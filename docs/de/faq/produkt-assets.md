@@ -4,7 +4,7 @@
 
 ## Wie kann ich das Hauptbild eines Produktes ändern?
 
-In TreoPIM gilt das erste Produktbild automatisch als Hauptbild eines Produktes. Um das Hauptbild zu ändern, nutzen Sie die Drag-and-Drop-Funktion auf der Produktdetailseite.
+In AtroPIM gilt das erste Produktbild automatisch als Hauptbild eines Produktes. Um das Hauptbild zu ändern, nutzen Sie die Drag-and-Drop-Funktion auf der Produktdetailseite.
 
 
 
