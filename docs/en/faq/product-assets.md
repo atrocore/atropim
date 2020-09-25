@@ -4,7 +4,7 @@
 
 ## How can I change the main image of a product?
 
-In TreoPIM, the first product image is automatically the main image of a product. To change the main picture, use the drag-and-drop function on the product detail page.
+In AtroPIM, the first product image is automatically the main image of a product. To change the main picture, use the drag-and-drop function on the product detail page.
 
 
 
