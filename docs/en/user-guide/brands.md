@@ -31,7 +31,7 @@ Click the `Save` button to finish the brand record creation or `Cancel` to abort
 
 If the brand code is not unique, the error message will appear notifying you about it.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the brand creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the brand creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/brands/creation-popup.jpg)
 
