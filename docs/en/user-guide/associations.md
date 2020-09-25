@@ -25,7 +25,7 @@ To create a new association record, click `Associations` in the navigation menu 
 
 Here enter the association name and description (optional); activate the new association, if needed. Define its backward association using the corresponding select button. Click the `Save` button to finish the association record creation or `Cancel` to abort the process.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the association creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the association creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/associations/creation-popup.jpg)
 
@@ -112,7 +112,7 @@ Use the `Duplicate` option from the actions drop-down menu to go to the associat
 
 ![Associated products panel](../../_assets/associations/associated-products-panel.jpg)
 
-TreoPIM also offers you the ability to add associations to all the products (or as many as needed) simultaneously via the [mass actions](./views-and-panels.md#mass-actions) menu.
+AtroPIM also offers you the ability to add associations to all the products (or as many as needed) simultaneously via the [mass actions](./views-and-panels.md#mass-actions) menu.
 
 
 
