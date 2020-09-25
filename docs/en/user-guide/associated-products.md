@@ -4,7 +4,7 @@
 
 The option to create associated products targets on increasing sales and helping in promotion and marketing of new products, but has a slightly different configuration process.
 
-TreoPIM comes with the following predefined associations:
+AtroPIM comes with the following predefined associations:
 
 - **Up-sell products** are the products with higher price and quality, which could be more popular with shoppers and more profitable for the sellers. Up-sell products are generally packed with special features or other competitive advantages to encourage customers to change their mind and buy these ones. 
 
@@ -36,7 +36,7 @@ Here fill in all the required fields for the entry being created. Select the `Bo
 
 *If a [backward association](./associations.md) is defined for the association entry within which the products are related, the `Both directions` checkbox will be selected by default with the backward association name displayed in the corresponding field.*
 
-Alternatively, use `+` button on the `ASSOCIATED PRODUCTS` panel of the [product](./products.md#associated-products) detail view page or the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the associated product creation pop-up that appears. Please, note that the `ASSOCIATED PRODUCTS` panel of the product [detail view](./views-and-panels.md#detail-view) page displays which products are in relation with the currently opened product and within which association.
+Alternatively, use `+` button on the `ASSOCIATED PRODUCTS` panel of the [product](./products.md#associated-products) detail view page or the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the associated product creation pop-up that appears. Please, note that the `ASSOCIATED PRODUCTS` panel of the product [detail view](./views-and-panels.md#detail-view) page displays which products are in relation with the currently opened product and within which association.
 
 ## Listing
 
