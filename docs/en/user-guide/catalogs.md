@@ -1,6 +1,6 @@
 # CATALOGS
 
-**Catalog** – a container for your [products](./products.md) arranged by certain criteria, i.e. it is a set of data at a given time compiled to be transferred via certain [channels](./channels.md). Catalog's content may be modified whenever needed within the [TreoPIM system](./what-is-treopim.md).
+**Catalog** – a container for your [products](./products.md) arranged by certain criteria, i.e. it is a set of data at a given time compiled to be transferred via certain [channels](./channels.md). Catalog's content may be modified whenever needed within the [AtroPIM system](./what-is-atropim.md).
 
 Catalogs, as well as channels, form the basis of the multichannel publication of your products data. They allow you to manage your range of products and carry out your multichannel strategy in the most flexible manner.
 
@@ -8,7 +8,7 @@ With the help of catalogs you can create as many versions of your products as yo
 
 The catalog structure can be different for each user, based on their needs. For instance, catalogs can be used to segment your range of products for further export of the product data to certain channels, as well as to store historical information about your products (e.g. "Winter jackets 2019" and "Winter jackets 2020").
 
-The multi-catalog function is beneficial both for manufacturers, wholesalers, and retailers due to its ability to meet all their specific needs and requirements. For instance, manufacturers can easily enlarge/shorten their range of products on the basis of their already existing catalog(s). At the same time, wholesalers or retailers get a powerful tool to organize and systematize all the product information collected from different sources into one proper master catalog (and then create as many versions of it as needed) in a very flexible manner. There is no need to spend much time on creating a brand new catalog from scratch – just edit what you already have with the help of the TreoPim multi-catalog feature!
+The multi-catalog function is beneficial both for manufacturers, wholesalers, and retailers due to its ability to meet all their specific needs and requirements. For instance, manufacturers can easily enlarge/shorten their range of products on the basis of their already existing catalog(s). At the same time, wholesalers or retailers get a powerful tool to organize and systematize all the product information collected from different sources into one proper master catalog (and then create as many versions of it as needed) in a very flexible manner. There is no need to spend much time on creating a brand new catalog from scratch – just edit what you already have with the help of the AtroPim multi-catalog feature!
 
 ## Catalog Fields
 
@@ -39,7 +39,7 @@ If the catalog code is not unique, the error message will appear notifying you a
 
 The new record will be added to the catalogs list. You can configure it right away on the [detail view](./views-and-panels.md#detail-view) page that opens or return to it later.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the catalog creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the catalog creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/catalogs/creation-popup.jpg)
 
