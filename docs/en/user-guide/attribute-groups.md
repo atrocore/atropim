@@ -25,7 +25,7 @@ Here enter the desired name for the attribute group record being created and its
 
 If the attribute group code is not unique, the error message will appear notifying you about it.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the attribute group creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the attribute group creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/attribute-groups/creation-popup.jpg)
 
