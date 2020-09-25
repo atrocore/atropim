@@ -32,7 +32,7 @@ Click the `Save` button to finish the channel record creation or `Cancel` to abo
 
 If the channel code is not unique, the error message will appear notifying you about it.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the channel creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the channel creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/channels/creation-popup.jpg)
 
@@ -147,4 +147,4 @@ To remove the product, select the `Remove` option from the single record actions
 
 To view the channel related product record from the `PRODUCTS` panel, click its name in the products list. The [detail view](./views-and-panels.md#detail-view) page of the given product will open, where you can perform further actions according to your access rights, configured by the administrator. 
 
-*Please, note that the **"Pricing"** module greatly extends the channels functionality. To learn more about the module and its features, please, visit our [store](https://treopim.com/store/pricing).*
+*Please, note that the **"Pricing"** module greatly extends the channels functionality. To learn more about the module and its features, please, visit our [store](https://atropim.com/store/pricing).*
