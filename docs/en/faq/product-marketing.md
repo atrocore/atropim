@@ -29,7 +29,7 @@ Each user can create any number of associations. The following associations are 
 - Similar
 - Related
 - Cross sell
-- upsell
+- Upsell
 
 The unused associations can easily be removed.
 
