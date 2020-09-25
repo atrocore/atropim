@@ -12,13 +12,13 @@ Ja, es ist möglich, die Layouts von Listen- und Detailseiten direkt aus dem Adm
 
 Ja, für jede Entität im System (d.h. Produkte, Attribute, Kategorien, Assoziationen, Produktfamilien, etc.) kann man benutzerdefinierte Felder anlegen. Nutzen Sie dafür den Entity Manager.
 
-TreoPIM bietet dem Anwender viel mehr Möglichkeiten an, als nur benutzerdefinierte Felder anzulegen, denn TreoPIM hat ein vollkommen flexibles Datenmodell. Man kann neue Entitäten anlegen, bestehende Entitäten editieren, die Relationen zwischen den Entitäten anlegen und verändern sowie die Metadaten editieren.
+AtroPIM bietet dem Anwender viel mehr Möglichkeiten an, als nur benutzerdefinierte Felder anzulegen, denn AtroPIM hat ein vollkommen flexibles Datenmodell. Man kann neue Entitäten anlegen, bestehende Entitäten editieren, die Relationen zwischen den Entitäten anlegen und verändern sowie die Metadaten editieren.
 
 
 
 ## Kann der Nutzer die Berechtigungen einschränken?
 
-Ja, TreoPIM hat ein sehr flexibles Zugriffs- und Berechtigungskonzept. Durch die Rollen wird bestimmt, welcher Nutzer was und bei welchen Entitäten machen kann. Es ist auch möglich, die Zugriffsebene der Nutzer nur für eigene Einträge, Einträge des eigenen Teams oder alle Einträge zu bestimmen.
+Ja, AtroPIM hat ein sehr flexibles Zugriffs- und Berechtigungskonzept. Durch die Rollen wird bestimmt, welcher Nutzer was und bei welchen Entitäten machen kann. Es ist auch möglich, die Zugriffsebene der Nutzer nur für eigene Einträge, Einträge des eigenen Teams oder alle Einträge zu bestimmen.
 
   
 
@@ -46,35 +46,35 @@ Es ist möglich, die Bedingungen einzustellen, ob ein Feld sichtbar, read-only o
 
   
 
-## Kann man TreoPIM aus dem Adminbereich aktualisieren?
+## Kann man AtroPIM aus dem Adminbereich aktualisieren?
 
-Es ist möglich, das TreoPIM direkt aus dem Adminbereich zu aktualisieren. Wir empfehlen aber, dies nur von Ihren TreoPIM-Entwicklern machen zu lassen. Der Admin erhält eine Benachrichtigung, wenn ein Update verfügbar ist.
+Es ist möglich, das AtroPIM direkt aus dem Adminbereich zu aktualisieren. Wir empfehlen aber, dies nur von Ihren AtroPIM-Entwicklern machen zu lassen. Der Admin erhält eine Benachrichtigung, wenn ein Update verfügbar ist.
 
 
 
-## Kann man TreoPIM-Module aus dem Adminbereich aktualisieren?
+## Kann man AtroPIM-Module aus dem Adminbereich aktualisieren?
 
-Ja, dank dem Modul Manager ist es möglich, sowohl die individuellen als auch die offiziellen Module von TreoPIM direkt aus dem Adminbereich zu installieren, zu aktualisieren, zu aktivieren oder zu deaktivieren sowie zu deinstallieren.
+Ja, dank dem Modul Manager ist es möglich, sowohl die individuellen als auch die offiziellen Module von AtroPIM direkt aus dem Adminbereich zu installieren, zu aktualisieren, zu aktivieren oder zu deaktivieren sowie zu deinstallieren.
 
-Wir empfehlen aber, Aktualisierungen nur von Ihren TreoPIM-Entwicklern vornehmen zu lassen.
+Wir empfehlen aber, Aktualisierungen nur von Ihren AtroPIM-Entwicklern vornehmen zu lassen.
 
   
 
 ## Kann man Aufgaben und Tasks nach Zeitplan im Hintergrund ausführen lassen?
 
-Ja, in TreoPIM gibt es “Scheduled Jobs” dafür. Es is möglich zu konfigurieren, welche Skripte nach welchem Zeitplan auszuführen sind. Es können sowohl die System-Skripte als auch die individuellen Skripte als “Scheduled Jobs” ausgeführt werden.
+Ja, in AtroPIM gibt es “Scheduled Jobs” dafür. Es is möglich zu konfigurieren, welche Skripte nach welchem Zeitplan auszuführen sind. Es können sowohl die System-Skripte als auch die individuellen Skripte als “Scheduled Jobs” ausgeführt werden.
 
   
 
 ## Kann man das Theme ändern?
 
-In TreoPIM gibt es ein vordefiniertes Theme - Treo Dark Theme. Man kann auch eigene Themes erstellen lassen, um z.B. ein Farbschema an die Firmenfarben anzupassen.
+In AtroPIM gibt es ein vordefiniertes Theme - Atro Dark Theme. Man kann auch eigene Themes erstellen lassen, um z.B. ein Farbschema an die Firmenfarben anzupassen.
 
   
 
 ## Ist die Navigationsleiste flexibel platzierbar?
 
-Ja, die Navigationsleiste kann links, oben oder rechts platziert werden. Der Platz wird im Theme festgelegt. In der Standardansicht von TreoPIM wird die Navigationsleiste links platziert.
+Ja, die Navigationsleiste kann links, oben oder rechts platziert werden. Der Platz wird im Theme festgelegt. In der Standardansicht von AtroPIM wird die Navigationsleiste links platziert.
 
   
 
@@ -104,6 +104,6 @@ Ja, wenn eingestellt, kann der Administrator alle Handlungen von allen Nutzern i
 
 ## Werden die Einträge wirklich gelöscht? Kann man gelöschte Daten wiederherstellen?
 
-Um die Konsistenz des Systems nicht zu gefährden, werden in TreoPIM keine Einträge gelöscht. Diese erhalten nur eine Eigenschaft “isDeleted”, damit das System weiß, dass dieser Eintrag den Nutzern nicht mehr anzuzeigen ist.
+Um die Konsistenz des Systems nicht zu gefährden, werden in AtroPIM keine Einträge gelöscht. Diese erhalten nur eine Eigenschaft “isDeleted”, damit das System weiß, dass dieser Eintrag den Nutzern nicht mehr anzuzeigen ist.
 
-Somit ist es möglich, die “gelöschten” Daten wiederherzustellen. Das sollte am besten von TreoLabs GmbH oder von Ihren TreoPIM-Entwicklern erfolgen.
+Somit ist es möglich, die “gelöschten” Daten wiederherzustellen. Das sollte am besten von Ihren AtroPIM-Entwicklern erfolgen.
