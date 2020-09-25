@@ -1,5 +1,5 @@
 ## Server Configurations
-TreoPIM can be installed only on **Unix-based** Systems with configured Apache, Nginx, or IIS server.
+AtroPIM can be installed only on **Unix-based** Systems with configured Apache, Nginx, or IIS server.
 
 #### PHP Requirements
 Requires **PHP 7.1 or above** (with pdo_mysql, openssl, json, zip, gd, mbstring, xml, curl,exif extensions)
@@ -46,10 +46,10 @@ chown -R <OWNER>:<GROUP-OWNER> .;
    ```   
 3. Configure crontab:
    ```
-   * * * * * cd /var/www/my-treopim-project; ./bin/cron.sh process-treopim-1 /usr/bin/php 
+   * * * * * cd /var/www/my-atropim-project; ./bin/cron.sh process-atropim-1 /usr/bin/php 
    ```
-   - **/var/www/my-treopim-project** - path to project root
-   - **process-treopim-1** - an unique id of process. You should use different process id if you have few TreoPIM project in one server
+   - **/var/www/my-atropim-project** - path to project root
+   - **process-atropim-1** - an unique id of process. You should use different process id if you have few AtroPIM project in one server
    - **/usr/bin/php** - PHP7.1 or above
 
 #### Configuration instructions based on your server
