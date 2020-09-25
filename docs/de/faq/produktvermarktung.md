@@ -10,7 +10,7 @@ Ja, man kann ein Produkt aktivieren oder deaktivieren. Dies ist auch über die M
 
 ## Kann man Cross-Selling-Angebote verwalten?
 
-Ja, in TreoPIM ist es möglich, Cross-Selling-Angebote für Ihre Produkte anzulegen und zu verwalten. Nutzen Sie dafür die Assoziationen. Cross-Selling ist als eine Assoziation bereits vorkonfiguriert.
+Ja, in AtroPIM ist es möglich, Cross-Selling-Angebote für Ihre Produkte anzulegen und zu verwalten. Nutzen Sie dafür die Assoziationen. Cross-Selling ist als eine Assoziation bereits vorkonfiguriert.
 
 
 
@@ -37,7 +37,7 @@ Die nicht benutzten Assoziationen können problemlos entfernt werden.
 
 ## Wie viele Produktkataloge kann man verwalten?
 
-Man kann mehrere Produktkataloge in TreoPIM verwalten.
+Man kann mehrere Produktkataloge in AtroPIM verwalten.
 
 
 
@@ -49,9 +49,9 @@ Ja, es ist möglich, Subkataloge anzulegen. Weisen Sie dafür einen Ast eines Ka
 
 ## Wie viele Kanäle kann man verwalten?
 
-Sie können in TreoPIM beliebig viele Kanäle verwalten. Die Informationen für einen Kanal können auf unterschiedliche Weisen übertragen werden:
+Sie können in AtroPIM beliebig viele Kanäle verwalten. Die Informationen für einen Kanal können auf unterschiedliche Weisen übertragen werden:
 
-- über API von TreoPIM,
+- über API von AtroPIM,
 - über API von einem Drittsystem,
 - über Export Feeds (Export Feeds-Modul notwendig).
 
@@ -72,7 +72,7 @@ Ja, nutzen Sie die kanalspezifischen Attribute dafür. Um ein Attribut als kanal
 
 ## Kann man Produktpreise verwalten?
 
-In “TreoPIM Preis” ist ein Standard-Feld vom Typ Preis vorhanden. Es ist möglich, mehrere solcher Felder anzulegen und zu nutzen.
+In AtroPIM Preis ist ein Standard-Feld vom Typ Preis vorhanden. Es ist möglich, mehrere solcher Felder anzulegen und zu nutzen.
 
 Wenn Sie eine komplizierte Preisverwaltung mit Staffelpreisen, unterschiedlichen Währungen etc. planen, nutzen Sie bitte unser Modul “Advanced Prices”.
 
