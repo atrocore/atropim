@@ -1,6 +1,6 @@
 # Dashboards and Dashlets
 
-Dashboards are designed for quick navigation within the TreoPIM entities data displayed on separate dashlets. The dashboard is the starting page of TreoPIM that can be reached any time via clicking the `TreoPIM` logo located in the upper left corner of the TreoPIM pages:
+Dashboards are designed for quick navigation within the AtroPIM entities data displayed on separate dashlets. The dashboard is the starting page of AtroPIM that can be reached any time via clicking the `AtroPIM` logo located in the upper left corner of the AtroPIM pages:
 
 ![Dashboard](../../_assets/dashboards-and-dashlets/dashboard-interface.jpg)
 
@@ -8,11 +8,11 @@ Both dashboards and dashlets are [user customizable](./user-interface.md#user-in
 
 ## Dashboards
 
-The `My TreoCore` dashboard comes out-of-the-box and is displayed on the TreoPIM starting page by default. It can be customized by adding the desired [dashlets](#dashlets) and configuring them. 
+The `My AtroCore` dashboard comes out-of-the-box and is displayed on the AtroPIM starting page by default. It can be customized by adding the desired [dashlets](#dashlets) and configuring them. 
 
 ### Creating a Dashboard
 
-It is also possible to create custom boards. To do this, click the pencil icon on the TreoPIM starting page and enter the desired dashboard name in the editing pop-up that appears and hit `Enter`:
+It is also possible to create custom boards. To do this, click the pencil icon on the AtroPIM starting page and enter the desired dashboard name in the editing pop-up that appears and hit `Enter`:
 
 ![New dashboard](../../_assets/dashboards-and-dashlets/dashboard-new.jpg)
 
@@ -34,7 +34,7 @@ In the given pop-up you can also remove the desired dashboard (or dashboards) by
 
 ### Switching between Dashboards
 
-In order to switch between dashboards available in the system, click the button with the desired dashboard name located in the upper right corner of the TreoPIM starting page:
+In order to switch between dashboards available in the system, click the button with the desired dashboard name located in the upper right corner of the AtroPIM starting page:
 
 ![Custom board](../../_assets/dashboards-and-dashlets/custom-board.jpg)
 
@@ -56,7 +56,7 @@ The added dashlets can be resized using the double-headed arrow in the bottom ri
 
 ### Available Dashlets
 
-The following dashlets are available in TreoPIM out-of-the-box:
+The following dashlets are available in AtroPIM out-of-the-box:
 - Channels
 - General Statistics
 - My Inbox
