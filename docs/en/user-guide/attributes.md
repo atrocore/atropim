@@ -23,7 +23,7 @@ If you want to make changes to the attribute entity (e.g. add new fields, or mod
 
 ## Available Attribute Types
 
-Attributes are automatically validated according to their type. The following attribute types are available in the TreoPIM system:
+Attributes are automatically validated according to their type. The following attribute types are available in the AtroPIM system:
 
 ![Attribute types](../../_assets/attributes/attribute-types-list.jpg)
 
@@ -66,7 +66,7 @@ When creating attribute records of the `Enum`, `Multi-Enum`, `Enum Multilang`, a
 
 ![Enum values list](../../_assets/attributes/enum-values-list.jpg)
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the attribute creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the attribute creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/attributes/creation-popup.jpg)
 
