@@ -2,14 +2,14 @@
 
   
 
-## Which services are offered by TreoLabs GmbH?
+## Which services are offered?
 
 We offer a wide range of services that are directly and indirectly related to the introduction of a PIM system, including:
 
 - Consulting
-- Implementation of TreoPIM
+- Implementation of AtroPIM
 - Migration from other PIM systems
-- Integration of TreoPIM with third-party systems
+- Integration of AtroPIM with third-party systems
 - Programming of additional functions and modules
 - Maintenance and support.
 
@@ -21,7 +21,7 @@ You can purchase a “worry-free” package from us, we will never let you down!
 
 We can offer you a free first consultation, contact us and we will make an appointment.
 
-Alternatively, if you would like to discuss your tasks and problems as well as the possible alternative solutions with the help of TreoPIM in more detail, we can offer you a workshop - via screen sharing, at our premises or at your location.
+Alternatively, if you would like to discuss your tasks and problems as well as the possible alternative solutions with the help of AtroPIM in more detail, we can offer you a workshop - via screen sharing, at our premises or at your location.
 
 
 
@@ -46,20 +46,20 @@ Yes, the project manager assigned to your project will be happy to assist you vi
 
   
 
-## How long does it take to implement TreoPIM?
+## How long does it take to implement AtroPIM?
 
-The implementation of TreoPIM takes from four weeks. The time depends very much on how many individual requirements and special features you have. However, this deadline depends not only on us, but much more on you, because you have to participate in the project.
+The implementation of AtroPIM takes from four weeks. The time depends very much on how many individual requirements and special features you have. However, this deadline depends not only on us, but much more on you, because you have to participate in the project.
 
 
 
-## How is the project implementation organized at TreoLabs GmbH?
+## How is the project implementation organized?
 
-We have been specializing in e-commerce for a long time and have built up extensive know-how in this area that allowed us to develop TreoPIM. Thanks to an agile project approach, we ensure that the end result fully meets the requirements.
+We have been specializing in e-commerce for a long time and have built up extensive know-how in this area that allowed us to develop AtroPIM. Thanks to an agile project approach, we ensure that the end result fully meets the requirements.
 
 *We implement a project as follows:*
 
 1. First we start with a kickoff meeting and discuss with you the goals and all the most important tasks to be implemented in the project.
-2. Then we discuss your data model and configure TreoPIM accordingly.
+2. Then we discuss your data model and configure AtroPIM accordingly.
 3. The detailed requirements are then formulated and divided into sprints in descending order of importance. The most important requirements are implemented in the first sprints and the less important ones in the following sprints.
 4. Each sprint is approved separately by the customer, and the resulting comments, changes and enhancements are then implemented in the subsequent sprint.
 
@@ -69,7 +69,7 @@ In this way, we remain flexible, agile and open to new insights throughout the p
 
 ## What support do you offer?
 
-We, the TreoLabs GmbH, ensure that you do not remain perplexed with our solutions and ensure that every customer receives proper support. We offer three support packages:
+We ensure that you do not remain perplexed with our solutions and ensure that every customer receives proper support. We offer three support packages:
 
 - **Basic** - for small users.
 - **Premium** - for small users with a few special requests.
