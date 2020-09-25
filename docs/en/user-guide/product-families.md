@@ -2,9 +2,9 @@
 
 **Product Family** – a grouping of similar [products](./products.md), which use similar or same production processes, have similar physical characteristics, and may share customer segments, distribution channels, pricing methods, promotional campaigns, and other elements of the marketing mix. 
 
-In TreoPIM product families are used in order to define a set of [attributes](./attributes.md) that are shared by products belonging to a certain family, and to describe the characteristics of these products. For each product family you can define, which attributes are mandatory and which are optional, so the system can calculate the completeness of your product content.
+In AtroPIM product families are used in order to define a set of [attributes](./attributes.md) that are shared by products belonging to a certain family, and to describe the characteristics of these products. For each product family you can define, which attributes are mandatory and which are optional, so the system can calculate the completeness of your product content.
 
-*Please, note that completeness calculation is possible only when a separate **"Completeness"** module is installed in your system. Please, visit our [store](https://treopim.com/store/completeness) to learn more about the module and its features.*
+*Please, note that completeness calculation is possible only when a separate **"Completeness"** module is installed in your system. Please, visit our [store](https://atropim.com/store/completeness) to learn more about the module and its features.*
 
 Creating a product family is a required step prior to arranging the assortment of your products. The product can belong only to one product family.
 
@@ -41,7 +41,7 @@ Click the `Save` button to finish the product family record creation or `Cancel`
 
 If the product family code is not unique, the error message will appear notifying you about it.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the product family creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the product family creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/product-families/creation-popup.jpg)
 
@@ -168,7 +168,7 @@ When you are trying to link to the product family record the attribute, which is
 
 ![PF-product-attributes](../../_assets/product-families/pf-product-attributes.jpg)
 
-Please, note that attributes, which are added to the product family record, are of higher priority, whereas custom product attributes adapt to the changes made in the product family attributes. <!--The interrelations between product families and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://treopim.com/store). -->  *<!--Unclose this note when the module is described-->*
+Please, note that attributes, which are added to the product family record, are of higher priority, whereas custom product attributes adapt to the changes made in the product family attributes. <!--The interrelations between product families and product records can be configured and structured even more with the help of the **Advanced Classification** module. For more details, please, visit our [store](https://atropim.com/store). -->  *<!--Unclose this note when the module is described-->*
 
 To assign an existing attribute (or several attributes) to the product family record, use the `Select` option from the actions menu:
 
@@ -176,7 +176,7 @@ To assign an existing attribute (or several attributes) to the product family re
 
 In the "Attributes" pop-up that appears, choose the desired attribute (or attributes) from the list and press the `Select` button to link the item(s) to the product family record. The linked attributes have the `Global` scope by default.
 
-TreoPIM supports linking to product families not only separate attributes, but also [attribute groups](./attribute-groups.md). For this, use the `Select Attribute Group` option from the actions menu, and in the "Attribute Groups" pop-up that appears, select the desired groups from the list of available attribute groups.
+AtroPIM supports linking to product families not only separate attributes, but also [attribute groups](./attribute-groups.md). For this, use the `Select Attribute Group` option from the actions menu, and in the "Attribute Groups" pop-up that appears, select the desired groups from the list of available attribute groups.
 
 Please, note that attributes linked to product families are arranged by attribute groups correspondingly. Their placement depends on the configuration and the sort order value of the attribute group to which they belong. The attribute records that don't belong to any product family, are placed at the bottom of the `PRODUCT FAMILY ATTRIBUTES` panel in `No Group`.
 
