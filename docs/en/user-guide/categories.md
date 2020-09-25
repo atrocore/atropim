@@ -10,17 +10,17 @@ Categories make up a powerful tool that can be used not only to sort your conten
 
 **Subcategories** – all child categories, assigned to a certain category. Subcategories for category "Germany" may be "Berlin", "Munich", "Hannover" and so on.
 
-There can be many category trees in TreoPIM. Each category can have only one parent category. Each category may have a lot of subcategories. One category can be used in several category trees. Also many products can be assigned to one category, and each product can be assigned to more than one category in accordance with the catalog content.
+There can be many category trees in AtroPIM. Each category can have only one parent category. Each category may have a lot of subcategories. One category can be used in several category trees. Also many products can be assigned to one category, and each product can be assigned to more than one category in accordance with the catalog content.
 
 ## One Category Tree vs Multiple Category Trees
 
-Each adopter of [TreoPIM](./what-is-treopim.md) may decide for himself what works better for him – setting up and supporting multiple category trees or just one. Irregardless of the choice, it is still possible to synchronize different content for products you want to supply. 
+Each adopter of [AtroPIM](./what-is-atropim.md) may decide for himself what works better for him – setting up and supporting multiple category trees or just one. Irregardless of the choice, it is still possible to synchronize different content for products you want to supply. 
 
 ## Product Categories in Multiple Languages
 
 Even if you want to manage your product content in different languages, there is no need in maintaining multiple category trees. 
 
-Please, note that multilingual functionality is available after the "Multi-Languages" module is installed (along with the TreoPIM system installation) and set up. Go to our store to learn more about the ["Multi-Languages" module](https://treopim.com/store/multi-languages).
+Please, note that multilingual functionality is available after the "Multi-Languages" module is installed (along with the AtroPIM system installation) and set up. Go to our store to learn more about the ["Multi-Languages" module](https://atropim.com/store/multi-languages).
 
 There are two ways to set up your product catalog if you carry product information in different languages:
 
@@ -57,7 +57,7 @@ If the category code is not unique, the error message will appear notifying you 
 
 The new record will be added to the categories list. You can configure it right away on the [detail view](./views-and-panels.md#detail-view) page that opens or return to it later.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create)  button on any TreoPIM page and fill in the required fields in the category creation pop-up that appears:
+Alternatively, use the [quick create](./user-interface.md#quick-create)  button on any AtroPIM page and fill in the required fields in the category creation pop-up that appears:
 
 ![Creation pop-up](../../_assets/categories/creation-popup.jpg)
 
@@ -138,7 +138,7 @@ Use the `Duplicate` option from the actions menu to go to the category creation 
 
 ## Category Tree
 
-TreoPIM offers you a dynamic display of all categories available in the system in a tree view. To see this, click the `Tree View` button on the categories list view:              
+AtroPIM offers you a dynamic display of all categories available in the system in a tree view. To see this, click the `Tree View` button on the categories list view:              
 ![Tree view button](../../_assets/categories/tree-view-button.jpg)
 
 In this view, parent–child relations are more explicit, and category trees are built (modified) via simple drag-and-drop of categories:
@@ -167,7 +167,7 @@ To create new image records to be linked to the currently open category record, 
 
 ![Image creation](../../_assets/categories/image-creation.jpg)
 
-The following *image uploading types* are available in the TreoPIM system by default:
+The following *image uploading types* are available in the AtroPIM system by default:
 - **File** / **Files** – image files that are stored locally (on your PC or other device). When the `File` type is selected on the image creation step, the desired image file is  uploaded as an attachment. To attach several image files at the same time, the `Files` type is to be defined accordingly.
 - **Link** – the URL to the image file, which is stored on the external server. When this type is selected on the image creation step, the image link must be entered in the corresponding field:
 
