@@ -1,6 +1,6 @@
 # Views and Panels
 
-The TreoPIM system comes with a user-friendly configurable [interface](./user-interface.md) that includes a number of views and panels, where **entity records** are displayed and managed. 
+The AtroPIM system comes with a user-friendly configurable [interface](./user-interface.md) that includes a number of views and panels, where **entity records** are displayed and managed. 
 
 Views can be shown in the main or pop-up window. They consist of the panels, which can be configured by the administrator. Usually these are structured in a way to provide you with key information on the record management.
 
@@ -55,7 +55,7 @@ Mass actions are to be applied to several (or all) selected entity records, i.e.
 
 ![Select all option](../../_assets/views-and-panels/select-all-option.jpg)
 
-The following mass actions are available in the TreoPIM system: 
+The following mass actions are available in the AtroPIM system: 
 
 ![Mass Actions](../../_assets/views-and-panels/mass-actions.jpg)
 
@@ -70,7 +70,7 @@ The following mass actions are available in the TreoPIM system:
 
 To modify the mass actions list, please, contact your administrator.
 
-*For more advanced export features, please, use the **Export Feeds** module. You can find the details on this module in our [store](https://treopim.com/store/export-feeds).*
+*For more advanced export features, please, use the **Export Feeds** module. You can find the details on this module in our [store](https://atropim.com/store/export-feeds).*
 
 ### Single Record Actions
 
@@ -99,7 +99,7 @@ You can configure the plate view layout by selecting the desired item number to 
 
 ![Plate view cfg](../../_assets/views-and-panels/plate-view-cfg.jpg)
 
-Within the TreoPIM system the plate view is available only for [products](./products.md).
+Within the AtroPIM system the plate view is available only for [products](./products.md).
 
 ## Small List Views
 
@@ -154,7 +154,7 @@ You can start following the entity record right on the detail view page. To do t
 
 ![Product filters](../../_assets/views-and-panels/product-filters.jpg)
 
-Keep in mind that the locales filter appears when the "Multi-Languages" module is installed and input language options are configured by your administrator. Go to our [store](https://treopim.com/store/multi-languages) to learn more about the "Multi-Languages" module and its features.
+Keep in mind that the locales filter appears when the "Multi-Languages" module is installed and input language options are configured by your administrator. Go to our [store](https://atropim.com/store/multi-languages) to learn more about the "Multi-Languages" module and its features.
 
 Navigation through the existing entity records can be done on the detail view pages using the corresponding buttons: 
 
@@ -199,7 +199,7 @@ The following information is available by default on the side view panel:
 
 The `Owner`, `Assigned user`, and `Teams` fields are enabled/disabled by the administrator.
 
-Other modules can add more panels to the side view panel. Please, visit our [store](https://treopim.com/store) to learn more about modules available for you.
+Other modules can add more panels to the side view panel. Please, visit our [store](https://atropim.com/store) to learn more about modules available for you.
 
 ## Create View
 
@@ -213,7 +213,7 @@ In all other cases, i.e. when the `+` button is used, you will be taken to the [
 
 ## Quick Create View
 
-The quick create view is shown in a pop-up window and uses the layout of the [quick detail view](#quick-detail-view-small-detail-view) page. It is usually applicable for creating records for the related entities or appears when the [quick create](./user-interface.md#quick-create) button is used on any TreoPIM page:
+The quick create view is shown in a pop-up window and uses the layout of the [quick detail view](#quick-detail-view-small-detail-view) page. It is usually applicable for creating records for the related entities or appears when the [quick create](./user-interface.md#quick-create) button is used on any AtroPIM page:
 
 ![Quick create view](../../_assets/views-and-panels/quick-create-view.jpg)
 
