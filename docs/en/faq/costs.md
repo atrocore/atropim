@@ -8,16 +8,15 @@ The costs are not linked to the number of users - with the sale of our premium m
 
 
 
-## What does the implementation of TreoPIM cost?
+## What does the implementation of AtroPIM cost?
 
-There is no general answer to this question, because every user has their own particularities and tasks that can be solved with the help of TreoPIM. We, TreoLabs GmbH, take projects with a project budget starting from EUR 10,000 net, including the acquisition of the necessary modules.
+There is no general answer to this question, because every user has their own particularities and tasks that can be solved with the help of AtroPIM. We take projects with a project budget starting from EUR 10,000 net, including the acquisition of the necessary modules.
 
 
 
-## What is the hourly rate of TreoLabs GmbH?
+## What is the hourly rate?
 
-Our services are billed at an hourly rate from EUR 50 net. The hourly rate depends on the location of the resources that are involved in the implementation of the project. The hourly rates for skilled workers based in Germany are higher than those for skilled workers based in Ukraine.
-
+Our services are billed at an hourly rate from EUR 100 net. The hourly rate depends on the location of the resources that are involved in the implementation of the project.
 
 
 ## How exactly are the costs determined?
@@ -26,15 +25,11 @@ For each project, we prepare a cost estimate based on the discussion of the cust
 
 In rare cases it can happen that the actual costs deviate from the estimate (e.g. if they cannot be objectively estimated or a third system or another party is involved in the solution). In these cases we will notify the customer in advance and agree on what to do with the request.
 
-The [General Terms and Conditions] (https://treopim.com/de/agb) of TreoLabs GmbH apply without exception.
-
 
 
 ## How is a project billed?
 
 Milestones / sprints are defined for the implementation of a project. After a milestone has been accepted by the customer, the associated costs are also billed.
-
-The [General Terms and Conditions] (https://treopim.com/de/agb) of TreoLabs GmbH apply without exception.
 
   
 
@@ -54,7 +49,7 @@ One of our competitive advantages lies in the use of nearshore programming.
 
 ## Are there any cost advantages?
 
-We, TreoLabs GmbH, have three of our own development offices in the Ukraine - in Kyiv, Lviv and Zhitomir, which gives us an additional competitive advantage and allows us to offer our services to our customers more cheaply without sacrificing quality, because we pay attention to the code quality.
+We have our own development office in the Ukraine, which gives us an additional competitive advantage and allows us to offer our services to our customers more cheaply without sacrificing quality, because we pay attention to the code quality.
 
   
 
@@ -77,14 +72,6 @@ No. Our solutions are based exclusively on open source technologies, including t
 - maintenance and support, if you take out a maintenance contract for it.
 
 
+## Do I have to expect monthly fees for AtroPIM?
 
-
-## Do I get an invoice with VAT shown?
-
-Yes. TreoLabs GmbH is a German GmbH.
-
-
-
-## Do I have to expect monthly fees for TreoPIM?
-
-No, TreoPIM software is free. You only pay a monthly fee if you conclude a maintenance and support contract with TreoLabs GmbH. The amount of the fees is determined by your needs and intensity of use, regardless of the number of your users.
+No, AtroPIM software is free. You only pay a monthly fee if you conclude a maintenance and support contract with us. The amount of the fees is determined by your needs and intensity of use, regardless of the number of your users.
