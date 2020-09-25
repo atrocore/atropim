@@ -1,24 +1,22 @@
 # Product management
 
 
-
 ## What is the difference between a product family and a category?
 
 A product family determines the type of product by assigning a product family to automatically determining which attributes should be used to describe a product, because the product family must be entered as a mandatory field when creating each individual product. A product can only be from one product family.
 
 Categories are important for a classification of the products, because thanks to the categorization your products are also found by customers, e.g. in an online shop. Categories are important for the marketing of the products, so a product can be assigned to several categories in order to be found more easily.
-
   
 
 ## Is it possible to have more than one category tree?
 
-Yes, you can have any number of category trees in TreoPIM. A product can also be assigned to more than one category and not necessarily within a category tree.
+Yes, you can have any number of category trees in AtroPIM. A product can also be assigned to more than one category and not necessarily within a category tree.
 
   
 
 ## Can you manage brands, product series or product groups? Something else?
 
-Yes. The brands are available straight out of the box. All other entities should be set up by the administrator using the Entity Manager. In TreoPIM it is possible to manage any data that has to do with the classification of the products.
+Yes. The brands are available straight out of the box. All other entities should be set up by the administrator using the Entity Manager. In AtroPIM it is possible to manage any data that has to do with the classification of the products.
 
   
 
@@ -28,13 +26,13 @@ If change tracking is activated for a field of an entity, every change in the sy
 
 To activate change tracking, please contact your administrator.
 
-If the standard functions for tracking changes are not sufficient for you, please use our module [Revisions] (https://treopim.com/de/shop/revisionen). Among other things, the module will allow you to restore the old values.
+If the standard functions for tracking changes are not sufficient for you, please use our module [Revisions] (https://atropim.com/de/shop/revisionen). Among other things, the module will allow you to restore the old values.
 
   
 
-## Are SEO requirements for product information feasible with TreoPIM?
+## Are SEO requirements for product information feasible with AtroPIM?
 
-Yes, all SEO requirements for your product information can be implemented in TreoPIM by your administrator using an additional configuration.
+Yes, all SEO requirements for your product information can be implemented in AtroPIM by your administrator using an additional configuration.
 
   
 
@@ -42,7 +40,7 @@ Yes, all SEO requirements for your product information can be implemented in Tre
 
 For a product, the values should be given for the attributes associated with the product family of which the product itself is. A product can have any number of attributes, it is even possible to add additional attributes that are not assigned to the product family.
 
-There are over 20 attribute types in TreoPIM. Each attribute value is automatically validated according to its type when it is saved.
+There are over 20 attribute types in AtroPIM. Each attribute value is automatically validated according to its type when it is saved.
 
   
 
@@ -52,9 +50,9 @@ When configuring the product family, you can determine for each attribute whethe
 
 
 
-## Can I save rich texts (HTML texts) in TreoPIM? Is there a WYSIWYG editor?
+## Can I save rich texts (HTML texts) in AtroPIM? Is there a WYSIWYG editor?
 
-Yes, in TreoPIM there is a WYSIWYG editor as an entity field type and an attribute type.
+Yes, in AtroPIM there is a WYSIWYG editor as an entity field type and an attribute type.
 
 This means that rich texts (HTML texts) can be saved in both ways - as the value of a field (not only for products) and as the value of a product attribute.
 
@@ -122,7 +120,7 @@ The total number of your products is shown in the list view for products just ab
   
 ## What are codes for (product codes, category codes, attribute codes etc.)?
 
-Codes are important as uniform names for your entries in TreoPIM, because you can e.g. Have multiple categories or attributes that have the same name but are of different nature.
+Codes are important as uniform names for your entries in AtroPIM, because you can e.g. Have multiple categories or attributes that have the same name but are of different nature.
 
 That is why we recommend defining codes that are clear, informative and help you to immediately and precisely understand which entry is involved.
 
@@ -132,7 +130,6 @@ That is why we recommend defining codes that are clear, informative and help you
 
 Yes, you can remove, add to or adapt information about products, product associations and other product-dependent entities using mass changes.
 
-  
 
 ## What is Entity?
 
