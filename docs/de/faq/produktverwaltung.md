@@ -12,13 +12,13 @@ Kategorien sind für eine Klassifizierung der Produkte wichtig, denn dank der Ka
 
 ## Ist es möglich, mehr als einen Kategoriebaum zu haben?
 
-Ja, in TreoPIM können Sie beliebig viele Kategoriebäume haben. Ein Produkt kann auch zu mehr als einer Kategorie und nicht unbedingt innerhalb eines Kategoriebaums zugeordnet sein.
+Ja, in AtroPIM können Sie beliebig viele Kategoriebäume haben. Ein Produkt kann auch zu mehr als einer Kategorie und nicht unbedingt innerhalb eines Kategoriebaums zugeordnet sein.
 
   
 
 ## Kann man Brands, Produktserien oder Produktgruppen verwalten? Noch was?
 
-Ja. Die Brands gibt es direkt aus der Box. Alle anderen Entities sollten von Administrator über den Entity Manager eingerichtet werden. In TreoPIM ist es möglich, beliebige Daten zu verwalten, die mit der Klassifizierung der Produkte zu tun haben.
+Ja. Die Brands gibt es direkt aus der Box. Alle anderen Entities sollten von Administrator über den Entity Manager eingerichtet werden. In AtroPIM ist es möglich, beliebige Daten zu verwalten, die mit der Klassifizierung der Produkte zu tun haben.
 
   
 
@@ -28,13 +28,13 @@ Wenn die Änderungsverfolgung bei einem Feld einer Entität aktiviert ist, wird 
 
 Um die Änderungsverfolgung zu aktivieren, kontaktieren Sie bitte Ihren Administrator.
 
-Wenn die Standardfunktionen für die Änderungsverfolgung für Sie nicht ausreichen, nutzen Sie bitte unser Modul [Revisions](https://treopim.com/de/shop/revisionen). Das Modul wird Ihnen unter anderem erlauben, die alten Werte wiederherzustellen.
+Wenn die Standardfunktionen für die Änderungsverfolgung für Sie nicht ausreichen, nutzen Sie bitte unser Modul [Revisions](https://atropim.com/de/shop/revisionen). Das Modul wird Ihnen unter anderem erlauben, die alten Werte wiederherzustellen.
 
   
 
-## Sind mit TreoPIM SEO-Anforderungen an Produktinformationen umsetzbar?
+## Sind mit AtroPIM SEO-Anforderungen an Produktinformationen umsetzbar?
 
-Ja, sämtliche SEO-Anforderungen an Ihre Produktinformationen lassen sich in TreoPIM von Ihrem Administrator über eine zusätzliche Konfiguration umsetzen.
+Ja, sämtliche SEO-Anforderungen an Ihre Produktinformationen lassen sich in AtroPIM von Ihrem Administrator über eine zusätzliche Konfiguration umsetzen.
 
   
 
@@ -42,7 +42,7 @@ Ja, sämtliche SEO-Anforderungen an Ihre Produktinformationen lassen sich in Tre
 
 Für ein Produkt sollten die Werte für die Attribute angegeben werden, die der Produktfamilie zugeordnet sind, von der das Produkt selbst ist. Ein Produkt kann beliebig viele Attribute haben, es ist sogar möglich, zusätzliche Attribute hinzuzufügen, die der Produktfamilie des Produktes nicht zugeordnet sind.
 
-In TreoPIM gibt es über 20 Attributtypen. Jeder Attributwert wird entsprechend seinem Typ beim Abspeichern automatisch validiert.
+In AtroPIM gibt es über 20 Attributtypen. Jeder Attributwert wird entsprechend seinem Typ beim Abspeichern automatisch validiert.
 
   
 
@@ -52,9 +52,9 @@ Bei der Konfiguration der Produktfamilie kann man für jedes Attribut bestimmen,
 
 
 
-## Kann ich Rich-Texte (HTML-Texte) in TreoPIM abspeichern? Gibt es einen WYSIWYG-Editor?
+## Kann ich Rich-Texte (HTML-Texte) in AtroPIM abspeichern? Gibt es einen WYSIWYG-Editor?
 
-Ja, in TreoPIM gibt es WYSIWYG als Entitätsfeld-Typ und als Attributtyp.
+Ja, in AtroPIM gibt es WYSIWYG als Entitätsfeld-Typ und als Attributtyp.
 
 Somit kann man Rich-Texte (HTML-Texte) auf beide Arten abspeichern – als Wert eines Feldes (nicht nur bei Produkten) als auch als Wert eines Produktattributes.
 
@@ -127,13 +127,13 @@ Die Gesamtanzahl Ihrer Produkte wird auf der Listenansicht für Produkte direkt 
 
 Ja, nutzen Sie die Dokumentenverwaltung dafür. Falls es notwendig ist, mehrere Dokumente einem Produkt zuzuordnen, lassen Sie eine Relation zwischen den Entitäten “Dokumente” und “Produkte” von Ihrem Administrator einrichten.
 
-Falls Ihnen diese Möglichkeit nicht ausreicht, nutzen Sie bitte unser [Produkt Assets Modul](https://treopim.com/de/shop/assets).
+Falls Ihnen diese Möglichkeit nicht ausreicht, nutzen Sie bitte unser [Produkt Assets Modul](https://atropim.com/de/shop/assets).
 
   
 
 ## Wozu gibt es Codes (Product Codes, Category Codes, Attribute Codes etc.)?
 
-Codes sind wichtig als einheitliche Bezeichnungen für Ihre Einträge in TreoPIM, denn Sie können z.B. mehrere Kategorien oder Attribute haben, die zwar den gleichen Namen haben, aber von unterschiedlicher Natur sind.
+Codes sind wichtig als einheitliche Bezeichnungen für Ihre Einträge in AtroPIM, denn Sie können z.B. mehrere Kategorien oder Attribute haben, die zwar den gleichen Namen haben, aber von unterschiedlicher Natur sind.
 
 Deshalb empfehlen wir solche Codes zu definieren, die eindeutig und informativ sind und Ihnen helfen, sofort und genau zu verstehen, um welchen Eintrag es geht.
 
