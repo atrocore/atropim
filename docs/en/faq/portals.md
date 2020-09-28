@@ -4,7 +4,7 @@
 
 ## What is a portal and what is it used for?
 
-A portal is a fully featured sub-instance of TreoPIM. Portals are used to grant portal users access only to certain entities so that collaboration with external parties can be organized more efficiently.
+A portal is a fully featured sub-instance of AtroPIM. Portals are used to grant portal users access only to certain entities so that collaboration with external parties can be organized more efficiently.
 
 You can configure for a portal:
 
@@ -22,9 +22,9 @@ Portal roles and portal users must be created in order to manage the authorizati
 
 ## Why do you need a supplier portal or a dealer portal?
 
-The cooperation with business partners can be organized in TreoPIM with the help of portals. A portal enables external parties to have restricted access to predefined entities and functions.
+The cooperation with business partners can be organized in AtroPIM with the help of portals. A portal enables external parties to have restricted access to predefined entities and functions.
 
-The portals for dealers and suppliers are preset with TreoPIM. If these are not needed, they can be removed quickly and easily.
+The portals for dealers and suppliers are preset with AtroPIM. If these are not needed, they can be removed quickly and easily.
 
 A dealer portal is helpful to organize cooperation with your own dealers. E.g. Every dealer can download all the product information themselves via the portal, when it suits them or when an update has taken place.
 
@@ -40,13 +40,13 @@ Yes, it is possible to set up a portal so that it can be accessed via a subdomai
 
 ## How many portals can be created?
 
-Several portals can be created in TreoPIM. Each portal can serve its own purpose - e.g. supplier portal, dealer portals, portals for collaboration with external parties and others can be created.
+Several portals can be created in AtroPIM. Each portal can serve its own purpose - e.g. supplier portal, dealer portals, portals for collaboration with external parties and others can be created.
 
 
 
 ## Are there any restrictions when configuring authorizations in a portal?
 
-No, there are no other restrictions except for access levels. For portals, users and roles are configured in the same way as for TreoPIM. The users who are assigned to an account automatically receive access to all entries that have been activated for the account, so there are no access levels here.
+No, there are no other restrictions except for access levels. For portals, users and roles are configured in the same way as for AtroPIM. The users who are assigned to an account automatically receive access to all entries that have been activated for the account, so there are no access levels here.
 
 
 

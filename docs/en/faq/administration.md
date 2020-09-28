@@ -12,13 +12,13 @@ Yes, it is possible to adjust the layout of list and detail pages directly from 
 
 Yes, you can create custom fields for each entity in the system (i.e. products, attributes, categories, associations, product families, etc.). Use the Entity Manager for this.
 
-TreoPIM offers the user much more options than just creating user-defined fields, because TreoPIM has a completely flexible data model. You can create new entities, edit existing entities, create and change the relationships between the entities and edit the metadata.
+AtroPIM offers the user much more options than just creating user-defined fields, because AtroPIM has a completely flexible data model. You can create new entities, edit existing entities, create and change the relationships between the entities and edit the metadata.
 
 
 
 ## Can the user restrict the authorizations?
 
-Yes, TreoPIM has a very flexible access and authorization concept. The roles determine which user can do what and with which entities. It is also possible to determine the access level of the users only for own entries, entries of the own team or all entries.
+Yes, AtroPIM has a very flexible access and authorization concept. The roles determine which user can do what and with which entities. It is also possible to determine the access level of the users only for own entries, entries of the own team or all entries.
 
   
 
@@ -46,35 +46,35 @@ It is possible to set the conditions, whether a field should be visible, read-on
 
   
 
-## Can TreoPIM be updated from the admin area?
+## Can AtroPIM be updated from the admin area?
 
-It is possible to update the TreoPIM directly from the admin area. However, we recommend that you only have this done by your TreoPIM developers. The admin will receive a notification when an update is available.
+It is possible to update the AtroPIM directly from the admin area. However, we recommend that you only have this done by your AtroPIM developers. The admin will receive a notification when an update is available.
 
 
 
-## Can I update TreoPIM modules from the admin area?
+## Can I update AtroPIM modules from the admin area?
 
-Yes, thanks to the Module Manager it is possible to install, update, activate or deactivate and uninstall both the individual and the official TreoPIM modules directly from the admin area.
+Yes, thanks to the Module Manager it is possible to install, update, activate or deactivate and uninstall both the individual and the official AtroPIM modules directly from the admin area.
 
-However, we recommend that updates only be carried out by your TreoPIM developers.
+However, we recommend that updates only be carried out by your AtroPIM developers.
 
   
 
 ## Can I have tasks and tasks run in the background according to a schedule?
 
-Yes, there are “Scheduled Jobs” for this in TreoPIM. It is possible to configure which scripts are to be executed on which schedule. Both the system scripts and the individual scripts can be executed as “Scheduled Jobs”.
+Yes, there are “Scheduled Jobs” for this in AtroPIM. It is possible to configure which scripts are to be executed on which schedule. Both the system scripts and the individual scripts can be executed as “Scheduled Jobs”.
 
   
 
 ## Can you change the theme?
 
-There is a predefined theme in TreoPIM - Treo Dark Theme. You can also have your own themes created, e.g. to adapt a color scheme to the company colors.
+There is a predefined theme in AtroPIM - Atro Dark Theme. You can also have your own themes created, e.g. to adapt a color scheme to the company colors.
 
   
 
 ## Can the navigation bar be placed flexibly?
 
-Yes, the navigation bar can be placed on the left, top or right. The place is determined in the theme. In the standard TreoPIM view, the navigation bar is placed on the left.
+Yes, the navigation bar can be placed on the left, top or right. The place is determined in the theme. In the standard AtroPIM view, the navigation bar is placed on the left.
 
 ## Can you configure the navigation bar?
 
@@ -102,6 +102,6 @@ Yes, if set, the administrator can trace all actions of all users in the system 
 
 ## Are the entries really deleted? Can you recover deleted data?
 
-In order not to endanger the consistency of the system, no entries are deleted in TreoPIM. These only get the property “isDeleted” so that the system knows that this entry can no longer be displayed to the users.
+In order not to endanger the consistency of the system, no entries are deleted in AtroPIM. These only get the property “isDeleted” so that the system knows that this entry can no longer be displayed to the users.
 
-Thus it is possible to restore the "deleted" data. This should best be done by TreoLabs GmbH or your TreoPIM developers.
+Thus it is possible to restore the "deleted" data. This should best be done by your AtroPIM developers.

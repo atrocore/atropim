@@ -10,7 +10,7 @@ Yes, you can activate or deactivate a product. This is also possible using the m
 
 ## Can you manage cross-selling offers?
 
-Yes, in TreoPIM it is possible to create and manage cross-selling offers for your products. Use the associations for this. Cross-selling is already preconfigured as an association.
+Yes, in AtroPIM it is possible to create and manage cross-selling offers for your products. Use the associations for this. Cross-selling is already preconfigured as an association.
 
 
 
@@ -29,7 +29,7 @@ Each user can create any number of associations. The following associations are 
 - Similar
 - Related
 - Cross sell
-- upsell
+- Upsell
 
 The unused associations can easily be removed.
 
@@ -37,15 +37,15 @@ The unused associations can easily be removed.
 
 ## How many product catalogs can you manage?
 
-You can manage several product catalogs in TreoPIM.
+You can manage several product catalogs in AtroPIM.
 
 
 
 ## How many channels can you manage?
 
-You can manage as many channels as you want in TreoPIM. The information for a channel can be transmitted in different ways:
+You can manage as many channels as you want in AtroPIM. The information for a channel can be transmitted in different ways:
 
-- via API from TreoPIM,
+- via API from AtroPIM,
 - via API from a third-party system,
 - via Export Feeds (Export Feeds module required).
 
@@ -64,7 +64,7 @@ Yes, use the channel-specific attributes for this. In order to create an attribu
 
 ## Can you manage product prices?
 
-In “TreoPIM Price” there is a standard field of the Price type. It is possible to create and use several such fields.
+In AtroPIM Price is a standard field of the Price type. It is possible to create and use several such fields.
 
 If you plan a complicated price management with graduated prices, different currencies etc., please use our module “Pricing”.
 

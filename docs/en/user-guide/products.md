@@ -2,7 +2,7 @@
 
 **Product** – the item in physical, virtual or cyber form as well as a service offered for sale. Every product is made at a cost and sold at a price. 
 
-There are several [types](#product-types) of products in the TreoPIM system, and each product, irregardless of its type, can be assigned to a certain [product family](./product-families.md), which will define the attributes to be set for this product. A product can be assigned to several [categories](./categories.md), be of a certain [brand](./brands.md), described in several languages and be prepared for selling via different [channels](./channels.md). A product can be in [association](./associations.md) of certain type with some other product, and thus within different associations and with different products. It is possible to set different [attribute](./attributes.md) values for different channels and upload product images.
+There are several [types](#product-types) of products in the AtroPIM system, and each product, irregardless of its type, can be assigned to a certain [product family](./product-families.md), which will define the attributes to be set for this product. A product can be assigned to several [categories](./categories.md), be of a certain [brand](./brands.md), described in several languages and be prepared for selling via different [channels](./channels.md). A product can be in [association](./associations.md) of certain type with some other product, and thus within different associations and with different products. It is possible to set different [attribute](./attributes.md) values for different channels and upload product images.
 
 ## Product Fields
 
@@ -20,9 +20,9 @@ If you want to make changes to the product entity, e.g. add new fields, or modif
 
 ## Product Types
 
-The only type of products available in the TreoPIM system by default is **Simple Product** – a standalone physical item or service sold as one piece. 
+The only type of products available in the AtroPIM system by default is **Simple Product** – a standalone physical item or service sold as one piece. 
 
-The list of products may be extended along with the installation of additional modules to your system. To learn more about available modules and their features, please, visit our [store](https://treopim.com/store). 
+The list of products may be extended along with the installation of additional modules to your system. To learn more about available modules and their features, please, visit our [store](https://atropim.com/store). 
 
 After the "Product Variants" module is installed to your system, the following product types are added:
 
@@ -30,7 +30,7 @@ After the "Product Variants" module is installed to your system, the following p
 
 - **Product variant** – basically a product with a complete set of its properties.
 
-*Please, visit our [store](https://treopim.com/store/product-variants) to learn more about the **"Product Variants"** module and its features.*
+*Please, visit our [store](https://atropim.com/store/product-variants) to learn more about the **"Product Variants"** module and its features.*
 
 In order to add custom types of products, please, contact your developer.
 
@@ -44,7 +44,7 @@ Here enter the desired name and SKU value for the product record being created a
 
 Click the `Save` button to finish the product record creation and get redirected to the product [editing page](#editing), described below, or `Cancel` to abort the process.
 
-Alternatively, use the [quick create](./user-interface.md#quick-create) button on any TreoPIM page and fill in the required fields in the product creation pop-up that appears or click the `Full Form` button to get to the common creation page:
+Alternatively, use the [quick create](./user-interface.md#quick-create) button on any AtroPIM page and fill in the required fields in the product creation pop-up that appears or click the `Full Form` button to get to the common creation page:
 
 ![Creation pop-up](../../_assets/products/product-create.jpg)
 
@@ -153,7 +153,7 @@ Use the `Duplicate` option from the actions menu to go to the product creation p
 
 ## Working With Entities Related to Products
 
-In the TreoPIM system, the following entities are related to products:
+In the AtroPIM system, the following entities are related to products:
 - [attributes](#product-attributes);
 - [categories](#product-categories);
 - [channels](#channels);
@@ -201,7 +201,7 @@ Use the `Select` option from the actions menu located in the upper right corner 
 
 In the "Attributes" pop-up that appears, choose the desired attribute (or attributes) from the list and press the `Select` button to link the item(s) to the product record. The linked attributes have the `Global` scope by default.
 
-TreoPIM supports linking to products not only separate attributes, but also [attribute groups](./attribute-groups.md). For this, use the `Select Attribute Group` option from the actions menu, and in the "Attribute Groups" pop-up that appears, select the desired groups from the list of available attribute group records.
+AtroPIM supports linking to products not only separate attributes, but also [attribute groups](./attribute-groups.md). For this, use the `Select Attribute Group` option from the actions menu, and in the "Attribute Groups" pop-up that appears, select the desired groups from the list of available attribute group records.
 
 Please, note that attributes linked to products are arranged by attribute groups correspondingly. Their placement depends on the configuration and sort order value of the attribute group to which they belong.
 
@@ -316,7 +316,7 @@ To create new image records to be linked to the currently open product record, c
 
 ![Creating images](../../_assets/products/product-image-creation-popup.jpg)
 
-The following *image uploading types* are available in the TreoPIM system by default:
+The following *image uploading types* are available in the AtroPIM system by default:
 - **File** / **Files** – image files that are stored locally (on your PC or other device). When the `File` type is selected on the image creation step, the desired image file is  uploaded as an attachment. To attach several image files at the same time, the `Files` type is to be defined accordingly.
 - **Link** – the URL to the image file, which is stored on the external server. When this type is selected on the image creation step, the image link must be entered in the corresponding field:
 

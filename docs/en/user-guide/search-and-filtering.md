@@ -25,7 +25,7 @@ On the [products](./products.md) detail view page, there is also the ability to 
 
 ![Product filters](../../_assets/search-and-filtering/product-filters.jpg)
 
-Keep in mind that the locales filter appears when the "Multi-Languages" module is installed and input language options are configured by your administrator. Go to our [store](https://treopim.com/store/multi-languages) to learn more about the "Multi-Languages" module and its features.
+Keep in mind that the locales filter appears when the "Multi-Languages" module is installed and input language options are configured by your administrator. Go to our [store](https://atropim.com/store/multi-languages) to learn more about the "Multi-Languages" module and its features.
 
 You can have one or more filters based on a certain field for all field types. The exception is field types that can be used as a filter only once (because there is no need for it), which are:
   - Boolean;
@@ -113,7 +113,7 @@ Depending of the field type, you can apply the following filtering criteria:
 
 ## Automatic Search Mask Recognition *(in development)*
 
-TreoPIM has automatic search mask recognition. This can be considered as a quick search function, i.e. when you start typing, TreoPIM automatically determines the search mask type of your search string. Automatic search mask recognition is available for the following fields: Text, Number, Date, and Time.
+AtroPIM has automatic search mask recognition. This can be considered as a quick search function, i.e. when you start typing, AtroPIM automatically determines the search mask type of your search string. Automatic search mask recognition is available for the following fields: Text, Number, Date, and Time.
 
 Depending on the search mask type, the system searches through all entity fields of the appropriate field type. A pop-up with auto-suggestions appears with the information about field name and amount of search results for this field, i.e. "Address: 3 results", and the text link(s) to show the results.
 
@@ -123,8 +123,8 @@ After clicking on the search results, the appropriate filter will be set automat
 
 |   **Search Mask Type**  |        **Field Types to Be Searched**        | **Applied Filter Criteria** |
 |:-----------------------|:--------------------------------------------|:---------------------------|
-| Теxt, e.g. "treo 123"   | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
-| %Text, e.g. "%treo 123" | Address, Number, Varchar, Text, URL, Wysiwyg | Consists                    |
+| Теxt, e.g. "atro 123"   | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
+| %Text, e.g. "%atro 123" | Address, Number, Varchar, Text, URL, Wysiwyg | Consists                    |
 | Numbers, e.g. "123"     | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
 | Numbers, e.g. "123"     | Auto-increment, Currency, Integer, Float     | Is                          |
 | Date, e.g. "12.12.2018" | Date, DateTime                               | On                          |
@@ -155,7 +155,7 @@ To extend the list of fields to be used for filtering, please, contact your admi
 
 ## Custom Attribute Filters
 
-TreoPIM supports the ability to filter [product](./products.md) records not only by field values, but also by [attribute](./attributes.md) values. This type of filtering is performed by values of the attributes that are linked to products. For your convenience, product attributes are grouped by product families and the `All` list contains all product attributes available in the system. 
+AtroPIM supports the ability to filter [product](./products.md) records not only by field values, but also by [attribute](./attributes.md) values. This type of filtering is performed by values of the attributes that are linked to products. For your convenience, product attributes are grouped by product families and the `All` list contains all product attributes available in the system. 
 
 To add a custom attribute filter, select the `Add attribute filter > 'product family' (or `All`) > 'product attribute'` option from the filtering drop-down list:
 

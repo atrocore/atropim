@@ -1,16 +1,16 @@
 # User Interface (UI)
 
-The user interface (UI) includes all visible elements users see and interact with while using TreoPIM. This chapter describes all the main elements of user interface, which are the same for all entities in the system, as well as gives details on how to perform common tasks or operations in the system.
+The user interface (UI) includes all visible elements users see and interact with while using AtroPIM. This chapter describes all the main elements of user interface, which are the same for all entities in the system, as well as gives details on how to perform common tasks or operations in the system.
 
 > Please, make sure to contact your administrator in order to have access to a whole set of options described in this user guide. 
 
-The following elements make up the TreoPIM user interface:
+The following elements make up the AtroPIM user interface:
 
 - [**Navigation Menu**](#navigation-menu) – to navigate through available entities.
-- [**Taskbar**](#taskbar) – to help the user interact with the TreoPIM system in a more efficient way; additional information or actions are displayed here. 
+- [**Taskbar**](#taskbar) – to help the user interact with the AtroPIM system in a more efficient way; additional information or actions are displayed here. 
 - [**Search and Filtering Panel**](./search-and-filtering.md) – to search and filter within one entity or its related entities.
 
-Within the TreoPIM system your information may be presented in various ways:
+Within the AtroPIM system your information may be presented in various ways:
 
 - [**List View**](./views-and-panels.md#list-view) – to view the lists of entity records.
 - [**Plate View**](./views-and-panels.md#plate-view) – to view entity records as plates.
@@ -23,7 +23,7 @@ Within the TreoPIM system your information may be presented in various ways:
 
 ## Navigation Menu
 
-The navigation menu in the default TreoPIM theme is the menu placed on the left side of your user interface. It allows you to open list views for all entities in the system.
+The navigation menu in the default AtroPIM theme is the menu placed on the left side of your user interface. It allows you to open list views for all entities in the system.
 
 > The navigation menu can be configured by your administrator according to your needs.
 
@@ -35,11 +35,11 @@ Here select the `Custom Tab List` option and add the desired tabs using the `Add
 
 ## Taskbar
 
-Taskbar is a top panel of the TreoPIM user interface:
+Taskbar is a top panel of the AtroPIM user interface:
 
 ![Taskbar](../../_assets/user-interface/taskbar.jpg)
 
-A taskbar consists of a [global search](#global-search) field and some functional icons that help you work and collaborate within the TreoPIM system, namely:
+A taskbar consists of a [global search](#global-search) field and some functional icons that help you work and collaborate within the AtroPIM system, namely:
 - [Desktop notifications](#desktop-notifications); 
 - [Queue Manager](#queue-manager);
 - [Quick create](#quick-create);
@@ -47,7 +47,7 @@ A taskbar consists of a [global search](#global-search) field and some functiona
 
 ### Global Search
 
-You can [search](./search-and-filtering.md) all the records existing in the TreoPIM system using the global search functionality. Use the search form on the taskbar for it:
+You can [search](./search-and-filtering.md) all the records existing in the AtroPIM system using the global search functionality. Use the search form on the taskbar for it:
 
 ![Global Search](../../_assets/user-interface/global-search.jpg) 
 
@@ -55,7 +55,7 @@ You can [search](./search-and-filtering.md) all the records existing in the Treo
 
 ### Desktop Notifications
 
-TreoPIM uses two types of notifications: email notifications and system notifications (desktop notifications). Generally, email and desktop notifications are configured globally, for all users.
+AtroPIM uses two types of notifications: email notifications and system notifications (desktop notifications). Generally, email and desktop notifications are configured globally, for all users.
 
 User can receive notifications in case when:
 - a record is assigned to him;
@@ -71,13 +71,13 @@ Queue Manager is opened in the pop-up window for each operation executed display
 
 ![Queue Manager](../../_assets/user-interface/queue-manager.jpg)
 
-In the Queue Manager, you will see the most recent TreoPIM operations, which were executed in the background mode. Additionally, the information on the data export and import performed with the help of export / import feeds correspondingly is shown in the Queue Manager pop-up. To learn more about the ["Export Feeds"](https://treopim.com/store/export-feeds) and ["Import Feeds"](https://treopim.com/store/import-feeds) modules, please, visit our store.
+In the Queue Manager, you will see the most recent AtroPIM operations, which were executed in the background mode. Additionally, the information on the data export and import performed with the help of export / import feeds correspondingly is shown in the Queue Manager pop-up. To learn more about the ["Export Feeds"](https://atropim.com/store/export-feeds) and ["Import Feeds"](https://atropim.com/store/import-feeds) modules, please, visit our store.
 
 To view the details of the performed operations, click `View List` in the upper right corner of the Queue Manager. 
 
 ### Quick Create
 
-To create new records from anywhere, click the quick create button located in the upper right corner of the taskbar on any TreoPIM page and choose the entity for the record to be created:
+To create new records from anywhere, click the quick create button located in the upper right corner of the taskbar on any AtroPIM page and choose the entity for the record to be created:
 
 ![Quick Create](../../_assets/user-interface/quick-create.jpg)
 
@@ -111,7 +111,7 @@ Click the `Save` button to apply the changes or `Cancel` to abort them.
 <!-- modified! needs to be changed in the CORE guide as well-->
 > If there is no `Edit` button on your user profile page, please, contact the administrator.
 <!-- -->
-On the user profile page, click the `Access` button to view your current permissions within the TreoPIM system on the scope and field levels in the pop-up window that appears:
+On the user profile page, click the `Access` button to view your current permissions within the AtroPIM system on the scope and field levels in the pop-up window that appears:
 
 ![User Access Window](../../_assets/user-interface/user-access-window.jpg)
 
@@ -130,7 +130,7 @@ To change your user password, select the corresponding option in the actions men
 
 ![User Password Change](../../_assets/user-interface/user-change-paswd.jpg)
 
-If you forget your password, it can be recovered using the `Forgot Password?` link on the TreoPIM login page.
+If you forget your password, it can be recovered using the `Forgot Password?` link on the AtroPIM login page.
 
 You can also manage your team and access control, if you have the corresponding permissions.
 <!-- modified! needs to be changed in the CORE guide as well + make stream as a cross-reference to the Core guide `stream` article?....<!-- -->
@@ -142,7 +142,7 @@ You can manage the types of activity to be displayed here in the corresponding a
 
 ![User profile stream menu](../../_assets/user-interface/user-profile-stream-menu.jpg)
 
-Recent updates and comments about certain entity records, as well as current user related activity entries are displayed on the `STREAM` panel, making it an excellent way to keep track of the changes in TreoPIM. 
+Recent updates and comments about certain entity records, as well as current user related activity entries are displayed on the `STREAM` panel, making it an excellent way to keep track of the changes in AtroPIM. 
 You can also create posts self-addressed or for other system users in the corresponding message box right on the `STREAM` panel:
 
 ![Stream post](../../_assets/user-interface/stream-post.jpg)
@@ -151,7 +151,7 @@ Self-posted messages can be edited and removed via the corresponding options of 
 
 ![Stream post menu](../../_assets/user-interface/stream-post-menu.jpg)
 
-To learn more about the stream and its features, please, refer to the **"Stream"** article within the TreoCore user guide.
+To learn more about the stream and its features, please, refer to the **"Stream"** article within the AtroCore user guide.
 <!-- -->  <!--+ make this interactive, when the Core guide is uploaded -->
 #### User Preferences
 
@@ -169,7 +169,7 @@ Select the `Custom Tab List` checkbox to enable a custom navigation menu. Using 
 
 ![Dashboard settings](../../_assets/user-interface/ui-dashboard.jpg) 
 
-The same options are available on the TreoPIM starting page:
+The same options are available on the AtroPIM starting page:
 
 ![PIM dashboard editing](../../_assets/user-interface/pim-dashboard-edit.jpg)
 
@@ -185,11 +185,11 @@ To rearrange your dashboard view, drag-and-drop the dashlets right on the `USER 
 
 ![Dashlets order](../../_assets/user-interface/dashlets-order.jpg)
 
-Alternatively, you can customize your [dashboard](./dashboards-and-dashlets.md#dashboards) view in the same way on the TreoPIM starting page.
+Alternatively, you can customize your [dashboard](./dashboards-and-dashlets.md#dashboards) view in the same way on the AtroPIM starting page.
 
 #### Email Accounts
 
-TreoPIM works with IMAP mail accounts, with or without SSL protection. TreoPIM is able to send emails via SMTP Server, also with or without SSL protection, which can be enabled or not.
+AtroPIM works with IMAP mail accounts, with or without SSL protection. AtroPIM is able to send emails via SMTP Server, also with or without SSL protection, which can be enabled or not.
 
 To open your personal email accounts, click the `Email Accounts` button on the user profile page; the list of the existing accounts, if any, will be displayed on the "Personal Email Accounts" page:
 
@@ -209,13 +209,13 @@ Here and fill in the required fields (marked with an asterisk) and configure the
 
 ### Last Viewed
 
-Select the `Last Viewed` option from the user drop-down menu to see the history of your visited pages within the TreoPIM system:
+Select the `Last Viewed` option from the user drop-down menu to see the history of your visited pages within the AtoPIM system:
 
 ![Last viewed](../../_assets/user-interface/last-viewed.jpg)
 
 ### Clear Local Cache
 
-TreoPIM is a single page application (SPA). To improve the page loading time, it actively uses cache for content as well as for the user interface.
+AtroPIM is a single page application (SPA). To improve the page loading time, it actively uses cache for content as well as for the user interface.
 
 If you want to be sure in getting the latest information and application functions, please use the `Clear Local Cache` option from the user drop-down menu:
 <!-- added this screenshot --> 
@@ -223,6 +223,6 @@ If you want to be sure in getting the latest information and application functio
 
 ## Breadcrumb Navigation
 
-TreoPIM comes with breadcrumb navigation on each page in the system. Breadcrumb navigation is a form of a path-style clickable navigation, which links the user back to the prior website page in the overall online route. It reveals the path the user took to arrive to the given page. The `>` symbol separates out the hierarchical search order from beginning to end and may look something like:
+AtroPIM comes with breadcrumb navigation on each page in the system. Breadcrumb navigation is a form of a path-style clickable navigation, which links the user back to the prior website page in the overall online route. It reveals the path the user took to arrive to the given page. The `>` symbol separates out the hierarchical search order from beginning to end and may look something like:
 `Home Page > Section Page > Subsection Page`.
 
