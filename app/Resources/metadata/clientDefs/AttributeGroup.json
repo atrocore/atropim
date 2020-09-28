@@ -1,0 +1,34 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "far fa-object-group",
+  "boolFilterList": [
+    "onlyMy",
+    "withNotLinkedAttributesToProductFamily",
+    "withNotLinkedAttributesToProduct"
+  ],
+  "hiddenBoolFilterList": [
+    "withNotLinkedAttributesToProductFamily",
+    "withNotLinkedAttributesToProduct"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "views": {
+    "list": "pim:views/list"
+  },
+  "recordViews": {
+    "list": "pim:views/record/list"
+  },
+  "relationshipPanels": {
+    "attributes": {
+      "view": "pim:views/attribute-group/record/panels/attributes",
+      "layout": "listAttributesInAttrGroup",
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      },
+      "sortBy": "sortOrder",
+      "asc": true
+    }
+  }
+}

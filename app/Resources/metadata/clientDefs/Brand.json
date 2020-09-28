@@ -1,0 +1,26 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "fas fa-tags",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "disabledMassActions": [
+        "merge"
+    ],
+    "views": {
+        "list": "pim:views/list",
+        "detail": "pim:views/detail"
+    },
+    "recordViews": {
+        "detail": "pim:views/brand/record/detail",
+        "list": "pim:views/brand/record/list"
+    },
+    "relationshipPanels": {
+        "products": {
+            "view": "pim:views/brand/record/panels/products",
+            "selectBoolFilterList": ["notLinkedWithBrand"],
+            "selectAction": "selectRelatedEntity",
+            "createAction": "createRelatedConfigured"
+        }
+    }
+}

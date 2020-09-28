@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "isActive": "Aktiv",
+    "products": "Produkte",
+    "categories": "Kategorien",
+    "code": "Code"
+  },
+  "links": {
+    "channels": "Kanäle",
+    "products": "Produkte",
+    "categories": "Kategorien"
+  },
+  "labels": {
+    "Create Catalog": "Katalog erstellen"
+  },
+  "queueManager": {
+    "Create product '%s' for catalog '%s'": "Produkt '%s' für den Katalog '%s'"
+  },
+  "exceptions": {
+    "Catalog cannot be deleted": "Katalog kann nicht gelöscht werden. Es gibt wenige Kanäle, die den aktuellen Katalog verwenden."
+  }
+}

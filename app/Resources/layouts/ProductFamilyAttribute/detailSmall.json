@@ -1,0 +1,28 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "attribute"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scope"
+        },
+        {
+          "name": "channels"
+        }
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": ""
+  }
+]

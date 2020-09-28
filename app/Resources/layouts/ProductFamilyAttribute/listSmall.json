@@ -1,0 +1,15 @@
+[
+  {
+    "name": "attribute"
+  },
+  {
+    "name": "isRequired"
+  },
+  {
+    "name": "scope"
+  },
+  {
+    "name": "channels",
+    "notSortable": true
+  }
+]

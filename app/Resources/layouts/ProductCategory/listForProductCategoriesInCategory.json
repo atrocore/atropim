@@ -1,0 +1,12 @@
+[
+  {
+    "name": "product"
+  },
+  {
+    "name": "scope"
+  },
+  {
+    "name": "channels",
+    "notSortable": true
+  }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "label": "",
+        "style": "default",
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "unit"
+                }
+            ]
+        ]
+    }
+]

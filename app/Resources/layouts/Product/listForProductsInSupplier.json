@@ -1,0 +1,15 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "notSortable": true
+    },
+    {
+        "name": "sku",
+        "notSortable": true
+    },
+    {
+        "name": "isActive",
+        "notSortable": true
+    }
+]

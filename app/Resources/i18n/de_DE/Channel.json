@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "categories": "Kategorien",
+    "description": "Beschreibung",
+    "currencies": "Währung",
+    "category": "Kategorie",
+    "code": "Code",
+    "channelProducts": "Produkte des Kanals",
+    "descriptionDeDe": "Beschreibung DeDe",
+    "descriptionEnUs": "Beschreibung EnUs",
+    "descriptionEsEs": "Beschreibung EsEs",
+    "descriptionFrFr": "Beschreibung FrFr",
+    "isActive": "Aktiv",
+    "nameDeDe": "Name DeDe",
+    "nameEnUs": "Name EnUs",
+    "nameEsEs": "Name EsEs",
+    "nameFrFr": "Name FrFr",
+    "createdAt": "erstellt am",
+    "createdBy": "erstellt von",
+    "modifiedAt": "geändert am",
+    "modifiedBy": "geändert von",
+    "locales": "Sprache",
+    "products": "Produkte",
+    "productFamilyAttributes": "Produktfamilie Attribute"
+  },
+  "links": {
+    "categories": "Kategorien",
+    "category": "Kategorie",
+    "channelProducts": "Produkte des Kanals",
+    "createdBy": "erstellt von",
+    "modifiedBy": "geändert von",
+    "products": "Produkte",
+    "productFamilyAttributes": "Produktfamilie Attribute"
+  },
+  "labels": {
+    "Create Channel": "Kanal erstellen"
+  },
+  "options": {
+    "type": {
+      "base": "Base",
+      "amazon": "Amazon",
+      "afterbuy": "Afterbuy"
+    }
+  },
+  "exceptions": {
+    "You should choose a root category": "Sie müssen eine Stammkategorie auswählen",
+    "Category is required": "Die Kategorie ist erforderlich",
+    "Channel with such CODE already exist": "Der Kanal mit einem solchen CODE existiert bereits"
+  }
+}

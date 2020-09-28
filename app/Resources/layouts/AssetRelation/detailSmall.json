@@ -1,0 +1,20 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "role",
+          "fullWidth": false
+        }
+      ],
+      [
+        {
+          "name": "scope"
+        },
+        {
+          "name": "channels"
+        }
+      ]
+    ]
+  }
+]

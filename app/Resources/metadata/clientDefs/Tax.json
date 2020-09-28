@@ -1,0 +1,16 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "fas fa-percent",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "disabledMassActions": [
+        "merge"
+    ],
+    "views": {
+        "list": "pim:views/list"
+    },
+    "recordViews": {
+        "list": "pim:views/record/list"
+    }
+}

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "image"
+  },
+  {
+    "name": "catalog"
+  },
+  {
+    "name": "sku"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "isActive"
+  }
+]

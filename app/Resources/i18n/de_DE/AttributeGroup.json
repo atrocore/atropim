@@ -1,0 +1,36 @@
+{
+    "fields": {
+        "name": "Gruppenname",
+        "description": "Beschreibung",
+        "code": "Code",
+        "attributes": "Attribute",
+        "createdAt": "erstellt am",
+        "createdBy": "erstellt von",
+        "descriptionDeDe": "Beschreibung DeDe",
+        "descriptionEnUs": "Beschreibung EnUs",
+        "descriptionEsEs": "Beschreibung EsEs",
+        "descriptionFrFr": "Beschreibung FrFr",
+        "isActive": "Aktiv",
+        "modifiedAt": "geändert am",
+        "modifiedBy": "geändert von",
+        "nameDeDe": "Gruppenname DeDe",
+        "nameEnUs": "Gruppenname EnUs",
+        "nameEsEs": "Gruppenname EsEs",
+        "nameFrFr": "Gruppenname FrFr",
+        "sortOrder": "Sortierreihenfolge"
+    },
+    "links": {
+        "attributes": "Attribute",
+        "createdBy": "erstellt von",
+        "modifiedBy": "geändert von"
+    },
+    "labels": {
+        "Create AttributeGroup": "Attributgruppe erstellen"
+    },
+    "messages": {
+        "unlinkAttributeGroupConfirmation": "Möchten Sie die Verknüpfung aller Attribute der Attributgruppe wirklich aufheben?"
+    },
+    "exceptions": {
+        "Attribute group is linked with attribute(s). Please, unlink attribute(s) first": "Attributgruppe ist mit Attribut(en) verknüpft. Bitte heben Sie zuerst die Verknüpfung mit den Attribut(en) auf"
+    }
+}

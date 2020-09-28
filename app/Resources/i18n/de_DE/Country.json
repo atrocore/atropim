@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "isActive": "Aktiv",
+        "nameDeDe": "Name (DeDe)",
+        "nameEnUs": "Name (EnUs)",
+        "nameEsEs": "Name (EsEs)",
+        "nameFrFr": "Name (FrFr)"
+    },
+    "links": [],
+    "labels": {
+        "Create Country": "Land anlegen"
+    }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "image"
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "categoryRouteName"
+  },
+  {
+    "name": "isActive"
+  }
+]

@@ -1,0 +1,120 @@
+{
+  "scopeNames": {
+    "ProductAttributeValue": "Produktattributwert",
+    "Product": "Produkt",
+    "ProductFamily": "Produktfamilie",
+    "Category": "Kategorie",
+    "Packaging": "Verpackung",
+    "Channel": "Kanal",
+    "Association": "Assoziation",
+    "Brand": "Marke",
+    "MeasuringUnit": "Maßeinheit",
+    "Country": "Land",
+    "Tax": "Tax",
+    "Settings": "Administration",
+    "AttributeGroup": "Attributgruppe",
+    "AssociatedProduct": "Assoziierte Produkte",
+    "Attribute": "Attribute",
+    "Currency": "Währung",
+    "ProductSerie": "Product Serie",
+    "Catalog": "Katalog",
+    "ProductFamilyAttribute": "Produktfamilie Attribute"
+  },
+  "scopeNamesPlural": {
+    "ProductAttributeValue": "Produktattributwert",
+    "Product": "Produkte",
+    "ProductFamily": "Produktfamilien",
+    "Category": "Kategorien",
+    "Packaging": "Verpackungen",
+    "Channel": "Kanäle",
+    "Association": "Assoziationen",
+    "Brand": "Marken",
+    "MeasuringUnit": "Maßeinheiten",
+    "AttributeGroup": "Attribut-Gruppen",
+    "Country": "Länder",
+    "Tax": "Steuern",
+    "Settings": "Administration",
+    "ActionHistoryRecord": "Aktionsgeschichte",
+    "Attribute": "Attribute",
+    "Currency": "Währung",
+    "Dashboard": "Instrumententafel",
+    "EmailAddress": "E-Mail Addresse",
+    "ProductSerie": "Product Series",
+    "AssociatedProduct": "Assoziierte Produkt",
+    "Catalog": "Kataloge",
+    "ProductFamilyAttribute": "Produktfamilie Attribute"
+  },
+  "fields": {
+    "productFamily": "Artikel-Familien",
+    "productSerie": "Product Serie",
+    "channels": "Kanale",
+    "scope": "Umfang",
+    "role": "Rolle"
+  },
+  "options": {
+    "searchRanges": {
+      "isNot": "Ist Nicht",
+      "isNotOneOf": "Ist nicht (Mehrfachsuche)",
+      "noneOf": "Ist nicht (Mehrfachsuche)"
+    },
+    "varcharSearchRanges": {
+      "equals": "Gleich",
+      "like": "Teilsuche (%)",
+      "notLike": "Ist nicht wie (%)",
+      "startsWith": "Beginnt mit",
+      "endsWith": "Endet mit",
+      "contains": "Enthält",
+      "notContains": "Nicht Enthält",
+      "isEmpty": "Ist leer",
+      "isNotEmpty": "Ist nicht leer",
+      "notEquals": "Nicht gleich"
+    },
+    "channelsFilter": {
+      "": "Alle Scopes",
+      "onlyGlobalScope": "Nur globaler Scope"
+    },
+    "scope": {
+      "Global": "Global",
+      "Channel": "Kanal"
+    }
+  },
+  "labels": {
+    "Add Field": "Filter hinzufügen",
+    "removeExplain": "Checkbox abhacken, um Attribute von anderen Entities vor dem Löschen loszubinden",
+    "Add Group": "Gruppe hinzufügen",
+    "Expand": "Erweitern",
+    "Manage Categories": "Kategorien verwalten",
+    "Manage Folders": "Ordner verwalten",
+    "New notifications": "Neue Benachrichtigungen",
+    "Return to Application": "Zurück zur Anwendung",
+    "you": "sie",
+    "removeHint": "Beim Entfernen des Katalogs werden die dazugehörigen Produkte gelöscht.",
+    "Category Preview": "Kategorievorschau",
+    "Product Preview": "Produktvorschau"
+  },
+  "dashlets": {
+    "GeneralStatistics": "Allgemeine Statistiken",
+    "Channels": "Kanäle",
+    "ProductsByStatus": "Produkte nach Status",
+    "ProductsByTag": "Produkte nach Tag",
+    "ProductTypes": "Produkttypen",
+    "ProductStatusOverview": "Produktstatus Übersicht"
+  },
+  "exceptions": {
+    "Only force deleting available": "Erzwinge nur Löschen verfügbar",
+    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet."
+  },
+  "messages": {
+    "fieldHasPattern": "{field} sollte nur Unterstriche, Zahlen und Alphabete in Kleinbuchstaben enthalten",
+    "fieldIsUploading": "Hochladen läuft",
+    "fieldMaxFileSizeError": "Datei sollte nicht überschreiten {max} Mb",
+    "internalPostTitle": "Post wird nur von internen Benutzern angezeigt",
+    "loading": "Wird geladen...",
+    "saving": "Sparen..."
+  },
+  "navMenuDelimiters": {
+    "_delimiter_393f8383": "Artikel",
+    "Attribute": "Attribute",
+    "Product": "Produkte"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "Name",
+    "description": "Description",
+    "code": "Code",
+    "isActive": "Active",
+    "categoryParent": "Parent Category",
+    "categories": "Categories",
+    "channels": "Channels",
+    "image": "Main Image",
+    "categoryRouteName": "Сategory Tree",
+    "scope": "Scope",
+    "productCategories": "Category Products",
+    "catalogs": "Catalogs"
+  },
+  "links": {
+    "categoryParent": "Parent Category",
+    "categories": "Categories",
+    "channels": "Channels",
+    "catalogs": "Catalogs",
+    "productCategories": "Category Products"
+  },
+  "labels": {
+    "Create Category": "Create Category"
+  },
+  "exceptions": {
+    "Category has children": "Selected category used by another category as parent and can not be selected as product category",
+    "Parent category has products": "Parent category has products. That's why you can not select that category as parent category. Please, unlink products first.",
+    "Category has child category and can't be deleted": "Category has child category and can't be deleted",
+    "You can not choose a child category": "You can not choose a child category"
+  }
+}

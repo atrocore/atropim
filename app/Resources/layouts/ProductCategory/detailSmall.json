@@ -1,0 +1,34 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "product"
+        },
+        false
+      ],
+      [
+        {
+          "name": "category"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scope"
+        },
+        {
+          "name": "channels"
+        }
+      ],
+      [
+        {
+          "name": "sorting"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": ""
+  }
+]

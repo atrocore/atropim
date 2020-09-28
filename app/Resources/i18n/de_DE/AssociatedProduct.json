@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "association": "Assoziation",
+        "relatedProduct": "Assoziiertes Produkt",
+        "bothDirections": "Beide Richtungen",
+        "backwardAssociation": "Umgekehrte Assoziation",
+        "relatedProductImage": "Assoziiertes Produktbild",
+        "mainProduct": "Hauptprodukt",
+        "mainProductImage": "Hauptproduktbild"
+    },
+    "links": {
+        "association": "Assoziation",
+        "mainProduct": "Hauptprodukt",
+        "mainProductImage": "Hauptproduktbild",
+        "relatedProduct": "Assoziiertes Produkt",
+        "relatedProductImage": "Assoziiertes Produktbild"
+    },
+    "labels": {
+        "Create AssociatedProduct": "Zugehöriges Produkt erstellen"
+    },
+    "exceptions": {
+        "isExistsAssociation": "Die Assoziation existiert bereits"
+    }
+}

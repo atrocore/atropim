@@ -1,0 +1,30 @@
+[
+  {
+    "label": "",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "sku"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "catalog"
+        },
+        {
+          "name": "productFamily"
+        }
+      ]
+    ]
+  }
+]

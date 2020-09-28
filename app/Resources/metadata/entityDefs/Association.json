@@ -1,0 +1,145 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "trim": true,
+            "isMultilang": true
+        },
+        "description": {
+            "type": "text",
+            "required": false,
+            "rows": 4,
+            "lengthOfCut": 400,
+            "seeMoreDisabled": false,
+            "readOnly": false,
+            "tooltip": false,
+            "isCustom": false,
+            "isMultilang": true
+        },
+        "isActive": {
+            "notNull": true,
+            "type": "bool",
+            "default": false,
+            "audited": false,
+            "readOnly": false,
+            "tooltip": false,
+            "isCustom": false
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "ownerUser": {
+            "type": "link",
+            "required": true,
+            "view": "views/fields/owner-user"
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "view": "views/fields/assigned-user"
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
+        },
+        "associatedProducts": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "isCustom": false
+        },
+        "backwardAssociation": {
+            "type": "link",
+            "view": "pim:views/association/fields/backward-association"
+        },
+        "associations": {
+            "type": "linkMultiple",
+            "layoutFiltersDisabled": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "isCustom": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "ownerUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "EntityTeam",
+            "layoutRelationshipsDisabled": true
+        },
+        "associatedProducts": {
+            "type": "hasMany",
+            "foreign": "association",
+            "entity": "AssociatedProduct",
+            "layoutRelationshipsDisabled": true,
+            "audited": false,
+            "isCustom": false
+        },
+        "backwardAssociation": {
+            "type": "belongsTo",
+            "foreign": "associations",
+            "entity": "Association",
+            "audited": false,
+            "isCustom": true
+        },
+        "associations": {
+            "type": "hasMany",
+            "foreign": "backwardAssociation",
+            "entity": "Association",
+            "audited": false,
+            "isCustom": true,
+            "layoutRelationshipsDisabled": true
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    },
+    "indexes": {
+        "ownerUser": {
+            "columns": ["ownerUserId", "deleted"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        }
+    }
+}

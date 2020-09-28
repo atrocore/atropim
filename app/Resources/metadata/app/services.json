@@ -1,0 +1,10 @@
+{
+  "ChannelsDashlet": "\\Pim\\Services\\ChannelsDashlet",
+  "GeneralStatisticsDashlet": "\\Pim\\Services\\GeneralStatisticsDashlet",
+  "ProductsByStatusDashlet": "\\Pim\\Services\\ProductsByStatusDashlet",
+  "ProductsByTagDashlet": "\\Pim\\Services\\ProductsByTagDashlet",
+  "ProductTypesDashlet": "\\Pim\\Services\\ProductTypesDashlet",
+  "QueueManagerCreateLocaleAttribute": "\\Pim\\Services\\QueueManagerCreateLocaleAttribute",
+  "QueueManagerDuplicateProduct": "\\Pim\\Services\\QueueManagerDuplicateProduct",
+  "RevisionField": "\\Pim\\Services\\RevisionField"
+}

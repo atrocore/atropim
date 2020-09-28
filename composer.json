@@ -1,0 +1,26 @@
+{
+  "name": "atrocore/pim",
+  "description": "AtroPIM. Open source PIM application.",
+  "homepage": "https://atropim.com",
+  "license": "GPL-3.0-only",
+  "require": {
+    "atrocore/core": "~1.0.0",
+    "atrocore/import-feeds-common": "~1.0.0",
+    "atrocore/dam-common": "~1.0.0",
+    "atrocore/completeness-common": "~1.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pim\\": "app/"
+    }
+  },
+  "extra": {
+    "treoId": "Pim",
+    "name": {
+      "default": "PIM"
+    },
+    "description": {
+      "default": "PIM module."
+    }
+  }
+}

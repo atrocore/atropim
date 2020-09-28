@@ -1,0 +1,18 @@
+{
+  "entity": false,
+  "layouts": false,
+  "tab": false,
+  "acl": true,
+  "aclPortal": true,
+  "customizable": false,
+  "importable": true,
+  "notifications": true,
+  "stream": false,
+  "disabled": false,
+  "type": "Base",
+  "module": "Pim",
+  "object": false,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "hasOwner": true
+}

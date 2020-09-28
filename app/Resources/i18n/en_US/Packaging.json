@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "name": "Name",
+        "price": "Price",
+        "description": "Description",
+        "isActive": "Active"
+    },
+    "links": {
+        "products": "Products"
+    },
+    "labels": {
+        "Create Packaging": "Create Packaging"
+    }
+}

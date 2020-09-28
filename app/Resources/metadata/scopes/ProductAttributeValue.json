@@ -1,0 +1,22 @@
+{
+  "entity": false,
+  "layouts": false,
+  "tab": false,
+  "acl": true,
+  "aclPortal": true,
+  "customizable": false,
+  "importable": true,
+  "notifications": true,
+  "stream": false,
+  "disabled": false,
+  "type": "Base",
+  "module": "Pim",
+  "object": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "completeness": {
+    "replacement" : "Product",
+    "service": "Completeness\\Services\\ProductCompleteness"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "Name",
+    "description": "Beschreibung",
+    "code": "Code",
+    "categories": "Kategorien",
+    "channels": "Kanäle",
+    "categoryParent": "Hauptkategorie",
+    "image": "Hauptbild",
+    "categoryRouteName": "Kategoriebaum",
+    "categoryRoot": "Stammkategorie",
+    "createdAt": "erstellt am",
+    "createdBy": "erstellt von",
+    "descriptionDeDe": "Beschreibung DeDe",
+    "descriptionEnUs": "Beschreibung EnUs",
+    "descriptionEsEs": "Beschreibung EsEs",
+    "descriptionFrFr": "Beschreibung FrFr",
+    "isActive": "Aktiv",
+    "modifiedAt": "geändert am",
+    "modifiedBy": "geändert von",
+    "rootCategories": "Stammkategorien",
+    "teams": "Teams",
+    "markupType": "Typ",
+    "markupValue": "Wert",
+    "scope": "Umfang",
+    "catalogs": "Kataloge",
+    "productCategories": "Kategorie Produkte"
+  },
+  "links": {
+    "categories": "Kategorien",
+    "channels": "Kanäle",
+    "categoryParent": "Hauptkategorie",
+    "categoryRoot": "Stammkategorie",
+    "createdBy": "erstellt von",
+    "modifiedBy": "geändert von",
+    "rootCategories": "Stammkategorien",
+    "teams": "Teams",
+    "catalogs": "Kataloge",
+    "productCategories": "Kategorie Produkte"
+  },
+  "labels": {
+    "Create Category": "Kategorie erstellen"
+  },
+  "exceptions": {
+    "Category has children": "Ausgewählte Kategorie, die von einer anderen Kategorie als übergeordnetes Element verwendet wird und nicht als Produktkategorie ausgewählt werden kann",
+    "Parent category has products": "Die übergeordnete Kategorie enthält Produkte. Aus diesem Grund können Sie diese Kategorie nicht als übergeordnete Kategorie auswählen. Bitte entfernen Sie zuerst die Produkte.",
+    "Category has child category and can't be deleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden",
+    "You can not change parent category in root category with linked products": "Sie können die Hauptkategorie für eine Stammkategorie mit den verknüpften Produkten nicht ändern",
+    "You can not choose a child category": "Sie können keine untergeordnete Kategorie auswählen"
+  }
+}

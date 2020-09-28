@@ -1,0 +1,22 @@
+[
+    {
+        "label": "Overview",
+        "style": "default",
+        "rows": [
+            [
+                {
+                    "name": "type"
+                },
+                {
+                    "name": "code"
+                }
+            ],
+            [
+                {
+                    "name": "attributeGroup"
+                },
+                false
+            ]
+        ]
+    }
+]

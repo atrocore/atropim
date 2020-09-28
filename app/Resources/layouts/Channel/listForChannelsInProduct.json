@@ -1,0 +1,14 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "isActive"
+    },
+    {
+        "name": "isActiveEntity",
+        "customLabel": "Active for Channel",
+        "notSortable": true
+    }
+]

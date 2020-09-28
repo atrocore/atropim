@@ -1,0 +1,7 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "fas fa-map-marker-alt",
+    "boolFilterList": [
+        "onlyMy"
+    ]
+}

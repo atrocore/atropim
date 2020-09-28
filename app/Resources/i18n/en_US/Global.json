@@ -1,0 +1,104 @@
+{
+  "navMenuDelimiters": {
+    "_delimiter_377f478e": "Attribute",
+    "_delimiter_393f8383": "Product",
+    "_delimiter_9707ec0a": "Price",
+    "_delimiter_8d96610c": "Import",
+    "_delimiter_0e884d8b": "Export",
+    "Attribute": "Attribute",
+    "Product": "Product",
+    "Import": "Import"
+  },
+  "scopeNames": {
+    "Association": "Association",
+    "AssociatedProduct": "Associated Product",
+    "Attribute": "Attribute",
+    "AttributeGroup": "Attribute Group",
+    "Brand": "Brand",
+    "Catalog": "Catalog",
+    "Category": "Category",
+    "Channel": "Channel",
+    "Country": "Country",
+    "MeasuringUnit": "Measuring Unit",
+    "Packaging": "Packaging",
+    "Product": "Product",
+    "ProductAttributeValue": "Product Attribute Value",
+    "ProductFamily": "Product Family",
+    "ProductPrice": "Product Price",
+    "Tax": "Tax",
+    "ProductSerie": "Product Serie",
+    "ProductCategory": "Product Category",
+    "ProductFamilyAttribute": "Product Family Attribute"
+  },
+  "scopeNamesPlural": {
+    "Association": "Associations",
+    "AssociatedProduct": "Associated Products",
+    "Attribute": "Attributes",
+    "AttributeGroup": "Attribute Groups",
+    "Brand": "Brands",
+    "Catalog": "Catalogs",
+    "Category": "Categories",
+    "Channel": "Channels",
+    "Country": "Countries",
+    "MeasuringUnit": "Measuring Units",
+    "Packaging": "Packagings",
+    "Product": "Products",
+    "ProductAttributeValue": "Product Attribute Value",
+    "ProductFamily": "Product Families",
+    "ProductPrice": "Product Prices",
+    "Tax": "Taxes",
+    "ProductSerie": "Product Series",
+    "ProductCategory": "Product Categories",
+    "ProductFamilyAttribute": "Product Family Attributes"
+  },
+  "options": {
+    "channelsFilter": {
+      "": "All Scopes",
+      "onlyGlobalScope": "Only Global Scope"
+    },
+    "scope": {
+      "Global": "Global",
+      "Channel": "Channel"
+    }
+  },
+  "fields": {
+    "productFamily": "Product Family",
+    "productStatus": "Product Status",
+    "oneGeoType": "OneGeo Type",
+    "priceCurrency": "Price Currency",
+    "price": "Price",
+    "sku": "SKU",
+    "tax": "Tax",
+    "ean": "EAN",
+    "uvp": "UVP",
+    "tag": "Tag",
+    "amount": "Amount",
+    "mpn": "MPN",
+    "productSerie": "Product Serie",
+    "channels": "Channels",
+    "scope": "Scope",
+    "role": "Role"
+  },
+  "labels": {
+    "Add Field": "Add Filter",
+    "removeExplain": "Select this to unlink attribute from other Entities before removing",
+    "removeHint": "When removing the Catalog, the Products belonging to it are deleted.",
+    "Category Preview": "Category Preview",
+    "Product Preview": "Product Preview"
+  },
+  "dashlets": {
+    "GeneralStatistics": "General Statistics",
+    "Channels": "Channels",
+    "ProductsByStatus": "Products by Status",
+    "ProductTypes": "Product Types",
+    "ProductsByTag": "Products by Tag",
+    "ProductStatusOverview": "Product Status Overview"
+  },
+  "exceptions": {
+    "Only force deleting available": "Only force deleting available",
+    "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected."
+  },
+  "messages": {
+    "fieldHasPattern": "{field} should contain only underscore, numbers and alphabets in lower case"
+  }
+}

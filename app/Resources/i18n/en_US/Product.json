@@ -1,0 +1,101 @@
+{
+  "fields": {
+    "categories": "Categories",
+    "product": "Main Product",
+    "products": "Products",
+    "productAttributeValues": "Product Attributes",
+    "productFamily": "Product Family",
+    "brand": "Brand",
+    "associatedRelatedProduct": "Associated Related Product",
+    "associatedMainProducts": "Associated Products",
+    "productStatus": "Product Status",
+    "sku": "SKU",
+    "isActive": "Active",
+    "type": "Type",
+    "productTypeConfigurables": "Product Type Configurables",
+    "amount": "Amount",
+    "channelProducts": "Product Channels",
+    "price": "Purchase Price",
+    "finalPrice": "Price",
+    "currency": "Currency",
+    "tax": "Tax",
+    "packaging": "Packaging",
+    "ean": "EAN",
+    "mpn": "MPN",
+    "uvp": "UVP",
+    "image": "Main Image",
+    "tag": "Tag",
+    "longDescription": "Long Description",
+    "productSerie": "Product Serie",
+    "association": "Association",
+    "catalog": "Catalog",
+    "channels": "Channels",
+    "productCategories": "Product Categories",
+    "measuringUnit": "Measuring Unit",
+    "basePriceAmount": "Base Price Amount",
+    "packedAmount": "Packed Amount"
+  },
+  "links": {
+    "categories": "Product Categories",
+    "product": "Main Product",
+    "products": "Products",
+    "productAttributeValues": "Product Attributes",
+    "productFamily": "Product Family",
+    "brand": "Brand",
+    "associatedRelatedProduct": "Associated Related Product",
+    "associatedMainProducts": "Associated Products",
+    "productTypeConfigurables": "Product Type Configurables",
+    "channelProducts": "Product Channels",
+    "tax": "Tax",
+    "packaging": "Packaging",
+    "catalog": "Catalog",
+    "channels": "Channels",
+    "productCategories": "Product Categories"
+  },
+  "labels": {
+    "Create Product": "Create Product",
+    "Product Attributes": "Attributes",
+    "There is no valid attributes for channel": "There is no valid attributes for channel",
+    "Add Attribute Filter": "Add Attribute Filter",
+    "Channels": "Channels",
+    "Product Channel Attributes": "Channel Attributes",
+    "Associated Products": "Associated Products",
+    "withoutAnyCategory": "Without Any Category",
+    "typeCategoryToSearch": "Type category to search...",
+    "No Group": "No Group",
+    "sort": "Sort",
+    "itemsInRow": "Items in row",
+    "productImage": "Product Image"
+  },
+  "options": {
+    "productStatus": {
+      "draft": "Draft",
+      "prepared": "Prepared",
+      "reviewed": "Reviewed",
+      "notReady": "Not Ready",
+      "ready": "Ready"
+    },
+    "type": {
+      "simpleProduct": "Simple Product"
+    },
+    "tag": {
+      "blue": "blue",
+      "yellow": "yellow",
+      "green": "green",
+      "red": "red",
+      "your tag1": "your tag1",
+      "your tag2": "your tag2"
+    }
+  },
+  "boolFilters": {
+    "withoutAssociatedProducts": "Without Associated Products",
+    "withoutAnyCategory": "Without Any Category",
+    "withoutProductAttributes": "Without Product Attributes",
+    "withoutImageAssets": "Without Image Assets"
+  },
+  "exceptions": {
+    "Product with such SKU already exist": "Product with such SKU already exist",
+    "You can't change Product Family in Product": "You can't change Product Family in Product",
+    "You can't change field of Type in Product": "You can't change field of Type in Product"
+  }
+}

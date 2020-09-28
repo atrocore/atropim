@@ -1,0 +1,17 @@
+[
+  {
+    "name": "productAttributeValues"
+  },
+  {
+    "name": "productCategories"
+  },
+  {
+    "name": "channels"
+  },
+  {
+    "name": "associatedMainProducts"
+  },
+  {
+    "name": "asset_relations"
+  }
+]

@@ -1,0 +1,20 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "sku"
+    },
+    {
+        "name": "type"
+    },
+    {
+        "name": "categories",
+        "type": "array",
+        "notSortable": true
+    },
+    {
+        "name": "isActive"
+    }
+]

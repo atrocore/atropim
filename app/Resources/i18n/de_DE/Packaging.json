@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "description": "Beschreibung",
+        "price": "Preis",
+        "products": "Produkte",
+        "teams": "Gruppen",
+        "createdAt": "erstellt am",
+        "createdBy": "erstellt von",
+        "isActive": "Aktiv",
+        "modifiedAt": "geändert am",
+        "modifiedBy": "geändert von"
+    },
+    "labels": {
+        "Create Packaging": "Verpackung anlegen"
+    },
+    "links": {
+        "products": "Produkte",
+        "teams": "Gruppen",
+        "createdBy": "erstellt von",
+        "modifiedBy": "geändert von"
+    }
+}

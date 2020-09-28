@@ -1,0 +1,68 @@
+{
+  "fields": {
+    "attributeGroup": "Attributgruppe",
+    "code": "Code",
+    "name": "Attributname",
+    "channelProductAttributeValues": "Attributwerte des Produktkanals",
+    "isRequired": "Ist Erforderlich",
+    "createdAt": "erstellt am",
+    "createdBy": "erstellt von",
+    "isSystem": "Ist das System",
+    "modifiedAt": "geändert am",
+    "modifiedBy": "geändert von",
+    "productAttributes": "Produktattribute",
+    "productAttributeValues": "Werte des Produktattributes",
+    "products": "Produkte",
+    "typeValue": "Werttyp",
+    "type": "Typ",
+    "productFamilyAttributes": "Produktfamilie Attribute",
+    "isMultilang": "Mehrsprachig"
+  },
+  "options": {
+    "type": {
+      "array": "Array",
+      "bool": "Bool",
+      "date": "Datum",
+      "datetime": "Datum Zeit",
+      "enum": "Enum",
+      "float": "Float",
+      "int": "Int",
+      "multiEnum": "Multi-Enum",
+      "text": "Text",
+      "unit": "Maßeinheit",
+      "url": "URL",
+      "varchar": "Varchar",
+      "wysiwyg": "Wysiwyg",
+      "image": "Bild"
+    }
+  },
+  "links": {
+    "attributeGroup": "Attributgruppe",
+    "createdBy": "erstellt von",
+    "modifiedBy": "geändert von",
+    "products": "Produkte",
+    "productAttributes": "Produktattribute",
+    "productAttributeValues": "Werte der Produktattribute",
+    "channelProductAttributeValues": "Kanal von",
+    "productFamilies": "Produktfamilien",
+    "productFamilyAttributes": "Produktfamilie Attribute"
+  },
+  "labels": {
+    "Create Attribute": "Attribut erstellen",
+    "productFamily": "Produktfamilie"
+  },
+  "messages": {
+    "sameNumberOptions": "Die gleiche Anzahl von Optionen",
+    "productsCountWithAttribute": "Anzahl der Produkte, für die dieses Attribut festgelegt ist: <strong>{count}</strong>"
+  },
+  "filterLabels": {
+    "All": "Alle"
+  },
+  "exceptions": {
+    "You can not unlink product family attribute": "Sie können das Produktfamilienattribut nicht aufheben",
+    "Attribute with such CODE already exist": "Das Attribut mit einem solchen CODE existiert bereits",
+    "Attribute is used in product families. Please, update product families first": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien",
+    "Attribute is used in products. Please, update products first": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte",
+    "You can't change field of Type in Attribute": "Sie können das Feld Typ im Attribut nicht ändern"
+  }
+}

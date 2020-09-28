@@ -1,0 +1,14 @@
+[
+  {
+    "name": "productFamily"
+  },
+  {
+    "name": "attribute"
+  },
+  {
+    "name": "isRequired"
+  },
+  {
+    "name": "scope"
+  }
+]

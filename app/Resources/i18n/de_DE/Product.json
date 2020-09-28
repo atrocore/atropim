@@ -1,0 +1,105 @@
+{
+  "fields": {
+    "categories": "Kategorien",
+    "product": "Hauptartikel",
+    "brand": "Marke",
+    "sku": "SKU",
+    "type": "Typ",
+    "amount": "Menge",
+    "price": "EK-Preis",
+    "currency": "Währung",
+    "tax": "MwSt.",
+    "packaging": "Verpackung",
+    "ean": "EAN",
+    "mpn": "HAN",
+    "uvp": "UVP",
+    "image": "Hauptbild",
+    "tag": "Etikett",
+    "longDescription": "Lange Beschreibung",
+    "name": "Name",
+    "associatedMainProducts": "zugehörige Produkte",
+    "associatedRelatedProduct": "Verknüpfung von ähnlichen Produkten",
+    "finalPrice": "Endpreis",
+    "finalPriceConverted": "konvertierter Endpreis",
+    "finalPriceCurrency": "Währung der Endpreis",
+    "isActive": "Aktiv",
+    "priceConverted": "konvertierter Preis",
+    "priceCurrency": "Währung der Preis",
+    "productAttributeValues": "Produktattribute",
+    "productFamily": "Produktfamilie",
+    "products": "Produkte",
+    "productStatus": "Produktstatus",
+    "productTypeConfigurables": "konfigurierbarer Produkttyp",
+    "scope": "Umfang",
+    "productSerie": "Product Serie",
+    "association": "Assoziation",
+    "catalog": "Katalog",
+    "channels": "Kanale",
+    "measuringUnit": "Maßeinheit",
+    "basePriceAmount": "Grundpreis Betrag",
+    "packedAmount": "Gepackte Menge"
+  },
+  "links": {
+    "brand": "Marke",
+    "tax": "MwSt.",
+    "packaging": "Verpackung",
+    "assignedUser": "zugewiesener Benutzer",
+    "associatedMainProducts": "zugehörige Produkte",
+    "associatedRelatedProduct": "Verknüpfung von ähnlichen Produkten",
+    "channelProducts": "Kanalprodukte",
+    "createdBy": "erstellt von",
+    "modifiedBy": "geändert von",
+    "product": "Produkt",
+    "productAttributeValues": "Produktattribute",
+    "productFamily": "Produktfamilie",
+    "products": "Produkte",
+    "productTypeConfigurables": "konfigurierbarer Produkttyp",
+    "catalog": "Katalog",
+    "channels": "Kanale",
+    "measuringUnit": "Messeinheit"
+  },
+  "labels": {
+    "There is no valid attributes for channel": "Es gibt keine gültigen Attribute für Kanal",
+    "Add Attribute Filter": "Attributfilter hinzufügen",
+    "Add Import Filter": "Importfilter hinzufügen",
+    "Associated Products": "Assoziierte Produkte",
+    "Channels": "Kanale",
+    "Create Product": "Produkt erstellen",
+    "withoutAnyCategory": "Ohne Kategorie",
+    "typeCategoryToSearch": "Kategorie zum Suchen eingeben...",
+    "Package Details": "Paketdetails",
+    "No Group": "Keine Gruppe",
+    "productImage": "Produktbild"
+  },
+  "options": {
+    "productStatus": {
+      "draft": "Entwurf",
+      "prepared": "vorbereitet",
+      "reviewed": "überprüft",
+      "notReady": "nicht bereit",
+      "ready": "bereit"
+    },
+    "tag": {
+      "blue": "blau",
+      "yellow": "gelb",
+      "green": "grün",
+      "red": "rot",
+      "your tag1": "your tag1",
+      "your tag2": "your tag2"
+    },
+    "type": {
+      "simpleProduct": "einfaches Produkt"
+    }
+  },
+  "boolFilters": {
+    "withoutAnyCategory": "ohne Kategorie",
+    "withoutAssociatedProducts": "ohne zugehörige Produkte",
+    "withoutImageAssets": "ohne Bildassets",
+    "withoutProductAttributes": "ohne Produktattribute"
+  },
+  "exceptions": {
+    "Product with such SKU already exist": "Produkt mit einer solchen Artikelnummer existiert bereits",
+    "You can't change Product Family in Product": "Sie können die Produktfamilie in Product nicht ändern",
+    "You can't change field of Type in Product": "Sie können das Feld Typ in Produkt nicht ändern"
+  }
+}

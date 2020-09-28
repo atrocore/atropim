@@ -1,0 +1,191 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "rows": 4,
+      "lengthOfCut": 400,
+      "seeMoreDisabled": false,
+      "isMultilang": true
+    },
+    "isActive": {
+      "notNull": true,
+      "type": "bool",
+      "default": false
+    },
+    "locales": {
+      "type": "multiEnum",
+      "options": []
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "ownerUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/owner-user"
+    },
+    "assignedUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/assigned-user"
+    },
+    "teams": {
+      "type": "linkMultiple",
+      "view": "views/fields/teams"
+    },
+    "currencies": {
+      "type": "multiEnum",
+      "required": true,
+      "view": "pim:views/fields/currencies",
+      "useFieldViewInImport": true
+    },
+    "code": {
+      "type": "varchar",
+      "layoutMassUpdateDisabled": true,
+      "required": true,
+      "trim": true,
+      "emHidden": true,
+      "view": "pim:views/fields/code-from-name"
+    },
+    "products": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
+    },
+    "productAttributeValues": {
+      "type": "linkMultiple",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
+    },
+    "productCategories": {
+      "type": "linkMultiple",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
+    },
+    "productFamilyAttributes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
+    },
+    "isActiveEntity": {
+      "type": "bool",
+      "notStorable": true,
+      "default": false,
+      "readOnly": false,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "ownerUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "assignedUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "relationName": "EntityTeam",
+      "layoutRelationshipsDisabled": true
+    },
+    "products": {
+      "type": "hasMany",
+      "relationName": "productChannel",
+      "foreign": "channels",
+      "entity": "Product"
+    },
+    "productAttributeValues": {
+      "type": "hasMany",
+      "relationName": "productAttributeValueChannel",
+      "foreign": "channels",
+      "entity": "ProductAttributeValue"
+    },
+    "productCategories": {
+      "type": "hasMany",
+      "relationName": "productCategoryChannel",
+      "foreign": "channels",
+      "entity": "ProductCategory"
+    },
+    "productFamilyAttributes": {
+      "type": "hasMany",
+      "relationName": "productFamilyAttributeChannel",
+      "foreign": "channels",
+      "entity": "ProductFamilyAttribute"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "ownerUser": {
+      "columns": [
+        "ownerUserId",
+        "deleted"
+      ]
+    },
+    "assignedUser": {
+      "columns": [
+        "assignedUserId",
+        "deleted"
+      ]
+    }
+  }
+}

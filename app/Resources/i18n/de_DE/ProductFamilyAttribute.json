@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "productFamily": "Produktfamilie",
+    "attribute": "Attribute",
+    "isRequired": "Ist Erforderlich",
+    "channels": "Kanale",
+    "scope": "Umfang"
+  },
+  "links": {
+    "productFamily": "Produktfamilie",
+    "attribute": "Attribute",
+    "channels": "Kanale"
+  },
+  "labels": {
+    "Create ProductFamilyAttribute": "Produktfamilie Attribute erstellen"
+  },
+  "options": {
+    "scope": {
+      "Global": "Global",
+      "Channel": "Kanal"
+    }
+  }
+}

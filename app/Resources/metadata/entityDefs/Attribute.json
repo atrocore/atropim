@@ -1,0 +1,213 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": false,
+      "trim": true,
+      "isMultilang": true,
+      "layoutDetailDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "ownerUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/owner-user"
+    },
+    "assignedUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/assigned-user"
+    },
+    "teams": {
+      "type": "linkMultiple",
+      "view": "views/fields/teams"
+    },
+    "attributeGroup": {
+      "type": "link",
+      "view": "pim:views/attribute/fields/attribute-group",
+      "required": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "code": {
+      "type": "varchar",
+      "layoutMassUpdateDisabled": true,
+      "required": true,
+      "trim": true,
+      "emHidden": true,
+      "view": "pim:views/fields/code-from-name"
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "array",
+        "bool",
+        "date",
+        "datetime",
+        "enum",
+        "float",
+        "int",
+        "multiEnum",
+        "text",
+        "unit",
+        "url",
+        "varchar",
+        "wysiwyg",
+        "image"
+      ],
+      "default": "text",
+      "layoutMassUpdateDisabled": true,
+      "isSorted": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false,
+      "view": "pim:views/attribute/fields/type"
+    },
+    "isMultilang": {
+      "type": "bool",
+      "hideMultilang": true,
+      "layoutDetailDisabled": true
+    },
+    "typeValue": {
+      "type": "array",
+      "layoutMassUpdateDisabled": true,
+      "required": false,
+      "noEmptyString": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false,
+      "isMultilang": true,
+      "layoutDetailDisabled": true,
+      "view": "pim:views/attribute/fields/type-value"
+    },
+    "isSystem": {
+      "notNull": true,
+      "type": "bool",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutFiltersDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "default": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false,
+      "importDisabled": true
+    },
+    "productAttributeValues": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true
+    },
+    "isRequired": {
+      "notStorable": true,
+      "type": "bool",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true
+    },
+    "productFamilyAttributes": {
+      "type": "linkMultiple",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "ownerUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "assignedUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "relationName": "EntityTeam",
+      "layoutRelationshipsDisabled": true
+    },
+    "attributeGroup": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "AttributeGroup",
+      "audited": false
+    },
+    "productAttributeValues": {
+      "type": "hasMany",
+      "foreign": "attribute",
+      "entity": "ProductAttributeValue",
+      "layoutRelationshipsDisabled": true
+    },
+    "productFamilyAttributes": {
+      "type": "hasMany",
+      "foreign": "attribute",
+      "entity": "ProductFamilyAttribute",
+      "layoutRelationshipsDisabled": true
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "ownerUser": {
+      "columns": [
+        "ownerUserId",
+        "deleted"
+      ]
+    },
+    "assignedUser": {
+      "columns": [
+        "assignedUserId",
+        "deleted"
+      ]
+    }
+  }
+}

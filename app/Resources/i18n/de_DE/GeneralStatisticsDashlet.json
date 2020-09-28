@@ -1,0 +1,17 @@
+{
+    "listFields": {
+        "generalStatistics": {
+            "product": "Produkt",
+            "category": "Kategorie",
+            "productFamily": "Produktfamilie",
+            "attribute": "Attribute",
+            "productWithoutAssociatedProduct": "Produkt ohne zugehöriges Produkt",
+            "productWithoutCategory": "Produkt ohne Kategorie",
+            "productWithoutAttribute": "Produkt ohne Attribut",
+            "productWithoutImage": "Produkt ohne Bild"
+        }
+    },
+    "fields": {
+        "amount": "Menge"
+    }
+}

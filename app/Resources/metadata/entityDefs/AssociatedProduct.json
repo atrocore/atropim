@@ -1,0 +1,116 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "trim": true
+    },
+    "association": {
+      "type": "link",
+      "required": true,
+      "view": "pim:views/associated-product/fields/association"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "ownerUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/owner-user"
+    },
+    "assignedUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/assigned-user"
+    },
+    "teams": {
+      "type": "linkMultiple",
+      "view": "views/fields/teams"
+    },
+    "mainProduct": {
+      "required": true,
+      "type": "link"
+    },
+    "relatedProduct": {
+      "required": true,
+      "type": "link",
+      "view": "pim:views/associated-product/fields/related-product",
+      "noLoad": false
+    },
+    "bothDirections": {
+      "type": "bool",
+      "view": "pim:views/associated-product/fields/both-directions"
+    },
+    "backwardAssociation": {
+      "type": "link",
+      "hidden": true,
+      "view": "pim:views/associated-product/fields/backward-association"
+    }
+  },
+  "links": {
+    "association": {
+      "type": "belongsTo",
+      "foreign": "associatedProducts",
+      "entity": "Association",
+      "audited": false,
+      "isCustom": false
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "ownerUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "assignedUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "relationName": "EntityTeam",
+      "layoutRelationshipsDisabled": true
+    },
+    "mainProduct": {
+      "type": "belongsTo",
+      "foreign": "associatedMainProducts",
+      "entity": "Product",
+      "audited": false,
+      "isCustom": false
+    },
+    "relatedProduct": {
+      "type": "belongsTo",
+      "foreign": "associatedRelatedProduct",
+      "entity": "Product",
+      "audited": false,
+      "isCustom": false
+    },
+    "backwardAssociation": {
+      "type": "belongsTo",
+      "foreign": "associatedProducts",
+      "entity": "Association",
+      "audited": false,
+      "isCustom": false
+    }
+  }
+}

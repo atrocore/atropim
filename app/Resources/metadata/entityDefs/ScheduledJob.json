@@ -1,0 +1,8 @@
+{
+  "jobs": {
+    "PimCleanup": {
+      "isSystem": true,
+      "scheduling": "0 0 * * SUN"
+    }
+  }
+}

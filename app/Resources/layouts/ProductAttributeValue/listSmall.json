@@ -1,0 +1,23 @@
+[
+  {
+    "name": "attribute",
+    "notSortable": true,
+    "width": "25",
+    "view": "pim:views/product-attribute-value/fields/attribute-with-required-sign"
+  },
+  {
+    "name": "value",
+    "notSortable": true,
+    "width": "44"
+  },
+  {
+    "name": "scope",
+    "notSortable": true,
+    "width": "14"
+  },
+  {
+    "name": "channels",
+    "notSortable": true,
+    "width": "17"
+  }
+]

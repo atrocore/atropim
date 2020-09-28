@@ -1,0 +1,99 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sku"
+        }
+      ],
+      [
+        {
+          "name": "catalog"
+        },
+        {
+          "name": "tag"
+        }
+      ],
+      [
+        {
+          "name": "mpn"
+        },
+        {
+          "name": "ean"
+        }
+      ],
+      [
+        {
+          "name": "productStatus"
+        },
+        {
+          "name": "productSerie"
+        }
+      ],
+      [
+        {
+          "name": "brand"
+        },
+        {
+          "name": "productFamily"
+        }
+      ],
+      [
+        {
+          "name": "measuringUnit"
+        },
+        {
+          "name": "packaging"
+        }
+      ],
+      [
+        {
+          "name": "tax"
+        },
+        {
+          "name": "uvp"
+        }
+      ],
+      [
+        {
+          "name": "price"
+        },
+        {
+          "name": "finalPrice"
+        }
+      ],
+      [
+        {
+          "name": "basePriceAmount"
+        },
+        {
+          "name": "packedAmount"
+        }
+      ],
+      [
+        {
+          "name": "amount"
+        },
+        false
+      ],
+      [
+        {
+          "name": "longDescription"
+        }
+      ]
+    ]
+  }
+]

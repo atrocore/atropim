@@ -1,0 +1,30 @@
+[
+    {
+        "label": "Overview",
+        "style": "default",
+        "rows": [
+            [
+                {
+                    "name": "association"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "bothDirections"
+                },
+                {
+                    "name": "backwardAssociation"
+                }
+            ],
+            [
+                {
+                    "name": "mainProduct"
+                },
+                {
+                    "name": "relatedProduct"
+                }
+            ]
+        ]
+    }
+]

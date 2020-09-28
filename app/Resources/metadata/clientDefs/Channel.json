@@ -1,0 +1,36 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-share-square",
+  "boolFilterList": [
+    "onlyMy",
+    "notLinkedWithProduct",
+    "notEntity",
+    "linkedWithProduct",
+    "linkedWithCategory",
+    "notLinkedWithCategory",
+    "notLinkedWithAttributesInProduct",
+    "notLinkedWithAttributesInProductFamily",
+    "notLinkedWithCategoriesInProduct"
+  ],
+  "hiddenBoolFilterList": [
+    "notLinkedWithProduct",
+    "notEntity",
+    "linkedWithProduct",
+    "linkedWithCategory",
+    "notLinkedWithCategory",
+    "notLinkedWithAttributesInProduct",
+    "notLinkedWithAttributesInProductFamily",
+    "notLinkedWithCategoriesInProduct"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "views": {
+    "detail": "pim:views/detail",
+    "list": "pim:views/list"
+  },
+  "recordViews": {
+    "detail": "pim:views/record/detail",
+    "list": "pim:views/record/list"
+  }
+}

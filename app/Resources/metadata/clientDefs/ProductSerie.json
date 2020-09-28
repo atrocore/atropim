@@ -1,0 +1,18 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "far fa-newspaper",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "views": {
+        "detail": "pim:views/detail"
+    },
+    "relationshipPanels": {
+        "products": {
+            "view": "pim:views/product-serie/record/panels/products",
+            "createAction": "createRelatedEntity",
+            "selectAction": "selectRelatedEntity",
+            "selectBoolFilterList": ["onlyActive", "notLinkedWithProductSerie"]
+        }
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "attributeId": {
+            "type": "varchar"
+        }
+    }
+}

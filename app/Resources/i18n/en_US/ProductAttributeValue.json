@@ -1,0 +1,28 @@
+{
+  "custom": {
+    "Attribute": "Attribute"
+  },
+  "fields": {
+    "name": "Id",
+    "productAttribute": "Product attribute",
+    "product": "Product",
+    "attribute": "Attribute",
+    "isRequired": "Is required",
+    "value": "Value",
+    "scope": "Scope",
+    "channels": "Channels"
+  },
+  "links": {
+    "productAttribute": "Product attribute",
+    "product": "Product",
+    "attribute": "Attribute",
+    "channels": "Channels"
+  },
+  "labels": {
+    "Create ProductAttributeValue": "Create Attribute Value"
+  },
+  "exceptions": {
+    "You have no ACL rights to read attribute values": "You have no ACL rights to read attribute values",
+    "You can't change product in attribute from Product Family": "You can't change product in attribute from ProductFamily"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "controller": "pim:controllers/product",
+  "iconClass": "fas fa-box-open",
+  "quickCreate": true,
+  "navigateToEntityAfterQuickCreate": true,
+  "quickCreateOptions": {
+    "fullFormDisabled": true
+  },
+  "boolFilterList": [
+    "onlyMy",
+    "notEntity",
+    "notAssociatedProducts",
+    "onlySimple",
+    "notLinkedWithOrder",
+    "notLinkedWithChannel",
+    "notLinkedWithWarehouse",
+    "notLinkedWithBrand",
+    "notLinkedWithProductFamily",
+    "notLinkedWithPackaging",
+    "withoutAssociatedProducts",
+    "withoutAnyCategory",
+    "withoutProductAttributes",
+    "notLinkedWithProductSerie",
+    "onlyCatalogProducts",
+    "linkedWithCategory"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity",
+    "notAssociatedProducts",
+    "onlySimple",
+    "notLinkedWithOrder",
+    "notLinkedWithChannel",
+    "notLinkedWithWarehouse",
+    "notLinkedWithBrand",
+    "notLinkedWithProductFamily",
+    "notLinkedWithPackaging",
+    "notLinkedWithProductSerie",
+    "onlyCatalogProducts",
+    "linkedWithCategory"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "addRelationPipelines": {
+    "productCategories": [
+      "__APPEND__",
+      "pim:views/product-category/pipe/action-update-filters"
+    ]
+  },
+  "views": {
+    "list": "pim:views/product/list",
+    "detail": "pim:views/product/detail",
+    "plate": "pim:views/product/plate"
+  },
+  "recordViews": {
+    "list": "pim:views/product/record/list",
+    "detail": "pim:views/product/record/detail",
+    "search": "pim:views/product/record/search",
+    "plate": "pim:views/product/record/plate",
+    "plateItem": "pim:views/product/record/plate-item"
+  },
+  "massRelationView": "pim:views/product/modals/select-entity-and-records",
+  "relationshipPanels": {
+    "productAttributeValues": {
+      "createAction": "createRelatedConfigured",
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notLinkedProductAttributeValues"
+      ],
+      "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
+      "view": "pim:views/product/record/panels/product-attribute-values",
+      "recordListView": "pim:views/product-attribute-value/record/list-in-product",
+      "aclScopesList": [
+        "Attribute",
+        "AttributeGroup",
+        "ProductAttributeValue"
+      ],
+      "sortBy": "attribute.sortOrder",
+      "asc": true
+    },
+    "productCategories": {
+      "view": "pim:views/product/record/panels/product-categories",
+      "createAction": "createRelatedConfigured",
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "onlyActive",
+        "notLinkedProductCategories",
+        "onlyCatalogCategories"
+      ],
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "modalEditView": "pim:views/product-category/modals/edit-in-product",
+      "layout": "listForProductCategoriesInProduct",
+      "aclScopesList": [
+        "Category"
+      ]
+    },
+    "channels": {
+      "view": "pim:views/product/record/panels/product-channels",
+      "recordListView": "pim:views/channel/record/list-in-product",
+      "createAction": "createRelatedConfigured",
+      "selectAction": "selectRelatedEntity",
+      "layout": "listForChannelsInProduct"
+    },
+    "associatedMainProducts": {
+      "view": "pim:views/product/record/panels/associated-main-product",
+      "label": "Associated Products",
+      "rowActionsView": "pim:views/associated-product/record/row-actions/edit-and-remove-in-product",
+      "select": false,
+      "aclScopesList": [
+        "Association"
+      ]
+    }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "id"
+                },
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "_duplicatingEntityId"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

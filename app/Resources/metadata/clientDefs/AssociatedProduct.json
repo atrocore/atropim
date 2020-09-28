@@ -1,0 +1,58 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "fas fa-link",
+    "quickCreate": true,
+    "quickCreateOptions": {
+        "fullFormDisabled": true
+    },
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "disabledMassActions": [
+        "merge"
+    ],
+    "views": {
+        "detail": "pim:views/detail",
+        "list": "pim:views/list"
+    },
+    "modalViews": {
+        "detail": "pim:views/modals/detail-full-form-disabled",
+        "edit": "pim:views/associated-product/modals/create-associated-product"
+    },
+    "recordViews": {
+        "list": "pim:views/record/list",
+        "editSmall": "pim:views/associated-product/record/edit-small"
+    },
+    "dynamicLogic": {
+        "fields": {
+            "backwardAssociation": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "bothDirections"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "bothDirections"
+                        }
+                    ]
+                }
+            },
+            "association": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

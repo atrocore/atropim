@@ -1,0 +1,15 @@
+[
+  {
+    "name": "name",
+    "link": true,
+    "notSortable": true
+  },
+  {
+    "name": "code",
+    "notSortable": true
+  },
+  {
+    "name": "type",
+    "notSortable": true
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "associatedProducts": "Associated products",
+    "description": "Description",
+    "isActive": "Active",
+    "backwardAssociation": "Backward Association"
+  },
+  "links": {
+    "associatedProducts": "Associated products",
+    "backwardAssociation": "Backward Association"
+  },
+  "labels": {
+    "Create Association": "Create Association"
+  },
+  "exceptions": {
+    "Association is linked with product(s). Please, unlink product(s) first": "Association is linked with product(s). Please, unlink product(s) first",
+    "You can not deactivate association with active product(s)": "You can not deactivate association with active product(s)"
+  }
+}

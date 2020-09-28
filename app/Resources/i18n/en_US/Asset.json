@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "categories": "Categories",
+    "products": "Products"
+  },
+  "links": {
+    "categories": "Categories",
+    "products": "Products"
+  }
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "product"
+        },
+        false
+      ],
+      [
+        {
+          "name": "category"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scope"
+        },
+        {
+          "name": "channels"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

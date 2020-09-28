@@ -1,0 +1,20 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "fas fa-exchange-alt",
+    "boolFilterList": [
+        "onlyMy",
+        "notUsedAssociations"
+    ],
+    "hiddenBoolFilterList": [
+        "notUsedAssociations"
+    ],
+    "disabledMassActions": [
+        "merge"
+    ],
+    "views": {
+        "list": "pim:views/list"
+    },
+    "recordViews": {
+        "list": "pim:views/record/list"
+    }
+}

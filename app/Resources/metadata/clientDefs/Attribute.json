@@ -1,0 +1,45 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-sort-amount-down",
+  "boolFilterList": [
+    "onlyMy",
+    "notLinkedWithProduct",
+    "notLinkedProductAttributeValues",
+    "notLinkedProductFamilyAttributes",
+    "unitTypeDisabled"
+  ],
+  "hiddenBoolFilterList": [
+    "notLinkedWithProduct",
+    "notLinkedProductAttributeValues",
+    "notLinkedProductFamilyAttributes",
+    "unitTypeDisabled"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "views": {
+    "list": "pim:views/list",
+    "detail": "pim:views/attribute/detail"
+  },
+  "recordViews": {
+    "detail": "pim:views/attribute/record/detail",
+    "list": "pim:views/attribute/record/list"
+  },
+  "modalViews": {
+    "select": "pim:views/attribute/modals/select-records"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

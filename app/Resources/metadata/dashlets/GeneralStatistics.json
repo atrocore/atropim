@@ -1,0 +1,69 @@
+{
+    "view": "pim:views/dashlets/general-statistics",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            }
+        },
+        "defaults": {
+            "displayRecords": 200,
+            "autorefreshInterval": 0.5,
+            "urlMap": {
+                "product": {
+                    "url": "#Product"
+                },
+                "category": {
+                    "url": "#Category"
+                },
+                "productFamily": {
+                    "url": "#ProductFamily"
+                },
+                "attribute": {
+                    "url": "#Attribute"
+                },
+                "productWithoutAssociatedProduct": {
+                    "url": "#Product",
+                    "options": {
+                        "boolFilterList": [
+                            "withoutAssociatedProducts"
+                        ]
+                    }
+                },
+                "productWithoutCategory": {
+                    "url": "#Product",
+                    "options": {
+                        "boolFilterList": [
+                            "withoutAnyCategory"
+                        ]
+                    }
+                },
+                "productWithoutAttribute": {
+                    "url": "#Product",
+                    "options": {
+                        "boolFilterList": [
+                            "withoutProductAttributes"
+                        ]
+                    }
+                }
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

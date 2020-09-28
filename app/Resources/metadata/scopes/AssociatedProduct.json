@@ -1,0 +1,11 @@
+{
+    "entity": true,
+    "layouts": true,
+    "tab": true,
+    "acl": true,
+    "disabled": false,
+    "customizable": true,
+    "type": "Base",
+    "module": "Pim",
+    "importable": true
+}

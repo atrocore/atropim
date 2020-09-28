@@ -1,0 +1,28 @@
+{
+    "controller": "controllers/record",
+    "iconClass": "fas fa-box",
+    "boolFilterList": [
+        "onlyMy",
+        "notUsedAssociations"
+    ],
+    "hiddenBoolFilterList": [
+        "notUsedAssociations"
+    ],
+    "disabledMassActions": [
+        "merge"
+    ],
+    "views": {
+        "list": "pim:views/list",
+        "detail": "pim:views/detail"
+    },
+    "recordViews": {
+        "list": "pim:views/record/list"
+    },
+    "relationshipPanels": {
+        "products": {
+            "view": "pim:views/packaging/record/panels/products",
+            "selectAction": "selectRelatedEntity",
+            "selectBoolFilterList": ["onlyActive", "notLinkedWithPackaging"]
+        }
+    }
+}

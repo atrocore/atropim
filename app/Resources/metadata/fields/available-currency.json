@@ -1,0 +1,32 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"isSorted",
+         "type":"bool"
+      },
+      {
+         "name":"translation",
+         "type":"varchar",
+         "hidden": true
+      },
+      {
+         "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": true,
+   "fieldDefs":{
+      "type":"varchar"
+   },
+   "translatedOptions": true,
+   "view": "pim:views/fields/available-currency"
+}

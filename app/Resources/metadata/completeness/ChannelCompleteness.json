@@ -1,0 +1,34 @@
+{
+    "view": "completeness:views/dashlets/channel-completeness",
+    "type": "completeness",
+    "entity": "Product",
+    "isDashlet": true,
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            }
+        },
+        "defaults": {
+            "displayRecords": 200,
+            "autorefreshInterval": 0.5
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"}
+                    ],
+                    [
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

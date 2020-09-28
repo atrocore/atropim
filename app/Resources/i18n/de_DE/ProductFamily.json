@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "code": "Code",
+    "description": "BeschreibungDeDe",
+    "isActive": "Aktiv",
+    "productFamilies": "Produktfamilien",
+    "products": "Produkte",
+    "productFamilyAttributes": "Produktfamilie Attribute"
+  },
+  "links": {
+    "productFamilies": "Produktfamilien",
+    "products": "Produkte",
+    "attributes": "Attribute",
+    "productFamilyAttributes": "Produktfamilie Attribute"
+  },
+  "labels": {
+    "Create ProductFamily": "Produktfamilie erstellen",
+    "Select Attribute Group": "Wählen Sie die Attributgruppe aus"
+  },
+  "messages": {
+    "Can't remove system Product Family": "Das System Produktfamilie kann nicht entfernt werden"
+  },
+  "exceptions": {
+    "Product Family is used in products": "Die Produktfamilie wird in den Produkten verwendet"
+  }
+}

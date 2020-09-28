@@ -1,0 +1,28 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "far fa-window-restore",
+  "boolFilterList": [
+    "onlyMy",
+    "notEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity"
+  ],
+  "recordViews": {
+    "edit": "pim:views/catalog/record/edit",
+    "detail": "pim:views/catalog/record/detail",
+    "list": "pim:views/catalog/record/list"
+  },
+  "relationshipPanels": {
+    "categories": {
+      "view": "pim:views/catalog/record/panels/categories",
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": ["notEntity", "onlyRootCategory"]
+    },
+    "products": {
+      "select": false,
+      "create": false,
+      "rowActionsView": "views/record/row-actions/empty"
+    }
+  }
+}
