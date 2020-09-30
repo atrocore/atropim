@@ -29,7 +29,7 @@ The navigation menu in the default AtroPIM theme is the menu placed on the left 
 
 Each user can customize his/her own navigation menu in the `User Interface` section of the user ["Preferences"](#user-preferences) page:
 
-![Navigation Menu Cfg](../../_assets/user-interface/navigation-user-cfg.jpg)
+![Navigation Menu Cfg](https://raw.githubusercontent.com/atrocore/atropim/master/docs/_assets/user-interface/navigation-user-cfg.jpg)
 
 Here select the `Custom Tab List` option and add the desired tabs using the `Add` button.  You can also define the tabs order via their drag-and-drop in the tab list.
 
