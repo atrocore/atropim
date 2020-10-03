@@ -67,18 +67,6 @@
       "min": 0,
       "default": 0
     },
-    "categories": {
-      "type": "linkMultiple",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "associatedRelatedProduct": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -206,15 +194,6 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "productCategories": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
-      "noLoad": true,
-      "importMultipleField": true,
-      "exportMultipleField": true
-    },
     "measuringUnit": {
       "type": "link",
       "required": false
@@ -258,6 +237,13 @@
     "teams": {
       "type": "linkMultiple",
       "view": "views/fields/teams"
+    },
+    "categories": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -271,11 +257,6 @@
       "type": "belongsTo",
       "foreign": "products",
       "entity": "ProductFamily"
-    },
-    "categories": {
-      "type": "hasMany",
-      "entity": "Category",
-      "layoutRelationshipsDisabled": true
     },
     "catalog": {
       "type": "belongsTo",
@@ -341,15 +322,6 @@
         }
       }
     },
-    "productCategories": {
-      "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductCategory",
-      "addRelationCustomDefs": {
-        "link": "productCategories",
-        "entity": "Category"
-      }
-    },
     "measuringUnit": {
       "type": "belongsTo",
       "entity": "MeasuringUnit"
@@ -375,6 +347,13 @@
       "entity": "Team",
       "relationName": "EntityTeam",
       "layoutRelationshipsDisabled": true
+    },
+    "categories": {
+      "type": "hasMany",
+      "relationName": "productCategory",
+      "foreign": "products",
+      "entity": "Category",
+      "audited": false
     }
   },
   "collection": {

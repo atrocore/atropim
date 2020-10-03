@@ -124,16 +124,6 @@ class CategoryEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
-     */
-    public function afterRemove(Event $event)
-    {
-        $this
-            ->getService('Category')
-            ->removeProductCategoryByCategory($event->getArgument('entity')->id);
-    }
-
-    /**
-     * @param Event $event
      *
      * @throws BadRequest
      */

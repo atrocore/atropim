@@ -11,20 +11,13 @@
     "categoryRoot": "Stammkategorie",
     "createdAt": "erstellt am",
     "createdBy": "erstellt von",
-    "descriptionDeDe": "Beschreibung DeDe",
-    "descriptionEnUs": "Beschreibung EnUs",
-    "descriptionEsEs": "Beschreibung EsEs",
-    "descriptionFrFr": "Beschreibung FrFr",
     "isActive": "Aktiv",
-    "modifiedAt": "geändert am",
-    "modifiedBy": "geändert von",
     "rootCategories": "Stammkategorien",
     "teams": "Teams",
     "markupType": "Typ",
     "markupValue": "Wert",
     "scope": "Umfang",
-    "catalogs": "Kataloge",
-    "productCategories": "Kategorie Produkte"
+    "catalogs": "Kataloge"
   },
   "links": {
     "categories": "Kategorien",
@@ -35,8 +28,7 @@
     "modifiedBy": "geändert von",
     "rootCategories": "Stammkategorien",
     "teams": "Teams",
-    "catalogs": "Kataloge",
-    "productCategories": "Kategorie Produkte"
+    "catalogs": "Kataloge"
   },
   "labels": {
     "Create Category": "Kategorie erstellen"

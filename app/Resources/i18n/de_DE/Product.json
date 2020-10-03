@@ -1,6 +1,6 @@
 {
   "fields": {
-    "categories": "Kategorien",
+    "categories": "Produktkategorien",
     "product": "Hauptartikel",
     "brand": "Marke",
     "sku": "SKU",
@@ -40,6 +40,7 @@
     "packedAmount": "Gepackte Menge"
   },
   "links": {
+    "categories": "Produktkategorien",
     "brand": "Marke",
     "tax": "MwSt.",
     "packaging": "Verpackung",

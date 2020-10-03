@@ -1,6 +1,6 @@
 {
   "fields": {
-    "categories": "Categories",
+    "categories": "Product Categories",
     "product": "Main Product",
     "products": "Products",
     "productAttributeValues": "Product Attributes",
@@ -30,7 +30,6 @@
     "association": "Association",
     "catalog": "Catalog",
     "channels": "Channels",
-    "productCategories": "Product Categories",
     "measuringUnit": "Measuring Unit",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount"
@@ -49,8 +48,7 @@
     "tax": "Tax",
     "packaging": "Packaging",
     "catalog": "Catalog",
-    "channels": "Channels",
-    "productCategories": "Product Categories"
+    "channels": "Channels"
   },
   "labels": {
     "Create Product": "Create Product",

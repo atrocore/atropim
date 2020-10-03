@@ -283,76 +283,8 @@ class ProductHandler extends AbstractHandler
      */
     protected function importCategories(Entity $product, array $data, string $delimiter)
     {
-        $entityType = 'ProductCategory';
-        $service = $this->getServiceFactory()->create($entityType);
-
-        $conf = $data['item'];
-        $row = $data['row'];
-
-        $channelsIds = isset($conf['channelsIds']) ? $conf['channelsIds'] : null;
-        $field = $conf['field'];
-
-        if (empty($categories = $row[$conf['column']])) {
-            $categories = $conf['default'];
-            $field = 'id';
-            $delimiter = ',';
-        }
-
-        $exists = $this->getExists('Category', $field, explode($delimiter, $categories));
-
-        foreach ($exists as $exist) {
-            $inputRow = new \stdClass();
-            $restoreRow = new \stdClass();
-
-            if (empty($category = $this->getProductCategory($product, $exist, $conf['scope']))) {
-                $inputRow->categoryId = $exist;
-                $inputRow->productId = $product->get('id');
-                $inputRow->scope = $conf['scope'];
-
-                if ($conf['scope'] == 'Channel') {
-                    $inputRow->channelsIds = $channelsIds;
-                }
-
-                $entity = $service->createEntity($inputRow);
-
-                $this->saveRestoreRow('created', $entityType, $entity->get('id'));
-
-                $this->saved = true;
-            } elseif ($conf['scope'] == 'Channel') {
-                $id = (string)$category->get('id');
-                $inputRow->channelsIds = $channelsIds;
-                $restoreRow->channelsIds = array_column($category->get('channels')->toArray(), 'id');
-
-                $entity = $this->updateEntity($service, $id, $inputRow);
-
-                if ($entity->isSaved()) {
-                    $this->saveRestoreRow('updated', $entityType, [$id => $restoreRow]);
-                    $this->saved = true;
-                }
-            }
-        }
-    }
-
-
-    /**
-     * @param Entity $product
-     * @param string $categoryId
-     * @param string $scope
-     *
-     * @return Entity|null
-     */
-    protected function getProductCategory(Entity $product, string $categoryId, string $scope): ?Entity
-    {
-        $result = null;
-
-        foreach ($product->get('productCategories') as $item) {
-            if ($item->get('categoryId') == $categoryId && $item->get('scope') == $scope) {
-                $result = $item;
-                break;
-            }
-        }
-
-        return $result;
+        //@todo implement category importing
+        return null;
     }
 
     /**

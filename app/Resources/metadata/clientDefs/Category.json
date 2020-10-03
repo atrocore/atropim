@@ -76,6 +76,18 @@
     }
   },
   "dynamicLogic": {
+    "fields": {
+      "channels": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "categoryParentId"
+            }
+          ]
+        }
+      }
+    },
     "panels": {
       "catalogs": {
         "visible": {

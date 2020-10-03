@@ -27,7 +27,6 @@
     "ProductPrice": "Product Price",
     "Tax": "Tax",
     "ProductSerie": "Product Serie",
-    "ProductCategory": "Product Category",
     "ProductFamilyAttribute": "Product Family Attribute"
   },
   "scopeNamesPlural": {
@@ -48,7 +47,6 @@
     "ProductPrice": "Product Prices",
     "Tax": "Taxes",
     "ProductSerie": "Product Series",
-    "ProductCategory": "Product Categories",
     "ProductFamilyAttribute": "Product Family Attributes"
   },
   "options": {

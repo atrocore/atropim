@@ -72,30 +72,31 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
         expandTreeWithProductCategory() {
             const catalogTreeData = this.getStorage().get('catalog-tree-panel-data', this.scope);
             if (this.model && (!catalogTreeData || !catalogTreeData.category)) {
-                this.ajaxGetRequest(`Product/${this.model.id}/productCategories`, this.getSortingParams())
-                    .then(productCategories => {
-                        let id = (((productCategories.list || [])[0] || {}).categoryId);
-                        if (id) {
-                            this.ajaxGetRequest(`Category/${id}`).then(category => {
-                                let parentCategoryId = id;
-                                if (category.categoryParentId) {
-                                    parentCategoryId = (category.categoryRoute || '').split('|').find(element => element);
-                                }
-
-                                let catalog = this.catalogs.find(catalog => {
-                                    return catalog.id === this.model.get('catalogId')
-                                        && (catalog.categoriesIds || []).includes(parentCategoryId);
-                                });
-
-                                if (catalog) {
-                                    let catalogTree = this.getView(`category-tree-${catalog.id}`);
-                                    if (catalogTree) {
-                                        catalogTree.expandCategoryHandler(category);
-                                    }
-                                }
-                            });
-                        }
-                    });
+                // @todo fix it
+                // this.ajaxGetRequest(`Product/${this.model.id}/productCategories`, this.getSortingParams())
+                //     .then(productCategories => {
+                //         let id = (((productCategories.list || [])[0] || {}).categoryId);
+                //         if (id) {
+                //             this.ajaxGetRequest(`Category/${id}`).then(category => {
+                //                 let parentCategoryId = id;
+                //                 if (category.categoryParentId) {
+                //                     parentCategoryId = (category.categoryRoute || '').split('|').find(element => element);
+                //                 }
+                //
+                //                 let catalog = this.catalogs.find(catalog => {
+                //                     return catalog.id === this.model.get('catalogId')
+                //                         && (catalog.categoriesIds || []).includes(parentCategoryId);
+                //                 });
+                //
+                //                 if (catalog) {
+                //                     let catalogTree = this.getView(`category-tree-${catalog.id}`);
+                //                     if (catalogTree) {
+                //                         catalogTree.expandCategoryHandler(category);
+                //                     }
+                //                 }
+                //             });
+                //         }
+                //     });
             }
         },
 

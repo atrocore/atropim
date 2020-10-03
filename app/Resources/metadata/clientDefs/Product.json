@@ -41,12 +41,6 @@
   "disabledMassActions": [
     "merge"
   ],
-  "addRelationPipelines": {
-    "productCategories": [
-      "__APPEND__",
-      "pim:views/product-category/pipe/action-update-filters"
-    ]
-  },
   "views": {
     "list": "pim:views/product/list",
     "detail": "pim:views/product/detail",
@@ -77,22 +71,6 @@
       ],
       "sortBy": "attribute.sortOrder",
       "asc": true
-    },
-    "productCategories": {
-      "view": "pim:views/product/record/panels/product-categories",
-      "createAction": "createRelatedConfigured",
-      "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "onlyActive",
-        "notLinkedProductCategories",
-        "onlyCatalogCategories"
-      ],
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "modalEditView": "pim:views/product-category/modals/edit-in-product",
-      "layout": "listForProductCategoriesInProduct",
-      "aclScopesList": [
-        "Category"
-      ]
     },
     "channels": {
       "view": "pim:views/product/record/panels/product-channels",

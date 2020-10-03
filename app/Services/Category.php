@@ -3,6 +3,8 @@
 namespace Pim\Services;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 /**
  * Service of Category
@@ -11,6 +13,16 @@ use Espo\Core\Exceptions\Forbidden;
  */
 class Category extends AbstractService
 {
+    /**
+     * @var array
+     */
+    protected $mandatorySelectAttributeList = ['categoryRoute'];
+
+    /**
+     * @var array
+     */
+    private $roots = [];
+
     /**
      * Get category entity
      *
@@ -24,10 +36,41 @@ class Category extends AbstractService
         // call parent
         $entity = parent::getEntity($id);
 
+        /** @var array $channels */
+        $channels = $this->getRootChannels($entity)->toArray();
+
         // set hasChildren param
         $entity->set('hasChildren', $entity->hasChildren());
+        $entity->set('channelsIds', array_column($channels, 'id'));
+        $entity->set('channelsNames', array_column($channels, 'name', 'id'));
 
         return $entity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findEntities($params)
+    {
+        $result = parent::findEntities($params);
+
+        /**
+         * Set channels to children categories
+         */
+        if (!empty($result['total'])) {
+            $roots = [];
+            foreach ($result['collection'] as $category) {
+                if (empty($category->get('channelsIds'))) {
+                    /** @var array $channels */
+                    $channels = $this->getRootChannels($category)->toArray();
+
+                    $category->set('channelsIds', array_column($channels, 'id'));
+                    $category->set('channelsNames', array_column($channels, 'name', 'id'));
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -75,120 +118,18 @@ class Category extends AbstractService
     }
 
     /**
-     * Remove ProductCategory by ID category
+     * @param Entity $category
      *
-     * @param string $categoryId
+     * @return EntityCollection
      */
-    public function removeProductCategoryByCategory(string $categoryId): void
+    protected function getRootChannels(Entity $category): EntityCollection
     {
-        $productsCategory = $this
-            ->getEntityManager()
-            ->getRepository('ProductCategory')
-            ->where(['categoryId' => $categoryId])
-            ->find()
-            ->toArray();
-
-        $serviceProduct = $this->getServiceFactory()->create('ProductCategory');
-
-        foreach ($productsCategory as $productCategory) {
-            $serviceProduct->deleteEntity($productCategory['id']);
-        }
-    }
-
-    /**
-     * @param array $ids
-     * @param array $foreignIds
-     *
-     * @return bool
-     */
-    public function massRelateProductCategories(array $ids, array $foreignIds): bool
-    {
-        // prepare productCategory repository
-        $repository = $this->getEntityManager()->getRepository('ProductCategory');
-
-        // get exists productCategories
-        $productCategories = $repository
-            ->select(['productId', 'categoryId'])
-            ->where([
-                'productId' => $foreignIds,
-                'categoryId' => $ids,
-                'scope' => 'Global'
-            ])
-            ->find()
-            ->toArray();
-
-        $exists = [];
-
-        // prepare exists
-        if (!empty($productCategories)) {
-            foreach ($productCategories as $productCategory) {
-                if (isset($exists[$productCategory['categoryId']])) {
-                    $exists[$productCategory['categoryId']][] = $productCategory['productId'];
-                } else {
-                    $exists[$productCategory['categoryId']] = [$productCategory['productId']];
-                }
-            }
+        $categoryRoute = explode('|', $category->get('categoryRoute'));
+        $categoryRootId = (isset($categoryRoute[1])) ? $categoryRoute[1] : $category->get('id');
+        if (!isset($this->roots[$categoryRootId])) {
+            $this->roots[$categoryRootId] = $this->getEntityManager()->getEntity('Category', $categoryRootId);
         }
 
-        // create ProductCategory entity where needed
-        foreach ($ids as $categoryId) {
-            foreach ($foreignIds as $productId) {
-                if (!isset($exists[$categoryId]) || !in_array($productId, $exists[$categoryId])) {
-                    $category = $repository->get();
-                    $category->set([
-                        'productId' => $productId,
-                        'categoryId' => $categoryId,
-                        'scope' => 'Global'
-                    ]);
-                    $this->getEntityManager()->saveEntity($category);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param array $ids
-     * @param array $foreignIds
-     *
-     * @return bool
-     */
-    public function massUnrelateProductCategories(array $ids, array $foreignIds): bool
-    {
-        // get exists productCategories
-        $productCategories = $this
-            ->getEntityManager()
-            ->getRepository('ProductCategory')
-            ->where([
-                'productId' => $foreignIds,
-                'categoryId' => $ids,
-                'scope' => 'Global'
-            ])
-            ->find();
-
-        // remove related categories
-        if (count($productCategories) > 0) {
-            foreach ($productCategories as $productCategory) {
-                $this->getEntityManager()->removeEntity($productCategory);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * After mass delete action
-     *
-     * @param array $idList
-     *
-     * @return void
-     */
-    protected function afterMassRemove(array $idList): void
-    {
-        foreach ($idList as $id) {
-            $this->removeProductCategoryByCategory($id);
-        }
-        parent::afterMassRemove($idList);
+        return $this->roots[$categoryRootId]->get('channels');
     }
 }
