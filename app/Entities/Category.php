@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Core\Exceptions\Error;
 
@@ -17,6 +18,20 @@ class Category extends \Espo\Core\Templates\Entities\Base
      * @var string
      */
     protected $entityType = "Category";
+
+    /**
+     * @return Entity
+     * @throws Error
+     */
+    public function getRoot(): Entity
+    {
+        // validation
+        $this->isEntity();
+
+        $categoryRoute = explode('|', $this->get('categoryRoute'));
+
+        return (isset($categoryRoute[1])) ? $this->getEntityManager()->getEntity('Category', $categoryRoute[1]) : $this;
+    }
 
     /**
      * @return bool
@@ -63,21 +78,20 @@ class Category extends \Espo\Core\Templates\Entities\Base
 
         // prepare where
         $where = [
-            'productCategories.categoryId' => [$this->get('id')]
+            'categories.id' => [$this->get('id')]
         ];
 
         $categoryChildren = $this->getChildren();
 
         if (count($categoryChildren) > 0) {
-            $where['productCategories.categoryId'] =
-                array_merge($where['productCategories.categoryId'], array_column($categoryChildren->toArray(), 'id'));
+            $where['categories.id'] = array_merge($where['categories.id'], array_column($categoryChildren->toArray(), 'id'));
         }
 
         return $this
             ->getEntityManager()
             ->getRepository('Product')
             ->distinct()
-            ->join('productCategories')
+            ->join('categories')
             ->where($where)
             ->find();
     }

@@ -37,7 +37,8 @@
     "Category has children": "Ausgewählte Kategorie, die von einer anderen Kategorie als übergeordnetes Element verwendet wird und nicht als Produktkategorie ausgewählt werden kann",
     "Parent category has products": "Die übergeordnete Kategorie enthält Produkte. Aus diesem Grund können Sie diese Kategorie nicht als übergeordnete Kategorie auswählen. Bitte entfernen Sie zuerst die Produkte.",
     "Category has child category and can't be deleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden",
-    "You can not change parent category in root category with linked products": "Sie können die Hauptkategorie für eine Stammkategorie mit den verknüpften Produkten nicht ändern",
-    "You can not choose a child category": "Sie können keine untergeordnete Kategorie auswählen"
+    "You can not choose a child category": "Sie können keine untergeordnete Kategorie auswählen",
+    "There is no ability to change category parent for root category": "Es gibt keine Möglichkeit, die übergeordnete Kategorie für die Stammkategorie zu ändern",
+    "There is no ability to change category tree": "Es gibt keine Möglichkeit, den Kategoriebaum zu ändern"
   }
 }

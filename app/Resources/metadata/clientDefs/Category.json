@@ -5,6 +5,7 @@
     "onlyMy",
     "notEntity",
     "notChildCategory",
+    "fromCategoryTree",
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
@@ -14,6 +15,7 @@
   "hiddenBoolFilterList": [
     "notEntity",
     "notChildCategory",
+    "fromCategoryTree",
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
@@ -77,6 +79,16 @@
   },
   "dynamicLogic": {
     "fields": {
+      "categoryParent": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "categoryParentId"
+            }
+          ]
+        }
+      },
       "channels": {
         "readOnly": {
           "conditionGroup": [

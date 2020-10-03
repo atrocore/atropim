@@ -60,9 +60,7 @@ class Category extends AbstractSelectManager
         $catalogs = $this
             ->getEntityManager()
             ->getRepository('Catalog')
-            ->where([
-                'id' => $value
-            ])
+            ->where(['id' => $value])
             ->find();
 
         $catalogsTrees = [];
@@ -96,6 +94,24 @@ class Category extends AbstractSelectManager
 
         $result['whereClause'][] = [
             'categoryRoute!*' => "%|$categoryId|%"
+        ];
+    }
+
+    /**
+     * @param array $result
+     */
+    protected function boolFilterFromCategoryTree(array &$result)
+    {
+        // get category
+        $category = $this
+            ->getEntityManager()
+            ->getEntity('Category', $this->getSelectCondition('fromCategoryTree'));
+
+        /** @var string $rootId */
+        $rootId = $category->getRoot()->get('id');
+
+        $result['whereClause'][] = [
+            'categoryRoute*' => "%|$rootId|%"
         ];
     }
 }
