@@ -6,6 +6,7 @@ namespace Pim\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions;
+use Espo\ORM\Entity;
 use Pim\Entities\Channel;
 use Treo\Core\EventManager\Event;
 
@@ -23,7 +24,10 @@ class ChannelEntity extends AbstractEntityListener
      */
     public function beforeSave(Event $event)
     {
-        if (!$this->isCodeValid($event->getArgument('entity'))) {
+        /** @var Channel $entity */
+        $entity = $event->getArgument('entity');
+
+        if (!$this->isCodeValid($entity)) {
             throw new Exceptions\BadRequest(
                 $this->translate(
                     'Code is invalid',
@@ -32,6 +36,9 @@ class ChannelEntity extends AbstractEntityListener
                 )
             );
         }
+
+        // cascade products relating
+        $this->cascadeProductsRelating($entity);
     }
 
     /**
@@ -40,8 +47,8 @@ class ChannelEntity extends AbstractEntityListener
     public function afterUnrelate(Event $event)
     {
         //set default value in isActive for channel after deleted link
-        if(is_object($foreign = $event->getArgument('foreign'))
-                && isset($foreign->getRelations()['channels']['additionalColumns']['isActive'])) {
+        if (is_object($foreign = $event->getArgument('foreign'))
+            && isset($foreign->getRelations()['channels']['additionalColumns']['isActive'])) {
             $dataEntity = new \StdClass();
             $dataEntity->entityName = $foreign->getEntityName();
             $dataEntity->entityId = $foreign->get('id');
@@ -50,6 +57,29 @@ class ChannelEntity extends AbstractEntityListener
             $this
                 ->getService('Channel')
                 ->setIsActiveEntity($event->getArgument('foreign')->get('id'), $dataEntity, true);
+        }
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws Exceptions\Error
+     */
+    protected function cascadeProductsRelating(Entity $entity)
+    {
+        if ($entity->isAttributeChanged('categoryId')) {
+            /** @var \Pim\Repositories\Channel $channelRepository */
+            $channelRepository = $this->getEntityManager()->getRepository('Channel');
+
+            // unrelate prev
+            if (!empty($entity->getFetched('categoryId'))) {
+                $channelRepository->cascadeProductsRelating($entity->getFetched('categoryId'), $entity, true);
+            }
+
+            // relate new
+            if (!empty($entity->get('categoryId'))) {
+                $channelRepository->cascadeProductsRelating($entity->get('categoryId'), $entity);
+            }
         }
     }
 }

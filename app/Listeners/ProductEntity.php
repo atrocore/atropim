@@ -63,6 +63,28 @@ class ProductEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
+     *
+     * @throws BadRequest
+     */
+    public function beforeUnrelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'channels') {
+            $productId = (string)$event->getArgument('entity')->get('id');
+            $channelId = (string)$event->getArgument('foreign')->get('id');
+
+            $channelRelationData = $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->getChannelRelationData($productId);
+
+            if (!empty($channelRelationData[$channelId]['isFromCategoryTree'])) {
+                throw new BadRequest($this->exception("Channel provided by category tree can't be unlinked from product"));
+            }
+        }
+    }
+
+    /**
+     * @param Event $event
      */
     public function afterUnrelate(Event $event)
     {

@@ -22,24 +22,13 @@ class ProductController extends AbstractEntityListener
         $result = $event->getArgument('result');
 
         if ($params['link'] === 'channels') {
-            $isActives = $this->getIsActive($params['id']);
+            $data = $this->getEntityManager()->getRepository('Product')->getChannelRelationData($params['id']);
             foreach ($result['list'] as &$item) {
-                $item->isActiveEntity = (bool)$isActives[$item->id]['isActive'];
+                $item->isActiveEntity = (bool)$data[$item->id]['isActive'];
+                $item->isFromCategoryTree = (bool)$data[$item->id]['isFromCategoryTree'];
             }
         }
 
         $event->setArgument('result', $result);
-    }
-
-    /**
-     * @param string $productId
-     * @return array
-     */
-    protected function getIsActive(string $productId): array
-    {
-        return $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT channel_id, is_active AS isActive FROM product_channel pc WHERE product_id = '{$productId}' AND pc.deleted = 0")
-            ->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_UNIQUE);
     }
 }

@@ -12,7 +12,7 @@ use Espo\Core\Templates\Repositories\Base;
 /**
  * Class Product
  *
- * @author r.ratsun@gmail.com
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Product extends Base
 {
@@ -22,6 +22,28 @@ class Product extends Base
     public function getInputLanguageList(): array
     {
         return $this->getConfig()->get('inputLanguageList', []);
+    }
+
+    /**
+     * @param string $productId
+     *
+     * @return array
+     */
+    public function getChannelRelationData(string $productId): array
+    {
+        $data = $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "SELECT channel_id as channelId, is_active AS isActive, from_category_tree as isFromCategoryTree FROM product_channel WHERE product_id='{$productId}' AND deleted=0"
+            )
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        $result = [];
+        foreach ($data as $row) {
+            $result[$row['channelId']] = $row;
+        }
+
+        return $result;
     }
 
     /**

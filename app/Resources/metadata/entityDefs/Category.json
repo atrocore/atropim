@@ -207,6 +207,7 @@
     "channels": {
       "type": "hasMany",
       "foreign": "category",
+      "layoutRelationshipsDisabled": true,
       "entity": "Channel",
       "audited": false
     }

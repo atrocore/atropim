@@ -101,6 +101,7 @@
   "exceptions": {
     "Product with such SKU already exist": "Produkt mit einer solchen Artikelnummer existiert bereits",
     "You can't change Product Family in Product": "Sie können die Produktfamilie in Product nicht ändern",
-    "You can't change field of Type in Product": "Sie können das Feld Typ in Produkt nicht ändern"
+    "You can't change field of Type in Product": "Sie können das Feld Typ in Produkt nicht ändern",
+    "Channel provided by category tree can't be unlinked from product": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden"
   }
 }
