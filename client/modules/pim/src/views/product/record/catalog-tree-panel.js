@@ -72,42 +72,27 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
         expandTreeWithProductCategory() {
             const catalogTreeData = this.getStorage().get('catalog-tree-panel-data', this.scope);
             if (this.model && (!catalogTreeData || !catalogTreeData.category)) {
-                // @todo fix it
-                // this.ajaxGetRequest(`Product/${this.model.id}/productCategories`, this.getSortingParams())
-                //     .then(productCategories => {
-                //         let id = (((productCategories.list || [])[0] || {}).categoryId);
-                //         if (id) {
-                //             this.ajaxGetRequest(`Category/${id}`).then(category => {
-                //                 let parentCategoryId = id;
-                //                 if (category.categoryParentId) {
-                //                     parentCategoryId = (category.categoryRoute || '').split('|').find(element => element);
-                //                 }
-                //
-                //                 let catalog = this.catalogs.find(catalog => {
-                //                     return catalog.id === this.model.get('catalogId')
-                //                         && (catalog.categoriesIds || []).includes(parentCategoryId);
-                //                 });
-                //
-                //                 if (catalog) {
-                //                     let catalogTree = this.getView(`category-tree-${catalog.id}`);
-                //                     if (catalogTree) {
-                //                         catalogTree.expandCategoryHandler(category);
-                //                     }
-                //                 }
-                //             });
-                //         }
-                //     });
+                this.ajaxGetRequest(`Product/${this.model.id}/categories`)
+                    .then(productCategories => {
+                        let category = (((productCategories.list || [])[0] || {}));
+
+                        let parentCategoryId = category.id;
+                        if (category.categoryParentId) {
+                            parentCategoryId = (category.categoryRoute || '').split('|').find(element => element);
+                        }
+
+                        let catalog = this.catalogs.find(catalog => {
+                            return catalog.id === this.model.get('catalogId') && (catalog.categoriesIds || []).includes(parentCategoryId);
+                        });
+
+                        if (catalog) {
+                            let catalogTree = this.getView(`category-tree-${catalog.id}`);
+                            if (catalogTree) {
+                                catalogTree.expandCategoryHandler(category);
+                            }
+                        }
+                    });
             }
-        },
-
-        getSortingParams() {
-            const panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', 'productCategories']);
-            const scopeDefs = this.getMetadata().get(['entityDefs', 'ProductCategory', 'collection']);
-
-            return {
-                sortBy: (panelDefs || {}).sortBy || (scopeDefs || {}).sortBy,
-                asc: (panelDefs || {}).asc || (scopeDefs || {}).asc
-            };
         },
 
         getFullEntity(url, params, callback, container) {
@@ -239,7 +224,7 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             this.catalogTreeData = {};
             if (type === 'isEmpty') {
                 this.catalogTreeData.advanced = {
-                    productCategories: {
+                    categories: {
                         type: 'isNotLinked',
                         data: {
                             type: type

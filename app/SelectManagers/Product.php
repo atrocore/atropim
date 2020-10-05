@@ -2,6 +2,7 @@
 
 namespace Pim\SelectManagers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Pim\Services\GeneralStatisticsDashlet;
 use Treo\Core\Utils\Util;
@@ -472,17 +473,24 @@ class Product extends AbstractSelectManager
 
     /**
      * @param array $result
+     *
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
      */
     protected function boolFilterLinkedWithCategory(array &$result)
     {
-        // prepare category id
-        $id = (string)$this->getSelectCondition('linkedWithCategory');
+        /** @var \Pim\Entities\Category $category */
+        $category = $this->getEntityManager()->getEntity('Category', $this->getSelectCondition('linkedWithCategory'));
+        if (empty($category)) {
+            throw new BadRequest('No such category');
+        }
 
-        // get categories
-        $categories = $this->fetchAll("SELECT id FROM category WHERE (id='$id' OR category_route LIKE '%|$id|%') AND deleted=0");
+        // collect categories
+        $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
+        $categoriesIds[] = $category->get('id');
 
         // prepare categories ids
-        $ids = implode("','", array_column($categories, 'id'));
+        $ids = implode("','", $categoriesIds);
 
         // prepare custom where
         if (!isset($result['customWhere'])) {
