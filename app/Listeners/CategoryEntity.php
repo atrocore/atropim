@@ -133,9 +133,15 @@ class CategoryEntity extends AbstractEntityListener
      */
     public function beforeRelate(Event $event)
     {
-        if ($event->getArgument('relationName') == 'catalogs'
-            && !empty($event->getArgument('entity')->get('categoryParent'))) {
+        if ($event->getArgument('relationName') == 'catalogs' && !empty($event->getArgument('entity')->get('categoryParent'))) {
             throw new BadRequest($this->translate('Only root category can be linked with catalog', 'exceptions', 'Catalog'));
+        }
+
+        if ($event->getArgument('relationName') == 'products') {
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->isCategoryFromCatalogTrees($event->getArgument('foreign'), $event->getArgument('entity'));
         }
     }
 

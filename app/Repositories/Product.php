@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
@@ -44,6 +45,40 @@ class Product extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * @param Entity $product
+     * @param Entity $category
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function isCategoryFromCatalogTrees(Entity $product, Entity $category): bool
+    {
+        if (!empty($catalog = $product->get('catalog'))) {
+            /** @var array $treesIds */
+            $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
+
+            /** @var string $rootId */
+            $rootId = $category->getRoot()->get('id');
+
+            if (!in_array($rootId, $treesIds)) {
+                throw new BadRequest($this->translate("You should use categories from those trees that linked with product catalog", 'exceptions', 'Product'));
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 
     /**
@@ -118,5 +153,17 @@ class Product extends Base
         }
 
         return true;
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translate(string $key, string $label, $scope = ''): string
+    {
+        return $this->getInjection('language')->translate($key, $label, $scope);
     }
 }

@@ -16,16 +16,6 @@ use Espo\ORM\Entity;
 class Category extends Base
 {
     /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-    }
-
-    /**
      * @param Entity $entity
      * @param array  $options
      *
@@ -63,6 +53,16 @@ class Category extends Base
         }
 
         parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 
     /**

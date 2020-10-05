@@ -14,8 +14,7 @@ use Pim\Entities\Channel;
 /**
  * Class ProductEntity
  *
- * @package Pim\Listeners
- * @author  r.ratsun@gmail.com
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class ProductEntity extends AbstractEntityListener
 {
@@ -70,19 +69,10 @@ class ProductEntity extends AbstractEntityListener
     public function beforeRelate(Event $event)
     {
         if ($event->getArgument('relationName') == 'categories') {
-            /** @var Product $product */
-            $product = $event->getArgument('entity');
-            if (!empty($catalog = $product->get('catalog'))) {
-                /** @var array $treesIds */
-                $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
-
-                /** @var string $rootId */
-                $rootId = $event->getArgument('foreign')->getRoot()->get('id');
-
-                if (!in_array($rootId, $treesIds)) {
-                    throw new BadRequest($this->exception("You should use categories from those trees that linked with product catalog"));
-                }
-            }
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->isCategoryFromCatalogTrees($event->getArgument('entity'), $event->getArgument('foreign'));
         }
     }
 
