@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
@@ -44,40 +45,25 @@ class Category extends AbstractSelectManager
     /**
      * @param array $result
      *
-     * @return mixed
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
      */
     protected function boolFilterOnlyCatalogCategories(array &$result)
     {
-        // get id
-        $value = $this->getSelectCondition('onlyCatalogCategories');
-
-        // get catalog
-        if (empty($value)) {
-            return null;
+        /** @var \Pim\Entities\Catalog $catalog */
+        $catalog = $this->getEntityManager()->getEntity('Catalog', (string)$this->getSelectCondition('onlyCatalogCategories'));
+        if (empty($catalog)) {
+            throw new BadRequest('No such catalog');
         }
 
-        // get catalog trees
-        $catalogs = $this
-            ->getEntityManager()
-            ->getRepository('Catalog')
-            ->where(['id' => $value])
-            ->find();
+        /** @var array $treesIds */
+        $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
 
-        $catalogsTrees = [];
-
-        if (count($catalogs) > 0) {
-            foreach ($catalogs as $catalog) {
-                $catalogsTrees = array_merge($catalogsTrees, array_column($catalog->get('categories')->toArray(), 'id'));
-            }
-        }
-
-        if (!empty($catalogsTrees)) {
-            // prepare where
-            $where[] = ['id' => $catalogsTrees];
-            foreach ($catalogsTrees as $catalogTree) {
+        if (!empty($treesIds)) {
+            $where[] = ['id' => $treesIds];
+            foreach ($treesIds as $catalogTree) {
                 $where[] = ['categoryRoute*' => "%|" . $catalogTree . "|%"];
             }
-
             $result['whereClause'][] = ['OR' => $where];
         } else {
             $result['whereClause'][] = ['id' => -1];

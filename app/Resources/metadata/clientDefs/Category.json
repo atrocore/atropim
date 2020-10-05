@@ -9,8 +9,7 @@
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
-    "onlyCatalogCategories",
-    "notLinkedProductCategories"
+    "onlyCatalogCategories"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
@@ -19,8 +18,7 @@
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
-    "onlyCatalogCategories",
-    "notLinkedProductCategories"
+    "onlyCatalogCategories"
   ],
   "disabledMassActions": [
     "merge"
@@ -35,18 +33,6 @@
     "detail": "pim:views/category/record/detail"
   },
   "relationshipPanels": {
-    "productCategories": {
-      "layout": "listForProductCategoriesInCategory",
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "select": false,
-      "recordsPerPage": 200,
-      "dragDrop": {
-        "isActive": true,
-        "sortField": "sorting"
-      },
-      "sortBy": "sorting",
-      "asc": true
-    },
     "catalogs": {
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [

@@ -80,6 +80,13 @@
       "selectAction": "selectRelatedEntity",
       "layout": "listForChannelsInProduct"
     },
+    "categories": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "onlyCatalogCategories"
+      ],
+      "view": "pim:views/product/record/panels/categories"
+    },
     "associatedMainProducts": {
       "view": "pim:views/product/record/panels/associated-main-product",
       "label": "Associated Products",
