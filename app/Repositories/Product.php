@@ -9,6 +9,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\EntityCollection;
 
 /**
  * Class Product
@@ -65,6 +66,31 @@ class Product extends Base
 
             if (!in_array($rootId, $treesIds)) {
                 throw new BadRequest($this->translate("You should use categories from those trees that linked with product catalog", 'exceptions', 'Product'));
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Entity $product
+     * @param Entity $catalog
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function isProductCategoriesInSelectedCatalog(Entity $product, Entity $catalog): bool
+    {
+        /** @var array $catalogTreesIds */
+        $catalogTreesIds = array_column($catalog->get('categories')->toArray(), 'id');
+
+        /** @var EntityCollection $categories */
+        $categories = $product->get('categories');
+        if ($categories->count() > 0) {
+            foreach ($categories as $category) {
+                if (!in_array($category->getRoot()->get('id'), $catalogTreesIds)) {
+                    throw new BadRequest("You should use categories from those trees that linked with product catalog");
+                }
             }
         }
 

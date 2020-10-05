@@ -34,8 +34,10 @@ class ProductEntity extends AbstractEntityListener
         }
 
         if ($entity->isAttributeChanged('catalogId')) {
-            // is product categories in selected catalog
-            $this->isProductCategoriesInSelectedCatalog($entity);
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->isProductCategoriesInSelectedCatalog($entity, $entity->get('catalog'));
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
