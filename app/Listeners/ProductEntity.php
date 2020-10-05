@@ -7,6 +7,7 @@ namespace Pim\Listeners;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Pim\Entities\Product;
 use Treo\Core\EventManager\Event;
 use Pim\Entities\Channel;
 
@@ -58,6 +59,30 @@ class ProductEntity extends AbstractEntityListener
 
         if ($skipUpdate && empty($entity->isDuplicate)) {
             $this->updateProductAttributesByProductFamily($entity, $options);
+        }
+    }
+
+    /**
+     * @param Event $event
+     *
+     * @throws BadRequest
+     */
+    public function beforeRelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'categories') {
+            /** @var Product $product */
+            $product = $event->getArgument('entity');
+            if (!empty($catalog = $product->get('catalog'))) {
+                /** @var array $treesIds */
+                $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
+
+                /** @var string $rootId */
+                $rootId = $event->getArgument('foreign')->getRoot()->get('id');
+
+                if (!in_array($rootId, $treesIds)) {
+                    throw new BadRequest($this->exception("You should use categories from those trees that linked with product catalog"));
+                }
+            }
         }
     }
 
