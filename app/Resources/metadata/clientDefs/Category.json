@@ -69,8 +69,17 @@
         "readOnly": {
           "conditionGroup": [
             {
-              "type": "isEmpty",
-              "attribute": "categoryParentId"
+              "type": "and",
+              "value": [
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "id"
+                },
+                {
+                  "type": "isEmpty",
+                  "attribute": "categoryParentId"
+                }
+              ]
             }
           ]
         }

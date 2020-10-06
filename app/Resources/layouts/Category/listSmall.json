@@ -10,10 +10,6 @@
     "name": "categoryRouteName"
   },
   {
-    "name": "channels",
-    "notSortable": true
-  },
-  {
     "name": "isActive"
   }
 ]

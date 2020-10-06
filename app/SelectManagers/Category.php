@@ -93,11 +93,16 @@ class Category extends AbstractSelectManager
             ->getEntityManager()
             ->getEntity('Category', $this->getSelectCondition('fromCategoryTree'));
 
-        /** @var string $rootId */
-        $rootId = $category->getRoot()->get('id');
+        try {
+            $root = $category->getRoot();
+        } catch (\Throwable $e) {
+            // skip exceptions
+        }
 
-        $result['whereClause'][] = [
-            'categoryRoute*' => "%|$rootId|%"
-        ];
+        if (!empty($root)) {
+            $result['whereClause'][] = [
+                'categoryRoute*' => "%|{$root->id}|%"
+            ];
+        }
     }
 }

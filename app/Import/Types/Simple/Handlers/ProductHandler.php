@@ -11,9 +11,9 @@ use Treo\Core\Exceptions\NoChange;
 use Treo\Core\Utils\Util;
 
 /**
- * Class Product
+ * Class ProductHandler
  *
- * @author r.ratsun@gmail.com
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class ProductHandler extends AbstractHandler
 {
@@ -105,7 +105,7 @@ class ProductHandler extends AbstractHandler
                     if (isset($item['attributeId']) || isset($item['pimImage']) || $item['name'] == 'productCategories') {
                         $additionalFields[] = [
                             'item' => $item,
-                            'row' => $row
+                            'row'  => $row
                         ];
 
                         continue;
@@ -133,24 +133,13 @@ class ProductHandler extends AbstractHandler
                     }
                 }
 
-                // prepare product images if needed
-                if (!empty($entity) && !empty(array_column($data['data']['configuration'], 'pimImage'))) {
-                    $this->images = $entity->get('pimImages');
-                }
-
                 // prepare product attributes
                 $this->attributes = $entity->get('productAttributeValues');
 
                 foreach ($additionalFields as $value) {
-                    if ($value['item']['name'] == 'productCategories') {
-                        // import categories
-                        $this->importCategories($entity, $value, $delimiter);
-                    } elseif (isset($value['item']['attributeId'])) {
+                    if (isset($value['item']['attributeId'])) {
                         // import attributes
                         $this->importAttribute($entity, $value, $delimiter);
-                    } elseif (isset($value['item']['pimImage'])) {
-                        // import product images
-                        $this->importImages($entity, $value);
                     }
                 }
 
@@ -178,8 +167,8 @@ class ProductHandler extends AbstractHandler
     }
 
     /**
-     * @param Record $service
-     * @param string $id
+     * @param Record    $service
+     * @param string    $id
      * @param \stdClass $data
      */
     protected function updateEntity(Record $service, string $id, \stdClass $data): ?Entity
@@ -195,7 +184,7 @@ class ProductHandler extends AbstractHandler
 
     /**
      * @param Entity $product
-     * @param array $data
+     * @param array  $data
      * @param string $delimiter
      */
     protected function importAttribute(Entity $product, array $data, string $delimiter)
@@ -269,105 +258,6 @@ class ProductHandler extends AbstractHandler
 
             if ($entity->isSaved()) {
                 $this->saveRestoreRow('updated', $entityType, [$id => $restoreRow]);
-                $this->saved = true;
-            }
-        }
-    }
-
-    /**
-     * @param Entity $product
-     * @param array $data
-     * @param string $delimiter
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function importCategories(Entity $product, array $data, string $delimiter)
-    {
-        //@todo implement category importing
-        return null;
-    }
-
-    /**
-     * @param Entity $product
-     * @param array $data
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function importImages(Entity $product, array $data)
-    {
-        // prepare image entity type
-        $entityType = 'PimImage';
-
-        // prepare data
-        $conf = $data['item'];
-        $row = $data['row'];
-
-        // prepare input row
-        $input = new \stdClass();
-
-        // prepare where
-        if (isset($row[$conf['column']]) && !empty($row[$conf['column']])) {
-            $field = 'link';
-            $value = $row[$conf['column']];
-            $input->link = $row[$conf['column']];
-        } elseif (!empty($conf['default'])) {
-            $field = 'imageId';
-            $value = $conf['default'];
-        } else {
-            return;
-        }
-
-        // prepare scope
-        $input->scope = $conf['scope'];
-        if ($conf['scope'] == 'Channel') {
-            $input->channelsIds = $conf['channelsIds'];
-        }
-
-        // check exist product image
-        $exist = null;
-        if (!empty($this->images)) {
-            foreach ($this->images as $image) {
-                if ($image->get($field) == $value) {
-                    $exist = $image;
-                    break;
-                }
-            }
-        }
-
-        // prepare service
-        $service = $this->getServiceFactory()->create($entityType);
-
-        if (empty($exist)) {
-            // convert image
-            $this->convertItem($input, $entityType, $conf, $row, '');
-
-            // get attachment
-            $attachment = $this->getEntityManager()->getEntity('Attachment', $input->{$conf['name'] . 'Id'});
-
-            // prepare input row
-            $input->productId = $product->get('id');
-            $input->productName = $product->get('name');
-            $input->name = $attachment->get('name');
-
-            // create entity
-            $entity = $service->createEntity($input);
-
-            // save restore row
-            $this->saveRestoreRow('created', $entityType, $entity->get('id'));
-
-            $this->saved = true;
-        } else {
-            // prepare restore row
-            $restore = new \stdClass();
-            $restore->scope = $exist->get('scope');
-            $restore->channelsIds = array_column($exist->get('channels')->toArray(), 'id');
-
-            // update entity
-            $entity = $this->updateEntity($service, $exist->get('id'), $input);
-
-            if ($entity->isSaved()) {
-                // save restore row
-                $this->saveRestoreRow('updated', $entityType, [$exist->get('id') => $restore]);
                 $this->saved = true;
             }
         }

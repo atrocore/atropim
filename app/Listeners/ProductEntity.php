@@ -70,11 +70,15 @@ class ProductEntity extends AbstractEntityListener
      */
     public function beforeRelate(Event $event)
     {
-        if ($event->getArgument('relationName') == 'categories') {
+        if ($event->getArgument('relationName') == 'categories' && !empty($category = $event->getArgument('foreign'))) {
+            if (is_string($category)){
+                $category = $this->getEntityManager()->getEntity('Category', $category);
+            }
+
             $this
                 ->getEntityManager()
                 ->getRepository('Product')
-                ->isCategoryFromCatalogTrees($event->getArgument('entity'), $event->getArgument('foreign'));
+                ->isCategoryFromCatalogTrees($event->getArgument('entity'), $category);
         }
     }
 
@@ -172,19 +176,6 @@ class ProductEntity extends AbstractEntityListener
         }
 
         return true;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    protected function isProductCategoriesInSelectedCatalog(Entity $entity): bool
-    {
-        // @todo fix it
-
-        return false;
     }
 
     /**
