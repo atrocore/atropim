@@ -138,10 +138,25 @@ class CategoryEntity extends AbstractEntityListener
         }
 
         if ($event->getArgument('relationName') == 'products') {
-            $this
-                ->getEntityManager()
-                ->getRepository('Product')
-                ->isCategoryFromCatalogTrees($event->getArgument('foreign'), $event->getArgument('entity'));
+            $product = $event->getArgument('foreign');
+            if (is_string($product)) {
+                $product = $this->getEntityManager()->getEntity('Product', $product);
+            }
+
+            $this->getProductRepository()->isCategoryFromCatalogTrees($product, $event->getArgument('entity'));
+        }
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function afterRelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'products') {
+            $productId = !is_string($event->getArgument('foreign')) ? (string)$event->getArgument('foreign')->get('id') : $event->getArgument('foreign');
+            $categoryId = (string)$event->getArgument('entity')->get('id');
+
+            $this->getProductRepository()->updateProductCategorySortOrder($productId, $categoryId);
         }
     }
 
@@ -310,5 +325,13 @@ class CategoryEntity extends AbstractEntityListener
                 }
             }
         }
+    }
+
+    /**
+     * @return \Pim\Repositories\Product
+     */
+    protected function getProductRepository(): \Pim\Repositories\Product
+    {
+        return $this->getEntityManager()->getRepository('Product');
     }
 }

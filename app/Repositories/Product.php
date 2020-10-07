@@ -68,12 +68,19 @@ class Product extends Base
     }
 
     /**
-     * @param string $productId
-     * @param string $categoryId
-     * @param int    $sorting
+     * @param string   $productId
+     * @param string   $categoryId
+     * @param int|null $sorting
      */
-    public function updateProductCategorySortOrder(string $productId, string $categoryId, int $sorting): void
+    public function updateProductCategorySortOrder(string $productId, string $categoryId, int $sorting = null): void
     {
+        $isLast = false;
+
+        if (is_null($sorting)) {
+            $sorting = time();
+            $isLast = true;
+        }
+
         // get link data
         $linkData = $this->getProductCategoryLinkData([$productId], [$categoryId]);
 
@@ -85,26 +92,28 @@ class Product extends Base
             ->getEntityManager()
             ->nativeQuery("UPDATE product_category SET sorting='$sorting' WHERE category_id='$categoryId' AND product_id='$productId' AND deleted=0");
 
-        // get next records
-        $ids = $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT id FROM product_category WHERE sorting>='$sorting' AND category_id='$categoryId' AND deleted=0 AND product_id!='$productId' ORDER BY sorting")
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        if (!$isLast) {
+            // get next records
+            $ids = $this
+                ->getEntityManager()
+                ->nativeQuery("SELECT id FROM product_category WHERE sorting>='$sorting' AND category_id='$categoryId' AND deleted=0 AND product_id!='$productId' ORDER BY sorting")
+                ->fetchAll(\PDO::FETCH_COLUMN);
 
-        // update next records
-        if (!empty($ids)) {
-            // prepare sql
-            $sql = '';
-            foreach ($ids as $id) {
-                // increase max
-                $max = $max + 10;
-
+            // update next records
+            if (!empty($ids)) {
                 // prepare sql
-                $sql .= "UPDATE product_category SET sorting='$max' WHERE id='$id';";
-            }
+                $sql = '';
+                foreach ($ids as $id) {
+                    // increase max
+                    $max = $max + 10;
 
-            // execute sql
-            $this->getEntityManager()->nativeQuery($sql);
+                    // prepare sql
+                    $sql .= "UPDATE product_category SET sorting='$max' WHERE id='$id';";
+                }
+
+                // execute sql
+                $this->getEntityManager()->nativeQuery($sql);
+            }
         }
     }
 

@@ -71,14 +71,23 @@ class ProductEntity extends AbstractEntityListener
     public function beforeRelate(Event $event)
     {
         if ($event->getArgument('relationName') == 'categories' && !empty($category = $event->getArgument('foreign'))) {
-            if (is_string($category)){
+            if (is_string($category)) {
                 $category = $this->getEntityManager()->getEntity('Category', $category);
             }
+            $this->getProductRepository()->isCategoryFromCatalogTrees($event->getArgument('entity'), $category);
+        }
+    }
 
-            $this
-                ->getEntityManager()
-                ->getRepository('Product')
-                ->isCategoryFromCatalogTrees($event->getArgument('entity'), $category);
+    /**
+     * @param Event $event
+     */
+    public function afterRelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'categories') {
+            $productId = (string)$event->getArgument('entity')->get('id');
+            $categoryId = !is_string($event->getArgument('foreign')) ? (string)$event->getArgument('foreign')->get('id') : $event->getArgument('foreign');
+
+            $this->getProductRepository()->updateProductCategorySortOrder($productId, $categoryId);
         }
     }
 
@@ -253,6 +262,14 @@ class ProductEntity extends AbstractEntityListener
         }
 
         return true;
+    }
+
+    /**
+     * @return \Pim\Repositories\Product
+     */
+    protected function getProductRepository(): \Pim\Repositories\Product
+    {
+        return $this->getEntityManager()->getRepository('Product');
     }
 
     /**
