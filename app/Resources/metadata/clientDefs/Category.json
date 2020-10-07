@@ -41,6 +41,7 @@
       "view": "pim:views/category/record/panels/catalogs"
     },
     "products": {
+      "create": false,
       "dragDrop": {
         "isActive": true,
         "sortField": "pcSorting"

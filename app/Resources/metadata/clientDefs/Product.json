@@ -81,6 +81,7 @@
       "layout": "listForChannelsInProduct"
     },
     "categories": {
+      "create": false,
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "onlyCatalogCategories"

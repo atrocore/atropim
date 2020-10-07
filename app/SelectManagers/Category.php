@@ -17,6 +17,16 @@ class Category extends AbstractSelectManager
     /**
      * @inheritDoc
      */
+    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    {
+        $this->filterByChannels($params);
+
+        return parent::getSelectParams($params, $withAcl, $checkWherePermission);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function applyAdditional(array &$result, array $params)
     {
         // prepare additional select columns
@@ -103,6 +113,63 @@ class Category extends AbstractSelectManager
             $result['whereClause'][] = [
                 'categoryRoute*' => "%|{$root->id}|%"
             ];
+        }
+    }
+
+    /**
+     * @param array $params
+     */
+    protected function filterByChannels(array &$params)
+    {
+        if (!empty($params['where'])) {
+            foreach ($params['where'] as $k => $row) {
+                if ($row['attribute'] == 'channels') {
+                    if (!empty($row['value'])) {
+                        $channels = $this
+                            ->getEntityManager()
+                            ->getRepository('Channel')
+                            ->where(['id' => $row['value']])
+                            ->find();
+
+                    } else {
+                        $channels = $this
+                            ->getEntityManager()
+                            ->getRepository('Channel')
+                            ->where(['categoryId!=' => null])
+                            ->find();
+                    }
+
+                    // prepare categories
+                    $categories = [];
+                    if ($channels->count() > 0) {
+                        foreach ($channels as $channel) {
+                            if (!empty($category = $channel->get('category'))) {
+                                $categories = array_merge($categories, array_column($category->getChildren()->toArray(), 'id'));
+                                $categories[] = $category->get('id');
+                            }
+                        }
+                    }
+
+                    switch ($row['type']) {
+                        case 'linkedWith':
+                        case 'isLinked':
+                            $params['where'][$k] = [
+                                'type'      => 'in',
+                                'attribute' => 'id',
+                                'value'     => $categories
+                            ];
+                            break;
+                        case 'notLinkedWith':
+                        case 'isNotLinked':
+                            $params['where'][$k] = [
+                                'type'      => 'notIn',
+                                'attribute' => 'id',
+                                'value'     => $categories
+                            ];
+                            break;
+                    }
+                }
+            }
         }
     }
 }
