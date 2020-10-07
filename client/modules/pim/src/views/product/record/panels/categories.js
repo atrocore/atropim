@@ -1,6 +1,12 @@
 Espo.define('pim:views/product/record/panels/categories', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
+        actionSelectRelatedEntity(data) {
+            setTimeout(function () {
+                $('.add-filter[data-name=channels]').click();
+            }, 750);
+        },
+
         boolFilterData: {
             onlyCatalogCategories() {
                 return this.model.get('catalogId');
