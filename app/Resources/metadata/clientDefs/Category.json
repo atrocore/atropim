@@ -39,6 +39,12 @@
         "notEntity"
       ],
       "view": "pim:views/category/record/panels/catalogs"
+    },
+    "products": {
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "pcSorting"
+      }
     }
   },
   "menu": {

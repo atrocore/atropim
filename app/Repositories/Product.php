@@ -49,6 +49,66 @@ class Product extends Base
     }
 
     /**
+     * @param array $productsIds
+     * @param array $categoriesIds
+     *
+     * @return array
+     */
+    public function getProductCategoryLinkData(array $productsIds, array $categoriesIds): array
+    {
+        $productsIds = implode("','", $productsIds);
+        $categoriesIds = implode("','", $categoriesIds);
+
+        return $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "SELECT * FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0"
+            )
+            ->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param string $productId
+     * @param string $categoryId
+     * @param int    $sorting
+     */
+    public function updateProductCategorySortOrder(string $productId, string $categoryId, int $sorting): void
+    {
+        // get link data
+        $linkData = $this->getProductCategoryLinkData([$productId], [$categoryId]);
+
+        // get max
+        $max = (int)$linkData[0]['sorting'];
+
+        // update current
+        $this
+            ->getEntityManager()
+            ->nativeQuery("UPDATE product_category SET sorting='$sorting' WHERE category_id='$categoryId' AND product_id='$productId' AND deleted=0");
+
+        // get next records
+        $ids = $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT id FROM product_category WHERE sorting>='$sorting' AND category_id='$categoryId' AND deleted=0 AND product_id!='$productId' ORDER BY sorting")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        // update next records
+        if (!empty($ids)) {
+            // prepare sql
+            $sql = '';
+            foreach ($ids as $id) {
+                // increase max
+                $max = $max + 10;
+
+                // prepare sql
+                $sql .= "UPDATE product_category SET sorting='$max' WHERE id='$id';";
+            }
+
+            // execute sql
+            $this->getEntityManager()->nativeQuery($sql);
+        }
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $category
      *

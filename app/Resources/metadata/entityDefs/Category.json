@@ -146,7 +146,14 @@
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "columns": {
+        "pcSorting": "sorting"
+      }
+    },
+    "pcSorting": {
+      "type": "int",
+      "notStorable": true
     },
     "channels": {
       "type": "linkMultiple",
@@ -202,7 +209,12 @@
       "relationName": "productCategory",
       "foreign": "categories",
       "entity": "Product",
-      "audited": false
+      "audited": false,
+      "additionalColumns": {
+        "sorting": {
+          "type": "int"
+        }
+      }
     },
     "channels": {
       "type": "hasMany",

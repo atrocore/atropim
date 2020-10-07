@@ -242,7 +242,14 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "columns": {
+        "pcSorting": "sorting"
+      }
+    },
+    "pcSorting": {
+      "type": "int",
+      "notStorable": true
     }
   },
   "links": {
