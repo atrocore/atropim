@@ -111,7 +111,10 @@ class Category extends AbstractSelectManager
 
         if (!empty($root)) {
             $result['whereClause'][] = [
-                'categoryRoute*' => "%|{$root->id}|%"
+                'OR' => [
+                    'id'             => $root->id,
+                    'categoryRoute*' => "%|{$root->id}|%"
+                ]
             ];
         }
     }

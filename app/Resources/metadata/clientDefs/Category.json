@@ -72,25 +72,6 @@
   },
   "dynamicLogic": {
     "fields": {
-      "categoryParent": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "and",
-              "value": [
-                {
-                  "type": "isNotEmpty",
-                  "attribute": "id"
-                },
-                {
-                  "type": "isEmpty",
-                  "attribute": "categoryParentId"
-                }
-              ]
-            }
-          ]
-        }
-      },
       "channels": {
         "readOnly": {
           "conditionGroup": [

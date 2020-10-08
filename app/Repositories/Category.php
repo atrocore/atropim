@@ -35,7 +35,7 @@ class Category extends Base
             // get fetched category
             $fetchedCategory = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'));
 
-            if ($entity->get('categoryParent')->getRoot()->get('id') != $fetchedCategory->getRoot()->get('id')) {
+            if (empty($entity->get('categoryParentId')) || $entity->get('categoryParent')->getRoot()->get('id') != $fetchedCategory->getRoot()->get('id')) {
                 throw new BadRequest($this->exception('There is no ability to change category tree'));
             }
         }
