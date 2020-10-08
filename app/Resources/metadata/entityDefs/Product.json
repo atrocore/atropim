@@ -249,7 +249,9 @@
     },
     "pcSorting": {
       "type": "int",
-      "notStorable": true
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true
     }
   },
   "links": {
