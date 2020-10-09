@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
+use Pim\Repositories\Category;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -46,6 +47,18 @@ class CatalogEntity extends AbstractEntityListener
     }
 
     /**
+     * @param Event $event
+     *
+     * @throws BadRequest
+     */
+    public function beforeUnrelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'categories') {
+            $this->getCategoryRepository()->canUnRelateCatalog($event->getArgument('foreign'), $event->getArgument('entity'));
+        }
+    }
+
+    /**
      * @param string $key
      *
      * @return string
@@ -53,5 +66,13 @@ class CatalogEntity extends AbstractEntityListener
     protected function exception(string $key): string
     {
         return $this->translate($key, 'exceptions', 'Catalog');
+    }
+
+    /**
+     * @return Category
+     */
+    protected function getCategoryRepository(): Category
+    {
+        return $this->getEntityManager()->getRepository('Category');
     }
 }

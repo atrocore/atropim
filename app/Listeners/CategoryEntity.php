@@ -7,6 +7,7 @@ namespace Pim\Listeners;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Pim\Repositories\Category;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -121,7 +122,14 @@ class CategoryEntity extends AbstractEntityListener
      */
     public function beforeRemove(Event $event)
     {
-        if (count($event->getArgument('entity')->get('categories')) > 0) {
+        /** @var Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        if ($entity->get('products')->count() > 0) {
+            throw new BadRequest($this->exception("categoryHasProducts"));
+        }
+
+        if ($entity->get('categories')->count() > 0) {
             throw new BadRequest($this->exception("Category has child category and can't be deleted"));
         }
     }
@@ -155,6 +163,18 @@ class CategoryEntity extends AbstractEntityListener
         if ($event->getArgument('relationName') == 'products') {
             $this->getProductRepository()->updateProductCategorySortOrder($event->getArgument('foreign'), $event->getArgument('entity'));
             $this->getProductRepository()->linkCategoryChannels($event->getArgument('foreign'), $event->getArgument('entity'));
+        }
+    }
+
+    /**
+     * @param Event $event
+     *
+     * @throws BadRequest
+     */
+    public function beforeUnrelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'catalogs') {
+            $this->getCategoryRepository()->canUnRelateCatalog($event->getArgument('entity'), $event->getArgument('foreign'));
         }
     }
 
@@ -342,5 +362,13 @@ class CategoryEntity extends AbstractEntityListener
     protected function getProductRepository(): \Pim\Repositories\Product
     {
         return $this->getEntityManager()->getRepository('Product');
+    }
+
+    /**
+     * @return Category
+     */
+    protected function getCategoryRepository(): Category
+    {
+        return $this->getEntityManager()->getRepository('Category');
     }
 }

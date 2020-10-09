@@ -16,6 +16,44 @@ use Espo\ORM\Entity;
 class Category extends Base
 {
     /**
+     * @param $category
+     * @param $catalog
+     *
+     * @throws BadRequest
+     */
+    public function canUnRelateCatalog($category, $catalog)
+    {
+        if (!$category instanceof Entity) {
+            $category = $this->getEntityManager()->getEntity('Category', $category);
+        }
+
+        if (!$catalog instanceof Entity) {
+            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalog);
+        }
+
+        /** @var array $productsIds */
+        $productsIds = array_column($catalog->get('products')->toArray(), 'id');
+
+        if (!empty($productsIds)) {
+            $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
+            $categoriesIds[] = $category->get('id');
+
+            $categoriesIds = implode("','", $categoriesIds);
+            $productsIds = implode("','", $productsIds);
+
+            $total = $this
+                ->getEntityManager()
+                ->nativeQuery("SELECT COUNT('id') as total FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0")
+                ->fetch(\PDO::FETCH_COLUMN);
+
+            if (!empty($total)) {
+                throw new BadRequest($this->exception('categoryCannotBeUnRelatedFromCatalog'));
+            }
+        }
+    }
+
+
+    /**
      * @param Entity $entity
      * @param array  $options
      *
