@@ -17,6 +17,7 @@
   },
   "exceptions": {
     "Channel with such CODE already exist": "Channel with such CODE already exist",
-    "channelHasProducts": "Channel with related products can't be deleted."
+    "channelHasProducts": "Channel with related products can't be deleted.",
+    "channelHasCategory": "Channel with related category tree can't be deleted."
   }
 }

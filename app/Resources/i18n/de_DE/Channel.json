@@ -17,6 +17,7 @@
   },
   "exceptions": {
     "Channel with such CODE already exist": "Der Kanal mit einem solchen CODE existiert bereits",
-    "channelHasProducts": "Kanäle mit zugeordneten Produkten können nicht gelöscht werden."
+    "channelHasProducts": "Kanäle mit zugeordneten Produkten können nicht gelöscht werden.",
+    "channelHasCategory": "Kanal mit einem zugeordneten Kategoriebaum kann nicht gelöscht werden."
   }
 }
