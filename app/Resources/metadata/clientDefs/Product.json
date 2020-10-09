@@ -84,6 +84,7 @@
       "create": false,
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
+        "notEntity",
         "onlyCatalogCategories"
       ],
       "view": "pim:views/product/record/panels/categories"

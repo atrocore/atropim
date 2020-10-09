@@ -8,6 +8,9 @@ Espo.define('pim:views/product/record/panels/categories', 'views/record/panels/r
         },
 
         boolFilterData: {
+            notEntity() {
+                return this.collection.map(model => model.id);
+            },
             onlyCatalogCategories() {
                 return this.model.get('catalogId');
             }
