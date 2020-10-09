@@ -31,11 +31,12 @@ class Product extends Base
      *
      * @param Entity|string                 $product
      * @param \Pim\Entities\Category|string $category
-     * @param bool                          $unRelate
+     * @param bool
      *
+     * @return bool
      * @throws Error
      */
-    public function linkCategoryChannels($product, $category, bool $unRelate = false)
+    public function linkCategoryChannels($product, $category, bool $unRelate = false): bool
     {
         if (is_string($product)) {
             $product = $this->getEntityManager()->getEntity('Product', $product);
@@ -44,8 +45,22 @@ class Product extends Base
             $category = $this->getEntityManager()->getEntity('Category', $category);
         }
 
+        // get root
+        $root = $category->getRoot();
+
+        if ($unRelate) {
+            $productCategories = $product->get('categories');
+            if ($productCategories->count() > 0) {
+                foreach ($productCategories as $productCategory) {
+                    if ($productCategory->getRoot() == $root) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         // get channels
-        $channels = $category->getRoot()->get('channels');
+        $channels = $root->get('channels');
         if ($channels->count() > 0) {
             foreach ($channels as $channel) {
                 if (!$unRelate) {
@@ -57,6 +72,8 @@ class Product extends Base
                 }
             }
         }
+
+        return true;
     }
 
     /**
