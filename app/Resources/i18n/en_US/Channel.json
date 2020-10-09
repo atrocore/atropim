@@ -16,6 +16,7 @@
     "Create Channel": "Create Channel"
   },
   "exceptions": {
-    "Channel with such CODE already exist": "Channel with such CODE already exist"
+    "Channel with such CODE already exist": "Channel with such CODE already exist",
+    "channelHasProducts": "Channel with related products can't be deleted."
   }
 }

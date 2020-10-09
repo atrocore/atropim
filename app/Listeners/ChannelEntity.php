@@ -43,6 +43,21 @@ class ChannelEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
+     *
+     * @throws BadRequest
+     */
+    public function beforeRemove(Event $event)
+    {
+        /** @var Channel $entity */
+        $entity = $event->getArgument('entity');
+
+        if ($entity->get('products')->count() > 0) {
+            throw new BadRequest($this->translate('channelHasProducts', 'exceptions', 'Channel'));
+        }
+    }
+
+    /**
+     * @param Event $event
      */
     public function afterUnrelate(Event $event)
     {

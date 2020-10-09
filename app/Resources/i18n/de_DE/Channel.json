@@ -16,6 +16,7 @@
     "Create Channel": "Kanal erstellen"
   },
   "exceptions": {
-    "Channel with such CODE already exist": "Der Kanal mit einem solchen CODE existiert bereits"
+    "Channel with such CODE already exist": "Der Kanal mit einem solchen CODE existiert bereits",
+    "channelHasProducts": "Kanäle mit zugeordneten Produkten können nicht gelöscht werden."
   }
 }
