@@ -16,6 +16,12 @@ Espo.define('pim:views/product/record/panels/categories', 'views/record/panels/r
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.listenTo(this.model, 'after:relate after:unrelate', link => {
+                if (link === 'categories') {
+                    $('.action[data-action=refresh][data-panel=channels]').click();
+                }
+            });
+
             let select = this.actionList.find(item => item.action === (this.defs.selectAction || 'selectRelated'));
             if (select) {
                 select.data = {
