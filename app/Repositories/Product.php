@@ -27,6 +27,39 @@ class Product extends Base
     }
 
     /**
+     * Link category(tree) channels to product
+     *
+     * @param Entity|string                 $product
+     * @param \Pim\Entities\Category|string $category
+     * @param bool                          $unRelate
+     *
+     * @throws Error
+     */
+    public function linkCategoryChannels($product, $category, bool $unRelate = false)
+    {
+        if (is_string($product)) {
+            $product = $this->getEntityManager()->getEntity('Product', $product);
+        }
+        if (is_string($category)) {
+            $category = $this->getEntityManager()->getEntity('Category', $category);
+        }
+
+        // get channels
+        $channels = $category->getRoot()->get('channels');
+        if ($channels->count() > 0) {
+            foreach ($channels as $channel) {
+                if (!$unRelate) {
+                    $product->fromCategoryTree = true;
+                    $this->relate($product, 'channels', $channel);
+                } else {
+                    $product->skipIsFromCategoryTreeValidation = true;
+                    $this->unrelate($product, 'channels', $channel);
+                }
+            }
+        }
+    }
+
+    /**
      * @param string $productId
      *
      * @return array
@@ -49,6 +82,37 @@ class Product extends Base
     }
 
     /**
+     * @param string|Entity $productId
+     * @param string|Entity $channelId
+     * @param bool|null     $isActive
+     * @param bool|null     $fromCategoryTree
+     */
+    public function updateChannelRelationData($productId, $channelId, bool $isActive = null, bool $fromCategoryTree = null)
+    {
+        if ($productId instanceof Entity) {
+            $productId = $productId->get('id');
+        }
+
+        if ($channelId instanceof Entity) {
+            $channelId = $channelId->get('id');
+        }
+
+        $data = [];
+        if (!is_null($isActive)) {
+            $data[] = 'is_active=' . (int)$isActive;
+        }
+        if (!is_null($fromCategoryTree)) {
+            $data[] = 'from_category_tree=' . (int)$fromCategoryTree;
+        }
+
+        if (!empty($data)) {
+            $this
+                ->getEntityManager()
+                ->nativeQuery("UPDATE product_channel SET " . implode(',', $data) . " WHERE product_id='$productId' AND channel_id='$channelId' AND deleted=0");
+        }
+    }
+
+    /**
      * @param array $productsIds
      * @param array $categoriesIds
      *
@@ -68,12 +132,19 @@ class Product extends Base
     }
 
     /**
-     * @param string   $productId
-     * @param string   $categoryId
-     * @param int|null $sorting
+     * @param string|Entity $productId
+     * @param string|Entity $categoryId
+     * @param int|null      $sorting
      */
-    public function updateProductCategorySortOrder(string $productId, string $categoryId, int $sorting = null): void
+    public function updateProductCategorySortOrder($productId, $categoryId, int $sorting = null): void
     {
+        if ($productId instanceof Entity) {
+            $productId = $productId->get('id');
+        }
+        if ($categoryId instanceof Entity) {
+            $categoryId = $categoryId->get('id');
+        }
+
         $isLast = false;
 
         if (is_null($sorting)) {

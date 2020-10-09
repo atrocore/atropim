@@ -40,17 +40,11 @@ class Channel extends Base
 
         foreach ($products as $product) {
             if ($unrelate) {
+                $product->skipIsFromCategoryTreeValidation = true;
                 $productRepository->unrelate($product, 'channels', $channel);
             } else {
+                $product->fromCategoryTree = true;
                 $productRepository->relate($product, 'channels', $channel);
-
-                // set from_category_tree param
-                $this
-                    ->getEntityManager()
-                    ->nativeQuery(
-                        "UPDATE product_channel SET from_category_tree=1 WHERE product_id=:productId AND channel_id=:channelId AND deleted=0",
-                        ['productId' => $product->get('id'), 'channelId' => $channel->get('id')]
-                    );
             }
         }
 

@@ -83,11 +83,19 @@ class ProductEntity extends AbstractEntityListener
      */
     public function afterRelate(Event $event)
     {
-        if ($event->getArgument('relationName') == 'categories') {
-            $productId = (string)$event->getArgument('entity')->get('id');
-            $categoryId = !is_string($event->getArgument('foreign')) ? (string)$event->getArgument('foreign')->get('id') : $event->getArgument('foreign');
+        /** @var Entity $product */
+        $product = $event->getArgument('entity');
 
-            $this->getProductRepository()->updateProductCategorySortOrder($productId, $categoryId);
+        if ($event->getArgument('relationName') == 'categories') {
+            $this->getProductRepository()->updateProductCategorySortOrder($product, $event->getArgument('foreign'));
+            $this->getProductRepository()->linkCategoryChannels($product, $event->getArgument('foreign'));
+        }
+
+        if ($event->getArgument('relationName') == 'channels') {
+            // set from_category_tree param
+            if (!empty($product->fromCategoryTree)) {
+                $this->getProductRepository()->updateChannelRelationData($product, $event->getArgument('foreign'), null, true);
+            }
         }
     }
 
@@ -98,8 +106,11 @@ class ProductEntity extends AbstractEntityListener
      */
     public function beforeUnrelate(Event $event)
     {
-        if ($event->getArgument('relationName') == 'channels') {
-            $productId = (string)$event->getArgument('entity')->get('id');
+        /** @var Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        if ($event->getArgument('relationName') == 'channels' && empty($entity->skipIsFromCategoryTreeValidation)) {
+            $productId = (string)$entity->get('id');
             $channelId = (string)$event->getArgument('foreign')->get('id');
 
             $channelRelationData = $this
@@ -132,6 +143,10 @@ class ProductEntity extends AbstractEntityListener
             $this
                 ->getService('Channel')
                 ->setIsActiveEntity($event->getArgument('foreign')->get('id'), $dataEntity, true);
+        }
+
+        if ($event->getArgument('relationName') == 'categories') {
+            $this->getProductRepository()->linkCategoryChannels($event->getArgument('entity'), $event->getArgument('foreign'), true);
         }
     }
 

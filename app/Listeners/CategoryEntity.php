@@ -153,10 +153,19 @@ class CategoryEntity extends AbstractEntityListener
     public function afterRelate(Event $event)
     {
         if ($event->getArgument('relationName') == 'products') {
-            $productId = !is_string($event->getArgument('foreign')) ? (string)$event->getArgument('foreign')->get('id') : $event->getArgument('foreign');
-            $categoryId = (string)$event->getArgument('entity')->get('id');
+            $this->getProductRepository()->updateProductCategorySortOrder($event->getArgument('foreign'), $event->getArgument('entity'));
+            $this->getProductRepository()->linkCategoryChannels($event->getArgument('foreign'), $event->getArgument('entity'));
+        }
+    }
 
-            $this->getProductRepository()->updateProductCategorySortOrder($productId, $categoryId);
+
+    /**
+     * @param Event $event
+     */
+    public function afterUnrelate(Event $event)
+    {
+        if ($event->getArgument('relationName') == 'products') {
+            $this->getProductRepository()->linkCategoryChannels($event->getArgument('foreign'), $event->getArgument('entity'), true);
         }
     }
 
