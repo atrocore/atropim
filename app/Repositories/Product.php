@@ -206,6 +206,27 @@ class Product extends Base
     }
 
     /**
+     * Is category already related
+     *
+     * @param Entity $product
+     * @param Entity $category
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function isCategoryAlreadyRelated(Entity $product, Entity $category): bool
+    {
+        /** @var array $productCategoriesIds */
+        $productCategoriesIds = array_column($product->get('categories')->toArray(), 'id');
+
+        if (in_array($category->get('id'), $productCategoriesIds)) {
+            throw new BadRequest($this->translate("isCategoryAlreadyRelated", 'exceptions', 'Product'));
+        }
+
+        return true;
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $category
      *
