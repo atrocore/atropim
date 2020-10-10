@@ -28,7 +28,7 @@ class Category extends \Espo\Core\Templates\Entities\Base
         // validation
         $this->isEntity();
 
-        $categoryRoute = explode('|', $this->get('categoryRoute'));
+        $categoryRoute = explode('|', (string)$this->get('categoryRoute'));
 
         return (isset($categoryRoute[1])) ? $this->getEntityManager()->getEntity('Category', $categoryRoute[1]) : $this;
     }
