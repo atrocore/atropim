@@ -96,6 +96,26 @@ class Category extends AbstractSelectManager
     /**
      * @param array $result
      */
+    protected function boolFilterOnlyLeafCategories(array &$result)
+    {
+        if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
+            $parents = $this
+                ->getEntityManager()
+                ->getRepository('Category')->select(['categoryParentId'])->where(['categoryParentId!=' => null])
+                ->find()
+                ->toArray();
+
+            if (!empty($parents)) {
+                $result['whereClause'][] = [
+                    'id!=' => array_column($parents, 'categoryParentId')
+                ];
+            }
+        }
+    }
+
+    /**
+     * @param array $result
+     */
     protected function boolFilterFromCategoryTree(array &$result)
     {
         // get category
