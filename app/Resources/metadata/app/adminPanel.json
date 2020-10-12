@@ -3,7 +3,7 @@
     "label": "pim",
     "itemList": [
       {
-        "url": "#Admin/moduleSettings/module=pim",
+        "url": "#Admin/moduleSettings/id=pim:views_settings_edit",
         "label": "Settings",
         "description": "pim-settings"
       }
