@@ -81,6 +81,7 @@ class ProductEntity extends AbstractEntityListener
 
             $this->getProductRepository()->isCategoryAlreadyRelated($product, $category);
             $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
+            $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
         }
     }
 

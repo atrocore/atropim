@@ -27,6 +27,32 @@ class Product extends Base
     }
 
     /**
+     * Is product can linked with non-lead category
+     *
+     * @param Entity|string $category
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function isProductCanLinkToNonLeafCategory($category): bool
+    {
+        if ($this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
+            return true;
+        }
+
+        if (is_string($category)) {
+            /** @var \Pim\Entities\Category $category */
+            $category = $this->getEntityManager()->getEntity('Category', $category);
+        }
+
+        if ($category->getChildren()->count() > 0) {
+            throw new BadRequest($this->translate("productCanNotLinkToNonLeafCategory", 'exceptions', 'Product'));
+        }
+
+        return true;
+    }
+
+    /**
      * Link category(tree) channels to product
      *
      * @param Entity|string                 $product

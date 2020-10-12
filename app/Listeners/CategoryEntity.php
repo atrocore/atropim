@@ -72,25 +72,18 @@ class CategoryEntity extends AbstractEntityListener
             throw new BadRequest($this->translate('Code is invalid', 'exceptions', 'Global'));
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
-            throw new BadRequest($this->exception('Category has linked products'));
-        }
-
         if ((count($entity->get('catalogs')) > 0 || !empty($entity->get('catalogsIds')))
             && !empty($entity->get('categoryParent'))) {
             throw new BadRequest($this->translate('Only root category can be linked with catalog', 'exceptions', 'Catalog'));
         }
 
-        if (!empty($parent = $entity->get('categoryParent'))
-            && !empty($parent->get('products'))
-            && !empty(count($parent->get('products')))) {
-            throw new BadRequest(
-                $this->translate(
-                    'Parent category has products',
-                    'exceptions',
-                    'Category'
-                )
-            );
+        if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
+            if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
+                throw new BadRequest($this->exception('parentCategoryHasProducts'));
+            }
+            if (!empty($parent = $entity->get('categoryParent')) && $parent->get('products')->count() > 0) {
+                throw new BadRequest($this->exception('parentCategoryHasProducts'));
+            }
         }
 
         // cascade products relating
@@ -146,12 +139,14 @@ class CategoryEntity extends AbstractEntityListener
         }
 
         if ($event->getArgument('relationName') == 'products') {
+            $category = $event->getArgument('entity');
             $product = $event->getArgument('foreign');
             if (is_string($product)) {
                 $product = $this->getEntityManager()->getEntity('Product', $product);
             }
 
-            $this->getProductRepository()->isCategoryFromCatalogTrees($product, $event->getArgument('entity'));
+            $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
+            $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
         }
     }
 
