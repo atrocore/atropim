@@ -152,8 +152,9 @@ class Product extends Base
      * @param string|Entity $productId
      * @param string|Entity $categoryId
      * @param int|null      $sorting
+     * @param bool          $cascadeUpdate
      */
-    public function updateProductCategorySortOrder($productId, $categoryId, int $sorting = null): void
+    public function updateProductCategorySortOrder($productId, $categoryId, int $sorting = null, bool $cascadeUpdate = true): void
     {
         if ($productId instanceof Entity) {
             $productId = $productId->get('id');
@@ -162,11 +163,9 @@ class Product extends Base
             $categoryId = $categoryId->get('id');
         }
 
-        $isLast = false;
-
         if (is_null($sorting)) {
             $sorting = time();
-            $isLast = true;
+            $cascadeUpdate = false;
         }
 
         // get link data
@@ -180,7 +179,7 @@ class Product extends Base
             ->getEntityManager()
             ->nativeQuery("UPDATE product_category SET sorting='$sorting' WHERE category_id='$categoryId' AND product_id='$productId' AND deleted=0");
 
-        if (!$isLast) {
+        if ($cascadeUpdate) {
             // get next records
             $ids = $this
                 ->getEntityManager()

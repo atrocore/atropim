@@ -32,7 +32,8 @@
     "channels": "Channels",
     "measuringUnit": "Measuring Unit",
     "basePriceAmount": "Base Price Amount",
-    "packedAmount": "Packed Amount"
+    "packedAmount": "Packed Amount",
+    "pcSorting": "Sort order"
   },
   "links": {
     "categories": "Product Categories",

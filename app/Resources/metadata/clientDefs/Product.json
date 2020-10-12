@@ -119,6 +119,16 @@
             }
           ]
         }
+      },
+      "pcSorting": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "pcSorting"
+            }
+          ]
+        }
       }
     }
   }

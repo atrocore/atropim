@@ -154,8 +154,12 @@
     "pcSorting": {
       "type": "int",
       "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true
     },
     "channels": {
       "type": "linkMultiple",

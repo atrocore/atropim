@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Espo\ORM\Entity;
+use Pim\Repositories\Product;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -20,11 +20,25 @@ class ProductService extends AbstractEntityListener
     public function beforeUpdateEntity(Event $event)
     {
         $data = $event->getArgument('data');
+
+        if (!empty($data->_mainEntityId)) {
+            $this
+                ->getProductRepository()
+                ->updateProductCategorySortOrder((string)$event->getArgument('id'), (string)$data->_mainEntityId, (int)$data->pcSorting, false);
+        }
+
         if (!empty($data->_id)) {
             $this
-                ->getEntityManager()
-                ->getRepository('Product')
+                ->getProductRepository()
                 ->updateProductCategorySortOrder((string)$event->getArgument('id'), (string)$data->_id, (int)$data->pcSorting);
         }
+    }
+
+    /**
+     * @return Product
+     */
+    protected function getProductRepository(): Product
+    {
+        return $this->getEntityManager()->getRepository('Product');
     }
 }

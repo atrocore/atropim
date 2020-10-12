@@ -37,7 +37,8 @@
     "channels": "Kanale",
     "measuringUnit": "Maßeinheit",
     "basePriceAmount": "Grundpreis Betrag",
-    "packedAmount": "Gepackte Menge"
+    "packedAmount": "Gepackte Menge",
+    "pcSorting": "Sortierreihenfolge"
   },
   "links": {
     "categories": "Produktkategorien",
