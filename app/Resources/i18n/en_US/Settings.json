@@ -1,0 +1,5 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories."
+  }
+}

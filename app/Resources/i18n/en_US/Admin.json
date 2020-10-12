@@ -1,5 +1,11 @@
 {
   "fieldTypes": {
     "available-currency": "Available Currency"
+  },
+  "labels": {
+    "pim": "PIM"
+  },
+  "descriptions": {
+    "pim-settings": "PIM system settings"
   }
 }

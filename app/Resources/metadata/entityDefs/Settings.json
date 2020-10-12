@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": {
+      "type": "bool"
+    }
+  }
+}

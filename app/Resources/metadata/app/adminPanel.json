@@ -1,0 +1,13 @@
+{
+  "pim": {
+    "label": "pim",
+    "itemList": [
+      {
+        "url": "#Admin/moduleSettings/module=pim",
+        "label": "Settings",
+        "description": "pim-settings"
+      }
+    ],
+    "order": 30
+  }
+}
