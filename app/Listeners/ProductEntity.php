@@ -70,11 +70,17 @@ class ProductEntity extends AbstractEntityListener
      */
     public function beforeRelate(Event $event)
     {
-        if ($event->getArgument('relationName') == 'categories' && !empty($category = $event->getArgument('foreign'))) {
+        /** @var Entity $product */
+        $product = $event->getArgument('entity');
+
+        if ($event->getArgument('relationName') == 'categories') {
+            $category = $event->getArgument('foreign');
             if (is_string($category)) {
                 $category = $this->getEntityManager()->getEntity('Category', $category);
             }
-            $this->getProductRepository()->isCategoryFromCatalogTrees($event->getArgument('entity'), $category);
+
+            $this->getProductRepository()->isCategoryAlreadyRelated($product, $category);
+            $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
         }
     }
 

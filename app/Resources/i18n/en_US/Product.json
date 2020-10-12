@@ -95,6 +95,7 @@
   "exceptions": {
     "Product with such SKU already exist": "Product with such SKU already exist",
     "You can't change Product Family in Product": "You can't change Product Family in Product",
-    "You can't change field of Type in Product": "You can't change field of Type in Product"
+    "You can't change field of Type in Product": "You can't change field of Type in Product",
+    "isCategoryAlreadyRelated": "Category is already linked with product."
   }
 }

@@ -104,6 +104,7 @@
     "You can't change Product Family in Product": "Sie können die Produktfamilie in Product nicht ändern",
     "You can't change field of Type in Product": "Sie können das Feld Typ in Produkt nicht ändern",
     "Channel provided by category tree can't be unlinked from product": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
-    "You should use categories from those trees that linked with product catalog": "Sie sollten Kategorien aus den Bäumen verwenden, die mit dem Produktkatalog verknüpft sind"
+    "You should use categories from those trees that linked with product catalog": "Sie sollten Kategorien aus den Bäumen verwenden, die mit dem Produktkatalog verknüpft sind",
+    "isCategoryAlreadyRelated": "Die Kategorie ist bereits mit dem Produkt verknüpft."
   }
 }
