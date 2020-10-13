@@ -85,7 +85,8 @@
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notEntity",
-        "onlyCatalogCategories"
+        "onlyCatalogCategories",
+        "onlyLeafCategories"
       ],
       "view": "pim:views/product/record/panels/categories"
     },
