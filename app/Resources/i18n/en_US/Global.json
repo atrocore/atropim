@@ -78,7 +78,7 @@
     "Product Preview": "Product Preview"
   },
   "dashlets": {
-    "GeneralStatistics": "General Statistics",
+    "GeneralStatistics": "PIM General Statistics",
     "Channels": "Channels",
     "ProductsByStatus": "Products by Status",
     "ProductTypes": "Product Types",
