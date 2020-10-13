@@ -1,10 +1,6 @@
 {
     "fields": {
-        "isActive": "Aktiv",
-        "nameDeDe": "Name (DeDe)",
-        "nameEnUs": "Name (EnUs)",
-        "nameEsEs": "Name (EsEs)",
-        "nameFrFr": "Name (FrFr)"
+        "isActive": "Aktiv"
     },
     "links": [],
     "labels": {
