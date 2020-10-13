@@ -1,5 +1,10 @@
 {
   "fields": {
+    "attachments": "Attachments",
+    "deliveryStatus": "Delivery Status",
+    "supplied": "Components",
+    "assets": "Assets",
+    "data": "Data",
     "categories": "Product Categories",
     "product": "Main Product",
     "products": "Products",
@@ -36,8 +41,14 @@
     "pcSorting": "Sort order"
   },
   "links": {
+    "productSerie": "Product Series",
+    "product": "Product",
+    "measuringUnit": "Measuring Unit",
+    "image": "Image",
+    "calls": "Calls",
+    "attachments": "Attachments",
+    "assets": "Assets",
     "categories": "Product Categories",
-    "product": "Main Product",
     "products": "Products",
     "productAttributeValues": "Product Attributes",
     "productFamily": "Product Family",
@@ -83,7 +94,70 @@
       "green": "green",
       "red": "red",
       "your tag1": "your tag1",
-      "your tag2": "your tag2"
+      "your tag2": "your tag2",
+      "your_tag1": "your tag1",
+      "your_tag2": "your tag2"
+    },
+    "deliveryStatus": {
+      "optionsEnUs": {
+        "Standard": "Standard",
+        "External Storehouse": "External Storehouse",
+        "If out of Stock, offline": "If out of Stock, offline",
+        "If out of Stock, not orderable": "If out of Stock, not orderable"
+      },
+      "optionsDeDe": {
+        "Standard": "Standard",
+        "External Storehouse": "Fremdlager",
+        "If out of Stock, offline": "Wenn ausverkauft offline",
+        "If out of Stock, not orderable": "Wenn ausverkauft nicht bestellbar"
+      },
+      "options": {
+        "Standard": "Standard",
+        "External Storehouse": "External Storehouse",
+        "If out of Stock, offline": "If out of Stock, offline",
+        "If out of Stock, not orderable": "If out of Stock, not orderable"
+      }
+    },
+    "supplied": {
+      "optionsEnUs": {
+        "TV": "TV",
+        "Phone": "Phone",
+        "Camera": "Camera",
+        "Remote Control (with batteries)": "Remote Control (with batteries)",
+        "Documentation": "Documentation",
+        "Headset": "Headset",
+        "Charger": "Charger",
+        "Battery": "Battery",
+        "Lens": "Lens",
+        "Case": "Case",
+        "Power cord": "Power cord"
+      },
+      "optionsDeDe": {
+        "TV": "Fernseher",
+        "Phone": "Telefon",
+        "Camera": "Kamera",
+        "Remote Control (with batteries)": "Fernbedienung (mit Batterien)",
+        "Documentation": "Dokumentation",
+        "Headset": "Headset",
+        "Charger": "Ladegerät",
+        "Battery": "Batterie",
+        "Lens": "Linse",
+        "Case": "Hülle",
+        "Power cord": "Netzkabel"
+      },
+      "options": {
+        "TV": "TV",
+        "Phone": "Phone",
+        "Camera": "Camera",
+        "Remote Control (with batteries)": "Remote Control (with batteries)",
+        "Documentation": "Documentation",
+        "Headset": "Headset",
+        "Charger": "Charger",
+        "Battery": "Battery",
+        "Lens": "Lens",
+        "Case": "Case",
+        "Power cord": "Power cord"
+      }
     }
   },
   "boolFilters": {

@@ -22,6 +22,6 @@
     "Create ProductAttributeValue": "Create Attribute Value"
   },
   "exceptions": {
-    "You have no ACL rights to read attribute values": "You have no ACL rights to read attribute values"
+    "You have no ACL rights to read attribute values": "You have no rights to read attribute values"
   }
 }
