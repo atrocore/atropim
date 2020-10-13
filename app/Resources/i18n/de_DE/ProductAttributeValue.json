@@ -3,25 +3,25 @@
     "Attribute": "Attribut"
   },
   "fields": {
-    "name": "Id",
     "product": "Produkt",
     "productAttribute": "Produktattribut",
+    "channels": "Kanäle",
+    "isRequired": "Erforderlich",
     "attribute": "Attribut",
-    "isRequired": "Ist Erforderlich",
     "value": "Wert",
-    "scope": "Umfang",
-    "channels": "Kanale"
+    "scope": "Umfang"
   },
   "links": {
     "product": "Produkt",
     "productAttribute": "Produktattribut",
-    "attribute": "Attribut",
-    "channels": "Kanale"
+    "channels": "Kanäle",
+    "attribute": "Attribut"
   },
   "labels": {
-    "Create ProductAttributeValue": "Wert der Produktattribut erstellen"
+    "Create ProductAttributeValue": "Produktattributwert erstellen"
   },
   "exceptions": {
-    "You have no ACL rights to read attribute values": "Sie haben keine ACL-Rechte zum Lesen von Attributwerten"
+    "You have no ACL rights to read attribute values": "Sie haben keine Rechte, Attributwerte zu lesen.",
+    "You can't change product in attribute from Product Family": "Sie können das Produkt im Attribut der Produktfamilie nicht ändern."
   }
 }

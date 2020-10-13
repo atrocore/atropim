@@ -1,22 +1,36 @@
 {
   "fields": {
-    "description": "Beschreibung",
+    "channelProductAttributeValues": "Attributwerte des Produktkanals",
+    "channelProducts": "Produkte des Kanals",
+    "isActive": "Aktiv",
+    "locales": "Lokale",
+    "assetRelations": "Asset Relationen",
+    "isActiveEntity": "ist aktive Entität",
+    "productAttributeValues": "Produktattrubitwerte",
+    "productCategories": "Produktkategorien",
+    "productFamilyAttributes": "Produktfamilieattribute",
     "currencies": "Währung",
     "category": "Kategorie",
     "code": "Code",
-    "isActive": "Aktiv",
-    "locales": "Sprache",
     "products": "Produkte"
   },
   "links": {
     "category": "Kategorie",
+    "channelProductAttributeValues": "Produktattributwerte für Kanal",
+    "channelProducts": "Kanalprodukte",
+    "assetRelations": "Asset Relationen",
+    "productAttributeValues": "Produktattributwerte",
+    "productCategories": "Produktkategorien",
+    "productFamilyAttributes": "Produktfamilieattribute",
     "products": "Produkte"
   },
   "labels": {
     "Create Channel": "Kanal erstellen"
   },
   "exceptions": {
-    "Channel with such CODE already exist": "Der Kanal mit einem solchen CODE existiert bereits",
+    "You should choose a root category": "Sie müssen eine Stammkategorie auswählen.",
+    "Category is required": "Die Kategorie ist erforderlich.",
+    "Channel with such CODE already exist": "Der Kanal mit einem solchen Code existiert bereits.",
     "channelHasProducts": "Kanäle mit zugeordneten Produkten können nicht gelöscht werden.",
     "channelHasCategory": "Kanal mit einem zugeordneten Kategoriebaum kann nicht gelöscht werden."
   }

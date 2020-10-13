@@ -1,33 +1,24 @@
 {
   "fields": {
     "associatedProducts": "Assoziierte Produkte",
-    "backwardAssociation": "Umgekehrte Assoziation",
-    "description": "Beschreibung",
-    "descriptionDeDe": "Beschreibung DeDe",
-    "descriptionEnUs": "Beschreibung EnUs",
-    "descriptionEsEs": "Beschreibung EsEs",
-    "descriptionFrFr": "Beschreibung FrFr",
     "isActive": "Aktiv",
     "modifiedAt": "geändert am",
     "createdAt": "erstellt am",
     "createdBy": "erstellt von",
     "modifiedBy": "geändert von",
-    "nameDeDe": "Name DeDe",
-    "nameEnUs": "Name DeDe",
-    "nameEsEs": "Name EsEs",
-    "nameFrFr": "Name FrFr"
+    "associations": "Assoziationen",
+    "backwardAssociation": "Umgekehrte Assoziation"
   },
   "links": {
-    "associatedProducts": "Assoziierte Produkte",
-    "backwardAssociation": "Umgekehrte Assoziation",
-    "createdBy": "erstellt von",
-    "modifiedBy": "geändert von"
+    "associatedProducts": "Zugehörige Produkte",
+    "associations": "Assoziationen",
+    "backwardAssociation": "Umgekehrte Assoziation"
   },
   "labels": {
     "Create Association": "Assoziation erstellen"
   },
   "exceptions": {
-    "Association is linked with product(s). Please, unlink product(s) first": "Die Assoziation ist mit dem Produkt (-en) verlinkt. Bitte entfernen Sie zuerst das Produkt (-e)",
-    "You can not deactivate association with active product(s)": "Sie können die Assoziation mit dem aktiven Produkt (-en) nicht deaktivieren"
+    "Association is linked with product(s). Please, unlink product(s) first": "Die Assoziation ist mit einem Produkt verlinkt. Bitte entfernen Sie zuerst das Produkt.",
+    "You can not deactivate association with active product(s)": "Sie können die Assoziation mit einem aktiven Produkt nicht deaktivieren"
   }
 }

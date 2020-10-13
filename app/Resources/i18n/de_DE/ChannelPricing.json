@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "channelIsActive": "Kanal ist aktiv",
+    "pricingIsActive": "Preisgestaltung ist aktiv",
+    "productPrices": "Produktpreise"
+  },
+  "labels": {
+    "Create ChannelPricing": "Preisgestaltung für Kanal erstellen"
+  },
+  "links": {
+    "productPrices": "Produktpreise"
+  }
+}

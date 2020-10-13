@@ -1,8 +1,9 @@
 {
   "fields": {
+    "isMultiChannel": "ist Multichannel",
+    "isRequired": "ist erforderlich",
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
-    "isRequired": "Ist Erforderlich",
     "channels": "Kanale",
     "scope": "Umfang"
   },
@@ -12,7 +13,7 @@
     "channels": "Kanale"
   },
   "labels": {
-    "Create ProductFamilyAttribute": "Produktfamilie Attribute erstellen"
+    "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen"
   },
   "options": {
     "scope": {

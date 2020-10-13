@@ -1,34 +1,19 @@
 {
-    "fields": {
-        "description": "Beschreibung",
-        "code": "Code",
-        "createdAt": "erstellt am",
-        "createdBy": "erstellt von",
-        "descriptionDeDe": "Beschreibung DeDe",
-        "descriptionEnUs": "Beschreibung EnUs",
-        "descriptionEsEs": "Beschreibung EsEs",
-        "descriptionFrFr": "Beschreibung FrFr",
-        "isActive": "Aktiv",
-        "modifiedAt": "geändert am",
-        "modifiedBy": "geändert von",
-        "nameDeDe": "Name DeDe",
-        "nameEnUs": "Name EnUs",
-        "nameEsEs": "Name EsEs",
-        "nameFrFr": "Name FrFr",
-        "products": "Produkte",
-        "textTest": "Text Test"
-
-    },
-    "links": {
-        "createdBy": "erstellt von",
-        "modifiedBy": "geändert von",
-        "products": "Produkte"
-    },
-    "labels": {
-        "Create Brand": "Marke erstellen"
-    },
-    "exceptions": {
-        "Brand is used in products. Please, update products first": "Die Marke wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte",
-        "Brand with such CODE already exist": "Die Marke mit einem solchen CODE existiert bereits"
-    }
+  "fields": {
+    "isActive": "Aktiv",
+    "products": "Produkte",
+    "code": "Code"
+  },
+  "links": {
+    "createdBy": "erstellt von",
+    "modifiedBy": "geändert von",
+    "products": "Produkte"
+  },
+  "labels": {
+    "Create Brand": "Marke erstellen"
+  },
+  "exceptions": {
+    "Brand is used in products. Please, update products first": "Die Marke wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
+    "Brand with such CODE already exist": "Die Marke mit einem solchen Code existiert bereits."
+  }
 }

@@ -3,7 +3,8 @@
     "isActive": "Aktiv",
     "products": "Produkte",
     "categories": "Kategorien",
-    "code": "Code"
+    "code": "Code",
+    "productsCount": "Anzahl Produkte"
   },
   "links": {
     "channels": "Kanäle",
@@ -14,7 +15,7 @@
     "Create Catalog": "Katalog erstellen"
   },
   "queueManager": {
-    "Create product '%s' for catalog '%s'": "Produkt '%s' für den Katalog '%s'"
+    "Create product '%s' for catalog '%s'": "Produkt '%s' für den Katalog '%s' erstellen",
   },
   "exceptions": {
     "Catalog cannot be deleted": "Katalog kann nicht gelöscht werden. Es gibt wenige Kanäle, die den aktuellen Katalog verwenden."

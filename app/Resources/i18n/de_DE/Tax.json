@@ -1,25 +1,14 @@
 {
-    "fields": {
-        "value": "Wert",
-        "createdAt": "erstellt am",
-        "createdBy": "erstellt von",
-        "isActive": "Aktiv",
-        "modifiedAt": "geändert am",
-        "modifiedBy": "geändert von",
-        "nameDeDe": "Name DeDe",
-        "nameEnUs": "Name EnUs",
-        "nameEsEs": "Name EsEs",
-        "nameFrFr": "Name FrFr",
-        "products": "Produkte",
-        "teams": "Teams"
-    },
-    "labels": {
-        "Create Tax": "MwSt. erstellen"
-    },
-    "links": {
-        "products": "Produkte",
-        "createdBy": "erstellt von",
-        "modifiedBy": "geändert von",
-        "teams": "Teams"
-    }
+  "fields": {
+    "isActive": "Aktiv",
+    "products": "Produkte",
+    "teams": "Teams",
+    "value": "Wert"
+  },
+  "labels": {
+    "Create Tax": "MwSt. erstellen"
+  },
+  "links": {
+    "products": "Produkte"
+  }
 }

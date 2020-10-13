@@ -1,8 +1,16 @@
 {
   "scopeNames": {
-    "ProductAttributeValue": "Produktattributwert",
+    "ProductPrice": "Produktpreis",
+    "ChannelPricing": "Kanal Pricing",
+    "AssetCategory": "Asset Kategorie",
+    "Catalog": "Kataloge",
     "Product": "Produkt",
     "ProductFamily": "Produktfamilie",
+    "ProductSerie": "Produktserie",
+    "AttributeGroup": "Attributgruppe",
+    "AssociatedProduct": "Assoziiertes Produkt",
+    "Attribute": "Attribut",
+    "ProductAttributeValue": "Produktattributwert",
     "Category": "Kategorie",
     "Packaging": "Verpackung",
     "Channel": "Kanal",
@@ -12,18 +20,19 @@
     "Country": "Land",
     "Tax": "Tax",
     "Settings": "Administration",
-    "AttributeGroup": "Attributgruppe",
-    "AssociatedProduct": "Assoziierte Produkte",
-    "Attribute": "Attribute",
     "Currency": "Währung",
-    "ProductSerie": "Product Serie",
-    "Catalog": "Katalog",
     "ProductFamilyAttribute": "Produktfamilie Attribute"
   },
   "scopeNamesPlural": {
-    "ProductAttributeValue": "Produktattributwert",
+    "ProductPrice": "Produktpreise",
+    "AssetCategory": "Asset Kategorien",
+    "Catalog": "Kataloge",
     "Product": "Produkte",
     "ProductFamily": "Produktfamilien",
+    "AssociatedProduct": "Assoziierte Produkte",
+    "ProductSerie": "Produktserien",
+    "Attribute": "Attribute",
+    "ProductAttributeValue": "Produktattributwert",
     "Category": "Kategorien",
     "Packaging": "Verpackungen",
     "Channel": "Kanäle",
@@ -35,19 +44,15 @@
     "Tax": "Steuern",
     "Settings": "Administration",
     "ActionHistoryRecord": "Aktionsgeschichte",
-    "Attribute": "Attribute",
     "Currency": "Währung",
     "Dashboard": "Instrumententafel",
     "EmailAddress": "E-Mail Addresse",
-    "ProductSerie": "Product Series",
-    "AssociatedProduct": "Assoziierte Produkt",
-    "Catalog": "Kataloge",
     "ProductFamilyAttribute": "Produktfamilie Attribute"
   },
   "fields": {
+    "channels": "Kanäle",
     "productFamily": "Artikel-Familien",
     "productSerie": "Product Serie",
-    "channels": "Kanale",
     "scope": "Umfang",
     "role": "Rolle"
   },
@@ -93,12 +98,12 @@
     "Product Preview": "Produktvorschau"
   },
   "dashlets": {
+    "ProductsByTag": "Produkte nach Tag",
+    "ProductTypes": "Produkt typen",
+    "ProductStatusOverview": "Produktstatus Übersicht",
     "GeneralStatistics": "Allgemeine Statistiken",
     "Channels": "Kanäle",
-    "ProductsByStatus": "Produkte nach Status",
-    "ProductsByTag": "Produkte nach Tag",
-    "ProductTypes": "Produkttypen",
-    "ProductStatusOverview": "Produktstatus Übersicht"
+    "ProductsByStatus": "Produkte nach Status"
   },
   "exceptions": {
     "Only force deleting available": "Erzwinge nur Löschen verfügbar",
