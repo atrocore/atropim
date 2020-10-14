@@ -20,7 +20,7 @@
       "default": "PIM"
     },
     "description": {
-      "default": "PIM module."
+      "default": "The PIM Module is a tool with which product data and information can be centrally saved, managed and distributed."
     }
   }
 }
