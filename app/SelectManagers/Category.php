@@ -159,6 +159,13 @@ class Category extends AbstractSelectManager
         if (!empty($params['where'])) {
             foreach ($params['where'] as $k => $row) {
                 if ($row['attribute'] == 'channels') {
+                    // skip filter if empty value
+                    if (in_array($row['type'], ['linkedWith', 'notLinkedWith']) && empty($row['value'])) {
+                        unset($params['where'][$k]);
+                        $params['where'] = array_values($params['where']);
+                        continue 1;
+                    }
+
                     if (!empty($row['value'])) {
                         $channels = $this
                             ->getEntityManager()
