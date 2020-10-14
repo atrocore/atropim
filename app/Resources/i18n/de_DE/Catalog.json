@@ -15,7 +15,7 @@
     "Create Catalog": "Katalog erstellen"
   },
   "queueManager": {
-    "Create product '%s' for catalog '%s'": "Produkt '%s' für den Katalog '%s' erstellen",
+    "Create product '%s' for catalog '%s'": "Produkt '%s' für den Katalog '%s' erstellen"
   },
   "exceptions": {
     "Catalog cannot be deleted": "Katalog kann nicht gelöscht werden. Es gibt wenige Kanäle, die den aktuellen Katalog verwenden."
