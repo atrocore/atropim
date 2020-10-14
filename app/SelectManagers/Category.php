@@ -60,8 +60,13 @@ class Category extends AbstractSelectManager
      */
     protected function boolFilterOnlyCatalogCategories(array &$result)
     {
+        $catalogId = $this->getSelectCondition('onlyCatalogCategories');
+        if (empty($catalogId)) {
+            return;
+        }
+
         /** @var \Pim\Entities\Catalog $catalog */
-        $catalog = $this->getEntityManager()->getEntity('Catalog', (string)$this->getSelectCondition('onlyCatalogCategories'));
+        $catalog = $this->getEntityManager()->getEntity('Catalog', $catalogId);
         if (empty($catalog)) {
             throw new BadRequest('No such catalog');
         }
@@ -85,8 +90,10 @@ class Category extends AbstractSelectManager
      */
     protected function boolFilterNotChildCategory(array &$result)
     {
-        // prepare category id
         $categoryId = (string)$this->getSelectCondition('notChildCategory');
+        if (empty($categoryId)) {
+            return;
+        }
 
         $result['whereClause'][] = [
             'categoryRoute!*' => "%|$categoryId|%"
@@ -118,10 +125,15 @@ class Category extends AbstractSelectManager
      */
     protected function boolFilterFromCategoryTree(array &$result)
     {
+        $categoryId = $this->getSelectCondition('fromCategoryTree');
+        if (empty($categoryId)) {
+            return;
+        }
+
         // get category
         $category = $this
             ->getEntityManager()
-            ->getEntity('Category', $this->getSelectCondition('fromCategoryTree'));
+            ->getEntity('Category', $categoryId);
 
         try {
             $root = $category->getRoot();
