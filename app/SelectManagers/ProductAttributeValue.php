@@ -36,8 +36,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * ProductAttributeValue select manager
- *
- * @author rr@atrocore.com
  */
 class ProductAttributeValue extends AbstractSelectManager
 {

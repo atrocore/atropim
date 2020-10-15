@@ -36,8 +36,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Product select manager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Product extends AbstractSelectManager
 {

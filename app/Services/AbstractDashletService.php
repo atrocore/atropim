@@ -37,8 +37,6 @@ use Treo\Services\DashletInterface;
 
 /**
  * Class AbstractDashletService
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractDashletService extends Base implements DashletInterface
 {

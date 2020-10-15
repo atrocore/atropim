@@ -35,8 +35,6 @@ use Espo\Core\Templates\Entities\Base;
 
 /**
  * Packaging entity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Packaging extends Base
 {

@@ -33,8 +33,6 @@ namespace Pim\Services;
 
 /**
  * ChannelsDashlet class
- *
- * @author rr@atrocore.com
  */
 class ChannelsDashlet extends AbstractDashletService
 {

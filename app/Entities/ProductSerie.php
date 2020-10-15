@@ -35,8 +35,6 @@ use Espo\Core\Templates\Entities\Base;
 
 /**
  * ProductSerie entity
- *
- * @author rr@atrocore.com
  */
 class ProductSerie extends Base
 {

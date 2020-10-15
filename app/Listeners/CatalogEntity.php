@@ -37,8 +37,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class CatalogEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class CatalogEntity extends AbstractEntityListener
 {

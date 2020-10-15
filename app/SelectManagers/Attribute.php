@@ -33,8 +33,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class of Attribute
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Attribute extends AbstractSelectManager
 {

@@ -34,8 +34,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class Channel
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Channel extends Base
 {

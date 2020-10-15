@@ -129,7 +129,7 @@
   "exceptions": {
     "wrongInputData": "Überprüfung ist fehlgeschlagen. Falsche Eingabedaten.",
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
-    "itselfAssociation.": "Produkt kann nicht mit sich selbst assoziiert sein.",
+    "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
     "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
     "Product with such SKU already exist": "Produkt mit einer solchen SKU existiert bereits",
     "You can't change Product Family in Product": "Sie können die Produktfamilie in Product nicht ändern.",

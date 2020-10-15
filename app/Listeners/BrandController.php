@@ -35,8 +35,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class BrandController
- *
- * @author rr@atrocore.com
  */
 class BrandController extends AbstractListener
 {

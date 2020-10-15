@@ -39,8 +39,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class AssociatedProductEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class AssociatedProductEntity extends AbstractListener
 {

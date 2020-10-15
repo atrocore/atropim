@@ -36,8 +36,6 @@ use Espo\ORM\Entity;
 
 /**
  * Catalog repository
- *
- * @author rr@atrocore.com
  */
 class Catalog extends Base
 {

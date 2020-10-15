@@ -37,8 +37,6 @@ use Treo\EntryPoints\Image as Base;
 
 /**
  * Class Image
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Image extends Base
 {

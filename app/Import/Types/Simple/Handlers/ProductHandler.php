@@ -39,8 +39,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Class ProductHandler
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ProductHandler extends AbstractHandler
 {

@@ -34,8 +34,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class StreamController
- *
- * @author rr@atrocore.com
  */
 class StreamController extends AbstractListener
 {

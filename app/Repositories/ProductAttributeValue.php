@@ -37,8 +37,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class ProductAttributeValue
- *
- * @author rr@atrocore.com
  */
 class ProductAttributeValue extends Base
 {

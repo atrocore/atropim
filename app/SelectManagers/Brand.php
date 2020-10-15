@@ -33,8 +33,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class of Brand
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Brand extends AbstractSelectManager
 {

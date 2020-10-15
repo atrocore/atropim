@@ -41,8 +41,6 @@ use Treo\Listeners\AbstractListener;
 
 /**
  * Class ProductAttributeValueEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ProductAttributeValueEntity extends AbstractListener
 {

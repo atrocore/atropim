@@ -37,8 +37,6 @@ use Espo\Core\Exceptions\Error;
 
 /**
  * Entity Category
- *
- * @author rr@atrocore.com
  */
 class Category extends \Espo\Core\Templates\Entities\Base
 {

@@ -35,8 +35,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class Channel
- *
- * @author rr@atrocore.com
  */
 class Channel extends AbstractSelectManager
 {

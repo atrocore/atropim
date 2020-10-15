@@ -36,8 +36,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class ProductFamilyController
- *
- * @author rr@atrocore.com
  */
 class ProductFamilyController extends AbstractListener
 {

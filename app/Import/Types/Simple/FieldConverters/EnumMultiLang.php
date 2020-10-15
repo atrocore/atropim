@@ -36,8 +36,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Class EnumMultiLang
- *
- * @author rr@atrocore.com
  */
 class EnumMultiLang extends \Import\Types\Simple\FieldConverters\AbstractConverter
 {

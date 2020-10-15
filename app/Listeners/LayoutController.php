@@ -36,8 +36,6 @@ use Treo\Listeners\AbstractListener;
 
 /**
  * Class LayoutController
- *
- * @author rr@atrocore.com
  */
 class LayoutController extends AbstractListener
 {

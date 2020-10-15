@@ -33,8 +33,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class of Association
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Association extends AbstractSelectManager
 {

@@ -37,8 +37,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class AttributeEntity
- *
- * @author rr@atrocore.com
  */
 class AttributeEntity extends AbstractEntityListener
 {

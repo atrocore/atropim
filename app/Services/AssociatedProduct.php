@@ -33,8 +33,6 @@ namespace Pim\Services;
 
 /**
  * AssociatedProduct service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class AssociatedProduct extends \Espo\Core\Templates\Services\Base
 {

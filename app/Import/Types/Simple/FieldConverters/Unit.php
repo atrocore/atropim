@@ -36,8 +36,6 @@ use Import\Types\Simple\FieldConverters\Unit as DefaultUnit;
 
 /**
  * Class Unit
- *
- * @author rr@atrocore.com
  */
 class Unit extends DefaultUnit
 {

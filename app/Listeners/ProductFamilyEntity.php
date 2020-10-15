@@ -37,9 +37,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class ProductFamilyEntity
- *
- * @package Pim\Listeners
- * @author  rr@atrocore.com
  */
 class ProductFamilyEntity extends AbstractEntityListener
 {

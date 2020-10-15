@@ -33,8 +33,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class of Tax
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Tax extends AbstractSelectManager
 {

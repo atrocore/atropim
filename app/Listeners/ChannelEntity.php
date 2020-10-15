@@ -39,8 +39,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class ChannelEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ChannelEntity extends AbstractEntityListener
 {

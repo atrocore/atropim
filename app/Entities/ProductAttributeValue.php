@@ -33,8 +33,6 @@ namespace Pim\Entities;
 
 /**
  * Class ProductAttributeValue
- *
- * @author rr@atrocore.com
  */
 class ProductAttributeValue extends \Espo\Core\Templates\Entities\Base
 {

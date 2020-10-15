@@ -33,8 +33,6 @@ namespace Pim\Services;
 
 /**
  * Class GeneralStatisticsDashlet
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class GeneralStatisticsDashlet extends AbstractProductDashletService
 {

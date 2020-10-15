@@ -37,8 +37,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class Category
- *
- * @author Roman Ratsun <rr@atrocore.com>
  */
 class Category extends Base
 {

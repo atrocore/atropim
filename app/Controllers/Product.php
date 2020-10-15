@@ -36,8 +36,6 @@ use Slim\Http\Request;
 
 /**
  * Product controller
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Product extends AbstractController
 {

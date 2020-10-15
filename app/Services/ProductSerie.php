@@ -35,8 +35,6 @@ use Espo\Core\Templates\Services\Base;
 
 /**
  * ProductSerie service
- *
- * @author rr@atrocore.com
  */
 class ProductSerie extends Base
 {

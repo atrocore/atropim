@@ -33,8 +33,6 @@ namespace Pim\Controllers;
 
 /**
  * Controller Category
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Category extends \Espo\Core\Templates\Controllers\Base
 {

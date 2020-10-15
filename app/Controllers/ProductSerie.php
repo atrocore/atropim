@@ -35,8 +35,6 @@ use Espo\Core\Templates\Controllers\Base;
 
 /**
  * ProductSerie controller
- *
- * @author rr@atrocore.com
  */
 class ProductSerie extends Base
 {

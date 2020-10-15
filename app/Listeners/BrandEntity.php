@@ -38,8 +38,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class BrandEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class BrandEntity extends AbstractEntityListener
 {

@@ -36,8 +36,6 @@ use Pim\ORM\DB\Query\Mysql;
 
 /**
  * Class of EntityManager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class EntityManager extends \Treo\Core\ORM\EntityManager
 {

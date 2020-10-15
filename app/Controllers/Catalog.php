@@ -35,8 +35,6 @@ use Espo\Core\Templates\Controllers\Base;
 
 /**
  * Catalog controller
- *
- * @author rr@atrocore.com
  */
 class Catalog extends Base
 {

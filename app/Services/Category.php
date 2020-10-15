@@ -35,8 +35,6 @@ use Espo\ORM\EntityCollection;
 
 /**
  * Service of Category
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Category extends AbstractService
 {

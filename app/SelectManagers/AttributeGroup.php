@@ -33,8 +33,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class of AttributeGroup
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class AttributeGroup extends AbstractSelectManager
 {

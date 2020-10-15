@@ -36,8 +36,6 @@ use DamCommon\Services\MigrationPimImage;
 
 /**
  * Class Event
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Event extends AbstractEvent
 {

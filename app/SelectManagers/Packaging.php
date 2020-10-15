@@ -33,8 +33,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Packaging select manager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Packaging extends AbstractSelectManager
 {

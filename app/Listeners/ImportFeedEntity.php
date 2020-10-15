@@ -39,8 +39,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class ImportFeedEntity
- *
- * @author rr@atrocore.com
  */
 class ImportFeedEntity extends AbstractListener
 {

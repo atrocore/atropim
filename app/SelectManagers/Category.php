@@ -36,8 +36,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class of Category
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Category extends AbstractSelectManager
 {

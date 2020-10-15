@@ -35,8 +35,6 @@ use Espo\Core\Templates\Entities\Base;
 
 /**
  * Class Attribute
- *
- * @author rr@atrocore.com
  */
 class Attribute extends Base
 {

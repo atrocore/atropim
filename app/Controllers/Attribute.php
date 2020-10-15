@@ -36,8 +36,6 @@ use Slim\Http\Request;
 
 /**
  * Attribute controller
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Attribute extends AbstractController
 {

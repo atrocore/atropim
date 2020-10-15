@@ -37,8 +37,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class ProductFamily
- *
- * @author rr@atrocore.com
  */
 class ProductFamily extends Base
 {

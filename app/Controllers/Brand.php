@@ -36,8 +36,6 @@ use Slim\Http\Request;
 
 /**
  * Brand controller
- *
- * @author rr@atrocore.com
  */
 class Brand extends AbstractController
 {

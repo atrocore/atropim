@@ -39,8 +39,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Class of AbstractService
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractService extends Base
 {

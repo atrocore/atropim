@@ -37,8 +37,6 @@ use Treo\Listeners\AbstractListener;
 
 /**
  * Class AbstractListener
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractEntityListener extends AbstractListener
 {

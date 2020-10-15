@@ -35,8 +35,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Channel controller
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Channel extends AbstractController
 {

@@ -33,8 +33,6 @@ namespace Pim\Services;
 
 /**
  * Class ProductsByTagDashlet
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ProductsByTagDashlet extends AbstractProductDashletService
 {

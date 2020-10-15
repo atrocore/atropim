@@ -35,8 +35,6 @@ use Espo\Core\Templates\Repositories\Base;
 
 /**
  * ProductSerie repository
- *
- * @author rr@atrocore.com
  */
 class ProductSerie extends Base
 {

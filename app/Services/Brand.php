@@ -35,8 +35,6 @@ use Espo\ORM\Entity;
 
 /**
  * Brand service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Brand extends AbstractService
 {

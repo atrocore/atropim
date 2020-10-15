@@ -35,8 +35,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class CategoryService
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class CategoryService extends AbstractEntityListener
 {

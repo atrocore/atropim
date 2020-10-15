@@ -35,8 +35,6 @@ use Espo\Core\Templates\Controllers\Base;
 
 /**
  * Class ProductFamilyAttribute
- *
- * @author rr@atrocore.com
  */
 class ProductFamilyAttribute extends Base
 {

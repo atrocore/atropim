@@ -31,8 +31,6 @@ namespace Pim\Controllers;
 
 /**
  * AssociatedProduct controller
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class AssociatedProduct extends \Espo\Core\Templates\Controllers\Base
 {

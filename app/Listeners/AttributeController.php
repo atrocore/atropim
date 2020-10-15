@@ -35,8 +35,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class AttributeController
- *
- * @author rr@atrocore.com
  */
 class AttributeController extends AbstractListener
 {

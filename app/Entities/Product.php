@@ -38,8 +38,6 @@ use Espo\ORM\EntityCollection;
 
 /**
  * Product entity
- *
- * @author rr@atrocore.com
  */
 class Product extends Base
 {

@@ -37,8 +37,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class CategoryController
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class CategoryController extends AbstractListener
 {

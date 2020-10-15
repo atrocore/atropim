@@ -40,8 +40,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class ProductAttributeValueController
- *
- * @author rr@atrocore.com
  */
 class ProductAttributeValueController extends AbstractListener
 {

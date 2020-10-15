@@ -33,8 +33,6 @@ namespace Pim\Core\Loaders;
 
 /**
  * Class EntityManager
- *
- * @author rr@atrocore.com
  */
 class EntityManager extends \Treo\Core\Loaders\EntityManager
 {

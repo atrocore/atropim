@@ -36,8 +36,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class CatalogController
- *
- * @author r.ratsun rr@atrocore.com
  */
 class AttachmentController extends AbstractListener
 {

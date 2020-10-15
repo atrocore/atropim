@@ -40,8 +40,6 @@ use Pim\Entities\Channel;
 
 /**
  * Class ProductEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ProductEntity extends AbstractEntityListener
 {

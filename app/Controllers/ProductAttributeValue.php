@@ -35,8 +35,6 @@ use Espo\Core\Templates\Controllers\Base;
 
 /**
  * Class ProductAttributeValue
- *
- * @author rr@atrocore.com
  */
 class ProductAttributeValue extends Base
 {

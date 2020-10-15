@@ -35,8 +35,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
  * Class ProductFamilyAttribute
- *
- * @author rr@atrocore.com
  */
 class ProductFamilyAttribute extends AbstractSelectManager
 {

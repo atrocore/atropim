@@ -36,8 +36,6 @@ use Treo\Listeners\AbstractListener;
 
 /**
  * Class ExportProfileEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ExportProfileEntity extends AbstractListener
 {

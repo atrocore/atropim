@@ -36,8 +36,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Service of Channel
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Channel extends AbstractService
 {

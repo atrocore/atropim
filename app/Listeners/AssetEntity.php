@@ -37,9 +37,6 @@ use Treo\Listeners\AbstractListener;
 
 /**
  * Class AssetEntity
- * @package Pim\Listeners
- *
- * @author r.ratsun rr@atrocore.com
  */
 class AssetEntity extends AbstractListener
 {

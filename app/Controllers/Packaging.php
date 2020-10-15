@@ -35,8 +35,6 @@ use Espo\Core\Templates\Controllers\Base;
 
 /**
  * Packaging controller
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Packaging extends Base
 {

@@ -37,8 +37,6 @@ use Pim\Entities\ProductAttributeValue as Entity;
 
 /**
  * Class of Mysql
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Mysql extends EspoMysql
 {

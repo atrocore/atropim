@@ -35,8 +35,6 @@ use Espo\Core\Templates\Entities\Base;
 
 /**
  * Catalog entity
- *
- * @author rr@atrocore.com
  */
 class Catalog extends Base
 {

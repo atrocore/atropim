@@ -33,8 +33,6 @@ namespace Pim\Services;
 
 /**
  * Class QueueManagerDuplicateProduct
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManagerDuplicateProduct extends \Treo\Services\QueueManagerBase
 {

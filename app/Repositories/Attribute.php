@@ -39,8 +39,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Class Attribute
- *
- * @author rr@atrocore.com
  */
 class Attribute extends Base
 {

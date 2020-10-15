@@ -38,8 +38,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Class ProductFamilyAttribute
- *
- * @author rr@atrocore.com
  */
 class ProductFamilyAttribute extends Base
 {

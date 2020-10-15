@@ -35,8 +35,6 @@ use Espo\Core\Templates\Services\Base;
 
 /**
  * Packaging service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Packaging extends Base
 {

@@ -35,8 +35,6 @@ use Espo\Core\Jobs\Base;
 
 /**
  * Class PimCleanup
- *
- * @author rr@atrocore.com
  */
 class PimCleanup extends Base
 {

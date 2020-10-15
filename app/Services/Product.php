@@ -40,8 +40,6 @@ use Treo\Services\MassActions;
 
 /**
  * Service of Product
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Product extends AbstractService
 {

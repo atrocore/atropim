@@ -35,8 +35,6 @@ use Espo\ORM\Entity;
 
 /**
  * Attribute service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Attribute extends AbstractService
 {

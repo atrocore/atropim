@@ -37,8 +37,6 @@ use Espo\Core\Exceptions;
 
 /**
  * Class AbstractTechService
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class AbstractTechnicalService extends AbstractService
 {

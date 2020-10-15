@@ -37,8 +37,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * ProductAttributeValue service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ProductAttributeValue extends AbstractService
 {

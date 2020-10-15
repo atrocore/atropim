@@ -39,8 +39,6 @@ use Slim\Http\Request;
 
 /**
  * RevisionField service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class RevisionField extends MultilangRevisionField
 {
