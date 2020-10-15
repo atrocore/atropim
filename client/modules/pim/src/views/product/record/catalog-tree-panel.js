@@ -1,5 +1,33 @@
 
 
+/*
+ * This file is part of AtroPIM.
+ *
+ * AtroPIM - Open Source PIM application.
+ * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
+ * Website: https://atropim.com
+ *
+ * AtroPIM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AtroPIM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with AtroPIM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
+ */
+
 Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
     Dep => Dep.extend({
 
@@ -72,27 +100,41 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
         expandTreeWithProductCategory() {
             const catalogTreeData = this.getStorage().get('catalog-tree-panel-data', this.scope);
             if (this.model && (!catalogTreeData || !catalogTreeData.category)) {
-                this.ajaxGetRequest(`Product/${this.model.id}/categories`)
+                this.ajaxGetRequest(`Product/${this.model.id}/productCategories`, this.getSortingParams())
                     .then(productCategories => {
-                        let category = (((productCategories.list || [])[0] || {}));
+                        let id = (((productCategories.list || [])[0] || {}).categoryId);
+                        if (id) {
+                            this.ajaxGetRequest(`Category/${id}`).then(category => {
+                                let parentCategoryId = id;
+                                if (category.categoryParentId) {
+                                    parentCategoryId = (category.categoryRoute || '').split('|').find(element => element);
+                                }
 
-                        let parentCategoryId = category.id;
-                        if (category.categoryParentId) {
-                            parentCategoryId = (category.categoryRoute || '').split('|').find(element => element);
-                        }
+                                let catalog = this.catalogs.find(catalog => {
+                                    return catalog.id === this.model.get('catalogId')
+                                        && (catalog.categoriesIds || []).includes(parentCategoryId);
+                                });
 
-                        let catalog = this.catalogs.find(catalog => {
-                            return catalog.id === this.model.get('catalogId') && (catalog.categoriesIds || []).includes(parentCategoryId);
-                        });
-
-                        if (catalog) {
-                            let catalogTree = this.getView(`category-tree-${catalog.id}`);
-                            if (catalogTree) {
-                                catalogTree.expandCategoryHandler(category);
-                            }
+                                if (catalog) {
+                                    let catalogTree = this.getView(`category-tree-${catalog.id}`);
+                                    if (catalogTree) {
+                                        catalogTree.expandCategoryHandler(category);
+                                    }
+                                }
+                            });
                         }
                     });
             }
+        },
+
+        getSortingParams() {
+            const panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', 'productCategories']);
+            const scopeDefs = this.getMetadata().get(['entityDefs', 'ProductCategory', 'collection']);
+
+            return {
+                sortBy: (panelDefs || {}).sortBy || (scopeDefs || {}).sortBy,
+                asc: (panelDefs || {}).asc || (scopeDefs || {}).asc
+            };
         },
 
         getFullEntity(url, params, callback, container) {
@@ -224,7 +266,7 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             this.catalogTreeData = {};
             if (type === 'isEmpty') {
                 this.catalogTreeData.advanced = {
-                    categories: {
+                    productCategories: {
                         type: 'isNotLinked',
                         data: {
                             type: type
