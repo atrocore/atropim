@@ -167,10 +167,15 @@
     "withoutImageAssets": "Without Image Assets"
   },
   "exceptions": {
+    "wrongInputData": "Validation failed. Wrong input data.",
+    "noSuchAssociation": "Validation failed. No such Association exists.",
+    "itselfAssociation": "Product cannot be associated with itself.",
+    "productAssociationAlreadyExists": "Such product association is already exists.",
     "Product with such SKU already exist": "Product with such SKU already exist",
     "You can't change Product Family in Product": "You can't change Product Family in Product",
     "You can't change field of Type in Product": "You can't change field of Type in Product",
     "isCategoryAlreadyRelated": "Category is already linked with product.",
-    "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category."
+    "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
+    "You should use categories from those trees that linked with product catalog": "This category is not available for the catalog of the selected product, and thus cannot be linked."
   }
 }

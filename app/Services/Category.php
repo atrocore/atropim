@@ -36,13 +36,15 @@ class Category extends AbstractService
         // call parent
         $entity = parent::getEntity($id);
 
-        /** @var array $channels */
-        $channels = $this->getRootChannels($entity)->toArray();
+        if (!empty($entity)) {
+            /** @var array $channels */
+            $channels = $this->getRootChannels($entity)->toArray();
 
-        // set hasChildren param
-        $entity->set('hasChildren', $entity->hasChildren());
-        $entity->set('channelsIds', array_column($channels, 'id'));
-        $entity->set('channelsNames', array_column($channels, 'name', 'id'));
+            // set hasChildren param
+            $entity->set('hasChildren', $entity->hasChildren());
+            $entity->set('channelsIds', array_column($channels, 'id'));
+            $entity->set('channelsNames', array_column($channels, 'name', 'id'));
+        }
 
         return $entity;
     }

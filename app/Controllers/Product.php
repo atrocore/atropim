@@ -21,12 +21,12 @@ class Product extends AbstractController
      * @param \stdClass $data
      * @param Request   $request
      *
-     * @return bool
+     * @return array
      *
      * @throws Exceptions\BadRequest
      * @throws Exceptions\Forbidden
      */
-    public function actionAddAssociatedProducts(array $params, \stdClass $data, Request $request): bool
+    public function actionAddAssociatedProducts(array $params, \stdClass $data, Request $request): array
     {
         if (!$request->isPost()) {
             throw new Exceptions\BadRequest();
@@ -48,12 +48,12 @@ class Product extends AbstractController
      * @param \stdClass $data
      * @param Request   $request
      *
-     * @return bool
+     * @return array
      *
      * @throws Exceptions\BadRequest
      * @throws Exceptions\Forbidden
      */
-    public function actionRemoveAssociatedProducts(array $params, \stdClass $data, Request $request): bool
+    public function actionRemoveAssociatedProducts(array $params, \stdClass $data, Request $request): array
     {
         if (!$request->isDelete()) {
             throw new Exceptions\BadRequest();

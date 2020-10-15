@@ -127,11 +127,15 @@
     "withoutProductAttributes": "ohne Produktattribute"
   },
   "exceptions": {
+    "wrongInputData": "Überprüfung ist fehlgeschlagen. Falsche Eingabedaten.",
+    "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
+    "itselfAssociation.": "Produkt kann nicht mit sich selbst assoziiert sein.",
+    "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
     "Product with such SKU already exist": "Produkt mit einer solchen SKU existiert bereits",
     "You can't change Product Family in Product": "Sie können die Produktfamilie in Product nicht ändern.",
     "You can't change field of Type in Product": "Sie können das Feld Typ in Produkt nicht ändern",
     "Channel provided by category tree can't be unlinked from product": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
-    "You should use categories from those trees that linked with product catalog": "Sie sollten Kategorien aus den Bäumen verwenden, die mit dem Produktkatalog verknüpft sind",
+    "You should use categories from those trees that linked with product catalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "isCategoryAlreadyRelated": "Die Kategorie ist bereits mit dem Produkt verknüpft.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden."
   }

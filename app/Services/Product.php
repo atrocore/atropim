@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Dam\Entities\AssetRelation;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
+use Treo\Services\MassActions;
 
 /**
  * Service of Product
@@ -19,66 +21,50 @@ class Product extends AbstractService
     /**
      * @param \stdClass $data
      *
-     * @return bool
+     * @return array
+     * @throws BadRequest
      */
-    public function addAssociateProducts(\stdClass $data): bool
+    public function addAssociateProducts(\stdClass $data): array
     {
-        if (empty($data->ids)
-            || empty($data->foreignIds)
-            || empty($data->associationId)
-            || !is_array($data->ids)
-            || !is_array($data->foreignIds)
-            || empty($association = $this->getEntityManager()->getEntity("Association", $data->associationId))) {
-            return false;
+        // input data validation
+        if (empty($data->ids) || empty($data->foreignIds) || empty($data->associationId) || !is_array($data->ids) || !is_array($data->foreignIds) || empty($data->associationId)) {
+            throw new BadRequest($this->exception('wrongInputData'));
         }
 
-        // prepare repository
-        $repository = $this->getEntityManager()->getRepository("AssociatedProduct");
-
-        // find exists entities
-        $entities = $repository->where(
-            [
-                'associationId'    => $data->associationId,
-                'mainProductId'    => $data->ids,
-                'relatedProductId' => $data->foreignIds
-            ]
-        )->find();
-
-        // prepare exists
-        $exists = [];
-        if (!empty($entities)) {
-            foreach ($entities as $entity) {
-                $exists[] = $entity->get("associationId") . "_" . $entity->get("mainProductId") .
-                    "_" . $entity->get("relatedProductId");
-            }
+        /** @var Entity $association */
+        $association = $this->getEntityManager()->getEntity("Association", $data->associationId);
+        if (empty($association)) {
+            throw new BadRequest($this->exception('noSuchAssociation'));
         }
 
+        $success = 0;
+        $error = [];
         foreach ($data->ids as $mainProductId) {
             foreach ($data->foreignIds as $relatedProductId) {
-                if (!in_array($data->associationId . "_{$mainProductId}_{$relatedProductId}", $exists)) {
-                    $entity = $repository->get();
-                    $entity->set("associationId", $data->associationId);
-                    $entity->set("mainProductId", $mainProductId);
-                    $entity->set("relatedProductId", $relatedProductId);
+                $success++;
 
-                    // for backward association
-                    if (!empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
-                        $entity->set('backwardAssociationId', $backwardAssociationId);
+                $entity = $this->getEntityManager()->getEntity('AssociatedProduct');
+                $entity->set("associationId", $data->associationId);
+                $entity->set("mainProductId", $mainProductId);
+                $entity->set("relatedProductId", $relatedProductId);
+                $entity->massRelateAction = 1;
 
-                        $backwardEntity = $repository->get();
-                        $backwardEntity->set("associationId", $backwardAssociationId);
-                        $backwardEntity->set("mainProductId", $relatedProductId);
-                        $backwardEntity->set("relatedProductId", $mainProductId);
-
-                        $this->getEntityManager()->saveEntity($backwardEntity);
-                    }
-
+                try {
                     $this->getEntityManager()->saveEntity($entity);
+                } catch (BadRequest $e) {
+                    $success--;
+                    $error[] = [
+                        'id'          => $mainProductId,
+                        'name'        => $this->getEntityManager()->getEntity('Product', $mainProductId)->get('name'),
+                        'foreignId'   => $relatedProductId,
+                        'foreignName' => $this->getEntityManager()->getEntity('Product', $relatedProductId)->get('name'),
+                        'message'     => utf8_encode($e->getMessage())
+                    ];
                 }
             }
         }
 
-        return true;
+        return ['message' => $this->getMassActionsService()->createRelationMessage($success, $error, 'Product', 'Product')];
     }
 
     /**
@@ -86,15 +72,16 @@ class Product extends AbstractService
      *
      * @param \stdClass $data
      *
-     * @return bool
+     * @return array|bool
+     * @throws BadRequest
      */
-    public function removeAssociateProducts(\stdClass $data): bool
+    public function removeAssociateProducts(\stdClass $data): array
     {
-        if (empty($data->ids) || empty($data->foreignIds) || empty($data->associationId)) {
-            return false;
+        // input data validation
+        if (empty($data->ids) || empty($data->foreignIds) || empty($data->associationId) || !is_array($data->ids) || !is_array($data->foreignIds) || empty($data->associationId)) {
+            throw new BadRequest($this->exception('wrongInputData'));
         }
 
-        // find associated products
         $associatedProducts = $this
             ->getEntityManager()
             ->getRepository('AssociatedProduct')
@@ -107,33 +94,42 @@ class Product extends AbstractService
             )
             ->find();
 
-        if (count($associatedProducts) > 0) {
-            foreach ($associatedProducts as $associatedProduct) {
-                // for backward association
-                if (!empty($backwardAssociationId = $associatedProduct->get('backwardAssociationId'))) {
-                    $backwards = $associatedProduct->get('backwardAssociation')->get('associatedProducts');
-
-                    if (count($backwards) > 0) {
-                        foreach ($backwards as $backward) {
-                            if ($backward->get('mainProductId') == $associatedProduct->get('relatedProductId')
-                                && $backward->get('relatedProductId') == $associatedProduct->get('mainProductId')
-                                && $backward->get('associationId') == $backwardAssociationId) {
-                                $this->getEntityManager()->removeEntity($backward);
-                            }
-                        }
-                    }
-                }
-
-                // remove associated product
-                $this->getEntityManager()->removeEntity($associatedProduct);
+        $exists = [];
+        if ($associatedProducts->count() > 0) {
+            foreach ($associatedProducts as $item) {
+                $exists[$item->get('mainProductId') . '_' . $item->get('relatedProductId')] = $item;
             }
         }
 
-        return true;
+        $success = 0;
+        $error = [];
+        foreach ($data->ids as $id) {
+            foreach ($data->foreignIds as $foreignId) {
+                $success++;
+                if (isset($exists["{$id}_{$foreignId}"])) {
+                    $associatedProduct = $exists["{$id}_{$foreignId}"];
+                    try {
+                        $this->getEntityManager()->removeEntity($associatedProduct);
+                    } catch (BadRequest $e) {
+                        $success--;
+                        $error[] = [
+                            'id'          => $associatedProduct->get('mainProductId'),
+                            'name'        => $associatedProduct->get('mainProduct')->get('name'),
+                            'foreignId'   => $associatedProduct->get('relatedProductId'),
+                            'foreignName' => $associatedProduct->get('relatedProduct')->get('name'),
+                            'message'     => utf8_encode($e->getMessage())
+                        ];
+                    }
+                }
+            }
+        }
+
+        return ['message' => $this->getMassActionsService()->createRelationMessage($success, $error, 'Product', 'Product', false)];
     }
 
     /**
      * @param AssetRelation $assetRelation
+     *
      * @return bool
      */
     public static function isMainRole(AssetRelation $assetRelation): bool
@@ -362,5 +358,23 @@ class Product extends AbstractService
     protected function getStringProductTypes(): string
     {
         return join("','", array_keys($this->getMetadata()->get('pim.productType')));
+    }
+
+    /**
+     * @return MassActions
+     */
+    protected function getMassActionsService(): MassActions
+    {
+        return $this->getServiceFactory()->create('MassActions');
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
+    protected function exception(string $key): string
+    {
+        return $this->getTranslate($key, 'exceptions', 'Product');
     }
 }

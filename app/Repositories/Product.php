@@ -292,7 +292,7 @@ class Product extends Base
         if ($categories->count() > 0) {
             foreach ($categories as $category) {
                 if (!in_array($category->getRoot()->get('id'), $catalogTreesIds)) {
-                    throw new BadRequest("You should use categories from those trees that linked with product catalog");
+                    throw new BadRequest($this->translate("You should use categories from those trees that linked with product catalog", 'exceptions', 'Product'));
                 }
             }
         }
