@@ -58,9 +58,9 @@
   },
   "options": {
     "searchRanges": {
-      "isNot": "Ist Nicht",
-      "isNotOneOf": "Ist nicht (Mehrfachsuche)",
-      "noneOf": "Ist nicht (Mehrfachsuche)"
+      "isNot": "Ist kein",
+      "isNotOneOf": "Ist kein von",
+      "noneOf": "Ist kein von"
     },
     "varcharSearchRanges": {
       "equals": "Gleich",
