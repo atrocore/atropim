@@ -170,7 +170,7 @@
     "wrongInputData": "Validation failed. Wrong input data.",
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Product cannot be associated with itself.",
-    "productAssociationAlreadyExists": "Such product association is already exists.",
+    "productAssociationAlreadyExists": "Such product association exists already.",
     "Product with such SKU already exist": "Product with such SKU already exist",
     "You can't change Product Family in Product": "You can't change Product Family in Product",
     "You can't change field of Type in Product": "You can't change field of Type in Product",
