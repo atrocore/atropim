@@ -174,8 +174,9 @@ class Event extends AbstractEvent
         $config->set('quickCreateList', $quickCreateList);
         $config->set('twoLevelTabList', $twoLevelTabList);
 
-        if ($config->get('applicationName') == 'TreoCore') {
-            $config->set('applicationName', 'TreoPIM');
+        // set application name
+        if (in_array($config->get('applicationName'), ['AtroCORE', 'AtroDAM'])) {
+            $config->set('applicationName', 'AtroPIM');
         }
 
         // save
