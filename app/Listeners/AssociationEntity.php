@@ -47,17 +47,19 @@ class AssociationEntity extends AbstractEntityListener
      */
     public function beforeSave(Event $event)
     {
-        // get entity
+        /** @var Entity $entity */
         $entity = $event->getArgument('entity');
 
         if (empty($entity->get('isActive')) && $this->hasProduct($entity, true)) {
-            throw new BadRequest(
-                $this->translate(
-                    'You can not deactivate association with active product(s)',
-                    'exceptions',
-                    'Association'
-                )
-            );
+            throw new BadRequest($this->translate('You can not deactivate association with active product(s)', 'exceptions', 'Association'));
+        }
+
+        if ($entity->get('id') === $entity->get('backwardAssociationId')) {
+            throw new BadRequest($this->translate('itselfBackwardAssociation', 'exceptions', 'Association'));
+        }
+
+        if ($entity->isAttributeChanged('backwardAssociationId')) {
+            $this->updateBackwardAssociation($entity);
         }
     }
 
@@ -72,13 +74,33 @@ class AssociationEntity extends AbstractEntityListener
         $entity = $event->getArgument('entity');
 
         if ($this->hasProduct($entity)) {
-            throw new BadRequest(
-                $this->translate(
-                    'Association is linked with product(s). Please, unlink product(s) first',
-                    'exceptions',
-                    'Association'
-                )
-            );
+            throw new BadRequest($this->translate('Association is linked with product(s). Please, unlink product(s) first', 'exceptions', 'Association'));
+        }
+    }
+
+    /**
+     * @param Entity $entity
+     */
+    protected function updateBackwardAssociation(Entity $entity)
+    {
+        if (!empty($entity->skipUpdateBackwardAssociation)) {
+            return;
+        }
+
+        // unlink old
+        if (!empty($entity->getFetched('backwardAssociationId'))) {
+            $association = $this->getEntityManager()->getEntity('Association', $entity->getFetched('backwardAssociationId'));
+            $association->set('backwardAssociationId', null);
+            $association->skipUpdateBackwardAssociation = 1;
+            $this->getEntityManager()->saveEntity($association);
+        }
+
+        // link
+        if (!empty($entity->get('backwardAssociationId'))) {
+            $association = $this->getEntityManager()->getEntity('Association', $entity->get('backwardAssociationId'));
+            $association->set('backwardAssociationId', $entity->get('id'));
+            $association->skipUpdateBackwardAssociation = 1;
+            $this->getEntityManager()->saveEntity($association);
         }
     }
 
