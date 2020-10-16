@@ -60,7 +60,8 @@
       "options": [
         "simpleProduct"
       ],
-      "importDisabled": true
+      "importDisabled": true,
+      "prohibitedEmptyValue": true
     },
     "amount": {
       "type": "float",
