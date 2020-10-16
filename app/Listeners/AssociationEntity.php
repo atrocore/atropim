@@ -54,10 +54,6 @@ class AssociationEntity extends AbstractEntityListener
             throw new BadRequest($this->translate('You can not deactivate association with active product(s)', 'exceptions', 'Association'));
         }
 
-        if ($entity->get('id') === $entity->get('backwardAssociationId')) {
-            throw new BadRequest($this->translate('itselfBackwardAssociation', 'exceptions', 'Association'));
-        }
-
         if ($entity->isAttributeChanged('backwardAssociationId')) {
             $this->updateBackwardAssociation($entity);
         }
