@@ -21,6 +21,7 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "advancedFilters": true,
+  "addRelationEnabled": true,
   "importTypeSimple": {
     "handler": "Pim\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },
