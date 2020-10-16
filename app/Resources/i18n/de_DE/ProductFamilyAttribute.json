@@ -4,13 +4,13 @@
     "isRequired": "ist erforderlich",
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
-    "channels": "Kanale",
-    "scope": "Umfang"
+    "channels": "Kanäle",
+    "scope": "Scope"
   },
   "links": {
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
-    "channels": "Kanale"
+    "channels": "Kanäle"
   },
   "labels": {
     "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen"
