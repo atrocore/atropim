@@ -149,6 +149,16 @@ class Product extends AbstractSelectManager
     }
 
     /**
+     * Products without any attributes
+     *
+     * @param $result
+     */
+    protected function boolFilterWithoutProductAttributes(&$result)
+    {
+        $result['customWhere'] .= " AND product.id NOT IN (SELECT DISTINCT product_id FROM product_attribute_value WHERE deleted=0)";
+    }
+
+    /**
      * Products without associated products filter
      *
      * @param $result
@@ -522,11 +532,6 @@ class Product extends AbstractSelectManager
 
         // prepare categories ids
         $ids = implode("','", $categoriesIds);
-
-        // prepare custom where
-        if (!isset($result['customWhere'])) {
-            $result['customWhere'] = '';
-        }
 
         // set custom where
         $result['customWhere'] .= " AND product.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=0 AND category_id IN ('$ids'))";
