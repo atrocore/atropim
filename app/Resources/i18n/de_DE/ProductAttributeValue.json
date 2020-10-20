@@ -5,7 +5,7 @@
   "fields": {
     "product": "Produkt",
     "productAttribute": "Produktattribut",
-    "channels": "Kanäle",
+    "channel": "Kanal",
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
     "value": "Wert",
@@ -14,7 +14,7 @@
   "links": {
     "product": "Produkt",
     "productAttribute": "Produktattribut",
-    "channels": "Kanäle",
+    "channel": "Kanal",
     "attribute": "Attribut"
   },
   "labels": {

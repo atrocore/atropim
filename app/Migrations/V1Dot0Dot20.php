@@ -49,6 +49,7 @@ class V1Dot0Dot20 extends Base
         $this->execute("DROP TABLE product_attribute_value_channel");
         $this->execute("ALTER TABLE `product_attribute_value` ADD channel_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("CREATE INDEX IDX_CHANNEL_ID ON `product_attribute_value` (channel_id)");
+        $this->execute("UPDATE product_attribute_value SET deleted=1 WHERE deleted=0 AND scope='Channel'");
     }
 
     /**
@@ -56,6 +57,13 @@ class V1Dot0Dot20 extends Base
      */
     public function down(): void
     {
+        $this->execute("CREATE TABLE `product_family_attribute_channel` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `channel_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `product_family_attribute_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_564D0D5672F5A1AA` (channel_id), INDEX `IDX_564D0D5658DA10F5` (product_family_attribute_id), UNIQUE INDEX `UNIQ_564D0D5672F5A1AA58DA10F5` (channel_id, product_family_attribute_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
+        $this->execute("CREATE TABLE `product_attribute_value_channel` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `channel_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `product_attribute_value_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_A5FC213872F5A1AA` (channel_id), INDEX `IDX_A5FC21389774A42E` (product_attribute_value_id), UNIQUE INDEX `UNIQ_A5FC213872F5A1AA9774A42E` (channel_id, product_attribute_value_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
+        $this->execute("DROP INDEX IDX_CHANNEL_ID ON `product_attribute_value`");
+        $this->execute("ALTER TABLE `product_attribute_value` DROP channel_id");
+        $this->execute("DROP INDEX IDX_CHANNEL_ID ON `product_family_attribute`");
+        $this->execute("ALTER TABLE `product_family_attribute` DROP channel_id");
+        $this->execute("UPDATE product_attribute_value SET deleted=1 WHERE deleted=0 AND scope='Channel'");
     }
 
     /**

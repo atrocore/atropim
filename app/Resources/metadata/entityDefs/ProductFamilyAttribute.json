@@ -19,6 +19,7 @@
     "scope": {
       "type": "enum",
       "required": true,
+      "prohibitedEmptyValue": true,
       "fontSize": 1,
       "options": [
         "Global",
@@ -27,8 +28,17 @@
       "default": "Global"
     },
     "channel": {
-      "type": "link",
-      "required": true
+      "type": "link"
+    },
+    "channels": {
+      "type": "linkMultiple",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": false
     },
     "productAttributeValues": {
       "type": "linkMultiple",
@@ -81,6 +91,10 @@
     "channel": {
       "type": "belongsTo",
       "foreign": "productFamilyAttributes",
+      "entity": "Channel"
+    },
+    "channels": {
+      "type": "hasMany",
       "entity": "Channel"
     },
     "productAttributeValues": {

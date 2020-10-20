@@ -9,7 +9,6 @@
     "name": "scope"
   },
   {
-    "name": "channels",
-    "notSortable": true
+    "name": "channel"
   }
 ]

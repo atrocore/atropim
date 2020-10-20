@@ -42,13 +42,10 @@ use Treo\Core\Utils\Util;
 class ProductFamilyAttribute extends Base
 {
     /**
-     * @var array
-     */
-    private $sqlItems = [];
-
-    /**
-     * @inheritDoc
+     * @param Entity $entity
+     * @param array  $options
      *
+     * @return bool|void
      * @throws BadRequest
      */
     public function beforeSave(Entity $entity, array $options = [])
@@ -60,13 +57,23 @@ class ProductFamilyAttribute extends Base
             return true;
         }
 
+        // when customer try to create records for few channels
+        if (empty($entity->get('channelId')) && !empty($channelsIds = $entity->get('channelsIds'))) {
+            $entity->set('channelId', array_shift($channelsIds));
+            $entity->set('channelsIds', null);
+            $entity->set('channelsNames', null);
+            $entity->tmpChannelsId = $channelsIds;
+        }
+
         // is valid
         $this->isValid($entity);
 
-        // clearing channels ids
+        // clearing channel id if it needs
         if ($entity->get('scope') == 'Global') {
-            $entity->set('channelsIds', []);
+            $entity->set('channelId', null);
         }
+
+        return true;
     }
 
     /**
@@ -78,6 +85,22 @@ class ProductFamilyAttribute extends Base
         $this->updateProductAttributeValues($entity);
 
         parent::afterSave($entity, $options);
+
+        // when customer try to create records for few channels
+        if (!empty($entity->tmpChannelsId)) {
+            foreach ($entity->tmpChannelsId as $channelId) {
+                $newEntity = $this->get();
+                $newEntity->set($entity->toArray());
+                $newEntity->id = Util::generateId();
+                $newEntity->set('channelId', $channelId);
+
+                try {
+                    $this->getEntityManager()->saveEntity($newEntity);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("ProductFamilyAttribute ERROR: " . $e->getMessage());
+                }
+            }
+        }
     }
 
     /**
@@ -120,41 +143,20 @@ class ProductFamilyAttribute extends Base
      */
     protected function isUnique(Entity $entity): bool
     {
-        // prepare count
-        $item = null;
-
-        if ($entity->get('scope') == 'Global') {
-            $item = $this
-                ->getEntityManager()
-                ->getRepository('ProductFamilyAttribute')
-                ->select(['id'])
-                ->where(
-                    [
-                        'id!='            => $entity->get('id'),
-                        'productFamilyId' => $entity->get('productFamilyId'),
-                        'attributeId'     => $entity->get('attributeId'),
-                        'scope'           => 'Global',
-                    ]
-                )
-                ->findOne();
-        } elseif ($entity->get('scope') == 'Channel') {
-            $item = $this
-                ->getEntityManager()
-                ->getRepository('ProductFamilyAttribute')
-                ->distinct()
-                ->select(['id'])
-                ->join('channels')
-                ->where(
-                    [
-                        'id!='            => $entity->get('id'),
-                        'productFamilyId' => $entity->get('productFamilyId'),
-                        'attributeId'     => $entity->get('attributeId'),
-                        'scope'           => 'Channel',
-                        'channels.id'     => $entity->get('channelsIds'),
-                    ]
-                )
-                ->findOne();
-        }
+        $item = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->select(['id'])
+            ->where(
+                [
+                    'id!='            => $entity->get('id'),
+                    'productFamilyId' => $entity->get('productFamilyId'),
+                    'attributeId'     => $entity->get('attributeId'),
+                    'scope'           => $entity->get('scope'),
+                    'channelId'       => $entity->get('channelId'),
+                ]
+            )
+            ->findOne();
 
         return empty($item);
     }
@@ -171,12 +173,6 @@ class ProductFamilyAttribute extends Base
             return true;
         }
 
-        // get channels ids
-        $channelsIds = (array)$entity->get('channelsIds');
-
-        // implode channels
-        $channels = implode(',', $channelsIds);
-
         // get already exists
         $exists = $this->getExistsProductAttributeValues($entity, $productsIds);
 
@@ -184,7 +180,10 @@ class ProductFamilyAttribute extends Base
         $pfaId = $entity->get('id');
 
         // get scope
-        $scope = $entity->get('scope');
+        $scope = (string)$entity->get('scope');
+
+        // get channel id
+        $channelId = (string)$entity->get('channelId');
 
         // get is required param
         $isRequired = (int)$entity->get('isRequired');
@@ -198,59 +197,28 @@ class ProductFamilyAttribute extends Base
             // prepare id
             $id = $item['id'];
 
-            if (empty($item['productFamilyAttributeId']) && $item['scope'] == $scope && $item['channels'] == $channels) {
+            if (empty($item['productFamilyAttributeId']) && (string)$item['scope'] == $scope && (string)$item['channelId'] == $channelId) {
                 if ($entity->isNew()) {
                     $skipToCreate[] = $item['productId'];
-                    $this->pushSql("UPDATE product_attribute_value SET product_family_attribute_id='$pfaId',is_required=$isRequired WHERE id='$id'");
+                    $this->execute("UPDATE product_attribute_value SET product_family_attribute_id='$pfaId',is_required=$isRequired WHERE id='$id'");
                 } else {
-                    $this->pushSql("UPDATE product_attribute_value SET deleted=1 WHERE id='$id'");
-                    $this->pushSql("DELETE FROM product_attribute_value_channel WHERE product_attribute_value_id='$id'");
-                }
-            }
-        }
-
-        // Unlink channels from exists records if it needs
-        if ($scope == 'Channel') {
-            foreach ($exists as $item) {
-                // prepare id
-                $id = $item['id'];
-
-                if (empty($item['productFamilyAttributeId']) && $item['scope'] == 'Channel' && !empty($item['channels']) && $item['channels'] != $channels) {
-                    foreach (explode(',', (string)$item['channels']) as $itemChannel) {
-                        if (in_array($itemChannel, $channelsIds)) {
-                            $this->pushSql("DELETE FROM product_attribute_value_channel WHERE product_attribute_value_id='$id' AND channel_id='$itemChannel'");
-                        }
-                    }
+                    $this->execute("UPDATE product_attribute_value SET deleted=1 WHERE id='$id'");
                 }
             }
         }
 
         // Update exists records if it needs
         if (!$entity->isNew()) {
-            // find ids
-            $ids = [];
-            foreach ($exists as $item) {
-                if ($item['productFamilyAttributeId'] == $pfaId) {
-                    $ids[] = $item['id'];
-                }
-            }
-            $this->pushSql("UPDATE product_attribute_value SET is_required=$isRequired,scope='$scope' WHERE product_family_attribute_id='$pfaId' AND deleted=0");
-            $this->pushSql("DELETE FROM product_attribute_value_channel WHERE product_attribute_value_id IN ('" . implode("','", $ids) . "')");
-            foreach ($ids as $id) {
-                foreach ($channelsIds as $channelId) {
-                    $this->pushSql("INSERT INTO product_attribute_value_channel (channel_id, product_attribute_value_id) VALUES ('$channelId','$id')");
-                }
-            }
+            $this->execute(
+                "UPDATE product_attribute_value SET is_required=$isRequired,scope='$scope',channel_id='$channelId' WHERE product_family_attribute_id='$pfaId' AND deleted=0"
+            );
         }
 
         // Create a new records if it needs
         if ($entity->isNew()) {
             // prepare data
-            $createdById = $entity->get('createdById');
-            $ownerUserId = $entity->get('ownerUserId');
-            $assignedUserId = $entity->get('assignedUserId');
+            $createdById = 'system';
             $createdAt = $entity->get('createdAt');
-            $teamsIds = (array)$entity->get('teamsIds');
 
             foreach ($productsIds as $productId) {
                 if (in_array($productId, $skipToCreate)) {
@@ -260,24 +228,11 @@ class ProductFamilyAttribute extends Base
                 // generate id
                 $id = Util::generateId();
 
-                $this->pushSql(
-                    "INSERT INTO product_attribute_value (id,scope,product_id,attribute_id,product_family_attribute_id,created_by_id,created_at,owner_user_id,assigned_user_id,is_required) VALUES ('$id','$scope','$productId','$attributeId','$pfaId','$createdById','$createdAt','$ownerUserId','$assignedUserId',$isRequired)"
+                $this->execute(
+                    "INSERT INTO product_attribute_value (id,scope,product_id,attribute_id,product_family_attribute_id,created_by_id,created_at,is_required,channel_id) VALUES ('$id','$scope','$productId','$attributeId','$pfaId','$createdById','$createdAt',$isRequired,'$channelId')"
                 );
-                if (!empty($teamsIds)) {
-                    foreach ($teamsIds as $teamId) {
-                        $this->pushSql("INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id','$teamId','ProductAttributeValue')");
-                    }
-                }
-                if ($scope == 'Channel') {
-                    foreach ($channelsIds as $channelId) {
-                        $this->pushSql("INSERT INTO product_attribute_value_channel (channel_id, product_attribute_value_id) VALUES ('$channelId','$id')");
-                    }
-                }
             }
         }
-
-        // execute sql
-        $this->executeSqlItems();
 
         return true;
     }
@@ -308,44 +263,23 @@ class ProductFamilyAttribute extends Base
      */
     private function getExistsProductAttributeValues(Entity $entity, array $productsIds): array
     {
-        // prepare sql
-        $sql = "SELECT
-                       id,
-                       scope,
-                       product_id AS productId,
-                       (SELECT GROUP_CONCAT(channel_id ORDER BY channel_id ASC) FROM product_attribute_value_channel WHERE product_attribute_value_id=product_attribute_value.id) AS channels,
-                       product_family_attribute_id AS productFamilyAttributeId
-                FROM product_attribute_value
-                WHERE product_id IN ('" . implode("','", $productsIds) . "')
-                  AND deleted=0
-                  AND attribute_id=:attributeId";
-
         return $this
             ->getEntityManager()
-            ->nativeQuery($sql, ['attributeId' => $entity->get('attributeId')])
-            ->fetchAll(\PDO::FETCH_ASSOC);
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $productsIds, 'attributeId' => $entity->get('attributeId')])
+            ->find()
+            ->toArray();
     }
 
     /**
      * @param string $sql
      */
-    private function pushSql(string $sql): void
+    private function execute(string $sql)
     {
-        $this->sqlItems[] = $sql;
-
-        if (count($this->sqlItems) > 3000) {
-            $this->executeSqlItems();
-            $this->sqlItems = [];
-        }
-    }
-
-    /**
-     * Execute SQL items
-     */
-    private function executeSqlItems(): void
-    {
-        if (!empty($this->sqlItems)) {
-            $this->getEntityManager()->nativeQuery(implode(';', $this->sqlItems));
+        try {
+            $this->getEntityManager()->nativeQuery($sql);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("SQL ERROR: '$sql' -> " . $e->getMessage());
         }
     }
 }

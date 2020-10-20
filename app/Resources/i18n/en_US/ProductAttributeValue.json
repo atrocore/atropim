@@ -10,13 +10,13 @@
     "isRequired": "Is required",
     "value": "Value",
     "scope": "Scope",
-    "channels": "Channels"
+    "channel": "Channel"
   },
   "links": {
     "productAttribute": "Product attribute",
     "product": "Product",
     "attribute": "Attribute",
-    "channels": "Channels"
+    "channel": "Channel"
   },
   "labels": {
     "Create ProductAttributeValue": "Create Attribute Value"

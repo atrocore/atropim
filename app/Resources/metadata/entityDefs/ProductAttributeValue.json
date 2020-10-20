@@ -38,6 +38,7 @@
     "scope": {
       "type": "enum",
       "required": true,
+      "prohibitedEmptyValue": true,
       "options": [
         "Global",
         "Channel"
