@@ -19,7 +19,7 @@
   },
   "dynamicLogic": {
     "fields": {
-      "channels": {
+      "channel": {
         "visible": {
           "conditionGroup": [
             {

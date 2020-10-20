@@ -143,19 +143,21 @@ class ProductFamilyAttribute extends Base
      */
     protected function isUnique(Entity $entity): bool
     {
+        $where = [
+            'id!='        => $entity->get('id'),
+            'productId'   => $entity->get('productId'),
+            'attributeId' => $entity->get('attributeId'),
+            'scope'       => $entity->get('scope'),
+        ];
+        if ($entity->get('scope') == 'Channel') {
+            $where['channelId'] = $entity->get('channelId');
+        }
+
         $item = $this
             ->getEntityManager()
             ->getRepository('ProductFamilyAttribute')
             ->select(['id'])
-            ->where(
-                [
-                    'id!='            => $entity->get('id'),
-                    'productFamilyId' => $entity->get('productFamilyId'),
-                    'attributeId'     => $entity->get('attributeId'),
-                    'scope'           => $entity->get('scope'),
-                    'channelId'       => $entity->get('channelId'),
-                ]
-            )
+            ->where($where)
             ->findOne();
 
         return empty($item);

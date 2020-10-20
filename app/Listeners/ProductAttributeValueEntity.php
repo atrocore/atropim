@@ -72,24 +72,19 @@ class ProductAttributeValueEntity extends AbstractListener
         if (!$entity->isNew() && !empty($entity->get('productFamilyAttribute')) && empty($entity->skipPfValidation)) {
             if ($entity->isAttributeChanged('scope')
                 || $entity->isAttributeChanged('isRequired')
-                || $entity->isAttributeChanged('channelsIds')
+                || $entity->isAttributeChanged('channelId')
                 || $entity->isAttributeChanged('attributeId')) {
                 throw new BadRequest($this->exception('Product Family attribute cannot be changed'));
             }
         }
 
         if (!$this->isUnique($entity)) {
-            throw new BadRequest(
-                sprintf(
-                    'Such product attribute \'%s\' already exists',
-                    $entity->get('attribute')->get('name')
-                )
-            );
+            throw new BadRequest(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name')));
         }
 
-        // clearing channels ids
+        // clearing channel id
         if ($entity->get('scope') == 'Global') {
-            $entity->set('channelsIds', []);
+            $entity->set('channelId', null);
         }
 
         // storing data

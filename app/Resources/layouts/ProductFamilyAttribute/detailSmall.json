@@ -11,9 +11,13 @@
         {
           "name": "scope"
         },
+        false
+      ],
+      [
         {
           "name": "channel"
-        }
+        },
+        false
       ],
       [
         {

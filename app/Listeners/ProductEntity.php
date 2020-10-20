@@ -274,31 +274,21 @@ class ProductEntity extends AbstractEntityListener
                         'attributeId'              => $productFamilyAttribute->get('attributeId'),
                         'productFamilyAttributeId' => $productFamilyAttribute->get('id'),
                         'isRequired'               => $productFamilyAttribute->get('isRequired'),
-                        'scope'                    => $productFamilyAttribute->get('scope')
+                        'scope'                    => $productFamilyAttribute->get('scope'),
+                        'channelId'                => $productFamilyAttribute->get('channelId')
                     ]
                 );
-
-                // relate channels if it needs
-                if ($productFamilyAttribute->get('scope') == 'Channel') {
-                    $channels = $productFamilyAttribute->get('channels');
-                    if (count($channels) > 0) {
-                        $productAttributeValue->set('channelsIds', array_column($channels->toArray(), 'id'));
-                    }
-                }
 
                 // save
                 try {
                     $this->getEntityManager()->saveEntity($productAttributeValue);
                 } catch (BadRequest $e) {
-                    $message = sprintf('Such product attribute \'%s\' already exists', $productFamilyAttribute->get('attribute')->get('name'));
+                    $translate = $this->translate('productAttributeAlreadyExists', 'exceptions', 'ProductAttributeValue');
+                    $message = sprintf($translate, $productFamilyAttribute->get('attribute')->get('name'));
                     if ($message == $e->getMessage()) {
                         $copy = $repository->findCopy($productAttributeValue);
                         $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
                         $copy->set('isRequired', $productAttributeValue->get('isRequired'));
-
-                        if ($productFamilyAttribute->get('scope') == 'Channel') {
-                            $copy->set('channelsIds', $productAttributeValue->get('channelsIds'));
-                        }
 
                         $copy->skipPfValidation = true;
 

@@ -108,38 +108,16 @@ class ProductAttributeValue extends Base
      */
     public function findCopy(Entity $entity): ?Entity
     {
-        // prepare copy
-        $copy = null;
-
-        if ($entity->get('scope') == 'Global') {
-            $copy = $this
-                ->where(
-                    [
-                        'id!='        => $entity->get('id'),
-                        'productId'   => $entity->get('productId'),
-                        'attributeId' => $entity->get('attributeId'),
-                        'scope'       => 'Global',
-                    ]
-                )
-                ->findOne();
-        }
-
+        $where = [
+            'id!='        => $entity->get('id'),
+            'productId'   => $entity->get('productId'),
+            'attributeId' => $entity->get('attributeId'),
+            'scope'       => $entity->get('scope'),
+        ];
         if ($entity->get('scope') == 'Channel') {
-            $copy = $this
-                ->distinct()
-                ->join('channels')
-                ->where(
-                    [
-                        'id!='        => $entity->get('id'),
-                        'productId'   => $entity->get('productId'),
-                        'attributeId' => $entity->get('attributeId'),
-                        'scope'       => 'Channel',
-                        'channels.id' => $entity->get('channelsIds'),
-                    ]
-                )
-                ->findOne();
+            $where['channelId'] = $entity->get('channelId');
         }
 
-        return $copy;
+        return $this->where($where)->findOne();
     }
 }

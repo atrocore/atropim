@@ -34,8 +34,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         template: 'pim:product/record/panels/product-attribute-values',
 
         baseSelectFields: [
-            'channelsIds',
-            'channelsNames',
+            'channelId',
+            'channelName',
             'data',
             'attributeGroupId',
             'attributeGroupName',
