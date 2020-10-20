@@ -23,6 +23,6 @@
   "exceptions": {
     "You have no ACL rights to read attribute values": "Sie haben keine Rechte, Attributwerte zu lesen.",
     "You can't change product in attribute from Product Family": "Sie können das Produkt im Attribut der Produktfamilie nicht ändern.",
-    "productAttributeAlreadyExists": "Ein solches Attribut  '%s' existiert bereits"
+    "productAttributeAlreadyExists": "Attribut '%s' existiert bereits."
   }
 }

@@ -30,6 +30,17 @@
 
 Espo.define('pim:views/product/record/panels/product-channels', 'views/record/panels/relationship',
     Dep => Dep.extend({
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'after:relate after:unrelate', link => {
+                if (link === 'channels') {
+                    $('.action[data-action=refresh][data-panel=productAttributeValues]').click();
+                }
+            });
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -46,5 +57,6 @@ Espo.define('pim:views/product/record/panels/product-channels', 'views/record/pa
                 }
             });
         },
+
     })
 );

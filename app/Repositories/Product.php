@@ -52,6 +52,44 @@ class Product extends Base
     }
 
     /**
+     * @inheritDoc
+     */
+    public function findRelated(Entity $entity, $relationName, array $params = [])
+    {
+        if ($relationName === 'productAttributeValues') {
+            $this->filterByChannel($entity, $params);
+        }
+
+        return parent::findRelated($entity, $relationName, $params);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function countRelated(Entity $entity, $relationName, array $params = [])
+    {
+        if ($relationName === 'productAttributeValues') {
+            $this->filterByChannel($entity, $params);
+        }
+
+        return parent::countRelated($entity, $relationName, $params);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $params
+     */
+    protected function filterByChannel(Entity $entity, array &$params)
+    {
+        // prepare channels ids
+        $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
+        $channelsIds[] = 'no-such-id';
+        $channelsIds = implode("','", $channelsIds);
+
+        $params['customWhere'] .= "AND (product_attribute_value.scope='Global' OR (product_attribute_value.scope='Channel' AND product_attribute_value.channel_id IN ('$channelsIds')))";
+    }
+
+    /**
      * Is product can linked with non-lead category
      *
      * @param Entity|string $category

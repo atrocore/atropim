@@ -612,7 +612,7 @@ class Product extends AbstractSelectManager
             $sql = str_replace('ÿ', '\\\\\\\\u00ff', $sql);
 
             // prepare custom where
-            $selectParams['customWhere'] .= ' AND product.id IN (' . $sql . ')';
+            $selectParams['customWhere'] .= " AND product.id IN ($sql AND product_attribute_value.scope='Global')";
         }
     }
 
