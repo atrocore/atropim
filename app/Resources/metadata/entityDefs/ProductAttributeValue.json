@@ -44,11 +44,8 @@
       ],
       "default": "Global"
     },
-    "channels": {
-      "type": "linkMultiple",
-      "importDisabled": true,
-      "noLoad": false,
-      "view": "pim:views/product-attribute-value/fields/channels"
+    "channel": {
+      "type": "link"
     },
     "isCustom": {
       "type": "bool",
@@ -137,9 +134,8 @@
       "type": "belongsTo",
       "entity": "Attribute"
     },
-    "channels": {
-      "type": "hasMany",
-      "relationName": "productAttributeValueChannel",
+    "channel": {
+      "type": "belongsTo",
       "foreign": "productAttributeValues",
       "entity": "Channel"
     },

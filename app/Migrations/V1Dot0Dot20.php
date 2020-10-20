@@ -1,5 +1,4 @@
-
-
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -28,33 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-attribute-value/fields/channels', 'treo-core:views/fields/filtered-link-multiple',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        selectBoolFilterList: ['notLinkedWithAttributesInProduct'],
+namespace Pim\Migrations;
 
-        boolFilterData: {
-            notLinkedWithAttributesInProduct() {
-                return {
-                    productId: this.model.get('productId'),
-                    attributeId: this.model.get('attributeId')
-                };
-            }
-        },
+use Treo\Core\Migration\Base;
 
-        setup() {
-            Dep.prototype.setup.call(this);
+/**
+ * Class V1Dot0Dot20
+ */
+class V1Dot0Dot20 extends Base
+{
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
+    {
+        $this->execute("DROP TABLE product_family_attribute_channel");
+        $this->execute("ALTER TABLE `product_family_attribute` ADD channel_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("CREATE INDEX IDX_CHANNEL_ID ON `product_family_attribute` (channel_id)");
+        $this->execute("DROP TABLE product_attribute_value_channel");
+        $this->execute("ALTER TABLE `product_attribute_value` ADD channel_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("CREATE INDEX IDX_CHANNEL_ID ON `product_attribute_value` (channel_id)");
+    }
 
-            this.listenTo(this.model, 'change:attributeId change:scope', () => {
-                if (this.model.get('scope') !== 'Channel' || !this.model.get('attributeId')) {
-                    this.model.set({
-                        [this.idsName]: null,
-                        [this.nameHashName]: null
-                    });
-                }
-            });
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+    }
+
+    /**
+     * @param string $sql
+     */
+    protected function execute(string $sql)
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
         }
-
-    })
-);
-
+    }
+}

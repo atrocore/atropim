@@ -153,14 +153,12 @@
     },
     "productAttributeValues": {
       "type": "hasMany",
-      "relationName": "productAttributeValueChannel",
-      "foreign": "channels",
+      "foreign": "channel",
       "entity": "ProductAttributeValue"
     },
     "productFamilyAttributes": {
       "type": "hasMany",
-      "relationName": "productFamilyAttributeChannel",
-      "foreign": "channels",
+      "foreign": "channel",
       "entity": "ProductFamilyAttribute"
     },
     "category": {

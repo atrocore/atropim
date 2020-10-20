@@ -26,13 +26,9 @@
       ],
       "default": "Global"
     },
-    "channels": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
-      "noLoad": false,
-      "view": "pim:views/product-family-attribute/fields/channels"
+    "channel": {
+      "type": "link",
+      "required": true
     },
     "productAttributeValues": {
       "type": "linkMultiple",
@@ -82,9 +78,8 @@
       "foreign": "productFamilyAttributes",
       "entity": "Attribute"
     },
-    "channels": {
-      "type": "hasMany",
-      "relationName": "productFamilyAttributeChannel",
+    "channel": {
+      "type": "belongsTo",
       "foreign": "productFamilyAttributes",
       "entity": "Channel"
     },
