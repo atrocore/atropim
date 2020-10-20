@@ -9,7 +9,7 @@
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
     "value": "Wert",
-    "scope": "Umfang"
+    "scope": "Scope"
   },
   "links": {
     "product": "Produkt",
