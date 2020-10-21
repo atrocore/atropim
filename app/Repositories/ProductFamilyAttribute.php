@@ -58,12 +58,7 @@ class ProductFamilyAttribute extends Base
         }
 
         // when customer try to create records for few channels
-        if (empty($entity->get('channelId')) && !empty($channelsIds = $entity->get('channelsIds'))) {
-            $entity->set('channelId', array_shift($channelsIds));
-            $entity->set('channelsIds', null);
-            $entity->set('channelsNames', null);
-            $entity->tmpChannelsId = $channelsIds;
-        }
+        $this->prepareForChannels($entity);
 
         // is valid
         $this->isValid($entity);
@@ -133,6 +128,49 @@ class ProductFamilyAttribute extends Base
 
         if (!$this->isUnique($entity)) {
             throw new BadRequest($this->exception('Such record already exists'));
+        }
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws BadRequest
+     */
+    protected function prepareForChannels(Entity $entity)
+    {
+        if (empty($entity->get('channelId')) && !empty($channelsIds = $entity->get('channelsIds'))) {
+            // find exists records
+            $exists = $this
+                ->select(['channelId'])
+                ->where(
+                    [
+                        'productFamilyId' => $entity->get('productFamilyId'),
+                        'attributeId'     => $entity->get('attributeId'),
+                        'scope'           => 'Channel',
+                        'channelId'       => $channelsIds
+                    ]
+                )
+                ->find()
+                ->toArray();
+            $exists = array_column($exists, 'channelId');
+
+            $notExistsChannelIds = [];
+            foreach ($channelsIds as $channelId) {
+                if (!in_array($channelId, $exists)) {
+                    $notExistsChannelIds[] = $channelId;
+                }
+            }
+
+            if (empty($notExistsChannelIds)) {
+                throw new BadRequest($this->exception('Such record already exists'));
+            }
+
+            $entity->set('channelId', array_shift($notExistsChannelIds));
+            $entity->set('channelsIds', null);
+            $entity->set('channelsNames', null);
+            if (!empty($notExistsChannelIds)) {
+                $entity->tmpChannelsId = $notExistsChannelIds;
+            }
         }
     }
 
