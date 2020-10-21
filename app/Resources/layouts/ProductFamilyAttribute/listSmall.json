@@ -1,14 +1,14 @@
 [
   {
-    "name": "attribute"
+    "name": "attribute",
+    "notSortable": true
   },
   {
-    "name": "isRequired"
+    "name": "isRequired",
+    "notSortable": true
   },
   {
-    "name": "scope"
-  },
-  {
-    "name": "channel"
+    "name": "channel",
+    "notSortable": true
   }
 ]

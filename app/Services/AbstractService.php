@@ -43,6 +43,33 @@ use Treo\Core\Utils\Util;
 abstract class AbstractService extends Base
 {
     /**
+     * @var string
+     */
+    protected $linkWhereNeedToUpdateChannel = '';
+
+    /**
+     * @inheritDoc
+     */
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        /**
+         * If scope == Global then we should set scope to channel
+         */
+        if ($link == $this->linkWhereNeedToUpdateChannel && isset($result['collection']) && $result['collection']->count() > 0) {
+            foreach ($result['collection'] as $productFamilyAttribute) {
+                if ($productFamilyAttribute->get('scope') == 'Global') {
+                    $productFamilyAttribute->set('channelId', null);
+                    $productFamilyAttribute->set('channelName', 'Global');
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get ACL "where" SQL
      *
      * @param string $entityName
@@ -88,7 +115,7 @@ abstract class AbstractService extends Base
         $this->addDependency('metadata');
     }
 
-      /**
+    /**
      * Get translated message
      *
      * @param string $label

@@ -20,6 +20,7 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": true,
+      "layoutListSmallDisabled": true,
       "fontSize": 1,
       "options": [
         "Global",

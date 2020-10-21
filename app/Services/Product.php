@@ -44,6 +44,11 @@ use Treo\Services\MassActions;
 class Product extends AbstractService
 {
     /**
+     * @var string
+     */
+    protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
+
+    /**
      * @param \stdClass $data
      *
      * @return array

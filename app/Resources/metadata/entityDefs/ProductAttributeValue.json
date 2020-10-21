@@ -39,6 +39,7 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": true,
+      "layoutListSmallDisabled": true,
       "options": [
         "Global",
         "Channel"

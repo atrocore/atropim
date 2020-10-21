@@ -38,4 +38,8 @@ use Espo\Core\Templates\Services\Base;
  */
 class ProductFamilyAttribute extends Base
 {
+    /**
+     * @var array
+     */
+    protected $mandatorySelectAttributeList = ['scope'];
 }

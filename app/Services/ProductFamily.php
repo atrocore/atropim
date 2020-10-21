@@ -31,45 +31,17 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
 /**
  * Class ProductFamily
  */
-class ProductFamily extends Base
+class ProductFamily extends AbstractService
 {
     /**
-     * Get count not empty product family attributes
-     *
-     * @param string $productFamilyId
-     * @param string $attributeId
-     *
-     * @return int
+     * @var string
      */
-    public function getLinkedProductAttributesCount(string $productFamilyId, string $attributeId): int
-    {
-        // prepare result
-        $count = 0;
-
-        // if not empty productFamilyId and attributeId
-        if (!empty($productFamilyId) && !empty($attributeId)) {
-            // get count products
-            $count = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->where(
-                    [
-                        'productFamilyId' => $productFamilyId,
-                        'attributeId'     => $attributeId,
-                        'value!='         => ['null', '', 0, '0', '[]']
-                    ]
-                )
-                ->count();
-        }
-
-        return $count;
-    }
+    protected $linkWhereNeedToUpdateChannel = 'productFamilyAttributes';
 
     /**
      * @inheritdoc
