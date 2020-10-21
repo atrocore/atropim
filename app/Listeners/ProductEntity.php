@@ -34,6 +34,7 @@ namespace Pim\Listeners;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Entities\Product;
 use Treo\Core\EventManager\Event;
 use Pim\Entities\Channel;
@@ -282,18 +283,16 @@ class ProductEntity extends AbstractEntityListener
                 // save
                 try {
                     $this->getEntityManager()->saveEntity($productAttributeValue);
+                } catch (ProductAttributeAlreadyExists $e) {
+                    $copy = $repository->findCopy($productAttributeValue);
+                    $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
+                    $copy->set('isRequired', $productAttributeValue->get('isRequired'));
+
+                    $copy->skipPfValidation = true;
+
+                    $this->getEntityManager()->saveEntity($copy);
                 } catch (BadRequest $e) {
-                    $translate = $this->translate('productAttributeAlreadyExists', 'exceptions', 'ProductAttributeValue');
-                    $message = sprintf($translate, $productFamilyAttribute->get('attribute')->get('name'));
-                    if ($message == $e->getMessage()) {
-                        $copy = $repository->findCopy($productAttributeValue);
-                        $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
-                        $copy->set('isRequired', $productAttributeValue->get('isRequired'));
-
-                        $copy->skipPfValidation = true;
-
-                        $this->getEntityManager()->saveEntity($copy);
-                    }
+                    // ignore
                 }
             }
         }

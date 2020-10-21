@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Entities\ProductAttributeValue;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
@@ -89,7 +90,12 @@ class ProductAttributeValueEntity extends AbstractListener
          * Validation. Is such ProductAttribute exist?
          */
         if (!$this->isUnique($entity)) {
-            throw new BadRequest(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name')));
+            $channelName = $entity->get('scope');
+            if ($channelName == 'Channel') {
+                $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
+            }
+
+            throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
         }
 
         /**
