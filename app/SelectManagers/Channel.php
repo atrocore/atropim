@@ -39,6 +39,26 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 class Channel extends AbstractSelectManager
 {
     /**
+     * @param $result
+     *
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function boolFilterProductChannels(&$result)
+    {
+        // get product id
+        $productId = (string)$this->getSelectCondition('productChannels');
+
+        if (!empty($productId)) {
+            $product = $this->getEntityManager()->getEntity('Product', $productId);
+            if (!empty($product)) {
+                $result['whereClause'][] = [
+                    'id' => array_column($product->get('channels')->toArray(), 'id')
+                ];
+            }
+        }
+    }
+
+    /**
      * NotLinkedWithPriceProfile filter
      *
      * @param array $result
@@ -77,10 +97,12 @@ class Channel extends AbstractSelectManager
                 ->select(['id'])
                 ->distinct()
                 ->join(['productAttributeValues'])
-                ->where([
-                    'productAttributeValues.attributeId' => $data['attributeId'],
-                    'productAttributeValues.productId' => $data['productId']
-                ])
+                ->where(
+                    [
+                        'productAttributeValues.attributeId' => $data['attributeId'],
+                        'productAttributeValues.productId'   => $data['productId']
+                    ]
+                )
                 ->find()
                 ->toArray();
 
@@ -104,10 +126,12 @@ class Channel extends AbstractSelectManager
                 ->select(['id'])
                 ->distinct()
                 ->join(['productFamilyAttributes'])
-                ->where([
-                    'productFamilyAttributes.attributeId' => $data['attributeId'],
-                    'productFamilyAttributes.productFamilyId' => $data['productFamilyId']
-                ])
+                ->where(
+                    [
+                        'productFamilyAttributes.attributeId'     => $data['attributeId'],
+                        'productFamilyAttributes.productFamilyId' => $data['productFamilyId']
+                    ]
+                )
                 ->find()
                 ->toArray();
 
@@ -130,10 +154,12 @@ class Channel extends AbstractSelectManager
             ->distinct()
             ->join(['productCategories'])
             ->select(['id'])
-            ->where([
-                'productCategories.productId' => $data['productId'],
-                'productCategories.categoryId' => $data['categoryId']
-            ])
+            ->where(
+                [
+                    'productCategories.productId'  => $data['productId'],
+                    'productCategories.categoryId' => $data['categoryId']
+                ]
+            )
             ->find()
             ->toArray();
 

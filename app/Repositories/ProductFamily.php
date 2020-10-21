@@ -56,7 +56,7 @@ class ProductFamily extends Base
             }
 
             // make product attribute as custom
-            $sql = "UPDATE product_attribute_value SET product_family_attribute_id=NULL,is_required=0 WHERE product_family_attribute_id='$id';";
+            $sql = "UPDATE product_attribute_value SET product_family_attribute_id=NULL,is_required=1 WHERE product_family_attribute_id='$id';";
 
             // unlink
             $sql .= "UPDATE product_family_attribute SET deleted=1 WHERE id='$id'";

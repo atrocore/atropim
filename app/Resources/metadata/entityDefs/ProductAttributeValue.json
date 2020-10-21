@@ -46,7 +46,8 @@
       "default": "Global"
     },
     "channel": {
-      "type": "link"
+      "type": "link",
+      "view": "pim:views/product-attribute-value/fields/channel"
     },
     "isCustom": {
       "type": "bool",

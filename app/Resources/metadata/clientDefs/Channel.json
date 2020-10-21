@@ -10,7 +10,8 @@
     "notLinkedWithCategory",
     "notLinkedWithAttributesInProduct",
     "notLinkedWithAttributesInProductFamily",
-    "notLinkedWithCategoriesInProduct"
+    "notLinkedWithCategoriesInProduct",
+    "productChannels"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
@@ -20,7 +21,8 @@
     "notLinkedWithCategory",
     "notLinkedWithAttributesInProduct",
     "notLinkedWithAttributesInProductFamily",
-    "notLinkedWithCategoriesInProduct"
+    "notLinkedWithCategoriesInProduct",
+    "productChannels"
   ],
   "disabledMassActions": [
     "merge"

@@ -56,8 +56,10 @@ class ProductAttributeValueEntity extends AbstractListener
      */
     public function beforeSave(Event $event)
     {
-        // get data
+        /** @var Entity $entity */
         $entity = $event->getArgument('entity');
+
+        /** @var array $options */
         $options = $event->getArgument('options');
 
         // exit
@@ -65,10 +67,16 @@ class ProductAttributeValueEntity extends AbstractListener
             return true;
         }
 
+        /**
+         * Validation. Product and Attribute can't by empty
+         */
         if (empty($entity->get('product')) || empty($entity->get('attribute'))) {
             throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
         }
 
+        /**
+         * Validation. ProductFamilyAttribute doesn't changeable
+         */
         if (!$entity->isNew() && !empty($entity->get('productFamilyAttribute')) && empty($entity->skipPfValidation)) {
             if ($entity->isAttributeChanged('scope')
                 || $entity->isAttributeChanged('isRequired')
@@ -77,12 +85,33 @@ class ProductAttributeValueEntity extends AbstractListener
                 throw new BadRequest($this->exception('Product Family attribute cannot be changed'));
             }
         }
-
+        /**
+         * Validation. Is such ProductAttribute exist?
+         */
         if (!$this->isUnique($entity)) {
             throw new BadRequest(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name')));
         }
 
-        // clearing channel id
+        /**
+         * Validation. Only product channels can be used.
+         */
+        if ($entity->get('scope') == 'Channel') {
+            $productChannelsIds = array_column($entity->get('product')->get('channels')->toArray(), 'id');
+            if (!in_array($entity->get('channelId'), $productChannelsIds)) {
+                throw new BadRequest($this->exception('noSuchChannelInProduct'));
+            }
+        }
+
+        /**
+         * Custom attributes are always required
+         */
+        if (empty($entity->get('productFamilyAttributeId'))) {
+            $entity->set('isRequired', true);
+        }
+
+        /**
+         * If scope Global then channelId should be empty
+         */
         if ($entity->get('scope') == 'Global') {
             $entity->set('channelId', null);
         }
