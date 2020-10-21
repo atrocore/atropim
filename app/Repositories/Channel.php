@@ -66,7 +66,7 @@ class Channel extends Base
         foreach ($products as $product) {
             if ($unrelate) {
                 $product->skipIsFromCategoryTreeValidation = true;
-                $productRepository->unrelate($product, 'channels', $channel);
+                $productRepository->unrelateForce($product, 'channels', $channel);
             } else {
                 $product->fromCategoryTree = true;
                 $productRepository->relate($product, 'channels', $channel);

@@ -157,7 +157,7 @@ class Product extends Base
                     $this->relate($product, 'channels', $channel);
                 } else {
                     $product->skipIsFromCategoryTreeValidation = true;
-                    $this->unrelate($product, 'channels', $channel);
+                    $this->unrelateForce($product, 'channels', $channel);
                 }
             }
         }
