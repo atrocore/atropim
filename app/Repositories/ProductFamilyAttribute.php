@@ -167,7 +167,7 @@ class ProductFamilyAttribute extends Base
 
             $entity->set('channelId', array_shift($notExistsChannelIds));
             $entity->set('channelsIds', null);
-            $entity->set('channelsNames', null);
+            $entity->set('channelsNames', !empty($exists));
             if (!empty($notExistsChannelIds)) {
                 $entity->tmpChannelsId = $notExistsChannelIds;
             }

@@ -22,5 +22,8 @@
       "Global": "Global",
       "Channel": "Kanal"
     }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Attribut '%s' wurde nicht für alle ausgewählten Kanäle verknüpft."
   }
 }

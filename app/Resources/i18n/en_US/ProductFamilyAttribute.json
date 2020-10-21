@@ -21,5 +21,8 @@
       "Global": "Global",
       "Channel": "Channel"
     }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels."
   }
 }

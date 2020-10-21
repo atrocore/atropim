@@ -6,6 +6,9 @@
   "kanbanViewMode": false,
   "color": null,
   "iconClass": null,
+  "modalViews": {
+    "edit": "pim:views/product-family-attribute/modals/edit"
+  },
   "dynamicLogic": {
     "fields": {
       "channel": {
