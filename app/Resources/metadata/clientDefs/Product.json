@@ -73,6 +73,9 @@
       "asc": true
     },
     "channels": {
+      "selectBoolFilterList": [
+        "notLinkedWithProduct"
+      ],
       "rowActionsView": "pim:views/product/record/row-actions/product-channels",
       "view": "pim:views/product/record/panels/product-channels",
       "recordListView": "pim:views/channel/record/list-in-product",

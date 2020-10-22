@@ -31,6 +31,12 @@
 Espo.define('pim:views/product/record/panels/product-channels', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
+        boolFilterData: {
+            notLinkedWithProduct() {
+                return this.model.id;
+            }
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 
