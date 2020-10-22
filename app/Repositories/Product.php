@@ -315,6 +315,37 @@ class Product extends Base
     }
 
     /**
+     * Is channel already related
+     *
+     * @param Entity|string $product
+     * @param Entity|string $channel
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function isChannelAlreadyRelated($product, $channel): bool
+    {
+        if (!$product instanceof Entity) {
+            /** @var Entity $product */
+            $product = $this->get($product);
+        }
+
+        if (!$channel instanceof Entity) {
+            /** @var Entity $channel */
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
+        }
+
+        /** @var array $productChannelsIds */
+        $productChannelsIds = array_column($product->get('channels')->toArray(), 'id');
+
+        if (in_array($channel->get('id'), $productChannelsIds)) {
+            throw new BadRequest($this->translate('isChannelAlreadyRelated', 'exceptions', 'Product'));
+        }
+
+        return true;
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $category
      *

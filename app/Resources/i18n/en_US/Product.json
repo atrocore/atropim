@@ -167,6 +167,7 @@
     "withoutImageAssets": "Without Image Assets"
   },
   "exceptions": {
+    "isChannelAlreadyRelated": "Such channel is already related to the product.",
     "wrongInputData": "Validation failed. Wrong input data.",
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Product cannot be associated with itself.",

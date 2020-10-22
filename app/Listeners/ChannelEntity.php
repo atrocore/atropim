@@ -87,6 +87,24 @@ class ChannelEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
+     *
+     * @throws BadRequest
+     */
+    public function beforeRelate(Event $event)
+    {
+        /** @var Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        /** @var Entity|string $foreign */
+        $foreign = $event->getArgument('foreign');
+
+        if ($event->getArgument('relationName') == 'products') {
+            $this->getEntityManager()->getRepository('Product')->isChannelAlreadyRelated($foreign, $entity);
+        }
+    }
+
+    /**
+     * @param Event $event
      */
     public function afterUnrelate(Event $event)
     {

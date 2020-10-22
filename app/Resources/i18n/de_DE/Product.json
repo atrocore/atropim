@@ -127,6 +127,7 @@
     "withoutProductAttributes": "ohne Produktattribute"
   },
   "exceptions": {
+    "isChannelAlreadyRelated": "Dieser Kanal ist mit dem Produkt bereits verknüpft.",
     "wrongInputData": "Überprüfung ist fehlgeschlagen. Falsche Eingabedaten.",
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",

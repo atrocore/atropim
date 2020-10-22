@@ -109,6 +109,10 @@ class ProductEntity extends AbstractEntityListener
             $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
             $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
         }
+
+        if ($event->getArgument('relationName') == 'channels') {
+            $this->getProductRepository()->isChannelAlreadyRelated($product, $event->getArgument('foreign'));
+        }
     }
 
     /**
