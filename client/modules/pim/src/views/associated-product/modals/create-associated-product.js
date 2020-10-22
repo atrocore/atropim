@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of AtroPIM.
  *
@@ -44,7 +42,10 @@ Espo.define('pim:views/associated-product/modals/create-associated-product', 'pi
                             mainProductId: attributes.relatedProductId,
                             mainProductName: attributes.relatedProductName,
                             relatedProductId: attributes.mainProductId,
-                            relatedProductName: attributes.mainProductName
+                            relatedProductName: attributes.mainProductName,
+                            bothDirections: true,
+                            backwardAssociationId: attributes.associationId,
+                            backwardAssociationName: attributes.associationName
                         });
                         newModel.save().then(response => {
                             if (this.scope === this.getParentView().scope) {

@@ -76,6 +76,10 @@ class AssociatedProductEntity extends AbstractListener
         /** @var Entity $associatedProduct */
         $associatedProduct = $event->getArgument('entity');
 
+        if (empty($associatedProduct->get('bothDirections')) || !empty($associatedProduct->skipBackwardDelete)) {
+            return;
+        }
+
         /** @var string $backwardAssociationId */
         $backwardAssociationId = $associatedProduct->get('backwardAssociationId');
 
@@ -86,6 +90,7 @@ class AssociatedProductEntity extends AbstractListener
                     if ($backward->get('mainProductId') == $associatedProduct->get('relatedProductId')
                         && $backward->get('relatedProductId') == $associatedProduct->get('mainProductId')
                         && $backward->get('associationId') == $backwardAssociationId) {
+                        $backward->skipBackwardDelete = true;
                         $this->getEntityManager()->removeEntity($backward);
                     }
                 }
@@ -128,11 +133,14 @@ class AssociatedProductEntity extends AbstractListener
 
         if (!empty($association) && !empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
             $entity->set('backwardAssociationId', $backwardAssociationId);
+            $entity->set("bothDirections", true);
 
             $backwardEntity = $this->getEntityManager()->getEntity('AssociatedProduct');
             $backwardEntity->set("associationId", $backwardAssociationId);
             $backwardEntity->set("mainProductId", $entity->get('relatedProductId'));
             $backwardEntity->set("relatedProductId", $entity->get('mainProductId'));
+            $backwardEntity->set("bothDirections", true);
+            $backwardEntity->set("backwardAssociationId", $entity->get('associationId'));
 
             $this->getEntityManager()->saveEntity($backwardEntity);
         }
