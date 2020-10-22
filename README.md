@@ -1,4 +1,4 @@
-![treopim_h80](docs/_assets/treopim_h80.png)
+![treopim_h80](docs/_assets/atropim_logo_color_340_64px.png)
 
 ## What Is AtroPIM?
 
