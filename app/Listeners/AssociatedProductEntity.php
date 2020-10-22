@@ -61,10 +61,6 @@ class AssociatedProductEntity extends AbstractListener
             if (!$this->isUnique($entity)) {
                 throw new BadRequest($this->exception('productAssociationAlreadyExists'));
             }
-
-            if (!empty($entity->massRelateAction)) {
-                $this->createBackwardAssociation($entity);
-            }
         }
     }
 
@@ -119,31 +115,6 @@ class AssociatedProductEntity extends AbstractListener
             ->findOne();
 
         return empty($exist);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function createBackwardAssociation(Entity $entity)
-    {
-        /** @var Association $association */
-        $association = $this->getEntityManager()->getEntity('Association', $entity->get('associationId'));
-
-        if (!empty($association) && !empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
-            $entity->set('backwardAssociationId', $backwardAssociationId);
-            $entity->set("bothDirections", true);
-
-            $backwardEntity = $this->getEntityManager()->getEntity('AssociatedProduct');
-            $backwardEntity->set("associationId", $backwardAssociationId);
-            $backwardEntity->set("mainProductId", $entity->get('relatedProductId'));
-            $backwardEntity->set("relatedProductId", $entity->get('mainProductId'));
-            $backwardEntity->set("bothDirections", true);
-            $backwardEntity->set("backwardAssociationId", $entity->get('associationId'));
-
-            $this->getEntityManager()->saveEntity($backwardEntity);
-        }
     }
 
     /**

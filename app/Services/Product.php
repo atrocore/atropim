@@ -67,34 +67,51 @@ class Product extends AbstractService
             throw new BadRequest($this->exception('noSuchAssociation'));
         }
 
-        $success = 0;
-        $error = [];
+        /**
+         * Collect entities for saving
+         */
+        $toSave = [];
         foreach ($data->ids as $mainProductId) {
             foreach ($data->foreignIds as $relatedProductId) {
-                $success++;
-
                 $entity = $this->getEntityManager()->getEntity('AssociatedProduct');
                 $entity->set("associationId", $data->associationId);
                 $entity->set("mainProductId", $mainProductId);
                 $entity->set("relatedProductId", $relatedProductId);
-                $entity->massRelateAction = 1;
 
-                try {
-                    $this->getEntityManager()->saveEntity($entity);
-                } catch (BadRequest $e) {
-                    $success--;
-                    $error[] = [
-                        'id'          => $mainProductId,
-                        'name'        => $this->getEntityManager()->getEntity('Product', $mainProductId)->get('name'),
-                        'foreignId'   => $relatedProductId,
-                        'foreignName' => $this->getEntityManager()->getEntity('Product', $relatedProductId)->get('name'),
-                        'message'     => utf8_encode($e->getMessage())
-                    ];
+                if (!empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
+                    $entity->set('backwardAssociationId', $backwardAssociationId);
+                    $entity->set("bothDirections", true);
+
+                    $backwardEntity = $this->getEntityManager()->getEntity('AssociatedProduct');
+                    $backwardEntity->set("associationId", $backwardAssociationId);
+                    $backwardEntity->set("mainProductId", $entity->get('relatedProductId'));
+                    $backwardEntity->set("relatedProductId", $entity->get('mainProductId'));
+                    $backwardEntity->set("bothDirections", true);
+                    $backwardEntity->set("backwardAssociationId", $entity->get('associationId'));
+
+                    $toSave[] = $backwardEntity;
                 }
+
+                $toSave[] = $entity;
             }
         }
 
-        return ['message' => $this->getMassActionsService()->createRelationMessage($success, $error, 'Product', 'Product')];
+        $error = [];
+        foreach ($toSave as $entity) {
+            try {
+                $this->getEntityManager()->saveEntity($entity);
+            } catch (BadRequest $e) {
+                $error[] = [
+                    'id'          => $entity->get('mainProductId'),
+                    'name'        => $this->getEntityManager()->getEntity('Product', $entity->get('mainProductId'))->get('name'),
+                    'foreignId'   => $entity->get('relatedProductId'),
+                    'foreignName' => $this->getEntityManager()->getEntity('Product', $entity->get('relatedProductId'))->get('name'),
+                    'message'     => utf8_encode($e->getMessage())
+                ];
+            }
+        }
+
+        return ['message' => $this->getMassActionsService()->createRelationMessage(count($toSave) - count($error), $error, 'Product', 'Product')];
     }
 
     /**
