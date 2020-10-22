@@ -37,6 +37,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\EntityCollection;
+use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
 
 /**
  * Class Product
@@ -154,7 +155,11 @@ class Product extends Base
             foreach ($channels as $channel) {
                 if (!$unRelate) {
                     $product->fromCategoryTree = true;
-                    $this->relate($product, 'channels', $channel);
+                    try {
+                        $this->relate($product, 'channels', $channel);
+                    } catch (ChannelAlreadyRelatedToProduct $e) {
+                        $this->updateChannelRelationData($product, $channel, null, true);
+                    }
                 } else {
                     $product->skipIsFromCategoryTreeValidation = true;
                     $this->unrelateForce($product, 'channels', $channel);
@@ -339,7 +344,7 @@ class Product extends Base
         $productChannelsIds = array_column($product->get('channels')->toArray(), 'id');
 
         if (in_array($channel->get('id'), $productChannelsIds)) {
-            throw new BadRequest($this->translate('isChannelAlreadyRelated', 'exceptions', 'Product'));
+            throw new ChannelAlreadyRelatedToProduct($this->translate('isChannelAlreadyRelated', 'exceptions', 'Product'));
         }
 
         return true;
