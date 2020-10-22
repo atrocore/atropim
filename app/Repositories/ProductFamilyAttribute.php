@@ -34,6 +34,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\Utils\Util;
 
 /**
@@ -127,7 +128,7 @@ class ProductFamilyAttribute extends Base
         }
 
         if (!$this->isUnique($entity)) {
-            throw new BadRequest($this->exception('Such record already exists'));
+            throw new BadRequest($this->exception($this->createUnUniqueValidationMessage($entity, $entity->get('channelId'))));
         }
     }
 
@@ -162,7 +163,7 @@ class ProductFamilyAttribute extends Base
             }
 
             if (empty($notExistsChannelIds)) {
-                throw new BadRequest($this->exception('Such record already exists'));
+                throw new ProductAttributeAlreadyExists($this->createUnUniqueValidationMessage($entity, array_shift($channelsIds)));
             }
 
             $entity->set('channelId', array_shift($notExistsChannelIds));
@@ -172,6 +173,27 @@ class ProductFamilyAttribute extends Base
                 $entity->tmpChannelsId = $notExistsChannelIds;
             }
         }
+    }
+
+    /**
+     * @param Entity $entity
+     * @param string $channelId
+     *
+     * @return string
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function createUnUniqueValidationMessage(Entity $entity, string $channelId): string
+    {
+        $channelName = $entity->get('scope');
+        if ($channelName == 'Channel') {
+            $channel = $this->getEntityManager()->getEntity('Channel', $channelId);
+            $channelName = !empty($channel) ? "'" . $channel->get('name') . "'" : '';
+        }
+
+        $message = $this->translate('productAttributeAlreadyExists', 'exceptions', 'ProductAttributeValue');
+        $message = sprintf($message, $entity->get('attribute')->get('name'), $channelName);
+
+        return $message;
     }
 
     /**
@@ -287,12 +309,24 @@ class ProductFamilyAttribute extends Base
 
     /**
      * @param string $key
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translate(string $key, string $label, string $scope = 'ProductFamilyAttribute'): string
+    {
+        return $this->getInjection('language')->translate($key, $label, $scope);
+    }
+
+    /**
+     * @param string $key
      *
      * @return string
      */
     protected function exception(string $key): string
     {
-        return $this->getInjection('language')->translate($key, 'exceptions', 'ProductFamilyAttribute');
+        return $this->translate($key, 'exceptions');
     }
 
     /**
