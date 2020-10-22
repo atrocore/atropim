@@ -34,10 +34,8 @@ namespace Pim\Core\Exceptions;
 use Espo\Core\Exceptions\BadRequest;
 
 /**
- * Class ProductAttributeAlreadyExists
+ * Class ChannelAlreadyRelatedToProduct
  */
-class ProductAttributeAlreadyExists extends BadRequest
+class ChannelAlreadyRelatedToProduct extends BadRequest
 {
 }
-
-
