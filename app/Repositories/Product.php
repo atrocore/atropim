@@ -38,6 +38,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
+use Treo\Core\EventManager\Event;
 
 /**
  * Class Product
@@ -82,8 +83,16 @@ class Product extends Base
      */
     protected function filterByChannel(Entity $entity, array &$params)
     {
-        // prepare channels ids
+        // get channels ids
         $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
+
+        /** @var Event $event */
+        $event = $this
+            ->getInjection('eventManager')
+            ->dispatch('ProductRepository', 'getChannelsForFilter', new Event(['entity' => $entity, 'params' => $params, 'channelsIds' => $channelsIds]));
+
+        // prepare channels ids
+        $channelsIds = $event->getArgument('channelsIds');
         $channelsIds[] = 'no-such-id';
         $channelsIds = implode("','", $channelsIds);
 
