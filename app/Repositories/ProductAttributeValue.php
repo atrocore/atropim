@@ -31,9 +31,11 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 
 /**
  * Class ProductAttributeValue
@@ -53,10 +55,30 @@ class ProductAttributeValue extends Base
     /**
      * @param Entity $entity
      * @param array  $options
+     *
+     * @throws BadRequest
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        if (!$this->isValidForSave($entity, $options)) {
+            return false;
+        }
+
+        /**
+         * Custom attributes are always required
+         */
+        if (empty($entity->get('productFamilyAttributeId'))) {
+            $entity->set('isRequired', true);
+        }
+
+        /**
+         * If scope Global then channelId should be empty
+         */
+        if ($entity->get('scope') == 'Global') {
+            $entity->set('channelId', null);
+        }
 
         // get attribute
         $attribute = $entity->get('attribute');
@@ -119,5 +141,93 @@ class ProductAttributeValue extends Base
         }
 
         return $this->where($where)->findOne();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws ProductAttributeAlreadyExists
+     */
+    protected function isValidForSave(Entity $entity, array $options): bool
+    {
+        // exit
+        if (!empty($options['skipProductAttributeValueHook'])) {
+            return true;
+        }
+
+        /**
+         * Validation. Product and Attribute can't by empty
+         */
+        if (empty($entity->get('product')) || empty($entity->get('attribute'))) {
+            throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
+        }
+
+        /**
+         * Validation. ProductFamilyAttribute doesn't changeable
+         */
+        if (!$entity->isNew() && !empty($entity->get('productFamilyAttribute')) && empty($entity->skipPfValidation)) {
+            if ($entity->isAttributeChanged('scope')
+                || $entity->isAttributeChanged('isRequired')
+                || $entity->isAttributeChanged('channelId')
+                || $entity->isAttributeChanged('attributeId')) {
+                throw new BadRequest($this->exception('Product Family attribute cannot be changed'));
+            }
+        }
+        /**
+         * Validation. Is such ProductAttribute exist?
+         */
+        if (!$this->isUnique($entity)) {
+            $channelName = $entity->get('scope');
+            if ($channelName == 'Channel') {
+                $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
+            }
+
+            throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
+        }
+
+        /**
+         * Validation. Only product channels can be used.
+         */
+        if ($entity->get('scope') == 'Channel' && empty($entity->skipProductChannelValidation)) {
+            $productChannelsIds = array_column($entity->get('product')->get('channels')->toArray(), 'id');
+            if (!in_array($entity->get('channelId'), $productChannelsIds)) {
+                throw new BadRequest($this->exception('noSuchChannelInProduct'));
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return bool
+     */
+    protected function isUnique(Entity $entity): bool
+    {
+        return empty($this->findCopy($entity));
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
+    protected function exception(string $key): string
+    {
+        return $this->getInjection('language')->translate($key, 'exceptions', 'ProductAttributeValue');
     }
 }

@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
-use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Entities\ProductAttributeValue;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
@@ -59,68 +58,6 @@ class ProductAttributeValueEntity extends AbstractListener
     {
         /** @var Entity $entity */
         $entity = $event->getArgument('entity');
-
-        /** @var array $options */
-        $options = $event->getArgument('options');
-
-        // exit
-        if (!empty($options['skipProductAttributeValueHook'])) {
-            return true;
-        }
-
-        /**
-         * Validation. Product and Attribute can't by empty
-         */
-        if (empty($entity->get('product')) || empty($entity->get('attribute'))) {
-            throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
-        }
-
-        /**
-         * Validation. ProductFamilyAttribute doesn't changeable
-         */
-        if (!$entity->isNew() && !empty($entity->get('productFamilyAttribute')) && empty($entity->skipPfValidation)) {
-            if ($entity->isAttributeChanged('scope')
-                || $entity->isAttributeChanged('isRequired')
-                || $entity->isAttributeChanged('channelId')
-                || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('Product Family attribute cannot be changed'));
-            }
-        }
-        /**
-         * Validation. Is such ProductAttribute exist?
-         */
-        if (!$this->isUnique($entity)) {
-            $channelName = $entity->get('scope');
-            if ($channelName == 'Channel') {
-                $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
-            }
-
-            throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
-        }
-
-        /**
-         * Validation. Only product channels can be used.
-         */
-        if ($entity->get('scope') == 'Channel') {
-            $productChannelsIds = array_column($entity->get('product')->get('channels')->toArray(), 'id');
-            if (!in_array($entity->get('channelId'), $productChannelsIds)) {
-                throw new BadRequest($this->exception('noSuchChannelInProduct'));
-            }
-        }
-
-        /**
-         * Custom attributes are always required
-         */
-        if (empty($entity->get('productFamilyAttributeId'))) {
-            $entity->set('isRequired', true);
-        }
-
-        /**
-         * If scope Global then channelId should be empty
-         */
-        if ($entity->get('scope') == 'Global') {
-            $entity->set('channelId', null);
-        }
 
         // storing data
         if (!$entity->isNew()) {
@@ -175,16 +112,6 @@ class ProductAttributeValueEntity extends AbstractListener
         if (!empty($productFamilyAttribute = $entity->get('productFamilyAttribute')) && !empty($productFamilyAttribute->get('productFamily'))) {
             throw new BadRequest($this->exception('Product Family attribute cannot be deleted'));
         }
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    protected function isUnique(Entity $entity): bool
-    {
-        return empty($this->getEntityManager()->getRepository('ProductAttributeValue')->findCopy($entity));
     }
 
     /**
