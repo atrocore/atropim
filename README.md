@@ -1,4 +1,4 @@
-![treopim_h80](docs/_assets/treopim_h80.png)
+![treopim_h80](docs/_assets/atropim_logo_color_340_64px.png)
 
 ## What Is AtroPIM?
 
@@ -49,7 +49,7 @@ Want to know more about AtroPIM functions and its advantages for you? Please, vi
 
 AtroPIM is based on EspoCRM and uses PHP7, backbone.js, composer and some Zend Framework 3 libraries.
 
-![Technology_schem](docs/_assets/technologie_scheme_eng.png)
+![Technology_schem](docs/_assets/technologie-scheme-eng.png)
 
 Want to know more about AtroPIM technology? Please, visit [our website](http://atropim.com/technology)!
 
@@ -129,4 +129,4 @@ AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Support
 
-- For support please contact us - visit [AtroIM Website](http://atropim.com).
+- For support please contact us - visit [AtroPIM Website](http://atropim.com).
