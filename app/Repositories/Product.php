@@ -58,6 +58,11 @@ class Product extends Base
      */
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
+        // prepare params
+        $params = $this
+            ->dispatch('ProductRepository', 'findRelated', new Event(['entity' => $entity, 'relationName' => $relationName, 'params' => $params]))
+            ->getArgument('params');
+
         if ($relationName === 'productAttributeValues') {
             $this->filterByChannel($entity, $params);
         }
@@ -70,6 +75,11 @@ class Product extends Base
      */
     public function countRelated(Entity $entity, $relationName, array $params = [])
     {
+        // prepare params
+        $params = $this
+            ->dispatch('ProductRepository', 'countRelated', new Event(['entity' => $entity, 'relationName' => $relationName, 'params' => $params]))
+            ->getArgument('params');
+
         if ($relationName === 'productAttributeValues') {
             $this->filterByChannel($entity, $params);
         }
@@ -83,20 +93,15 @@ class Product extends Base
      */
     protected function filterByChannel(Entity $entity, array &$params)
     {
-        // get channels ids
-        $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
-
-        /** @var Event $event */
-        $event = $this
-            ->getInjection('eventManager')
-            ->dispatch('ProductRepository', 'getChannelsForFilter', new Event(['entity' => $entity, 'params' => $params, 'channelsIds' => $channelsIds]));
-
         // prepare channels ids
-        $channelsIds = $event->getArgument('channelsIds');
+        $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
+        $channelsIds = $this
+            ->dispatch('ProductRepository', 'getChannelsForFilter', new Event(['entity' => $entity, 'params' => $params, 'channelsIds' => $channelsIds]))
+            ->getArgument('channelsIds');
         $channelsIds[] = 'no-such-id';
         $channelsIds = implode("','", $channelsIds);
 
-        $params['customWhere'] .= "AND (product_attribute_value.scope='Global' OR (product_attribute_value.scope='Channel' AND product_attribute_value.channel_id IN ('$channelsIds')))";
+        $params['customWhere'] .= " AND (product_attribute_value.scope='Global' OR (product_attribute_value.scope='Channel' AND product_attribute_value.channel_id IN ('$channelsIds')))";
     }
 
     /**
@@ -502,5 +507,17 @@ class Product extends Base
     protected function translate(string $key, string $label, $scope = ''): string
     {
         return $this->getInjection('language')->translate($key, $label, $scope);
+    }
+
+    /**
+     * @param string $target
+     * @param string $action
+     * @param Event  $event
+     *
+     * @return Event
+     */
+    protected function dispatch(string $target, string $action, Event $event): Event
+    {
+        return $this->getInjection('eventManager')->dispatch($target, $action, $event);
     }
 }

@@ -181,7 +181,7 @@ class ProductAttributeValue extends Base
         if (!$entity->isNew() && !empty($entity->get('productFamilyAttribute')) && empty($entity->skipPfValidation)) {
             if ($entity->isAttributeChanged('scope')
                 || $entity->isAttributeChanged('isRequired')
-                || $entity->isAttributeChanged('channelId')
+                || ($entity->getFetched('channelId') != $entity->get('channelId'))
                 || $entity->isAttributeChanged('attributeId')) {
                 throw new BadRequest($this->exception('Product Family attribute cannot be changed'));
             }
