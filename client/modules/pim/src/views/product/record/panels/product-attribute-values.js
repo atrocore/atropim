@@ -209,8 +209,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
+                collection.where = [];
                 collection.maxSize = 200;
-
                 if (this.defs.filters) {
                     var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
                     searchManager.setAdvanced(this.defs.filters);
@@ -224,6 +224,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 if (asc) {
                     collection.asc = asc;
                 }
+
+                this.prepareCollection(collection);
+
                 this.collection = collection;
 
                 this.setFilter(this.filter);
@@ -245,6 +248,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }, this);
 
             this.setupFilterActions();
+        },
+
+        prepareCollection(collection) {
+
         },
 
         updateBaseSelectFields() {
