@@ -49,8 +49,8 @@ class ProductController extends AbstractEntityListener
         if ($params['link'] === 'channels') {
             $data = $this->getEntityManager()->getRepository('Product')->getChannelRelationData($params['id']);
             foreach ($result['list'] as $k => $item) {
-                $result['list'][$k]->isActiveEntity = !empty($data[$item->id]['isActive']);
-                $result['list'][$k]->isFromCategoryTree = !empty($data[$item->id]['isFromCategoryTree']);
+                $result['list'][$k]['isActiveEntity'] = !empty($data[$item->id]['isActive']);
+                $result['list'][$k]['isFromCategoryTree'] = !empty($data[$item->id]['isFromCategoryTree']);
             }
         }
 
