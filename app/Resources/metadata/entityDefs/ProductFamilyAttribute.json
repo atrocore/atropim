@@ -14,7 +14,7 @@
     },
     "isRequired": {
       "type": "bool",
-      "default": false
+      "default": true
     },
     "scope": {
       "type": "enum",
