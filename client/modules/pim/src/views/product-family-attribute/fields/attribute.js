@@ -29,10 +29,10 @@
 Espo.define('pim:views/product-family-attribute/fields/attribute', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductFamily'],
+        selectBoolFilterList: ['notLinkedWithProductFamilyAttribute'],
 
         boolFilterData: {
-            notLinkedWithProductFamily() {
+            notLinkedWithProductFamilyAttribute() {
                 return {
                     productFamilyId: this.model.get('productFamilyId'),
                     channelsIds: this.model.get('channelsIds')

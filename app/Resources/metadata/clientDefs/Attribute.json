@@ -7,14 +7,16 @@
     "notLinkedProductAttributeValues",
     "notLinkedProductFamilyAttributes",
     "unitTypeDisabled",
-    "notLinkedWithProductFamily"
+    "notLinkedWithProductFamilyAttribute",
+    "notLinkedWithProductAttributeValue"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "notLinkedProductAttributeValues",
     "notLinkedProductFamilyAttributes",
     "unitTypeDisabled",
-    "notLinkedWithProductFamily"
+    "notLinkedWithProductFamilyAttribute",
+    "notLinkedWithProductAttributeValue"
   ],
   "disabledMassActions": [
     "merge"

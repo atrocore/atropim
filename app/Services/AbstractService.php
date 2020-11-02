@@ -57,11 +57,17 @@ abstract class AbstractService extends Base
         /**
          * If scope == Global then we should set scope to channel
          */
-        if ($link == $this->linkWhereNeedToUpdateChannel && isset($result['collection']) && $result['collection']->count() > 0) {
-            foreach ($result['collection'] as $productFamilyAttribute) {
-                if ($productFamilyAttribute->get('scope') == 'Global') {
-                    $productFamilyAttribute->set('channelId', null);
-                    $productFamilyAttribute->set('channelName', 'Global');
+        if ($link == $this->linkWhereNeedToUpdateChannel) {
+            // Collection to list
+            if (isset($result['collection'])) {
+                $result['list'] = $result['collection']->toArray();
+                unset($result['collection']);
+            }
+
+            foreach ($result['list'] as $k => $record) {
+                if ($record['scope'] == 'Global') {
+                    $result['list'][$k]['channelId'] = null;
+                    $result['list'][$k]['channelName'] = 'Global';
                 }
             }
         }

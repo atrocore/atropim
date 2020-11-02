@@ -81,10 +81,10 @@ class Channel extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotLinkedWithProductFamily(array &$result)
+    protected function boolFilterNotLinkedWithProductFamilyAttribute(array &$result)
     {
         // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithProductFamily');
+        $data = (array)$this->getSelectCondition('notLinkedWithProductFamilyAttribute');
 
         if (isset($data['productFamilyId']) && isset($data['attributeId'])) {
             $channelsIds = $this
@@ -96,6 +96,35 @@ class Channel extends AbstractSelectManager
                         'attributeId'     => $data['attributeId'],
                         'productFamilyId' => $data['productFamilyId'],
                         'scope'           => 'Channel',
+                    ]
+                )
+                ->find()
+                ->toArray();
+
+            $result['whereClause'][] = [
+                'id!=' => array_column($channelsIds, 'channelId')
+            ];
+        }
+    }
+
+    /**
+     * @param array $result
+     */
+    protected function boolFilterNotLinkedWithProductAttributeValue(array &$result)
+    {
+        // get filter data
+        $data = (array)$this->getSelectCondition('notLinkedWithProductAttributeValue');
+
+        if (isset($data['productId']) && isset($data['attributeId'])) {
+            $channelsIds = $this
+                ->getEntityManager()
+                ->getRepository('ProductAttributeValue')
+                ->select(['channelId'])
+                ->where(
+                    [
+                        'attributeId' => $data['attributeId'],
+                        'productId'   => $data['productId'],
+                        'scope'       => 'Channel',
                     ]
                 )
                 ->find()

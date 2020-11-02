@@ -29,6 +29,14 @@
 Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
+        selectBoolFilterList: ['notLinkedWithProductAttributeValue'],
+
+        boolFilterData: {
+            notLinkedWithProductAttributeValue() {
+                return {productId: this.model.get('productId'), channelId: this.model.get('channelId')};
+            }
+        },
+
         createDisabled: true,
 
         setup() {
