@@ -73,6 +73,35 @@ class Attribute extends AbstractSelectManager
     /**
      * @param array $result
      */
+    protected function boolFilterNotLinkedWithProductFamily(array &$result)
+    {
+        // get filter data
+        $data = (array)$this->getSelectCondition('notLinkedWithProductFamily');
+
+        if (isset($data['productFamilyId']) && isset($data['channelsIds'])) {
+            $attributesIds = $this
+                ->getEntityManager()
+                ->getRepository('ProductFamilyAttribute')
+                ->select(['attributeId'])
+                ->where(
+                    [
+                        'channelId'       => $data['channelsIds'],
+                        'productFamilyId' => $data['productFamilyId'],
+                        'scope'           => 'Channel',
+                    ]
+                )
+                ->find()
+                ->toArray();
+
+            $result['whereClause'][] = [
+                'id!=' => array_column($attributesIds, 'attributeId')
+            ];
+        }
+    }
+
+    /**
+     * @param array $result
+     */
     protected function boolFilterNotLinkedProductAttributeValues(array &$result)
     {
         // prepare data
@@ -84,10 +113,12 @@ class Attribute extends AbstractSelectManager
                 ->getEntityManager()
                 ->getRepository('ProductAttributeValue')
                 ->select(['attributeId'])
-                ->where([
-                    'productId' => $data['productId'],
-                    'scope' => $data['scope']
-                ])
+                ->where(
+                    [
+                        'productId' => $data['productId'],
+                        'scope'     => $data['scope']
+                    ]
+                )
                 ->find()
                 ->toArray();
 
@@ -121,15 +152,17 @@ class Attribute extends AbstractSelectManager
             ->getEntityManager()
             ->getRepository('Attribute')
             ->select(['id'])
-            ->where([
-                'type' => 'unit'
-            ])
+            ->where(
+                [
+                    'type' => 'unit'
+                ]
+            )
             ->find()
             ->toArray();
 
         if (count($unitAttributes) > 0) {
             $result['whereClause'][] = [
-                'id!=' =>  array_column($unitAttributes, 'id')
+                'id!=' => array_column($unitAttributes, 'id')
             ];
         }
     }
