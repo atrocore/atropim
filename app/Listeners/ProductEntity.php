@@ -284,9 +284,12 @@ class ProductEntity extends AbstractEntityListener
                     ]
                 );
 
+                // skip validation by channel
+                $productAttributeValue->skipProductChannelValidation = true;
+
                 // save
                 try {
-                    $this->getEntityManager()->saveEntity($productAttributeValue, ['skipProductAttributeValueHook' => true]);
+                    $this->getEntityManager()->saveEntity($productAttributeValue);
                 } catch (ProductAttributeAlreadyExists $e) {
                     $copy = $repository->findCopy($productAttributeValue);
                     $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
