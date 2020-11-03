@@ -79,25 +79,25 @@ class ProductAttributeValue extends AbstractService
         if (!empty($type)) {
             switch ($type) {
                 case 'array':
-                    $entity->set('value', Json::decode($entity->get('value'), true));
+                    $entity->set('value', ((string)$entity->get('value') === '') ? null : Json::decode($entity->get('value'), true));
                     break;
                 case 'bool':
-                    $entity->set('value', (bool)$entity->get('value'));
+                    $entity->set('value', ((string)$entity->get('value') === '1' || (string)$entity->get('value') === 'true'));
                     foreach ($this->getInputLanguageList() as $multiLangField) {
-                        $entity->set($multiLangField, (bool)$entity->get($multiLangField));
+                        $entity->set($multiLangField, ((string)$entity->get($multiLangField) === '1' || (string)$entity->get($multiLangField) === 'true'));
                     }
                     break;
                 case 'int':
-                    $entity->set('value', (int)$entity->get('value'));
+                    $entity->set('value', ((string)$entity->get('value') === '') ? null : (int)$entity->get('value'));
                     break;
                 case 'unit':
                 case 'float':
-                    $entity->set('value', (float)$entity->get('value'));
+                    $entity->set('value', ((string)$entity->get('value') === '') ? null : (float)$entity->get('value'));
                     break;
                 case 'multiEnum':
-                    $entity->set('value', Json::decode($entity->get('value'), true));
+                    $entity->set('value', ((string)$entity->get('value') === '') ? null : Json::decode($entity->get('value'), true));
                     foreach ($this->getInputLanguageList() as $multiLangField) {
-                        $entity->set($multiLangField, Json::decode($entity->get($multiLangField), true));
+                        $entity->set($multiLangField, ((string)$entity->get($multiLangField) === '') ? null : Json::decode($entity->get($multiLangField), true));
                     }
                     break;
             }
