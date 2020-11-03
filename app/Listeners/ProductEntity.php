@@ -286,7 +286,7 @@ class ProductEntity extends AbstractEntityListener
 
                 // save
                 try {
-                    $this->getEntityManager()->saveEntity($productAttributeValue);
+                    $this->getEntityManager()->saveEntity($productAttributeValue, ['skipProductAttributeValueHook' => true]);
                 } catch (ProductAttributeAlreadyExists $e) {
                     $copy = $repository->findCopy($productAttributeValue);
                     $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
@@ -295,8 +295,6 @@ class ProductEntity extends AbstractEntityListener
                     $copy->skipPfValidation = true;
 
                     $this->getEntityManager()->saveEntity($copy);
-                } catch (BadRequest $e) {
-                    // ignore
                 }
             }
         }
