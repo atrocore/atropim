@@ -43,7 +43,8 @@
     },
     "mainProduct": {
       "required": true,
-      "type": "link"
+      "type": "link",
+      "view": "pim:views/associated-product/fields/main-product"
     },
     "relatedProduct": {
       "required": true,
