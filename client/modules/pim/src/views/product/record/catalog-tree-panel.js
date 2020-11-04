@@ -249,13 +249,8 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
         configCatalogTreeData(type, category) {
             this.catalogTreeData = {};
             if (type === 'isEmpty') {
-                this.catalogTreeData.advanced = {
-                    productCategories: {
-                        type: 'isNotLinked',
-                        data: {
-                            type: type
-                        }
-                    }
+                this.catalogTreeData.bool = {
+                    withoutAnyCategory: true
                 };
             } else if (type === 'anyOf' && category) {
                 this.catalogTreeData.bool = {
