@@ -299,6 +299,7 @@ class ProductEntity extends AbstractEntityListener
                     $copy->set('isRequired', $productAttributeValue->get('isRequired'));
 
                     $copy->skipPfValidation = true;
+                    $copy->skipProductChannelValidation = true;
 
                     $this->getEntityManager()->saveEntity($copy);
                 }
