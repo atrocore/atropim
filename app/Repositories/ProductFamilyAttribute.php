@@ -176,13 +176,13 @@ class ProductFamilyAttribute extends Base
     }
 
     /**
-     * @param Entity $entity
-     * @param string $channelId
+     * @param Entity      $entity
+     * @param string|null $channelId
      *
      * @return string
      * @throws \Espo\Core\Exceptions\Error
      */
-    protected function createUnUniqueValidationMessage(Entity $entity, string $channelId): string
+    protected function createUnUniqueValidationMessage(Entity $entity, string $channelId = null): string
     {
         $channelName = $entity->get('scope');
         if ($channelName == 'Channel') {
