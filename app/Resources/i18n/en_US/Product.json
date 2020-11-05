@@ -75,7 +75,8 @@
     "No Group": "No Group",
     "sort": "Sort",
     "itemsInRow": "Items in row",
-    "productImage": "Product Image"
+    "productImage": "Product Image",
+    "Select Attribute Group": "Select Attribute Group"
   },
   "options": {
     "productStatus": {

@@ -96,7 +96,8 @@
     "typeCategoryToSearch": "Kategorie zum Suchen eingeben...",
     "Package Details": "Paketdetails",
     "No Group": "Keine Gruppe",
-    "productImage": "Produktbild"
+    "productImage": "Produktbild",
+    "Select Attribute Group": "Attributgruppe auswählen"
   },
   "options": {
     "productStatus": {
