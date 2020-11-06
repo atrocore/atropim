@@ -38,6 +38,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -424,15 +425,106 @@ class Product extends Base
     }
 
     /**
-     * @inheritdoc
+     * @param Entity $entity
+     * @param array  $options
+     *
+     * @throws Error
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
         // save attributes
         $this->saveAttributes($entity);
 
+        // update pavs by product family
+        if (
+            empty($entity->skipUpdateProductAttributesByProductFamily)
+            && empty($options['skipProductFamilyHook'])
+            && empty($entity->isDuplicate)
+            && $entity->isAttributeChanged('productFamilyId')
+        ) {
+            $this->updateProductAttributesByProductFamily($entity, $options);
+        }
+
         // parent action
         parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     *
+     * @return bool
+     */
+    protected function updateProductAttributesByProductFamily(Entity $entity, array $options): bool
+    {
+        /**
+         * Only for product variants
+         */
+        if ($entity->get('type') === 'configurableProduct' && !empty($productVariants = $entity->get('productVariants')) && $productVariants->count() > 0) {
+            foreach ($productVariants as $productVariant) {
+                $productVariant->set('productFamilyId', $entity->get('productFamilyId'));
+                $this->updateProductAttributesByProductFamily($productVariant, $options);
+            }
+        }
+
+        // get product id
+        $productId = $entity->get('id');
+
+        // unlink attributes from old product family
+        if (!$entity->isNew() && $entity->isAttributeChanged('productFamilyId')) {
+            $this
+                ->getEntityManager()
+                ->nativeQuery(
+                    "UPDATE product_attribute_value SET product_family_attribute_id=NULL WHERE product_id in ('$productId') AND product_family_attribute_id IS NOT NULL AND deleted=0"
+                );
+        }
+
+        if (empty($productFamily = $entity->get('productFamily'))) {
+            return true;
+        }
+
+        // get product family attributes
+        $productFamilyAttributes = $productFamily->get('productFamilyAttributes');
+
+        if (count($productFamilyAttributes) > 0) {
+            /** @var \Pim\Repositories\ProductAttributeValue $repository */
+            $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
+            foreach ($productFamilyAttributes as $productFamilyAttribute) {
+                // create
+                $productAttributeValue = $repository->get();
+                $productAttributeValue->set(
+                    [
+                        'productId'                => $productId,
+                        'attributeId'              => $productFamilyAttribute->get('attributeId'),
+                        'productFamilyAttributeId' => $productFamilyAttribute->get('id'),
+                        'isRequired'               => $productFamilyAttribute->get('isRequired'),
+                        'scope'                    => $productFamilyAttribute->get('scope'),
+                        'channelId'                => $productFamilyAttribute->get('channelId')
+                    ]
+                );
+
+                $productAttributeValue->skipVariantValidation = true;
+                $productAttributeValue->skipProductChannelValidation = true;
+
+                // save
+                try {
+                    $this->getEntityManager()->saveEntity($productAttributeValue);
+                } catch (ProductAttributeAlreadyExists $e) {
+                    $copy = $repository->findCopy($productAttributeValue);
+                    $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
+                    $copy->set('isRequired', $productAttributeValue->get('isRequired'));
+
+                    $copy->skipVariantValidation = true;
+                    $copy->skipPfValidation = true;
+                    $copy->skipProductChannelValidation = true;
+
+                    $this->getEntityManager()->saveEntity($copy);
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -24,6 +24,8 @@
   "exceptions": {
     "You have no ACL rights to read attribute values": "You have no rights to read attribute values.",
     "productAttributeAlreadyExists": "Attribute '%s' for the channel %s is already linked.",
-    "noSuchChannelInProduct": "For adding such a product atribute please choose a channel, available for the product."
+    "noSuchChannelInProduct": "For adding such a product atribute please choose a channel, available for the product.",
+    "Attribute inherited from product family cannot be deleted.": "Attribute inherited from product family cannot be deleted.",
+    "Attribute inherited from product family cannot be changed.": "Attribute inherited from product family cannot be changed."
   }
 }

@@ -73,27 +73,6 @@ class ProductEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
-     */
-    public function afterSave(Event $event)
-    {
-        /** @var Entity $entity */
-        $entity = $event->getArgument('entity');
-
-        /** @var array $options */
-        $options = $event->getArgument('options');
-
-        if (
-            empty($entity->skipUpdateProductAttributesByProductFamily)
-            && empty($options['skipProductFamilyHook'])
-            && empty($entity->isDuplicate)
-            && $entity->isAttributeChanged('productFamilyId')
-        ) {
-            $this->updateProductAttributesByProductFamily($entity, $options);
-        }
-    }
-
-    /**
-     * @param Event $event
      *
      * @throws BadRequest
      */
@@ -235,73 +214,6 @@ class ProductEntity extends AbstractEntityListener
             foreach ($products as $item) {
                 if ($item->get('id') != $product->get('id')) {
                     return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @return bool
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function updateProductAttributesByProductFamily(Entity $entity, array $options): bool
-    {
-        if (!$entity->isNew() && $entity->isAttributeChanged('productFamilyId')) {
-            // unlink attributes from old product family
-            $this
-                ->getEntityManager()
-                ->nativeQuery(
-                    "UPDATE product_attribute_value SET product_family_attribute_id=NULL WHERE product_id=:productId AND product_family_attribute_id IS NOT NULL AND deleted=0",
-                    ['productId' => $entity->get('id')]
-                );
-        }
-
-        if (empty($productFamily = $entity->get('productFamily'))) {
-            return true;
-        }
-
-        // get product family attributes
-        $productFamilyAttributes = $productFamily->get('productFamilyAttributes');
-
-        if (count($productFamilyAttributes) > 0) {
-            /** @var \Pim\Repositories\ProductAttributeValue $repository */
-            $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
-
-            foreach ($productFamilyAttributes as $productFamilyAttribute) {
-                // create
-                $productAttributeValue = $repository->get();
-                $productAttributeValue->set(
-                    [
-                        'productId'                => $entity->get('id'),
-                        'attributeId'              => $productFamilyAttribute->get('attributeId'),
-                        'productFamilyAttributeId' => $productFamilyAttribute->get('id'),
-                        'isRequired'               => $productFamilyAttribute->get('isRequired'),
-                        'scope'                    => $productFamilyAttribute->get('scope'),
-                        'channelId'                => $productFamilyAttribute->get('channelId')
-                    ]
-                );
-
-                // skip validation by channel
-                $productAttributeValue->skipProductChannelValidation = true;
-
-                // save
-                try {
-                    $this->getEntityManager()->saveEntity($productAttributeValue);
-                } catch (ProductAttributeAlreadyExists $e) {
-                    $copy = $repository->findCopy($productAttributeValue);
-                    $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
-                    $copy->set('isRequired', $productAttributeValue->get('isRequired'));
-
-                    $copy->skipPfValidation = true;
-                    $copy->skipProductChannelValidation = true;
-
-                    $this->getEntityManager()->saveEntity($copy);
                 }
             }
         }

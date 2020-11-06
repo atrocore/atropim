@@ -183,7 +183,7 @@ class ProductAttributeValue extends Base
                 || $entity->isAttributeChanged('isRequired')
                 || ($entity->getFetched('channelId') != $entity->get('channelId'))
                 || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('Product Family attribute cannot be changed'));
+                throw new BadRequest($this->exception('Attribute inherited from product family cannot be changed.'));
             }
         }
         /**

@@ -24,6 +24,8 @@
     "You have no ACL rights to read attribute values": "Sie haben keine Rechte, Attributwerte zu lesen.",
     "You can't change product in attribute from Product Family": "Sie können das Produkt im Attribut der Produktfamilie nicht ändern.",
     "productAttributeAlreadyExists": "Attribut '%s' für den Kanal %s ist bereits verknüpft.",
-    "noSuchChannelInProduct": "Um ein solches Produktattribut hinzuzufügen, wählen Sie bitte einen Kanal aus, der für das Produkt verfügbar ist."
+    "noSuchChannelInProduct": "Um ein solches Produktattribut hinzuzufügen, wählen Sie bitte einen Kanal aus, der für das Produkt verfügbar ist.",
+    "Attribute inherited from product family cannot be deleted.": "Von der Produktfamilie geerbtes Attribut kann nicht gelöscht werden.",
+    "Attribute inherited from product family cannot be changed.": "Von der Produktfamilie geerbtes Attribut kann nicht geändert werden."
   }
 }
