@@ -29,6 +29,8 @@
 Espo.define('pim:views/product-family-attribute/modals/edit', 'views/modals/edit',
     Dep => Dep.extend({
 
+        fullFormDisabled: true,
+
         setup() {
             Dep.prototype.setup.call(this);
 
