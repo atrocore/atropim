@@ -14,7 +14,9 @@
     "channels": "Channels"
   },
   "labels": {
-    "Create ProductFamilyAttribute": "Create Product Family Attribute"
+    "Create ProductFamilyAttribute": "Create Product Family Attribute",
+    "Unlink, preserve values": "Unlink, preserve values",
+    "Unlink, remove values": "Unlink, remove values"
   },
   "options": {
     "scope": {

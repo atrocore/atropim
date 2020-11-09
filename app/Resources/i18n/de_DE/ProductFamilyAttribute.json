@@ -15,7 +15,9 @@
     "channels": "Kanäle"
   },
   "labels": {
-    "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen"
+    "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen",
+    "Unlink, preserve values": "Link entfernen, Werte beibehalten",
+    "Unlink, remove values": "Link und Werte entfernen"
   },
   "options": {
     "scope": {
