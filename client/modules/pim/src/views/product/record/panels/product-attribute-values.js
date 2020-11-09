@@ -169,6 +169,13 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
             }
 
+            if (this.getAcl().check('ProductAttributeValue', 'remove')) {
+                this.actionList.push({
+                    label: 'Remove all NOT inherited attributes',
+                    action: 'removeAllNotInheritedAttributes'
+                });
+            }
+
             this.setupActions();
 
             var layoutName = 'listSmall';
@@ -350,6 +357,21 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     });
                 });
             });
+        },
+
+        actionRemoveAllNotInheritedAttributes() {
+            this.confirm({
+                message: this.translate("Are you sure, you want to remove all not inherited attributes?", 'messages', 'Product'),
+                confirmText: this.translate('Apply')
+            }, function () {
+                this.notify('Saving...');
+                this.ajaxPostRequest(`ProductAttributeValue/action/RemoveAllNotInheritedAttributes`, {
+                    productId: this.model.id
+                }).then(response => {
+                    this.notify('Saved', 'success');
+                    this.actionRefresh();
+                });
+            }, this);
         },
 
         getFullEntityList(url, params, callback, container) {
@@ -560,10 +582,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             Object.keys(fields).forEach(name => {
                 let fieldView = fields[name];
                 let hide = !this.checkFieldValue(currentFieldFilter, fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'));
-                if (!hide){
+                if (!hide) {
                     hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
                 }
-                if (!hide && fieldView.model.get('attributeIsMultilang')){
+                if (!hide && fieldView.model.get('attributeIsMultilang')) {
                     hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
                 }
                 this.controlRowVisibility(fieldView, name, hide);

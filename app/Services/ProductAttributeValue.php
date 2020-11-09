@@ -31,8 +31,10 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
+use Espo\ORM\EntityCollection;
 use Treo\Core\Utils\Util;
 
 /**
@@ -67,6 +69,42 @@ class ProductAttributeValue extends AbstractService
         }
 
         return parent::updateEntity($id, $data);
+    }
+
+    /**
+     * @param string $productId
+     *
+     * @return bool
+     * @throws Forbidden
+     */
+    public function removeAllNotInheritedAttributes(string $productId): bool
+    {
+        // check acl
+        if (!$this->getAcl()->check('ProductAttributeValue', 'remove')) {
+            throw new Forbidden();
+        }
+
+        /** @var EntityCollection $pavs */
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(
+                [
+                    'productId'                => $productId,
+                    'productFamilyAttributeId' => null
+                ]
+            )
+            ->find();
+
+        if ($pavs->count() > 0) {
+            foreach ($pavs as $pav) {
+                if ($this->getAcl()->check($pav, 'remove')) {
+                    $this->getEntityManager()->removeEntity($pav);
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Controllers\Base;
 
 /**
@@ -38,4 +39,20 @@ use Espo\Core\Templates\Controllers\Base;
  */
 class ProductAttributeValue extends Base
 {
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function actionRemoveAllNotInheritedAttributes($params, $data, $request): bool
+    {
+        if (!$request->isPost() || !isset($data->productId)) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->removeAllNotInheritedAttributes((string)$data->productId);
+    }
 }
