@@ -77,7 +77,7 @@
     "itemsInRow": "Items in row",
     "productImage": "Product Image",
     "Select Attribute Group": "Select Attribute Group",
-    "Remove all NOT inherited attributes": "Remove all NOT inherited attributes"
+    "Remove all custom attributes": "Remove all custom attributes"
   },
   "options": {
     "productStatus": {
@@ -169,7 +169,7 @@
     "withoutImageAssets": "Without Image Assets"
   },
   "messages": {
-    "Are you sure, you want to remove all not inherited attributes?": "Are you sure, you want to remove all not inherited attributes?"
+    "Are you sure, you want to remove all сustom attributes?": "Are you sure, you want to remove all сustom attributes?"
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Such channel is already related to the product.",

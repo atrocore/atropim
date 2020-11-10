@@ -171,7 +171,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
             if (this.getAcl().check('ProductAttributeValue', 'remove')) {
                 this.actionList.push({
-                    label: 'Remove all NOT inherited attributes',
+                    label: 'Remove all custom attributes',
                     action: 'removeAllNotInheritedAttributes'
                 });
             }
@@ -361,7 +361,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         actionRemoveAllNotInheritedAttributes() {
             this.confirm({
-                message: this.translate("Are you sure, you want to remove all not inherited attributes?", 'messages', 'Product'),
+                message: this.translate("Are you sure, you want to remove all сustom attributes?", 'messages', 'Product'),
                 confirmText: this.translate('Apply')
             }, function () {
                 this.notify('Saving...');

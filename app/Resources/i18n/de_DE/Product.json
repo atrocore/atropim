@@ -98,7 +98,7 @@
     "No Group": "Keine Gruppe",
     "productImage": "Produktbild",
     "Select Attribute Group": "Attributgruppe auswählen",
-    "Remove all NOT inherited attributes": "Alle NICHT geerbten Attribute entfernen"
+    "Remove all custom attributes": "Alle benutzerdefinierten Attribute entfernen"
   },
   "options": {
     "productStatus": {
@@ -129,7 +129,7 @@
     "withoutProductAttributes": "ohne Produktattribute"
   },
   "messages": {
-    "Are you sure, you want to remove all not inherited attributes?": "Sind Sie sicher, dass Sie alle nicht geerbten Attribute entfernen möchten?"
+    "Are you sure, you want to remove all сustom attributes?": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?"
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Dieser Kanal ist mit dem Produkt bereits verknüpft.",
