@@ -620,48 +620,5 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             }, this);
         },
 
-        actionRemoveRelated: function (data) {
-            var id = data.id;
-
-            this.ajaxGetRequest(`ProductFamily/${this.model.id}/productsCount`, {attributeId: id}).then(response => {
-                Espo.TreoUi.confirmWithBody('', {
-                    message: this.translate('removeRecordConfirmation', 'messages'),
-                    confirmText: this.translate('Remove'),
-                    cancelText: this.translate('Cancel'),
-                    body: this.getUnlinkHtml(response)
-                }, function () {
-                    var model = this.collection.get(id);
-                    this.notify('Removing...');
-                    $.ajax({
-                        url: 'ProductFamilyAttribute/' + id,
-                        type: 'DELETE',
-                        contentType: 'application/json',
-                        success: function () {
-                            this.notify('Removed', 'success');
-                            this.collection.fetch();
-                            this.model.trigger('after:unrelate');
-                        }.bind(this),
-                        error: function () {
-                            this.notify('Error occurred', 'error');
-                        }.bind(this),
-                    });
-                }, this);
-            });
-        },
-
-        getUnlinkHtml(count) {
-            return `
-                <div class="row">
-                    <div class="col-xs-12">
-                        <span class="confirm-message">${this.translate('removeRecordConfirmation', 'messages')}</span>
-                    </div>
-                    <div class="col-xs-12">
-                        <div style="margin-top: 15px;">
-                            <span class="product-counts-message">${this.translate('productsCountWithAttribute', 'messages', 'Attribute').replace('{count}', count)}</span>
-                        </div>
-                    </div>
-                </div>`;
-        }
-
     })
 );
