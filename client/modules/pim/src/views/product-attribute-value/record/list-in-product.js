@@ -42,6 +42,7 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                 let panelView = this.getParentView();
                 if (panelView && panelView.model) {
                     panelView.model.trigger('after:attributesSave');
+                    panelView.actionRefresh();
                 }
             });
 
