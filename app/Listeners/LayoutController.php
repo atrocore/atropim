@@ -77,7 +77,7 @@ class LayoutController extends AbstractListener
         if ($this->getConfig()->get('isMultilangActive', false)) {
             $result[0]['rows'][] = [['name' => 'isMultilang', 'inlineEditDisabled' => true], false];
             foreach ($this->getInputLanguageList() as $locale => $key) {
-                $result[0]['rows'][] = [['name' => 'name' . $key], ['name' => 'typeValue' . $key]];
+                $result[0]['rows'][] = [['name' => 'name' . $key], false];
             }
         }
 
