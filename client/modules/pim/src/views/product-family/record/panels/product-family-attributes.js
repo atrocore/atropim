@@ -52,7 +52,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
         },
 
         events: _.extend({
-            'click [data-action="unlinkAttributeGroup"]': function(e) {
+            'click [data-action="unlinkAttributeGroup"]': function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 let data = $(e.currentTarget).data();
@@ -253,6 +253,53 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             });
         },
 
+        actionUnlinkRelatedAttribute(data) {
+            var id = data.id;
+
+            this.confirm({
+                message: this.translate('Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?', 'messages', 'ProductFamilyAttribute'),
+                confirmText: this.translate('Unlink')
+            }, function () {
+                var model = this.collection.get(id);
+                this.notify('Unlinking...');
+                $.ajax({
+                    url: this.collection.url,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        id: id
+                    }),
+                    contentType: 'application/json',
+                    success: function () {
+                        this.notify('Unlinked', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate');
+                    }.bind(this),
+                    error: function () {
+                        this.notify('Error occurred', 'error');
+                    }.bind(this),
+                });
+            }, this);
+        },
+
+        actionRemoveRelatedAttribute(data) {
+            var id = data.id;
+
+            this.confirm({
+                message: this.translate('Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?', 'messages', 'ProductFamilyAttribute'),
+                confirmText: this.translate('Remove')
+            }, function () {
+                var model = this.collection.get(id);
+                this.notify('Removing...');
+                model.destroy({
+                    success: function () {
+                        this.notify('Removed', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate');
+                    }.bind(this),
+                });
+            }, this);
+        },
+
         actionSelectAttributeGroup() {
             const scope = 'AttributeGroup';
             const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
@@ -386,8 +433,8 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                             if (noGroup) {
                                 noGroup.sortOrder = Math.max(...orderArray) + 1;
                             }
-                            this.groups.sort(function(a, b) {
-                                return a.sortOrder - b.sortOrder ;
+                            this.groups.sort(function (a, b) {
+                                return a.sortOrder - b.sortOrder;
                             });
 
                             if (callback) {
@@ -540,7 +587,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             // prepare ids
             let ids = [];
             group.rowList.forEach(id => {
-                if (!this.collection.get(id).get('isInherited')){
+                if (!this.collection.get(id).get('isInherited')) {
                     ids.push(id);
                 }
             });

@@ -25,6 +25,8 @@
     }
   },
   "messages": {
-    "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels."
+    "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels.",
+    "Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?": "Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?",
+    "Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?": "Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?"
   }
 }
