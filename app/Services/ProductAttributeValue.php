@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
@@ -99,7 +100,11 @@ class ProductAttributeValue extends AbstractService
         if ($pavs->count() > 0) {
             foreach ($pavs as $pav) {
                 if ($this->getAcl()->check($pav, 'remove')) {
-                    $this->getEntityManager()->removeEntity($pav);
+                    try {
+                        $this->getEntityManager()->removeEntity($pav);
+                    } catch (BadRequest $e) {
+                        // skip validation errors
+                    }
                 }
             }
         }
