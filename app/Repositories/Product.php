@@ -436,13 +436,10 @@ class Product extends Base
         $this->saveAttributes($entity);
 
         // update pavs by product family
-        if (
-            empty($entity->skipUpdateProductAttributesByProductFamily)
-            && empty($options['skipProductFamilyHook'])
-            && empty($entity->isDuplicate)
-            && $entity->isAttributeChanged('productFamilyId')
-        ) {
-            $this->updateProductAttributesByProductFamily($entity, $options);
+        if ($entity->isAttributeChanged('productFamilyId')) {
+            if (empty($entity->skipUpdateProductAttributesByProductFamily) && empty($entity->isDuplicate)) {
+                $this->updateProductAttributesByProductFamily($entity);
+            }
         }
 
         // parent action
@@ -450,36 +447,23 @@ class Product extends Base
     }
 
     /**
-     * @param Entity $entity
-     * @param array  $options
+     * @param Entity $product
      *
      * @return bool
      */
-    protected function updateProductAttributesByProductFamily(Entity $entity, array $options): bool
+    protected function updateProductAttributesByProductFamily(Entity $product): bool
     {
-        /**
-         * Only for product variants
-         */
-        if ($entity->get('type') === 'configurableProduct' && !empty($productVariants = $entity->get('productVariants')) && $productVariants->count() > 0) {
-            foreach ($productVariants as $productVariant) {
-                $productVariant->set('productFamilyId', $entity->get('productFamilyId'));
-                $this->updateProductAttributesByProductFamily($productVariant, $options);
+        // unlink attributes from old product family
+        if (!$product->isNew() && !empty($pavs = $product->get('productAttributeValues')) && $pavs->count() > 0) {
+            foreach ($pavs as $pav) {
+                if (!empty($pav->get('productFamilyAttributeId'))) {
+                    $pav->set('productFamilyAttributeId', null);
+                    $this->getEntityManager()->saveEntity($pav);
+                }
             }
         }
 
-        // get product id
-        $productId = $entity->get('id');
-
-        // unlink attributes from old product family
-        if (!$entity->isNew() && $entity->isAttributeChanged('productFamilyId')) {
-            $this
-                ->getEntityManager()
-                ->nativeQuery(
-                    "UPDATE product_attribute_value SET product_family_attribute_id=NULL WHERE product_id in ('$productId') AND product_family_attribute_id IS NOT NULL AND deleted=0"
-                );
-        }
-
-        if (empty($productFamily = $entity->get('productFamily'))) {
+        if (empty($productFamily = $product->get('productFamily'))) {
             return true;
         }
 
@@ -495,7 +479,7 @@ class Product extends Base
                 $productAttributeValue = $repository->get();
                 $productAttributeValue->set(
                     [
-                        'productId'                => $productId,
+                        'productId'                => $product->get('id'),
                         'attributeId'              => $productFamilyAttribute->get('attributeId'),
                         'productFamilyAttributeId' => $productFamilyAttribute->get('id'),
                         'isRequired'               => $productFamilyAttribute->get('isRequired'),

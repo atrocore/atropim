@@ -178,7 +178,7 @@ class ProductAttributeValue extends Base
         /**
          * Validation. ProductFamilyAttribute doesn't changeable
          */
-        if (!$entity->isNew() && !empty($entity->get('productFamilyAttribute')) && empty($entity->skipPfValidation)) {
+        if (!$entity->isNew() && !empty($entity->get('productFamilyAttributeId')) && empty($entity->skipPfValidation)) {
             if ($entity->isAttributeChanged('scope')
                 || $entity->isAttributeChanged('isRequired')
                 || ($entity->getFetched('channelId') != $entity->get('channelId'))
