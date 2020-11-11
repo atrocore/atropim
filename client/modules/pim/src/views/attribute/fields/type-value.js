@@ -135,7 +135,7 @@ Espo.define('pim:views/attribute/fields/type-value', 'views/fields/array',
             // set template
             this.template = 'fields/' + Espo.Utils.camelCaseToHyphen(type) + '/' + this.mode;
 
-            if (this.isEnumsMultilang() && mode !== 'list') {
+            if (this.isEnums() && mode !== 'list') {
                 this.template = 'pim:attribute/fields/type-value/enum-multilang/' + mode;
             }
         },
@@ -194,7 +194,7 @@ Espo.define('pim:views/attribute/fields/type-value', 'views/fields/array',
                 fetchedData[this.name] = [this.$el.find(`[name="${this.name}"]`).val()];
             }
 
-            if (this.isEnumsMultilang()) {
+            if (this.isEnums()) {
                 this.fetchFromDom();
                 Object.entries(this.selectedComplex).forEach(([key, value]) => data[key] = value);
             }
@@ -203,7 +203,7 @@ Espo.define('pim:views/attribute/fields/type-value', 'views/fields/array',
         },
 
         fetchFromDom() {
-            if (this.isEnumsMultilang()) {
+            if (this.isEnums()) {
                 const data = {};
                 data[this.name] = [];
                 this.langFieldNames.forEach(name => data[name] = []);
@@ -309,32 +309,37 @@ Espo.define('pim:views/attribute/fields/type-value', 'views/fields/array',
                 }
             }
 
-            if (this.isEnumsMultilang()) {
+            if (this.isEnums()) {
                 data.optionGroups = (this.selectedComplex[this.name] || []).map((item, index) => {
-                    return {
-                        options: [
-                            {
-                                name: this.name,
-                                value: item,
-                                shortLang: ''
-                            },
-                            ...this.langFieldNames.map(name => {
-                                return {
+                    let options = [
+                        {
+                            name: this.name,
+                            value: item,
+                            shortLang: ''
+                        }
+                    ];
+
+                    if (this.model.get('isMultilang')) {
+                        (this.langFieldNames || []).forEach(function (name) {
+                            options.push(
+                                {
                                     name: name,
                                     value: (this.selectedComplex[name] || [])[index],
                                     shortLang: name.slice(-4, -2).toLowerCase() + '_' + name.slice(-2).toUpperCase()
                                 }
-                            })
-                        ]
+                            );
+                        }, this);
                     }
+
+                    return {options: options};
                 });
             }
 
             return data;
         },
 
-        isEnumsMultilang() {
-            return (this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum') && this.model.get('isMultilang');
+        isEnums() {
+            return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
         },
 
         resetValue() {
