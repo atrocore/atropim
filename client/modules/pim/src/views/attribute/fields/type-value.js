@@ -248,6 +248,12 @@ Espo.define('pim:views/attribute/fields/type-value', 'views/fields/array',
             if (!$el.size() && this.$element) {
                 $el = this.$element;
             }
+
+            $el.css('border-color', '#a94442');
+            $el.css('-webkit-box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+            $el.css('-moz-box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+            $el.css('box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+
             $el.popover({
                 placement: 'bottom',
                 container: 'body',

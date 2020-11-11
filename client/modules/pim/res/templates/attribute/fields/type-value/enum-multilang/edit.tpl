@@ -16,3 +16,11 @@
     {{/each}}
 </div>
 <a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><span class="fas fa-plus"></span></a>
+<style>
+	.has-error .attribute-type-value .option-group .form-control {
+		border-color: #eaeaea;
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
+</style>
