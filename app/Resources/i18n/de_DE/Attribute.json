@@ -59,6 +59,7 @@
     "All": "Alle"
   },
   "exceptions": {
+    "Attribute value should be unique.": "Attributwert sollte eindeutig sein.",
     "Attribute is used in product families. Please, update product families first": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien.",
     "Attribute is used in products. Please, update products first": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "Attribute with such CODE already exist": "Das Attribut mit einem solchen Code existiert bereits.",

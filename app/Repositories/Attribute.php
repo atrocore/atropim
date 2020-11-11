@@ -33,8 +33,10 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
+use Espo\ORM\EntityCollection;
 use Treo\Core\Utils\Util;
 
 /**
@@ -59,14 +61,6 @@ class Attribute extends Base
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
-        // call parent action
-        parent::beforeSave($entity, $options);
-
-        // set sort order
-        if (is_null($entity->get('sortOrder'))) {
-            $entity->set('sortOrder', (int)$this->max('sortOrder') + 1);
-        }
-
         if (!$this->isTypeValueValid($entity)) {
             throw new BadRequest("The number of 'Values' items should be identical for all locales");
         }
@@ -79,9 +73,22 @@ class Attribute extends Base
             $this->deletePositions($entity, $deletedPositions);
         }
 
+        if (!$entity->isNew()) {
+            $this->updateEnumPav($entity, $deletedPositions);
+            $this->updateMultiEnumPav($entity, $deletedPositions);
+        }
+
+        // set sort order
+        if (is_null($entity->get('sortOrder'))) {
+            $entity->set('sortOrder', (int)$this->max('sortOrder') + 1);
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('sortOrder')) {
             $this->updateSortOrder($entity);
         }
+
+        // call parent action
+        parent::beforeSave($entity, $options);
     }
 
     /**
@@ -111,6 +118,164 @@ class Attribute extends Base
                 throw new Error($this->exception("You can not unlink product family attribute"));
             }
         }
+    }
+
+    /**
+     * @param Entity $attribute
+     * @param array  $deletedPositions
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    protected function updateEnumPav(Entity $attribute, array $deletedPositions): bool
+    {
+        if ($attribute->get('type') != 'enum') {
+            return true;
+        }
+
+        if (!$this->isEnumTypeValueValid($attribute)) {
+            return true;
+        }
+
+        /** @var string $attributeId */
+        $attributeId = $attribute->get('id');
+
+        $sql = [];
+
+        foreach ($this->getTypeValuesFields() as $field) {
+            // prepare column
+            $column = str_replace('type_', '', Util::toUnderScore($field));
+
+            // get fetched
+            $fetchedTypeValue = $attribute->getFetched($field);
+
+            // get type value and remove deleted positions
+            $typeValue = $attribute->get($field);
+
+            foreach ($attribute->getFetched('typeValue') as $k => $value) {
+                $oldValue = isset($fetchedTypeValue[$k]) ? $fetchedTypeValue[$k] : '';
+                $newValue = (in_array($k, $deletedPositions)) ? '' : $typeValue[$k];
+                if ($oldValue != $newValue) {
+                    $rowSql = "UPDATE product_attribute_value SET $column='$newValue' WHERE attribute_id='$attributeId' AND deleted=0";
+                    if ($field != 'typeValue') {
+                        // prepare main value
+                        $mainValue = (in_array($k, $deletedPositions)) ? '' : $attribute->get('typeValue')[$k];
+
+                        $rowSql .= " AND value='$mainValue'";
+                    } else {
+                        $rowSql .= " AND value='$oldValue'";
+                    }
+
+                    // push
+                    $sql[] = $rowSql;
+                }
+            }
+        }
+
+        if (!empty($sql)) {
+            $this->getEntityManager()->nativeQuery(implode(';', $sql));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Entity $attribute
+     * @param array  $deletedPositions
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    protected function updateMultiEnumPav(Entity $attribute, array $deletedPositions): bool
+    {
+        if ($attribute->get('type') != 'multiEnum') {
+            return true;
+        }
+
+        if (!$this->isEnumTypeValueValid($attribute)) {
+            return true;
+        }
+
+        // old type value
+        $oldTypeValue = $attribute->getFetched('typeValue');
+
+        // delete
+        foreach ($deletedPositions as $deletedPosition) {
+            unset($oldTypeValue[$deletedPosition]);
+        }
+
+        // prepare became values
+        $becameValues = [];
+        foreach (array_values($oldTypeValue) as $k => $v) {
+            $becameValues[$v] = $attribute->get('typeValue')[$k];
+        }
+
+        /** @var EntityCollection $pavs */
+        $pavs = $attribute->get('productAttributeValues');
+
+        if ($pavs->count() > 0) {
+            foreach ($pavs as $pav) {
+                /**
+                 * First, prepare main value
+                 */
+                $values = !empty($pav->get('value')) ? Json::decode($pav->get('value'), true) : [];
+                if (!empty($values)) {
+                    $newValues = [];
+                    foreach ($values as $value) {
+                        if (isset($becameValues[$value])) {
+                            $newValues[] = $becameValues[$value];
+                        }
+                    }
+                    $pav->set('value', Json::encode($newValues));
+                    $values = $newValues;
+                }
+
+                $sqlValues = ["value='" . $pav->get('value') . "'"];
+
+                /**
+                 * Second, update locales
+                 */
+                if ($this->getConfig()->get('isMultilangActive', false)) {
+                    foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                        $locale = ucfirst(Util::toCamelCase(strtolower($language)));
+                        $localeValues = [];
+                        foreach ($values as $value) {
+                            $localeValues[] = $attribute->get("typeValue{$locale}")[array_search($value, $attribute->get('typeValue'))];
+                        }
+                        $pav->set("value{$locale}", Json::encode($localeValues));
+                        $sqlValues[] = "value_" . strtolower($language) . "='" . $pav->get("value{$locale}") . "'";
+                    }
+                }
+
+                /**
+                 * Third, set to DB
+                 */
+                $this
+                    ->getEntityManager()
+                    ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav->get('id') . "'");
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $entity
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    protected function isEnumTypeValueValid($entity): bool
+    {
+        if (!empty($entity->get('typeValue'))) {
+            foreach (array_count_values($entity->get('typeValue')) as $count) {
+                if ($count > 1) {
+                    throw new BadRequest($this->exception('Attribute value should be unique.'));
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

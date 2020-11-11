@@ -52,6 +52,7 @@
     "All": "All"
   },
   "exceptions": {
+    "Attribute value should be unique.": "Attribute value should be unique.",
     "You can't change field of Type in Attribute": "You can't change Attribute type.",
     "You can not unlink product family attribute": "You cannot unlink product family attribute.",
     "Attribute with such CODE already exist": "Attribute with such code already exist.",
