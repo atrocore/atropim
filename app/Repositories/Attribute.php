@@ -36,7 +36,6 @@ use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
-use Espo\ORM\EntityCollection;
 use Treo\Core\Utils\Util;
 
 /**
@@ -210,50 +209,53 @@ class Attribute extends Base
             $becameValues[$v] = $attribute->get('typeValue')[$k];
         }
 
-        /** @var EntityCollection $pavs */
-        $pavs = $attribute->get('productAttributeValues');
+        /** @var array $pavs */
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->select(['id', 'value'])
+            ->where(['attributeId' => $attribute->get('id')])
+            ->find()
+            ->toArray();
 
-        if ($pavs->count() > 0) {
-            foreach ($pavs as $pav) {
-                /**
-                 * First, prepare main value
-                 */
-                $values = !empty($pav->get('value')) ? Json::decode($pav->get('value'), true) : [];
-                if (!empty($values)) {
-                    $newValues = [];
-                    foreach ($values as $value) {
-                        if (isset($becameValues[$value])) {
-                            $newValues[] = $becameValues[$value];
-                        }
-                    }
-                    $pav->set('value', Json::encode($newValues));
-                    $values = $newValues;
-                }
-
-                $sqlValues = ["value='" . $pav->get('value') . "'"];
-
-                /**
-                 * Second, update locales
-                 */
-                if ($this->getConfig()->get('isMultilangActive', false)) {
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                        $locale = ucfirst(Util::toCamelCase(strtolower($language)));
-                        $localeValues = [];
-                        foreach ($values as $value) {
-                            $localeValues[] = $attribute->get("typeValue{$locale}")[array_search($value, $attribute->get('typeValue'))];
-                        }
-                        $pav->set("value{$locale}", Json::encode($localeValues));
-                        $sqlValues[] = "value_" . strtolower($language) . "='" . $pav->get("value{$locale}") . "'";
+        foreach ($pavs as $pav) {
+            /**
+             * First, prepare main value
+             */
+            $values = !empty($pav['value']) ? Json::decode($pav['value'], true) : [];
+            if (!empty($values)) {
+                $newValues = [];
+                foreach ($values as $value) {
+                    if (isset($becameValues[$value])) {
+                        $newValues[] = $becameValues[$value];
                     }
                 }
-
-                /**
-                 * Third, set to DB
-                 */
-                $this
-                    ->getEntityManager()
-                    ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav->get('id') . "'");
+                $pav['value'] = Json::encode($newValues);
+                $values = $newValues;
             }
+
+            $sqlValues = ["value='" . $pav['value'] . "'"];
+
+            /**
+             * Second, update locales
+             */
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                    $locale = ucfirst(Util::toCamelCase(strtolower($language)));
+                    $localeValues = [];
+                    foreach ($values as $value) {
+                        $localeValues[] = $attribute->get("typeValue{$locale}")[array_search($value, $attribute->get('typeValue'))];
+                    }
+                    $sqlValues[] = "value_" . strtolower($language) . "='" . Json::encode($localeValues) . "'";
+                }
+            }
+
+            /**
+             * Third, set to DB
+             */
+            $this
+                ->getEntityManager()
+                ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav['id'] . "'");
         }
 
         return true;
