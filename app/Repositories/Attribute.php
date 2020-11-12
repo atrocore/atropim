@@ -136,43 +136,63 @@ class Attribute extends Base
             return true;
         }
 
-        /** @var string $attributeId */
-        $attributeId = $attribute->get('id');
+        // old type value
+        $oldTypeValue = $attribute->getFetched('typeValue');
 
-        $sql = [];
-
-        foreach ($this->getTypeValuesFields() as $field) {
-            // prepare column
-            $column = str_replace('type_', '', Util::toUnderScore($field));
-
-            // get fetched
-            $fetchedTypeValue = $attribute->getFetched($field);
-
-            // get type value and remove deleted positions
-            $typeValue = $attribute->get($field);
-
-            foreach ($attribute->getFetched('typeValue') as $k => $value) {
-                $oldValue = isset($fetchedTypeValue[$k]) ? $fetchedTypeValue[$k] : '';
-                $newValue = (in_array($k, $deletedPositions)) ? '' : $typeValue[$k];
-                if ($oldValue != $newValue) {
-                    $rowSql = "UPDATE product_attribute_value SET $column='$newValue' WHERE attribute_id='$attributeId' AND deleted=0";
-                    if ($field != 'typeValue') {
-                        // prepare main value
-                        $mainValue = (in_array($k, $deletedPositions)) ? '' : $attribute->get('typeValue')[$k];
-
-                        $rowSql .= " AND value='$mainValue'";
-                    } else {
-                        $rowSql .= " AND value='$oldValue'";
-                    }
-
-                    // push
-                    $sql[] = $rowSql;
-                }
-            }
+        // delete
+        foreach ($deletedPositions as $deletedPosition) {
+            unset($oldTypeValue[$deletedPosition]);
         }
 
-        if (!empty($sql)) {
-            $this->getEntityManager()->nativeQuery(implode(';', $sql));
+        // prepare became values
+        $becameValues = [];
+        foreach (array_values($oldTypeValue) as $k => $v) {
+            $becameValues[$v] = $attribute->get('typeValue')[$k];
+        }
+
+        /** @var array $pavs */
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->select(['id', 'value'])
+            ->where(['attributeId' => $attribute->get('id')])
+            ->find()
+            ->toArray();
+
+        foreach ($pavs as $pav) {
+            $sqlValues = [];
+
+            /**
+             * First, prepare main value
+             */
+            if (!empty($becameValues[$pav['value']])) {
+                $sqlValues[] = "value='{$becameValues[$pav['value']]}'";
+            } else {
+                $sqlValues[] = "value=null";
+            }
+
+            /**
+             * Second, update locales
+             */
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                    if (!empty($becameValues[$pav['value']])) {
+                        $locale = ucfirst(Util::toCamelCase(strtolower($language)));
+                        $localeValue = "'" . $attribute->get("typeValue{$locale}")[array_search($pav['value'], $attribute->getFetched('typeValue'))] . "'";
+                    } else {
+                        $localeValue = 'null';
+                    }
+
+                    $sqlValues[] = "value_" . strtolower($language) . "=$localeValue";
+                }
+            }
+
+            /**
+             * Third, set to DB
+             */
+            $this
+                ->getEntityManager()
+                ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav['id'] . "'");
         }
 
         return true;
@@ -219,6 +239,8 @@ class Attribute extends Base
             ->toArray();
 
         foreach ($pavs as $pav) {
+            $sqlValues = [];
+
             /**
              * First, prepare main value
              */
@@ -234,7 +256,7 @@ class Attribute extends Base
                 $values = $newValues;
             }
 
-            $sqlValues = ["value='" . $pav['value'] . "'"];
+            $sqlValues[] = "value='" . $pav['value'] . "'";
 
             /**
              * Second, update locales
