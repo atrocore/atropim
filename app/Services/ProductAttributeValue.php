@@ -64,6 +64,9 @@ class ProductAttributeValue extends AbstractService
      */
     public function getEntity($id = null)
     {
+        /**
+         * For attribute locale
+         */
         $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
         if (count($parts) === 2) {
             $entity = parent::getEntity($parts[0]);
@@ -71,15 +74,16 @@ class ProductAttributeValue extends AbstractService
                 $locale = $parts[1];
                 $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
 
+                $entity->id = $id;
                 $entity->set('isLocale', true);
                 $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $parts[1]);
                 $entity->set('value', $entity->get("value{$camelCaseLocale}"));
             }
-        } else {
-            $entity = parent::getEntity($id);
+
+            return $entity;
         }
 
-        return $entity;
+        return parent::getEntity($id);
     }
 
     /**
@@ -135,6 +139,22 @@ class ProductAttributeValue extends AbstractService
         }
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function processActionHistoryRecord($action, Entity $entity)
+    {
+        /**
+         * Skip if is attribute locale
+         */
+        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $entity->id);
+        if (count($parts) === 2) {
+            return;
+        }
+
+        parent::processActionHistoryRecord($action, $entity);
     }
 
     /**

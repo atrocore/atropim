@@ -352,6 +352,9 @@ class Product extends AbstractService
             'collection' => $collection
         ];
 
+        /**
+         * For attribute locales
+         */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
