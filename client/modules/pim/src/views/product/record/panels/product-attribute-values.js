@@ -875,7 +875,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 (groupView.rowList || []).forEach(id => {
                     const row = groupView.getView(id);
                     const value = row.getView('valueField');
-                    console.log(value);
 
                     if (value.mode === 'edit' && !value.disabled && !value.readOnly) {
                         notValid = value.validate() || notValid;

@@ -91,6 +91,20 @@ class ProductAttributeValue extends AbstractService
      */
     public function updateEntity($id, $data)
     {
+        /**
+         * For attribute locale
+         */
+        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
+        if (count($parts) === 2) {
+            $id = $parts[0];
+            if (isset($data->value)) {
+                $data->{'value' . ucfirst(Util::toCamelCase(strtolower($parts[1])))} = $data->value;
+                unset($data->value);
+            }
+
+            $data->isLocale = true;
+        }
+
         // prepare data
         foreach ($data as $k => $v) {
             if (is_array($v)) {
@@ -139,6 +153,19 @@ class ProductAttributeValue extends AbstractService
         }
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        /**
+         * For attribute locale
+         */
+        if (!empty($data->isLocale)) {
+            $entity->skipRequiredValidation = true;
+        }
     }
 
     /**
