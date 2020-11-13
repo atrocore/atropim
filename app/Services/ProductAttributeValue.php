@@ -164,7 +164,7 @@ class ProductAttributeValue extends AbstractService
          * For attribute locale
          */
         if (!empty($data->isLocale)) {
-            $entity->skipRequiredValidation = true;
+            $entity->skipValidation('requiredField');
         }
     }
 
