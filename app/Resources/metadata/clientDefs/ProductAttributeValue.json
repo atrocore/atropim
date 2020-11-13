@@ -55,6 +55,22 @@
               "attribute": "attributeId"
             }
           ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isLocale"
+            },
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "enum",
+                "multiEnum"
+              ]
+            }
+          ]
         }
       },
       "scope": {
@@ -63,6 +79,24 @@
             {
               "type": "isNotEmpty",
               "attribute": "attributeId"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isLocale"
+            }
+          ]
+        }
+      },
+      "attribute": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isLocale"
             }
           ]
         }

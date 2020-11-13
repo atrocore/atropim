@@ -95,21 +95,6 @@ class LayoutController extends AbstractListener
     /**
      * @param Event $event
      */
-    protected function modifyProductAttributeValueDetailSmall(Event $event)
-    {
-        /** @var array $result */
-        $result = Json::decode($event->getArgument('result'), true);
-
-        foreach ($this->getInputLanguageList() as $locale => $key) {
-            $result[0]['rows'][] = [['name' => 'value' . $key], false];
-        }
-
-        $event->setArgument('result', Json::encode($result));
-    }
-
-    /**
-     * @param Event $event
-     */
     protected function modifyProductRelationshipsAdmin(Event $event)
     {
         $this->hideAssetRelation($event);

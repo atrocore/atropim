@@ -43,6 +43,8 @@ use Treo\Core\Utils\Util;
  */
 class ProductAttributeValue extends AbstractService
 {
+    public const LOCALE_IN_ID_SEPARATOR = '_l_';
+
     /**
      * @inheritdoc
      */
@@ -55,6 +57,29 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeIsMultilang', !empty($entity->get('attribute')) ? $entity->get('attribute')->get('isMultilang') : false);
 
         $this->convertValue($entity);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getEntity($id = null)
+    {
+        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
+        if (count($parts) === 2) {
+            $entity = parent::getEntity($parts[0]);
+            if (!empty($entity)) {
+                $locale = $parts[1];
+                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+
+                $entity->set('isLocale', true);
+                $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $parts[1]);
+                $entity->set('value', $entity->get("value{$camelCaseLocale}"));
+            }
+        } else {
+            $entity = parent::getEntity($id);
+        }
+
+        return $entity;
     }
 
     /**

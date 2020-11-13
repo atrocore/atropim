@@ -34,8 +34,11 @@ namespace Pim\Services;
 use Dam\Entities\AssetRelation;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
+use Espo\ORM\EntityCollection;
+use Treo\Core\EventManager\Event;
 use Treo\Services\MassActions;
 
 /**
@@ -289,6 +292,94 @@ class Product extends AbstractService
             'list'  => $this->getDBAssociationMainProducts($id, '', $params),
             'total' => $this->getDBTotalAssociationMainProducts($id, '')
         ];
+    }
+
+    /**
+     * @param string $id
+     * @param array  $params
+     *
+     * @return array
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    protected function findLinkedEntitiesProductAttributeValues(string $id, array $params): array
+    {
+        $entity = $this->getRepository()->get($id);
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'read')) {
+            throw new Forbidden();
+        }
+
+        $foreignEntityName = 'ProductAttributeValue';
+
+        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+            throw new Forbidden();
+        }
+
+        $link = 'productAttributeValues';
+
+        if (!empty($params['maxSize'])) {
+            $params['maxSize'] = $params['maxSize'] + 1;
+        }
+
+        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+
+        $recordService = $this->getRecordService($foreignEntityName);
+
+        $selectAttributeList = $recordService->getSelectAttributeList($params);
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        }
+
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+
+        foreach ($collection as $e) {
+            $recordService->loadAdditionalFieldsForList($e);
+            if (!empty($params['loadAdditionalFields'])) {
+                $recordService->loadAdditionalFields($e);
+            }
+            if (!empty($selectAttributeList)) {
+                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+            }
+            $recordService->prepareEntityForOutput($e);
+        }
+
+        $result = [
+            'total'      => $this->getRepository()->countRelated($entity, $link, $selectParams),
+            'collection' => $collection
+        ];
+
+        if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
+            $newCollection = new EntityCollection();
+            foreach ($result['collection'] as $pav) {
+                $pav->set('isLocale', false);
+                $newCollection->append($pav);
+                if (!empty($pav->get('attributeIsMultilang'))) {
+                    foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
+                        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+
+                        $localePav = clone $pav;
+                        $localePav->id = $localePav->id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
+                        $localePav->set('isLocale', true);
+                        $localePav->set('attributeName', $localePav->get('attributeName') . ' › ' . $locale);
+                        $localePav->set('typeValue', $localePav->get("typeValue{$camelCaseLocale}"));
+                        $localePav->set('value', $localePav->get("value{$camelCaseLocale}"));
+
+                        $newCollection->append($localePav);
+                        $result['total']++;
+                    }
+                }
+            }
+
+            $result['collection'] = $newCollection;
+        }
+
+        return $this
+            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
+            ->getArgument('result');
     }
 
     /**
