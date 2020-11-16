@@ -1,6 +1,6 @@
 # Attributes
 
-![Import page](/atrocore/atrocore/master/docs/_assets/import/import-page.jpg)
+[Import page](/atrocore/atrocore/blob/master/docs/en/user-guide/import-core.md)
 
 **Attributes** – characteristics of a certain [product](./products.md) that distinguish it from other products, e.g. size, color, functionality, components and features that affect the product's attractiveness or acceptance in the market. 
 
