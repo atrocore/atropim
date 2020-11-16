@@ -101,11 +101,13 @@
     "ownerUser": {
       "type": "link",
       "required": true,
+      "isMultilang": true,
       "view": "views/fields/owner-user"
     },
     "assignedUser": {
       "type": "link",
       "required": true,
+      "isMultilang": true,
       "view": "views/fields/assigned-user"
     },
     "teams": {

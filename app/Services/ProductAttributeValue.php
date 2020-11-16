@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\ORM\EntityCollection;
+use Treo\Core\EventManager\Event;
 use Treo\Core\Utils\Util;
 
 /**
@@ -64,26 +65,62 @@ class ProductAttributeValue extends AbstractService
      */
     public function getEntity($id = null)
     {
+        $id = $this
+            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
+            ->getArgument('id');
+
         /**
          * For attribute locale
          */
         $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
         if (count($parts) === 2) {
-            $entity = parent::getEntity($parts[0]);
+            $entity = $this->getRepository()->get($parts[0]);
             if (!empty($entity)) {
-                $locale = $parts[1];
-                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($parts[1])));
 
                 $entity->id = $id;
                 $entity->set('isLocale', true);
                 $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $parts[1]);
                 $entity->set('value', $entity->get("value{$camelCaseLocale}"));
-            }
 
-            return $entity;
+                // prepare owner user
+                $ownerUser = $this->getEntityManager()->getEntity('User', $entity->get("ownerUser{$camelCaseLocale}Id"));
+                if (!empty($ownerUser)) {
+                    $entity->set('ownerUserId', $ownerUser->get('id'));
+                    $entity->set('ownerUserName', $ownerUser->get('name'));
+                } else {
+                    $entity->set('ownerUserId', null);
+                    $entity->set('ownerUserName', null);
+                }
+
+                // prepare assigned user
+                $assignedUser = $this->getEntityManager()->getEntity('User', $entity->get("assignedUser{$camelCaseLocale}Id"));
+                if (!empty($assignedUser)) {
+                    $entity->set('assignedUserId', $assignedUser->get('id'));
+                    $entity->set('assignedUserName', $assignedUser->get('name'));
+                } else {
+                    $entity->set('assignedUserId', null);
+                    $entity->set('assignedUserName', null);
+                }
+            }
+        } else {
+            $entity = $this->getRepository()->get($id);
         }
 
-        return parent::getEntity($id);
+        if (!empty($entity) && !empty($id)) {
+            $this->loadAdditionalFields($entity);
+
+            if (!$this->getAcl()->check($entity, 'read')) {
+                throw new Forbidden();
+            }
+        }
+        if (!empty($entity)) {
+            $this->prepareEntityForOutput($entity);
+        }
+
+        return $this
+            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->getArgument('entity');
     }
 
     /**
@@ -97,9 +134,23 @@ class ProductAttributeValue extends AbstractService
         $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
         if (count($parts) === 2) {
             $id = $parts[0];
+
+            // prepare camel case locale
+            $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($parts[1])));
+
             if (isset($data->value)) {
-                $data->{'value' . ucfirst(Util::toCamelCase(strtolower($parts[1])))} = $data->value;
+                $data->{"value{$camelCaseLocale}"} = $data->value;
                 unset($data->value);
+            }
+
+            if (isset($data->ownerUserId)) {
+                $data->{"ownerUser{$camelCaseLocale}Id"} = $data->ownerUserId;
+                unset($data->ownerUserId);
+            }
+
+            if (isset($data->assignedUserId)) {
+                $data->{"assignedUser{$camelCaseLocale}Id"} = $data->assignedUserId;
+                unset($data->assignedUserId);
             }
 
             $data->isLocale = true;
@@ -163,7 +214,7 @@ class ProductAttributeValue extends AbstractService
         /**
          * For attribute locale
          */
-        if (!empty($data->isLocale)) {
+        if (!empty($data->isLocale) || !empty($data->ownerUserId) || !empty($data->assignedUserId)) {
             $entity->skipValidation('requiredField');
         }
     }
