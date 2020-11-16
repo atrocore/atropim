@@ -42,14 +42,4 @@ class ProductAttributeValue extends Base
 
         return false;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function checkInTeam(User $user, Entity $entity)
-    {
-        // @todo develop for teams
-
-        return true;
-    }
 }

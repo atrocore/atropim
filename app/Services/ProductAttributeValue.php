@@ -44,7 +44,7 @@ use Treo\Core\Utils\Util;
  */
 class ProductAttributeValue extends AbstractService
 {
-    public const LOCALE_IN_ID_SEPARATOR = '_l_';
+    public const LOCALE_IN_ID_SEPARATOR = '~';
 
     /**
      * @inheritdoc
@@ -133,27 +133,50 @@ class ProductAttributeValue extends AbstractService
          */
         $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
         if (count($parts) === 2) {
-            $id = $parts[0];
-
             // prepare camel case locale
             $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($parts[1])));
 
+            /**
+             * Set locale value
+             */
             if (isset($data->value)) {
                 $data->{"value{$camelCaseLocale}"} = $data->value;
                 unset($data->value);
             }
 
+            /**
+             * Set locale ownerUser
+             */
             if (isset($data->ownerUserId)) {
                 $data->{"ownerUser{$camelCaseLocale}Id"} = $data->ownerUserId;
                 unset($data->ownerUserId);
             }
 
+            /**
+             * Set locale assignedUser
+             */
             if (isset($data->assignedUserId)) {
                 $data->{"assignedUser{$camelCaseLocale}Id"} = $data->assignedUserId;
                 unset($data->assignedUserId);
             }
 
+            /**
+             * Set locale teams
+             */
+            if (isset($data->teamsIds)) {
+                $sql = ["DELETE FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$id'"];
+                foreach ($data->teamsIds as $teamId) {
+                    $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '$teamId', 'ProductAttributeValue')";
+                }
+                $this->getEntityManager()->nativeQuery(implode(";", $sql));
+
+                unset($data->teamsIds);
+            }
+
             $data->isLocale = true;
+
+            // update id
+            $id = $parts[0];
         }
 
         // prepare data
