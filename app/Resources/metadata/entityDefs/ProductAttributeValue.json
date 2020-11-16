@@ -102,12 +102,14 @@
       "type": "link",
       "required": true,
       "isMultilang": true,
+      "requiredForMultilang": false,
       "view": "views/fields/owner-user"
     },
     "assignedUser": {
       "type": "link",
       "required": true,
       "isMultilang": true,
+      "requiredForMultilang": false,
       "view": "views/fields/assigned-user"
     },
     "teams": {

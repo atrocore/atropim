@@ -237,7 +237,7 @@ class ProductAttributeValue extends AbstractService
         /**
          * For attribute locale
          */
-        if (!empty($data->isLocale) || !empty($data->ownerUserId) || !empty($data->assignedUserId)) {
+        if (!empty($data->isLocale)) {
             $entity->skipValidation('requiredField');
         }
     }
