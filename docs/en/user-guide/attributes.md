@@ -1,7 +1,5 @@
 # Attributes
 
-[Import page](https://github.com/atrocore/atrocore/blob/master/docs/en/user-guide/import-core.md)
-
 **Attributes** – characteristics of a certain [product](./products.md) that distinguish it from other products, e.g. size, color, functionality, components and features that affect the product's attractiveness or acceptance in the market. 
 
 An attribute can be assigned to only one [attribute group](./attribute-groups.md). Value of a certain attribute set for a certain product is called *product attribute value*. It is possible to define the same product attribute different values for each channel. 
