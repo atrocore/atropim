@@ -121,25 +121,41 @@ class Product extends AbstractSelectManager
         // get attributes ids
         $attributesIds = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT id FROM attribute WHERE type IN ('varchar','text','wysiwyg') AND deleted=0")
-            ->fetchAll(\PDO::FETCH_ASSOC);
-        $attributesIds = array_column($attributesIds, 'id');
+            ->getRepository('Attribute')
+            ->select(['id'])
+            ->where(['type' => ['varchar', 'text', 'wysiwyg']])
+            ->find()
+            ->toArray();
 
         // prepare attributes values
         $attributesValues = ["value LIKE '%$textFilter%'"];
-        if ($this->getConfig()->get('isMultilangActive', false) && !empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
-            foreach ($locales as $locale) {
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                 $attributesValues[] = "value_" . strtolower($locale) . " LIKE '%$textFilter%'";
             }
         }
-        $attributesValues = implode(" OR ", $attributesValues);
 
-        // get products ids
-        $productsIds = $this
+        // prepare sql params
+        $attrsIdsParam = implode("','", array_column($attributesIds, 'id'));
+        $attrsValuesParam = implode(" OR ", $attributesValues);
+
+        // find product attribute values
+        $pavData = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT product_id FROM product_attribute_value WHERE deleted=0 AND attribute_id IN ('" . implode("','", $attributesIds) . "') AND ($attributesValues)")
+            ->nativeQuery("SELECT product_id, scope, channel_id FROM product_attribute_value WHERE deleted=0 AND attribute_id IN ('$attrsIdsParam') AND ($attrsValuesParam)")
             ->fetchAll(\PDO::FETCH_ASSOC);
-        $productsIds = array_column($productsIds, 'product_id');
+
+        // find product channels
+        $productChannels = $this->getProductsChannels(array_column($pavData, 'product_id'));
+
+        // filtering products
+        $productsIds = [];
+        foreach ($pavData as $row) {
+            if ($row['scope'] == 'Channel' && (!isset($productChannels[$row['product_id']]) || !in_array($row['channel_id'], $productChannels[$row['product_id']]))) {
+                continue 1;
+            }
+            $productsIds[] = $row['product_id'];
+        }
 
         // push for attributes
         $rows[] = "product.id IN ('" . implode("','", $productsIds) . "')";
@@ -582,7 +598,7 @@ class Product extends AbstractSelectManager
             $sp = $this
                 ->createSelectManager('ProductAttributeValue')
                 ->getSelectParams(['where' => [$where]], true, true);
-            $sp['select'] = ['productId'];
+            $sp['select'] = ['productId', 'scope', 'channelId'];
 
             // create sql
             $sql = $this
@@ -611,8 +627,26 @@ class Product extends AbstractSelectManager
             $sql = str_replace('Ÿ', '\\\\\\\\u0178', $sql);
             $sql = str_replace('ÿ', '\\\\\\\\u00ff', $sql);
 
+            // get product attribute values
+            $pavData = $this
+                ->getEntityManager()
+                ->nativeQuery($sql)
+                ->fetchAll(\PDO::FETCH_ASSOC);
+
+            // find product channels
+            $productChannels = $this->getProductsChannels(array_column($pavData, 'productId'));
+
+            // filtering products
+            $productsIds = [];
+            foreach ($pavData as $v) {
+                if ($v['scope'] == 'Channel' && (!isset($productChannels[$v['productId']]) || !in_array($v['channelId'], $productChannels[$v['productId']]))) {
+                    continue 1;
+                }
+                $productsIds[] = $v['productId'];
+            }
+
             // prepare custom where
-            $selectParams['customWhere'] .= " AND product.id IN ($sql AND product_attribute_value.scope='Global')";
+            $selectParams['customWhere'] .= " AND product.id IN ('" . implode("','", $productsIds) . "')";
         }
     }
 
@@ -928,5 +962,26 @@ class Product extends AbstractSelectManager
         }
 
         $params['where'] = array_values($params['where']);
+    }
+
+    /**
+     * @param array $productsIds
+     *
+     * @return array
+     */
+    protected function getProductsChannels(array $productsIds): array
+    {
+        // find product channels
+        $productsChannels = $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT product_id, channel_id FROM product_channel WHERE deleted=0 AND product_id IN ('" . implode("','", $productsIds) . "')")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        $products = [];
+        foreach ($productsChannels as $row) {
+            $products[$row['product_id']][] = $row['channel_id'];
+        }
+
+        return $products;
     }
 }
