@@ -93,8 +93,8 @@ class ProductAttributeValue extends AbstractSelectManager
 
         // prepare additional select columns
         $additionalSelectColumns = [
-            'typeValue' => 'attribute.type_value',
-            'attributeGroupId' => 'ag1.id',
+            'typeValue'          => 'attribute.type_value',
+            'attributeGroupId'   => 'ag1.id',
             'attributeGroupName' => 'ag1.name'
         ];
 
@@ -113,6 +113,26 @@ class ProductAttributeValue extends AbstractSelectManager
         foreach ($additionalSelectColumns as $alias => $sql) {
             $result['additionalSelectColumns'][$sql] = $alias;
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function accessOnlyOwn(&$result)
+    {
+        $d['createdById'] = $this->getUser()->id;
+        $d['ownerUserId'] = $this->getUser()->id;
+        $d['assignedUserId'] = $this->getUser()->id;
+        if ($this->getConfig()->get('isMultilangActive')) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $d[Util::toCamelCase('owner_user_' . strtolower($locale) . '_id')] = $this->getUser()->id;
+                $d[Util::toCamelCase('assigned_user_' . strtolower($locale) . '_id')] = $this->getUser()->id;
+            }
+        }
+
+        $result['whereClause'][] = array(
+            'OR' => $d
+        );
     }
 
     /**

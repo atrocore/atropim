@@ -325,13 +325,26 @@ class Product extends AbstractService
             $params['maxSize'] = $params['maxSize'] + 1;
         }
 
+        // get select params
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
 
+        // get record service
         $recordService = $this->getRecordService($foreignEntityName);
 
+        /**
+         * Prepare select list
+         */
         $selectAttributeList = $recordService->getSelectAttributeList($params);
         if ($selectAttributeList) {
-            $selectParams['select'] = $selectAttributeList;
+            $selectAttributeList[] = 'ownerUserId';
+            $selectAttributeList[] = 'assignedUserId';
+            if ($this->getConfig()->get('isMultilangActive')) {
+                foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
+                    $selectAttributeList[] = Util::toCamelCase('owner_user_' . strtolower($locale) . '_id');
+                    $selectAttributeList[] = Util::toCamelCase('assigned_user_' . strtolower($locale) . '_id');
+                }
+            }
+            $selectParams['select'] = array_unique($selectAttributeList);
         }
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
@@ -370,6 +383,8 @@ class Product extends AbstractService
                         $localePav->set('attributeName', $localePav->get('attributeName') . ' › ' . $locale);
                         $localePav->set('typeValue', $localePav->get("typeValue{$camelCaseLocale}"));
                         $localePav->set('value', $localePav->get("value{$camelCaseLocale}"));
+                        $localePav->set('ownerUserId', $localePav->get("ownerUser{$camelCaseLocale}Id"));
+                        $localePav->set('assignedUserId', $localePav->get("assignedUser{$camelCaseLocale}Id"));
 
                         $newCollection->append($localePav);
                         $result['total']++;
@@ -377,6 +392,21 @@ class Product extends AbstractService
                 }
             }
 
+            $result['collection'] = $newCollection;
+        }
+
+        /**
+         * Check every pav by ACL
+         */
+        if (!empty($result['total'])) {
+            $newCollection = new EntityCollection();
+            foreach ($result['collection'] as $pav) {
+                $result['total']--;
+                if ($this->getAcl()->check($pav, 'read')) {
+                    $newCollection->append($pav);
+                    $result['total']++;
+                }
+            }
             $result['collection'] = $newCollection;
         }
 

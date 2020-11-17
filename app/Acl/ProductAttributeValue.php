@@ -18,15 +18,12 @@ class ProductAttributeValue extends Base
      */
     public function checkIsOwner(User $user, Entity $entity)
     {
-        if (empty($entity->get('isLocale'))) {
-            return parent::checkIsOwner($user, $entity);
-        }
-
-        // get locale
-        $locale = explode(\Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR, $entity->id)[1];
-
         // prepare camelCase locale
-        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+        $camelCaseLocale = '';
+        if (!empty($entity->get('isLocale'))) {
+            $locale = explode(\Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR, $entity->id)[1];
+            $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+        }
 
         if ($user->id === $entity->get("ownerUser{$camelCaseLocale}Id")) {
             return true;
