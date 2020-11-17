@@ -19,7 +19,9 @@
     "ProductSerie": "Product Serie",
     "AssetCategory": "Asset Category",
     "ChannelPricing": "Channel Pricing",
-    "ProductFamilyAttribute": "Product Family Attribute"
+    "ProductFamilyAttribute": "Product Family Attribute",
+    "Content": "Content",
+    "ContentGroup": "Content Group"
   },
   "scopeNamesPlural": {
     "Attribute": "Attributes",
@@ -40,7 +42,9 @@
     "ProductAttributeValue": "Product Attribute Value",
     "ProductPrice": "Product Prices",
     "ProductSerie": "Product Series",
-    "ProductFamilyAttribute": "Product Family Attributes"
+    "ProductFamilyAttribute": "Product Family Attributes",
+    "Content": "Contents",
+    "ContentGroup": "Content Groups"
   },
   "options": {
     "channelsFilter": {

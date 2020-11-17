@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "tags": "Tags",
+    "title": "Title",
+    "status": "Status",
+    "type": "Type",
+    "description": "Description",
+    "text": "Text",
+    "metaTitle": "Meta Title",
+    "metaDescription": "Meta Description",
+    "contentGroup": "Content Group",
+    "products": "Products"
+  },
+  "links": {
+    "contentGroup": "Content Group",
+    "products": "Products"
+  },
+  "options": {
+    "status": {
+      "draft": "Draft",
+      "written": "Written",
+      "reviewed": "Reviewed",
+      "published": "Published"
+    },
+    "type": {
+      "review": "Review",
+      "news": "News",
+      "promotional": "Promotional"
+    }
+  },
+  "labels": {
+    "Create Content": "Create Content"
+  }
+}

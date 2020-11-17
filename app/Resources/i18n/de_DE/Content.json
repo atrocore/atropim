@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "tags": "Stichworte",
+    "title": "Titel",
+    "status": "Status",
+    "type": "Art",
+    "description": "Beschreibung",
+    "text": "Text",
+    "metaTitle": "Meta-Titel",
+    "metaDescription": "Meta Beschreibung",
+    "contentGroup": "Inhaltsgruppe",
+    "products": "Produkte"
+  },
+  "links": {
+    "contentGroup": "Inhaltsgruppe",
+    "products": "Produkte"
+  },
+  "options": {
+    "status": {
+      "draft": "Entwurf",
+      "written": "Geschrieben",
+      "reviewed": "Bewertet",
+      "published": "Veröffentlicht"
+    },
+    "type": {
+      "review": "Rezension",
+      "news": "Nachrichten",
+      "promotional": "Werbung"
+    }
+  },
+  "labels": {
+    "Create Content": "Inhalt erstellen"
+  }
+}

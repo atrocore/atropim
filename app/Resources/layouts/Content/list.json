@@ -1,0 +1,15 @@
+[
+  {
+    "name": "title",
+    "link": true
+  },
+  {
+    "name": "tags"
+  },
+  {
+    "name": "status"
+  },
+  {
+    "name": "modifiedAt"
+  }
+]
