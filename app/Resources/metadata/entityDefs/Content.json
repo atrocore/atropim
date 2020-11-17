@@ -1,7 +1,10 @@
 {
   "fields": {
     "tags": {
-      "type": "enum"
+      "type": "multiEnum",
+      "optionColors": {},
+      "audited": true,
+      "default": []
     },
     "title": {
       "type": "varchar",
