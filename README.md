@@ -1,8 +1,8 @@
-![treopim_h80](docs/_assets/atropim_logo_color_340_64px.png)
+![treopim_h80](_assets/atropim_logo_color_340_64px.png)
 
 ## What Is AtroPIM?
 
-![anne](docs/_assets/zs_ft_19_01_2018_employee_eng2.png)
+![anne](_assets/zs_ft_19_01_2018_employee_eng2.png)
 
 AtroPIM is an open-source product information management system (PIM), which is based on [AtroCore](https://github.com/atrocore/atrocore) software platform. AtroPIM (as well as AtroCore) is distributed under GPLv3 License and is free. It has a lot of features right out-of-the-box and thus is an excellent tool for cost-effective and timely application development.
 
@@ -23,7 +23,7 @@ AtroPIM is a single page application (SPA) with an API-centric and service-orien
 
 AtroPIM is an effective solution for storing, processing and managing your product information. All product data are extracted from different sources, classified, translated and enriched. AtroPIM helps you publish the relevant data on different sales channels with minimum efforts. 
 
-![unctions_banne](docs/_assets/how_it_works_scheme_en.png)
+![unctions_banne](_assets/how_it_works_scheme_en.png)
 
 ## Features
 
@@ -49,7 +49,7 @@ Want to know more about AtroPIM functions and its advantages for you? Please, vi
 
 AtroPIM is based on EspoCRM and uses PHP7, backbone.js, composer and some Zend Framework 3 libraries.
 
-![Technology_schem](docs/_assets/technologie-scheme-eng.png)
+![Technology_schem](_assets/technologie-scheme-eng.png)
 
 Want to know more about AtroPIM technology? Please, visit [our website](http://atropim.com/technology)!
 
@@ -73,9 +73,9 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 
 ## Documentation
 
-- Documentation for users is available [here](docs/en/user-guide).
-- Documentation for administrators is available [here](docs/en/administration/).
-- Documentation for developers is available [here](docs/).
+- Documentation for users is available [here](https://github.com/atrocore/atropim-docs/tree/master/en/user-guide).
+- Documentation for administrators is available [here](https://github.com/atrocore/atropim-docs/tree/master/en/administration).
+- Documentation for developers is currently not available.
 
 ### Requirements
 
@@ -85,8 +85,8 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 
 ### Configuration Instructions Based on Your Server
 
-* [Apache server configuration](https://github.com/atrocore/atrocore/blob/master/docs/en/administration/apache-server-configuration.md)
-* [Nginx server configuration](https://github.com/atrocore/atrocore/blob/master/docs/en/administration/nginx-server-configuration.md)
+* [Apache server configuration](https://github.com/atrocore/atropim-docs/blob/master/en/administration/apache-server-configuration.md)
+* [Nginx server configuration](https://github.com/atrocore/atropim-docs/blob/master/en/administration/nginx-server-configuration.md)
 
 ### Installation
 
