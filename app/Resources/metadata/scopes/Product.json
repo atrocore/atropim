@@ -22,6 +22,7 @@
   "hasTeam": true,
   "advancedFilters": true,
   "addRelationEnabled": true,
+  "searchInProductAttributeValues": false,
   "importTypeSimple": {
     "handler": "Pim\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },

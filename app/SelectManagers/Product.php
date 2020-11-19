@@ -90,13 +90,11 @@ class Product extends AbstractSelectManager
         // call parent
         parent::textFilter($textFilter, $result);
 
-        if (empty($result['whereClause'])) {
+        if (!$this->getMetadata()->get(['scopes', 'Product', 'searchInProductAttributeValues'], false)){
             return;
         }
 
-        $scopes = $this->getMetadata()->get(['entityDefs', 'Product', 'collection'], []);
-
-        if (isset($scopes['attributeTextFilterDisable']) && $scopes['attributeTextFilterDisable'] == true) {
+        if (empty($result['whereClause'])) {
             return;
         }
 
