@@ -1,0 +1,54 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "tags"
+        }
+      ],
+      [
+        {
+          "name": "contentGroup"
+        },
+        false
+      ],
+      [
+        {
+          "name": "status"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "text",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "metaTitle",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "metaDescription",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

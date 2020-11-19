@@ -1,0 +1,10 @@
+{
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyMy",
+    "notEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity"
+  ]
+}

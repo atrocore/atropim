@@ -13,5 +13,8 @@
   },
   {
     "name": "asset_relations"
+  },
+  {
+    "name": "contents"
   }
 ]
