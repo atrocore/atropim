@@ -6,6 +6,14 @@
             "trim": true,
             "isMultilang": true
         },
+        "code": {
+            "type": "varchar",
+            "layoutMassUpdateDisabled": true,
+            "required": true,
+            "trim": true,
+            "emHidden": true,
+            "view": "pim:views/fields/code-from-name"
+        },
         "description": {
             "type": "text",
             "required": false,

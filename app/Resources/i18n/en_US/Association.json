@@ -3,7 +3,8 @@
     "associatedProducts": "Associated products",
     "description": "Description",
     "isActive": "Active",
-    "backwardAssociation": "Backward Association"
+    "backwardAssociation": "Backward Association",
+    "code": "Code"
   },
   "links": {
     "associatedProducts": "Associated products",
