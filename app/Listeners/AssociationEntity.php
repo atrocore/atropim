@@ -50,6 +50,10 @@ class AssociationEntity extends AbstractEntityListener
         /** @var Entity $entity */
         $entity = $event->getArgument('entity');
 
+        if (!$this->isCodeValid($entity)) {
+            throw new BadRequest($this->translate('Code is invalid', 'exceptions', 'Global'));
+        }
+
         if (empty($entity->get('isActive')) && $this->hasProduct($entity, true)) {
             throw new BadRequest($this->translate('You can not deactivate association with active product(s)', 'exceptions', 'Association'));
         }
