@@ -6,7 +6,7 @@
       "audited": true,
       "default": []
     },
-    "title": {
+    "name": {
       "type": "varchar",
       "maxLength": 128,
       "required": true,

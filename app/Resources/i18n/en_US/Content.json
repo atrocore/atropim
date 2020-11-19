@@ -1,7 +1,7 @@
 {
   "fields": {
     "tags": "Tags",
-    "title": "Title",
+    "name": "Title",
     "status": "Status",
     "type": "Type",
     "description": "Description",
