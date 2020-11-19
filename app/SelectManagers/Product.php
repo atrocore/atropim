@@ -90,7 +90,7 @@ class Product extends AbstractSelectManager
         // call parent
         parent::textFilter($textFilter, $result);
 
-        if (!$this->getMetadata()->get(['scopes', 'Product', 'searchInProductAttributeValues'], false)){
+        if (!$this->getMetadata()->get(['scopes', 'Product', 'searchInProductAttributeValues'], false)) {
             return;
         }
 
@@ -107,14 +107,6 @@ class Product extends AbstractSelectManager
 
         // prepare text filter
         $textFilter = \addslashes($textFilter);
-
-        // prepare rows
-        $rows = [];
-
-        // push for fields
-        foreach ($last['OR'] as $name => $value) {
-            $rows[] = "product." . Util::toUnderScore(str_replace('*', '', $name)) . " LIKE '" . \addslashes($value) . "'";
-        }
 
         // get attributes ids
         $attributesIds = $this
@@ -147,7 +139,6 @@ class Product extends AbstractSelectManager
         $productChannels = $this->getProductsChannels(array_column($pavData, 'product_id'));
 
         // filtering products
-        $productsIds = [];
         foreach ($pavData as $row) {
             if ($row['scope'] == 'Channel' && (!isset($productChannels[$row['product_id']]) || !in_array($row['channel_id'], $productChannels[$row['product_id']]))) {
                 continue 1;
@@ -155,11 +146,11 @@ class Product extends AbstractSelectManager
             $productsIds[] = $row['product_id'];
         }
 
-        // push for attributes
-        $rows[] = "product.id IN ('" . implode("','", $productsIds) . "')";
+        if (!empty($productsIds)) {
+            $last['OR']['id'] = $productsIds;
+        }
 
-        // prepare custom where
-        $result['customWhere'] .= " AND (" . implode(" OR ", $rows) . ")";
+        $result['whereClause'][] = $last;
     }
 
     /**
