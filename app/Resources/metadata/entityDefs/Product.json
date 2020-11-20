@@ -98,7 +98,8 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "productStatus": {
       "type": "enum",
