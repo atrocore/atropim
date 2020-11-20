@@ -258,6 +258,9 @@
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true
+    },
+    "contents": {
+      "type": "linkMultiple"
     }
   },
   "links": {
@@ -376,6 +379,12 @@
       "foreign": "products",
       "entity": "Category",
       "audited": false
+    },
+    "contents": {
+      "type": "hasMany",
+      "entity": "Content",
+      "relationName": "productContents",
+      "foreign": "products"
     }
   },
   "collection": {

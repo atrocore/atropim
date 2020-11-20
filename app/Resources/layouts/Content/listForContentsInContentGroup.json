@@ -1,0 +1,16 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "tags",
+    "notSortable": true
+  },
+  {
+    "name": "status"
+  },
+  {
+    "name": "modifiedAt"
+  }
+]

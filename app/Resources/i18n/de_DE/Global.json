@@ -21,7 +21,9 @@
     "Tax": "Tax",
     "Settings": "Administration",
     "Currency": "Währung",
-    "ProductFamilyAttribute": "Produktfamilie Attribute"
+    "ProductFamilyAttribute": "Produktfamilie Attribute",
+    "Content": "Content",
+    "ContentGroup": "Content Gruppe"
   },
   "scopeNamesPlural": {
     "ProductPrice": "Produktpreise",
@@ -47,7 +49,9 @@
     "Currency": "Währung",
     "Dashboard": "Instrumententafel",
     "EmailAddress": "E-Mail Addresse",
-    "ProductFamilyAttribute": "Produktfamilie Attribute"
+    "ProductFamilyAttribute": "Produktfamilie Attribute",
+    "Content": "Contents",
+    "ContentGroup": "Content Gruppen"
   },
   "fields": {
     "channels": "Kanäle",
