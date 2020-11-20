@@ -97,7 +97,7 @@
       "tooltip": false,
       "isMultilang": true,
       "layoutDetailDisabled": true,
-      "view": "views/fields/array-extended"
+      "view": "pim:views/fields/array-extended"
     },
     "isSystem": {
       "notNull": true,
