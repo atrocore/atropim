@@ -57,6 +57,12 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeType', !empty($entity->get('attribute')) ? $entity->get('attribute')->get('type') : null);
         $entity->set('attributeIsMultilang', !empty($entity->get('attribute')) ? $entity->get('attribute')->get('isMultilang') : false);
 
+        // set currency value
+        if ($entity->get('attributeType') == 'currency' && empty($entity->get('data'))) {
+            $entity->set('value', 0);
+            $entity->set('data', ['currency' => $this->getConfig()->get('defaultCurrency', 'EUR')]);
+        }
+
         $this->convertValue($entity);
     }
 
@@ -280,6 +286,7 @@ class ProductAttributeValue extends AbstractService
                     $entity->set('value', ((string)$entity->get('value') === '') ? null : (int)$entity->get('value'));
                     break;
                 case 'unit':
+                case 'currency':
                 case 'float':
                     $entity->set('value', ((string)$entity->get('value') === '') ? null : (float)$entity->get('value'));
                     break;

@@ -5,6 +5,9 @@
     },
     "unit": {
       "converter": "\\Pim\\Import\\Types\\Simple\\FieldConverters\\Unit"
+    },
+    "currency": {
+      "converter": "\\Pim\\Import\\Types\\Simple\\FieldConverters\\Currency"
     }
   }
 }

@@ -65,7 +65,7 @@ class Attribute extends Base
         }
 
         // get deleted positions
-        $deletedPositions = $this->getDeletedPositions($entity->get('typeValue'));
+        $deletedPositions = !empty($entity->get('typeValue')) ? $this->getDeletedPositions($entity->get('typeValue')) : [];
 
         // delete positions
         if (!empty($deletedPositions)) {

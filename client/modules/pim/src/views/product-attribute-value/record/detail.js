@@ -83,6 +83,11 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                         fieldDefs.measure = (typeValue || ['Length'])[0];
                     }
 
+                    // for currency
+                    if (type === 'currency') {
+                        fieldDefs.currency = typeValue || 'EUR';
+                    }
+
                     // for multi-language
                     if (isMultiLang) {
                         if (this.getConfig().get('isMultilangActive')) {
@@ -116,7 +121,7 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
         extendFieldData(view, data) {
             let additionalData = false;
 
-            if (view.type === 'unit') {
+            if (view.type === 'unit' || view.type === 'currency') {
                 let actualFieldDefs = this.getMetadata().get(['fields', view.type, 'actualFields']) || [];
                 let actualFieldValues = this.getFieldManager().getActualAttributes(view.type, view.name) || [];
                 actualFieldDefs.forEach((field, i) => {

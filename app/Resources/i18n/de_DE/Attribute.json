@@ -18,6 +18,7 @@
     "type": {
       "array": "Array",
       "bool": "Bool",
+      "currency": "Währung",
       "date": "Datum",
       "datetime": "Datum Zeit",
       "enum": "Enum",

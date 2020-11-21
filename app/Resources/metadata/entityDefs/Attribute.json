@@ -61,6 +61,7 @@
       "options": [
         "array",
         "bool",
+        "currency",
         "date",
         "datetime",
         "enum",
@@ -80,7 +81,8 @@
       "audited": false,
       "readOnly": false,
       "tooltip": false,
-      "view": "pim:views/attribute/fields/type"
+      "view": "pim:views/attribute/fields/type",
+      "prohibitedEmptyValue": true
     },
     "isMultilang": {
       "type": "bool",
