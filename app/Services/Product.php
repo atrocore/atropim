@@ -35,6 +35,7 @@ use Dam\Entities\AssetRelation;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
@@ -521,6 +522,89 @@ class Product extends AbstractService
         if (isset($data->_duplicatingEntityId)) {
             $entity->isDuplicate = true;
         }
+    }
+
+    /**
+     * @param array $attributeList
+     */
+    protected function prepareAttributeListForExport(&$attributeList)
+    {
+        foreach ($attributeList as $k => $v) {
+            if ($v == 'productAttributeValuesIds') {
+                $attributeList[$k] = 'productAttributeValues';
+            }
+
+            if ($v == 'productAttributeValuesNames') {
+                unset($attributeList[$k]);
+            }
+
+            if ($v == 'channelsIds') {
+                $attributeList[$k] = 'channels';
+            }
+
+            if ($v == 'channelsNames') {
+                unset($attributeList[$k]);
+            }
+        }
+
+        $attributeList = array_values($attributeList);
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return string|null
+     */
+    protected function getAttributeProductAttributeValuesFromEntityForExport(Entity $entity): ?string
+    {
+        if (empty($entity->get('productAttributeValuesIds'))) {
+            return null;
+        }
+
+        // prepare select
+        $select = ['id', 'attributeId', 'attributeName', 'isRequired', 'scope', 'channelId', 'channelName', 'data', 'value'];
+        if ($this->getConfig()->get('isMultilangActive')) {
+            foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
+                $select[] = Util::toCamelCase('value_' . strtolower($locale));
+            }
+        }
+
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->select($select)
+            ->where(['id' => $entity->get('productAttributeValuesIds')])
+            ->find();
+
+        return Json::encode($pavs->toArray());
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return string|null
+     */
+    protected function getAttributeChannelsFromEntityForExport(Entity $entity): ?string
+    {
+        if (empty($entity->get('channelsIds'))) {
+            return null;
+        }
+
+        $channelRelationData = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->getChannelRelationData($entity->get('id'));
+
+        $result = [];
+        foreach ($entity->get('channelsNames') as $id => $name) {
+            $result[] = [
+                'id'       => $id,
+                'name'     => $name,
+                'isActive' => $channelRelationData[$id]['isActive']
+            ];
+        }
+
+        return Json::encode($result);
     }
 
     /**

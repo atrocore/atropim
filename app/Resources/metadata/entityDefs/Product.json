@@ -15,7 +15,7 @@
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true,
+      "exportType": "text",
       "noLoad": true
     },
     "productFamily": {
@@ -194,6 +194,7 @@
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
+      "exportType": "text",
       "noLoad": true
     },
     "measuringUnit": {
