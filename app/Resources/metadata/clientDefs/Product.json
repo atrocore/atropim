@@ -53,6 +53,9 @@
     "plate": "pim:views/product/record/plate",
     "plateItem": "pim:views/product/record/plate-item"
   },
+  "modalViews": {
+    "edit": "pim:views/product/modals/edit"
+  },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
   "relationshipPanels": {
     "productAttributeValues": {
