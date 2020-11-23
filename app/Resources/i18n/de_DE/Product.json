@@ -51,7 +51,8 @@
     "catalog": "Katalog",
     "measuringUnit": "Maßeinheit",
     "packedAmount": "Gepackte Menge",
-    "pcSorting": "Sortierreihenfolge"
+    "pcSorting": "Sortierreihenfolge",
+    "contents": "Contents"
   },
   "links": {
     "associatedMainProducts": "zugehörige Produkte",
