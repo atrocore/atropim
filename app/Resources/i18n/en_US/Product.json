@@ -38,7 +38,8 @@
     "measuringUnit": "Measuring Unit",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
-    "pcSorting": "Sort order"
+    "pcSorting": "Sort order",
+    "contents": "Contents"
   },
   "links": {
     "productSerie": "Product Series",
