@@ -2,6 +2,30 @@
   "fields": {
     "productCanLinkedWithNonLeafCategories": {
       "type": "bool"
+    },
+    "assignedUserProductOwnership": {
+      "type": "enum",
+      "options": [
+        "sameAsCreator",
+        "notInherit"
+      ],
+      "default": "sameAsCreator"
+    },
+    "ownerUserProductOwnership": {
+      "type": "enum",
+      "options": [
+        "sameAsCreator",
+        "notInherit"
+      ],
+      "default": "sameAsCreator"
+    },
+    "teamsProductOwnership": {
+      "type": "enum",
+      "options": [
+        "sameAsCreator",
+        "notInherit"
+      ],
+      "default": "sameAsCreator"
     }
   }
 }

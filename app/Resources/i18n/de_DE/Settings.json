@@ -1,5 +1,31 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken."
+    "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
+    "assignedUserProductOwnership": "Zugewiesener Benutzer",
+    "ownerUserProductOwnership": "Eigentümer",
+    "teamsProductOwnership": "Team"
+  },
+  "labels": {
+    "Inheritance of product ownership": "Vererbung der Eigentumsinformationen für Produkte"
+  },
+  "options": {
+    "assignedUserProductOwnership": {
+      "fromCatalog": "Vom Katalog",
+      "fromProductFamily": "Von Produktfamilie",
+      "sameAsCreator": "Gleich wie Ersteller",
+      "notInherit": "Nicht vererben"
+    },
+    "ownerUserProductOwnership": {
+      "fromCatalog": "Vom Katalog",
+      "fromProductFamily": "Von Produktfamilie",
+      "sameAsCreator": "Gleich wie Ersteller",
+      "notInherit": "Nicht vererben"
+    },
+    "teamsProductOwnership": {
+      "fromCatalog": "Vom Katalog",
+      "fromProductFamily": "Von Produktfamilie",
+      "sameAsCreator": "Gleich wie Ersteller",
+      "notInherit": "Nicht vererben"
+    }
   }
 }

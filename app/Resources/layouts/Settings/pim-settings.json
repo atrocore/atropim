@@ -9,5 +9,28 @@
         false
       ]
     ]
+  },
+  {
+    "label": "Inheritance of product ownership",
+    "rows": [
+      [
+        {
+          "name": "assignedUserProductOwnership"
+        },
+        false
+      ],
+      [
+        {
+          "name": "ownerUserProductOwnership"
+        },
+        false
+      ],
+      [
+        {
+          "name": "teamsProductOwnership"
+        },
+        false
+      ]
+    ]
   }
 ]

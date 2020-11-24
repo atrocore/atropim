@@ -1,5 +1,31 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories."
+    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
+    "assignedUserProductOwnership": "Assigned User",
+    "ownerUserProductOwnership": "Owner",
+    "teamsProductOwnership": "Team"
+  },
+  "labels": {
+    "Inheritance of product ownership": "Inheritance of product ownership"
+  },
+  "options": {
+    "assignedUserProductOwnership": {
+      "fromCatalog": "From Catalog",
+      "fromProductFamily": "From Product Family",
+      "sameAsCreator": "Same as Creator",
+      "notInherit": "Not inherit"
+    },
+    "ownerUserProductOwnership": {
+      "fromCatalog": "From Catalog",
+      "fromProductFamily": "From Product Family",
+      "sameAsCreator": "Same as Creator",
+      "notInherit": "Not inherit"
+    },
+    "teamsProductOwnership": {
+      "fromCatalog": "From Catalog",
+      "fromProductFamily": "From Product Family",
+      "sameAsCreator": "Same as Creator",
+      "notInherit": "Not inherit"
+    }
   }
 }
