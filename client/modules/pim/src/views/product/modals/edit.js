@@ -48,16 +48,15 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
         setupOwnership: function (param, field) {
             switch (param) {
                 case 'fromCatalog':
+                    this.clearModel(field);
                     this.setRelatedOwnershipInfo('Catalog', 'catalogId', field);
                     break;
                 case 'fromProductFamily':
+                    this.clearModel(field);
                     this.setRelatedOwnershipInfo('ProductFamily', 'productFamilyId', field);
                     break;
                 case 'notInherit':
-                    this.model.set({
-                        [field + 'Id']: null,
-                        [field + 'Name']: null
-                    });
+                    this.clearModel(field);
                     break;
                 default:
                     if (field === 'teams') {
@@ -67,6 +66,13 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
                         });
                     }
             }
+        },
+
+        clearModel: function (field) {
+            this.model.set({
+                [field + 'Id']: null,
+                [field + 'Name']: null
+            });
         },
 
         setRelatedOwnershipInfo: function (scope, target, field) {

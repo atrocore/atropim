@@ -1,13 +1,21 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-
 use Treo\Core\EventManager\Event;
 
+/**
+ * Class Metadata
+ *
+ * @package Pim\Listeners
+ */
 class Metadata extends \Treo\Listeners\AbstractListener
 {
+    /**
+     * @param Event $event
+     */
     public function modify(Event $event)
     {
         $data = $event->getArgument('data');
@@ -17,6 +25,11 @@ class Metadata extends \Treo\Listeners\AbstractListener
         $event->setArgument('data', $data);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
     protected function setProductOwnershipSettings(array $data): array
     {
         if (isset($data['scopes']['Catalog']['hasAssignedUser']) && $data['scopes']['Catalog']['hasAssignedUser']) {
