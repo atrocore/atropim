@@ -123,7 +123,11 @@
   },
   "collection": {
     "sortBy": "createdAt",
-    "asc": false
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
   },
   "indexes": {
     "ownerUser": {
