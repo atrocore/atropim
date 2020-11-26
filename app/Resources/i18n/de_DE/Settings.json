@@ -6,7 +6,8 @@
     "teamsProductOwnership": "Team"
   },
   "labels": {
-    "Inheritance of product ownership": "Vererbung der Eigentumsinformationen für Produkte"
+    "Inheritance of product ownership": "Vererbung der Eigentumsinformationen für Produkte",
+    "Inheritance of the product attribute value ownership": "Vererbung der Eigentumsinformationen für Produktattributwerte"
   },
   "options": {
     "assignedUserProductOwnership": {
@@ -26,6 +27,24 @@
       "fromProductFamily": "Von Produktfamilie",
       "sameAsCreator": "Gleich wie Ersteller",
       "notInherit": "Nicht vererben"
+    },
+    "assignedUserAttributeOwnership": {
+      "notInherit": "Nicht vererben\n\n",
+      "fromAttribute": "Vom Attribut",
+      "sameAsCreator": "Gleich wie Ersteller",
+      "fromProduct": "Vom Produkt"
+    },
+    "ownerUserAttributeOwnership": {
+      "notInherit": "Nicht vererben",
+      "fromAttribute": "Vom Attribut",
+      "sameAsCreator": "Gleich wie Ersteller",
+      "fromProduct": "Vom Produkt"
+    },
+    "teamsAttributeOwnership": {
+      "notInherit": "Nicht vererben",
+      "fromAttribute": "Vom Attribut",
+      "sameAsCreator": "Gleich wie Erstellerteams",
+      "fromProduct": "Vom Produkt"
     }
   }
 }

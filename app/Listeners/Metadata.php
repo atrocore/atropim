@@ -49,6 +49,8 @@ class Metadata extends \Treo\Listeners\AbstractListener
 
         $data = $this->setProductOwnershipSettings($data);
 
+        $data = $this->setProductAttributeValueSettings($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -59,28 +61,57 @@ class Metadata extends \Treo\Listeners\AbstractListener
      */
     protected function setProductOwnershipSettings(array $data): array
     {
-        if (isset($data['scopes']['Catalog']['hasAssignedUser']) && $data['scopes']['Catalog']['hasAssignedUser']) {
+        if ($data['scopes']['Catalog']['hasAssignedUser'] ?? false) {
             $data['entityDefs']['Settings']['fields']['assignedUserProductOwnership']['options'][] = 'fromCatalog';
         }
 
-        if (isset($data['scopes']['Catalog']['hasOwner']) && $data['scopes']['Catalog']['hasOwner']) {
+        if ($data['scopes']['Catalog']['hasOwner'] ?? false) {
             $data['entityDefs']['Settings']['fields']['ownerUserProductOwnership']['options'][] = 'fromCatalog';
         }
 
-        if (isset($data['scopes']['Catalog']['hasTeam']) && $data['scopes']['Catalog']['hasTeam']) {
+        if ($data['scopes']['Catalog']['hasTeam'] ?? false) {
             $data['entityDefs']['Settings']['fields']['teamsProductOwnership']['options'][] = 'fromCatalog';
         }
 
-        if (isset($data['scopes']['ProductFamily']['hasAssignedUser']) && $data['scopes']['ProductFamily']['hasAssignedUser']) {
+        if ($data['scopes']['ProductFamily']['hasAssignedUser'] ?? false) {
             $data['entityDefs']['Settings']['fields']['assignedUserProductOwnership']['options'][] = 'fromProductFamily';
         }
 
-        if (isset($data['scopes']['ProductFamily']['hasOwner']) && $data['scopes']['ProductFamily']['hasOwner']) {
+        if ($data['scopes']['ProductFamily']['hasOwner'] ?? false) {
             $data['entityDefs']['Settings']['fields']['ownerUserProductOwnership']['options'][] = 'fromProductFamily';
         }
 
-        if (isset($data['scopes']['ProductFamily']['hasTeam']) && $data['scopes']['ProductFamily']['hasTeam']) {
+        if ($data['scopes']['ProductFamily']['hasTeam'] ?? false) {
             $data['entityDefs']['Settings']['fields']['teamsProductOwnership']['options'][] = 'fromProductFamily';
+        }
+
+        return $data;
+    }
+
+    protected function setProductAttributeValueSettings(array $data): array
+    {
+        if ($data['scopes']['Attribute']['hasAssignedUser'] ?? false) {
+            $data['entityDefs']['Settings']['fields']['assignedUserAttributeOwnership']['options'][] = 'fromAttribute';
+        }
+
+        if ($data['scopes']['Attribute']['hasOwner'] ?? false) {
+            $data['entityDefs']['Settings']['fields']['ownerUserAttributeOwnership']['options'][] = 'fromAttribute';
+        }
+
+        if ($data['scopes']['Attribute']['hasTeam'] ?? false) {
+            $data['entityDefs']['Settings']['fields']['teamsAttributeOwnership']['options'][] = 'fromAttribute';
+        }
+
+        if ($data['scopes']['Product']['hasAssignedUser'] ?? false) {
+            $data['entityDefs']['Settings']['fields']['assignedUserAttributeOwnership']['options'][] = 'fromProduct';
+        }
+
+        if ($data['scopes']['Product']['hasOwner'] ?? false) {
+            $data['entityDefs']['Settings']['fields']['ownerUserAttributeOwnership']['options'][] = 'fromProduct';
+        }
+
+        if ($data['scopes']['Product']['hasTeam'] ?? false) {
+            $data['entityDefs']['Settings']['fields']['teamsAttributeOwnership']['options'][] = 'fromProduct';
         }
 
         return $data;

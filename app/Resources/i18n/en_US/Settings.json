@@ -3,10 +3,14 @@
     "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
     "assignedUserProductOwnership": "Assigned User",
     "ownerUserProductOwnership": "Owner",
-    "teamsProductOwnership": "Team"
+    "teamsProductOwnership": "Team",
+    "assignedUserAttributeOwnership": "Assigned User",
+    "ownerUserAttributeOwnership": "Owner",
+    "teamsAttributeOwnership": "Team"
   },
   "labels": {
-    "Inheritance of product ownership": "Inheritance of product ownership"
+    "Inheritance of product ownership": "Inheritance of product ownership",
+    "Inheritance of the product attribute value ownership": "Inheritance of the product attribute value ownership"
   },
   "options": {
     "assignedUserProductOwnership": {
@@ -26,6 +30,24 @@
       "fromProductFamily": "From Product Family",
       "sameAsCreator": "Same as Creator",
       "notInherit": "Not inherit"
+    },
+    "assignedUserAttributeOwnership": {
+      "notInherit": "Not inherit",
+      "fromAttribute": "From Attribute",
+      "sameAsCreator": "Same as Creator",
+      "fromProduct": "From Product"
+    },
+    "ownerUserAttributeOwnership": {
+      "notInherit": "Not inherit",
+      "fromAttribute": "From Attribute",
+      "sameAsCreator": "Same as Creator",
+      "fromProduct": "From Product"
+    },
+    "teamsAttributeOwnership": {
+      "notInherit": "Not inherit",
+      "fromAttribute": "From Attribute",
+      "sameAsCreator": "Same as Creator's Teams",
+      "fromProduct": "From Product"
     }
   }
 }

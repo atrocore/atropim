@@ -29,7 +29,73 @@
 Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit',
     Dep => Dep.extend({
 
-        fullFormDisabled: true
+        fullFormDisabled: true,
 
+        setup()
+        {
+            Dep.prototype.setup.call(this);
+
+            let config = this.getConfig(),
+                assignedUser = config.get('assignedUserAttributeOwnership'),
+                ownerUser = config.get('ownerUserAttributeOwnership'),
+                teams = config.get('teamsAttributeOwnership');
+
+            if (this.getAcl().get('assignmentPermission') !== 'no') {
+                this.setupOwnership(assignedUser, 'assignedUser');
+
+                this.setupOwnership(ownerUser, 'ownerUser');
+            }
+
+            this.setupOwnership(teams, 'teams');
+
+            this.reRender();
+        },
+
+        setupOwnership: function (param, field) {
+            switch (param) {
+                case 'fromAttribute':
+                    this.clearModel(field);
+                    this.setRelatedOwnershipInfo('Attribute', 'attributeId', field);
+                    break;
+                case 'fromProduct':
+                    this.clearModel(field);
+                    this.setRelatedOwnershipInfo('Product', 'productId', field);
+                    break;
+                case 'notInherit':
+                    this.clearModel(field);
+                    break;
+            }
+        },
+
+        clearModel: function (field) {
+            this.model.set({
+                [field + 'Id']: null,
+                [field + 'Name']: null
+            });
+        },
+
+        setRelatedOwnershipInfo: function (scope, target, field) {
+            this.listenTo(this.model, `change:${target}`, () => {
+                let id = this.model.get(target),
+                    isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
+                    idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
+                    nameField = field + (isLinkMultiple ? 'Names' : 'Name');
+
+                if (id) {
+                    this.ajaxGetRequest(`${scope}/${id}`)
+                        .then(response => {
+                            this.model.set({
+                                [idField]: response[idField],
+                                [nameField]: response[nameField]
+                            });
+                        });
+                } else {
+                    this.model.set({
+                        [idField]: null,
+                        [nameField]: null
+                    });
+                }
+            });
+        }
     })
 );
