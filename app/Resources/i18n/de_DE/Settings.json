@@ -29,7 +29,7 @@
       "notInherit": "Nicht vererben"
     },
     "assignedUserAttributeOwnership": {
-      "notInherit": "Nicht vererben\n\n",
+      "notInherit": "Nicht vererben",
       "fromAttribute": "Vom Attribut",
       "sameAsCreator": "Gleich wie Ersteller",
       "fromProduct": "Vom Produkt"
