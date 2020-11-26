@@ -234,7 +234,8 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "name"
+      "name",
+      "code"
     ]
   },
   "indexes": {
