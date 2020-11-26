@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/user-with-avatar', 'views/fields/user', function (Dep) {
+Espo.define('pim:views/fields/user-with-avatar', 'class-replace!pim:views/fields/user-with-avatar', function (Dep) {
 
     return Dep.extend({
 
