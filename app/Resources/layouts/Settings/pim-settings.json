@@ -28,5 +28,24 @@
         false
       ]
     ]
+  },
+  {
+    "label": "Inheritance of the product attribute value ownership",
+    "rows": [
+      [
+        {
+          "name": "ownerUserAttributeOwnership"
+        },
+        {
+          "name": "assignedUserAttributeOwnership"
+        }
+      ],
+      [
+        {
+          "name": "teamsAttributeOwnership"
+        },
+        false
+      ]
+    ]
   }
 ]
