@@ -24,7 +24,7 @@
     "teamsProductOwnership": {
       "fromCatalog": "From Catalog",
       "fromProductFamily": "From Product Family",
-      "sameAsCreator": "Same as Creator",
+      "sameAsCreator": "Same as Creator's Teams",
       "notInherit": "Not inherit"
     }
   }

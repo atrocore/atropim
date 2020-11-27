@@ -15,15 +15,11 @@
     "rows": [
       [
         {
-          "name": "assignedUserProductOwnership"
-        },
-        false
-      ],
-      [
-        {
           "name": "ownerUserProductOwnership"
         },
-        false
+        {
+          "name": "assignedUserProductOwnership"
+        }
       ],
       [
         {

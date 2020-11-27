@@ -36,9 +36,11 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
                 ownerUser = config.get('ownerUserProductOwnership'),
                 teams = config.get('teamsProductOwnership');
 
-            this.setupOwnership(assignedUser, 'assignedUser');
+            if (this.getAcl().get('assignmentPermission') !== 'no') {
+                this.setupOwnership(assignedUser, 'assignedUser');
 
-            this.setupOwnership(ownerUser, 'ownerUser');
+                this.setupOwnership(ownerUser, 'ownerUser');
+            }
 
             this.setupOwnership(teams, 'teams');
 

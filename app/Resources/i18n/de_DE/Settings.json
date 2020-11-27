@@ -24,7 +24,7 @@
     "teamsProductOwnership": {
       "fromCatalog": "Vom Katalog",
       "fromProductFamily": "Von Produktfamilie",
-      "sameAsCreator": "Gleich wie Ersteller",
+      "sameAsCreator": "Gleich wie Erstellerteams",
       "notInherit": "Nicht vererben"
     }
   }
