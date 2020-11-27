@@ -29,7 +29,7 @@
 Espo.define('pim:views/fields/code-from-name', 'pim:views/fields/varchar-with-pattern',
     Dep => Dep.extend({
 
-        validationPattern: '^[a-z_0-9{}\u00de-\u00ff]+$',
+        validationPattern: '^[a-z_0-9{}]+$',
 
         getPatternValidationMessage() {
             return this.translate('fieldHasPattern', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
@@ -49,8 +49,22 @@ Espo.define('pim:views/fields/code-from-name', 'pim:views/fields/varchar-with-pa
         },
 
         transformToPattern(value) {
-            return value.toLowerCase().replace(/ /g, '_').replace(/[^a-z_0-9\u00de-\u00ff]/gu, '');
-        }
+            let replacementSymbols = {
+                    \u00e4: 'ae',
+                    \u00fc: 'ue',
+                    \u00df: 'ss',
+                    \u00f6: 'oe',
+                    \u00d6: 'oe',
+                    \u00e5: 'a'
+                };
 
+            return value
+                .toLowerCase()
+                .replace(/ /g, '_')
+                .replace(new RegExp('[' + Object.keys(replacementSymbols).join('') + ']', 'gu'), function (str) {
+                    return replacementSymbols[str];
+                })
+                .replace(/[^a-z_0-9]/gu, '');
+        }
     })
 );
