@@ -15,6 +15,7 @@
         "list": "pim:views/list"
     },
     "recordViews": {
-        "list": "pim:views/record/list"
+        "list": "pim:views/record/list",
+        "detail": "pim:views/association/record/detail"
     }
 }
