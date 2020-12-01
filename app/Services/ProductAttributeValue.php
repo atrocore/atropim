@@ -59,9 +59,6 @@ class ProductAttributeValue extends AbstractService
 
         // set currency value
         if ($entity->get('attributeType') == 'currency' && empty($entity->get('data'))) {
-            if ($entity->get('value') === null) {
-                $entity->set('value', 0);
-            }
             $entity->set('data', ['currency' => $this->getConfig()->get('defaultCurrency', 'EUR')]);
         }
 
