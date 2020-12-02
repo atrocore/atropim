@@ -138,7 +138,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 if (multilangLocale !== null) {
                     if (locale !== null && locale !== '' && multilangLocale !== locale) {
                         fieldView.hide();
-                    } else if (!fieldView.$el.hasClass('hidden')) {
+                    } else if (fieldView.$el.hasClass('hidden')) {
                         fieldView.show();
                     }
                 }
@@ -150,13 +150,13 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             let isShow = (this.model.advancedEntityView || {}).showGenericFields;
 
             $.each(this.getFilterFieldViews(), (name, fieldView) => {
-                let field = fieldView.model.getFieldParam(name, 'multilangField');
-                const view = this.getFieldView(field);
+                let isMultilang = fieldView.model.getFieldParam(name, 'isMultilang') || false;
+                const view = this.getFieldView(name);
 
-                if (field !== null && view) {
-                    if (isShow && !view.$el.hasClass('hidden')) {
+                if (isMultilang === true && view) {
+                    if (isShow && view.$el.hasClass('hidden')) {
                         view.show();
-                    } else {
+                    } else if (!isShow && !view.$el.hasClass('hidden')) {
                         view.hide();
                     }
                 }
