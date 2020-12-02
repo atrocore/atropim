@@ -632,7 +632,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             // get filter
             let filter = (this.model.advancedEntityView || {}).localesFilter;
 
-            return filter !== null && filter !== '' && !fieldView.model.get('attributeIsMultilang');
+            return filter !== null
+                && filter !== ''
+                && fieldView.model.get('isLocale')
+                && fieldView.model.get('id').indexOf(filter) === -1;
         },
 
         getValueFields() {
