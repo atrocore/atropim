@@ -80,7 +80,7 @@
     },
     "channelsFilter": {
       "": "Alle Scopes",
-      "onlyGlobalScope": "Nur globaler Scope"
+      "onlyGlobalScope": "Nur Global"
     },
     "scope": {
       "Global": "Global",
