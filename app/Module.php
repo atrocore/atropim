@@ -300,7 +300,7 @@ class Module extends AbstractModule
         ];
 
         $clientDefsCategory = [
-            "sidePanels" => [
+            "sidePanels"         => [
                 "edit"        => [
                     [
                         "name"  => "image",
@@ -322,11 +322,16 @@ class Module extends AbstractModule
                         "view"  => "pim:views/product/fields/image"
                     ]
                 ]
+            ],
+            "relationshipPanels" => [
+                "assets" => [
+                    "layoutName" => "listSmallForCategory"
+                ]
             ]
         ];
 
         $clientDefsProduct = [
-            "sidePanels" => [
+            "sidePanels"         => [
                 "edit"        => [
                     [
                         "name"  => "image",
@@ -349,7 +354,12 @@ class Module extends AbstractModule
                     ]
                 ]
             ],
-            "menu"       => [
+            "relationshipPanels" => [
+                "assets" => [
+                    "layoutName" => "listSmallForProduct"
+                ]
+            ],
+            "menu"               => [
                 "list"  => [
                     "buttons" => [
                         [
@@ -412,6 +422,33 @@ class Module extends AbstractModule
             ]
         ];
 
+        $clientDefsAsset = [
+            "dynamicLogic" => [
+                "fields" => [
+                    "channel" => [
+                        "visible"  => [
+                            "conditionGroup" => [
+                                [
+                                    "type"      => "equals",
+                                    "attribute" => "scope",
+                                    'value'     => 'Channel'
+                                ]
+                            ]
+                        ],
+                        "required" => [
+                            "conditionGroup" => [
+                                [
+                                    "type"      => "equals",
+                                    "attribute" => "scope",
+                                    'value'     => 'Channel'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+        ];
+
         $entityDefsCategory = [
             "fields" => [
                 "image"  => [
@@ -447,34 +484,22 @@ class Module extends AbstractModule
 
         $entityDefsProduct = [
             "fields" => [
-                "image"      => [
+                "image"  => [
                     "type"           => "image",
                     "previewSize"    => "medium",
                     "readOnly"       => true,
                     "view"           => "pim:views/product/fields/image",
                     "importDisabled" => true
                 ],
-                "assets"     => [
+                "assets" => [
                     "type"                     => "linkMultiple",
                     "layoutDetailDisabled"     => true,
                     "layoutMassUpdateDisabled" => true,
                     "importDisabled"           => true,
                     "noLoad"                   => true,
                     'columns'                  => [
-                        'assetScope' => 'scope'
+                        'assetChannel' => 'channel'
                     ]
-                ],
-                "assetScope" => [
-                    'type'                      => 'jsonObject',
-                    'notStorable'               => true,
-                    'layoutListDisabled'        => true,
-                    'layoutListSmallDisabled'   => true,
-                    'layoutDetailDisabled'      => true,
-                    'layoutDetailSmallDisabled' => true,
-                    'layoutMassUpdateDisabled'  => true,
-                    'layoutFiltersDisabled'     => true,
-                    'importDisabled'            => true,
-                    'exportDisabled'            => true,
                 ]
             ],
             "links"  => [
@@ -485,8 +510,8 @@ class Module extends AbstractModule
                     "entity"            => "Asset",
                     "audited"           => false,
                     "additionalColumns" => [
-                        'scope' => [
-                            'type' => 'text'
+                        'channel' => [
+                            'type' => 'varchar'
                         ]
                     ],
                 ],
@@ -500,6 +525,46 @@ class Module extends AbstractModule
 
         $entityDefsAsset = [
             "fields" => [
+                "scope"      => [
+                    "type"                      => "enum",
+                    "notStorable"               => true,
+                    "prohibitedEmptyValue"      => true,
+                    "options"                   => ["Global", "Channel"],
+                    "default"                   => "Global",
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "channel"    => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "view"                      => "pim:views/asset/fields/channel",
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "entityId"   => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
                 "products"   => [
                     "type"                     => "linkMultiple",
                     "layoutDetailDisabled"     => true,
@@ -534,17 +599,14 @@ class Module extends AbstractModule
         ];
 
         $data['clientDefs']['AssociatedProduct'] = array_merge_recursive($data['clientDefs']['AssociatedProduct'], $clientDefsAssociatedProduct);
-
+        $data['clientDefs']['Asset'] = array_merge_recursive($data['clientDefs']['Asset'], $clientDefsAsset);
         $data['clientDefs']['Category'] = array_merge_recursive($data['clientDefs']['Category'], $clientDefsCategory);
         $data['clientDefs']['Product'] = array_merge_recursive($data['clientDefs']['Product'], $clientDefsProduct);
 
         $data['entityDefs']['AssociatedProduct'] = array_merge_recursive($data['entityDefs']['AssociatedProduct'], $entityDefsAssociatedProduct);
-
+        $data['entityDefs']['Asset'] = array_merge_recursive($data['entityDefs']['Asset'], $entityDefsAsset);
         $data['entityDefs']['Category'] = array_merge_recursive($data['entityDefs']['Category'], $entityDefsCategory);
         $data['entityDefs']['Product'] = array_merge_recursive($data['entityDefs']['Product'], $entityDefsProduct);
-
-        //create asset
-        $data['entityDefs']['Asset'] = array_merge_recursive($data['entityDefs']['Asset'], $entityDefsAsset);
 
         //expansion GeneralStatistics
         $data['dashlets']['GeneralStatistics']['options']['defaults']['urlMap']['productWithoutImage'] = [

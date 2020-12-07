@@ -55,6 +55,58 @@ class Product extends Base
     }
 
     /**
+     * @param Entity $entity
+     * @param array  $types
+     *
+     * @return array
+     */
+    public function findRelatedAssetsByTypes(Entity $entity, array $types): array
+    {
+        $id = $entity->get('id');
+        $types = implode("','", $types);
+
+        $sql = "SELECT a.*, r.channel
+                FROM product_asset r 
+                LEFT JOIN asset a ON a.id=r.asset_id 
+                WHERE 
+                      r.deleted=0 
+                  AND a.deleted=0 
+                  AND a.type IN ('$types') 
+                  AND r.product_id='$id' 
+                ORDER BY r.sorting ASC";
+
+        $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
+
+        return $this->prepareAssets($entity, $result);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $ids
+     *
+     * @return array
+     */
+    public function findRelatedAssetsByIds(Entity $entity, array $ids): array
+    {
+        $id = $entity->get('id');
+        $ids = implode("','", $ids);
+
+        $sql = "SELECT a.*, r.channel
+                FROM product_asset r 
+                LEFT JOIN asset a ON a.id=r.asset_id 
+                WHERE 
+                      r.deleted=0 
+                  AND a.deleted=0 
+                  AND a.id IN ('$ids')
+                  AND r.product_id_id='$id' 
+                ORDER BY r.sorting ASC";
+
+        $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
+
+        return $this->prepareAssets($entity, $result);
+    }
+
+    /**
      * @inheritDoc
      */
     public function findRelated(Entity $entity, $relationName, array $params = [])
@@ -571,6 +623,32 @@ class Product extends Base
         }
 
         return true;
+    }
+
+    protected function prepareAssets(Entity $entity, array $result): array
+    {
+        $channelsIds = array_column($result, 'channel');
+
+        $channels = [];
+        if (!empty($channelsIds)) {
+            $dbChannels = $this->getEntityManager()->getRepository('Channel')->select(['id', 'name'])->where(['id' => $channelsIds])->find()->toArray();
+            $channels = array_column($dbChannels, 'name', 'id');
+        }
+
+        foreach ($result as $k => $v) {
+            $result[$k]['entityId'] = $entity->get('id');
+            $result[$k]['scope'] = 'Global';
+            $result[$k]['channelId'] = null;
+            $result[$k]['channelName'] = 'Global';
+            if (!empty($v['channel']) && !empty($channels[$v['channel']])) {
+                $result[$k]['scope'] = 'Channel';
+                $result[$k]['channelId'] = $v['channel'];
+                $result[$k]['channelName'] = $channels[$v['channel']];
+            }
+            unset($result[$k]['channel']);
+        }
+
+        return $result;
     }
 
     /**

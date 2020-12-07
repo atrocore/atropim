@@ -1,7 +1,9 @@
 {
   "fields": {
     "categories": "Categories",
-    "products": "Products"
+    "products": "Products",
+    "scope": "Scope",
+    "channel": "Channel"
   },
   "links": {
     "categories": "Categories",
