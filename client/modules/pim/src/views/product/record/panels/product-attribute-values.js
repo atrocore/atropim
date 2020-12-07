@@ -603,8 +603,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 if (!hide) {
                     hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
                 }
-                if (!hide && fieldView.model.get('attributeIsMultilang')) {
+                if (!hide) {
                     hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
+                }
+                if (!hide) {
+                    hide = this.updateCheckByGenericFieldsFilter(fieldView);
                 }
                 this.controlRowVisibility(fieldView, name, hide);
             });
@@ -618,8 +621,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 if (currentChannelFilter === 'onlyGlobalScope') {
                     hide = fieldView.model.get('scope') !== 'Global';
                 } else {
-                    hide = (fieldView.model.get('scope') === 'Channel' && !(fieldView.model.get('channelsIds') || []).includes(currentChannelFilter));
-                    if ((fieldView.model.get('channelsIds') || []).includes(currentChannelFilter)) {
+                    hide = (fieldView.model.get('scope') !== 'Channel' || !(fieldView.model.get('channelId') || []).includes(currentChannelFilter));
+                    if ((fieldView.model.get('channelId') || []).includes(currentChannelFilter)) {
                         attributesWithChannelScope.push(fieldView.model.get('attributeId'));
                     }
                 }
@@ -629,13 +632,27 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         updateCheckByLocaleFilter(fieldView, currentFieldFilter) {
+            let hide = false;
             // get filter
             let filter = (this.model.advancedEntityView || {}).localesFilter;
 
-            return filter !== null
-                && filter !== ''
-                && fieldView.model.get('isLocale')
-                && fieldView.model.get('id').indexOf(filter) === -1;
+            if (filter !== null && filter !== ''
+                && fieldView.model.get('isLocale') && fieldView.model.get('id').indexOf(filter) === -1) {
+                hide = true;
+            }
+
+            return hide;
+        },
+
+        updateCheckByGenericFieldsFilter(fieldView) {
+            let hide = false;
+            let filter = (this.model.advancedEntityView || {}).showGenericFields;
+
+            if (!fieldView.model.get('isLocale') && !filter) {
+                hide = true;
+            }
+
+            return hide;
         },
 
         getValueFields() {
