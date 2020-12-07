@@ -447,28 +447,48 @@ class Module extends AbstractModule
 
         $entityDefsProduct = [
             "fields" => [
-                "image"  => [
+                "image"      => [
                     "type"           => "image",
                     "previewSize"    => "medium",
                     "readOnly"       => true,
                     "view"           => "pim:views/product/fields/image",
                     "importDisabled" => true
                 ],
-                "assets" => [
+                "assets"     => [
                     "type"                     => "linkMultiple",
                     "layoutDetailDisabled"     => true,
                     "layoutMassUpdateDisabled" => true,
                     "importDisabled"           => true,
-                    "noLoad"                   => true
+                    "noLoad"                   => true,
+                    'columns'                  => [
+                        'assetScope' => 'scope'
+                    ]
+                ],
+                "assetScope" => [
+                    'type'                      => 'jsonObject',
+                    'notStorable'               => true,
+                    'layoutListDisabled'        => true,
+                    'layoutListSmallDisabled'   => true,
+                    'layoutDetailDisabled'      => true,
+                    'layoutDetailSmallDisabled' => true,
+                    'layoutMassUpdateDisabled'  => true,
+                    'layoutFiltersDisabled'     => true,
+                    'importDisabled'            => true,
+                    'exportDisabled'            => true,
                 ]
             ],
             "links"  => [
                 "assets" => [
-                    "type"         => "hasMany",
-                    "relationName" => "productAsset",
-                    "foreign"      => "products",
-                    "entity"       => "Asset",
-                    "audited"      => false
+                    "type"              => "hasMany",
+                    "relationName"      => "productAsset",
+                    "foreign"           => "products",
+                    "entity"            => "Asset",
+                    "audited"           => false,
+                    "additionalColumns" => [
+                        'scope' => [
+                            'type' => 'text'
+                        ]
+                    ],
                 ],
                 "image"  => [
                     "type"        => "belongsTo",
