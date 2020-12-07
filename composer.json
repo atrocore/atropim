@@ -6,7 +6,7 @@
   "require": {
     "atrocore/core": "~1.0.60",
     "atrocore/import-feeds-common": "~1.0.0",
-    "atrocore/dam-common": "~1.0.0",
+    "atrocore/dam-common": "~1.1.0",
     "atrocore/completeness-common": "~1.0.0"
   },
   "autoload": {
