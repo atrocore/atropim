@@ -98,7 +98,7 @@ class Product extends Base
                       r.deleted=0 
                   AND a.deleted=0 
                   AND a.id IN ('$ids')
-                  AND r.product_id_id='$id' 
+                  AND r.product_id='$id' 
                 ORDER BY r.sorting ASC";
 
         $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
