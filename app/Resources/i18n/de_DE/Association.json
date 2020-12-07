@@ -2,10 +2,10 @@
   "fields": {
     "associatedProducts": "Assoziierte Produkte",
     "isActive": "Aktiv",
-    "modifiedAt": "geändert am",
-    "createdAt": "erstellt am",
-    "createdBy": "erstellt von",
-    "modifiedBy": "geändert von",
+    "modifiedAt": "Geändert am",
+    "createdAt": "Erstellt am",
+    "createdBy": "Erstellt von",
+    "modifiedBy": "Geändert von",
     "associations": "Assoziationen",
     "backwardAssociation": "Umgekehrte Assoziation",
     "code": "Code"
