@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Dam\Entities\Asset;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
@@ -43,6 +44,22 @@ class AssetEntity extends AbstractListener
     /** @var array */
     protected $hasMainImage = ['Product', 'Category'];
 
+    public function afterSave(Event $event): void
+    {
+        /** @var Asset $asset */
+        $asset = $event->getArgument('entity');
+
+        if (!empty($entityName = $asset->get('entityName')) && !empty($entityId = $asset->get('entityId')) && in_array($entityName, $this->hasMainImage)) {
+            $table = Util::toCamelCase($entityName);
+            $assetId = $asset->get('id');
+            $channelId = empty($asset->get('channelId')) || $asset->get('scope') == 'Global' ? 'NULL' : "'" . $asset->get('channelId') . "'";
+            $entityId = $asset->get('entityId');
+            $this
+                ->getEntityManager()
+                ->nativeQuery("UPDATE {$table}_asset SET channel=$channelId WHERE asset_id='$assetId' AND {$table}_id='{$entityId}' AND deleted=0");
+        }
+    }
+
     /**
      * @param Event $event
      */
@@ -53,7 +70,7 @@ class AssetEntity extends AbstractListener
             $table = Util::toCamelCase($entity);
             $this
                 ->getEntityManager()
-                ->nativeQuery('UPDATE '. $table .' SET image_id = null WHERE image_id = :id', ['id' => $fileId]);
+                ->nativeQuery('UPDATE ' . $table . ' SET image_id = null WHERE image_id = :id', ['id' => $fileId]);
         }
     }
 }

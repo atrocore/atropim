@@ -425,6 +425,16 @@ class Module extends AbstractModule
         $clientDefsAsset = [
             "dynamicLogic" => [
                 "fields" => [
+                    "scope"   => [
+                        "visible" => [
+                            "conditionGroup" => [
+                                [
+                                    "type"      => "isNotEmpty",
+                                    "attribute" => "scope"
+                                ]
+                            ]
+                        ]
+                    ],
                     "channel" => [
                         "visible"  => [
                             "conditionGroup" => [
@@ -525,6 +535,30 @@ class Module extends AbstractModule
 
         $entityDefsAsset = [
             "fields" => [
+                "entityName" => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "entityId"   => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
                 "scope"      => [
                     "type"                      => "enum",
                     "notStorable"               => true,
@@ -553,7 +587,7 @@ class Module extends AbstractModule
                     "importDisabled"            => true,
                     "exportDisabled"            => true,
                 ],
-                "entityId"   => [
+                "channelId"  => [
                     "type"                      => "varchar",
                     "notStorable"               => true,
                     "layoutDetailDisabled"      => true,

@@ -636,16 +636,17 @@ class Product extends Base
         }
 
         foreach ($result as $k => $v) {
+            $result[$k]['entityName'] = $entity->getEntityType();
             $result[$k]['entityId'] = $entity->get('id');
             $result[$k]['scope'] = 'Global';
             $result[$k]['channelId'] = null;
-            $result[$k]['channelName'] = 'Global';
+            $result[$k]['channelName'] = null;
             if (!empty($v['channel']) && !empty($channels[$v['channel']])) {
                 $result[$k]['scope'] = 'Channel';
                 $result[$k]['channelId'] = $v['channel'];
                 $result[$k]['channelName'] = $channels[$v['channel']];
             }
-            unset($result[$k]['channel']);
+            $result[$k]['channel'] = '-';
         }
 
         return $result;
