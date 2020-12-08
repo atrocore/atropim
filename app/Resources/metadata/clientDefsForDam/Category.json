@@ -1,0 +1,30 @@
+{
+  "relationshipPanels": {
+    "assets": {
+      "layoutName": "listSmallForCategory"
+    }
+  },
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "image",
+        "label": "Category Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "image",
+        "label": "Category Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ],
+    "detailSmall": [
+      {
+        "name": "image",
+        "label": "Category Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ]
+  }
+}

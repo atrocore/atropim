@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "mainProductImage": {
+      "type": "image",
+      "previewSize": "small",
+      "readOnly": true,
+      "notStorable": true,
+      "view": "pim:views/fields/full-width-list-image"
+    },
+    "relatedProductImage": {
+      "type": "image",
+      "previewSize": "small",
+      "readOnly": true,
+      "notStorable": true,
+      "view": "pim:views/fields/full-width-list-image"
+    }
+  }
+}

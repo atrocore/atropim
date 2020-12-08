@@ -1,0 +1,36 @@
+{
+  "dynamicLogic": {
+    "fields": {
+      "scope": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "scope"
+            }
+          ]
+        }
+      },
+      "channel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "scope",
+              "value": "Channel"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "scope",
+              "value": "Channel"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

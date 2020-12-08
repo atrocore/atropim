@@ -1,0 +1,16 @@
+{
+  "options": {
+    "defaults": {
+      "urlMap": {
+        "productWithoutAssociatedProduct": {
+          "url": "#Product",
+          "options": {
+            "boolFilterList": [
+              "withoutImageAssets"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
