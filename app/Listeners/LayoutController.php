@@ -61,7 +61,29 @@ class LayoutController extends AbstractListener
         } else if ($isAdminPage && method_exists($this, $methodAdmin)) {
             $this->{$methodAdmin}($event);
         }
+    }
 
+    /**
+     * @param Event $event
+     */
+    protected function modifyAssetDetailSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+        $result[0]['rows'][] = [['name' => 'scope'], ['name' => 'channel']];
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyAssetListSmallForProduct(Event $event): void
+    {
+        $data = Json::decode($this->getContainer()->get('layout')->get('Asset', 'listSmall'), true);
+        $data[] = ['name' => 'channel'];
+
+        $event->setArgument('result', Json::encode($data));
+    }
+
+    protected function modifyAssetListSmallForCategory(Event $event): void
+    {
+        $this->modifyAssetListSmallForProduct($event);
     }
 
     /**

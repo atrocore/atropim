@@ -1,7 +1,9 @@
 {
   "fields": {
     "categories": "Kategorien",
-    "products": "Produkte"
+    "products": "Produkte",
+    "scope": "Scope",
+    "channel": "Kanal"
   },
   "links": {
     "categories": "Kategorien",
