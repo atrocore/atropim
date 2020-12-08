@@ -266,11 +266,11 @@ class Module extends AbstractModule
     }
 
     /**
-     * @param $data
+     * @param array $data
      *
      * @return array
      */
-    protected function addImage($data): array
+    protected function addImage(array $data): array
     {
         $data['dashlets'] = array_merge_recursive($data['dashlets'], $data['dashletsForDam']);
         $data['clientDefs'] = array_merge_recursive($data['clientDefs'], $data['clientDefsForDam']);
