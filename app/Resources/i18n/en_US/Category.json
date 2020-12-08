@@ -4,6 +4,7 @@
     "description": "Description",
     "code": "Code",
     "isActive": "Active",
+    "assets": "Assets",
     "categoryParent": "Parent Category",
     "categories": "Categories",
     "channels": "Channels",
@@ -16,6 +17,7 @@
   "links": {
     "categoryParent": "Parent Category",
     "categories": "Categories",
+    "assets": "Assets",
     "channels": "Channels",
     "catalogs": "Catalogs",
     "productCategories": "Category Products"

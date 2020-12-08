@@ -32,14 +32,53 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 /**
  * Class Category
  */
-class Category extends Base
+class Category extends AbstractRepository
 {
+    public function findRelatedAssetsByTypes(Entity $entity, array $types): array
+    {
+        $id = $entity->get('id');
+        $types = implode("','", $types);
+
+        $sql = "SELECT a.*, r.channel
+                FROM category_asset r 
+                LEFT JOIN asset a ON a.id=r.asset_id 
+                WHERE 
+                      r.deleted=0 
+                  AND a.deleted=0 
+                  AND a.type IN ('$types') 
+                  AND r.category_id='$id' 
+                ORDER BY r.sorting ASC";
+
+        $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
+
+        return $this->prepareAssets($entity, $result);
+    }
+
+    public function findRelatedAssetsByIds(Entity $entity, array $ids): array
+    {
+        $id = $entity->get('id');
+        $ids = implode("','", $ids);
+
+        $sql = "SELECT a.*, r.channel
+                FROM category_asset r 
+                LEFT JOIN asset a ON a.id=r.asset_id 
+                WHERE 
+                      r.deleted=0 
+                  AND a.deleted=0 
+                  AND a.id IN ('$ids')
+                  AND r.category_id='$id' 
+                ORDER BY r.sorting ASC";
+
+        $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
+
+        return $this->prepareAssets($entity, $result);
+    }
+
     /**
      * @param $category
      * @param $catalog

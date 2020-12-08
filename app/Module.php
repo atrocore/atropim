@@ -461,19 +461,86 @@ class Module extends AbstractModule
 
         $entityDefsCategory = [
             "fields" => [
-                "image"  => [
+                "entityName" => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "entityId"   => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "scope"      => [
+                    "type"                      => "enum",
+                    "notStorable"               => true,
+                    "prohibitedEmptyValue"      => true,
+                    "options"                   => ["Global", "Channel"],
+                    "default"                   => "Global",
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "channel"    => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "view"                      => "pim:views/asset/fields/channel",
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "channelId"  => [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutMassUpdateDisabled"  => true,
+                    "layoutFiltersDisabled"     => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                ],
+                "image"      => [
                     "type"           => "image",
                     "previewSize"    => "medium",
                     "readOnly"       => true,
                     "view"           => "pim:views/product/fields/image",
                     "importDisabled" => true
                 ],
-                "assets" => [
+                "assets"     => [
                     "type"                     => "linkMultiple",
                     "layoutDetailDisabled"     => true,
                     "layoutMassUpdateDisabled" => true,
                     "importDisabled"           => true,
-                    "noLoad"                   => true
+                    "noLoad"                   => true,
+                    'columns'                  => [
+                        'assetChannel' => 'channel'
+                    ]
                 ]
             ],
             "links"  => [
@@ -483,11 +550,16 @@ class Module extends AbstractModule
                     "skipOrmDefs" => true
                 ],
                 "assets" => [
-                    "type"         => "hasMany",
-                    "relationName" => "categoryAsset",
-                    "foreign"      => "categories",
-                    "entity"       => "Asset",
-                    "audited"      => false
+                    "type"              => "hasMany",
+                    "relationName"      => "categoryAsset",
+                    "foreign"           => "categories",
+                    "entity"            => "Asset",
+                    "audited"           => false,
+                    "additionalColumns" => [
+                        'channel' => [
+                            'type' => 'varchar'
+                        ]
+                    ],
                 ]
             ]
         ];

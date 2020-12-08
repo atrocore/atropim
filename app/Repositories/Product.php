@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
-use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
@@ -44,7 +43,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class Product
  */
-class Product extends Base
+class Product extends AbstractRepository
 {
     /**
      * @return array
@@ -54,12 +53,6 @@ class Product extends Base
         return $this->getConfig()->get('inputLanguageList', []);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $types
-     *
-     * @return array
-     */
     public function findRelatedAssetsByTypes(Entity $entity, array $types): array
     {
         $id = $entity->get('id');
@@ -80,12 +73,6 @@ class Product extends Base
         return $this->prepareAssets($entity, $result);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $ids
-     *
-     * @return array
-     */
     public function findRelatedAssetsByIds(Entity $entity, array $ids): array
     {
         $id = $entity->get('id');
@@ -623,33 +610,6 @@ class Product extends Base
         }
 
         return true;
-    }
-
-    protected function prepareAssets(Entity $entity, array $result): array
-    {
-        $channelsIds = array_column($result, 'channel');
-
-        $channels = [];
-        if (!empty($channelsIds)) {
-            $dbChannels = $this->getEntityManager()->getRepository('Channel')->select(['id', 'name'])->where(['id' => $channelsIds])->find()->toArray();
-            $channels = array_column($dbChannels, 'name', 'id');
-        }
-
-        foreach ($result as $k => $v) {
-            $result[$k]['entityName'] = $entity->getEntityType();
-            $result[$k]['entityId'] = $entity->get('id');
-            $result[$k]['scope'] = 'Global';
-            $result[$k]['channelId'] = null;
-            $result[$k]['channelName'] = null;
-            if (!empty($v['channel']) && !empty($channels[$v['channel']])) {
-                $result[$k]['scope'] = 'Channel';
-                $result[$k]['channelId'] = $v['channel'];
-                $result[$k]['channelName'] = $channels[$v['channel']];
-            }
-            $result[$k]['channel'] = '-';
-        }
-
-        return $result;
     }
 
     /**
