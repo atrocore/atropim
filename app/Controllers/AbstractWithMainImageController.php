@@ -27,13 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
-
 namespace Pim\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Slim\Http\Request;
+
 /**
- * Controller Category
+ * Class AbstractWithMainImageController
  */
-class Category extends AbstractWithMainImageController
+abstract class AbstractWithMainImageController extends AbstractController
 {
+    /**
+     * @param array     $params
+     * @param \stdClass $data
+     * @param Request   $request
+     *
+     * @return array
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function actionSetAsMainImage(array $params, \stdClass $data, Request $request): array
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if (empty($data->assetId) || empty($data->entityId)) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->setAsMainImage($data->assetId, $data->entityId);
+    }
 }

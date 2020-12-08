@@ -68,9 +68,7 @@ class AssetEntity extends AbstractListener
         $fileId = $event->getArgument('entity')->get('fileId');
         foreach ($this->hasMainImage as $entity) {
             $table = Util::toCamelCase($entity);
-            $this
-                ->getEntityManager()
-                ->nativeQuery('UPDATE ' . $table . ' SET image_id = null WHERE image_id = :id', ['id' => $fileId]);
+            $this->getEntityManager()->nativeQuery("UPDATE $table SET image_id=null WHERE image_id='$fileId'");
         }
     }
 }

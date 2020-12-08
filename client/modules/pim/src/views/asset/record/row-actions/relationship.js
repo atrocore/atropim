@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,13 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row-actions/relationship-no-remove', function (Dep) {
 
-namespace Pim\Controllers;
+    return Dep.extend({
 
-/**
- * Controller Category
- */
-class Category extends AbstractWithMainImageController
-{
-}
+        getActionList: function () {
+            let list = Dep.prototype.getActionList.call(this);
+
+            if (this.getMetadata().get(`fields.asset.typeNatures.${this.model.get('type')}`, 'File') === 'Image' && !this.model.get('channelId')) {
+                list.unshift({
+                    action: 'setAsMainImage',
+                    label: this.translate('Set as Main Image', 'labels', 'Asset'),
+                    data: {
+                        asset_id: this.model.id,
+                        entity_id: this.model.get('entityId'),
+                        entity_name: this.model.get('entityName'),
+                    }
+                });
+            }
+
+            return list;
+        }
+    });
+
+});
+

@@ -8,5 +8,8 @@
   "links": {
     "categories": "Categories",
     "products": "Products"
+  },
+  "labels": {
+    "Set as Main Image": "Set as Main Image"
   }
 }

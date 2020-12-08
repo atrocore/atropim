@@ -31,11 +31,10 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Dam\Entities\Asset;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Base;
-use Espo\ORM\Entity;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
 
 /**
  * Class of AbstractService
@@ -46,6 +45,35 @@ abstract class AbstractService extends Base
      * @var string
      */
     protected $linkWhereNeedToUpdateChannel = '';
+
+    /**
+     * @param string $assetId
+     * @param string $entityId
+     *
+     * @return array
+     * @throws NotFound
+     */
+    public function setAsMainImage(string $assetId, string $entityId): array
+    {
+        /** @var Asset $asset */
+        $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
+        if (empty($asset)) {
+            throw new NotFound();
+        }
+
+        $entity = $this->getRepository()->get($entityId);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        $entity->set('imageId', $asset->get('fileId'));
+        $this->getEntityManager()->saveEntity($entity);
+
+        return [
+            'imageId'   => $asset->get('fileId'),
+            'imageName' => $asset->get('name')
+        ];
+    }
 
     /**
      * @inheritDoc

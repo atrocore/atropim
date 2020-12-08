@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,13 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/asset/record/panels/asset-type-block', 'dam:views/asset/record/panels/asset-type-block',
+    Dep => Dep.extend({
 
-namespace Pim\Controllers;
+        rowActionsView: 'pim:views/asset/record/row-actions/relationship',
 
-/**
- * Controller Category
- */
-class Category extends AbstractWithMainImageController
-{
-}
+    })
+);

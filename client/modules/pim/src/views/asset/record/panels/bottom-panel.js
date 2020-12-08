@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,13 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/record/panels/bottom-panel',
+    Dep => Dep.extend({
 
-namespace Pim\Controllers;
+        actionSetAsMainImage: function (data) {
+            this.notify('Saving...');
+            this.ajaxPostRequest(`${data.entity_name}/action/SetAsMainImage`, {
+                entityId: data.entity_id,
+                assetId: data.asset_id
+            }).then(response => {
+                this.notify('Saved', 'success');
 
-/**
- * Controller Category
- */
-class Category extends AbstractWithMainImageController
-{
-}
+                this.model.set('imageId', response.imageId);
+                this.model.set('imageName', response.imageName);
+            });
+        }
+
+    })
+);
