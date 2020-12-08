@@ -7,44 +7,12 @@
   },
   "labels": {
     "Inheritance of product ownership": "Vererbung der Eigentumsinformationen für Produkte",
-    "Inheritance of the product attribute value ownership": "Vererbung der Eigentumsinformationen für Produktattributwerte"
-  },
-  "options": {
-    "assignedUserProductOwnership": {
-      "fromCatalog": "Vom Katalog",
-      "fromProductFamily": "Von Produktfamilie",
-      "sameAsCreator": "Gleich wie Ersteller",
-      "notInherit": "Nicht vererben"
-    },
-    "ownerUserProductOwnership": {
-      "fromCatalog": "Vom Katalog",
-      "fromProductFamily": "Von Produktfamilie",
-      "sameAsCreator": "Gleich wie Ersteller",
-      "notInherit": "Nicht vererben"
-    },
-    "teamsProductOwnership": {
-      "fromCatalog": "Vom Katalog",
-      "fromProductFamily": "Von Produktfamilie",
-      "sameAsCreator": "Gleich wie Erstellerteams",
-      "notInherit": "Nicht vererben"
-    },
-    "assignedUserAttributeOwnership": {
-      "notInherit": "Nicht vererben",
-      "fromAttribute": "Vom Attribut",
-      "sameAsCreator": "Gleich wie Ersteller",
-      "fromProduct": "Vom Produkt"
-    },
-    "ownerUserAttributeOwnership": {
-      "notInherit": "Nicht vererben",
-      "fromAttribute": "Vom Attribut",
-      "sameAsCreator": "Gleich wie Ersteller",
-      "fromProduct": "Vom Produkt"
-    },
-    "teamsAttributeOwnership": {
-      "notInherit": "Nicht vererben",
-      "fromAttribute": "Vom Attribut",
-      "sameAsCreator": "Gleich wie Erstellerteams",
-      "fromProduct": "Vom Produkt"
-    }
+    "Inheritance of the product attribute value ownership": "Vererbung der Eigentumsinformationen für Produktattributwerte",
+    "fromCatalog": "Vom Katalog",
+    "fromProductFamily": "Von Produktfamilie",
+    "fromProduct": "Vom Produkt",
+    "fromAttribute": "Vom Attribut",
+    "sameAsCreator": "Gleich wie Ersteller",
+    "notInherit": "Nicht vererben"
   }
 }

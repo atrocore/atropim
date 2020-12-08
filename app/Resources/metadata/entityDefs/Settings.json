@@ -22,7 +22,6 @@
     "teamsProductOwnership": {
       "type": "enum",
       "options": [
-        "sameAsCreator",
         "notInherit"
       ],
       "default": "sameAsCreator"
