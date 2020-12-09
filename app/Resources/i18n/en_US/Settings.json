@@ -10,44 +10,12 @@
   },
   "labels": {
     "Inheritance of product ownership": "Inheritance of product ownership",
-    "Inheritance of the product attribute value ownership": "Inheritance of the product attribute value ownership"
-  },
-  "options": {
-    "assignedUserProductOwnership": {
-      "fromCatalog": "From Catalog",
-      "fromProductFamily": "From Product Family",
-      "sameAsCreator": "Same as Creator",
-      "notInherit": "Not inherit"
-    },
-    "ownerUserProductOwnership": {
-      "fromCatalog": "From Catalog",
-      "fromProductFamily": "From Product Family",
-      "sameAsCreator": "Same as Creator",
-      "notInherit": "Not inherit"
-    },
-    "teamsProductOwnership": {
-      "fromCatalog": "From Catalog",
-      "fromProductFamily": "From Product Family",
-      "sameAsCreator": "Same as Creator's Teams",
-      "notInherit": "Not inherit"
-    },
-    "assignedUserAttributeOwnership": {
-      "notInherit": "Not inherit",
-      "fromAttribute": "From Attribute",
-      "sameAsCreator": "Same as Creator",
-      "fromProduct": "From Product"
-    },
-    "ownerUserAttributeOwnership": {
-      "notInherit": "Not inherit",
-      "fromAttribute": "From Attribute",
-      "sameAsCreator": "Same as Creator",
-      "fromProduct": "From Product"
-    },
-    "teamsAttributeOwnership": {
-      "notInherit": "Not inherit",
-      "fromAttribute": "From Attribute",
-      "sameAsCreator": "Same as Creator's Teams",
-      "fromProduct": "From Product"
-    }
+    "Inheritance of the product attribute value ownership": "Inheritance of the product attribute value ownership",
+    "fromCatalog": "From Catalog",
+    "fromProductFamily": "From Product Family",
+    "fromAttribute": "From Attribute",
+    "fromProduct": "From Product",
+    "sameAsCreator": "Same as Creator",
+    "notInherit": "Not inherit"
   }
 }
