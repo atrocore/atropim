@@ -111,13 +111,13 @@
         "notReady",
         "ready"
       ],
-      "optionColors": {
-        "draft": "00BFFF",
-        "prepared": "004DFF",
-        "reviewed": "800080",
-        "notReady": "FF0000",
-        "ready": "00FF00"
-      },
+      "optionColors": [
+        "00BFFF",
+        "004DFF",
+        "800080",
+        "FF0000",
+        "00FF00"
+      ],
       "default": "draft"
     },
     "currency": {
