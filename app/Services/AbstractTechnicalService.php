@@ -83,7 +83,7 @@ class AbstractTechnicalService extends AbstractService
         // check data
         foreach ($requiredParams as $field) {
             if (empty($data[$field])) {
-                $message = $this->getTranslate('notValid', 'exceptions', 'AbstractTechnical');
+                $message = $this->getTranslate('notValid', 'exceptions', 'Global');
                 throw new Exceptions\BadRequest($message);
             }
         }
