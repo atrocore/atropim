@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -64,5 +65,28 @@ abstract class AbstractRepository extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * @param Entity        $entity
+     * @param Entity|string $foreign
+     * @param array         $options
+     *
+     * @throws Error
+     */
+    protected function afterUnrelateAssets($entity, $foreign, $options): void
+    {
+        if (!in_array($entity->getEntityType(), ['Product', 'Category'])) {
+            return;
+        }
+
+        if (is_string($foreign)) {
+            $foreign = $this->getEntityManager()->getEntity('Asset', $foreign);
+        }
+
+        if ($entity->get('imageId') === $foreign->get('fileId')) {
+            $entity->set('imageId', null);
+            $this->getEntityManager()->saveEntity($entity);
+        }
     }
 }
