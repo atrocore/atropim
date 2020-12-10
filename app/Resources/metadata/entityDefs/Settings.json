@@ -24,7 +24,7 @@
       "options": [
         "notInherit"
       ],
-      "default": "sameAsCreator"
+      "default": "notInherit"
     },
     "assignedUserAttributeOwnership": {
       "type": "enum",
