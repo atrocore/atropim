@@ -444,6 +444,8 @@ class Product extends Base
 
         // parent action
         parent::afterSave($entity, $options);
+
+        $this->chnageProductAttributeValueOwnership($entity);
     }
 
     /**
@@ -571,6 +573,41 @@ class Product extends Base
         }
 
         return true;
+    }
+
+    /**
+     * @param Entity $entity
+     */
+    protected function chnageProductAttributeValueOwnership(Entity $entity)
+    {
+        if ($entity->isAttributeChanged('assignedUserId') || $entity->isAttributeChanged('ownerUserId')) {
+            $assignedUserOwnership = $this->getConfig()->get('assignedUserAttributeOwnership', '');
+            $ownerUserOwnership = $this->getConfig()->get('ownerUserAttributeOwnership', '');
+
+            if ($assignedUserOwnership == 'fromProduct' || $ownerUserOwnership == 'fromProduct') {
+                foreach ($entity->get('productAttributeValues') as $attribute) {
+                    $toSave = false;
+
+                    if ($assignedUserOwnership == 'fromProduct'
+                        && ($attribute->get('assignedUserId') == null || $attribute->get('assignedUserId') == $entity->getFetched('assignedUserId'))) {
+                        $attribute->set('assignedUserId', $entity->get('assignedUserId'));
+                        $attribute->set('assignedUserName', $entity->get('assignedUserName'));
+                        $toSave = true;
+                    }
+
+                    if ($ownerUserOwnership == 'fromProduct'
+                        && ($attribute->get('ownerUserId') == null || $attribute->get('ownerUserId') == $entity->getFetched('ownerUserId'))) {
+                        $attribute->set('ownerUserId', $entity->get('ownerUserId'));
+                        $attribute->set('ownerUserName', $entity->get('ownerUserName'));
+                        $toSave = true;
+                    }
+
+                    if ($toSave) {
+                        $this->getEntityManager()->saveEntity($attribute, ['skipAll' => true]);
+                    }
+                }
+            }
+        }
     }
 
     /**

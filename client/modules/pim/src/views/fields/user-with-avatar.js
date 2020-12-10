@@ -35,12 +35,20 @@ Espo.define('pim:views/fields/user-with-avatar', 'class-replace!pim:views/fields
                 return this.getConfig().get('ownerUserProductOwnership') === 'sameAsCreator';
             }
 
+            if (this.model.name === 'ProductAttributeValue'){
+                return this.getConfig().get('ownerUserProductOwnership') === 'sameAsCreator';
+            }
+
             return true;
         },
 
         setDefaultAssignedUser: function () {
             if (this.model.name === 'Product'){
-                return this.getConfig().get('assignedUserProductOwnership') === 'sameAsCreator';
+                return this.getConfig().get('assignedUserAttributeOwnership') === 'sameAsCreator';
+            }
+
+            if (this.model.name === 'ProductAttributeValue'){
+                return this.getConfig().get('ownerUserAttributeOwnership') === 'sameAsCreator';
             }
 
             return true;

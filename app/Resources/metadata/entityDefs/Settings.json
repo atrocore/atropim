@@ -46,10 +46,9 @@
     "teamsAttributeOwnership": {
       "type": "enum",
       "options": [
-        "sameAsCreator",
         "notInherit"
       ],
-      "default": "sameAsCreator"
+      "default": "notInherit"
     }
   }
 }

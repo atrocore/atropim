@@ -93,6 +93,43 @@ class Attribute extends Base
     /**
      * @inheritDoc
      */
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isAttributeChanged('assignedUserId') || $entity->isAttributeChanged('ownerUserId')) {
+            $assignedUserOwnership = $this->getConfig()->get('assignedUserAttributeOwnership', '');
+            $ownerUserOwnership = $this->getConfig()->get('ownerUserAttributeOwnership', '');
+
+            if ($assignedUserOwnership == 'fromAttribute' || $ownerUserOwnership == 'fromAttribute') {
+                foreach ($entity->get('productAttributeValues') as $attribute) {
+                    $toSave = false;
+
+                    if ($assignedUserOwnership == 'fromAttribute'
+                        && ($attribute->get('assignedUserId') == null || $attribute->get('assignedUserId') == $entity->getFetched('assignedUserId'))) {
+                        $attribute->set('assignedUserId', $entity->get('assignedUserId'));
+                        $attribute->set('assignedUserName', $entity->get('assignedUserName'));
+                        $toSave = true;
+                    }
+
+                    if ($ownerUserOwnership == 'fromAttribute'
+                        && ($attribute->get('ownerUserId') == null || $attribute->get('ownerUserId') == $entity->getFetched('ownerUserId'))) {
+                        $attribute->set('ownerUserId', $entity->get('ownerUserId'));
+                        $attribute->set('ownerUserName', $entity->get('ownerUserName'));
+                        $toSave = true;
+                    }
+
+                    if ($toSave) {
+                        $this->getEntityManager()->saveEntity($attribute, ['skipAll' => true]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function max($field)
     {
         $data = $this
