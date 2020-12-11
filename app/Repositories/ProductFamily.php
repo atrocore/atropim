@@ -32,14 +32,33 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 /**
  * Class ProductFamily
  */
-class ProductFamily extends Base
+class ProductFamily extends AbstractRepository
 {
+    /**
+     * @var string
+     */
+    protected $ownership = 'fromProductFamily';
+
+    /**
+     * @var string
+     */
+    protected $ownershipRelation = 'products';
+
+    /**
+     * @var string
+     */
+    protected $assignedUserOwnership = 'assignedUserProductOwnership';
+
+    /**
+     * @var string
+     */
+    protected $ownerUserOwnership = 'ownerUserProductOwnership';
+
     /**
      * @inheritDoc
      */
