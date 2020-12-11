@@ -31,14 +31,33 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 /**
  * Catalog repository
  */
-class Catalog extends Base
+class Catalog extends AbstractRepository
 {
+    /**
+     * @var string
+     */
+    protected $ownership = 'fromCatalog';
+
+    /**
+     * @var string
+     */
+    protected $ownershipRelation = 'products';
+
+    /**
+     * @var string
+     */
+    protected $assignedUserOwnership = 'assignedUserProductOwnership';
+
+    /**
+     * @var string
+     */
+    protected $ownerUserOwnership = 'ownerUserProductOwnership';
+
     /**
      * @inheritDoc
      */
@@ -51,42 +70,5 @@ class Catalog extends Base
 
         // remove catalog products
         $this->getEntityManager()->nativeQuery("UPDATE product SET deleted=1 WHERE catalog_id='$id'");
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->isAttributeChanged('assignedUserId') || $entity->isAttributeChanged('ownerUserId')) {
-            $assignedUserOwnership = $this->getConfig()->get('assignedUserProductOwnership', '');
-            $ownerUserOwnership = $this->getConfig()->get('ownerUserProductOwnership', '');
-
-            if ($assignedUserOwnership == 'fromCatalog' || $ownerUserOwnership == 'fromCatalog') {
-                foreach ($entity->get('products') as $product) {
-                    $toSave = false;
-
-                    if ($assignedUserOwnership == 'fromCatalog'
-                        && ($product->get('assignedUserId') == null || $product->get('assignedUserId') == $entity->getFetched('assignedUserId'))) {
-                        $product->set('assignedUserId', $entity->get('assignedUserId'));
-                        $product->set('assignedUserName', $entity->get('assignedUserName'));
-                        $toSave = true;
-                    }
-
-                    if ($ownerUserOwnership == 'fromCatalog'
-                        && ($product->get('ownerUserId') == null || $product->get('ownerUserId') == $entity->getFetched('ownerUserId'))) {
-                        $product->set('ownerUserId', $entity->get('ownerUserId'));
-                        $product->set('ownerUserName', $entity->get('ownerUserName'));
-                        $toSave = true;
-                    }
-
-                    if ($toSave) {
-                        $this->getEntityManager()->saveEntity($product, ['skipAll' => true]);
-                    }
-                }
-            }
-        }
     }
 }
