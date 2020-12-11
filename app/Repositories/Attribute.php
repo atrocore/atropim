@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
@@ -41,8 +40,28 @@ use Treo\Core\Utils\Util;
 /**
  * Class Attribute
  */
-class Attribute extends Base
+class Attribute extends AbstractRepository
 {
+    /**
+     * @var string
+     */
+    protected $ownership = 'fromAttribute';
+
+    /**
+     * @var string
+     */
+    protected $ownershipRelation = 'productAttributeValues';
+
+    /**
+     * @var string
+     */
+    protected $assignedUserOwnership = 'assignedUserAttributeOwnership';
+
+    /**
+     * @var string
+     */
+    protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
+
     /**
      * @inheritdoc
      */
@@ -88,43 +107,6 @@ class Attribute extends Base
 
         // call parent action
         parent::beforeSave($entity, $options);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->isAttributeChanged('assignedUserId') || $entity->isAttributeChanged('ownerUserId')) {
-            $assignedUserOwnership = $this->getConfig()->get('assignedUserAttributeOwnership', '');
-            $ownerUserOwnership = $this->getConfig()->get('ownerUserAttributeOwnership', '');
-
-            if ($assignedUserOwnership == 'fromAttribute' || $ownerUserOwnership == 'fromAttribute') {
-                foreach ($entity->get('productAttributeValues') as $attribute) {
-                    $toSave = false;
-
-                    if ($assignedUserOwnership == 'fromAttribute'
-                        && ($attribute->get('assignedUserId') == null || $attribute->get('assignedUserId') == $entity->getFetched('assignedUserId'))) {
-                        $attribute->set('assignedUserId', $entity->get('assignedUserId'));
-                        $attribute->set('assignedUserName', $entity->get('assignedUserName'));
-                        $toSave = true;
-                    }
-
-                    if ($ownerUserOwnership == 'fromAttribute'
-                        && ($attribute->get('ownerUserId') == null || $attribute->get('ownerUserId') == $entity->getFetched('ownerUserId'))) {
-                        $attribute->set('ownerUserId', $entity->get('ownerUserId'));
-                        $attribute->set('ownerUserName', $entity->get('ownerUserName'));
-                        $toSave = true;
-                    }
-
-                    if ($toSave) {
-                        $this->getEntityManager()->saveEntity($attribute, ['skipAll' => true]);
-                    }
-                }
-            }
-        }
     }
 
     /**
