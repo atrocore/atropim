@@ -11,7 +11,7 @@ use Espo\ORM\Entity;
  * Class AbstractRepository
  * @package Pim\Repositories
  */
-class AbstractRepository extends Base
+abstract class AbstractRepository extends Base
 {
     /**
      * @var string
