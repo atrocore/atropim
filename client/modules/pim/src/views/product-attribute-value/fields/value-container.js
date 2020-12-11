@@ -89,7 +89,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 let fieldDefs = {
                     type: type,
                     options: typeValue,
-                    view: type !== 'bool' ? this.getFieldManager().getViewName(type) : 'pim:views/fields/bool-required',
+                    view: this.getFieldManager().getViewName(type),
                     required: !!this.model.get('isRequired')
                 };
 
