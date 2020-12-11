@@ -44,9 +44,10 @@ class Category extends AbstractRepository
         $id = $entity->get('id');
         $types = implode("','", $types);
 
-        $sql = "SELECT a.*, r.channel
+        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName
                 FROM category_asset r 
-                LEFT JOIN asset a ON a.id=r.asset_id 
+                LEFT JOIN asset a ON a.id=r.asset_id
+                LEFT JOIN attachment at ON at.id=a.file_id 
                 WHERE 
                       r.deleted=0 
                   AND a.deleted=0 
@@ -64,9 +65,10 @@ class Category extends AbstractRepository
         $id = $entity->get('id');
         $ids = implode("','", $ids);
 
-        $sql = "SELECT a.*, r.channel
+        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName
                 FROM category_asset r 
-                LEFT JOIN asset a ON a.id=r.asset_id 
+                LEFT JOIN asset a ON a.id=r.asset_id
+                LEFT JOIN attachment at ON at.id=a.file_id 
                 WHERE 
                       r.deleted=0 
                   AND a.deleted=0 
