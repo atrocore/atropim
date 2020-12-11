@@ -31,14 +31,33 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 /**
  * Catalog repository
  */
-class Catalog extends Base
+class Catalog extends AbstractRepository
 {
+    /**
+     * @var string
+     */
+    protected $ownership = 'fromCatalog';
+
+    /**
+     * @var string
+     */
+    protected $ownershipRelation = 'products';
+
+    /**
+     * @var string
+     */
+    protected $assignedUserOwnership = 'assignedUserProductOwnership';
+
+    /**
+     * @var string
+     */
+    protected $ownerUserOwnership = 'ownerUserProductOwnership';
+
     /**
      * @inheritDoc
      */
