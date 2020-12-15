@@ -11,25 +11,6 @@
     ]
   },
   {
-    "label": "Inheritance of product ownership",
-    "rows": [
-      [
-        {
-          "name": "ownerUserProductOwnership"
-        },
-        {
-          "name": "assignedUserProductOwnership"
-        }
-      ],
-      [
-        {
-          "name": "teamsProductOwnership"
-        },
-        false
-      ]
-    ]
-  },
-  {
     "label": "Inheritance of the product attribute value ownership",
     "rows": [
       [

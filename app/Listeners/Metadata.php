@@ -47,11 +47,50 @@ class Metadata extends \Treo\Listeners\AbstractListener
     {
         $data = $event->getArgument('data');
 
-        $data = $this->setProductOwnershipSettings($data);
+        $data = $this->productOwnership($data);
 
         $data = $this->setProductAttributeValueSettings($data);
 
         $event->setArgument('data', $data);
+    }
+
+    protected function productOwnership(array $data): array
+    {
+        if ($data['scopes']['Product']['hasAssignedUser']) {
+            $data['entityDefs']['Settings']['fields']["assignedUserProductOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['Product']['hasOwner']) {
+            $data['entityDefs']['Settings']['fields']["ownerUserProductOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['Product']['hasTeam']) {
+            $data['entityDefs']['Settings']['fields']["teamsProductOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "notInherit"
+                ],
+                "default"   =>  "notInherit"
+            ];
+        }
+
+        $data = $this->setProductOwnershipSettings($data);
+
+        return $data;
     }
 
     /**
