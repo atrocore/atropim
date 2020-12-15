@@ -138,4 +138,59 @@ class LayoutController extends AbstractListener
         }
         $event->setArgument('result', Json::encode($result));
     }
+
+    /**
+     * @param Event $event
+     */
+    protected function modifySettingsPimSettingsAdmin(Event $event)
+    {
+        /** @var array $result */
+        $result = Json::decode($event->getArgument('result'), true);
+
+        $result = $this->generatePimSettingsPanel($result, 'Inheritance of product ownership', [
+            'ownerUserProductOwnership',
+            'assignedUserProductOwnership',
+            'teamsProductOwnership'
+        ]);
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    /**
+     * @param array $layout
+     * @param string $label
+     * @param array $fields
+     *
+     * @return array
+     */
+    protected function generatePimSettingsPanel(array $layout, string $label, array $fields): array
+    {
+        $panel = [
+            'label' => $label,
+            'rows' => []
+        ];
+
+        $metadataFields = array_keys($this->getMetadata()->get(['entityDefs', 'Settings', 'fields']));
+        $row = [];
+
+        foreach ($fields as $key => $field) {
+            if (in_array($field, $metadataFields)) {
+                $row[] = ['name' => $field];
+
+                if (count($row) == 2) {
+                    $panel['rows'][] = $row;
+                    $row = [];
+                } elseif ($key == count($fields) - 1 && count($row) == 1) {
+                    $row[] = false;
+                    $panel['rows'][] = $row;
+                }
+            }
+        }
+
+        if (!empty($panel['rows'])) {
+            $layout[] = $panel;
+        }
+
+        return $layout;
+    }
 }
