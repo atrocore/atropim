@@ -94,7 +94,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         applyOverviewFilters() {
             let fields = this.getFilterFieldViews();
             Object.keys(fields).forEach(name => {
-                if (!this.isEmptyRequiredField(name)) {
+                if (!this.isEmptyRequiredField(name, this.model.get(name))) {
                     let fieldView = fields[name],
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);
@@ -142,11 +142,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         multiLangFieldsFilter: function (name, fieldView) {
             // get locale
             let locale = (this.model.advancedEntityView || {}).localesFilter,
+                isMultiLang = fieldView.model.getFieldParam(name, 'isMultilang'),
                 multilangLocale = fieldView.model.getFieldParam(name, 'multilangLocale'),
                 hide = false;
 
             if (locale !== null && locale !== '') {
-                if (multilangLocale !== null && multilangLocale !== locale) {
+                if ((multilangLocale !== null && multilangLocale !== locale) || isMultiLang === null) {
                     hide = true;
                 }
             }
@@ -167,10 +168,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return hide;
         },
 
-        isEmptyRequiredField: function (field) {
+        isEmptyRequiredField: function (field, value) {
           return this.showEmptyRequiredFields
               && this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) === true
-              && this.model.get(field) === null;
+              && (value === null || value === '' || (Array.isArray(value) && !value.length));
         },
 
         hotKeySave: function (e) {
