@@ -7,7 +7,7 @@
   },
   "labels": {
     "Inheritance of product ownership": "Standardwerte für Produktbesitz",
-    "Inheritance of the product attribute value ownership": "Vererbung der Eigentumsinformationen für Produktattributwerte",
+    "Inheritance of the product attribute value ownership": "Standardwerte für Besitz von Produktattributwerten",
     "fromCatalog": "Vom Katalog",
     "fromProductFamily": "Von Produktfamilie",
     "fromProduct": "Vom Produkt",

@@ -10,7 +10,7 @@
   },
   "labels": {
     "Inheritance of product ownership": "Default Values for Product Ownership",
-    "Inheritance of the product attribute value ownership": "Inheritance of the product attribute value ownership",
+    "Inheritance of the product attribute value ownership": "Default Values for Product Attribute Value Ownership",
     "fromCatalog": "From Catalog",
     "fromProductFamily": "From Product Family",
     "fromAttribute": "From Attribute",
