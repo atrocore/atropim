@@ -61,6 +61,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         initialAttributes: null,
 
+        showEmptyRequiredFields: true,
+
         boolFilterData: {
             notLinkedProductAttributeValues() {
                 return {
@@ -599,19 +601,27 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             let fields = this.getValueFields();
             Object.keys(fields).forEach(name => {
                 let fieldView = fields[name];
-                let hide = !this.checkFieldValue(currentFieldFilter, fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'));
-                if (!hide) {
-                    hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
+
+                if (!this.isEmptyRequiredField(fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'))) {
+                    let hide = !this.checkFieldValue(currentFieldFilter, fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'));
+                    if (!hide) {
+                        hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
+                    }
+                    if (!hide) {
+                        hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
+                    }
+                    if (!hide) {
+                        hide = this.updateCheckByGenericFieldsFilter(fieldView);
+                    }
+                    this.controlRowVisibility(fieldView, name, hide);
                 }
-                if (!hide) {
-                    hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
-                }
-                if (!hide) {
-                    hide = this.updateCheckByGenericFieldsFilter(fieldView);
-                }
-                this.controlRowVisibility(fieldView, name, hide);
             });
             this.hideChannelAttributesWithGlobalScope(fields, attributesWithChannelScope);
+        },
+
+        isEmptyRequiredField: function (value, required) {
+            return this.showEmptyRequiredFields && required
+                && (value === null || value === '' || (Array.isArray(value) && !value.length));
         },
 
         updateCheckByChannelFilter(fieldView, attributesWithChannelScope) {
@@ -636,9 +646,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             // get filter
             let filter = (this.model.advancedEntityView || {}).localesFilter;
 
-            if (filter !== null && filter !== ''
-                && fieldView.model.get('isLocale') && fieldView.model.get('id').indexOf(filter) === -1) {
-                hide = true;
+            if (filter !== null && filter !== '') {
+                if ((fieldView.model.get('isLocale') && fieldView.model.get('id').indexOf(filter) === -1)
+                    || !fieldView.model.get('attributeIsMultilang')) {
+                    hide = true;
+                }
             }
 
             return hide;
