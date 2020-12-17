@@ -32,13 +32,14 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Treo\Core\EventManager\Event;
+use Treo\Listeners\AbstractListener;
 
 /**
  * Class Metadata
  *
  * @package Pim\Listeners
  */
-class Metadata extends \Treo\Listeners\AbstractListener
+class Metadata extends AbstractListener
 {
     /**
      * @param Event $event
@@ -49,11 +50,16 @@ class Metadata extends \Treo\Listeners\AbstractListener
 
         $data = $this->productOwnership($data);
 
-        $data = $this->setProductAttributeValueSettings($data);
+        $data = $this->attributeOwnership($data);
 
         $event->setArgument('data', $data);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
     protected function productOwnership(array $data): array
     {
         if ($data['scopes']['Product']['hasAssignedUser']) {
@@ -89,6 +95,50 @@ class Metadata extends \Treo\Listeners\AbstractListener
         }
 
         $data = $this->setProductOwnershipSettings($data);
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function attributeOwnership(array $data): array
+    {
+        if ($data['scopes']['ProductAttributeValue']['hasAssignedUser']) {
+            $data['entityDefs']['Settings']['fields']["assignedUserAttributeOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['ProductAttributeValue']['hasOwner']) {
+            $data['entityDefs']['Settings']['fields']["ownerUserAttributeOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['ProductAttributeValue']['hasTeam']) {
+            $data['entityDefs']['Settings']['fields']["teamsAttributeOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "notInherit"
+                ],
+                "default"   =>  "notInherit"
+            ];
+        }
+
+        $data = $this->setProductAttributeValueSettings($data);
 
         return $data;
     }

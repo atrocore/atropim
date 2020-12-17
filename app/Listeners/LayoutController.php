@@ -174,6 +174,11 @@ class LayoutController extends AbstractListener
             'assignedUserProductOwnership',
             'teamsProductOwnership'
         ]);
+        $result = $this->generatePimSettingsPanel($result, 'Inheritance of the product attribute value ownership', [
+            'ownerUserAttributeOwnership',
+            'assignedUserAttributeOwnership',
+            'teamsAttributeOwnership'
+        ]);
 
         $event->setArgument('result', Json::encode($result));
     }
