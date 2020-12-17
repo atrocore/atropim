@@ -32,7 +32,7 @@
         "Global",
         "Channel"
       ],
-      "default": "Global",
+      "default": null,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
