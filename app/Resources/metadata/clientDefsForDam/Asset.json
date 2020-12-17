@@ -5,8 +5,17 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "isNotEmpty",
-              "attribute": "scope"
+              "type": "or",
+              "value": [
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "productsIds"
+                },
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "categoriesIds"
+                }
+              ]
             }
           ]
         }

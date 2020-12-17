@@ -39,10 +39,9 @@ use Espo\ORM\Entity;
  */
 class Category extends AbstractRepository
 {
-    public function findRelatedAssetsByTypes(Entity $entity, array $types): array
+    public function findRelatedAssetsByType(Entity $entity, string $type): array
     {
         $id = $entity->get('id');
-        $types = implode("','", $types);
 
         $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName
                 FROM category_asset r 
@@ -51,28 +50,7 @@ class Category extends AbstractRepository
                 WHERE 
                       r.deleted=0 
                   AND a.deleted=0 
-                  AND a.type IN ('$types') 
-                  AND r.category_id='$id' 
-                ORDER BY r.sorting ASC";
-
-        $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
-
-        return $this->prepareAssets($entity, $result);
-    }
-
-    public function findRelatedAssetsByIds(Entity $entity, array $ids): array
-    {
-        $id = $entity->get('id');
-        $ids = implode("','", $ids);
-
-        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName
-                FROM category_asset r 
-                LEFT JOIN asset a ON a.id=r.asset_id
-                LEFT JOIN attachment at ON at.id=a.file_id 
-                WHERE 
-                      r.deleted=0 
-                  AND a.deleted=0 
-                  AND a.id IN ('$ids')
+                  AND a.type='$type' 
                   AND r.category_id='$id' 
                 ORDER BY r.sorting ASC";
 
