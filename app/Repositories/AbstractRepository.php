@@ -94,16 +94,6 @@ abstract class AbstractRepository extends Base
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        $this->changeOwnership($entity);
-    }
-
-    /**
      * @param Entity        $entity
      * @param Entity|string $foreign
      * @param array         $options
