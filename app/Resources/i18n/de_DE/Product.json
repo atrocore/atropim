@@ -97,16 +97,14 @@
     "No Group": "Keine Gruppe",
     "productImage": "Produktbild",
     "Select Attribute Group": "Attributgruppe auswählen",
-    "Remove all custom attributes": "Alle benutzerdefinierten Attribute entfernen"
+    "Remove all custom attributes": "Alle benutzerdefinierten Attribute entfernen",
+    "draft": "Entwurf",
+    "prepared": "Vorbereitet",
+    "reviewed": "Überprüft",
+    "notReady": "Nicht bereit",
+    "ready": "Bereit"
   },
   "options": {
-    "productStatus": {
-      "draft": "Entwurf",
-      "prepared": "Vorbereitet",
-      "reviewed": "Überprüft",
-      "notReady": "Nicht bereit",
-      "ready": "Bereit"
-    },
     "tag": {
       "blue": "blau",
       "yellow": "gelb",
