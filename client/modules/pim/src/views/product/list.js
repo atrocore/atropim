@@ -38,7 +38,7 @@ Espo.define('pim:views/product/list', ['pim:views/list', 'search-manager'],
 
             this.menu.buttons.push({
                 link: '#' + this.scope + '/create',
-                action: 'create',
+                action: 'quickCreate',
                 label: 'Create ' +  this.scope,
                 style: 'primary',
                 acl: 'create',
