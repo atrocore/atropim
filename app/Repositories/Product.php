@@ -73,6 +73,26 @@ class Product extends AbstractRepository
         return $this->getConfig()->get('inputLanguageList', []);
     }
 
+    public function findRelatedAssetsByType(Entity $entity, string $type): array
+    {
+        $id = $entity->get('id');
+
+        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName
+                FROM product_asset r 
+                LEFT JOIN asset a ON a.id=r.asset_id
+                LEFT JOIN attachment at ON at.id=a.file_id 
+                WHERE 
+                      r.deleted=0 
+                  AND a.deleted=0 
+                  AND a.type='$type' 
+                  AND r.product_id='$id' 
+                ORDER BY r.sorting ASC";
+
+        $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
+
+        return $this->prepareAssets($entity, $result);
+    }
+
     /**
      * @inheritDoc
      */

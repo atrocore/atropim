@@ -31,8 +31,20 @@ Espo.define('pim:views/product/list', ['pim:views/list', 'search-manager'],
 
         template: 'pim:product/list',
 
+        createButton: false,
+
         setup() {
             Dep.prototype.setup.call(this);
+
+            this.menu.buttons.push({
+                link: '#' + this.scope + '/create',
+                action: 'quickCreate',
+                label: 'Create ' +  this.scope,
+                style: 'primary',
+                acl: 'create',
+                cssStyle: "margin-left: 15px",
+                aclScope: this.entityType || this.scope
+            });
 
             if (this.getAcl().check('Catalog', 'read') && this.getAcl().check('Category', 'read')) {
                 this.setupCatalogTreePanel();

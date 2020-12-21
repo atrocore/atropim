@@ -32,13 +32,14 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Treo\Core\EventManager\Event;
+use Treo\Listeners\AbstractListener;
 
 /**
  * Class Metadata
  *
  * @package Pim\Listeners
  */
-class Metadata extends \Treo\Listeners\AbstractListener
+class Metadata extends AbstractListener
 {
     /**
      * @param Event $event
@@ -47,11 +48,99 @@ class Metadata extends \Treo\Listeners\AbstractListener
     {
         $data = $event->getArgument('data');
 
+        $data = $this->productOwnership($data);
+
+        $data = $this->attributeOwnership($data);
+
+        $event->setArgument('data', $data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function productOwnership(array $data): array
+    {
+        if ($data['scopes']['Product']['hasAssignedUser']) {
+            $data['entityDefs']['Settings']['fields']["assignedUserProductOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['Product']['hasOwner']) {
+            $data['entityDefs']['Settings']['fields']["ownerUserProductOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['Product']['hasTeam']) {
+            $data['entityDefs']['Settings']['fields']["teamsProductOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "notInherit"
+                ],
+                "default"   =>  "notInherit"
+            ];
+        }
+
         $data = $this->setProductOwnershipSettings($data);
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function attributeOwnership(array $data): array
+    {
+        if ($data['scopes']['ProductAttributeValue']['hasAssignedUser']) {
+            $data['entityDefs']['Settings']['fields']["assignedUserAttributeOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['ProductAttributeValue']['hasOwner']) {
+            $data['entityDefs']['Settings']['fields']["ownerUserAttributeOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "sameAsCreator",
+                    "notInherit"
+                ],
+                "default"   =>  "sameAsCreator"
+            ];
+        }
+
+        if ($data['scopes']['ProductAttributeValue']['hasTeam']) {
+            $data['entityDefs']['Settings']['fields']["teamsAttributeOwnership"] = [
+                "type"      => "enum",
+                "options"   => [
+                    "notInherit"
+                ],
+                "default"   =>  "notInherit"
+            ];
+        }
 
         $data = $this->setProductAttributeValueSettings($data);
 
-        $event->setArgument('data', $data);
+        return $data;
     }
 
     /**

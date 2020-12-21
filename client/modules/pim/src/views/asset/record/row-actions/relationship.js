@@ -26,12 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/admin/settings', 'views/admin/settings', function (Dep) {
+Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row-actions/relationship-no-remove', function (Dep) {
 
     return Dep.extend({
 
-        layoutName: 'pimSettings',
+        getActionList: function () {
+            let list = Dep.prototype.getActionList.call(this);
 
+            if (this.getMetadata().get(`fields.asset.typeNatures.${this.model.get('type')}`, 'File') === 'Image' && !this.model.get('channelId')) {
+                list.unshift({
+                    action: 'setAsMainImage',
+                    label: this.translate('Set as Main Image', 'labels', 'Asset'),
+                    data: {
+                        asset_id: this.model.id,
+                        entity_id: this.model.get('entityId'),
+                        entity_name: this.model.get('entityName'),
+                    }
+                });
+            }
+
+            return list;
+        }
     });
+
 });
 

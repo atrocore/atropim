@@ -111,7 +111,8 @@
   },
   "exceptions": {
     "Only force deleting available": "Nur erzwingtes Löschen verfügbar",
-    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet."
+    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
+    "notValid": "Daten sind nicht gültig"
   },
   "messages": {
     "fieldHasPattern": "{field} sollte nur Unterstriche, Zahlen und Alphabete in Kleinbuchstaben enthalten",

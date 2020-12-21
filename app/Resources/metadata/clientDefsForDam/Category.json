@@ -1,0 +1,32 @@
+{
+  "relationshipPanels": {
+    "assets": {
+      "layoutName": "listSmallForCategory",
+      "view": "pim:views/asset/record/panels/bottom-panel",
+      "innerPanelView": "pim:views/asset/record/panels/asset-type-block"
+    }
+  },
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "image",
+        "label": "Category Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "image",
+        "label": "Category Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ],
+    "detailSmall": [
+      {
+        "name": "image",
+        "label": "Category Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ]
+  }
+}

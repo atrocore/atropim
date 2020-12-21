@@ -76,16 +76,14 @@
     "itemsInRow": "Items in row",
     "productImage": "Product Image",
     "Select Attribute Group": "Select Attribute Group",
-    "Remove all custom attributes": "Remove all custom attributes"
+    "Remove all custom attributes": "Remove all custom attributes",
+    "draft": "Draft",
+    "prepared": "Prepared",
+    "reviewed": "Reviewed",
+    "notReady": "Not Ready",
+    "ready": "Ready"
   },
   "options": {
-    "productStatus": {
-      "draft": "Draft",
-      "prepared": "Prepared",
-      "reviewed": "Reviewed",
-      "notReady": "Not Ready",
-      "ready": "Ready"
-    },
     "type": {
       "simpleProduct": "Simple Product"
     },

@@ -31,12 +31,12 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 /**
  * Class AbstractRepository
- * @package Pim\Repositories
  */
 abstract class AbstractRepository extends Base
 {
@@ -61,13 +61,59 @@ abstract class AbstractRepository extends Base
     protected $ownerUserOwnership;
 
     /**
-     * @inheritDoc
+     * @param Entity $entity
+     * @param array  $result
+     *
+     * @return array
      */
-    protected function afterSave(Entity $entity, array $options = array())
+    protected function prepareAssets(Entity $entity, array $result): array
     {
-        parent::afterSave($entity, $options);
+        $channelsIds = array_column($result, 'channel');
 
-        $this->changeOwnership($entity);
+        $channels = [];
+        if (!empty($channelsIds)) {
+            $dbChannels = $this->getEntityManager()->getRepository('Channel')->select(['id', 'name'])->where(['id' => $channelsIds])->find()->toArray();
+            $channels = array_column($dbChannels, 'name', 'id');
+        }
+
+        foreach ($result as $k => $v) {
+            $result[$k]['entityName'] = $entity->getEntityType();
+            $result[$k]['entityId'] = $entity->get('id');
+            $result[$k]['scope'] = 'Global';
+            $result[$k]['channelId'] = null;
+            $result[$k]['channelName'] = null;
+            if (!empty($v['channel']) && !empty($channels[$v['channel']])) {
+                $result[$k]['scope'] = 'Channel';
+                $result[$k]['channelId'] = $v['channel'];
+                $result[$k]['channelName'] = $channels[$v['channel']];
+            }
+            $result[$k]['channel'] = '-';
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Entity        $entity
+     * @param Entity|string $foreign
+     * @param array         $options
+     *
+     * @throws Error
+     */
+    protected function afterUnrelateAssets($entity, $foreign, $options): void
+    {
+        if (!in_array($entity->getEntityType(), ['Product', 'Category'])) {
+            return;
+        }
+
+        if (is_string($foreign)) {
+            $foreign = $this->getEntityManager()->getEntity('Asset', $foreign);
+        }
+
+        if ($entity->get('imageId') === $foreign->get('fileId')) {
+            $entity->set('imageId', null);
+            $this->getEntityManager()->saveEntity($entity);
+        }
     }
 
     /**

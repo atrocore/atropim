@@ -37,7 +37,7 @@ use Slim\Http\Request;
 /**
  * Product controller
  */
-class Product extends AbstractController
+class Product extends AbstractWithMainImageController
 {
     /**
      * Action add associated products

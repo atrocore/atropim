@@ -1,0 +1,77 @@
+{
+  "boolFilterList": [
+    "withoutImageAssets"
+  ],
+  "relationshipPanels": {
+    "assets": {
+      "layoutName": "listSmallForProduct",
+      "view": "pim:views/asset/record/panels/bottom-panel",
+      "innerPanelView": "pim:views/asset/record/panels/asset-type-block"
+    }
+  },
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "image",
+        "label": "Product Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "image",
+        "label": "Product Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ],
+    "detailSmall": [
+      {
+        "name": "image",
+        "label": "Product Preview",
+        "view": "pim:views/product/fields/image"
+      }
+    ]
+  },
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "acl": "read",
+          "label": "",
+          "link": "#Product/list",
+          "style": "primary",
+          "title": "List",
+          "iconHtml": "<span class=\"fa fa-list\"></span>"
+        },
+        {
+          "acl": "read",
+          "label": "",
+          "link": "#Product/plate",
+          "style": "default",
+          "title": "Plate",
+          "iconHtml": "<span class=\"fa fa-th\"></span>"
+        }
+      ]
+    },
+    "plate": {
+      "buttons": [
+        {
+          "acl": "read",
+          "label": "",
+          "link": "#Product/list",
+          "style": "default",
+          "title": "List",
+          "iconHtml": "<span class=\"fa fa-list\"></span>"
+        },
+        {
+          "acl": "read",
+          "label": "",
+          "link": "#Product/plate",
+          "style": "primary",
+          "title": "Plate",
+          "iconHtml": "<span class=\"fa fa-th\"></span>"
+        }
+      ]
+    }
+  }
+}

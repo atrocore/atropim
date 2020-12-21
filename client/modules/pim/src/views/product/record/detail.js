@@ -37,6 +37,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         isCatalogTreePanel: false,
 
+        showEmptyRequiredFields: true,
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -90,14 +92,26 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         applyOverviewFilters() {
-            // fields filter
-            this.fieldsFilter();
+            let fields = this.getFilterFieldViews();
+            Object.keys(fields).forEach(name => {
+                if (!this.isEmptyRequiredField(name, this.model.get(name))) {
+                    let fieldView = fields[name],
+                        // fields filter
+                        hide = this.fieldsFilter(name, fieldView);
 
-            // multi-language fields filter
-            this.multiLangFieldsFilter();
+                    if (!hide) {
+                        // multi-language fields filter
+                        hide = this.multiLangFieldsFilter(name, fieldView);
+                    }
 
-            // hide generic fields
-            this.genericFieldsFilter();
+                    if (!hide) {
+                        // hide generic fields
+                        hide = this.genericFieldsFilter(name, fieldView);
+                    }
+
+                    this.controlFieldVisibility(fieldView, hide);
+                }
+            });
 
             // trigger
             this.model.trigger('overview-filters-applied');
@@ -114,55 +128,50 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return fields;
         },
 
-        fieldsFilter: function () {
+        fieldsFilter: function (name, fieldView) {
             // get filter param
             let filter = (this.model.advancedEntityView || {}).fieldsFilter;
 
-            $.each(this.getFilterFieldViews(), (name, fieldView) => {
-                let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
-                let actualFieldValues = actualFields.map(field => fieldView.model.get(field));
-                actualFieldValues = actualFieldValues.concat(this.getAlternativeValues(fieldView));
+            let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
+            let actualFieldValues = actualFields.map(field => fieldView.model.get(field));
+            actualFieldValues = actualFieldValues.concat(this.getAlternativeValues(fieldView));
 
-                let hide = !actualFieldValues.every(value => this.checkFieldValue(filter, value, fieldView.isRequired()));
-                this.controlFieldVisibility(fieldView, hide);
-            });
+            return !actualFieldValues.every(value => this.checkFieldValue(filter, value, fieldView.isRequired()));
         },
 
-        multiLangFieldsFilter: function () {
+        multiLangFieldsFilter: function (name, fieldView) {
             // get locale
-            let locale = (this.model.advancedEntityView || {}).localesFilter;
+            let locale = (this.model.advancedEntityView || {}).localesFilter,
+                isMultiLang = fieldView.model.getFieldParam(name, 'isMultilang'),
+                multilangLocale = fieldView.model.getFieldParam(name, 'multilangLocale'),
+                hide = false;
 
-            $.each(this.getFilterFieldViews(), function (name, fieldView) {
-                let multilangLocale = fieldView.model.getFieldParam(name, 'multilangLocale');
-
-                if (locale !== null && locale !== '') {
-                    if (multilangLocale !== locale) {
-                        fieldView.hide();
-                    } else if (fieldView.$el.hasClass('hidden')) {
-                        fieldView.show();
-                    }
-                } else if (fieldView.$el.hasClass('hidden')) {
-                    fieldView.show();
+            if (locale !== null && locale !== '') {
+                if ((multilangLocale !== null && multilangLocale !== locale) || isMultiLang === null) {
+                    hide = true;
                 }
-            });
+            }
+
+            return hide;
         },
 
-        genericFieldsFilter: function () {
-            // prepare is show param
-            let isShow = (this.model.advancedEntityView || {}).showGenericFields;
+        genericFieldsFilter: function (name, fieldView) {
+            // prepare filter param
+            let filter = (this.model.advancedEntityView || {}).showGenericFields,
+                isMultilang = fieldView.model.getFieldParam(name, 'multilangLocale') || false,
+                hide = false;
 
-            $.each(this.getFilterFieldViews(), (name, fieldView) => {
-                let isMultilang = fieldView.model.getFieldParam(name, 'multilangLocale') || false;
-                const view = this.getFieldView(name);
+            if (!isMultilang && !filter) {
+                hide = true;
+            }
 
-                if (!isMultilang && view) {
-                    if (isShow && view.$el.hasClass('hidden')) {
-                        view.show();
-                    } else if (!isShow && !view.$el.hasClass('hidden')) {
-                        view.hide();
-                    }
-                }
-            });
+            return hide;
+        },
+
+        isEmptyRequiredField: function (field, value) {
+          return this.showEmptyRequiredFields
+              && this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) === true
+              && (value === null || value === '' || (Array.isArray(value) && !value.length));
         },
 
         hotKeySave: function (e) {

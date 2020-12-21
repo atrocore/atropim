@@ -1,10 +1,15 @@
 {
   "fields": {
     "categories": "Kategorien",
-    "products": "Produkte"
+    "products": "Produkte",
+    "scope": "Scope",
+    "channel": "Kanal"
   },
   "links": {
     "categories": "Kategorien",
     "products": "Produkte"
+  },
+  "labels": {
+    "Set as Main Image": "Als Hauptbild setzen"
   }
 }

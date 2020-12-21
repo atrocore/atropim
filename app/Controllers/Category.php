@@ -34,6 +34,6 @@ namespace Pim\Controllers;
 /**
  * Controller Category
  */
-class Category extends \Espo\Core\Templates\Controllers\Base
+class Category extends AbstractWithMainImageController
 {
 }

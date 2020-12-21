@@ -91,7 +91,8 @@
   },
   "exceptions": {
     "Only force deleting available": "Only force deleting available",
-    "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected."
+    "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
+    "notValid": "Data is not valid"
   },
   "messages": {
     "fieldHasPattern": "{field} should contain only underscore, numbers and alphabets in lower case"

@@ -1,0 +1,13 @@
+[
+  {
+    "label": "System",
+    "rows": [
+      [
+        {
+          "name": "productCanLinkedWithNonLeafCategories"
+        },
+        false
+      ]
+    ]
+  }
+]

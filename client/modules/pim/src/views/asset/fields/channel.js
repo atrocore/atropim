@@ -26,12 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/admin/settings', 'views/admin/settings', function (Dep) {
+Espo.define('pim:views/asset/fields/channel', 'treo-core:views/fields/filtered-link',
+    Dep => Dep.extend({
 
-    return Dep.extend({
+        idName: 'id',
 
-        layoutName: 'pimSettings',
+        foreignScope: 'Channel',
 
-    });
-});
+        selectBoolFilterList: ['productChannels'],
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.get('channelId') === null) {
+                if (this.mode === 'edit') {
+                    this.model.set('channelName', null);
+                } else {
+                    this.model.set('channelName', 'Global');
+                }
+            }
+        },
+
+        boolFilterData: {
+            productChannels() {
+                return this.model.get('entityId');
+            }
+        },
+    })
+);

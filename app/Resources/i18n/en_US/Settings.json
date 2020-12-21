@@ -9,13 +9,13 @@
     "teamsAttributeOwnership": "Team"
   },
   "labels": {
-    "Inheritance of product ownership": "Inheritance of product ownership",
-    "Inheritance of the product attribute value ownership": "Inheritance of the product attribute value ownership",
+    "Inheritance of product ownership": "Default Values for Product Ownership",
+    "Inheritance of the product attribute value ownership": "Default Values for Product Attribute Value Ownership",
     "fromCatalog": "From Catalog",
     "fromProductFamily": "From Product Family",
     "fromAttribute": "From Attribute",
     "fromProduct": "From Product",
     "sameAsCreator": "Same as Creator",
-    "notInherit": "Not inherit"
+    "notInherit": "No default value"
   }
 }
