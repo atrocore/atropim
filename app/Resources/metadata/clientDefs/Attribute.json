@@ -27,6 +27,7 @@
   },
   "recordViews": {
     "detail": "pim:views/attribute/record/detail",
+    "editSmall": "pim:views/attribute/record/edit-small",
     "list": "pim:views/attribute/record/list"
   },
   "modalViews": {
