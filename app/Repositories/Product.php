@@ -46,6 +46,26 @@ use Treo\Core\EventManager\Event;
 class Product extends AbstractRepository
 {
     /**
+     * @var string
+     */
+    protected $ownership = 'fromProduct';
+
+    /**
+     * @var string
+     */
+    protected $ownershipRelation = 'productAttributeValues';
+
+    /**
+     * @var string
+     */
+    protected $assignedUserOwnership = 'assignedUserAttributeOwnership';
+
+    /**
+     * @var string
+     */
+    protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
+
+    /**
      * @return array
      */
     public function getInputLanguageList(): array

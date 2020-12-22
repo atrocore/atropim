@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit',
+Espo.define('pim:views/product-attribute-value/modals/edit', 'treo-core:views/modals/edit',
     Dep => Dep.extend({
 
         fullFormDisabled: true,
@@ -55,7 +55,9 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
             switch (param) {
                 case 'fromAttribute':
                     this.clearModel(field);
-                    this.setRelatedOwnershipInfo('Attribute', 'attributeId', field);
+                    this.listenTo(this.model, `change:attributeId`, () => {
+                        this.setRelatedOwnershipInfo('Attribute', 'attributeId', field);
+                    });
                     break;
                 case 'fromProduct':
                     this.clearModel(field);
@@ -75,27 +77,25 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
         },
 
         setRelatedOwnershipInfo: function (scope, target, field) {
-            this.listenTo(this.model, `change:${target}`, () => {
-                let id = this.model.get(target),
-                    isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
-                    idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
-                    nameField = field + (isLinkMultiple ? 'Names' : 'Name');
+            let id = this.model.get(target),
+                isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
+                idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
+                nameField = field + (isLinkMultiple ? 'Names' : 'Name');
 
-                if (id) {
-                    this.ajaxGetRequest(`${scope}/${id}`)
-                        .then(response => {
-                            this.model.set({
-                                [idField]: response[idField],
-                                [nameField]: response[nameField]
-                            });
+            if (id) {
+                this.ajaxGetRequest(`${scope}/${id}`)
+                    .then(response => {
+                        this.model.set({
+                            [idField]: response[idField],
+                            [nameField]: response[nameField]
                         });
-                } else {
-                    this.model.set({
-                        [idField]: null,
-                        [nameField]: null
                     });
-                }
-            });
+            } else {
+                this.model.set({
+                    [idField]: null,
+                    [nameField]: null
+                });
+            }
         }
     })
 );

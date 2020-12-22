@@ -26,32 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/user-with-avatar', 'class-replace!pim:views/fields/user-with-avatar', function (Dep) {
-
-    return Dep.extend({
-
-        setDefaultOwnerUser: function () {
-            if (this.model.name === 'Product'){
-                return this.getConfig().get('ownerUserProductOwnership') === 'sameAsCreator';
+Espo.define('pim:views/attribute/record/edit-small', 'views/record/edit-small',
+    Dep => Dep.extend({
+        convertDetailLayout(simplifiedLayout) {
+            if (this.getRouter().getLast().controller === 'AttributeGroup'
+                && !this.hasLayoutField(simplifiedLayout[0].rows, 'sortOrder')) {
+                simplifiedLayout[0].rows.push([
+                    {
+                        name: 'sortOrder'
+                    },
+                    false
+                ]);
             }
 
-            if (this.model.name === 'ProductAttributeValue'){
-                return this.getConfig().get('ownerUserAttributeOwnership') === 'sameAsCreator';
-            }
-
-            return true;
+            return Dep.prototype.convertDetailLayout.call(this, simplifiedLayout);
         },
 
-        setDefaultAssignedUser: function () {
-            if (this.model.name === 'Product'){
-                return this.getConfig().get('assignedUserProductOwnership') === 'sameAsCreator';
+        hasLayoutField(layout, field) {
+            for (let row of layout.values()) {
+                for (let item of row.values()) {
+                    if (item !== false && item['name'] === field) {
+                        return true;
+                    }
+                }
             }
 
-            if (this.model.name === 'ProductAttributeValue'){
-                return this.getConfig().get('assignedUserAttributeOwnership') === 'sameAsCreator';
-            }
-
-            return true;
+            return false;
         }
-    });
-});
+    })
+);

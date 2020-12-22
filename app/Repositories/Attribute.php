@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
@@ -41,8 +40,28 @@ use Treo\Core\Utils\Util;
 /**
  * Class Attribute
  */
-class Attribute extends Base
+class Attribute extends AbstractRepository
 {
+    /**
+     * @var string
+     */
+    protected $ownership = 'fromAttribute';
+
+    /**
+     * @var string
+     */
+    protected $ownershipRelation = 'productAttributeValues';
+
+    /**
+     * @var string
+     */
+    protected $assignedUserOwnership = 'assignedUserAttributeOwnership';
+
+    /**
+     * @var string
+     */
+    protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
+
     /**
      * @inheritdoc
      */

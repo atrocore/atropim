@@ -11,7 +11,8 @@
     "productAttributeValues": "Product Attribute Values",
     "isRequired": "Required",
     "productFamilyAttributes": "Product Family Attributes",
-    "isMultilang": "Multi-Language"
+    "isMultilang": "Multi-Language",
+    "sortOrder": "Sort Order"
   },
   "options": {
     "type": {
