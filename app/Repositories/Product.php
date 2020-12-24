@@ -291,7 +291,7 @@ class Product extends AbstractRepository
         return $this
             ->getEntityManager()
             ->nativeQuery(
-                "SELECT * FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0"
+                "SELECT * FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0 ORDER BY sorting ASC"
             )
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -311,16 +311,16 @@ class Product extends AbstractRepository
             $categoryId = $categoryId->get('id');
         }
 
-        if (is_null($sorting)) {
-            $sorting = time();
-            $cascadeUpdate = false;
-        }
-
         // get link data
         $linkData = $this->getProductCategoryLinkData([$productId], [$categoryId]);
 
         // get max
-        $max = (int)$linkData[0]['sorting'];
+        $max = (int)$linkData[count($linkData) - 1]['sorting'];
+
+        if (is_null($sorting)) {
+            $sorting = $max + 10;
+            $cascadeUpdate = false;
+        }
 
         // update current
         $this
