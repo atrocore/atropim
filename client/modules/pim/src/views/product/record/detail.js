@@ -41,11 +41,22 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         notFilterFields: ['assignedUser', 'ownerUser', 'teams'],
 
+        beforeSaveModel: null,
+
         setup() {
             Dep.prototype.setup.call(this);
 
             if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit') && this.getMetadata().get(['scopes', this.scope, 'advancedFilters'])) {
                 this.listenTo(this.model, 'main-image-updated', () => {
+                    this.applyOverviewFilters();
+                });
+
+                this.listenTo(this.model, 'change', () => {
+                    this.applyOverviewFilters();
+                });
+
+                this.listenTo(this.model, 'after:save', () => {
+                    this.beforeSaveModel = this.model.getClonedAttributes();
                     this.applyOverviewFilters();
                 });
             }
@@ -88,16 +99,19 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         data() {
+            let data = Dep.prototype.data.call(this);
+            this.beforeSaveModel = this.model.getClonedAttributes();
+
             return _.extend({
                 isCatalogTreePanel: this.isCatalogTreePanel
-            }, Dep.prototype.data.call(this))
+            }, data)
         },
 
         applyOverviewFilters() {
             let fields = this.getFilterFieldViews();
             Object.keys(fields).forEach(name => {
                 if (!this.notFilterFields.includes(name)
-                    && !this.isEmptyRequiredField(name, this.model.get(name))) {
+                    && !this.isEmptyRequiredField(name, this.beforeSaveModel[name])) {
                     let fieldView = fields[name],
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);
@@ -136,7 +150,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             let filter = (this.model.advancedEntityView || {}).fieldsFilter;
 
             let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
-            let actualFieldValues = actualFields.map(field => fieldView.model.get(field));
+            let actualFieldValues = actualFields.map(field => this.beforeSaveModel[field]);
             actualFieldValues = actualFieldValues.concat(this.getAlternativeValues(fieldView));
 
             return !actualFieldValues.every(value => this.checkFieldValue(filter, value, fieldView.isRequired()));
@@ -150,7 +164,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 hide = false;
 
             if (locale !== null && locale !== '') {
-                if ((multilangLocale !== null && multilangLocale !== locale) || isMultiLang === null) {
+                if ((multilangLocale !== null && multilangLocale !== locale)
+                    || (isMultiLang === false && multilangLocale === null)
+                    || isMultiLang === null) {
                     hide = true;
                 }
             }
