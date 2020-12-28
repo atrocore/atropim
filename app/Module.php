@@ -138,17 +138,8 @@ class Module extends AbstractModule
          */
         $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value']['required']['conditionGroup'] = [
             [
-                'type'  => 'or',
-                'value' => [
-                    [
-                        'type'      => 'isTrue',
-                        'attribute' => 'isRequired'
-                    ],
-                    [
-                        'type'      => 'isEmpty',
-                        'attribute' => 'productFamilyAttributeId'
-                    ]
-                ]
+                'type'      => 'isTrue',
+                'attribute' => 'isRequired'
             ]
         ];
 

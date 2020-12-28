@@ -203,14 +203,14 @@ class LayoutController extends AbstractListener
         foreach ($fields as $key => $field) {
             if (in_array($field, $metadataFields)) {
                 $row[] = ['name' => $field];
+            }
 
-                if (count($row) == 2) {
-                    $panel['rows'][] = $row;
-                    $row = [];
-                } elseif ($key == count($fields) - 1 && count($row) == 1) {
-                    $row[] = false;
-                    $panel['rows'][] = $row;
-                }
+            if (count($row) == 2) {
+                $panel['rows'][] = $row;
+                $row = [];
+            } elseif ($key == count($fields) - 1 && count($row) == 1) {
+                $row[] = false;
+                $panel['rows'][] = $row;
             }
         }
 

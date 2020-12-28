@@ -46,6 +46,12 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model = model;
                 this.createValueFieldView();
             });
+
+            this.listenTo(this.model, 'change:value', () => {
+                if ((this.model.get('attributeType') === 'enum' || this.model.get('attributeType') === 'multiEnum') && !this.model.get('isLocale')) {
+                    this.getParentView().getParentView().trigger('change:enumLocaleValue', this.model);
+                }
+            });
         },
 
         afterRender() {
@@ -72,6 +78,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 model: this.model,
                 name: this.name,
                 mode: this.mode,
+                prohibitedEmptyValue:true,
                 inlineEditDisabled: true
             }, view => {
                 view.render();

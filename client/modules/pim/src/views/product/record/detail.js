@@ -39,6 +39,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         showEmptyRequiredFields: true,
 
+        notFilterFields: ['assignedUser', 'ownerUser', 'teams'],
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -94,7 +96,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         applyOverviewFilters() {
             let fields = this.getFilterFieldViews();
             Object.keys(fields).forEach(name => {
-                if (!this.isEmptyRequiredField(name, this.model.get(name))) {
+                if (!this.notFilterFields.includes(name)
+                    && !this.isEmptyRequiredField(name, this.model.get(name))) {
                     let fieldView = fields[name],
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);

@@ -46,6 +46,10 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                 }
             });
 
+            this.listenTo(this, 'change:enumLocaleValue', eventModel => {
+                this.updateEnumLocaleValue(eventModel);
+            });
+
             this.runPipeline('actionShowRevisionAttribute');
         },
 
@@ -55,6 +59,57 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
             if (this.mode === 'edit') {
                 this.setEditMode();
             }
+        },
+
+        updateEnumLocaleValue(eventModel) {
+            let position = null;
+            if (eventModel.get('attributeType') === 'multiEnum') {
+                position = [];
+                $.each(eventModel.get('value'), (k, v) => {
+                    $.each(eventModel.get('typeValue'), (key, item) => {
+                        if (v === item) {
+                            position.push(key);
+                        }
+                    });
+                });
+            } else {
+                $.each(eventModel.get('typeValue'), (key, item) => {
+                    if (eventModel.get('value') === item) {
+                        position = key;
+                    }
+                });
+            }
+
+            this.collection.forEach(model => {
+                if (model.get('isLocale')) {
+                    const parts = model.get('id').split('~');
+                    const id = parts.shift();
+
+                    // prepare locale
+                    let localeParts = parts.pop().split('_');
+                    let locale = localeParts[0].charAt(0).toUpperCase() + localeParts[0].slice(1);
+                    localeParts[1] = localeParts[1].toLowerCase();
+                    locale += localeParts[1].charAt(0).toUpperCase() + localeParts[1].slice(1);
+
+                    if (id === eventModel.get('id')) {
+                        // get field view
+                        const view = this.nestedViews[model.get('id')].getView('valueField');
+
+                        let value = null;
+                        if (eventModel.get('attributeType') === 'multiEnum') {
+                            value = [];
+                            $.each(position, (k, v) => {
+                                value.push(eventModel.get('typeValue' + locale)[v]);
+                            });
+                        } else {
+                            value = eventModel.get('typeValue' + locale)[position];
+                        }
+
+                        // set value
+                        view.model.set('value', value);
+                    }
+                }
+            });
         },
 
         prepareInternalLayout(internalLayout, model) {

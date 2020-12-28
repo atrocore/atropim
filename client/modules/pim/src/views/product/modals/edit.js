@@ -36,13 +36,18 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
                 ownerUser = config.get('ownerUserProductOwnership'),
                 teams = config.get('teamsProductOwnership');
 
-            if (this.getAcl().get('assignmentPermission') !== 'no') {
+            if (this.getAcl().get('assignmentPermission') !== 'no'
+                && this.getAcl().checkScope('User')
+                && this.getEntityReadScopeLevel('User') !== 'no') {
                 this.setupOwnership(assignedUser, 'assignedUser');
 
                 this.setupOwnership(ownerUser, 'ownerUser');
             }
 
-            this.setupOwnership(teams, 'teams');
+            if (this.getAcl().checkScope('Team')
+                && this.getEntityReadScopeLevel('Team') !== 'no') {
+                this.setupOwnership(teams, 'teams');
+            }
 
             this.reRender();
         },
@@ -77,26 +82,62 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
             });
         },
 
+        getEntityReadScopeLevel: function (entity) {
+            return this.getAcl().data.table[entity].read;
+        },
+
+        throwError403: function () {
+            let msg = this.getLanguage().translate('Error') + ' 403: ';
+            msg += this.getLanguage().translate('Access denied');
+            Espo.Ui.error(msg);
+        },
+
         setRelatedOwnershipInfo: function (scope, target, field) {
             this.listenTo(this.model, `change:${target}`, () => {
                 let id = this.model.get(target),
                     isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
+                    foreign = this.getMetadata().get(['entityDefs', scope, 'links', field, 'entity']),
                     idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
                     nameField = field + (isLinkMultiple ? 'Names' : 'Name');
 
                 if (id) {
                     this.ajaxGetRequest(`${scope}/${id}`)
                         .then(response => {
-                            this.model.set({
+                            let data = {
                                 [idField]: response[idField],
                                 [nameField]: response[nameField]
-                            });
+                            };
+
+                            switch (this.getEntityReadScopeLevel(foreign)) {
+                                case 'team':
+                                    if (foreign === 'User') {
+                                        this.ajaxGetRequest(`${foreign}/${response[idField]}`).then(res => {
+                                            this.model.set(data);
+                                        });
+                                    }
+
+                                    if (foreign === 'Team') {
+                                        if (!response[idField].filter(item => !this.getUser().getTeamIdList().includes(item)).length) {
+                                            this.model.set(data);
+                                        } else {
+                                            this.throwError403();
+                                        }
+                                    }
+                                    break;
+                                case 'own':
+                                    if (foreign === 'User'
+                                        && response[idField] === this.getUser().get('id')) {
+                                        this.model.set(data);
+                                    } else {
+                                        this.throwError403();
+                                    }
+                                    break;
+                                default:
+                                    this.model.set(data);
+                            }
                         });
                 } else {
-                    this.model.set({
-                        [idField]: null,
-                        [nameField]: null
-                    });
+                    this.clearModel(field);
                 }
             });
         }
