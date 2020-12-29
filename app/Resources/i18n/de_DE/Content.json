@@ -15,19 +15,6 @@
     "contentGroup": "Content Gruppe",
     "products": "Produkte"
   },
-  "options": {
-    "status": {
-      "draft": "Entwurf",
-      "written": "Geschrieben",
-      "reviewed": "Überprüft",
-      "published": "Veröffentlicht"
-    },
-    "type": {
-      "review": "Review",
-      "news": "Nachricht",
-      "promotional": "Werbung"
-    }
-  },
   "labels": {
     "Create Content": "Сontent erstellen"
   }

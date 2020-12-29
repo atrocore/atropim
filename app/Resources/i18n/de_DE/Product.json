@@ -79,7 +79,8 @@
     "tax": "MwSt.",
     "packaging": "Verpackung",
     "catalog": "Katalog",
-    "channels": "Kanäle"
+    "channels": "Kanäle",
+    "contents": "Contents"
   },
   "labels": {
     "Add Attribute Filter": "Attributfilter hinzufügen",

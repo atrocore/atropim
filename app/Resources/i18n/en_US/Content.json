@@ -15,20 +15,14 @@
     "contentGroup": "Content Group",
     "products": "Products"
   },
-  "options": {
-    "status": {
-      "draft": "Draft",
-      "written": "Written",
-      "reviewed": "Reviewed",
-      "published": "Published"
-    },
-    "type": {
-      "review": "Review",
-      "news": "News",
-      "promotional": "Promotional"
-    }
-  },
   "labels": {
-    "Create Content": "Create Content"
+    "Create Content": "Create Content",
+    "draft": "Draft",
+    "written": "Written",
+    "reviewed": "Reviewed",
+    "published": "Published",
+    "review": "Review",
+    "news": "News",
+    "promotional": "Promotional"
   }
 }
