@@ -94,52 +94,56 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
 
         setRelatedOwnershipInfo: function (scope, target, field) {
             this.listenTo(this.model, `change:${target}`, () => {
-                let id = this.model.get(target),
-                    isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
-                    foreign = this.getMetadata().get(['entityDefs', scope, 'links', field, 'entity']),
-                    idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
-                    nameField = field + (isLinkMultiple ? 'Names' : 'Name');
+                this.ownershipRequestAndSetup(scope, target, field);
+            });
+        },
 
-                if (id) {
-                    this.ajaxGetRequest(`${scope}/${id}`)
-                        .then(response => {
-                            let data = {
-                                [idField]: response[idField],
-                                [nameField]: response[nameField]
-                            };
+        ownershipRequestAndSetup(scope, target, field) {
+            let id = this.model.get(target),
+                isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
+                foreign = this.getMetadata().get(['entityDefs', scope, 'links', field, 'entity']),
+                idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
+                nameField = field + (isLinkMultiple ? 'Names' : 'Name');
 
-                            switch (this.getEntityReadScopeLevel(foreign)) {
-                                case 'team':
-                                    if (foreign === 'User') {
-                                        this.ajaxGetRequest(`${foreign}/${response[idField]}`).then(res => {
-                                            this.model.set(data);
-                                        });
-                                    }
+            if (id) {
+                this.ajaxGetRequest(`${scope}/${id}`)
+                    .then(response => {
+                        let data = {
+                            [idField]: response[idField],
+                            [nameField]: response[nameField]
+                        };
 
-                                    if (foreign === 'Team') {
-                                        if (!response[idField].filter(item => !this.getUser().getTeamIdList().includes(item)).length) {
-                                            this.model.set(data);
-                                        } else {
-                                            this.throwError403();
-                                        }
-                                    }
-                                    break;
-                                case 'own':
-                                    if (foreign === 'User'
-                                        && response[idField] === this.getUser().get('id')) {
+                        switch (this.getEntityReadScopeLevel(foreign)) {
+                            case 'team':
+                                if (foreign === 'User') {
+                                    this.ajaxGetRequest(`${foreign}/${response[idField]}`).then(res => {
+                                        this.model.set(data);
+                                    });
+                                }
+
+                                if (foreign === 'Team') {
+                                    if (!response[idField].filter(item => !this.getUser().getTeamIdList().includes(item)).length) {
                                         this.model.set(data);
                                     } else {
                                         this.throwError403();
                                     }
-                                    break;
-                                default:
+                                }
+                                break;
+                            case 'own':
+                                if (foreign === 'User'
+                                    && response[idField] === this.getUser().get('id')) {
                                     this.model.set(data);
-                            }
-                        });
-                } else {
-                    this.clearModel(field);
-                }
-            });
+                                } else {
+                                    this.throwError403();
+                                }
+                                break;
+                            default:
+                                this.model.set(data);
+                        }
+                    });
+            } else {
+                this.clearModel(field);
+            }
         }
     })
 );
