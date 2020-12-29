@@ -96,10 +96,11 @@ Espo.define('pim:views/dashlets/product-status-overview', ['views/dashlets/abstr
         buildChart() {
             this.fetch().then(data => {
                 this.chartData = this.prepareData(data);
-                let colorList = [];
-                let optionColors = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'optionColors']);
-                (data.list || []).forEach(item => {
-                    colorList.push('#' + optionColors[item.name]);
+                let colorList = [],
+                    options = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'options']),
+                    optionColors = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'optionColors']);
+                (data.list || []).forEach((item, index) => {
+                    colorList.push('#' + optionColors[options.indexOf(item.name)]);
                 });
                 this.colorList = colorList;
 
