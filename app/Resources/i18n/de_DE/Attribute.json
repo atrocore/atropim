@@ -14,30 +14,6 @@
     "isRequired": "Ist Erforderlich",
     "isMultilang": "Mehrsprachig"
   },
-  "options": {
-    "type": {
-      "array": "Array",
-      "bool": "Bool",
-      "currency": "Währung",
-      "date": "Datum",
-      "datetime": "Datum Zeit",
-      "enum": "Enum",
-      "float": "Float",
-      "int": "Int",
-      "multiEnum": "Multi-Enum",
-      "text": "Text",
-      "url": "URL",
-      "varchar": "Varchar",
-      "varcharMultiLang": "varcharMultiLang",
-      "textMultiLang": "textMultiLang",
-      "enumMultiLang": "enumMultiLang",
-      "multiEnumMultiLang": "multiEnumMultiLang",
-      "arrayMultiLang": "ArrayMultiLang",
-      "unit": "Maßeinheit",
-      "wysiwyg": "Wysiwyg",
-      "image": "Bild"
-    }
-  },
   "links": {
     "products": "Produkte",
     "productAttributes": "Produktattribute",
@@ -50,7 +26,22 @@
   "labels": {
     "Create Attribute": "Attribut erstellen",
     "productFamily": "Produktfamilie",
-    "addNewValue": "Neuen Wert hinzufügen"
+    "addNewValue": "Neuen Wert hinzufügen",
+    "array": "Array",
+    "bool": "Boolean",
+    "currency": "Currency",
+    "date": "Date",
+    "datetime": "DateTime",
+    "enum": "Enum",
+    "float": "Float",
+    "int": "Int",
+    "multiEnum": "Multi-Enum",
+    "text": "Text",
+    "unit": "Unit",
+    "url": "Url",
+    "varchar": "Varchar",
+    "wysiwyg": "Wysiwyg",
+    "image": "Image"
   },
   "messages": {
     "sameNumberOptions": "Die gleiche Anzahl von Optionen",

@@ -14,25 +14,6 @@
     "isMultilang": "Multi-Language",
     "sortOrder": "Sort Order"
   },
-  "options": {
-    "type": {
-      "array": "Array",
-      "bool": "Boolean",
-      "currency": "Currency",
-      "date": "Date",
-      "datetime": "DateTime",
-      "enum": "Enum",
-      "float": "Float",
-      "int": "Int",
-      "multiEnum": "Multi-Enum",
-      "text": "Text",
-      "unit": "Unit",
-      "url": "Url",
-      "varchar": "Varchar",
-      "wysiwyg": "Wysiwyg",
-      "image": "Image"
-    }
-  },
   "links": {
     "attributeGroup": "Attribute Group",
     "productAttributes": "Product attributes",
@@ -44,7 +25,22 @@
   "labels": {
     "Create Attribute": "Create Attribute",
     "productFamily": "Product Family",
-    "addNewValue": "Add new value"
+    "addNewValue": "Add new value",
+    "array": "Array",
+    "bool": "Boolean",
+    "currency": "Currency",
+    "date": "Date",
+    "datetime": "DateTime",
+    "enum": "Enum",
+    "float": "Float",
+    "int": "Int",
+    "multiEnum": "Multi-Enum",
+    "text": "Text",
+    "unit": "Unit",
+    "url": "Url",
+    "varchar": "Varchar",
+    "wysiwyg": "Wysiwyg",
+    "image": "Image"
   },
   "messages": {
     "sameNumberOptions": "You must set the same number of options",
