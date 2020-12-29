@@ -33,7 +33,7 @@ Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
 
-            if (this.getMetadata().get(`fields.asset.typeNatures.${this.model.get('type')}`, 'File') === 'Image' && !this.model.get('channelId')) {
+            if (this.isImage() && !this.model.get('channelId')) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('Set as Main Image', 'labels', 'Asset'),
@@ -46,7 +46,15 @@ Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row
             }
 
             return list;
-        }
+        },
+
+        isImage() {
+            const imageExtensions = this.getMetadata().get('dam.image.extensions') || [];
+            const fileExt = (this.model.get('fileName') || '').split('.').pop().toLowerCase();
+
+            return $.inArray(fileExt, imageExtensions) !== -1;
+        },
+
     });
 
 });
