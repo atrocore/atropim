@@ -59,7 +59,8 @@
     "tax": "Tax",
     "packaging": "Packaging",
     "catalog": "Catalog",
-    "channels": "Channels"
+    "channels": "Channels",
+    "contents": "Contents"
   },
   "labels": {
     "Create Product": "Create Product",
