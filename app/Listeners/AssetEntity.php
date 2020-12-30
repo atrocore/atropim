@@ -32,6 +32,9 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Dam\Entities\Asset;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
@@ -43,6 +46,25 @@ class AssetEntity extends AbstractListener
 {
     /** @var array */
     protected $hasMainImage = ['Product', 'Category'];
+
+    /**
+     * @param Event $event
+     *
+     * @throws BadRequest
+     * @throws Error
+     */
+    public function beforeSave(Event $event)
+    {
+        $entity = $event->getArgument('entity');
+
+        if ($entity->isAttributeChanged('channelId') && $this->isProductMainImage($entity)) {
+            $msg = $message = $this
+                ->getLanguage()
+                ->translate("Scope for the image marked as Main cannot be changed.", 'exceptions', 'Asset');
+
+            throw new BadRequest($msg);
+        }
+    }
 
     public function afterSave(Event $event): void
     {
@@ -70,5 +92,28 @@ class AssetEntity extends AbstractListener
             $table = Util::toCamelCase($entity);
             $this->getEntityManager()->nativeQuery("UPDATE $table SET image_id=null WHERE image_id='$fileId'");
         }
+    }
+
+    /**
+     * @param \Espo\Core\ORM\Entity $asset
+     *
+     * @return bool
+     *
+     * @throws Error
+     */
+    protected function isProductMainImage(Entity $asset): bool
+    {
+        $result = false;
+
+        if (!empty($entityId = $asset->get('entityId'))
+            && $asset->get('entityName') == 'Product') {
+            $entity = $this->getEntityManager()->getEntity($asset->get('entityName'), $entityId);
+
+            if ($entity->get('imageId') == $asset->get('fileId')) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 }
