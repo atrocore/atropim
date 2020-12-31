@@ -29,7 +29,6 @@
 Espo.define('pim:views/product/fields/image', 'views/fields/image',
     Dep => Dep.extend({
 
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
             if (this.mode === 'list')
@@ -41,5 +40,6 @@ Espo.define('pim:views/product/fields/image', 'views/fields/image',
                 this.$el.find('img').css({'display': 'block', 'margin': '0 auto'});
             }
         },
+
     })
 );
