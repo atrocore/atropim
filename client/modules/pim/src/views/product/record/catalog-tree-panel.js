@@ -87,12 +87,6 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
                 this.getStorage().set('catalog-tree-panel-data', this.scope, '');
                 this.selectCategoryButtonApplyFilter(this.$el.find('button[data-action="selectAll"]'), false);
             });
-
-            if (this.model) {
-                this.listenTo(Backbone, 'menu-expanded', () => {
-                    this.actionCollapsePanel(true);
-                });
-            }
         },
 
         expandTreeWithProductCategory() {
@@ -287,9 +281,6 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
                 categoryPanel.removeClass('hidden');
                 this.showUtilityElements();
                 this.getStorage().set('catalog-tree-panel', this.scope, '');
-                if (this.model) {
-                    Backbone.trigger('tree-panel-expanded');
-                }
             } else {
                 categoryPanel.addClass('hidden');
                 this.hideUtilityElements();
