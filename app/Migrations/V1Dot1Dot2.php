@@ -34,11 +34,11 @@ namespace Pim\Migrations;
 use Treo\Core\Migration\Base;
 
 /**
- * Class V1Dot1Dot1
+ * Class V1Dot1Dot2
  *
  * @package Pim\Migrations
  */
-class V1Dot1Dot1 extends Base
+class V1Dot1Dot2 extends Base
 {
     /**
      * @inheritDoc
@@ -62,9 +62,9 @@ class V1Dot1Dot1 extends Base
                     $sql .= "UPDATE product_category SET sorting='{$sorting}' WHERE category_id='{$categoryId}' AND product_id='{$pc['product_id']}';";
                     $sorting += 10;
                 }
-            }
 
-            $this->getPDO()->exec($sql);
+                $this->getPDO()->exec($sql);
+            }
         }
     }
 }

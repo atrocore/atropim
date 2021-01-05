@@ -291,7 +291,7 @@ class Product extends AbstractRepository
         return $this
             ->getEntityManager()
             ->nativeQuery(
-                "SELECT * FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0 ORDER BY sorting ASC"
+                "SELECT * FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0"
             )
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -315,7 +315,7 @@ class Product extends AbstractRepository
         $linkData = $this->getProductCategoryLinkData([$productId], [$categoryId]);
 
         // get max
-        $max = (int)$linkData[count($linkData) - 1]['sorting'];
+        $max = (int)$linkData[0]['sorting'];
 
         if (is_null($sorting)) {
             $sorting = $max + 10;
