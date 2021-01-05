@@ -53,9 +53,8 @@ class V1Dot1Dot2 extends Base
         )->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_GROUP);
 
         if (!empty($pcs)) {
-            $sql = "";
-
             foreach ($pcs as $categoryId => $data) {
+                $sql = "";
                 $sorting = 0;
 
                 foreach ($data as $key => $pc) {
