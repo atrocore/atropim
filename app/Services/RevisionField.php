@@ -31,10 +31,10 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Revisions\Services\RevisionField as MultilangRevisionField;
 use Espo\ORM\EntityCollection;
-use Espo\Core\Utils\Json;
 use Slim\Http\Request;
 
 /**
@@ -66,16 +66,29 @@ class RevisionField extends MultilangRevisionField
             if (empty($max)) {
                 $max = $this->maxSize;
             }
-            $isImageAttr = $this->checkIsAttributeImage($params['field']);
+            $attributeId = $params['field'];
+            $isImageAttr = $this->checkIsAttributeImage($attributeId);
+            $locale = '';
+
+            $parts = explode(ProductAttributeValue::LOCALE_IN_ID_SEPARATOR, $attributeId);
+            if (count($parts) == 2) {
+                $attributeId = $parts[0];
+                $locale = $parts[1];
+            }
+
             foreach ($notes as $note) {
-                if (!empty($note->get('attributeId')) && $note->get('attributeId') == $params['field']) {
+                if (!empty($note->get('attributeId')) && $note->get('attributeId') == $attributeId) {
                     // prepare data
-                    $data = Json::decode(Json::encode($note->get('data')), true);
+                    $data = $this->prepareNoteData($note->get('data'));
 
                     foreach ($data['fields'] as $field) {
-                        if ($max > count($result['list']) && $result['total'] >= $offset) {
+                        if ($max > count($result['list']) && $result['total'] >= $offset && $data['locale'] == $locale) {
                             // prepare field name
-                            $fieldName = 'value';
+                            if ($locale) {
+                                $fieldName = Util::toCamelCase('value_' . strtolower($locale));
+                            } else {
+                                $fieldName = 'value';
+                            }
 
                             // prepare data
                             $was = $became = [];
@@ -105,8 +118,9 @@ class RevisionField extends MultilangRevisionField
                                 "became"   => $became,
                                 "field"    => $fieldName
                             ];
+
+                            $result['total'] = $result['total'] + 1;
                         }
-                        $result['total'] = $result['total'] + 1;
                     }
                 }
             }
