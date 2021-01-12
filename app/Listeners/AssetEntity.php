@@ -53,16 +53,29 @@ class AssetEntity extends AbstractListener
      * @throws BadRequest
      * @throws Error
      */
-    public function beforeSave(Event $event)
+    public function beforeSave(Event $event): void
     {
-        $entity = $event->getArgument('entity');
+        /** @var Asset $asset */
+        $asset = $event->getArgument('entity');
 
-        if ($entity->isAttributeChanged('channelId') && $this->isProductMainImage($entity)) {
-            $msg = $message = $this
-                ->getLanguage()
-                ->translate("Scope for the image marked as Main cannot be changed.", 'exceptions', 'Asset');
+        if (!$asset->isNew() && !empty($entityName = $asset->get('entityName'))
+            && !empty($entityId = $asset->get('entityId')) && in_array($entityName, $this->hasMainImage)) {
+            if ($this->isAttributeChannelChanged($asset)) {
+                $table = Util::toCamelCase($entityName);
 
-            throw new BadRequest($msg);
+                $id = $this
+                    ->getEntityManager()
+                    ->nativeQuery("SELECT id FROM {$table} WHERE image_id = '{$asset->get('fileId')}' AND id = '{$entityId}'")
+                    ->fetch(\PDO::FETCH_ASSOC);
+
+                if (!empty($id)) {
+                    throw new BadRequest(
+                        $this
+                            ->getLanguage()
+                            ->translate("Scope for the image marked as Main cannot be changed.", 'exceptions', 'Asset')
+                    );
+                }
+            }
         }
     }
 
@@ -95,23 +108,22 @@ class AssetEntity extends AbstractListener
     }
 
     /**
-     * @param \Espo\Core\ORM\Entity $asset
+     * @param Asset $asset
      *
      * @return bool
-     *
-     * @throws Error
      */
-    protected function isProductMainImage(Entity $asset): bool
+    protected function isAttributeChannelChanged(Asset $asset): bool
     {
         $result = false;
+        $table = Util::toCamelCase($asset->get('entityName'));
 
-        if (!empty($entityId = $asset->get('entityId'))
-            && $asset->get('entityName') == 'Product') {
-            $entity = $this->getEntityManager()->getEntity($asset->get('entityName'), $entityId);
+        $data = $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT channel FROM {$table}_asset WHERE asset_id = '{$asset->get('id')}' AND {$table}_id = '{$asset->get('entityId')}' AND deleted = 0;")
+            ->fetch(\PDO::FETCH_ASSOC);
 
-            if ($entity->get('imageId') == $asset->get('fileId')) {
-                $result = true;
-            }
+        if ($data['channel'] != $asset->get('channelId')) {
+            $result = true;
         }
 
         return $result;
