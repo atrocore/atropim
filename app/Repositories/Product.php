@@ -311,16 +311,16 @@ class Product extends AbstractRepository
             $categoryId = $categoryId->get('id');
         }
 
-        if (is_null($sorting)) {
-            $sorting = time();
-            $cascadeUpdate = false;
-        }
-
         // get link data
         $linkData = $this->getProductCategoryLinkData([$productId], [$categoryId]);
 
         // get max
         $max = (int)$linkData[0]['sorting'];
+
+        if (is_null($sorting)) {
+            $sorting = $max + 10;
+            $cascadeUpdate = false;
+        }
 
         // update current
         $this

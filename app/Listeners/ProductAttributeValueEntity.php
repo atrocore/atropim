@@ -34,8 +34,10 @@ namespace Pim\Listeners;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Pim\Entities\ProductAttributeValue;
+use Pim\Import\Types\Simple\FieldConverters\Unit;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
 
@@ -90,6 +92,15 @@ class ProductAttributeValueEntity extends AbstractListener
             $this->createNote($entity);
         }
 
+        $langList = $this->getConfig()->get('inputLanguageList', []);
+        foreach ($langList as $locale) {
+            $field = Util::toCamelCase('value_' . strtolower($locale));
+
+            if ($entity->isAttributeChanged($field)) {
+                $this->createNote($entity, $locale);
+            }
+        }
+
         return true;
     }
 
@@ -116,12 +127,13 @@ class ProductAttributeValueEntity extends AbstractListener
 
     /**
      * @param Entity $entity
+     * @param string $locale
      *
      * @throws \Espo\Core\Exceptions\Error
      */
-    protected function createNote(Entity $entity)
+    protected function createNote(Entity $entity, string $locale = '')
     {
-        if (!empty($data = $this->getNoteData($entity))) {
+        if (!empty($data = $this->getNoteData($entity, $locale))) {
             $note = $this->getEntityManager()->getEntity('Note');
             $note->set('type', 'Update');
             $note->set('parentId', $entity->get('productId'));
@@ -137,10 +149,11 @@ class ProductAttributeValueEntity extends AbstractListener
      * Get note data
      *
      * @param Entity $entity
+     * @param string $locale
      *
      * @return array
      */
-    protected function getNoteData(Entity $entity): array
+    protected function getNoteData(Entity $entity, string $locale = ''): array
     {
         // get attribute
         $attribute = $entity->get('attribute');
@@ -157,16 +170,25 @@ class ProductAttributeValueEntity extends AbstractListener
         // prepare array types
         $arrayTypes = ['array', 'multiEnum'];
 
-        if (self::$beforeSaveData['value'] != $entity->get('value')
+        // prepare field name
+        if ($locale) {
+            $field = Util::toCamelCase('value_' . strtolower($locale));
+            $fieldName .= " ($locale)";
+        } else {
+            $field = 'value';
+        }
+
+        if (self::$beforeSaveData[$field] != $entity->get($field)
             || ($entity->isAttributeChanged('data')
                 && self::$beforeSaveData['data']->unit != $entity->get('data')->unit)) {
             $result['fields'][] = $fieldName;
+            $result['locale'] = $locale;
             if (in_array($attribute->get('type'), $arrayTypes)) {
-                $result['attributes']['was'][$fieldName] = Json::decode(self::$beforeSaveData['value'], true);
-                $result['attributes']['became'][$fieldName] = Json::decode($entity->get('value'), true);
+                $result['attributes']['was'][$fieldName] = Json::decode(self::$beforeSaveData[$field], true);
+                $result['attributes']['became'][$fieldName] = Json::decode($entity->get($field), true);
             } else {
-                $result['attributes']['was'][$fieldName] = (!empty(self::$beforeSaveData['value'])) ? self::$beforeSaveData['value'] : null;
-                $result['attributes']['became'][$fieldName] = $entity->get('value');
+                $result['attributes']['was'][$fieldName] = (!empty(self::$beforeSaveData[$field])) ? self::$beforeSaveData[$field] : null;
+                $result['attributes']['became'][$fieldName] = $entity->get($field);
             }
 
             if ($entity->get('attribute')->get('type') == 'unit') {

@@ -29,35 +29,41 @@
 
 declare(strict_types=1);
 
-namespace Pim\EntryPoints;
+namespace Pim\Migrations;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Entities\Attachment;
+use Treo\Core\Migration\Base;
 
 /**
- * Class Image
+ * Class V1Dot1Dot2
+ *
+ * @package Pim\Migrations
  */
-class Image extends \Espo\EntryPoints\Image
+class V1Dot1Dot2 extends Base
 {
     /**
      * @inheritDoc
-     * @throws NotFound
      */
-    protected function checkAttachment(Attachment $attachment): bool
+    public function up(): void
     {
-        if (in_array($attachment->get('relatedType'), ['Asset'])) {
-            $entity = $this
-                ->getEntityManager()
-                ->getRepository('Asset')
-                ->where(['fileId' => $attachment->get('id')])
-                ->findOne();
-            if (empty($entity)) {
-                throw new NotFound();
-            }
-        } else {
-            $entity = $attachment;
-        }
+        $pcs = $this->getPDO()->query(
+            "SELECT category_id, product_id, sorting
+            FROM product_category
+            WHERE deleted = 0
+            ORDER BY sorting ASC"
+        )->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_GROUP);
 
-        return $this->getAcl()->checkEntity($entity);
+        if (!empty($pcs)) {
+            foreach ($pcs as $categoryId => $data) {
+                $sql = "";
+                $sorting = 0;
+
+                foreach ($data as $key => $pc) {
+                    $sql .= "UPDATE product_category SET sorting='{$sorting}' WHERE category_id='{$categoryId}' AND product_id='{$pc['product_id']}';";
+                    $sorting += 10;
+                }
+
+                $this->getPDO()->exec($sql);
+            }
+        }
     }
 }
