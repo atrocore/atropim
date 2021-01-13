@@ -34,7 +34,7 @@ namespace Pim\Import\Types\Simple\Handlers;
 use Espo\ORM\Entity;
 use Espo\Services\Record;
 use Import\Types\Simple\Handlers\AbstractHandler;
-use Treo\Core\Exceptions\NoChange;
+use Treo\Core\Exceptions\NotModified;
 use Treo\Core\Utils\Util;
 
 /**
@@ -127,7 +127,7 @@ class ProductHandler extends AbstractHandler
                         continue;
                     }
 
-                    if (isset($item['attributeId']) || isset($item['pimImage']) || $item['name'] == 'productCategories') {
+                    if (isset($item['attributeId']) || $item['name'] == 'productCategories') {
                         $additionalFields[] = [
                             'item' => $item,
                             'row'  => $row
@@ -200,7 +200,7 @@ class ProductHandler extends AbstractHandler
     {
         try {
             $result = $service->updateEntity($id, $data);
-        } catch (NoChange $e) {
+        } catch (NotModified $e) {
             $result = $service->readEntity($id);
         }
 
@@ -233,17 +233,10 @@ class ProductHandler extends AbstractHandler
 
         foreach ($this->attributes as $item) {
             if ($item->get('attributeId') == $conf['attributeId'] && $item->get('scope') == $conf['scope']) {
-                if ($conf['scope'] == 'Global') {
+                if ($conf['scope'] == 'Global'
+                    || ($conf['scope'] == 'Channel' && $conf['channelId'] == $item->get('channelId'))) {
                     $inputRow->id = $item->get('id');
                     $this->prepareValue($restoreRow, $item, $conf);
-                } elseif ($conf['scope'] == 'Channel') {
-                    $channels = array_column($item->get('channels')->toArray(), 'id');
-
-                    if (empty($diff = array_diff($conf['channelsIds'], $channels))
-                        && empty($diff = array_diff($channels, $conf['channelsIds']))) {
-                        $inputRow->id = $item->get('id');
-                        $this->prepareValue($restoreRow, $item, $conf);
-                    }
                 }
             }
         }
@@ -266,7 +259,8 @@ class ProductHandler extends AbstractHandler
             $inputRow->scope = $conf['scope'];
 
             if ($conf['scope'] == 'Channel') {
-                $inputRow->channelsIds = $conf['channelsIds'];
+                $inputRow->channelId = $conf['channelId'];
+                $inputRow->channelName = $conf['channelName'];
             }
 
             $entity = $service->createEntity($inputRow);
