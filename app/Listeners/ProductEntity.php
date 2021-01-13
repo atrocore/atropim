@@ -92,7 +92,7 @@ class ProductEntity extends AbstractEntityListener
             $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
         }
 
-        if ($event->getArgument('relationName') == 'channels') {
+        if ($event->getArgument('relationName') == 'channels' && !$product->isSkippedValidation('isChannelAlreadyRelated')) {
             $this->getProductRepository()->isChannelAlreadyRelated($product, $event->getArgument('foreign'));
         }
     }

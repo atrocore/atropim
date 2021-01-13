@@ -68,6 +68,7 @@ class Channel extends Base
                 $product->skipIsFromCategoryTreeValidation = true;
                 $productRepository->unrelateForce($product, 'channels', $channel);
             } else {
+                $product->skipValidation('isChannelAlreadyRelated');
                 $product->fromCategoryTree = true;
                 $productRepository->relate($product, 'channels', $channel);
             }
