@@ -11,5 +11,8 @@
   },
   "labels": {
     "Set as Main Image": "Als Hauptbild setzen"
+  },
+  "exceptions": {
+    "Scope for the image marked as Main cannot be changed.": "Scope für das als Hauptbild markierte Bild kann nicht geändert werden."
   }
 }

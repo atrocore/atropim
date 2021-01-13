@@ -32,6 +32,8 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Dam\Entities\Asset;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
@@ -43,6 +45,38 @@ class AssetEntity extends AbstractListener
 {
     /** @var array */
     protected $hasMainImage = ['Product', 'Category'];
+
+    /**
+     * @param Event $event
+     *
+     * @throws BadRequest
+     * @throws Error
+     */
+    public function beforeSave(Event $event): void
+    {
+        /** @var Asset $asset */
+        $asset = $event->getArgument('entity');
+
+        if (!$asset->isNew() && !empty($entityName = $asset->get('entityName'))
+            && !empty($entityId = $asset->get('entityId')) && in_array($entityName, $this->hasMainImage)) {
+            if ($this->isAttributeChannelChanged($asset)) {
+                $table = Util::toCamelCase($entityName);
+
+                $id = $this
+                    ->getEntityManager()
+                    ->nativeQuery("SELECT id FROM {$table} WHERE image_id = '{$asset->get('fileId')}' AND id = '{$entityId}'")
+                    ->fetch(\PDO::FETCH_ASSOC);
+
+                if (!empty($id)) {
+                    throw new BadRequest(
+                        $this
+                            ->getLanguage()
+                            ->translate("Scope for the image marked as Main cannot be changed.", 'exceptions', 'Asset')
+                    );
+                }
+            }
+        }
+    }
 
     public function afterSave(Event $event): void
     {
@@ -70,5 +104,27 @@ class AssetEntity extends AbstractListener
             $table = Util::toCamelCase($entity);
             $this->getEntityManager()->nativeQuery("UPDATE $table SET image_id=null WHERE image_id='$fileId'");
         }
+    }
+
+    /**
+     * @param Asset $asset
+     *
+     * @return bool
+     */
+    protected function isAttributeChannelChanged(Asset $asset): bool
+    {
+        $result = false;
+        $table = Util::toCamelCase($asset->get('entityName'));
+
+        $data = $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT channel FROM {$table}_asset WHERE asset_id = '{$asset->get('id')}' AND {$table}_id = '{$asset->get('entityId')}' AND deleted = 0;")
+            ->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data['channel'] != $asset->get('channelId')) {
+            $result = true;
+        }
+
+        return $result;
     }
 }
