@@ -32,12 +32,12 @@ declare(strict_types=1);
 namespace Pim\EntryPoints;
 
 use Espo\Core\Exceptions\NotFound;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
 
 /**
  * Class Image
  */
-class Image extends \Treo\EntryPoints\Image
+class Image extends \Espo\EntryPoints\Image
 {
     /**
      * @inheritDoc

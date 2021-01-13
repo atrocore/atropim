@@ -233,14 +233,10 @@ class ProductHandler extends AbstractHandler
 
         foreach ($this->attributes as $item) {
             if ($item->get('attributeId') == $conf['attributeId'] && $item->get('scope') == $conf['scope']) {
-                if ($conf['scope'] == 'Global') {
+                if ($conf['scope'] == 'Global'
+                    || ($conf['scope'] == 'Channel' && $conf['channelId'] == $item->get('channelId'))) {
                     $inputRow->id = $item->get('id');
                     $this->prepareValue($restoreRow, $item, $conf);
-                } elseif ($conf['scope'] == 'Channel') {
-                    if ($conf['channelId'] != $item->get('channelId')) {
-                        $inputRow->id = $item->get('id');
-                        $this->prepareValue($restoreRow, $item, $conf);
-                    }
                 }
             }
         }
