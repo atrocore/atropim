@@ -32,11 +32,11 @@ Espo.define('pim:views/fields/user-with-avatar', 'class-replace!pim:views/fields
 
         setDefaultOwnerUser: function () {
             if (this.model.name === 'Product'){
-                return this.getConfig().get('ownerUserProductOwnership') === 'sameAsCreator';
+                return (this.getConfig().get('ownerUserProductOwnership') || 'sameAsCreator') === 'sameAsCreator';
             }
 
             if (this.model.name === 'ProductAttributeValue'){
-                return this.getConfig().get('ownerUserAttributeOwnership') === 'sameAsCreator';
+                return (this.getConfig().get('ownerUserAttributeOwnership') || 'sameAsCreator') === 'sameAsCreator';
             }
 
             return true;
@@ -44,11 +44,11 @@ Espo.define('pim:views/fields/user-with-avatar', 'class-replace!pim:views/fields
 
         setDefaultAssignedUser: function () {
             if (this.model.name === 'Product'){
-                return this.getConfig().get('assignedUserProductOwnership') === 'sameAsCreator';
+                return (this.getConfig().get('assignedUserProductOwnership') || 'sameAsCreator') === 'sameAsCreator';
             }
 
             if (this.model.name === 'ProductAttributeValue'){
-                return this.getConfig().get('assignedUserAttributeOwnership') === 'sameAsCreator';
+                return (this.getConfig().get('assignedUserAttributeOwnership') || 'sameAsCreator') === 'sameAsCreator';
             }
 
             return true;
