@@ -2,7 +2,7 @@
 
 ## What Is AtroPIM?
 
-![anne](_assets/zs_ft_19_01_2018_employee_eng2.png)
+![anne](_assets/atropim-banner.png)
 
 AtroPIM is an open-source product information management system (PIM), which is based on [AtroCore](https://github.com/atrocore/atrocore) software platform. AtroPIM (as well as AtroCore) is distributed under GPLv3 License and is free. It has a lot of features right out-of-the-box and thus is an excellent tool for cost-effective and timely application development.
 
