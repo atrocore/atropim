@@ -38,6 +38,18 @@ Espo.define('pim:views/asset/fields/channel', 'treo-core:views/fields/filtered-l
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.listenTo(this.model, 'change:channelId', () => {
+                if (!this.model.get('entityId')) {
+                    this.model.set('entityId', this.getEntityId(), {silent: true});
+                }
+
+                if (!this.model.get('entityName')) {
+                    this.model.set('entityName', 'Product', {silent: true});
+                }
+
+                this.model.set('channel', this.model.get('channelId'), {silent: true});
+            });
+
             if (this.model.get('channelId') === null) {
                 if (this.mode === 'edit') {
                     this.model.set('channelName', null);
@@ -47,9 +59,17 @@ Espo.define('pim:views/asset/fields/channel', 'treo-core:views/fields/filtered-l
             }
         },
 
+        getEntityId: function () {
+            if (this.model.get('entityId')) {
+                return this.model.get('entityId');
+            }
+
+            return this.model.get('productsIds')[0];
+        },
+
         boolFilterData: {
             productChannels() {
-                return this.model.get('entityId');
+                return this.getEntityId();
             }
         },
     })
