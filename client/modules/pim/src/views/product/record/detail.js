@@ -41,12 +41,13 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         notFilterFields: ['assignedUser', 'ownerUser', 'teams'],
 
-        beforeSaveModel: null,
+        beforeSaveModel: [],
 
         setup() {
             Dep.prototype.setup.call(this);
 
             if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit') && this.getMetadata().get(['scopes', this.scope, 'advancedFilters'])) {
+                this.beforeSaveModel = this.model.getClonedAttributes();
                 this.listenTo(this.model, 'main-image-updated', () => {
                     this.applyOverviewFilters();
                 });
@@ -110,8 +111,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         applyOverviewFilters() {
             let fields = this.getFilterFieldViews();
             Object.keys(fields).forEach(name => {
+                let value = (name in this.beforeSaveModel) ? this.beforeSaveModel[name] : this.model.get(name);
                 if (!this.notFilterFields.includes(name)
-                    && !this.isEmptyRequiredField(name, this.beforeSaveModel[name])) {
+                    && !this.isEmptyRequiredField(name, value)) {
                     let fieldView = fields[name],
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);
@@ -150,7 +152,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             let filter = (this.model.advancedEntityView || {}).fieldsFilter;
 
             let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
-            let actualFieldValues = actualFields.map(field => this.beforeSaveModel[field]);
+            let actualFieldValues = actualFields.map(field => (field in this.beforeSaveModel) ? this.beforeSaveModel[field] : fieldView.model.get(field));
             actualFieldValues = actualFieldValues.concat(this.getAlternativeValues(fieldView));
 
             return !actualFieldValues.every(value => this.checkFieldValue(filter, value, fieldView.isRequired()));
