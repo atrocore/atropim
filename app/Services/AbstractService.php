@@ -57,7 +57,7 @@ abstract class AbstractService extends Base
     {
         /** @var Asset $asset */
         $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
-        if (empty($asset)) {
+        if (empty($asset) || empty($attachment = $asset->get('file'))) {
             throw new NotFound();
         }
 
@@ -70,8 +70,9 @@ abstract class AbstractService extends Base
         $this->getEntityManager()->saveEntity($entity);
 
         return [
-            'imageId'   => $asset->get('fileId'),
-            'imageName' => $asset->get('name')
+            'imageId'        => $asset->get('fileId'),
+            'imageName'      => $asset->get('name'),
+            'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
         ];
     }
 

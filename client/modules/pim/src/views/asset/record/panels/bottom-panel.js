@@ -37,8 +37,9 @@ Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/recor
             }).then(response => {
                 this.notify('Saved', 'success');
 
-                this.model.set('imageId', response.imageId);
+                this.model.set('imagePathsData', response.imagePathsData);
                 this.model.set('imageName', response.imageName);
+                this.model.set('imageId', response.imageId);
             });
         }
 
