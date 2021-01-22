@@ -50,7 +50,7 @@ class Attribute extends AbstractRepository
     /**
      * @var string
      */
-    protected $ownershipRelation = 'productAttributeValues';
+    protected $ownershipRelation = 'ProductAttributeValue';
 
     /**
      * @var string
