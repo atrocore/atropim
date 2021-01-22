@@ -1,21 +1,5 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
-    "assignedUserProductOwnership": "Assigned User",
-    "ownerUserProductOwnership": "Owner",
-    "teamsProductOwnership": "Team",
-    "assignedUserAttributeOwnership": "Assigned User",
-    "ownerUserAttributeOwnership": "Owner",
-    "teamsAttributeOwnership": "Team"
-  },
-  "labels": {
-    "Inheritance of product ownership": "Default Values for Product Ownership",
-    "Inheritance of the product attribute value ownership": "Default Values for Product Attribute Value Ownership",
-    "fromCatalog": "From Catalog",
-    "fromProductFamily": "From Product Family",
-    "fromAttribute": "From Attribute",
-    "fromProduct": "From Product",
-    "sameAsCreator": "Same as Creator",
-    "notInherit": "No default value"
+    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories."
   }
 }

@@ -63,6 +63,11 @@ class Attribute extends AbstractRepository
     protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
 
     /**
+     * @var string
+     */
+    protected $teamsOwnership = 'teamsAttributeOwnership';
+
+    /**
      * @inheritdoc
      */
     protected function init()
@@ -107,6 +112,16 @@ class Attribute extends AbstractRepository
 
         // call parent action
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        $this->setInheritedOnwership($entity);
     }
 
     /**

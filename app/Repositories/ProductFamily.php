@@ -47,7 +47,7 @@ class ProductFamily extends AbstractRepository
     /**
      * @var string
      */
-    protected $ownershipRelation = 'products';
+    protected $ownershipRelation = 'Product';
 
     /**
      * @var string
@@ -58,6 +58,11 @@ class ProductFamily extends AbstractRepository
      * @var string
      */
     protected $ownerUserOwnership = 'ownerUserProductOwnership';
+
+    /**
+     * @var string
+     */
+    protected $teamsOwnership = 'teamsProductOwnership';
 
     /**
      * @inheritDoc
@@ -148,5 +153,15 @@ class ProductFamily extends AbstractRepository
                 $this->getEntityManager()->saveEntity($product);
             }
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        $this->setInheritedOnwership($entity);
     }
 }

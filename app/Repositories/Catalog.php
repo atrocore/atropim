@@ -46,7 +46,7 @@ class Catalog extends AbstractRepository
     /**
      * @var string
      */
-    protected $ownershipRelation = 'products';
+    protected $ownershipRelation = 'Product';
 
     /**
      * @var string
@@ -57,6 +57,11 @@ class Catalog extends AbstractRepository
      * @var string
      */
     protected $ownerUserOwnership = 'ownerUserProductOwnership';
+
+    /**
+     * @var string
+     */
+    protected $teamsOwnership = 'teamsProductOwnership';
 
     /**
      * @inheritDoc
@@ -70,5 +75,15 @@ class Catalog extends AbstractRepository
 
         // remove catalog products
         $this->getEntityManager()->nativeQuery("UPDATE product SET deleted=1 WHERE catalog_id='$id'");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        $this->setInheritedOnwership($entity);
     }
 }

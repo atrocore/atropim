@@ -29,6 +29,8 @@
 Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
+        sideView: "pim:views/product-attribute-value/record/detail-side",
+
         setup() {
             Dep.prototype.setup.call(this);
 

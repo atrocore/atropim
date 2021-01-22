@@ -262,6 +262,39 @@
     },
     "contents": {
       "type": "linkMultiple"
+    },
+    "isInheritAssignedUser": {
+      "type": "bool",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "isInheritOwnerUser": {
+      "type": "bool",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "isInheritTeams": {
+      "type": "bool",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     }
   },
   "links": {

@@ -33,6 +33,7 @@ Espo.define('pim:views/product-attribute-value/record/edit-small', ['pim:views/p
             Dep.prototype.setup.call(this);
 
             Detail.prototype.handleValueModelDefsUpdating.call(this);
+            this.sideView = Detail.prototype.sideView;
         },
 
         updateModelDefs() {

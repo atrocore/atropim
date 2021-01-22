@@ -1,18 +1,5 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
-    "assignedUserProductOwnership": "Zugewiesener Benutzer",
-    "ownerUserProductOwnership": "Eigentümer",
-    "teamsProductOwnership": "Team"
-  },
-  "labels": {
-    "Inheritance of product ownership": "Standardwerte für Produktbesitz",
-    "Inheritance of the product attribute value ownership": "Standardwerte für Besitz von Produktattributwerten",
-    "fromCatalog": "Vom Katalog",
-    "fromProductFamily": "Von Produktfamilie",
-    "fromProduct": "Vom Produkt",
-    "fromAttribute": "Vom Attribut",
-    "sameAsCreator": "Gleich wie Ersteller",
-    "notInherit": "Kein Standardwert"
+    "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken."
   }
 }

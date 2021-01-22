@@ -32,8 +32,8 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
             Dep.prototype.setup.call(this);
 
             let config = this.getConfig(),
-                assignedUser = config.get('assignedUserProductOwnership') || 'sameAsCreator',
-                ownerUser = config.get('ownerUserProductOwnership') || 'sameAsCreator',
+                assignedUser = config.get('assignedUserProductOwnership') || 'notInherit',
+                ownerUser = config.get('ownerUserProductOwnership') || 'notInherit',
                 teams = config.get('teamsProductOwnership') || 'notInherit';
 
             if (this.getAcl().get('assignmentPermission') !== 'no'

@@ -53,7 +53,7 @@ class Product extends AbstractRepository
     /**
      * @var string
      */
-    protected $ownershipRelation = 'productAttributeValues';
+    protected $ownershipRelation = 'ProductAttributeValue';
 
     /**
      * @var string
@@ -64,6 +64,11 @@ class Product extends AbstractRepository
      * @var string
      */
     protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
+
+    /**
+     * @var string
+     */
+    protected $teamsOwnership = 'teamsAttributeOwnership';
 
     /**
      * @return array
@@ -481,8 +486,38 @@ class Product extends AbstractRepository
             }
         }
 
+        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritAssignedUser') && $entity->get('isInheritAssignedUser')) {
+            $this->inheritOwnership($entity, 'assignedUser', $this->getConfig()->get('assignedUserProductOwnership', null));
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritOwnerUser') && $entity->get('isInheritOwnerUser')) {
+            $this->inheritOwnership($entity, 'ownerUser', $this->getConfig()->get('ownerUserProductOwnership', null));
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritTeams') && $entity->get('isInheritTeams')) {
+            $this->inheritOwnership($entity, 'teams', $this->getConfig()->get('teamsProductOwnership', null));
+        }
+
         // parent action
         parent::afterSave($entity, $options);
+
+        $this->setInheritedOnwership($entity);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getInheritedEntity(Entity $entity, string $config): ?Entity
+    {
+        $result = null;
+
+        if ($config == 'fromCatalog') {
+            $result = $entity->get('catalog');
+        } elseif ($config == 'fromProductFamily') {
+            $result = $entity->get('productFamily');
+        }
+
+        return $result;
     }
 
     /**
