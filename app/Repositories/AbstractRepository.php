@@ -173,7 +173,7 @@ abstract class AbstractRepository extends Base
                                 ON {$table}.id = entity_team.entity_id 
                                     AND entity_team.entity_type = '{$this->ownershipRelation}' 
                                     AND {$table}.deleted = 0
-                            WHERE {$table}.is_inherit_teams = 1 AND entity_team.deleted = 0;";
+                            WHERE {$table}.is_inherit_teams = 1;";
                     $this
                         ->getEntityManager()
                         ->nativeQuery($sql);
