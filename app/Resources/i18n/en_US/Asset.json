@@ -10,9 +10,9 @@
     "products": "Products"
   },
   "labels": {
-    "Set as Main Image": "Set as Main Image"
+    "setAsMainImage": "Set as Main Image"
   },
   "exceptions": {
-    "Scope for the image marked as Main cannot be changed.": "Scope for the image marked as Main cannot be changed."
+    "scopeForTheImageMarkedAsMainCannotBeChanged": "Scope for the image marked as Main cannot be changed."
   }
 }

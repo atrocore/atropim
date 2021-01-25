@@ -5,7 +5,7 @@
       {
         "url": "#Admin/moduleSettings/id=pim:views_settings_edit",
         "label": "Settings",
-        "description": "pim-settings"
+        "description": "pimSettings"
       }
     ],
     "order": 60

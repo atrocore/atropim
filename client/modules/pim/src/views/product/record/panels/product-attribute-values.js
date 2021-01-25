@@ -59,7 +59,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         noGroup: {
             key: 'no_group',
-            label: 'No Group'
+            label: 'noGroup'
         },
 
         initialAttributes: null,
@@ -168,7 +168,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
                 if (this.getAcl().check('AttributeGroup', 'read')) {
                     this.actionList.push({
-                        label: 'Select Attribute Group',
+                        label: 'selectAttributeGroup',
                         action: 'selectAttributeGroup'
                     });
                 }
@@ -176,7 +176,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
             if (this.getAcl().check('ProductAttributeValue', 'remove')) {
                 this.actionList.push({
-                    label: 'Remove all custom attributes',
+                    label: 'removeAllCustomAttributes',
                     action: 'removeAllNotInheritedAttributes'
                 });
             }
@@ -366,7 +366,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         actionRemoveAllNotInheritedAttributes() {
             this.confirm({
-                message: this.translate("Are you sure, you want to remove all сustom attributes?", 'messages', 'Product'),
+                message: this.translate("areYouSureYouWantToRemoveAllCustomAttributes", 'messages', 'Product'),
                 confirmText: this.translate('Apply')
             }, function () {
                 this.notify('Saving...');

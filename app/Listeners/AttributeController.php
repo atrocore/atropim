@@ -76,7 +76,7 @@ class AttributeController extends AbstractListener
         if ($this->hasProductFamilies($idsAttribute)) {
             throw new BadRequest(
                 $this->getLanguage()->translate(
-                    'Attribute is used in product families. Please, update product families first',
+                    'attributeIsUsedInProductFamilies',
                     'exceptions',
                     'Attribute'
                 )
@@ -94,7 +94,7 @@ class AttributeController extends AbstractListener
         if ($this->hasProduct($idsAttribute)) {
             throw new BadRequest(
                 $this->getLanguage()->translate(
-                    'Attribute is used in products. Please, update products first',
+                    'attributeIsUsedInProducts',
                     'exceptions',
                     'Attribute'
                 )

@@ -16,6 +16,6 @@
     "unlinkAttributeGroupConfirmation": "Möchten Sie die Verknüpfung aller Attribute der Attributgruppe wirklich aufheben?"
   },
   "exceptions": {
-    "Attribute group is linked with attribute(s). Please, unlink attribute(s) first": "Attributgruppe ist mit Attributen verknüpft. Bitte heben Sie zuerst die Verknüpfung mit Attributen auf."
+    "attributeGroupSsLinkedWithAttributes": "Attributgruppe ist mit Attributen verknüpft. Bitte heben Sie zuerst die Verknüpfung mit Attributen auf."
   }
 }

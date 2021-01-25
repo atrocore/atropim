@@ -65,19 +65,19 @@
   "labels": {
     "Create Product": "Create Product",
     "Product Attributes": "Attributes",
-    "There is no valid attributes for channel": "There is no valid attributes for channel",
-    "Add Attribute Filter": "Add Attribute Filter",
+    "thereIsNoValidAttributesForChannel": "There is no valid attributes for channel",
+    "addAttributeFilter": "Add Attribute Filter",
     "Channels": "Channels",
     "Product Channel Attributes": "Channel Attributes",
-    "Associated Products": "Associated Products",
+    "associatedProducts": "Associated Products",
     "withoutAnyCategory": "Without Any Category",
     "typeCategoryToSearch": "Type category to search...",
-    "No Group": "No Group",
+    "noGroup": "No Group",
     "sort": "Sort",
     "itemsInRow": "Items in row",
     "productImage": "Product Image",
-    "Select Attribute Group": "Select Attribute Group",
-    "Remove all custom attributes": "Remove all custom attributes",
+    "selectAttributeGroup": "Select Attribute Group",
+    "removeAllCustomAttributes": "Remove all custom attributes",
     "draft": "Draft",
     "prepared": "Prepared",
     "reviewed": "Reviewed",
@@ -106,7 +106,7 @@
     "withoutImageAssets": "Without Image Assets"
   },
   "messages": {
-    "Are you sure, you want to remove all сustom attributes?": "Are you sure, you want to remove all сustom attributes?"
+    "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?"
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Such channel is already related to the product.",
@@ -114,11 +114,12 @@
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Product cannot be associated with itself.",
     "productAssociationAlreadyExists": "Such product association exists already.",
-    "Product with such SKU already exist": "Product with such SKU already exist",
-    "You can't change Product Family in Product": "You can't change Product Family in Product",
-    "You can't change field of Type in Product": "You can't change field of Type in Product",
+    "productWithSuchSkuAlreadyExist": "Product with such SKU already exist",
+    "youCantChangeProductFamilyInProduct": "You can't change Product Family in Product",
+    "youCantChangeFieldOfTypeInProduct": "You can't change field of Type in Product",
     "isCategoryAlreadyRelated": "Category is already linked with product.",
     "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
-    "You should use categories from those trees that linked with product catalog": "This category is not available for the catalog of the selected product, and thus cannot be linked."
+    "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "This category is not available for the catalog of the selected product, and thus cannot be linked.",
+    "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Channel provided by category tree can't be unlinked from product"
   }
 }

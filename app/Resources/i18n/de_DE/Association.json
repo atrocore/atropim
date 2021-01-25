@@ -19,7 +19,7 @@
     "Create Association": "Assoziation erstellen"
   },
   "exceptions": {
-    "Association is linked with product(s). Please, unlink product(s) first": "Die Assoziation ist mit einem Produkt verlinkt. Bitte entfernen Sie zuerst das Produkt.",
-    "You can not deactivate association with active product(s)": "Sie können die Assoziation mit einem aktiven Produkt nicht deaktivieren"
+    "associationIsLinkedWithProducts": "Die Assoziation ist mit einem Produkt verlinkt. Bitte entfernen Sie zuerst das Produkt.",
+    "youCanNotDeactivateAssociationWithActiveProducts": "Sie können die Assoziation mit einem aktiven Produkt nicht deaktivieren"
   }
 }

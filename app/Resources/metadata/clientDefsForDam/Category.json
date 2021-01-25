@@ -10,21 +10,21 @@
     "edit": [
       {
         "name": "image",
-        "label": "Category Preview",
+        "label": "categoryPreview",
         "view": "pim:views/product/fields/image"
       }
     ],
     "detail": [
       {
         "name": "image",
-        "label": "Category Preview",
+        "label": "categoryPreview",
         "view": "pim:views/product/fields/image"
       }
     ],
     "detailSmall": [
       {
         "name": "image",
-        "label": "Category Preview",
+        "label": "categoryPreview",
         "view": "pim:views/product/fields/image"
       }
     ]

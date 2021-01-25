@@ -55,7 +55,7 @@ class ChannelEntity extends AbstractEntityListener
         if (!$this->isCodeValid($entity)) {
             throw new Exceptions\BadRequest(
                 $this->translate(
-                    'Code is invalid',
+                    'codeIsInvalid',
                     'exceptions',
                     'Global'
                 )

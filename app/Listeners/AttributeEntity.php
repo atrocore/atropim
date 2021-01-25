@@ -51,7 +51,7 @@ class AttributeEntity extends AbstractEntityListener
         $entity = $event->getArgument('entity');
 
         if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('Code is invalid', 'exceptions', 'Global'));
+            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {

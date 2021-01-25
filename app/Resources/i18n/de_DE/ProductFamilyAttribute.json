@@ -16,8 +16,8 @@
   },
   "labels": {
     "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen",
-    "Unlink, preserve values": "Link entfernen, Werte beibehalten",
-    "Unlink, remove values": "Link und Werte entfernen"
+    "unlinkPreserveValues": "Link entfernen, Werte beibehalten",
+    "unlinkRemoveValues": "Link und Werte entfernen"
   },
   "options": {
     "scope": {
@@ -27,7 +27,7 @@
   },
   "messages": {
     "savedForNotAllChannels": "Attribut '%s' wurde nicht für alle ausgewählten Kanäle verknüpft.",
-    "Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?": "Sind Sie sicher, dass Sie den Link vom Attribut zur Produktfamilie löschen und dessen Werte beibehalten wollen?",
-    "Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?": "Sind Sie sicher, dass Sie den Link vom Attribut zur Produktfamilie und alle Attributwerte löschen wollen?"
+    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues": "Sind Sie sicher, dass Sie den Link vom Attribut zur Produktfamilie löschen und dessen Werte beibehalten wollen?",
+    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues": "Sind Sie sicher, dass Sie den Link vom Attribut zur Produktfamilie und alle Attributwerte löschen wollen?"
   }
 }

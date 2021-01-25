@@ -71,7 +71,7 @@ class AssetEntity extends AbstractListener
                     throw new BadRequest(
                         $this
                             ->getLanguage()
-                            ->translate("Scope for the image marked as Main cannot be changed.", 'exceptions', 'Asset')
+                            ->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset')
                     );
                 }
             }

@@ -93,7 +93,7 @@ class CategoryEntity extends AbstractEntityListener
 
         // is code valid
         if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('Code is invalid', 'exceptions', 'Global'));
+            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
 
         if ((count($entity->get('catalogs')) > 0 || !empty($entity->get('catalogsIds')))
@@ -147,7 +147,7 @@ class CategoryEntity extends AbstractEntityListener
         }
 
         if ($entity->get('categories')->count() > 0) {
-            throw new BadRequest($this->exception("Category has child category and can't be deleted"));
+            throw new BadRequest($this->exception("categoryHasChildCategoryAndCantBeDeleted"));
         }
     }
 

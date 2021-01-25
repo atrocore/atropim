@@ -111,14 +111,14 @@ class Category extends AbstractRepository
 
         if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId')) {
             if (empty($entity->getFetched('categoryParentId'))) {
-                throw new BadRequest($this->exception('There is no ability to change category parent for root category'));
+                throw new BadRequest($this->exception('thereIsNoAbilityToChangeCategoryParentForRootCategory'));
             }
 
             // get fetched category
             $fetchedCategory = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'));
 
             if (empty($entity->get('categoryParentId')) || $entity->get('categoryParent')->getRoot()->get('id') != $fetchedCategory->getRoot()->get('id')) {
-                throw new BadRequest($this->exception('There is no ability to change category tree'));
+                throw new BadRequest($this->exception('thereIsNoAbilityToChangeCategoryTree'));
             }
         }
 

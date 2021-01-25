@@ -121,7 +121,7 @@ class ProductAttributeValueEntity extends AbstractListener
         }
 
         if (!empty($entity->get('productFamilyAttributeId'))) {
-            throw new BadRequest($this->exception('Attribute inherited from product family cannot be deleted.'));
+            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
         }
     }
 

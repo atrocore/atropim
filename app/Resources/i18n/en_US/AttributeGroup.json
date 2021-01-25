@@ -17,6 +17,6 @@
         "unlinkAttributeGroupConfirmation": "Are you sure you want to unlink all Attribute Group's Attributes?"
     },
     "exceptions": {
-        "Attribute group is linked with attribute(s). Please, unlink attribute(s) first": "Attribute group is linked with attribute(s). Please, unlink attribute(s) first"
+        "attributeGroupSsLinkedWithAttributes": "Attribute group is linked with attribute(s). Please, unlink attribute(s) first"
     }
 }

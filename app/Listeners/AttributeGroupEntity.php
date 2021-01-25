@@ -51,7 +51,7 @@ class AttributeGroupEntity extends AbstractEntityListener
         if (!$this->isCodeValid($event->getArgument('entity'))) {
             throw new BadRequest(
                 $this->translate(
-                    'Code is invalid',
+                    'codeIsInvalid',
                     'exceptions',
                     'Global'
                 )
@@ -71,7 +71,7 @@ class AttributeGroupEntity extends AbstractEntityListener
         if (count($event->getArgument('entity')->get('attributes')) > 0) {
             throw new BadRequest(
                 $this->translate(
-                    'Attribute group is linked with attribute(s). Please, unlink attribute(s) first',
+                    'attributeGroupSsLinkedWithAttributes',
                     'exceptions',
                     'AttributeGroup'
                 )

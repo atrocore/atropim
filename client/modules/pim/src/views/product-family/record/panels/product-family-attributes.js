@@ -144,7 +144,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
 
                 if (this.getAcl().check('AttributeGroup', 'read')) {
                     this.actionList.push({
-                        label: 'Select Attribute Group',
+                        label: 'selectAttributeGroup',
                         action: 'selectAttributeGroup'
                     });
                 }
@@ -257,7 +257,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: this.translate('Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues', 'messages', 'ProductFamilyAttribute'),
                 confirmText: this.translate('Unlink')
             }, function () {
                 var model = this.collection.get(id);
@@ -285,7 +285,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: this.translate('Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues', 'messages', 'ProductFamilyAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 var model = this.collection.get(id);
