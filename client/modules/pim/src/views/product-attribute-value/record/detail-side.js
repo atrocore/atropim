@@ -26,32 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/user-with-avatar', 'class-replace!pim:views/fields/user-with-avatar', function (Dep) {
-
-    return Dep.extend({
-
-        setDefaultOwnerUser: function () {
-            if (this.model.name === 'Product'){
-                return !this.getConfig().get('ownerUserProductOwnership');
+Espo.define('pim:views/product-attribute-value/record/detail-side', 'pim:views/record/detail-side',
+    Dep => Dep.extend({
+        ownershipOptions: {
+            'assignedUser': {
+                'config': 'assignedUserAttributeOwnership',
+                'field': 'isInheritAssignedUser'
+            },
+            'ownerUser': {
+                'config': 'ownerUserAttributeOwnership',
+                'field': 'isInheritOwnerUser'
+            },
+            'teams': {
+                'config': 'teamsAttributeOwnership',
+                'field': 'isInheritTeams'
             }
-
-            if (this.model.name === 'ProductAttributeValue'){
-                return !this.getConfig().get('ownerUserAttributeOwnership');
-            }
-
-            return true;
         },
-
-        setDefaultAssignedUser: function () {
-            if (this.model.name === 'Product'){
-                return !this.getConfig().get('assignedUserProductOwnership');
-            }
-
-            if (this.model.name === 'ProductAttributeValue'){
-                return !this.getConfig().get('assignedUserAttributeOwnership');
-            }
-
-            return true;
-        }
-    });
-});
+    })
+);

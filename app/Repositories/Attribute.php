@@ -50,7 +50,7 @@ class Attribute extends AbstractRepository
     /**
      * @var string
      */
-    protected $ownershipRelation = 'productAttributeValues';
+    protected $ownershipRelation = 'ProductAttributeValue';
 
     /**
      * @var string
@@ -61,6 +61,11 @@ class Attribute extends AbstractRepository
      * @var string
      */
     protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
+
+    /**
+     * @var string
+     */
+    protected $teamsOwnership = 'teamsAttributeOwnership';
 
     /**
      * @inheritdoc
@@ -107,6 +112,16 @@ class Attribute extends AbstractRepository
 
         // call parent action
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        $this->setInheritedOnwership($entity);
     }
 
     /**

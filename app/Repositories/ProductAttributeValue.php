@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
@@ -40,7 +39,7 @@ use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 /**
  * Class ProductAttributeValue
  */
-class ProductAttributeValue extends Base
+class ProductAttributeValue extends AbstractRepository
 {
     /**
      * @param string $productFamilyAttributeId
@@ -121,6 +120,43 @@ class ProductAttributeValue extends Base
                 }
             }
         }
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array $options
+     */
+    public function afterSave(Entity $entity, array $options = array())
+    {
+        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritAssignedUser') && $entity->get('isInheritAssignedUser')) {
+            $this->inheritOwnership($entity, 'assignedUser', $this->getConfig()->get('assignedUserAttributeOwnership', null));
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritOwnerUser') && $entity->get('isInheritOwnerUser')) {
+            $this->inheritOwnership($entity, 'ownerUser', $this->getConfig()->get('ownerUserAttributeOwnership', null));
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritTeams') && $entity->get('isInheritTeams')) {
+            $this->inheritOwnership($entity, 'teams', $this->getConfig()->get('teamsAttributeOwnership', null));
+        }
+
+        parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getInheritedEntity(Entity $entity, string $config): ?Entity
+    {
+        $result = null;
+
+        if ($config == 'fromAttribute') {
+            $result = $entity->get('attribute');
+        } elseif ($config == 'fromProduct') {
+            $result = $entity->get('product');
+        }
+
+        return $result;
     }
 
     /**

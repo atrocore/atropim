@@ -43,6 +43,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         beforeSaveModel: [],
 
+        sideView: "pim:views/product/record/detail-side",
+
         setup() {
             Dep.prototype.setup.call(this);
 
