@@ -47,8 +47,13 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
 
                     if (config && config !== 'notInherit') {
                         fields[field].readOnly = true;
-                        let unlock = !(this.model.get(this.ownershipOptions[field].field) === false ? this.model.get(this.ownershipOptions[field].field) : true);
+                        let unlock = !this.model.get(this.ownershipOptions[field].field);
                         this.changeFieldOwnership(fields[field].name, unlock);
+                    } else {
+                        if (this.getParentView().mode === 'edit') {
+                            fields[field].setMode('edit');
+                            fields[field].reRender();
+                        }
                     }
                 }
             });
@@ -103,14 +108,20 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
 
         updateOwnership (field, remove) {
             if (field in this.ownershipOptions) {
-                this.notify('Saving...');
-                this.model.save({[this.ownershipOptions[field].field]: remove}, {
-                    success: function () {
-                        this.notify('Saved', 'success');
-                        this.model.trigger('after:save');
-                    }.bind(this),
-                    patch: true
-                });
+                if (this.model.isNew()) {
+                    this.model.set({
+                        [this.ownershipOptions[field].field]: remove
+                    });
+                } else {
+                    this.notify('Saving...');
+                    this.model.save({[this.ownershipOptions[field].field]: remove}, {
+                        success: function () {
+                            this.notify('Saved', 'success');
+                            this.model.trigger('after:save');
+                        }.bind(this),
+                        patch: true
+                    });
+                }
             }
         },
 

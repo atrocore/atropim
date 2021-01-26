@@ -59,9 +59,7 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'treo-core:views/mo
             switch (param) {
                 case 'fromAttribute':
                     this.clearModel(field);
-                    this.listenTo(this.model, `change:attributeId`, () => {
-                        this.setRelatedOwnershipInfo('Attribute', 'attributeId', field);
-                    });
+                    this.setRelatedOwnershipInfo('Attribute', 'attributeId', field);
                     break;
                 case 'fromProduct':
                     this.clearModel(field);
@@ -95,53 +93,61 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'treo-core:views/mo
         },
 
         setRelatedOwnershipInfo: function (scope, target, field) {
-            let id = this.model.get(target),
-                isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
-                foreign = this.getMetadata().get(['entityDefs', scope, 'links', field, 'entity']),
-                idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
-                nameField = field + (isLinkMultiple ? 'Names' : 'Name');
+            this.listenTo(this.model, `change:${target} change:isInherit` + Espo.Utils.upperCaseFirst(field), () => {
+                this.ownershipRequestAndSetup(scope, target, field);
+            });
+        },
 
-            if (id) {
-                this.ajaxGetRequest(`${scope}/${id}`)
-                    .then(response => {
-                        let data = {
-                            [idField]: response[idField],
-                            [nameField]: response[nameField]
-                        };
+        ownershipRequestAndSetup: function (scope, target, field) {
+            if (this.model.get('isInherit' + Espo.Utils.upperCaseFirst(field))) {
+                let id = this.model.get(target),
+                    isLinkMultiple = (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']) === 'linkMultiple'),
+                    foreign = this.getMetadata().get(['entityDefs', scope, 'links', field, 'entity']),
+                    idField = field + (isLinkMultiple ? 'Ids' : 'Id'),
+                    nameField = field + (isLinkMultiple ? 'Names' : 'Name');
 
-                        switch (this.getEntityReadScopeLevel(foreign)) {
-                            case 'team':
-                                if (foreign === 'User') {
-                                    this.ajaxGetRequest(`${foreign}/${response[idField]}`).then(res => {
-                                        this.model.set(data);
-                                    });
-                                }
+                if (id && foreign) {
+                    this.ajaxGetRequest(`${scope}/${id}`)
+                        .then(response => {
+                            let data = {
+                                [idField]: response[idField],
+                                [nameField]: response[nameField]
+                            };
 
-                                if (foreign === 'Team') {
-                                    if (!response[idField].filter(item => !this.getUser().getTeamIdList().includes(item)).length) {
+                            switch (this.getEntityReadScopeLevel(foreign)) {
+                                case 'team':
+                                    if (foreign === 'User') {
+                                        this.ajaxGetRequest(`${foreign}/${response[idField]}`).then(res => {
+                                            this.model.set(data);
+                                        });
+                                    }
+
+                                    if (foreign === 'Team') {
+                                        if (!response[idField].filter(item => !this.getUser().getTeamIdList().includes(item)).length) {
+                                            this.model.set(data);
+                                        } else {
+                                            this.throwError403();
+                                        }
+                                    }
+                                    break;
+                                case 'own':
+                                    if (foreign === 'User'
+                                        && response[idField] === this.getUser().get('id')) {
                                         this.model.set(data);
                                     } else {
                                         this.throwError403();
                                     }
-                                }
-                                break;
-                            case 'own':
-                                if (foreign === 'User'
-                                    && response[idField] === this.getUser().get('id')) {
+                                    break;
+                                default:
                                     this.model.set(data);
-                                } else {
-                                    this.throwError403();
-                                }
-                                break;
-                            default:
-                                this.model.set(data);
-                        }
+                            }
+                        });
+                } else {
+                    this.model.set({
+                        [idField]: null,
+                        [nameField]: null
                     });
-            } else {
-                this.model.set({
-                    [idField]: null,
-                    [nameField]: null
-                });
+                }
             }
         }
     })
