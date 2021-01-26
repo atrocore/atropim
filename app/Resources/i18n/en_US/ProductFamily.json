@@ -14,12 +14,12 @@
   },
   "labels": {
     "Create ProductFamily": "Create Product family",
-    "Select Attribute Group": "Select Attribute Group"
+    "selectAttributeGroup": "Select Attribute Group"
   },
   "messages": {
     "Can't remove system Product Family": "Can't remove system Product Family"
   },
   "exceptions": {
-    "Product Family is used in products": "Product Family is used in products"
+    "productFamilyIsUsedInProducts": "Product Family is used in products"
   }
 }

@@ -14,7 +14,7 @@
     "Create Association": "Create Association"
   },
   "exceptions": {
-    "Association is linked with product(s). Please, unlink product(s) first": "Association is linked with product(s). Please, unlink product(s) first",
-    "You can not deactivate association with active product(s)": "You can not deactivate association with active product(s)"
+    "associationIsLinkedWithProducts": "Association is linked with product(s). Please, unlink product(s) first",
+    "youCanNotDeactivateAssociationWithActiveProducts": "You can not deactivate association with active product(s)"
   }
 }

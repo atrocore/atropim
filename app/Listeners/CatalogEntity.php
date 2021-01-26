@@ -51,7 +51,7 @@ class CatalogEntity extends AbstractEntityListener
     {
         if (!$this->isCodeValid($event->getArgument('entity'))) {
             throw new BadRequest(
-                $this->translate('Code is invalid', 'exceptions', 'Global')
+                $this->translate('codeIsInvalid', 'exceptions', 'Global')
             );
         }
     }

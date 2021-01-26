@@ -37,7 +37,7 @@
                     <li class="divider"></li>
                     <li class="dropdown-submenu">
                         <a href="javascript:" class=" add-attribute-filter-button" tabindex="-1">
-                            {{translate 'Add Attribute Filter' category="labels" scope=scope}}
+                            {{translate 'addAttributeFilter' category="labels" scope=scope}}
                         </a>
                         <ul class="dropdown-menu show-list family-list">
                             {{#if familiesAttributes}}

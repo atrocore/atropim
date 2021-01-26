@@ -83,22 +83,22 @@
     "contents": "Contents"
   },
   "labels": {
-    "Add Attribute Filter": "Attributfilter hinzufügen",
+    "addAttributeFilter": "Attributfilter hinzufügen",
     "Add Import Filter": "Importfilter hinzufügen",
-    "Associated Products": "Assoziierte Produkte",
+    "associatedProducts": "Assoziierte Produkte",
     "Channels": "Kanäle",
     "Create Product": "Produkt erstellen",
     "Product Attributes": "Produktattribute",
     "Product Channel Attributes": "Produktkanalattribute",
     "itemsInRow": "Anzahl Elemente in der Reihe",
-    "There is no valid attributes for channel": "Es gibt keine gültigen Attribute für Kanal",
+    "thereIsNoValidAttributesForChannel": "Es gibt keine gültigen Attribute für Kanal",
     "withoutAnyCategory": "Ohne Kategorie",
     "typeCategoryToSearch": "Kategorie zum Suchen eingeben...",
     "Package Details": "Paketdetails",
-    "No Group": "Keine Gruppe",
+    "noGroup": "Keine Gruppe",
     "productImage": "Produktbild",
-    "Select Attribute Group": "Attributgruppe auswählen",
-    "Remove all custom attributes": "Alle benutzerdefinierten Attribute entfernen",
+    "selectAttributeGroup": "Attributgruppe auswählen",
+    "removeAllCustomAttributes": "Alle benutzerdefinierten Attribute entfernen",
     "draft": "Entwurf",
     "prepared": "Vorbereitet",
     "reviewed": "Überprüft",
@@ -127,7 +127,7 @@
     "withoutProductAttributes": "ohne Produktattribute"
   },
   "messages": {
-    "Are you sure, you want to remove all сustom attributes?": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?"
+    "areYouSureYouWantToRemoveAllCustomAttributes": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?"
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Dieser Kanal ist mit dem Produkt bereits verknüpft.",
@@ -135,11 +135,11 @@
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
     "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
-    "Product with such SKU already exist": "Produkt mit einer solchen SKU existiert bereits",
-    "You can't change Product Family in Product": "Sie können die Produktfamilie in Product nicht ändern.",
-    "You can't change field of Type in Product": "Sie können das Feld Typ in Produkt nicht ändern",
-    "Channel provided by category tree can't be unlinked from product": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
-    "You should use categories from those trees that linked with product catalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
+    "productWithSuchSkuAlreadyExist": "Produkt mit einer solchen SKU existiert bereits",
+    "youCantChangeProductFamilyInProduct": "Sie können die Produktfamilie in Product nicht ändern.",
+    "youCantChangeFieldOfTypeInProduct": "Sie können das Feld Typ in Produkt nicht ändern",
+    "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
+    "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "isCategoryAlreadyRelated": "Die Kategorie ist bereits mit dem Produkt verknüpft.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden."
   }

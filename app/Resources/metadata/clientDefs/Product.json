@@ -98,7 +98,7 @@
     },
     "associatedMainProducts": {
       "view": "pim:views/product/record/panels/associated-main-product",
-      "label": "Associated Products",
+      "label": "associatedProducts",
       "rowActionsView": "pim:views/associated-product/record/row-actions/edit-and-remove-in-product",
       "select": false,
       "aclScopesList": [

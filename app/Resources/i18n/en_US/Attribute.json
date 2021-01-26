@@ -50,11 +50,11 @@
     "All": "All"
   },
   "exceptions": {
-    "Attribute value should be unique.": "Attribute value should be unique.",
-    "You can't change field of Type in Attribute": "You can't change Attribute type.",
-    "You can not unlink product family attribute": "You cannot unlink product family attribute.",
-    "Attribute with such CODE already exist": "Attribute with such code already exist.",
-    "Attribute is used in products. Please, update products first": "Attribute is used in products. Please, update products first.",
-    "Attribute is used in product families. Please, update product families first": "Attribute is used in product families. Please, update product families first."
+    "attributeValueShouldBeUnique": "Attribute value should be unique.",
+    "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",
+    "youCanNotUnlinkProductFamilyAttribute": "You cannot unlink product family attribute.",
+    "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
+    "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
+    "attributeIsUsedInProductFamilies": "Attribute is used in product families. Please, update product families first."
   }
 }

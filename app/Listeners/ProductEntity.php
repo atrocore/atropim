@@ -56,7 +56,7 @@ class ProductEntity extends AbstractEntityListener
 
         // is sku valid
         if (!$this->isSkuUnique($entity)) {
-            throw new BadRequest($this->exception('Product with such SKU already exist'));
+            throw new BadRequest($this->exception('productWithSuchSkuAlreadyExist'));
         }
 
         if ($entity->isAttributeChanged('catalogId')) {
@@ -138,7 +138,7 @@ class ProductEntity extends AbstractEntityListener
                 ->getChannelRelationData($productId);
 
             if (!empty($channelRelationData[$channelId]['isFromCategoryTree'])) {
-                throw new BadRequest($this->exception("Channel provided by category tree can't be unlinked from product"));
+                throw new BadRequest($this->exception("channelProvidedByCategoryTreeCantBeUnlinkedFromProduct"));
             }
         }
     }

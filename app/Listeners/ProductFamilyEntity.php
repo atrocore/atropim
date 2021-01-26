@@ -53,7 +53,7 @@ class ProductFamilyEntity extends AbstractEntityListener
         if (!$this->isCodeValid($entity)) {
             throw new BadRequest(
                 $this->translate(
-                    'Code is invalid',
+                    'codeIsInvalid',
                     'exceptions',
                     'Global'
                 )
@@ -109,7 +109,7 @@ class ProductFamilyEntity extends AbstractEntityListener
         if ($this->hasProducts($id)) {
             throw new BadRequest(
                 $this->getLanguage()->translate(
-                    'Product Family is used in products',
+                    'productFamilyIsUsedInProducts',
                     'exceptions',
                     'ProductFamily'
                 )

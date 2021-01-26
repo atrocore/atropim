@@ -426,7 +426,7 @@ class Product extends AbstractRepository
             $rootId = $category->getRoot()->get('id');
 
             if (!in_array($rootId, $treesIds)) {
-                throw new BadRequest($this->translate("You should use categories from those trees that linked with product catalog", 'exceptions', 'Product'));
+                throw new BadRequest($this->translate("youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog", 'exceptions', 'Product'));
             }
         }
 
@@ -450,7 +450,7 @@ class Product extends AbstractRepository
         if ($categories->count() > 0) {
             foreach ($categories as $category) {
                 if (!in_array($category->getRoot()->get('id'), $catalogTreesIds)) {
-                    throw new BadRequest($this->translate("You should use categories from those trees that linked with product catalog", 'exceptions', 'Product'));
+                    throw new BadRequest($this->translate("youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog", 'exceptions', 'Product'));
                 }
             }
         }

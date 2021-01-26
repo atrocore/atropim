@@ -219,7 +219,7 @@ class ProductAttributeValue extends AbstractRepository
                 || $entity->isAttributeChanged('isRequired')
                 || ($entity->getFetched('channelId') != $entity->get('channelId'))
                 || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('Attribute inherited from product family cannot be changed.'));
+                throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeChanged'));
             }
         }
         /**

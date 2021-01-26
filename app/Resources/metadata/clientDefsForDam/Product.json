@@ -13,21 +13,21 @@
     "edit": [
       {
         "name": "image",
-        "label": "Product Preview",
+        "label": "productPreview",
         "view": "pim:views/product/fields/image"
       }
     ],
     "detail": [
       {
         "name": "image",
-        "label": "Product Preview",
+        "label": "productPreview",
         "view": "pim:views/product/fields/image"
       }
     ],
     "detailSmall": [
       {
         "name": "image",
-        "label": "Product Preview",
+        "label": "productPreview",
         "view": "pim:views/product/fields/image"
       }
     ]

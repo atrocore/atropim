@@ -36,7 +36,7 @@ Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row
             if (this.isImage() && !this.model.get('channelId')) {
                 list.unshift({
                     action: 'setAsMainImage',
-                    label: this.translate('Set as Main Image', 'labels', 'Asset'),
+                    label: this.translate('setAsMainImage', 'labels', 'Asset'),
                     data: {
                         asset_id: this.model.id,
                         entity_id: this.model.get('entityId'),

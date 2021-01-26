@@ -78,8 +78,8 @@
     "Add Field": "Add Filter",
     "removeExplain": "Select this to unlink attribute from other Entities before removing",
     "removeHint": "When removing the Catalog, the Products belonging to it are deleted.",
-    "Category Preview": "Category Preview",
-    "Product Preview": "Product Preview"
+    "categoryPreview": "Category Preview",
+    "productPreview": "Product Preview"
   },
   "dashlets": {
     "GeneralStatistics": "PIM General Statistics",
@@ -90,8 +90,8 @@
     "ProductStatusOverview": "Product Status Overview"
   },
   "exceptions": {
-    "Only force deleting available": "Only force deleting available",
-    "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
+    "onlyForceDeletingAvailable": "Only force deleting available",
+    "codeIsInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
     "notValid": "Data is not valid"
   },
   "messages": {

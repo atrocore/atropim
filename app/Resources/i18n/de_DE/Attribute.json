@@ -51,11 +51,11 @@
     "All": "Alle"
   },
   "exceptions": {
-    "Attribute value should be unique.": "Attributwert sollte eindeutig sein.",
-    "Attribute is used in product families. Please, update product families first": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien.",
-    "Attribute is used in products. Please, update products first": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
-    "Attribute with such CODE already exist": "Das Attribut mit einem solchen Code existiert bereits.",
-    "You can not unlink product family attribute": "Sie können die Verknüpfung mit dem Attribut nicht aufheben.",
-    "You can't change field of Type in Attribute": "Sie können das Feld Typ im Attribut nicht ändern"
+    "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
+    "attributeIsUsedInProductFamilies": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien.",
+    "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
+    "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
+    "youCanNotUnlinkProductFamilyAttribute": "Sie können die Verknüpfung mit dem Attribut nicht aufheben.",
+    "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern"
   }
 }

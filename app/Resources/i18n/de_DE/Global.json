@@ -98,8 +98,8 @@
     "Return to Application": "Zurück zur Anwendung",
     "you": "sie",
     "removeHint": "Beim Entfernen des Katalogs werden die dazugehörigen Produkte gelöscht.",
-    "Category Preview": "Kategorievorschau",
-    "Product Preview": "Produktvorschau"
+    "categoryPreview": "Kategorievorschau",
+    "productPreview": "Produktvorschau"
   },
   "dashlets": {
     "ProductsByTag": "Produkte nach Tag",
@@ -110,8 +110,8 @@
     "ProductsByStatus": "Produkte nach Status"
   },
   "exceptions": {
-    "Only force deleting available": "Nur erzwingtes Löschen verfügbar",
-    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
+    "onlyForceDeletingAvailable": "Nur erzwingtes Löschen verfügbar",
+    "codeIsInvalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
     "notValid": "Daten sind nicht gültig"
   },
   "messages": {

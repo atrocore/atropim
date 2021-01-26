@@ -51,11 +51,11 @@ class AssociationEntity extends AbstractEntityListener
         $entity = $event->getArgument('entity');
 
         if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('Code is invalid', 'exceptions', 'Global'));
+            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
 
         if (empty($entity->get('isActive')) && $this->hasProduct($entity, true)) {
-            throw new BadRequest($this->translate('You can not deactivate association with active product(s)', 'exceptions', 'Association'));
+            throw new BadRequest($this->translate('youCanNotDeactivateAssociationWithActiveProducts', 'exceptions', 'Association'));
         }
 
         if ($entity->isAttributeChanged('backwardAssociationId')) {
@@ -74,7 +74,7 @@ class AssociationEntity extends AbstractEntityListener
         $entity = $event->getArgument('entity');
 
         if ($this->hasProduct($entity)) {
-            throw new BadRequest($this->translate('Association is linked with product(s). Please, unlink product(s) first', 'exceptions', 'Association'));
+            throw new BadRequest($this->translate('associationIsLinkedWithProducts', 'exceptions', 'Association'));
         }
     }
 

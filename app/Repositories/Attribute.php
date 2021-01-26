@@ -148,7 +148,7 @@ class Attribute extends AbstractRepository
             $productId = (is_string($foreign)) ? $foreign : (string)$foreign->get('id');
 
             if ($this->isProductFamilyAttribute($attributeId, $productId)) {
-                throw new Error($this->exception("You can not unlink product family attribute"));
+                throw new Error($this->exception("youCanNotUnlinkProductFamilyAttribute"));
             }
         }
     }
@@ -328,7 +328,7 @@ class Attribute extends AbstractRepository
         if (!empty($entity->get('typeValue'))) {
             foreach (array_count_values($entity->get('typeValue')) as $count) {
                 if ($count > 1) {
-                    throw new BadRequest($this->exception('Attribute value should be unique.'));
+                    throw new BadRequest($this->exception('attributeValueShouldBeUnique'));
                 }
             }
         }

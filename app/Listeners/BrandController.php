@@ -75,7 +75,7 @@ class BrandController extends AbstractListener
         if ($this->hasProducts($idsBrand)) {
             throw new BadRequest(
                 $this->getLanguage()->translate(
-                    'Brand is used in products. Please, update products first',
+                    'brandIsUsedInProducts',
                     'exceptions',
                     'Brand'
                 )

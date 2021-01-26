@@ -57,7 +57,7 @@ class CategoryController extends AbstractListener
             if ($this->getService($this->entityType)->isChildCategory($data['params']['id'], $categoryParentId)) {
                 $message = $this
                     ->getLanguage()
-                    ->translate("You can not choose a child category", 'exceptions', 'Category');
+                    ->translate("youCanNotChooseChildCategory", 'exceptions', 'Category');
 
                 throw new BadRequest($message);
             }

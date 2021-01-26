@@ -35,13 +35,12 @@
     "Create Category": "Kategorie erstellen"
   },
   "exceptions": {
-    "You can not change parent category in root category with linked products": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",
-    "Category has children": "Kategorie hat untergeordnete Elemente.",
-    "Parent category has products": "Die übergeordnete Kategorie enthält Produkte.",
-    "Category has child category and can't be deleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden.",
-    "You can not choose a child category": "Sie können keine untergeordnete Kategorie auswählen.",
-    "There is no ability to change category parent for root category": "Es gibt keine Möglichkeit, die übergeordnete Kategorie für die Stammkategorie zu ändern",
-    "There is no ability to change category tree": "Es gibt keine Möglichkeit, den Kategoriebaum zu ändern",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",
+    "categoryHasChildren": "Kategorie hat untergeordnete Elemente.",
+    "categoryHasChildCategoryAndCantBeDeleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden.",
+    "youCanNotChooseChildCategory": "Sie können keine untergeordnete Kategorie auswählen.",
+    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "Es gibt keine Möglichkeit, die übergeordnete Kategorie für die Stammkategorie zu ändern",
+    "thereIsNoAbilityToChangeCategoryTree": "Es gibt keine Möglichkeit, den Kategoriebaum zu ändern",
     "categoryHasProducts": "Kategorie mit verknüpften Produkten kann nicht gelöscht werden.",
     "categoryCannotBeUnRelatedFromCatalog": "Verknüpfung zwischen Katalog und Kategoriebaum mit verknüpften Produkten kann nicht aufgehoben werden.",
     "parentCategoryHasProducts": "Diese Kategorie kann nicht als Parent-Kategorie eingestellt werden, sie beinhaltet zugeordnete Produkte."

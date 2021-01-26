@@ -53,7 +53,7 @@ class BrandEntity extends AbstractEntityListener
         if (!$this->isCodeValid($event->getArgument('entity'))) {
             throw new BadRequest(
                 $this->translate(
-                    'Code is invalid',
+                    'codeIsInvalid',
                     'exceptions',
                     'Global'
                 )
