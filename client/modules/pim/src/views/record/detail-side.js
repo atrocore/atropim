@@ -38,6 +38,17 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
             },
         }, Dep.prototype.events),
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            (Object.keys(this.ownershipOptions) || []).forEach(field => {
+                if (this.model.isNew()
+                    && this.getConfig().get(this.ownershipOptions[field].config) !== 'notInherit') {
+                    this.model.set(this.ownershipOptions[field].field, true);
+                }
+            });
+        },
+
         afterRender() {
             let fields = this.getFieldViews();
 
