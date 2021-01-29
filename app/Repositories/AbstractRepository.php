@@ -69,7 +69,7 @@ abstract class AbstractRepository extends Base
     /**
      * @var int
      */
-    protected const RECORDS_PER_QUERY = 500;
+    public const RECORDS_PER_QUERY = 500;
 
     /**
      * @param Entity $entity
