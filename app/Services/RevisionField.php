@@ -105,6 +105,12 @@ class RevisionField extends MultilangRevisionField
                                 $became[$fieldName . 'Unit'] = $data['attributes']['became'][$field . 'Unit'];
                             }
 
+                            if (isset($data['attributes']['was'][$field . 'Currency'])
+                                && isset($data['attributes']['became'][$field . 'Currency'])) {
+                                $was[$fieldName . 'Currency'] = $data['attributes']['was'][$field . 'Currency'];
+                                $became[$fieldName . 'Currency'] = $data['attributes']['became'][$field . 'Currency'];
+                            }
+
                             if (is_bool($became)) {
                                 $was = (bool)$was;
                             }
