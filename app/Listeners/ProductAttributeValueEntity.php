@@ -180,7 +180,7 @@ class ProductAttributeValueEntity extends AbstractListener
 
         if (self::$beforeSaveData[$field] != $entity->get($field)
             || ($entity->isAttributeChanged('data')
-                && array_diff((array)self::$beforeSaveData['data'], (array)$entity->get('data')))) {
+                && !empty(array_diff((array)self::$beforeSaveData['data'], (array)$entity->get('data'))))) {
             $result['fields'][] = $fieldName;
             $result['locale'] = $locale;
             $type = $attribute->get('type');
