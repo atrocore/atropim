@@ -88,7 +88,7 @@ class ProductAttributeValueEntity extends AbstractListener
         }
 
         // create note
-        if ($entity->isAttributeChanged('value') || $entity->isAttributeChanged('data')) {
+        if (!$entity->isNew() && ($entity->isAttributeChanged('value') || $entity->isAttributeChanged('data'))) {
             $this->createNote($entity);
         }
 
@@ -96,7 +96,7 @@ class ProductAttributeValueEntity extends AbstractListener
         foreach ($langList as $locale) {
             $field = Util::toCamelCase('value_' . strtolower($locale));
 
-            if ($entity->isAttributeChanged($field)) {
+            if (!$entity->isNew() && $entity->isAttributeChanged($field)) {
                 $this->createNote($entity, $locale);
             }
         }
@@ -180,21 +180,47 @@ class ProductAttributeValueEntity extends AbstractListener
 
         if (self::$beforeSaveData[$field] != $entity->get($field)
             || ($entity->isAttributeChanged('data')
-                && self::$beforeSaveData['data']->unit != $entity->get('data')->unit)) {
+                && array_diff((array)self::$beforeSaveData['data'], (array)$entity->get('data')))) {
             $result['fields'][] = $fieldName;
             $result['locale'] = $locale;
-            if (in_array($attribute->get('type'), $arrayTypes)) {
-                $result['attributes']['was'][$fieldName] = Json::decode(self::$beforeSaveData[$field], true);
-                $result['attributes']['became'][$fieldName] = Json::decode($entity->get($field), true);
-            } else {
-                $result['attributes']['was'][$fieldName] = (!empty(self::$beforeSaveData[$field])) ? self::$beforeSaveData[$field] : null;
-                $result['attributes']['became'][$fieldName] = $entity->get($field);
-            }
+            $type = $attribute->get('type');
+
+            $result['attributes']['was'][$fieldName] = $this->convertAttributeValue($type, self::$beforeSaveData[$field]);
+            $result['attributes']['became'][$fieldName] = $this->convertAttributeValue($type, $entity->get($field));
 
             if ($entity->get('attribute')->get('type') == 'unit') {
                 $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['data']->unit;
                 $result['attributes']['became'][$fieldName . 'Unit'] = $entity->get('data')->unit;
+            } elseif ($entity->get('attribute')->get('type') == 'currency') {
+                $result['attributes']['was'][$fieldName . 'Currency'] = self::$beforeSaveData['data']->currency;
+                $result['attributes']['became'][$fieldName . 'Currency'] = $entity->get('data')->currency;
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $type
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function convertAttributeValue(string $type, $value)
+    {
+        $result = null;
+
+        switch ($type) {
+            case 'array':
+            case 'multiEnum':
+                $result = Json::decode($value, true);
+                break;
+            case 'bool':
+                $result = (bool)$value;
+                break;
+            default:
+                if (!empty($value)) {
+                    $result = $value;
+                }
         }
 
         return $result;
