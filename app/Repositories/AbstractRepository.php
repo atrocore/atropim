@@ -72,6 +72,19 @@ abstract class AbstractRepository extends Base
     public const RECORDS_PER_QUERY = 500;
 
     /**
+     * @param string $id
+     * @param array $teamsIds
+     */
+    public function changeMultilangTeams(string $id, string $entityType, array $teamsIds)
+    {
+        $sql = ["DELETE FROM entity_team WHERE entity_type='{$entityType}' AND entity_id='$id'"];
+        foreach ($teamsIds as $teamId) {
+            $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '$teamId', '{$entityType}')";
+        }
+        $this->getEntityManager()->nativeQuery(implode(";", $sql));
+    }
+
+    /**
      * @param Entity $entity
      * @param array  $result
      *
@@ -129,73 +142,93 @@ abstract class AbstractRepository extends Base
 
     /**
      * @param Entity $entity
+     * @param string $field
+     * @param string $config
      */
-    protected function setInheritedOnwership(Entity $entity)
+    protected function setInheritedOwnershipUser(Entity $entity, string $field, string $config)
     {
-        if ($entity->isAttributeChanged('assignedUserId')) {
-            $config = $this->getConfig()->get($this->assignedUserOwnership, '');
-            $table = Util::toUnderScore($this->ownershipRelation);
-            $relatedField = Util::toUnderScore($entity->getEntityType()) . '_id';
+        $table = Util::toUnderScore($this->ownershipRelation);
+        $relatedField = Util::toUnderScore($entity->getEntityType()) . '_id';
+        $underscoreField = Util::toUnderScore($field);
 
-            if ($config == $this->ownership) {
-                $sql = "UPDATE {$table} SET assigned_user_id = '{$entity->get('assignedUserId')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_assigned_user = 1 AND deleted = 0;";
-                $this->getEntityManager()->nativeQuery($sql);
-            }
+        if ($config == $this->ownership) {
+            $sql = "UPDATE {$table} SET {$underscoreField}_id = '{$entity->get($field . 'Id')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_{$underscoreField} = 1 AND deleted = 0;";
+            $this->getEntityManager()->nativeQuery($sql);
         }
+    }
 
-        if ($entity->isAttributeChanged('ownerUserId')) {
-            $config = $this->getConfig()->get($this->ownerUserOwnership, '');
+    /**
+     * @param Entity $entity
+     * @param array $teamsIds
+     */
+    public function setInheritedOwnershipTeams(Entity $entity, array $teamsIds, string $locale = '')
+    {
+        $teamsOwnership = $this->getConfig()->get($this->teamsOwnership, '');
+
+        if ($teamsOwnership == $this->ownership) {
+            // get related entities ids that must inherit teams
             $table = Util::toUnderScore($this->ownershipRelation);
-            $relatedField = Util::toUnderScore($entity->getEntityType()) . '_id';
+            $relatedTable = Util::toUnderScore($entity->getEntityType());
+            $inheritedField = !empty($locale) ? 'is_inherit_teams_' . $locale : 'is_inherit_teams';
 
-            if ($config == $this->ownership) {
-                $sql = "UPDATE {$table} SET owner_user_id = '{$entity->get('ownerUserId')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_owner_user = 1 AND deleted = 0;";
-                $this->getEntityManager()->nativeQuery($sql);
-            }
-        }
+            $ids = $this
+                ->getEntityManager()
+                ->nativeQuery(
+                    "SELECT id 
+                            FROM {$table}
+                            WHERE {$relatedTable}_id = '{$entity->id}' AND {$inheritedField} = 1 AND deleted = 0;"
+                )
+                ->fetchAll(\PDO::FETCH_COLUMN);
 
-        if ($entity->isAttributeChanged('teamsIds')) {
-            $teamsOwnership = $this->getConfig()->get($this->teamsOwnership, '');
+            if (!empty($ids)) {
+                $ids = array_map(function ($id) use ($locale) {
+                    return !empty($locale) ? $id . '~' . $locale : $id;
+                }, $ids);
+                $preparedIds = implode("','", $ids);
 
-            if ($teamsOwnership == $this->ownership) {
-                // get related entities ids that must inherit teams
-                $table = Util::toUnderScore($this->ownershipRelation);
-                $ids = $this
+                // delete old entity teams
+                $sql = "DELETE entity_team
+                            FROM entity_team 
+                            WHERE entity_id IN ('{$preparedIds}') AND entity_type = '{$this->ownershipRelation}';";
+                $this
                     ->getEntityManager()
-                    ->nativeQuery("SELECT id FROM {$table} WHERE is_inherit_teams = 1 AND deleted = 0;")
-                    ->fetchAll(\PDO::FETCH_COLUMN);
+                    ->nativeQuery($sql);
 
-                if (!empty($ids)) {
-                    // delete old entity teams
-                    $sql = "DELETE entity_team
-                            FROM entity_team
-                                INNER JOIN {$table} 
-                                ON {$table}.id = entity_team.entity_id 
-                                    AND entity_team.entity_type = '{$this->ownershipRelation}' 
-                                    AND {$table}.deleted = 0
-                            WHERE {$table}.is_inherit_teams = 1;";
-                    $this
-                        ->getEntityManager()
-                        ->nativeQuery($sql);
+                // insert new teams to entities
+                $count = 0;
+                $sql = '';
+                foreach ($ids as $key => $id) {
+                    foreach ($teamsIds as $k => $teamId) {
+                        $sql .= "INSERT INTO entity_team SET entity_id = '{$id}', entity_type = '{$this->ownershipRelation}', team_id = '{$teamId}';";
+                        $count++;
 
-                    // insert new teams to entities
-                    $teamsIds = $entity->get('teamsIds');
-                    $count = 0;
-                    $sql = '';
-                    foreach ($ids as $key => $id) {
-                        foreach ($teamsIds as $k => $teamId) {
-                            $sql .= "INSERT INTO entity_team SET entity_id = '{$id}', entity_type = '{$this->ownershipRelation}', team_id = '{$teamId}';";
-                            $count++;
-
-                            if ($count == self::RECORDS_PER_QUERY || ($key == count($ids) - 1 && $k == count($teamsIds) - 1)) {
-                                $this->getEntityManager()->nativeQuery($sql);
-                                $count = 0;
-                                $sql = '';
-                            }
+                        if ($count == self::RECORDS_PER_QUERY || ($key == count($ids) - 1 && $k == count($teamsIds) - 1)) {
+                            $this->getEntityManager()->nativeQuery($sql);
+                            $count = 0;
+                            $sql = '';
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array $options
+     */
+    protected function setInheritedOwnership(Entity $entity)
+    {
+        if ($entity->isAttributeChanged('assignedUserId')) {
+            $this->setInheritedOwnershipUser($entity, 'assignedUser', $this->getConfig()->get($this->assignedUserOwnership, ''));
+        }
+
+        if ($entity->isAttributeChanged('ownerUserId')) {
+            $this->setInheritedOwnershipUser($entity, 'ownerUser', $this->getConfig()->get($this->ownerUserOwnership, ''));
+        }
+
+        if ($entity->isAttributeChanged('teamsIds')) {
+            $this->setInheritedOwnershipTeams($entity, $entity->get('teamsIds'));
         }
     }
 

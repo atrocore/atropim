@@ -44,7 +44,7 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
             (Object.keys(this.ownershipOptions) || []).forEach(field => {
                 if (this.model.isNew()
                     && this.getConfig().get(this.ownershipOptions[field].config) !== 'notInherit') {
-                    this.model.set(this.ownershipOptions[field].field, true);
+                    this.model.set(this.getInheritedFieldName(field), true);
                 }
             });
         },
@@ -58,7 +58,7 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
 
                     if (config && config !== 'notInherit') {
                         fields[field].readOnly = true;
-                        let unlock = !this.model.get(this.ownershipOptions[field].field);
+                        let unlock = !this.model.get(this.getInheritedFieldName(field));
                         this.changeFieldOwnership(fields[field].name, unlock);
                     } else {
                         if (this.getParentView().mode === 'edit') {
@@ -121,11 +121,11 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
             if (field in this.ownershipOptions) {
                 if (this.model.isNew()) {
                     this.model.set({
-                        [this.ownershipOptions[field].field]: remove
+                        [this.getInheritedFieldName(field)]: remove
                     });
                 } else {
                     this.notify('Saving...');
-                    this.model.save({[this.ownershipOptions[field].field]: remove}, {
+                    this.model.save({[this.getInheritedFieldName(field)]: remove}, {
                         success: function () {
                             this.notify('Saved', 'success');
                             this.model.trigger('after:save');
@@ -136,5 +136,8 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
             }
         },
 
+        getInheritedFieldName(field) {
+            return this.ownershipOptions[field].field;
+        }
     })
 );

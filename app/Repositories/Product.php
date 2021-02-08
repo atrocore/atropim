@@ -501,7 +501,7 @@ class Product extends AbstractRepository
         // parent action
         parent::afterSave($entity, $options);
 
-        $this->setInheritedOnwership($entity);
+        $this->setInheritedOwnership($entity);
     }
 
     /**

@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
+use Treo\Core\Utils\Util;
 
 /**
  * Class ProductAttributeValue
@@ -128,19 +129,68 @@ class ProductAttributeValue extends AbstractRepository
      */
     public function afterSave(Entity $entity, array $options = array())
     {
-        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritAssignedUser') && $entity->get('isInheritAssignedUser')) {
-            $this->inheritOwnership($entity, 'assignedUser', $this->getConfig()->get('assignedUserAttributeOwnership', null));
+        if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'assignedUser', 'isInheritAssignedUser'))) {
+            $this->inheritOwnership($entity, $field, $this->getConfig()->get('assignedUserAttributeOwnership', null));
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritOwnerUser') && $entity->get('isInheritOwnerUser')) {
-            $this->inheritOwnership($entity, 'ownerUser', $this->getConfig()->get('ownerUserAttributeOwnership', null));
+        if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'ownerUser', 'isInheritOwnerUser'))) {
+            $this->inheritOwnership($entity, $field, $this->getConfig()->get('ownerUserAttributeOwnership', null));
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritTeams') && $entity->get('isInheritTeams')) {
-            $this->inheritOwnership($entity, 'teams', $this->getConfig()->get('teamsAttributeOwnership', null));
+        if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'teams', 'isInheritTeams'))) {
+            $this->inheritOwnership($entity, $field, $this->getConfig()->get('teamsAttributeOwnership', null));
         }
 
         parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @param string $id
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getMultilangAttributeId(string $id, string $locale): array
+    {
+        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+
+        $sql = "SELECT CONCAT(pav.attribute_id, '{$separator}', '{$locale}') AS id
+                FROM product_attribute_value pav
+                WHERE pav.id = '{$id}'";
+
+        return $this->getEntityManager()->nativeQuery($sql)->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param string $field
+     * @param string $param
+     *
+     * @return string|null
+     */
+    protected function getPreparedInheritedField(Entity $entity, string $field, string $param): ?string
+    {
+        if ($entity->isAttributeChanged($param) && $entity->get($param)) {
+            return $field;
+        }
+
+        if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isLocale')) {
+
+            if (isset($entity->locale)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    if ($locale == $entity->locale) {
+                        $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+                        $param .= $camelCaseLocale;
+
+                        if ($entity->isAttributeChanged($param) && $entity->get($param)) {
+                            return $field . $camelCaseLocale;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

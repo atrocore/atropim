@@ -31,13 +31,128 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
+use Treo\Core\EventManager\Event;
+use Treo\Core\Utils\Util;
 
 /**
  * Attribute service
  */
 class Attribute extends AbstractService
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity($id = null)
+    {
+        $id = $this
+            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
+            ->getArgument('id');
+
+        $entity = $this->getRepository()->get($id);
+
+        if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+                if (!empty($ownerUserId = $entity->get("ownerUser{$camelCaseLocale}Id"))) {
+                    $ownerUser = $this->getEntityManager()->getEntity('User', $ownerUserId);
+                    $entity->set("ownerUser{$camelCaseLocale}Name", $ownerUser->get('name'));
+                } else {
+                    $entity->set("ownerUser{$camelCaseLocale}Name", null);
+                }
+
+                if (!empty($assignedUserId = $entity->get("assignedUser{$camelCaseLocale}Id"))) {
+                    $assignedUser = $this->getEntityManager()->getEntity('User', $assignedUserId);
+                    $entity->set("assignedUser{$camelCaseLocale}Name", $assignedUser->get('name'));
+                } else {
+                    $entity->set("assignedUser{$camelCaseLocale}Name", null);
+                }
+            }
+        }
+
+        if (!empty($entity) && !empty($id)) {
+            $this->loadAdditionalFields($entity);
+
+            if (!$this->getAcl()->check($entity, 'read')) {
+                throw new Forbidden();
+            }
+        }
+        if (!empty($entity)) {
+            $this->prepareEntityForOutput($entity);
+        }
+
+        return $this
+            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->getArgument('entity');
+    }
+
+    /**
+     * @param \stdClass $data
+     *
+     * @return \stdClass
+     */
+    public function updateAttributeReadData(\stdClass $data): \stdClass
+    {
+        if (isset($data->id)) {
+            $separator = ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+
+            if ($this->getConfig()->get('isMultilangActive', false) && $data->isMultilang) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+                    $id = $data->id . $separator . $locale;
+
+                    $teamsIds = $this->getRepository()->getAttributeTeams($id);
+
+                    if (!empty($teamsIds)) {
+                        $ids = $names = [];
+
+                        foreach ($teamsIds as $teamId) {
+                            $ids[] = $teamId['id'];
+                            $names[$teamId['id']] = $teamId['name'];
+                        }
+                        $data->{"teams{$camelCaseLocale}Ids"} = $ids;
+                        $data->{"teams{$camelCaseLocale}Names"} = $names;
+                    } else {
+                        $data->{"teams{$camelCaseLocale}Ids"} = null;
+                        $data->{"teams{$camelCaseLocale}Names"} = null;
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateEntity($id, $data)
+    {
+        $entity = $this->getEntityManager()->getRepository('Attribute')->get($id);
+
+        if (!empty($entity)) {
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+
+                    $teamsField = "teams{$camelCaseLocale}Ids";
+                    if (isset($data->$teamsField)) {
+                        $multiLangId = $id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . strtolower($locale);
+                        $this->getRepository()->changeMultilangTeams($multiLangId, 'Attribute', $data->$teamsField);
+
+                        $this
+                            ->getEntityManager()
+                            ->getRepository('Attribute')
+                            ->setInheritedOwnershipTeams($entity, $data->$teamsField, $locale);
+                    }
+                }
+            }
+        }
+
+        return parent::updateEntity($id, $data);
+    }
+
     /**
      * Get filters
      *

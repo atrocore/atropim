@@ -181,16 +181,26 @@ class ProductAttributeValue extends AbstractService
              * Set locale teams
              */
             if (isset($data->teamsIds)) {
-                $sql = ["DELETE FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$id'"];
-                foreach ($data->teamsIds as $teamId) {
-                    $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '$teamId', 'ProductAttributeValue')";
-                }
-                $this->getEntityManager()->nativeQuery(implode(";", $sql));
+                $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $data->teamsIds);
 
                 unset($data->teamsIds);
             }
 
+            if (isset($data->{'isInheritTeams' . $camelCaseLocale}) && $data->{'isInheritTeams' . $camelCaseLocale}) {
+                $attributeId = $this->getRepository()->getMultilangAttributeId($parts[0], $parts[1]);
+
+                if (!empty($attributeId)) {
+                    $teamsIds = $this->getEntityManager()->getRepository('Attribute')->getAttributeTeams($attributeId['id']);
+
+                    if (!empty($teamsIds)) {
+                        $teamsIds = array_column($teamsIds, 'id');
+                        $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $teamsIds);
+                    }
+                }
+            }
+
             $data->isLocale = true;
+            $data->locale = $parts[1];
 
             // update id
             $id = $parts[0];
@@ -256,6 +266,7 @@ class ProductAttributeValue extends AbstractService
          */
         if (!empty($data->isLocale)) {
             $entity->skipValidation('requiredField');
+            $entity->locale = $data->locale ?? null;
         }
     }
 

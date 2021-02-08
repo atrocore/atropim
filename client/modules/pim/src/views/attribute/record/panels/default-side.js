@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,51 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/attribute/record/panels/default-side', 'views/record/panels/default-side', function (Dep) {
 
-namespace Pim\Controllers;
+    return Dep.extend({
 
-use Espo\Core\Exceptions;
-use Espo\Core\Exceptions\NotFound;
-use Slim\Http\Request;
+        complexCreatedDisabled: true,
 
-/**
- * Attribute controller
- */
-class Attribute extends AbstractController
-{
+        complexModifiedDisabled: true
 
-    /**
-     * @ApiDescription(description="Get filters data for product entity")
-     * @ApiMethod(type="GET")
-     * @ApiRoute(name="/Markets/Attribute/filtersData")
-     * @ApiReturn(sample="'json'")
-     *
-     * @param array   $params
-     * @param array   $data
-     * @param Request $request
-     *
-     * @return bool
-     * @throws Exceptions\BadRequest
-     * @throws Exceptions\Error
-     * @throws Exceptions\Forbidden
-     */
-    public function actionGetFiltersData($params, $data, Request $request): array
-    {
-        if ($this->isReadAction($request, $params)) {
-            return $this->getRecordService()->getFiltersData();
-        }
+    });
 
-        throw new Exceptions\Error();
-    }
+});
 
-    /**
-     * @inheritDoc
-     */
-    public function actionRead($params, $data, $request)
-    {
-        $result = parent::actionRead($params, $data, $request);
-
-        return $this->getRecordService()->updateAttributeReadData($result);
-    }
-}

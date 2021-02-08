@@ -28,12 +28,16 @@
     "ownerUser": {
       "type": "link",
       "required": true,
-      "view": "views/fields/owner-user"
+      "view": "views/fields/owner-user",
+      "isMultilang": true,
+      "requiredForMultilang": false
     },
     "assignedUser": {
       "type": "link",
       "required": true,
-      "view": "views/fields/assigned-user"
+      "view": "views/fields/assigned-user",
+      "isMultilang": true,
+      "requiredForMultilang": false
     },
     "teams": {
       "type": "linkMultiple",

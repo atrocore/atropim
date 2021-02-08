@@ -29,6 +29,8 @@
 Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
+        sideView: "pim:views/attribute/record/detail-side",
+
         delete: function () {
             Espo.TreoUi.confirmWithBody('', {
                 confirmText: this.translate('Remove'),

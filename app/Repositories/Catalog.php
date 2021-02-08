@@ -84,6 +84,6 @@ class Catalog extends AbstractRepository
     {
         parent::afterSave($entity, $options);
 
-        $this->setInheritedOnwership($entity);
+        $this->setInheritedOwnership($entity);
     }
 }

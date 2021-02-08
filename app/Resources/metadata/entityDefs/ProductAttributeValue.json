@@ -172,7 +172,9 @@
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "isMultilang": true,
+      "requiredForMultilang": false
     },
     "isInheritOwnerUser": {
       "type": "bool",
@@ -183,7 +185,9 @@
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "isMultilang": true,
+      "requiredForMultilang": false
     },
     "isInheritTeams": {
       "type": "bool",
@@ -194,7 +198,9 @@
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "isMultilang": true,
+      "requiredForMultilang": false
     }
   },
   "links": {
