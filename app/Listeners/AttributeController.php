@@ -30,6 +30,8 @@
 namespace Pim\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
+use Pim\Services\ProductAttributeValue;
+use Treo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 use Treo\Core\EventManager\Event;
 
@@ -38,6 +40,43 @@ use Treo\Core\EventManager\Event;
  */
 class AttributeController extends AbstractListener
 {
+    /**
+     * @param Event $event
+     */
+    public function afterActionRead(Event $event)
+    {
+        $data = $event->getArguments();
+
+        if (isset($data['result']->id)) {
+            $parts = explode(ProductAttributeValue::LOCALE_IN_ID_SEPARATOR, $data['result']->id);
+
+            if (count($parts) == 1 && $this->getConfig()->get('isMultilangActive', false) && $data['result']->isMultilang) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+
+                    $sql = "SELECT t.id, t.name FROM entity_team et INNER JOIN team t ON t.id = et.team_id WHERE et.entity_type='Attribute' AND et.entity_id='{$data['result']->id}~{$locale}'";
+                    $teamsIds = $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_ASSOC);
+
+                    if (!empty($teamsIds)) {
+                        $ids = $names = [];
+
+                        foreach ($teamsIds as $teamId) {
+                            $ids[] = $teamId['id'];
+                            $names[$teamId['id']] = $teamId['name'];
+                        }
+                        $data['result']->{"teams{$camelCaseLocale}Ids"} = $ids;
+                        $data['result']->{"teams{$camelCaseLocale}Names"} = $names;
+                    } else {
+                        $data['result']->{"teams{$camelCaseLocale}Ids"} = null;
+                        $data['result']->{"teams{$camelCaseLocale}Names"} = null;
+                    }
+                }
+            }
+
+            $event->setArgument('result', $data['result']);
+        }
+    }
+
     /**
      * @param Event $event
      */

@@ -190,7 +190,27 @@ class ProductAttributeValue extends AbstractService
                 unset($data->teamsIds);
             }
 
+            if (isset($data->{'isInheritTeams' . $camelCaseLocale}) && $data->{'isInheritTeams' . $camelCaseLocale}) {
+                $sqlTeamsIds = "SELECT et.team_id AS id
+                                FROM entity_team et 
+                                WHERE et.entity_type = 'Attribute' AND et.entity_id = (
+                                    SELECT CONCAT(pav.attribute_id, '~', '{$parts['1']}')
+                                    FROM product_attribute_value pav
+                                    WHERE pav.id = '{$parts['0']}'
+                                );";
+                $teamsIds = $this->getEntityManager()->nativeQuery($sqlTeamsIds)->fetchAll(\PDO::FETCH_ASSOC);
+
+                if (!empty($teamsIds)) {
+                    $sql = ["DELETE FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$id'"];
+                    foreach ($teamsIds as $teamId) {
+                        $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '{$teamId['id']}', 'ProductAttributeValue')";
+                    }
+                    $this->getEntityManager()->nativeQuery(implode(";", $sql));
+                }
+            }
+
             $data->isLocale = true;
+            $data->locale = $parts[1];
 
             // update id
             $id = $parts[0];
@@ -256,6 +276,7 @@ class ProductAttributeValue extends AbstractService
          */
         if (!empty($data->isLocale)) {
             $entity->skipValidation('requiredField');
+            $entity->locale = $data->locale ?? null;
         }
     }
 

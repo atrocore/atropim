@@ -268,10 +268,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
             if (this.getConfig().get('isMultilangActive') && inputLanguageList.length) {
                 inputLanguageList.forEach(lang => {
-                    let field = lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), 'value');
-                    if (!this.baseSelectFields.includes(field)) {
-                        this.baseSelectFields.push(field);
-                    }
+                    ['isInheritAssignedUser', 'isInheritOwnerUser', 'isInheritTeams', 'value'].forEach(field => {
+                        let multilangField = lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), field);
+                        if (!this.baseSelectFields.includes(multilangField)) {
+                            this.baseSelectFields.push(multilangField);
+                        }
+                    })
                 });
             }
         },

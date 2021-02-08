@@ -162,6 +162,6 @@ class ProductFamily extends AbstractRepository
     {
         parent::afterSave($entity, $options);
 
-        $this->setInheritedOnwership($entity);
+        $this->setInheritedOwnership($entity);
     }
 }

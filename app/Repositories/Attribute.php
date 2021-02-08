@@ -121,7 +121,29 @@ class Attribute extends AbstractRepository
     {
         parent::afterSave($entity, $options);
 
-        $this->setInheritedOnwership($entity);
+        $this->setInheritedOwnership($entity);
+
+        if ($entity->get('isMultilang') == true && $this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+
+                if ($entity->isAttributeChanged("assignedUser{$camelCaseLocale}Id")) {
+                    $this->setInheritedOwnershipUser(
+                        $entity,
+                        "assignedUser{$camelCaseLocale}",
+                        $this->getConfig()->get($this->assignedUserOwnership, '')
+                    );
+                }
+
+                if ($entity->isAttributeChanged("ownerUser{$camelCaseLocale}Id")) {
+                    $this->setInheritedOwnershipUser(
+                        $entity,
+                        "ownerUser{$camelCaseLocale}",
+                        $this->getConfig()->get($this->ownerUserOwnership, '')
+                    );
+                }
+            }
+        }
     }
 
     /**

@@ -31,13 +31,95 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
+use Treo\Core\EventManager\Event;
+use Treo\Core\Utils\Util;
 
 /**
  * Attribute service
  */
 class Attribute extends AbstractService
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity($id = null)
+    {
+        $id = $this
+            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
+            ->getArgument('id');
+
+        $entity = $this->getRepository()->get($id);
+
+        if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+                if (!empty($ownerUserId = $entity->get("ownerUser{$camelCaseLocale}Id"))) {
+                    $ownerUser = $this->getEntityManager()->getEntity('User', $ownerUserId);
+                    $entity->set("ownerUser{$camelCaseLocale}Name", $ownerUser->get('name'));
+                } else {
+                    $entity->set("ownerUser{$camelCaseLocale}Name", null);
+                }
+
+                if (!empty($assignedUserId = $entity->get("assignedUser{$camelCaseLocale}Id"))) {
+                    $assignedUser = $this->getEntityManager()->getEntity('User', $assignedUserId);
+                    $entity->set("assignedUser{$camelCaseLocale}Name", $assignedUser->get('name'));
+                } else {
+                    $entity->set("assignedUser{$camelCaseLocale}Name", null);
+                }
+            }
+        }
+
+        if (!empty($entity) && !empty($id)) {
+            $this->loadAdditionalFields($entity);
+
+            if (!$this->getAcl()->check($entity, 'read')) {
+                throw new Forbidden();
+            }
+        }
+        if (!empty($entity)) {
+            $this->prepareEntityForOutput($entity);
+        }
+
+        return $this
+            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->getArgument('entity');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateEntity($id, $data)
+    {
+        $entity = $this->getEntityManager()->getRepository('Attribute')->get($id);
+
+        if (!empty($entity)) {
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+
+                    $teamsField = "teams{$camelCaseLocale}Ids";
+                    if (isset($data->$teamsField)) {
+                        $multiLangId = $id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . strtolower($locale);
+                        $sql = ["DELETE FROM entity_team WHERE entity_type='Attribute' AND entity_id='$multiLangId'"];
+                        foreach ($data->$teamsField as $teamId) {
+                            $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$multiLangId', '$teamId', 'Attribute')";
+                        }
+                        $this->getEntityManager()->nativeQuery(implode(";", $sql));
+
+                        $this
+                            ->getEntityManager()
+                            ->getRepository('Attribute')
+                            ->setInheritedOwnershipTeams($entity, $data->$teamsField, $locale);
+                    }
+                }
+            }
+        }
+
+        return parent::updateEntity($id, $data);
+    }
+
     /**
      * Get filters
      *
