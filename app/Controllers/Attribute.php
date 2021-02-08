@@ -70,14 +70,7 @@ class Attribute extends AbstractController
      */
     public function actionRead($params, $data, $request)
     {
-        $id = $params['id'];
-        $entity = $this->getRecordService()->readEntity($id);
-
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        $result = $entity->getValueMap();
+        $result = parent::actionRead($params, $data, $request);
 
         return $this->getRecordService()->updateAttributeReadData($result);
     }
