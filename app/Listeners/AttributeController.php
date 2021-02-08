@@ -30,8 +30,6 @@
 namespace Pim\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
-use Pim\Services\ProductAttributeValue;
-use Treo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 use Treo\Core\EventManager\Event;
 
