@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Exceptions;
+use Espo\Core\Exceptions\NotFound;
 use Slim\Http\Request;
 
 /**
@@ -62,5 +63,22 @@ class Attribute extends AbstractController
         }
 
         throw new Exceptions\Error();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function actionRead($params, $data, $request)
+    {
+        $id = $params['id'];
+        $entity = $this->getRecordService()->readEntity($id);
+
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        $result = $entity->getValueMap();
+
+        return $this->getRecordService()->updateAttributeReadData($result);
     }
 }

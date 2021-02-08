@@ -88,6 +88,43 @@ class Attribute extends AbstractService
     }
 
     /**
+     * @param \stdClass $data
+     *
+     * @return \stdClass
+     */
+    public function updateAttributeReadData(\stdClass $data): \stdClass
+    {
+        if (isset($data->id)) {
+            $separator = ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+
+            if ($this->getConfig()->get('isMultilangActive', false) && $data->isMultilang) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+                    $id = $data->id . $separator . $locale;
+
+                    $teamsIds = $this->getRepository()->getAttributeTeams($id);
+
+                    if (!empty($teamsIds)) {
+                        $ids = $names = [];
+
+                        foreach ($teamsIds as $teamId) {
+                            $ids[] = $teamId['id'];
+                            $names[$teamId['id']] = $teamId['name'];
+                        }
+                        $data->{"teams{$camelCaseLocale}Ids"} = $ids;
+                        $data->{"teams{$camelCaseLocale}Names"} = $names;
+                    } else {
+                        $data->{"teams{$camelCaseLocale}Ids"} = null;
+                        $data->{"teams{$camelCaseLocale}Names"} = null;
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * @inheritDoc
      */
     public function updateEntity($id, $data)
@@ -102,11 +139,7 @@ class Attribute extends AbstractService
                     $teamsField = "teams{$camelCaseLocale}Ids";
                     if (isset($data->$teamsField)) {
                         $multiLangId = $id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . strtolower($locale);
-                        $sql = ["DELETE FROM entity_team WHERE entity_type='Attribute' AND entity_id='$multiLangId'"];
-                        foreach ($data->$teamsField as $teamId) {
-                            $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$multiLangId', '$teamId', 'Attribute')";
-                        }
-                        $this->getEntityManager()->nativeQuery(implode(";", $sql));
+                        $this->getRepository()->changeMultilangTeams($multiLangId, 'Attribute', $data->$teamsField);
 
                         $this
                             ->getEntityManager()

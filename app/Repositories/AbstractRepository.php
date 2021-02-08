@@ -72,6 +72,19 @@ abstract class AbstractRepository extends Base
     public const RECORDS_PER_QUERY = 500;
 
     /**
+     * @param string $id
+     * @param array $teamsIds
+     */
+    public function changeMultilangTeams(string $id, string $entityType, array $teamsIds)
+    {
+        $sql = ["DELETE FROM entity_team WHERE entity_type='{$entityType}' AND entity_id='$id'"];
+        foreach ($teamsIds as $teamId) {
+            $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '$teamId', '{$entityType}')";
+        }
+        $this->getEntityManager()->nativeQuery(implode(";", $sql));
+    }
+
+    /**
      * @param Entity $entity
      * @param array  $result
      *

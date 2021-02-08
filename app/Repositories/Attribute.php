@@ -115,6 +115,23 @@ class Attribute extends AbstractRepository
     }
 
     /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function getAttributeTeams(string $id): array
+    {
+        $sql = "
+            SELECT t.id, t.name 
+            FROM entity_team et 
+                INNER JOIN team t 
+                    ON t.id = et.team_id 
+            WHERE et.entity_type='Attribute' AND et.entity_id='{$id}'";
+
+        return $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @inheritDoc
      */
     protected function afterSave(Entity $entity, array $options = array())

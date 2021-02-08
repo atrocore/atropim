@@ -181,31 +181,21 @@ class ProductAttributeValue extends AbstractService
              * Set locale teams
              */
             if (isset($data->teamsIds)) {
-                $sql = ["DELETE FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$id'"];
-                foreach ($data->teamsIds as $teamId) {
-                    $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '$teamId', 'ProductAttributeValue')";
-                }
-                $this->getEntityManager()->nativeQuery(implode(";", $sql));
+                $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $data->teamsIds);
 
                 unset($data->teamsIds);
             }
 
             if (isset($data->{'isInheritTeams' . $camelCaseLocale}) && $data->{'isInheritTeams' . $camelCaseLocale}) {
-                $sqlTeamsIds = "SELECT et.team_id AS id
-                                FROM entity_team et 
-                                WHERE et.entity_type = 'Attribute' AND et.entity_id = (
-                                    SELECT CONCAT(pav.attribute_id, '~', '{$parts['1']}')
-                                    FROM product_attribute_value pav
-                                    WHERE pav.id = '{$parts['0']}'
-                                );";
-                $teamsIds = $this->getEntityManager()->nativeQuery($sqlTeamsIds)->fetchAll(\PDO::FETCH_ASSOC);
+                $attributeId = $this->getRepository()->getMultilangAttributeId($parts[0], $parts[1]);
 
-                if (!empty($teamsIds)) {
-                    $sql = ["DELETE FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$id'"];
-                    foreach ($teamsIds as $teamId) {
-                        $sql[] = "INSERT INTO entity_team (entity_id, team_id, entity_type) VALUES ('$id', '{$teamId['id']}', 'ProductAttributeValue')";
+                if (!empty($attributeId)) {
+                    $teamsIds = $this->getEntityManager()->getRepository('Attribute')->getAttributeTeams($attributeId['id']);
+
+                    if (!empty($teamsIds)) {
+                        $teamsIds = array_column($teamsIds, 'id');
+                        $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $teamsIds);
                     }
-                    $this->getEntityManager()->nativeQuery(implode(";", $sql));
                 }
             }
 

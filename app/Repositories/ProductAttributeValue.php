@@ -134,14 +134,31 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'ownerUser', 'isInheritOwnerUser'))) {
-            $this->inheritOwnership($entity, 'ownerUser', $this->getConfig()->get('ownerUserAttributeOwnership', null));
+            $this->inheritOwnership($entity, $field, $this->getConfig()->get('ownerUserAttributeOwnership', null));
         }
 
         if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'teams', 'isInheritTeams'))) {
-            $this->inheritOwnership($entity, 'teams', $this->getConfig()->get('teamsAttributeOwnership', null));
+            $this->inheritOwnership($entity, $field, $this->getConfig()->get('teamsAttributeOwnership', null));
         }
 
         parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @param string $id
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getMultilangAttributeId(string $id, string $locale): array
+    {
+        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+
+        $sql = "SELECT CONCAT(pav.attribute_id, '{$separator}', '{$locale}') AS id
+                FROM product_attribute_value pav
+                WHERE pav.id = '{$id}'";
+
+        return $this->getEntityManager()->nativeQuery($sql)->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**
