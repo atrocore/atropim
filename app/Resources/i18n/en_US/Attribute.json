@@ -12,7 +12,8 @@
     "isRequired": "Required",
     "productFamilyAttributes": "Product Family Attributes",
     "isMultilang": "Multi-Language",
-    "sortOrder": "Sort Order"
+    "sortOrder": "Sort Order",
+    "assetType": "Asset Type"
   },
   "links": {
     "attributeGroup": "Attribute Group",
@@ -40,7 +41,7 @@
     "url": "Url",
     "varchar": "Varchar",
     "wysiwyg": "Wysiwyg",
-    "image": "Image"
+    "asset": "Asset"
   },
   "messages": {
     "sameNumberOptions": "You must set the same number of options",

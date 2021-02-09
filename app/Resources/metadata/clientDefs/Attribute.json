@@ -44,6 +44,26 @@
             }
           ]
         }
+      },
+      "assetType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "asset"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "asset"
+            }
+          ]
+        }
       }
     }
   }

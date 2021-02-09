@@ -13,6 +13,12 @@
             ],
             [
                 {
+                    "name": "assetType"
+                },
+                false
+            ],
+            [
+                {
                     "name": "attributeGroup"
                 },
                 false

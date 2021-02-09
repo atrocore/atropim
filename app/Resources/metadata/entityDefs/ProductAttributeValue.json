@@ -85,6 +85,10 @@
       "type": "varchar",
       "notStorable": true
     },
+    "attributeAssetType": {
+      "type": "varchar",
+      "notStorable": true
+    },
     "attributeIsMultilang": {
       "type": "bool",
       "notStorable": true,

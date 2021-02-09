@@ -54,15 +54,19 @@ class ProductAttributeValue extends AbstractService
         parent::prepareEntityForOutput($entity);
 
         $entity->set('isCustom', $this->isCustom($entity));
-        $entity->set('attributeType', !empty($entity->get('attribute')) ? $entity->get('attribute')->get('type') : null);
-        $entity->set('attributeIsMultilang', !empty($entity->get('attribute')) ? $entity->get('attribute')->get('isMultilang') : false);
+
+        $attribute = $entity->get('attribute');
+
+        $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
+        $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
+        $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
 
         // set currency value
         if ($entity->get('attributeType') == 'currency' && empty($entity->get('data'))) {
             $entity->set('data', ['currency' => $this->getConfig()->get('defaultCurrency', 'EUR')]);
         }
 
-        if (in_array($entity->get('attributeType'), ['image', 'file', 'asset'])) {
+        if ($entity->get('attributeType') === 'asset') {
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value'));
             if (empty($attachment)) {
                 $entity->set('value', null);
@@ -141,10 +145,24 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
+     * @inheritDoc
+     */
+    public function createEntity($attachment)
+    {
+        // for asset attribute type
+        $this->prepareValueForAssetType($attachment);
+
+        return parent::createEntity($attachment);
+    }
+
+    /**
      * @inheritdoc
      */
     public function updateEntity($id, $data)
     {
+        // for asset attribute type
+        $this->prepareValueForAssetType($data);
+
         /**
          * For attribute locale
          */
@@ -355,5 +373,12 @@ class ProductAttributeValue extends AbstractService
         }
 
         return $isCustom;
+    }
+
+    private function prepareValueForAssetType(\stdClass $data): void
+    {
+        if (empty($data->value) && !empty($data->valueId)) {
+            $data->value = $data->valueId;
+        }
     }
 }

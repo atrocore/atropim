@@ -124,7 +124,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             let data = this.model.get('data') || {};
             Object.keys(data).forEach(param => this.model.set({[`${this.name}${Espo.Utils.upperCaseFirst(param)}`]: data[param]}));
 
-            if (this.model.get('attributeType') === 'image') {
+            if (this.model.get('attributeType') === 'asset') {
                 this.model.set({[`${this.name}Id`]: this.model.get(this.name)});
             }
         },
@@ -158,7 +158,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     _.extend(data, {data: additionalData});
                 }
             }
-            if (view.type === 'image') {
+            if (view.type === 'asset') {
                 _.extend(data, {[this.name]: data[`${this.name}Id`]});
             }
         },
