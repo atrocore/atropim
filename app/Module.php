@@ -33,7 +33,7 @@ namespace Pim;
 
 use Espo\Core\Utils\Json;
 use Treo\Core\ModuleManager\AbstractModule;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
 
 /**
