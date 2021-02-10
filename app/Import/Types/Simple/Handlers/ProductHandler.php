@@ -86,7 +86,7 @@ class ProductHandler extends AbstractHandler
         // find exists if it needs
         $exists = [];
         if (in_array($data['action'], ['update', 'create_update']) && !empty($idRow)) {
-            $exists = $this->getExists($entityType, $idRow['name'], array_column($fileData, $idRow['column']));
+            $exists = $this->getExistsProducts($idRow['name'], array_column($fileData, $idRow['column']), $data['data']['configuration']);
         }
 
         // prepare file row
@@ -294,6 +294,51 @@ class ProductHandler extends AbstractHandler
         } else {
             $result = parent::getType($entityType, $item);
         }
+        return $result;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $ids
+     * @param array  $configuration
+     *
+     * @return array
+     */
+    protected function getExistsProducts(string $name, array $ids, array $configuration): array
+    {
+        $catalogId = 'no-such-catalog';
+        foreach ($configuration as $row) {
+            if ($row['name'] === 'catalog') {
+                if (empty($row['column'])) {
+                    $catalogId = $row['default'];
+                } else {
+                    $catalog = $this->getEntityManager()->getRepository('Catalog')->where([$row['field'] => $row['column']])->findOne();
+                    if (!empty($catalog)) {
+                        $catalogId = $catalog->get('id');
+                    }
+                }
+                break;
+            }
+        }
+
+        $select = ($name == 'id') ? [$name] : ['id', $name];
+
+        // get data
+        $data = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->select($select)
+            ->where([$name => $ids, 'catalogId' => $catalogId])
+            ->find();
+
+        $result = [];
+
+        if (count($data) > 0) {
+            foreach ($data as $entity) {
+                $result[$entity->get($name)] = $entity->get('id');
+            }
+        }
+
         return $result;
     }
 }
