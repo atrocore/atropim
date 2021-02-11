@@ -70,9 +70,11 @@ class ProductAttributeValue extends AbstractService
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value'));
             if (empty($attachment)) {
                 $entity->set('value', null);
+                $entity->set('valueId', null);
                 $entity->set('valueName', null);
                 $entity->set('valuePathsData', null);
             } else {
+                $entity->set('valueId', $attachment->get('id'));
                 $entity->set('valueName', $attachment->get('name'));
                 $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
             }
