@@ -612,11 +612,13 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     if (!hide) {
                         hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
                     }
-                    if (!hide) {
-                        hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
-                    }
-                    if (!hide) {
-                        hide = this.updateCheckByGenericFieldsFilter(fieldView);
+                    if (this.getConfig().get('isMultilangActive')) {
+                        if (!hide) {
+                            hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
+                        }
+                        if (!hide) {
+                            hide = this.updateCheckByGenericFieldsFilter(fieldView);
+                        }
                     }
                     this.controlRowVisibility(fieldView, name, hide);
                 }

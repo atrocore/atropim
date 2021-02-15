@@ -120,14 +120,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);
 
-                    if (!hide) {
-                        // multi-language fields filter
-                        hide = this.multiLangFieldsFilter(name, fieldView);
-                    }
-
-                    if (!hide) {
-                        // hide generic fields
-                        hide = this.genericFieldsFilter(name, fieldView);
+                    if (this.getConfig().get('isMultilangActive')) {
+                        if (!hide) {
+                            // multi-language fields filter
+                            hide = this.multiLangFieldsFilter(name, fieldView);
+                        }
+                        if (!hide) {
+                            // hide generic fields
+                            hide = this.genericFieldsFilter(name, fieldView);
+                        }
                     }
 
                     this.controlFieldVisibility(fieldView, hide);
