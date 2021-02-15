@@ -92,12 +92,14 @@ class ProductAttributeValueEntity extends AbstractListener
             $this->createNote($entity);
         }
 
-        $langList = $this->getConfig()->get('inputLanguageList', []);
-        foreach ($langList as $locale) {
-            $field = Util::toCamelCase('value_' . strtolower($locale));
+        if (!in_array($entity->get('attribute')->get('type'), ['enum', 'multiEnum'])) {
+            $langList = $this->getConfig()->get('inputLanguageList', []);
+            foreach ($langList as $locale) {
+                $field = Util::toCamelCase('value_' . strtolower($locale));
 
-            if (!$entity->isNew() && $entity->isAttributeChanged($field)) {
-                $this->createNote($entity, $locale);
+                if (!$entity->isNew() && $entity->isAttributeChanged($field)) {
+                    $this->createNote($entity, $locale);
+                }
             }
         }
 
