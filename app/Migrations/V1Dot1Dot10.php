@@ -44,36 +44,9 @@ class V1Dot1Dot10 extends Base
      */
     public function up(): void
     {
-        $sql = "
-            SELECT note.id, note.data
-            FROM note
-            INNER JOIN product_attribute_value pav
-                ON note.attribute_id = pav.id AND pav.deleted = 0
-            INNER JOIN attribute a
-                ON pav.attribute_id = a.id AND a.deleted = 0
-            WHERE a.type IN ('enum', 'multiEnum') AND note.deleted = 0
-        ";
+        $sql = "DELETE FROM note WHERE attribute_id IS NOT NULL";
 
-        $notes = $this
-            ->getPDO()
-            ->query($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (!empty($notes)) {
-            $sql = "";
-
-            foreach ($notes as $note) {
-                $data = Json::decode($note['data'], true);
-
-                if (isset($data['locale']) && !empty($data['locale'])) {
-                    $sql .= "DELETE FROM note WHERE id = '{$note['id']}';";
-                }
-            }
-
-            if (!empty($sql)) {
-                $this->execute($sql);
-            }
-        }
+        $this->execute($sql);
     }
 
     /**
