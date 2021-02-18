@@ -6,5 +6,6 @@
   "ProductTypesDashlet": "\\Pim\\Services\\ProductTypesDashlet",
   "QueueManagerCreateLocaleAttribute": "\\Pim\\Services\\QueueManagerCreateLocaleAttribute",
   "QueueManagerDuplicateProduct": "\\Pim\\Services\\QueueManagerDuplicateProduct",
-  "RevisionField": "\\Pim\\Services\\RevisionField"
+  "RevisionField": "\\Pim\\Services\\RevisionField",
+  "QueueManagerOwnership": "\\Pim\\Services\\QueueManagerOwnership"
 }
