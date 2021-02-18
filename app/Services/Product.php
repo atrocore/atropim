@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Dam\Entities\AssetRelation;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -51,6 +50,35 @@ class Product extends AbstractService
      * @var string
      */
     protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
+
+    /**
+     * @inheritDoc
+     */
+    public function updateEntity($id, $data)
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            if ($this->isProductAttributeUpdating($data)) {
+                $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
+                foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
+                    if (!empty($data->_ignoreConflict)) {
+                        $pavData->_prev = null;
+                    }
+                    $service->updateEntity($pavId, $pavData);
+                }
+            }
+
+            $result = parent::updateEntity($id, $data);
+
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw new $e($e->getMessage());
+        }
+
+        return $result;
+    }
 
     /**
      * @param \stdClass $data
@@ -631,5 +659,37 @@ class Product extends AbstractService
     protected function exception(string $key): string
     {
         return $this->getTranslate($key, 'exceptions', 'Product');
+    }
+
+    /**
+     * @param \stdClass $data
+     *
+     * @return bool
+     */
+    protected function isProductAttributeUpdating(\stdClass $data): bool
+    {
+        return !empty($data->panelsData->productAttributeValues);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        if ($this->isProductAttributeUpdating($data)) {
+            return true;
+        }
+
+        return parent::isEntityUpdated($entity, $data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
     }
 }

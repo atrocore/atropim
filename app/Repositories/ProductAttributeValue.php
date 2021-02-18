@@ -63,7 +63,7 @@ class ProductAttributeValue extends AbstractRepository
         parent::beforeSave($entity, $options);
 
         if (!$this->isValidForSave($entity, $options)) {
-            return false;
+            return;
         }
 
         /**
@@ -125,7 +125,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     public function afterSave(Entity $entity, array $options = array())
     {
@@ -140,6 +140,11 @@ class ProductAttributeValue extends AbstractRepository
         if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'teams', 'isInheritTeams'))) {
             $this->inheritOwnership($entity, $field, $this->getConfig()->get('teamsAttributeOwnership', null));
         }
+
+        // update modifiedAt for product
+        $this
+            ->getEntityManager()
+            ->nativeQuery("UPDATE `product` SET modified_at='{$entity->get('modifiedAt')}' WHERE id='{$entity->get('productId')}'");
 
         parent::afterSave($entity, $options);
     }
