@@ -291,14 +291,17 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         handlePanelsSave() {
+            let panelsData = {};
             let panels = this.getBottomPanels();
             if (panels) {
                 for (let panel in panels) {
-                    if (typeof panels[panel].save === 'function') {
-                        panels[panel].save();
+                    if (typeof panels[panel].panelFetch === 'function') {
+                        panelsData[panel] = panels[panel].panelFetch();
                     }
                 }
             }
+
+            return panelsData;
         },
 
         save(callback, skipExit) {
@@ -382,7 +385,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 packageView.save();
             }
 
-            this.handlePanelsSave();
+            attrs['panelsData'] = this.handlePanelsSave();
 
             if (!attrs) {
                 this.afterNotModified(gridPackages || panelsChanges);
@@ -395,61 +398,76 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             this.trigger('before:save');
             model.trigger('before:save');
 
+            let _prev = {};
+            $.each(attrs, function (field, value) {
+                _prev[field] = initialAttributes[field];
+            });
+
+            attrs['_prev'] = _prev;
+            attrs['_silentMode'] = true;
+
             model.save(attrs, {
                 success: function () {
-                    this.afterSave();
+                    self.afterSave();
+                    let isNew = self.isNew;
                     if (self.isNew) {
                         self.isNew = false;
                     }
-                    this.trigger('after:save');
+                    self.trigger('after:save');
                     model.trigger('after:save');
 
                     if (!callback) {
                         if (!skipExit) {
-                            if (self.isNew) {
-                                this.exit('create');
+                            if (isNew) {
+                                self.exit('create');
                             } else {
-                                this.exit('save');
+                                self.exit('save');
                             }
                         }
                     } else {
-                        callback(this);
+                        callback(self);
                     }
-                }.bind(this),
+                },
                 error: function (e, xhr) {
-                    let r = xhr.getAllResponseHeaders();
-                    let response = null;
+                    if (xhr.status === 409) {
+                        self.notify(false);
+                        self.enableButtons();
+                        self.trigger('cancel:save');
+                        Espo.Ui.confirm(self.translate('editedByAnotherUser', 'exceptions', 'Global'), {
+                            confirmText: self.translate('Apply'),
+                            cancelText: self.translate('Cancel')
+                        }, function () {
+                            attrs['_prev'] = null;
+                            attrs['_ignoreConflict'] = true;
+                            attrs['_silentMode'] = false;
+                            model.save(attrs, {
+                                success: function () {
+                                    self.afterSave();
+                                    self.isNew = false;
+                                    self.trigger('after:save');
+                                    model.trigger('after:save');
+                                    if (!callback) {
+                                        if (!skipExit) {
+                                            self.exit('save');
+                                        }
+                                    } else {
+                                        callback(self);
+                                    }
+                                },
+                                patch: true
+                            });
+                        })
+                    } else {
+                        self.enableButtons();
+                        self.trigger('cancel:save');
 
-                    if (xhr.status == 409) {
-                        let header = xhr.getResponseHeader('X-Status-Reason');
-                        try {
-                            let response = JSON.parse(header);
-                        } catch (e) {
-                            console.error('Error while parsing response');
-                        }
+                        let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
                     }
-
-                    if (xhr.status == 400) {
-                        if (!this.isNew) {
-                            this.model.set(this.attributes);
-                        }
-                    }
-
-                    if (response) {
-                        if (response.reason == 'Duplicate') {
-                            xhr.errorIsHandled = true;
-                            self.showDuplicate(response.data);
-                        }
-                    }
-
-                    this.afterSaveError();
-
-                    model.attributes = beforeSaveAttributes;
-                    self.trigger('cancel:save');
-
-                }.bind(this),
+                },
                 patch: !model.isNew()
             });
+
             return true;
         }
     })
