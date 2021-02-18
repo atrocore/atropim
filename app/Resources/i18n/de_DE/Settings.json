@@ -1,5 +1,8 @@
 {
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken."
+  },
+  "queueManager": {
+    "updatingOwnershipInformation": "Aktualisierung der Besiterinformationen"
   }
 }

@@ -214,7 +214,7 @@ class QueueManagerOwnership extends QueueManagerBase
 
             // for multilang owner and assigned users
             if (empty($locale) && $this->getConfig()->get('isMultilangActive', false)) {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', Util::toCamelCase($entity, '_', true), 'fields', Util::toCamelCase('isInheritTeams')]);
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', Util::toCamelCase($entity, '_', true), 'fields', 'isInheritTeams']);
 
                 if ($fieldDefs['isMultilang'] ?? false) {
                     foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {

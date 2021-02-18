@@ -1,5 +1,8 @@
 {
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories."
+  },
+  "queueManager": {
+    "updatingOwnershipInformation": "Updating ownership information"
   }
 }
