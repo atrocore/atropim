@@ -66,9 +66,7 @@ class Product extends AbstractSelectManager
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
         // prepare custom where
-        if (!isset($selectParams['customWhere'])) {
-            $selectParams['customWhere'] = $this->customWhere;
-        }
+        $selectParams['customWhere'] .= $this->customWhere;
 
         // add product attributes filter
         $this->addProductAttributesFilter($selectParams, $productAttributes);
