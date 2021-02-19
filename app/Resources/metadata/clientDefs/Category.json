@@ -43,11 +43,14 @@
       "view": "pim:views/category/record/panels/catalogs"
     },
     "products": {
+      "view": "pim:views/category/record/panels/products",
       "create": false,
       "dragDrop": {
         "isActive": true,
         "sortField": "pcSorting"
-      }
+      },
+      "sortBy": "pcSorting",
+      "asc": true
     }
   },
   "menu": {
