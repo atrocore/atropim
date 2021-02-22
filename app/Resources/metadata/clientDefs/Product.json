@@ -22,7 +22,8 @@
     "withoutProductAttributes",
     "notLinkedWithProductSerie",
     "onlyCatalogProducts",
-    "linkedWithCategory"
+    "linkedWithCategory",
+    "activeForChannel"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
@@ -36,7 +37,8 @@
     "notLinkedWithPackaging",
     "notLinkedWithProductSerie",
     "onlyCatalogProducts",
-    "linkedWithCategory"
+    "linkedWithCategory",
+    "activeForChannel"
   ],
   "disabledMassActions": [
     "merge"
