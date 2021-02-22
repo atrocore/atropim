@@ -34,13 +34,12 @@ namespace Pim\Services;
 use Pim\Repositories\AbstractRepository;
 use Treo\Core\Utils\Metadata;
 use Treo\Core\Utils\Util;
-use Treo\Services\AbstractService;
-use Treo\Services\QueueManagerServiceInterface;
+use Treo\Services\QueueManagerBase;
 
 /**
  * Class QueueManagerOwnership
  */
-class QueueManagerOwnership extends AbstractService implements QueueManagerServiceInterface
+class QueueManagerOwnership extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
