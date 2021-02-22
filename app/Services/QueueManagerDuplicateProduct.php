@@ -31,10 +31,13 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Treo\Services\AbstractService;
+use Treo\Services\QueueManagerServiceInterface;
+
 /**
  * Class QueueManagerDuplicateProduct
  */
-class QueueManagerDuplicateProduct extends \Treo\Services\QueueManagerBase
+class QueueManagerDuplicateProduct extends AbstractService implements QueueManagerServiceInterface
 {
     /**
      * @inheritdoc
