@@ -101,7 +101,7 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                             $.each(position, (k, v) => {
                                 value.push(eventModel.get('typeValue' + locale)[v]);
                             });
-                        } else {
+                        } else if (eventModel.get('typeValue' + locale)) {
                             value = eventModel.get('typeValue' + locale)[position];
                         }
 
