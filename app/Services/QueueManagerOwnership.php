@@ -34,7 +34,7 @@ namespace Pim\Services;
 use Pim\Repositories\AbstractRepository;
 use Treo\Core\Utils\Metadata;
 use Treo\Core\Utils\Util;
-use Treo\Services\QueueManagerBase;
+use Espo\Services\QueueManagerBase;
 
 /**
  * Class QueueManagerOwnership

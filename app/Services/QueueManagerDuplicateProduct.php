@@ -31,7 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Treo\Services\QueueManagerBase;
+use Espo\Services\QueueManagerBase;
 
 /**
  * Class QueueManagerDuplicateProduct
