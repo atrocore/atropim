@@ -188,7 +188,7 @@ class ProductAttributeValue extends AbstractRepository
                         $param .= $camelCaseLocale;
 
                         if ($entity->isAttributeChanged($param) && $entity->get($param)) {
-                            return $field . $camelCaseLocale;
+                            return $field != 'teams' ? $field . $camelCaseLocale : $field;
                         }
                     }
                 }

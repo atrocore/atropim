@@ -245,10 +245,31 @@ abstract class AbstractRepository extends Base
 
             if ($inheritedEntity) {
                 if ($target == 'teams') {
-                    $teams = $inheritedEntity->get('teams')->toArray();
+                    if (isset($entity->locale)) {
+                        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+                        $entityId = $entity->id . $separator . $entity->locale;
+                        $inheritedId = $inheritedEntity->getEntityType() == 'Attribute' ? $inheritedEntity->id . $separator . $entity->locale : $inheritedEntity->id;
+                    } else {
+                        $entityId = $entity->id;
+                        $inheritedId = $inheritedEntity->id;
+                    }
+                    $this->getEntityManager()->nativeQuery("DELETE FROM entity_team WHERE entity_id = '{$entityId}'");
 
-                    $entity->set('teamsIds', array_column($teams, 'id'));
-                    $entity->set('teamsNames', array_column($teams, 'name', 'id'));
+                    $sql = "SELECT team_id 
+                            FROM entity_team 
+                            WHERE entity_type = '{$inheritedEntity->getEntityType()}'
+                                AND entity_id = '{$inheritedId}' AND deleted = 0";
+                    $teamsIds = $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_COLUMN);
+
+                    if (!empty($teamsIds)) {
+                        $sql = "";
+
+                        foreach ($teamsIds as $teamId) {
+                            $sql .= "INSERT INTO entity_team SET entity_id = '{$entityId}', entity_type = '{$entity->getEntityType()}', team_id = '{$teamId}';";
+                        }
+
+                        $this->getEntityManager()->nativeQuery($sql);
+                    }
                 } else {
                     $entity->set($target . 'Id', $inheritedEntity->get($target . 'Id'));
                     $entity->set($target . 'Name', $inheritedEntity->get($target .  'Name'));
