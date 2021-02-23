@@ -59,7 +59,7 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
                         required = this.getMetadata().get(['entityDefs', this.entityType, 'fields', entityField, 'required']) || false;
 
                     if (config && config !== 'notInherit') {
-                        if (this.model.isNew() && !required) {
+                        if (!required) {
                             if (this.getParentView().mode === 'edit') {
                                 this.setEdit(fields[field]);
                             }
@@ -70,7 +70,9 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
                                     let unlock = !this.model.get(this.getInheritedFieldName(field));
                                     this.changeFieldOwnership(fields[field].name, unlock);
                                 } else {
-                                    this.setEdit(fields[field]);
+                                    if (this.getParentView().mode === 'edit') {
+                                        this.setEdit(fields[field]);
+                                    }
                                     $(`a[data-name="${field}"][data-action="changeOwnership"]`).remove();
                                 }
                             });

@@ -271,8 +271,14 @@ abstract class AbstractRepository extends Base
                         $this->getEntityManager()->nativeQuery($sql);
                     }
                 } else {
-                    $entity->set($target . 'Id', $inheritedEntity->get($target . 'Id'));
-                    $entity->set($target . 'Name', $inheritedEntity->get($target .  'Name'));
+                    if (isset($entity->locale)) {
+                        $inheritedField = $inheritedEntity->getEntityType() == 'Attribute' ? $target . Util::toCamelCase(strtolower($entity->locale), '_', true) : $target;
+                        $target .= Util::toCamelCase(strtolower($entity->locale), '_', true);
+                    } else {
+                        $inheritedField = $target;
+                    }
+                    $entity->set($target . 'Id', $inheritedEntity->get($inheritedField . 'Id'));
+                    $entity->set($target . 'Name', $inheritedEntity->get($inheritedField .  'Name'));
                 }
 
                 $this->getEntityManager()->saveEntity($entity, ['skipAll' => true]);
