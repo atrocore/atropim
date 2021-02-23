@@ -862,19 +862,21 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             let data = false;
             this.groups.forEach(group => {
                 const groupView = this.getView(group.key);
-                (groupView.rowList || []).forEach(id => {
-                    const row = groupView.getView(id);
-                    const value = row.getView('valueField');
-                    if (value.mode === 'edit') {
-                        const fetchedData = value.fetch();
-                        const initialData = this.initialAttributes[id];
-                        value.model.set(fetchedData);
-                        if (this.equalityValueCheck(fetchedData, initialData)) {
-                            fetchedData['_prev'] = initialData;
-                            data = _.extend(data || {}, {[id]: fetchedData});
+                if (groupView) {
+                    (groupView.rowList || []).forEach(id => {
+                        const row = groupView.getView(id);
+                        const value = row.getView('valueField');
+                        if (value.mode === 'edit') {
+                            const fetchedData = value.fetch();
+                            const initialData = this.initialAttributes[id];
+                            value.model.set(fetchedData);
+                            if (this.equalityValueCheck(fetchedData, initialData)) {
+                                fetchedData['_prev'] = initialData;
+                                data = _.extend(data || {}, {[id]: fetchedData});
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
             return data;
         },
@@ -912,14 +914,16 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             let notValid = false;
             this.groups.forEach(group => {
                 const groupView = this.getView(group.key);
-                (groupView.rowList || []).forEach(id => {
-                    const row = groupView.getView(id);
-                    const value = row.getView('valueField');
+                if (groupView) {
+                    (groupView.rowList || []).forEach(id => {
+                        const row = groupView.getView(id);
+                        const value = row.getView('valueField');
 
-                    if (value.mode === 'edit' && !value.disabled && !value.readOnly) {
-                        notValid = value.validate() || notValid;
-                    }
-                });
+                        if (value.mode === 'edit' && !value.disabled && !value.readOnly) {
+                            notValid = value.validate() || notValid;
+                        }
+                    });
+                }
             });
             return notValid;
         }
