@@ -54,16 +54,36 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
 
             (Object.keys(fields) || []).forEach(field => {
                 if (field in this.ownershipOptions) {
-                    let config = this.getConfig().get(this.ownershipOptions[field].config);
+                    let config = this.getConfig().get(this.ownershipOptions[field].config),
+                        entityField = Espo.Utils.lowerCaseFirst((this.getInheritedEntityField(config) || '')),
+                        required = this.getMetadata().get(['entityDefs', this.entityType, 'fields', entityField, 'required']) || false;
 
                     if (config && config !== 'notInherit') {
-                        fields[field].readOnly = true;
-                        let unlock = !this.model.get(this.getInheritedFieldName(field));
-                        this.changeFieldOwnership(fields[field].name, unlock);
+                        if (!required) {
+                            if (this.getParentView().mode === 'edit') {
+                                this.setEdit(fields[field]);
+                            }
+
+                            this.listenTo(this.model, `change:${entityField}Id`, () => {
+                                if (this.model.get(entityField + 'Id') || null) {
+                                    fields[field].readOnly = true;
+                                    let unlock = !this.model.get(this.getInheritedFieldName(field));
+                                    this.changeFieldOwnership(fields[field].name, unlock);
+                                } else {
+                                    if (this.getParentView().mode === 'edit') {
+                                        this.setEdit(fields[field]);
+                                    }
+                                    $(`a[data-name="${field}"][data-action="changeOwnership"]`).remove();
+                                }
+                            });
+                        } else {
+                            fields[field].readOnly = true;
+                            let unlock = !this.model.get(this.getInheritedFieldName(field));
+                            this.changeFieldOwnership(fields[field].name, unlock);
+                        }
                     } else {
                         if (this.getParentView().mode === 'edit') {
-                            fields[field].setMode('edit');
-                            fields[field].reRender();
+                            this.setEdit(fields[field]);
                         }
                     }
                 }
@@ -138,6 +158,24 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
 
         getInheritedFieldName(field) {
             return this.ownershipOptions[field].field;
+        },
+
+        setEdit(view) {
+            view.setMode('edit');
+            view.reRender();
+        },
+
+        getInheritedEntityField(config) {
+            let entity = null;
+
+            switch (config) {
+                case 'fromCatalog': entity = 'Catalog'; break;
+                case 'fromProductFamily': entity = 'ProductFamily'; break;
+                case 'fromProduct': entity = 'Product'; break;
+                case 'fromAttribute': entity = 'Attribute'; break;
+            }
+
+            return entity;
         }
     })
 );
