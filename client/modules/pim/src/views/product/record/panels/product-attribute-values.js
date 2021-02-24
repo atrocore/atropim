@@ -884,15 +884,15 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         equalityValueCheck(fetchedData, initialData) {
             if (typeof fetchedData.valueId !== 'undefined') {
-                return fetchedData.valueId === initialData.valueId;
+                return _.isEqual(fetchedData.valueId, initialData.valueId);
             }
 
             if (typeof fetchedData.valueCurrency !== 'undefined') {
                 fetchedData.data = {currency: fetchedData.valueCurrency};
-                return fetchedData.valueCurrency === initialData.valueCurrency && fetchedData.value === initialData.value;
+                return _.isEqual(fetchedData.valueCurrency, initialData.valueCurrency) && _.isEqual(fetchedData.value, initialData.value);
             }
 
-            return fetchedData.value === initialData.value;
+            return _.isEqual(fetchedData.value, initialData.value);
         },
 
         save() {
