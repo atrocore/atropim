@@ -28,9 +28,24 @@
       "view": "pim:views/product-attribute-value/fields/value-container",
       "hasCompleteValidation": true
     },
+    "valueCurrency": {
+      "type": "varchar",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "valueId": {
       "type": "varchar",
       "notStorable": true,
+      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -44,6 +59,7 @@
     "valueName": {
       "type": "varchar",
       "notStorable": true,
+      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -57,6 +73,7 @@
     "valuePathsData": {
       "type": "jsonObject",
       "notStorable": true,
+      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,

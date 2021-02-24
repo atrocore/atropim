@@ -62,18 +62,18 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
 
         // set currency value
-        if ($entity->get('attributeType') == 'currency' && empty($entity->get('data'))) {
-            $entity->set('data', ['currency' => $this->getConfig()->get('defaultCurrency', 'EUR')]);
+        if ($entity->get('attributeType') == 'currency') {
+            if (empty($entity->get('data'))) {
+                $data = new \stdClass();
+                $data->currency = $this->getConfig()->get('defaultCurrency', 'EUR');
+                $entity->set('data', $data);
+            }
+            $entity->set('valueCurrency', get_object_vars($entity->get('data'))['currency']);
         }
 
+        // set asset value
         if ($entity->get('attributeType') === 'asset') {
-            $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value'));
-            if (empty($attachment)) {
-                $entity->set('value', null);
-                $entity->set('valueId', null);
-                $entity->set('valueName', null);
-                $entity->set('valuePathsData', null);
-            } else {
+            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value')))) {
                 $entity->set('valueId', $attachment->get('id'));
                 $entity->set('valueName', $attachment->get('name'));
                 $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));

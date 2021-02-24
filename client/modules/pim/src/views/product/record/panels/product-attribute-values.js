@@ -870,7 +870,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                             const fetchedData = value.fetch();
                             const initialData = this.initialAttributes[id];
                             value.model.set(fetchedData);
-                            if (this.equalityValueCheck(fetchedData, initialData)) {
+
+                            if (!this.equalityValueCheck(fetchedData, initialData)) {
                                 fetchedData['_prev'] = initialData;
                                 data = _.extend(data || {}, {[id]: fetchedData});
                             }
@@ -882,11 +883,16 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         equalityValueCheck(fetchedData, initialData) {
-            return !_.isEqual(initialData, fetchedData) && (Object.keys(fetchedData).every(key => {
-                const initial = initialData[key];
-                const fetched = fetchedData[key];
-                return (Array.isArray(initial) ? initial.length : initial) || (Array.isArray(fetched) ? fetched.length : fetched);
-            }));
+            if (typeof fetchedData.valueId !== 'undefined') {
+                return fetchedData.valueId === initialData.valueId;
+            }
+
+            if (typeof fetchedData.valueCurrency !== 'undefined') {
+                fetchedData.data = {currency: fetchedData.valueCurrency};
+                return fetchedData.valueCurrency === initialData.valueCurrency && fetchedData.value === initialData.value;
+            }
+
+            return fetchedData.value === initialData.value;
         },
 
         save() {

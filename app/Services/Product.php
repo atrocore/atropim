@@ -207,16 +207,6 @@ class Product extends AbstractService
     }
 
     /**
-     * @param AssetRelation $assetRelation
-     *
-     * @return bool
-     */
-    public static function isMainRole(AssetRelation $assetRelation): bool
-    {
-        return in_array('Main', (array)$assetRelation->get('role'));
-    }
-
-    /**
      * @param Entity $product
      * @param Entity $duplicatingProduct
      */
