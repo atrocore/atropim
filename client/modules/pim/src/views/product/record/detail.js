@@ -206,7 +206,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 let viewsFields = this.getFieldViews();
                 Object.keys(viewsFields).forEach(item => {
                     if (viewsFields[item].mode === "edit" ) {
-                        viewsFields[item].inlineEditSave();                        
+                        viewsFields[item].inlineEditSave();
                     }
                 });
             }
@@ -461,8 +461,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         self.enableButtons();
                         self.trigger('cancel:save');
 
-                        let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
-                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                        if (xhr.status === 304) {
+                            Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+                        } else {
+                            let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                            Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                        }
                     }
                 },
                 patch: !model.isNew()
