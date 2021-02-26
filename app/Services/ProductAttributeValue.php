@@ -35,12 +35,12 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
 
 /**
- * ProductAttributeValue service
+ * Class ProductAttributeValue
  */
 class ProductAttributeValue extends AbstractService
 {
@@ -367,9 +367,10 @@ class ProductAttributeValue extends AbstractService
         $fields = parent::getFieldsThatConflict($entity, $data);
 
         if (!empty($fields)) {
-            $fields = [
-                $entity->get('id') => $entity->get('attributeName')
-            ];
+            $fields = [$entity->get('id') => $entity->get('attributeName')];
+            if (!empty($data->isLocale) && !empty($data->locale)) {
+                $fields = [$entity->get('id') . '_' . $data->locale => $entity->get('attributeName') . ' &rsaquo; ' . $data->locale];
+            }
         }
 
         return $fields;

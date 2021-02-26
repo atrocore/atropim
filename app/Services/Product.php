@@ -40,6 +40,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Treo\Core\EventManager\Event;
+use Treo\Core\Exceptions\NotModified;
 use Treo\Services\MassActions;
 
 /**
@@ -70,6 +71,8 @@ class Product extends AbstractService
                     $service->updateEntity($pavId, $pavData);
                 } catch (Conflict $e) {
                     $conflicts = array_merge($conflicts, $e->getFields());
+                } catch (NotModified $e) {
+                    // ignore
                 }
             }
         }
