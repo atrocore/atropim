@@ -80,7 +80,7 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 ### Requirements
 
 * Unix-based system. Ubuntu is recommended.
-* PHP 7.1 or above (with pdo_mysql, openssl, json, zip, gd, mbstring, xml, curl, exif extensions).
+* PHP 7.1 or above.
 * MySQL 5.5.3 or above.
 
 ### Configuration Instructions Based on Your Server
