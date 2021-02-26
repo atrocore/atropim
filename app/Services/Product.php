@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
@@ -58,24 +59,33 @@ class Product extends AbstractService
     {
         $this->getEntityManager()->getPDO()->beginTransaction();
 
-        try {
-            if ($this->isProductAttributeUpdating($data)) {
-                $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
-                foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
-                    if (!empty($data->_ignoreConflict)) {
-                        $pavData->_prev = null;
-                    }
+        $conflicts = [];
+        if ($this->isProductAttributeUpdating($data)) {
+            $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
+            foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
+                if (!empty($data->_ignoreConflict)) {
+                    $pavData->_prev = null;
+                }
+                try {
                     $service->updateEntity($pavId, $pavData);
+                } catch (Conflict $e) {
+                    $conflicts = array_merge($conflicts, $e->getFields());
                 }
             }
-
-            $result = parent::updateEntity($id, $data);
-
-            $this->getEntityManager()->getPDO()->commit();
-        } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
-            throw new $e($e->getMessage());
         }
+
+        try {
+            $result = parent::updateEntity($id, $data);
+        } catch (Conflict $e) {
+            $conflicts = array_merge($conflicts, $e->getFields());
+        }
+
+        if (!empty($conflicts)) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts)));
+        }
+
+        $this->getEntityManager()->getPDO()->commit();
 
         return $result;
     }

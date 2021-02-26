@@ -360,6 +360,22 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        $fields = parent::getFieldsThatConflict($entity, $data);
+
+        if (!empty($fields)) {
+            $fields = [
+                $entity->get('id') => $entity->get('attributeName')
+            ];
+        }
+
+        return $fields;
+    }
+
+    /**
      * @param Entity $entity
      *
      * @return bool
