@@ -179,6 +179,11 @@ class ProductAttributeValue extends AbstractService
             if (isset($data->value)) {
                 $data->{"value{$camelCaseLocale}"} = $data->value;
                 unset($data->value);
+
+                if (!empty($data->_prev->value)){
+                    $data->_prev->{"value{$camelCaseLocale}"} = $data->_prev->value;
+                    unset($data->_prev->value);
+                }
             }
 
             /**
