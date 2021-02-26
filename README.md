@@ -85,8 +85,8 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 
 ### Configuration Instructions Based on Your Server
 
-* [Apache server configuration](https://github.com/atrocore/atropim-docs/blob/master/en/administration/apache-server-configuration.md)
-* [Nginx server configuration](https://github.com/atrocore/atropim-docs/blob/master/en/administration/nginx-server-configuration.md)
+- [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
+- [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.md)
 
 ### Installation
 
