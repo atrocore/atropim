@@ -429,11 +429,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                     }
                 },
                 error: function (e, xhr) {
+                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                     if (xhr.status === 409) {
                         self.notify(false);
                         self.enableButtons();
                         self.trigger('cancel:save');
-                        Espo.Ui.confirm(self.translate('editedByAnotherUser', 'exceptions', 'Global'), {
+                        Espo.Ui.confirm(statusReason, {
                             confirmText: self.translate('Apply'),
                             cancelText: self.translate('Cancel')
                         }, function () {
@@ -464,7 +465,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         if (xhr.status === 304) {
                             Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
                         } else {
-                            let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                             Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
                         }
                     }
