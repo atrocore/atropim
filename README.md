@@ -79,7 +79,7 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 
 ### Requirements
 
-* Unix-based system. Linux Mint is recommended.
+* Unix-based system. Ubuntu is recommended.
 * PHP 7.1 or above (with pdo_mysql, openssl, json, zip, gd, mbstring, xml, curl, exif extensions).
 * MySQL 5.5.3 or above.
 
@@ -90,9 +90,9 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 
 ### Installation
 
-> The Installation guide is based on **Linux Mint OS**. Of course, you can use any Unix-based system, but make sure that your OS supports the following commands.<br/>
+> The Installation guide is based on **Ubuntu**. Of course, you can use any Unix-based system, but make sure that your OS supports the following commands.<br/>
 
-To create your new AtroPIM application, first make sure you are using PHP 7.1 or above and have [Composer](https://getcomposer.org/) installed.
+To create your new AtroPIM application, first make sure you are using PHP 7.1 or above and have [Composer](https://getcomposer.org/download/) installed.
 
 1. Create your new project by running one of the following commands.
 
@@ -108,20 +108,26 @@ To create your new AtroPIM application, first make sure you are using PHP 7.1 or
    ```
    chown -R webserver_user:webserver_user my-atropim-project/
    ```
-   >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.
+   >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.   
 
-3. Configure the crontab as described below.
+3. Change the permissions for project files: 
+   ```
+    find . -type d -exec chmod 755 {} + && find . -type f -exec chmod 644 {} +;
+    find data custom -type d -exec chmod 775 {} + && find data custom -type f -exec chmod 664 {}
+   ```
 
-   3.1. Run the following command:
+4. Configure the crontab as described below.
+
+   4.1. Run the following command:
       ```
       crontab -e -u webserver_user
       ```
-   3.2. Add the following configuration:
+   4.2. Add the following configuration:
       ```
       * * * * * /usr/bin/php /var/www/my-atropim-project/index.php cron
       ```      
 
-4. Install AtroPIM following the installation wizard in the web interface. Go to http://YOUR_PROJECT/
+5. Install AtroPIM following the installation wizard in the web interface. Go to http://YOUR_PROJECT/
      
 ## License
 
