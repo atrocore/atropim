@@ -96,6 +96,11 @@ To create your new AtroPIM application, first make sure you are using PHP 7.1 or
 
 1. Create your new project by running one of the following commands.
 
+   Go to the folder, where the project folder should be created.
+   ```
+   cd /var/www
+   ```
+   
    If you don't need the demo data, run:
    ```
    composer create-project atrocore/skeleton-pim-no-demo my-atropim-project
@@ -106,7 +111,7 @@ To create your new AtroPIM application, first make sure you are using PHP 7.1 or
    ```   
 2. Change recursively the user and group ownership for project files: 
    ```
-   chown -R webserver_user:webserver_user my-atropim-project/
+   chown -R www-data:www-data my-atropim-project/
    ```
    >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.   
 
@@ -120,7 +125,7 @@ To create your new AtroPIM application, first make sure you are using PHP 7.1 or
 
    4.1. Run the following command:
       ```
-      crontab -e -u webserver_user
+      crontab -e -u www-data
       ```
    4.2. Add the following configuration:
       ```
