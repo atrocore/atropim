@@ -53,32 +53,7 @@ class ProductAttributeValue extends AbstractService
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('isCustom', $this->isCustom($entity));
-
-        $attribute = $entity->get('attribute');
-
-        $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
-        $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
-        $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
-
-        // set currency value
-        if ($entity->get('attributeType') == 'currency') {
-            if (empty($entity->get('data'))) {
-                $data = new \stdClass();
-                $data->currency = $this->getConfig()->get('defaultCurrency', 'EUR');
-                $entity->set('data', $data);
-            }
-            $entity->set('valueCurrency', get_object_vars($entity->get('data'))['currency']);
-        }
-
-        // set asset value
-        if ($entity->get('attributeType') === 'asset') {
-            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value')))) {
-                $entity->set('valueId', $attachment->get('id'));
-                $entity->set('valueName', $attachment->get('name'));
-                $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-            }
-        }
+        $this->prepareEntity($entity);
 
         $this->convertValue($entity);
     }
@@ -369,6 +344,8 @@ class ProductAttributeValue extends AbstractService
      */
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
+        $this->prepareEntity($entity);
+
         $fields = parent::getFieldsThatConflict($entity, $data);
 
         if (!empty($fields)) {
@@ -379,6 +356,61 @@ class ProductAttributeValue extends AbstractService
         }
 
         return $fields;
+    }
+
+    /**
+     * @param Entity $entity
+     */
+    protected function prepareEntity(Entity $entity): void
+    {
+        // exit if already prepared
+        if (!empty($entity->get('attributeType'))) {
+            return;
+        }
+
+        $entity->set('isCustom', $this->isCustom($entity));
+
+        $attribute = $entity->get('attribute');
+
+        $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
+        $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
+        $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
+
+        // set currency value
+        if ($entity->get('attributeType') == 'currency') {
+            if (empty($entity->get('data'))) {
+                $data = new \stdClass();
+                $data->currency = $this->getConfig()->get('defaultCurrency', 'EUR');
+                $entity->set('data', $data);
+            }
+            $entity->set('valueCurrency', get_object_vars($entity->get('data'))['currency']);
+        }
+
+        // set unit value
+        if ($entity->get('attributeType') == 'unit') {
+            if (empty($entity->get('data'))) {
+                $data = new \stdClass();
+                $data->unit = null;
+
+                $unitType = $attribute->get('typeValue')[0];
+                $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure', []);
+                if (!empty($unitsOfMeasure->{$unitType}) && !empty($unitsOfMeasure->{$unitType}->unitList)) {
+                    $data->unit = $unitsOfMeasure->{$unitType}->unitList[0];
+                }
+
+                $entity->set('data', $data);
+            }
+            $entity->set('valueUnit', get_object_vars($entity->get('data'))['unit']);
+        }
+
+        // set asset value
+        if ($entity->get('attributeType') === 'asset') {
+            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value')))) {
+                $entity->set('valueId', $attachment->get('id'));
+                $entity->set('valueName', $attachment->get('name'));
+                $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+            }
+        }
     }
 
     /**
