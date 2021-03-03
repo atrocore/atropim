@@ -2,7 +2,7 @@
   {
     "name": "attribute",
     "notSortable": true,
-    "width": "25",
+    "width": "20",
     "view": "pim:views/product-attribute-value/fields/attribute-with-required-sign"
   },
   {
@@ -13,6 +13,6 @@
   {
     "name": "channel",
     "notSortable": true,
-    "width": "17"
+    "width": "10"
   }
 ]
