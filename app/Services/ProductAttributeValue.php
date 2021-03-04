@@ -167,6 +167,11 @@ class ProductAttributeValue extends AbstractService
             if (isset($data->ownerUserId)) {
                 $data->{"ownerUser{$camelCaseLocale}Id"} = $data->ownerUserId;
                 unset($data->ownerUserId);
+
+                if (isset($data->_prev) && property_exists($data->_prev, 'ownerUserId')) {
+                    $data->_prev->{"ownerUser{$camelCaseLocale}Id"} = $data->_prev->ownerUserId;
+                    unset($data->_prev->ownerUserId);
+                }
             }
 
             /**
@@ -175,15 +180,25 @@ class ProductAttributeValue extends AbstractService
             if (isset($data->assignedUserId)) {
                 $data->{"assignedUser{$camelCaseLocale}Id"} = $data->assignedUserId;
                 unset($data->assignedUserId);
+
+                if (isset($data->_prev) && property_exists($data->_prev, 'assignedUserId')) {
+                    $data->_prev->{"assignedUser{$camelCaseLocale}Id"} = $data->_prev->assignedUserId;
+                    unset($data->_prev->assignedUserId);
+                }
             }
 
             /**
              * Set locale teams
              */
             if (isset($data->teamsIds)) {
-                $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $data->teamsIds);
-
+//                $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $data->teamsIds);
+                $data->{"teams{$camelCaseLocale}Ids"} = $data->teamsIds;
                 unset($data->teamsIds);
+
+                if (isset($data->_prev) && property_exists($data->_prev, 'teamsIds')) {
+                    $data->_prev->{"teams{$camelCaseLocale}Ids"} = $data->_prev->teamsIds;
+                    unset($data->_prev->teamsIds);
+                }
             }
 
             if (isset($data->{'isInheritTeams' . $camelCaseLocale}) && $data->{'isInheritTeams' . $camelCaseLocale}) {
@@ -371,9 +386,10 @@ class ProductAttributeValue extends AbstractService
         $fields = parent::getFieldsThatConflict($entity, $data);
 
         if (!empty($fields)) {
-            foreach ($fields as $field => $translated) {
-                if (strpos($field, 'value') !== false) {
-                    $fields[$field] = $this->getInjection('language')->translate('value', 'fields', 'ProductAttributeValue');
+            if (!empty($data->isLocale) && !empty($data->locale)) {
+                $locale = ucfirst(Util::toCamelCase(strtolower($data->locale)));
+                foreach ($fields as $field => $translated) {
+                    $fields[$field] = $this->getInjection('language')->translate($this->removeSuffix($field, $locale), 'fields', 'ProductAttributeValue');
                 }
             }
 

@@ -31,10 +31,12 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
+use Espo\Core\Templates\Entities\Base;
+
 /**
  * Class ProductAttributeValue
  */
-class ProductAttributeValue extends \Espo\Core\Templates\Entities\Base
+class ProductAttributeValue extends Base
 {
     /**
      * @var string

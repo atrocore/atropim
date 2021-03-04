@@ -43,6 +43,22 @@ use Treo\Core\Utils\Util;
 class ProductAttributeValue extends AbstractRepository
 {
     /**
+     * @param string $pavId
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getLocaleTeamsIds(string $pavId, string $locale): array
+    {
+        $localeId = $pavId . \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
+
+        return $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT team_id FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$localeId'")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    /**
      * @param string $productFamilyAttributeId
      */
     public function removeCollectionByProductFamilyAttribute(string $productFamilyAttributeId)
