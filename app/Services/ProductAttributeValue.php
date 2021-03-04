@@ -357,23 +357,21 @@ class ProductAttributeValue extends AbstractService
     /**
      * @inheritDoc
      */
-    protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
+    protected function getRequiredFields(Entity $entity, \stdClass $data): array
     {
-        try {
-            parent::checkRequiredFields($entity, $data);
-        } catch (BadRequest $e) {
-            if (strpos($e->getDataItem('field'), 'value') !== false) {
-                foreach ($data as $k => $v) {
-                    if (strpos($k, 'value') !== false) {
-                        return true;
-                    }
+        $fields = parent::getRequiredFields($entity, $data);
+
+        if (!empty($data->_ignoreValueValidation)) {
+            $newFields = [];
+            foreach ($fields as $field) {
+                if (strpos($field, 'value') === false) {
+                    $newFields[] = $field;
                 }
             }
-
-            throw $e;
+            $fields = $newFields;
         }
 
-        return true;
+        return $fields;
     }
 
     /**
