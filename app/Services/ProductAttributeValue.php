@@ -155,7 +155,7 @@ class ProductAttributeValue extends AbstractService
                 $data->{"value{$camelCaseLocale}"} = $data->value;
                 unset($data->value);
 
-                if (!empty($data->_prev->value)){
+                if (isset($data->_prev) && property_exists($data->_prev, 'value')){
                     $data->_prev->{"value{$camelCaseLocale}"} = $data->_prev->value;
                     unset($data->_prev->value);
                 }
@@ -340,6 +340,23 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
+     * @param Entity $entity
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function isValid($entity)
+    {
+        // in case when attribute is multi-language we should skip validation by required fields
+        if (!empty($entity->get('attribute')->get('isMultilang'))) {
+            return true;
+        }
+
+        return parent::isValid($entity);
+    }
+
+    /**
      * @inheritDoc
      */
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
@@ -348,7 +365,7 @@ class ProductAttributeValue extends AbstractService
 
         $fields = parent::getFieldsThatConflict($entity, $data);
 
-        if (!empty($fields)) {
+        if (!empty($fields) && !empty($data->isProductUpdate)) {
             $fields = [$entity->get('id') => $entity->get('attributeName')];
             if (!empty($data->isLocale) && !empty($data->locale)) {
                 $fields = [$entity->get('id') . '_' . $data->locale => $entity->get('attributeName') . ' &rsaquo; ' . $data->locale];

@@ -67,6 +67,7 @@ class Product extends AbstractService
                 if (!empty($data->_ignoreConflict)) {
                     $pavData->_prev = null;
                 }
+                $pavData->isProductUpdate = true;
                 try {
                     $service->updateEntity($pavId, $pavData);
                 } catch (Conflict $e) {
