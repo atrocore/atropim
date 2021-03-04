@@ -340,20 +340,25 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
-     * @param Entity $entity
-     *
-     * @return bool
-     * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\Error
+     * @inheritDoc
      */
-    protected function isValid($entity)
+    protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
     {
-        // in case when attribute is multi-language we should skip validation by required fields
-        if (!empty($entity->get('attribute')->get('isMultilang'))) {
-            return true;
+        try {
+            parent::checkRequiredFields($entity, $data);
+        } catch (BadRequest $e) {
+            if (strpos($e->getDataItem('field'), 'value') !== false) {
+                foreach ($data as $k => $v) {
+                    if (strpos($k, 'value') !== false) {
+                        return true;
+                    }
+                }
+            }
+
+            throw $e;
         }
 
-        return parent::isValid($entity);
+        return true;
     }
 
     /**
