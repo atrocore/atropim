@@ -39,6 +39,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.name = this.options.name || this.defs.name;
 
             this.getModelFactory().create(this.model.name, model => {
+                if (!this.model.id && !this.model.get('productFamilyAttributeId')) {
+                    this.model.set('isRequired', true);
+                }
+
                 this.updateDataForValueField();
                 this.updateModelDefs();
 
