@@ -155,7 +155,7 @@ class ProductAttributeValue extends AbstractService
                 $data->{"value{$camelCaseLocale}"} = $data->value;
                 unset($data->value);
 
-                if (isset($data->_prev) && property_exists($data->_prev, 'value')){
+                if (isset($data->_prev) && property_exists($data->_prev, 'value')) {
                     $data->_prev->{"value{$camelCaseLocale}"} = $data->_prev->value;
                     unset($data->_prev->value);
                 }
@@ -365,10 +365,18 @@ class ProductAttributeValue extends AbstractService
 
         $fields = parent::getFieldsThatConflict($entity, $data);
 
-        if (!empty($fields) && !empty($data->isProductUpdate)) {
-            $fields = [$entity->get('id') => $entity->get('attributeName')];
-            if (!empty($data->isLocale) && !empty($data->locale)) {
-                $fields = [$entity->get('id') . '_' . $data->locale => $entity->get('attributeName') . ' &rsaquo; ' . $data->locale];
+        if (!empty($fields)) {
+            foreach ($fields as $field => $translated) {
+                if (strpos($field, 'value') !== false) {
+                    $fields[$field] = $this->getInjection('language')->translate('value', 'fields', 'ProductAttributeValue');
+                }
+            }
+
+            if (!empty($data->isProductUpdate)) {
+                $fields = [$entity->get('id') => $entity->get('attributeName')];
+                if (!empty($data->isLocale) && !empty($data->locale)) {
+                    $fields = [$entity->get('id') . '_' . $data->locale => $entity->get('attributeName') . ' &rsaquo; ' . $data->locale];
+                }
             }
         }
 
