@@ -35,6 +35,8 @@ Espo.define('pim:views/product/plate', 'pim:views/product/list',
             Dep.prototype.setup.call(this);
 
             this.collection.maxSize = 20;
+
+            this.getStorage().set('list-view', 'Product', 'plate');
         },
 
         getRecordViewName: function () {
