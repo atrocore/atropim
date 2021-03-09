@@ -628,7 +628,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         isEmptyRequiredField: function (value, required) {
             return this.showEmptyRequiredFields && required
-                && (value === null || value === '' || (Array.isArray(value) && !value.length));
+                && (value === null || value === '' || (Array.isArray(value) && !value.length))
+                && !this.hasCompleteness();
         },
 
         updateCheckByChannelFilter(fieldView, attributesWithChannelScope) {
@@ -937,7 +938,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
             });
             return notValid;
-        }
+        },
 
+        hasCompleteness() {
+            return this.getMetadata().get(['scopes', 'Product', 'hasCompleteness'])
+                && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
+        }
     })
 );

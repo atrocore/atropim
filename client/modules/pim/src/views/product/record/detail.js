@@ -195,7 +195,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         isEmptyRequiredField: function (field, value) {
           return this.showEmptyRequiredFields
               && this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) === true
-              && (value === null || value === '' || (Array.isArray(value) && !value.length));
+              && (value === null || value === '' || (Array.isArray(value) && !value.length))
+              && !this.hasCompleteness();
         },
 
         hotKeySave: function (e) {
