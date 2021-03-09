@@ -115,7 +115,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             Object.keys(fields).forEach(name => {
                 let value = (name in this.beforeSaveModel) ? this.beforeSaveModel[name] : this.model.get(name);
                 if (!this.notFilterFields.includes(name)
-                    && !this.isEmptyRequiredField(name, value)) {
+                    && (!this.isEmptyRequiredField(name, value) || this.hasCompleteness())
+                ) {
                     let fieldView = fields[name],
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);
@@ -473,6 +474,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             });
 
             return true;
+        },
+
+        hasCompleteness() {
+            return this.getMetadata().get(['scopes', this.scope, 'hasCompleteness'])
+                && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
         }
     })
 );
