@@ -31,7 +31,7 @@ namespace Pim\Listeners;
 
 use Espo\Core\Utils\Json;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 
 /**
@@ -119,7 +119,6 @@ class LayoutController extends AbstractListener
      */
     protected function modifyProductRelationshipsAdmin(Event $event)
     {
-        $this->hideAssetRelation($event);
     }
 
     /**
@@ -127,7 +126,6 @@ class LayoutController extends AbstractListener
      */
     protected function modifyCategoryRelationshipsAdmin(Event $event)
     {
-        $this->hideAssetRelation($event);
     }
 
     /**
@@ -143,21 +141,5 @@ class LayoutController extends AbstractListener
         }
 
         return $result;
-    }
-
-    protected function hideAssetRelation(Event $event): void
-    {
-        /** @var array $result */
-        $result = Json::decode($event->getArgument('result'), true);
-        //hide asset relation if Dam did not install
-        if (!$this->getMetadata()->isModuleInstalled('Dam')) {
-            foreach ($result as $k => $item) {
-                if (isset($item['name']) && $item['name'] === 'asset_relations') {
-                    unset($result[$k]);
-                    break;
-                }
-            }
-        }
-        $event->setArgument('result', Json::encode($result));
     }
 }
