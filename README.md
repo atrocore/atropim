@@ -83,11 +83,6 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 * PHP 7.1 or above.
 * MySQL 5.5.3 or above.
 
-### Configuration Instructions Based on Your Server
-
-- [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
-- [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.md)
-
 ### Installation
 
 Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
