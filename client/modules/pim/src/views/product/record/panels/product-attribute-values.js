@@ -607,7 +607,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             Object.keys(fields).forEach(name => {
                 let fieldView = fields[name];
 
-                if (!this.isEmptyRequiredField(fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'))) {
+                if (!this.isEmptyRequiredField(fieldView.model.get(fieldView.name), fieldView.model.get('isRequired')) || this.hasCompleteness()) {
                     let hide = !this.checkFieldValue(currentFieldFilter, fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'));
                     if (!hide) {
                         hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
@@ -937,7 +937,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
             });
             return notValid;
-        }
+        },
 
+        hasCompleteness() {
+            return this.getMetadata().get(['scopes', 'Product', 'hasCompleteness'])
+                && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
+        }
     })
 );

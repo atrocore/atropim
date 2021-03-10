@@ -83,56 +83,9 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 * PHP 7.1 or above.
 * MySQL 5.5.3 or above.
 
-### Configuration Instructions Based on Your Server
-
-- [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
-- [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.md)
-
 ### Installation
 
-> The Installation guide is based on **Ubuntu**. Of course, you can use any Unix-based system, but make sure that your OS supports the following commands.<br/>
-
-To create your new AtroPIM application, first make sure you are using PHP 7.1 or above and have [Composer](https://getcomposer.org/download/) installed.
-
-1. Create your new project by running one of the following commands.
-
-   Go to the folder, where the project folder should be created.
-   ```
-   cd /var/www
-   ```
-   
-   If you don't need the demo data, run:
-   ```
-   composer create-project atrocore/skeleton-pim-no-demo my-atropim-project
-   ```
-   If you need the demo data, run:
-    ```
-   composer create-project atrocore/skeleton-pim my-atropim-project
-   ```   
-2. Change recursively the user and group ownership for project files: 
-   ```
-   chown -R www-data:www-data my-atropim-project/
-   ```
-   >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.   
-
-3. Change the permissions for project files: 
-   ```
-    find . -type d -exec chmod 755 {} + && find . -type f -exec chmod 644 {} +;
-    find data custom -type d -exec chmod 775 {} + && find data custom -type f -exec chmod 664 {}
-   ```
-
-4. Configure the crontab as described below.
-
-   4.1. Run the following command:
-      ```
-      crontab -e -u www-data
-      ```
-   4.2. Add the following configuration:
-      ```
-      * * * * * /usr/bin/php /var/www/my-atropim-project/index.php cron
-      ```      
-
-5. Install AtroPIM following the installation wizard in the web interface. Go to http://YOUR_PROJECT/
+Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
      
 ## License
 

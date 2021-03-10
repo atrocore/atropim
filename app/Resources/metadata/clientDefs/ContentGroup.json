@@ -6,5 +6,6 @@
   ],
   "hiddenBoolFilterList": [
     "notEntity"
-  ]
+  ],
+  "iconClass": "far fa-window-restore"
 }
