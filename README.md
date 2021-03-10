@@ -90,7 +90,7 @@ Please, [ask](https://atropim.com/contact), if you want to know more.
 
 ### Installation
 
-Installation guide you can find [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
+Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
      
 ## License
 
