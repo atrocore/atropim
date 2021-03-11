@@ -69,7 +69,7 @@ We offer following integrations:
 - OXID eShop 6
 - and others.
 
-Please, [ask](https://atropim.com/contact), if you want to know more.
+Please [contact us](https://atropim.com/contact), if you want to know more.
 
 ## Documentation
 
