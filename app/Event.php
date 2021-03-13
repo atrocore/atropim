@@ -81,8 +81,6 @@ class Event extends AbstractEvent
 
         // add menu items
         $this->addMenuItems();
-        //for Pim
-        $this->migratePimImageToDam();
     }
 
     /**
@@ -157,6 +155,15 @@ class Event extends AbstractEvent
         $quickCreateList = $config->get("quickCreateList", []);
         $twoLevelTabList = $config->get("twoLevelTabList", []);
 
+        $twoLevelTabListItems = [];
+        foreach ($twoLevelTabList as $item) {
+            if (is_string($item)) {
+                $twoLevelTabListItems[] = $item;
+            } else {
+                $twoLevelTabListItems = array_merge($twoLevelTabListItems, $item->items);
+            }
+        }
+
         foreach ($this->menuItems as $item) {
             if (!in_array($item, $tabList)) {
                 $tabList[] = $item;
@@ -164,7 +171,7 @@ class Event extends AbstractEvent
             if (!in_array($item, $quickCreateList)) {
                 $quickCreateList[] = $item;
             }
-            if (!in_array($item, $twoLevelTabList)) {
+            if (!in_array($item, $twoLevelTabListItems)) {
                 $twoLevelTabList[] = $item;
             }
         }
@@ -220,26 +227,5 @@ class Event extends AbstractEvent
 
         // save
         $config->save();
-    }
-
-    /**
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function migratePimImageToDam(): void
-    {
-        $config = $this->getContainer()->get('config');
-
-        if (!empty($config->get('isInstalled'))
-            && $config->get('pimAndDamInstalled') === false
-            && $this->getContainer()->get('metadata')->isModuleInstalled('Dam')) {
-            //migration pimImage
-            $migrationPimImage = new MigrationPimImage();
-            $migrationPimImage->setContainer($this->getContainer());
-            $migrationPimImage->run();
-
-            //set flag about installed Pim and Image
-            $config->set('pimAndDamInstalled', true);
-            $config->save();
-        }
     }
 }
