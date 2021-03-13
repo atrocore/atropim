@@ -31,13 +31,12 @@ declare(strict_types=1);
 
 namespace Pim;
 
-use Treo\Core\ModuleManager\AbstractEvent;
-use DamCommon\Services\MigrationPimImage;
+use Treo\Core\ModuleManager\AfterInstallAfterDelete;
 
 /**
  * Class Event
  */
-class Event extends AbstractEvent
+class Event extends AfterInstallAfterDelete
 {
     /**
      * @var array
@@ -88,11 +87,6 @@ class Event extends AbstractEvent
      */
     public function afterDelete(): void
     {
-        // delete global search
-        $this->deleteGlobalSearchEntities();
-
-        // delete menu items
-        $this->deleteMenuItems();
     }
 
     /**
@@ -118,29 +112,6 @@ class Event extends AbstractEvent
         // save
         $config->save();
     }
-
-    /**
-     * Delete global search entities
-     */
-    protected function deleteGlobalSearchEntities(): void
-    {
-        // get config
-        $config = $this->getContainer()->get('config');
-
-        $globalSearchEntityList = [];
-        foreach ($config->get("globalSearchEntityList", []) as $entity) {
-            if (!in_array($entity, $this->searchEntities)) {
-                $globalSearchEntityList[] = $entity;
-            }
-        }
-
-        // set to config
-        $config->set('globalSearchEntityList', $globalSearchEntityList);
-
-        // save
-        $config->save();
-    }
-
 
     /**
      * Add menu items
@@ -185,45 +156,6 @@ class Event extends AbstractEvent
         if (in_array($config->get('applicationName'), ['AtroCORE', 'AtroDAM'])) {
             $config->set('applicationName', 'AtroPIM');
         }
-
-        // save
-        $config->save();
-    }
-
-    /**
-     * Delete menu items
-     */
-    protected function deleteMenuItems()
-    {
-        // get config
-        $config = $this->getContainer()->get('config');
-
-        // for tabList
-        $tabList = [];
-        foreach ($config->get("tabList", []) as $entity) {
-            if (!in_array($entity, $this->menuItems)) {
-                $tabList[] = $entity;
-            }
-        }
-        $config->set('tabList', $tabList);
-
-        // for quickCreateList
-        $quickCreateList = [];
-        foreach ($config->get("quickCreateList", []) as $entity) {
-            if (!in_array($entity, $this->menuItems)) {
-                $quickCreateList[] = $entity;
-            }
-        }
-        $config->set('quickCreateList', $quickCreateList);
-
-        // for twoLevelTabList
-        $twoLevelTabList = [];
-        foreach ($config->get("twoLevelTabList", []) as $entity) {
-            if (!in_array($entity, $this->menuItems)) {
-                $twoLevelTabList[] = $entity;
-            }
-        }
-        $config->set('twoLevelTabList', $twoLevelTabList);
 
         // save
         $config->save();
