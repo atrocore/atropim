@@ -56,7 +56,11 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
 
                     this.clearView('middle');
                     this.gridLayout = null;
-                    this.createMiddleView(() => this.reRender());
+                    this.createMiddleView(
+                        function (view) {
+                            view.render();
+                        }
+                    );
                 }
             });
         },
