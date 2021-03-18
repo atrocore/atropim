@@ -24,6 +24,7 @@
 
                     <li class="dropdown-submenu">
                         <a href="javascript:" class="add-filter-button" tabindex="-1">
+                            <span class="fas fa-filter"></span>
                             {{translate 'Add Field'}}
                         </a>
                         <ul class="dropdown-menu show-list filter-list">
@@ -37,6 +38,7 @@
                     <li class="divider"></li>
                     <li class="dropdown-submenu">
                         <a href="javascript:" class=" add-attribute-filter-button" tabindex="-1">
+                            <span class="fas fa-filter"></span>
                             {{translate 'addAttributeFilter' category="labels" scope=scope}}
                         </a>
                         <ul class="dropdown-menu show-list family-list">
