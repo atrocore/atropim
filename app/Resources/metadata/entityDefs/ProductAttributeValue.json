@@ -1,9 +1,5 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "readonly": true
-    },
     "product": {
       "type": "link",
       "required": true
@@ -97,10 +93,6 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
-    },
-    "image": {
-      "type": "image",
-      "notStorable": true
     },
     "data": {
       "type": "jsonObject"
@@ -294,12 +286,6 @@
     }
   },
   "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    },
     "ownerUser": {
       "columns": [
         "ownerUserId",

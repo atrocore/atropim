@@ -3,7 +3,6 @@
     "Attribute": "Attribute"
   },
   "fields": {
-    "name": "Id",
     "productAttribute": "Product attribute",
     "product": "Product",
     "attribute": "Attribute",
