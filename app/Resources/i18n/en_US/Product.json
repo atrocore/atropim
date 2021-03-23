@@ -103,7 +103,7 @@
     "withoutAssociatedProducts": "Without Associated Products",
     "withoutAnyCategory": "Without Any Category",
     "withoutProductAttributes": "Without Product Attributes",
-    "withoutImageAssets": "Without Image Assets"
+    "withoutImageAssets": "Without Assets"
   },
   "messages": {
     "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?"
