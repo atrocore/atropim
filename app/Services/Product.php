@@ -412,6 +412,7 @@ class Product extends AbstractService
                         $localePav->id = $localePav->id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
                         $localePav->set('isLocale', true);
                         $localePav->set('attributeName', $localePav->get('attributeName') . ' › ' . $locale);
+                        $localePav->set('attributeCode', $localePav->get('attributeCode') . ' › ' . $locale);
                         $localePav->set('typeValue', $localePav->get("typeValue{$camelCaseLocale}"));
                         $localePav->set('value', $localePav->get("value{$camelCaseLocale}"));
                         $localePav->set('ownerUserId', $localePav->get("ownerUser{$camelCaseLocale}Id"));
