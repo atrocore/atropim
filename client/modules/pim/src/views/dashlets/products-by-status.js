@@ -47,7 +47,7 @@ Espo.define('pim:views/dashlets/products-by-status', 'views/dashlets/abstract/ba
                     defs: {
                         fields: {
                             name: {
-                                labelMap: this.translate('productStatus', 'options', 'Product')
+                                labelMap: this.prepareStatusLabel()
                             }
                         }
                     }
@@ -104,6 +104,18 @@ Espo.define('pim:views/dashlets/products-by-status', 'views/dashlets/abstract/ba
             }, this);
         },
 
+        prepareStatusLabel: function () {
+            let options = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'options']) || [],
+                labels = [];
+
+            if (options.length) {
+                options.forEach(item => {
+                    labels[item] = this.translate(item, 'labels', 'Product');
+                })
+            }
+
+            return labels;
+        }
     })
 );
 

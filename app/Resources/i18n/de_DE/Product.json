@@ -123,7 +123,16 @@
     "withoutAnyCategory": "ohne Kategorie",
     "withoutAssociatedProducts": "ohne zugehörige Produkte",
     "withoutImageAssets": "ohne Bildassets",
-    "withoutProductAttributes": "ohne Produktattribute"
+    "withoutProductAttributes": "ohne Produktattribute",
+    "notAssociatedProducts": "Ohne assoziierte Produkte",
+    "onlySimple": "Nur einfache Produkte",
+    "notLinkedWithChannel": "Ohne Kanäle",
+    "notLinkedWithBrand": "Ohne Marke",
+    "notLinkedWithProductFamily": "Ohne Produktfamilie",
+    "notLinkedWithPackaging": "Ohne Verpackung",
+    "notLinkedWithProductSerie": "Ohne Produktserie",
+    "linkedWithCategory": "Mit Kategorie",
+    "onlyConfigurableProducts": "Nur konfigurierbare Produkte"
   },
   "messages": {
     "areYouSureYouWantToRemoveAllCustomAttributes": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?"
