@@ -69,8 +69,6 @@ class Module extends AbstractModule
     {
         parent::loadMetadata($data);
 
-        $this->setLocalesToChannels($data);
-
         // prepare result
         $result = Json::decode(Json::encode($data), true);
 
@@ -235,25 +233,6 @@ class Module extends AbstractModule
         }
 
         return $result;
-    }
-
-    /**
-     * @param \stdClass $metadata
-     */
-    protected function setLocalesToChannels(\stdClass &$metadata)
-    {
-        // prepare result
-        $data = Json::decode(Json::encode($metadata), true);
-
-        /** @var Config $config */
-        $config = $this->container->get('config');
-
-        if ($config->get('isMultilangActive', false)) {
-            $data['entityDefs']['Channel']['fields']['locales']['options'] = $config->get('inputLanguageList', []);
-        }
-
-        // set data
-        $metadata = Json::decode(Json::encode($data));
     }
 
     /**
