@@ -419,6 +419,10 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
         $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
         $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
+        $entity->set('attributeCode', !empty($attribute) ? $attribute->get('code') : null);
+
+        $channel = $entity->get('channel');
+        $entity->set('channelCode', !empty($channel) ? $channel->get('code') : null);
 
         // set currency value
         if ($entity->get('attributeType') == 'currency') {
