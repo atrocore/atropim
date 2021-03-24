@@ -1,6 +1,6 @@
 
 <div class="row search-row">
-    <div class="form-group col-md-6 col-sm-7">
+    <div class="form-group">
         <div class="input-group">
             <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
                 <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
@@ -83,10 +83,9 @@
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide" data-action="search">
                     <span class="fa fa-search"></span>
-                    <span>{{translate 'Search'}}</span>
                 </button>
                 <button type="button" class="btn btn-default reset" data-action="reset">
-                    <span class="fa fa-redo-alt"></span>&nbsp;{{translate 'Reset'}}
+                    <span class="fa fa-redo-alt"></span>
                 </button>
             </div>
         </div>

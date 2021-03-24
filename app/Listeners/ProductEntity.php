@@ -59,7 +59,7 @@ class ProductEntity extends AbstractEntityListener
             throw new BadRequest($this->exception('productWithSuchSkuAlreadyExist'));
         }
 
-        if ($entity->isAttributeChanged('catalogId')) {
+        if ($entity->isAttributeChanged('catalogId') && !empty($entity->get('catalogId'))) {
             $this
                 ->getEntityManager()
                 ->getRepository('Product')
