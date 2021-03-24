@@ -103,7 +103,6 @@
     "withoutAssociatedProducts": "Without Associated Products",
     "withoutAnyCategory": "Without Any Category",
     "withoutProductAttributes": "Without Product Attributes",
-    "withoutImageAssets": "Without Image Assets",
     "notAssociatedProducts": "Without Associated Products",
     "onlySimple": "Only Simple",
     "notLinkedWithChannel": "Without Channel",
@@ -112,7 +111,8 @@
     "notLinkedWithPackaging": "Without Packaging",
     "notLinkedWithProductSerie": "Without Product Serie",
     "linkedWithCategory": "With Category",
-    "onlyConfigurableProducts": "Only Configurable Products"
+    "onlyConfigurableProducts": "Only Configurable Products",
+    "withoutImageAssets": "Without Assets"
   },
   "messages": {
     "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?"

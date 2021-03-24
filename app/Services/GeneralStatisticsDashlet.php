@@ -76,6 +76,11 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
                 'id'     => 'productWithoutCategory',
                 'name'   => 'productWithoutCategory',
                 'amount' => $this->getAmountProductWithoutCategory()
+            ],
+            [
+                'id'     => 'productWithoutAttribute',
+                'name'   => 'productWithoutAttribute',
+                'amount' => $this->getAmountProductWithoutAttribute()
             ]
         ];
 
@@ -157,6 +162,17 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
     }
 
     /**
+     * @return string
+     */
+    protected function getQueryProductWithoutAttribute(): string
+    {
+        return "SELECT COUNT(p.id)
+                FROM product p
+                LEFT JOIN product_attribute_value pav ON pav.product_id = p.id AND pav.deleted = 0
+                WHERE p.deleted = 0 AND pav.id IS NULL";
+    }
+
+    /**
      * Get Amount Product without image
      *
      * @return int
@@ -190,6 +206,17 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
     protected function getAmountProductWithoutCategory(): int
     {
         $sth = $this->getPDO()->prepare($this->getQueryProductWithoutCategory(true));
+        $sth->execute();
+
+        return (int)$sth->fetchColumn();
+    }
+
+    /**
+     * @return int
+     */
+    protected function getAmountProductWithoutAttribute(): int
+    {
+        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutAttribute());
         $sth->execute();
 
         return (int)$sth->fetchColumn();
