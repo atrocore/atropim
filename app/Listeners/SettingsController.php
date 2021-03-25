@@ -70,8 +70,6 @@ class SettingsController extends AbstractListener
      */
     public function afterActionUpdate(Event $event): void
     {
-        $this->updateChannelsLocales();
-
         // cleanup
         unset($_SESSION['isMultilangActive']);
         unset($_SESSION['inputLanguageList']);
@@ -94,41 +92,6 @@ class SettingsController extends AbstractListener
         }
 
         $this->removeConfigFields();
-    }
-
-    /**
-     * Update Channel locales field
-     */
-    protected function updateChannelsLocales(): void
-    {
-        if (!$this->getConfig()->get('isMultilangActive', false)) {
-            $this->getEntityManager()->nativeQuery("UPDATE channel SET locales=NULL WHERE 1");
-        } elseif (!empty($_SESSION['isMultilangActive'])) {
-            /** @var array $deletedLocales */
-            $deletedLocales = array_diff($_SESSION['inputLanguageList'], $this->getConfig()->get('inputLanguageList', []));
-
-            /** @var Channel[] $channels */
-            $channels = $this
-                ->getEntityManager()
-                ->getRepository('Channel')
-                ->select(['id', 'locales'])
-                ->find();
-
-            if (count($channels) > 0) {
-                foreach ($channels as $channel) {
-                    if (!empty($locales = $channel->get('locales'))) {
-                        $newLocales = [];
-                        foreach ($locales as $locale) {
-                            if (!in_array($locale, $deletedLocales)) {
-                                $newLocales[] = $locale;
-                            }
-                        }
-                        $channel->set('locales', $newLocales);
-                        $this->getEntityManager()->saveEntity($channel);
-                    }
-                }
-            }
-        }
     }
 
     /**

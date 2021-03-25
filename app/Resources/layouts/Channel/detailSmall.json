@@ -19,14 +19,6 @@
       ],
       [
         {
-          "name": "currencies"
-        },
-        {
-          "name": "locales"
-        }
-      ],
-      [
-        {
           "name": "description",
           "fullWidth": true
         }

@@ -19,10 +19,6 @@
       "type": "bool",
       "default": false
     },
-    "locales": {
-      "type": "multiEnum",
-      "options": []
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -54,12 +50,6 @@
     "teams": {
       "type": "linkMultiple",
       "view": "views/fields/teams"
-    },
-    "currencies": {
-      "type": "multiEnum",
-      "required": true,
-      "view": "pim:views/fields/currencies",
-      "useFieldViewInImport": true
     },
     "code": {
       "type": "varchar",
