@@ -8,6 +8,7 @@
   },
   "boolFilterList": [
     "onlyMy",
+    "notEntity",
     "notAssociatedProducts",
     "onlySimple",
     "notLinkedWithChannel",
@@ -18,9 +19,12 @@
     "withoutAnyCategory",
     "withoutProductAttributes",
     "notLinkedWithProductSerie",
-    "linkedWithCategory"
+    "onlyCatalogProducts",
+    "linkedWithCategory",
+    "activeForChannel"
   ],
   "hiddenBoolFilterList": [
+    "notEntity",
     "notAssociatedProducts",
     "onlySimple",
     "notLinkedWithChannel",
@@ -28,7 +32,9 @@
     "notLinkedWithProductFamily",
     "notLinkedWithPackaging",
     "notLinkedWithProductSerie",
-    "linkedWithCategory"
+    "onlyCatalogProducts",
+    "linkedWithCategory",
+    "activeForChannel"
   ],
   "disabledMassActions": [
     "merge"
