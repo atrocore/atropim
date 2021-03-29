@@ -101,13 +101,6 @@ class Module extends AbstractModule
                 'value'     => self::$multiLangTypes
             ]
         ];
-        $result['clientDefs']['Attribute']['dynamicLogic']['fields']['name']['required']['conditionGroup'] = [
-            [
-                'type'      => 'notIn',
-                'attribute' => 'type',
-                'value'     => [md5('some-str')]
-            ]
-        ];
 
         $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue']['visible']['conditionGroup'] = [
             [
@@ -145,23 +138,6 @@ class Module extends AbstractModule
             /**
              * Attribute
              */
-            $result['clientDefs']['Attribute']['dynamicLogic']['fields']['name' . $key]['required']['conditionGroup'] = [
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isMultilang'
-                ]
-            ];
-            $result['clientDefs']['Attribute']['dynamicLogic']['fields']['name' . $key]['visible']['conditionGroup'] = [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'type',
-                    'value'     => self::$multiLangTypes
-                ],
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isMultilang'
-                ]
-            ];
             $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue' . $key]['visible']['conditionGroup'] = [
                 [
                     'type'      => 'in',
