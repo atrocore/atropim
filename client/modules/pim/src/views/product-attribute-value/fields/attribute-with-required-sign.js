@@ -34,6 +34,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute-with-required-si
 
             if (this.model.get('isRequired')) {
                 data.nameValue += ' *';
+                data.titleValue += ' *';
             }
             return data;
         }

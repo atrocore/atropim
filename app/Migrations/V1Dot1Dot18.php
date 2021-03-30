@@ -45,7 +45,16 @@ class V1Dot1Dot18 extends Base
     public function up(): void
     {
         if ($this->getConfig()->get('isMultilangActive', false)) {
-            $multilangTypes = implode("','", Module::$multiLangTypes);
+            $multilangTypes = [
+                'bool',
+                'enum',
+                'multiEnum',
+                'varchar',
+                'text',
+                'wysiwyg'
+            ];
+
+            $multilangTypes = implode("','", $multilangTypes);
             $set = [];
 
             foreach ($this->getConfig()->get('inputLanguageList') as $locale) {

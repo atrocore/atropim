@@ -31,6 +31,8 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
 
         selectBoolFilterList: ['notLinkedWithProductAttributeValue'],
 
+        listTemplate: 'pim:product-attribute-value/fields/attribute',
+
         boolFilterData: {
             notLinkedWithProductAttributeValue() {
                 return {productId: this.model.get('productId'), channelId: this.model.get('channelId')};
@@ -66,6 +68,19 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
             };
             (this.typeValueFields || []).forEach(item => attributes[item] = model.get(item));
             this.model.set(attributes);
+        },
+
+        data() {
+            let data = Dep.prototype.data.call(this);
+            let attributeData = data.data || {};
+
+            if ('title' in attributeData) {
+                data.titleValue = attributeData.title;
+            } else {
+                data.titleValue = data.nameValue;
+            }
+
+            return data;
         },
 
         clearLink() {
