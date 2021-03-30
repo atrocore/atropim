@@ -31,13 +31,12 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Pim\Module;
 use Treo\Core\Migration\Base;
 
 /**
- * Migration class for version 1.1.18
+ * Migration class for version 1.1.19
  */
-class V1Dot1Dot18 extends Base
+class V1Dot1Dot19 extends Base
 {
     /**
      * @inheritDoc
