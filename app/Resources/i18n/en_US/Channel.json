@@ -2,7 +2,6 @@
   "fields": {
     "description": "Description",
     "isActive": "Active",
-    "currencies": "Currencies",
     "category": "Category",
     "locales": "Locales",
     "code": "Code",

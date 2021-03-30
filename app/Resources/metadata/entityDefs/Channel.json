@@ -19,6 +19,11 @@
       "type": "bool",
       "default": false
     },
+    "locales": {
+      "type": "multiEnum",
+      "options": [],
+      "view": "pim:views/channel/fields/locales"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
