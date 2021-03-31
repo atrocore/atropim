@@ -77,12 +77,13 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.clearView('valueField');
 
             let type = this.model.get('attributeType') || 'base';
+
             this.createView('valueField', this.getValueFieldView(type), {
                 el: `${this.options.el} > .field[data-name="valueField"]`,
                 model: this.model,
                 name: this.name,
                 mode: this.mode,
-                prohibitedEmptyValue:true,
+                prohibitedEmptyValue: true,
                 inlineEditDisabled: true
             }, view => {
                 view.render();
@@ -92,7 +93,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         updateModelDefs() {
             // prepare data
             let type = this.model.get('attributeType');
-            let isMultiLang = this.model.get('attributeIsMultilang');
             let typeValue = this.model.get('typeValue');
 
             if (type) {
@@ -100,23 +100,12 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 let fieldDefs = {
                     type: type,
                     options: typeValue,
-                    view: this.getFieldManager().getViewName(type),
+                    view: this.getValueFieldView(type),
                     required: !!this.model.get('isRequired')
                 };
 
                 if (type === 'unit') {
                     fieldDefs.measure = (typeValue || ['Length'])[0];
-                }
-
-                // for multi-language
-                if (isMultiLang) {
-                    if (this.getConfig().get('isMultilangActive')) {
-                        (this.getConfig().get('inputLanguageList') || []).forEach(lang => {
-                            let field = lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), 'value');
-                            this.model.defs.fields[field] = Espo.Utils.cloneDeep(fieldDefs);
-                        });
-                    }
-                    fieldDefs.isMultilang = true;
                 }
 
                 // set field defs
@@ -134,6 +123,14 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         },
 
         getValueFieldView(type) {
+            if (type === 'enum') {
+                return 'views/fields/enum';
+            }
+
+            if (type === 'multiEnum') {
+                return 'views/fields/multi-enum';
+            }
+
             return this.getFieldManager().getViewName(type);
         },
 

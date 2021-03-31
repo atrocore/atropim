@@ -166,6 +166,17 @@
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true
     },
+    "locale": {
+      "type": "varchar",
+      "notStorable": true,
+      "default": false,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

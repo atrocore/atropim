@@ -80,6 +80,7 @@ class ProductAttributeValue extends AbstractService
                 $entity->set('isLocale', true);
                 $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $parts[1]);
                 $entity->set('value', $entity->get("value{$camelCaseLocale}"));
+                $entity->set('typeValue', $entity->get('attribute')->get("typeValue{$camelCaseLocale}"));
 
                 // prepare owner user
                 $ownerUser = $this->getEntityManager()->getEntity('User', $entity->get("ownerUser{$camelCaseLocale}Id"));
@@ -103,6 +104,7 @@ class ProductAttributeValue extends AbstractService
             }
         } else {
             $entity = $this->getRepository()->get($id);
+            $entity->set('typeValue', $entity->get('attribute')->get("typeValue"));
         }
 
         if (!empty($entity) && !empty($id)) {

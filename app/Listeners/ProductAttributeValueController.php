@@ -46,34 +46,6 @@ class ProductAttributeValueController extends AbstractListener
     /**
      * @param Event $event
      */
-    public function afterActionRead(Event $event)
-    {
-        // get data
-        $data = $event->getArguments();
-
-        if (isset($data['result']->attributeId)) {
-            $attribute = $this->getEntityManager()->getEntity('Attribute', $data['result']->attributeId);
-
-            if (!empty($attribute)) {
-                $data['result']->typeValue = $attribute->get('typeValue');
-
-                // for multiLang fields
-                if ($this->getConfig()->get('isMultilangActive')) {
-                    foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                        $multiLangField = Util::toCamelCase('typeValue_' . strtolower($locale));
-                        $data['result']->$multiLangField = $attribute->get($multiLangField);
-                    }
-                }
-            }
-
-            // set data
-            $event->setArgument('result', $data['result']);
-        }
-    }
-
-    /**
-     * @param Event $event
-     */
     public function beforeActionCreate(Event $event)
     {
         // get data

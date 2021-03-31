@@ -138,7 +138,6 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                         && fieldView.model
                         && !fieldView.model.getFieldParam(fieldView.name, 'readOnly')
                         && typeof fieldView.setMode === 'function'
-                        && !(fieldView.model.get('isLocale') === true && (fieldView.model.get('attributeType') === 'enum' || fieldView.model.get('attributeType') === 'multiEnum'))
                     ) {
                         fieldView.setMode(mode);
                         fieldView.reRender();
