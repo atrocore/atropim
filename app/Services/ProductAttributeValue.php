@@ -399,6 +399,10 @@ class ProductAttributeValue extends AbstractService
     {
         $this->prepareEntity($entity);
 
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            return [];
+        }
+
         $fields = parent::getFieldsThatConflict($entity, $data);
 
         if (!empty($fields)) {
