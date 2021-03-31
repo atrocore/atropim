@@ -31,10 +31,8 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
-use Pim\Entities\Channel;
-use Pim\Repositories\AbstractRepository;
-use Treo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 use Treo\Core\EventManager\Event;
 
@@ -54,15 +52,25 @@ class SettingsController extends AbstractListener
 
     /**
      * @param Event $event
+     *
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function beforeActionUpdate(Event $event): void
     {
-        // open session
-        session_start();
+        $channelsLocales = $this->getEntityManager()->getRepository('Channel')->getUsedLocales();
 
-        // set to session
-        $_SESSION['isMultilangActive'] = $this->getConfig()->get('isMultilangActive', false);
-        $_SESSION['inputLanguageList'] = $this->getConfig()->get('inputLanguageList', []);
+        if (isset($event->getArgument('data')->isMultilangActive) && empty($event->getArgument('data')->isMultilangActive) && count($channelsLocales) > 1) {
+            throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
+        }
+
+        if (!empty($event->getArgument('data')->inputLanguageList)) {
+            foreach ($channelsLocales as $locale) {
+                if ($locale !== 'mainLocale' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
+                    throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
+                }
+            }
+        }
     }
 
     /**
@@ -70,10 +78,6 @@ class SettingsController extends AbstractListener
      */
     public function afterActionUpdate(Event $event): void
     {
-        // cleanup
-        unset($_SESSION['isMultilangActive']);
-        unset($_SESSION['inputLanguageList']);
-
         $data = Json::decode(Json::encode($event->getArgument('data')), true);
 
         $qm = false;

@@ -293,6 +293,16 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeChanged'));
             }
         }
+
+        /**
+         * Validation. Custom attribute doesn't changeable
+         */
+        if (!$entity->isNew() && !empty($entity->get('isCustom'))) {
+            if ($entity->isAttributeChanged('scope') || ($entity->getFetched('channelId') != $entity->get('channelId')) || $entity->isAttributeChanged('attributeId')) {
+                throw new BadRequest($this->exception('onlyValueOrOwnershipCanBeChanged'));
+            }
+        }
+
         /**
          * Validation. Is such ProductAttribute exist?
          */

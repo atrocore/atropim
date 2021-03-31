@@ -133,6 +133,22 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
+     * @inheritDoc
+     */
+    public function deleteEntity($id)
+    {
+        /**
+         * Prepare ID for locale PAV
+         */
+        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
+        if (count($parts) === 2) {
+            $id = $parts[0];
+        }
+
+        return parent::deleteEntity($id);
+    }
+
+    /**
      * @inheritdoc
      */
     public function updateEntity($id, $data)

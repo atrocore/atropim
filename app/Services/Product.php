@@ -400,12 +400,23 @@ class Product extends AbstractService
          * For attribute locales
          */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
+            $allLocales = $this->getConfig()->get('inputLanguageList', []);
+
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
                 $pav->set('isLocale', false);
-                $newCollection->append($pav);
+
+                if ($pav->get('scope') === 'Global' || $pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav))) {
+                    $newCollection->append($pav);
+                }
+
                 if (!empty($pav->get('attributeIsMultilang'))) {
-                    foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
+                    $locales = $allLocales;
+                    if ($pav->get('scope') === 'Channel') {
+                        $locales = $this->getPavLocales($pav, true);
+                    }
+
+                    foreach ($locales as $locale) {
                         $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
 
                         $localePav = clone $pav;
@@ -694,5 +705,28 @@ class Product extends AbstractService
         parent::init();
 
         $this->addDependency('serviceFactory');
+    }
+
+    /**
+     * @param Entity $pav
+     * @param bool   $ignoreMainLocale
+     *
+     * @return array
+     */
+    private function getPavLocales(Entity $pav, bool $ignoreMainLocale = false): array
+    {
+        if ($pav->get('scope') !== 'Channel' || empty($channel = $pav->get('channel'))) {
+            return [];
+        }
+
+        $locales = [];
+        foreach ($pav->get('channel')->get('locales') as $locale) {
+            if ($locale === 'mainLocale' && $ignoreMainLocale) {
+                continue 1;
+            }
+            $locales[] = $locale;
+        }
+
+        return $locales;
     }
 }

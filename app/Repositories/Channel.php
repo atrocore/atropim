@@ -38,16 +38,16 @@ use Espo\ORM\Entity;
 class Channel extends Base
 {
     /**
-     * @param Entity $entity
-     * @param array  $options
+     * @return array
      */
-    protected function beforeSave(Entity $entity, array $options = [])
+    public function getUsedLocales(): array
     {
-        if (empty($entity->get('locales'))) {
-            $entity->set('locales', ['mainLocale']);
+        $locales = [];
+        foreach ($this->select(['locales'])->find()->toArray() as $item) {
+            $locales = array_merge($locales, $item['locales']);
         }
 
-        parent::beforeSave($entity, $options);
+        return array_values(array_unique($locales));
     }
 
     /**
@@ -88,5 +88,18 @@ class Channel extends Base
         }
 
         return true;
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (empty($entity->get('locales'))) {
+            $entity->set('locales', ['mainLocale']);
+        }
+
+        parent::beforeSave($entity, $options);
     }
 }
