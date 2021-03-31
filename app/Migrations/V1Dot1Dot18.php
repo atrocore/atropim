@@ -44,6 +44,7 @@ class V1Dot1Dot18 extends V1Dot1Dot17
     public function up(): void
     {
         $this->execute("ALTER TABLE `channel` ADD locales MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("UPDATE `channel` SET locales='[\"mainLocale\"]' WHERE 1");
     }
 
     /**

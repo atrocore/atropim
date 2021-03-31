@@ -2,6 +2,9 @@
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken."
   },
+  "exceptions": {
+    "languageUsedInChannel": "Diese Sprache wird in einem Kanal verwendet und kann nicht entfernt werden."
+  },
   "queueManager": {
     "updatingOwnershipInformation": "Aktualisierung der Besiterinformationen"
   }

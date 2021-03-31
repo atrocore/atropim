@@ -80,6 +80,7 @@ class ProductAttributeValue extends AbstractService
                 $entity->set('isLocale', true);
                 $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $parts[1]);
                 $entity->set('value', $entity->get("value{$camelCaseLocale}"));
+                $entity->set('typeValue', $entity->get('attribute')->get("typeValue{$camelCaseLocale}"));
 
                 // prepare owner user
                 $ownerUser = $this->getEntityManager()->getEntity('User', $entity->get("ownerUser{$camelCaseLocale}Id"));
@@ -103,6 +104,7 @@ class ProductAttributeValue extends AbstractService
             }
         } else {
             $entity = $this->getRepository()->get($id);
+            $entity->set('typeValue', $entity->get('attribute')->get("typeValue"));
         }
 
         if (!empty($entity) && !empty($id)) {
@@ -130,6 +132,22 @@ class ProductAttributeValue extends AbstractService
         $this->prepareValueForAssetType($attachment);
 
         return parent::createEntity($attachment);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteEntity($id)
+    {
+        /**
+         * Prepare ID for locale PAV
+         */
+        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
+        if (count($parts) === 2) {
+            $id = $parts[0];
+        }
+
+        return parent::deleteEntity($id);
     }
 
     /**
@@ -380,6 +398,10 @@ class ProductAttributeValue extends AbstractService
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         $this->prepareEntity($entity);
+
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            return [];
+        }
 
         $fields = parent::getFieldsThatConflict($entity, $data);
 

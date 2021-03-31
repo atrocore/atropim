@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class ProductAttributeValue
@@ -96,47 +96,9 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('channelId', null);
         }
 
-        // get attribute
-        $attribute = $entity->get('attribute');
+        $this->syncEnumValues($entity);
 
-        // get fields
-        $fields = $this->getMetadata()->get(['entityDefs', 'ProductAttributeValue', 'fields'], []);
-
-        if ($attribute->get('type') == 'enum' && !empty($attribute->get('isMultilang')) && $entity->isAttributeChanged('value')) {
-            // find key
-            $key = array_search($entity->get('value'), $attribute->get('typeValue'));
-
-            foreach ($fields as $mField => $mData) {
-                if (isset($mData['multilangField']) && $mData['multilangField'] == 'value') {
-                    $data = $attribute->get('type' . ucfirst($mField));
-                    if (isset($data[$key])) {
-                        $entity->set($mField, $data[$key]);
-                    } else {
-                        $entity->set($mField, $entity->get('value'));
-                    }
-                }
-            }
-        }
-
-        if ($attribute->get('type') == 'multiEnum' && !empty($attribute->get('isMultilang')) && $entity->isAttributeChanged('value')) {
-            $values = Json::decode($entity->get('value'), true);
-
-            $keys = [];
-            foreach ($values as $value) {
-                $keys[] = array_search($value, $attribute->get('typeValue'));
-            }
-
-            foreach ($fields as $mField => $mData) {
-                if (isset($mData['multilangField']) && $mData['multilangField'] == 'value') {
-                    $data = $attribute->get('type' . ucfirst($mField));
-                    $values = [];
-                    foreach ($keys as $key) {
-                        $values[] = isset($data[$key]) ? $data[$key] : null;
-                    }
-                    $entity->set($mField, Json::encode($values));
-                }
-            }
-        }
+        $this->syncMultiEnumValues($entity);
     }
 
     /**
@@ -293,6 +255,16 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeChanged'));
             }
         }
+
+        /**
+         * Validation. Custom attribute doesn't changeable
+         */
+        if (!$entity->isNew() && !empty($entity->get('isCustom'))) {
+            if ($entity->isAttributeChanged('scope') || ($entity->getFetched('channelId') != $entity->get('channelId')) || $entity->isAttributeChanged('attributeId')) {
+                throw new BadRequest($this->exception('onlyValueOrOwnershipCanBeChanged'));
+            }
+        }
+
         /**
          * Validation. Is such ProductAttribute exist?
          */
@@ -336,5 +308,89 @@ class ProductAttributeValue extends AbstractRepository
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, 'exceptions', 'ProductAttributeValue');
+    }
+
+    protected function syncEnumValues(Entity $entity): void
+    {
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return;
+        }
+
+        // get attribute
+        $attribute = $entity->get('attribute');
+
+        if ($attribute->get('type') !== 'enum' || empty($attribute->get('isMultilang'))) {
+            return;
+        }
+
+        $locale = '';
+        if (!empty($entity->get('isLocale'))) {
+            $locale = ucfirst(Util::toCamelCase(strtolower($entity->get('locale'))));
+        }
+
+        if (!$entity->isAttributeChanged('value' . $locale)) {
+            return;
+        }
+
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return;
+        }
+
+        $key = array_search($entity->get('value' . $locale), $attribute->get('typeValue' . $locale));
+
+        $locales = [''];
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+            $locales[] = ucfirst(Util::toCamelCase(strtolower($v)));
+        }
+
+        foreach ($locales as $locale) {
+            $typeValue = $attribute->get('typeValue' . $locale);
+            $entity->set('value' . $locale, $typeValue[$key]);
+        }
+    }
+
+    protected function syncMultiEnumValues(Entity $entity): void
+    {
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return;
+        }
+
+        // get attribute
+        $attribute = $entity->get('attribute');
+
+        if ($attribute->get('type') !== 'multiEnum' || empty($attribute->get('isMultilang'))) {
+            return;
+        }
+
+        $locale = '';
+        if (!empty($entity->get('isLocale'))) {
+            $locale = ucfirst(Util::toCamelCase(strtolower($entity->get('locale'))));
+        }
+
+        if (!$entity->isAttributeChanged('value' . $locale)) {
+            return;
+        }
+
+        $values = Json::decode($entity->get('value' . $locale), true);
+
+        $keys = [];
+        foreach ($values as $value) {
+            $keys[] = array_search($value, $attribute->get('typeValue' . $locale));
+        }
+
+        $locales = [''];
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+            $locales[] = ucfirst(Util::toCamelCase(strtolower($v)));
+        }
+
+        foreach ($locales as $locale) {
+            $typeValue = $attribute->get('typeValue' . $locale);
+
+            $values = [];
+            foreach ($keys as $key) {
+                $values[] = isset($typeValue[$key]) ? $typeValue[$key] : null;
+            }
+            $entity->set('value' . $locale, Json::encode($values));
+        }
     }
 }

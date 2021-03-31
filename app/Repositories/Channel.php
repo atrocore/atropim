@@ -38,6 +38,19 @@ use Espo\ORM\Entity;
 class Channel extends Base
 {
     /**
+     * @return array
+     */
+    public function getUsedLocales(): array
+    {
+        $locales = [];
+        foreach ($this->select(['locales'])->find()->toArray() as $item) {
+            $locales = array_merge($locales, $item['locales']);
+        }
+
+        return array_values(array_unique($locales));
+    }
+
+    /**
      * @param string $categoryRootId
      * @param Entity $channel
      * @param bool   $unrelate
@@ -75,5 +88,18 @@ class Channel extends Base
         }
 
         return true;
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (empty($entity->get('locales'))) {
+            $entity->set('locales', ['mainLocale']);
+        }
+
+        parent::beforeSave($entity, $options);
     }
 }

@@ -3,7 +3,7 @@
     "channelProductAttributeValues": "Attributwerte des Produktkanals",
     "channelProducts": "Produkte des Kanals",
     "isActive": "Aktiv",
-    "locales": "Lokale",
+    "locales": "Sprachen",
     "assetRelations": "Asset Relationen",
     "isActiveEntity": "ist aktive Entität",
     "productAttributeValues": "Produktattrubitwerte",
@@ -24,7 +24,8 @@
     "products": "Produkte"
   },
   "labels": {
-    "Create Channel": "Kanal erstellen"
+    "Create Channel": "Kanal erstellen",
+    "mainLocale": "Hauptsprache"
   },
   "exceptions": {
     "youShouldChooseRootCategory": "Sie müssen eine Stammkategorie auswählen.",

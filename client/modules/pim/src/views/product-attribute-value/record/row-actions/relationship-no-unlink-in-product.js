@@ -55,7 +55,7 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                 ]);
             }
 
-            if (this.options.acl.delete && this.model.get('isCustom') && !this.model.get('isLocale')) {
+            if (this.options.acl.delete && this.model.get('isCustom')) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',

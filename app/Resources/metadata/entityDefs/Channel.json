@@ -21,6 +21,7 @@
     },
     "locales": {
       "type": "multiEnum",
+      "required": true,
       "options": [],
       "view": "pim:views/channel/fields/locales"
     },

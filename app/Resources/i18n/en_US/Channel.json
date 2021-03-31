@@ -3,7 +3,7 @@
     "description": "Description",
     "isActive": "Active",
     "category": "Category",
-    "locales": "Locales",
+    "locales": "Languages",
     "code": "Code",
     "products": "Products"
   },
@@ -12,7 +12,8 @@
     "products": "Products"
   },
   "labels": {
-    "Create Channel": "Create Channel"
+    "Create Channel": "Create Channel",
+    "mainLocale": "Main Language"
   },
   "exceptions": {
     "channelWithSuchCodeAlreadyExist": "Channel with such CODE already exist",

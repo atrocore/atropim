@@ -50,7 +50,7 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                         })];
 
                         valuesKeysList.forEach(value => {
-                            this.model.set({[value]: null}, { silent: true });
+                            this.model.set({[value]: null}, {silent: true});
                         });
                     }
 
@@ -81,6 +81,7 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                         type: type,
                         options: typeValue,
                         view: this.getFieldManager().getViewName(type),
+                        prohibitedEmptyValue: true,
                         required: !!this.model.get('isRequired')
                     };
 
@@ -94,15 +95,12 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                         fieldDefs.currency = typeValue || 'EUR';
                     }
 
-                    // for multi-language
-                    if (isMultiLang) {
-                        if (this.getConfig().get('isMultilangActive')) {
-                            (this.getConfig().get('inputLanguageList') || []).forEach(lang => {
-                                let field = lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), 'value');
-                                this.model.defs.fields[field] = Espo.Utils.cloneDeep(fieldDefs);
-                            });
-                        }
-                        fieldDefs.isMultilang = true;
+                    if (type === 'enum') {
+                        fieldDefs.view = 'views/fields/enum';
+                    }
+
+                    if (type === 'multiEnum') {
+                        fieldDefs.view = 'views/fields/multi-enum';
                     }
 
                     // set field defs
@@ -110,6 +108,7 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                 }
             }
         },
+
 
         changeFieldsReadOnlyStatus(fields, condition) {
             fields.forEach(field => this.model.defs.fields[field].readOnly = condition);

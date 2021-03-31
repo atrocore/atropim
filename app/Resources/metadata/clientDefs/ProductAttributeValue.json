@@ -45,6 +45,14 @@
               "attribute": "attributeId"
             }
           ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
         }
       },
       "value": {
@@ -52,23 +60,7 @@
           "conditionGroup": [
             {
               "type": "isNotEmpty",
-              "attribute": "attributeId"
-            }
-          ]
-        },
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isLocale"
-            },
-            {
-              "type": "in",
-              "attribute": "attributeType",
-              "value": [
-                "enum",
-                "multiEnum"
-              ]
+              "attribute": "id"
             }
           ]
         }
@@ -85,8 +77,8 @@
         "readOnly": {
           "conditionGroup": [
             {
-              "type": "isTrue",
-              "attribute": "isLocale"
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
@@ -95,8 +87,8 @@
         "readOnly": {
           "conditionGroup": [
             {
-              "type": "isTrue",
-              "attribute": "isLocale"
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
