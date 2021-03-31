@@ -35,10 +35,9 @@ Espo.define('pim:views/channel/fields/locales', 'views/fields/multi-enum',
 
             if (this.getConfig().get('isMultilangActive')) {
                 const locales = this.getConfig().get('inputLanguageList') || [];
-                const translates = this.getLanguage().get('Global', 'options', 'language');
                 locales.forEach(locale => {
                     this.params.options.push(locale);
-                    this.params.translatedOptions[locale] = translates[locale];
+                    this.params.translatedOptions[locale] = locale;
                 });
             }
 
