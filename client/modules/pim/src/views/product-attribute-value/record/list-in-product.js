@@ -80,33 +80,25 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                 });
             }
 
-            this.collection.forEach(model => {
-                if (model.get('isLocale')) {
-                    const parts = model.get('id').split('~');
-                    const id = parts.shift();
+            const originId = eventModel.get('id');
 
-                    // prepare locale
-                    let localeParts = parts.pop().split('_');
-                    let locale = localeParts[0].charAt(0).toUpperCase() + localeParts[0].slice(1);
-                    localeParts[1] = localeParts[1].toLowerCase();
-                    locale += localeParts[1].charAt(0).toUpperCase() + localeParts[1].slice(1);
+            const id = originId.split('~').shift();
 
-                    if (id === eventModel.get('id')) {
-                        // get field view
-                        const view = this.nestedViews[model.get('id')].getView('valueField');
+            const locales = this.getConfig().get('inputLanguageList') || [];
+            locales.push('');
 
-                        let value = null;
-                        if (eventModel.get('attributeType') === 'multiEnum') {
-                            value = [];
-                            $.each(position, (k, v) => {
-                                value.push(eventModel.get('typeValue' + locale)[v]);
-                            });
-                        } else if (eventModel.get('typeValue' + locale)) {
-                            value = eventModel.get('typeValue' + locale)[position];
-                        }
-
-                        // set value
-                        view.model.set('value', value);
+            locales.forEach(locale => {
+                let viewName = locale ? `${id}~${locale}` : id;
+                let model = this.nestedViews[viewName].getView('valueField').model;
+                if (model.get('id') !== originId) {
+                    if (eventModel.get('attributeType') === 'multiEnum') {
+                        let value = [];
+                        $.each(position, (k, v) => {
+                            value.push(model.get('typeValue')[v]);
+                        });
+                        model.set('value', value);
+                    } else {
+                        model.set('value', model.get('typeValue')[position]);
                     }
                 }
             });

@@ -52,7 +52,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             });
 
             this.listenTo(this.model, 'change:value', () => {
-                if ((this.model.get('attributeType') === 'enum' || this.model.get('attributeType') === 'multiEnum') && !this.model.get('isLocale')) {
+                if ((this.model.get('attributeType') === 'enum' || this.model.get('attributeType') === 'multiEnum')) {
                     this.getParentView().getParentView().trigger('change:enumLocaleValue', this.model);
                 }
             });
