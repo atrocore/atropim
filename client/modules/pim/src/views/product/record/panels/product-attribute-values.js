@@ -404,29 +404,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.markCustomAttributes();
-
             this.buildGroups();
 
             if (this.mode === 'edit') {
                 this.setEditMode();
             }
-        },
-
-        markCustomAttributes() {
-            let intervals = {};
-            (this.collection || []).forEach(function (model) {
-                let id = model.id;
-                if (model.get('productFamilyAttributeId') === null) {
-                    intervals[`${id}`] = setInterval(function () {
-                        let $el = $("tr[data-id='" + id + "'] td[data-name='attribute'] a");
-                        if ($el.length > 0) {
-                            clearInterval(intervals[`${id}`]);
-                            $el.css('font-style', 'italic');
-                        }
-                    }, 100);
-                }
-            });
         },
 
         fetchCollectionGroups(callback) {

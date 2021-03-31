@@ -418,6 +418,13 @@ class Product extends AbstractService
                         $localePav->set('ownerUserId', $localePav->get("ownerUser{$camelCaseLocale}Id"));
                         $localePav->set('assignedUserId', $localePav->get("assignedUser{$camelCaseLocale}Id"));
 
+                        if (is_null($data = $localePav->get('data'))) {
+                            $data = new \stdClass();
+                        }
+
+                        $data->title = $localePav->get('attribute')->get("name{$camelCaseLocale}");
+                        $localePav->set('data', $data);
+
                         $newCollection->append($localePav);
                         $result['total']++;
                     }
