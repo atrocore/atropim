@@ -38,6 +38,19 @@ use Espo\ORM\Entity;
 class Channel extends Base
 {
     /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (empty($entity->get('locales'))) {
+            $entity->set('locales', ['mainLocale']);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    /**
      * @param string $categoryRootId
      * @param Entity $channel
      * @param bool   $unrelate
