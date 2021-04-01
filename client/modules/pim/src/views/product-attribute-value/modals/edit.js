@@ -53,10 +53,6 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'treo-core:views/mo
             }
 
             this.reRender();
-
-            this.listenTo(this.model, 'before:save', attr => {
-                attr['_ignoreValueValidation'] = true;
-            });
         },
 
         setupOwnership: function (param, field) {

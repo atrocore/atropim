@@ -379,15 +379,13 @@ class ProductAttributeValue extends AbstractService
     {
         $fields = parent::getRequiredFields($entity, $data);
 
-        if (!empty($data->_ignoreValueValidation)) {
-            $newFields = [];
-            foreach ($fields as $field) {
-                if (strpos($field, 'value') === false) {
-                    $newFields[] = $field;
-                }
+        $newFields = [];
+        foreach ($fields as $field) {
+            if (strpos($field, 'value') === false || $field === 'value') {
+                $newFields[] = $field;
             }
-            $fields = $newFields;
         }
+        $fields = $newFields;
 
         return $fields;
     }
