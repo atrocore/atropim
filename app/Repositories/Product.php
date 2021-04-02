@@ -110,6 +110,7 @@ class Product extends AbstractRepository
 
         if ($relationName === 'productAttributeValues') {
             $this->filterByChannel($entity, $params);
+            $params['limit'] = 9999;
         }
 
         return parent::findRelated($entity, $relationName, $params);
@@ -127,6 +128,7 @@ class Product extends AbstractRepository
 
         if ($relationName === 'productAttributeValues') {
             $this->filterByChannel($entity, $params);
+            $params['limit'] = 9999;
         }
 
         return parent::countRelated($entity, $relationName, $params);

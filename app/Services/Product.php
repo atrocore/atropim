@@ -437,7 +437,6 @@ class Product extends AbstractService
                         $localePav->set('data', $data);
 
                         $newCollection->append($localePav);
-                        $result['total']++;
                     }
                 }
             }
@@ -448,17 +447,17 @@ class Product extends AbstractService
         /**
          * Check every pav by ACL
          */
-        if (!empty($result['total'])) {
+        if (!empty($result['collection']->count())) {
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
-                $result['total']--;
                 if ($this->getAcl()->check($pav, 'read')) {
                     $newCollection->append($pav);
-                    $result['total']++;
                 }
             }
             $result['collection'] = $newCollection;
         }
+
+        $result['total'] = $result['collection']->count();
 
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))

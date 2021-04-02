@@ -465,9 +465,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         fetchCollectionPart(callback) {
             this.collection.fetch({remove: false, more: true}).then((response) => {
-                if (this.collection.total > this.collection.length) {
-                    this.fetchCollectionPart(callback);
-                } else if (callback) {
+                if (callback) {
                     callback();
                 }
             });
