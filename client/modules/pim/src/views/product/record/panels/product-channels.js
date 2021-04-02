@@ -40,7 +40,7 @@ Espo.define('pim:views/product/record/panels/product-channels', 'views/record/pa
 
             this.listenTo(this.model, 'after:relate after:unrelate', link => {
                 if (link === 'channels') {
-                    $('.action[data-action=refresh][data-panel=productAttributeValues]').click();
+                    $('.panel-productAttributeValues button.action[data-action=refresh][data-panel=productAttributeValues]').click();
                 }
             });
         },
