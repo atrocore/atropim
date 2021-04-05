@@ -89,17 +89,20 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
 
             locales.forEach(locale => {
                 let viewName = locale ? `${id}~${locale}` : id;
-                let model = this.nestedViews[viewName].getView('valueField').model;
-                if (model.get('id') !== originId) {
-                    if (eventModel.get('attributeType') === 'multiEnum') {
-                        let value = [];
-                        $.each(position, (k, v) => {
-                            value.push(model.get('typeValue')[v]);
-                        });
-                        model.set('value', value);
-                    } else {
-                        if (model.get('typeValue') && model.get('typeValue')[position]) {
-                            model.set('value', model.get('typeValue')[position]);
+                let view = this.nestedViews[viewName].getView('valueField');
+                if (view && view.model) {
+                    let model = view.model;
+                    if (model.get('id') !== originId) {
+                        if (eventModel.get('attributeType') === 'multiEnum') {
+                            let value = [];
+                            $.each(position, (k, v) => {
+                                value.push(model.get('typeValue')[v]);
+                            });
+                            model.set('value', value);
+                        } else {
+                            if (model.get('typeValue') && model.get('typeValue')[position]) {
+                                model.set('value', model.get('typeValue')[position]);
+                            }
                         }
                     }
                 }
