@@ -94,14 +94,33 @@ class LayoutController extends AbstractListener
         /** @var array $result */
         $result = Json::decode($event->getArgument('result'), true);
 
-        $result[0]['rows'][] = [['name' => 'name'], ['name' => 'typeValue']];
+        $names = [['name' => 'name']];
 
         if ($this->getConfig()->get('isMultilangActive', false)) {
-            $result[0]['rows'][] = [['name' => 'isMultilang', 'inlineEditDisabled' => true], false];
-            foreach ($this->getInputLanguageList() as $locale => $key) {
-                $result[0]['rows'][] = [['name' => 'name' . $key], false];
+            $multilangField = ['name' => 'isMultilang', 'inlineEditDisabled' => true];
+            $rowsCount = count($result[0]['rows']);
+
+            if (count($result[0]['rows'][$rowsCount - 1]) == 2 && $result[0]['rows'][$rowsCount - 1][1] == false) {
+                $result[0]['rows'][$rowsCount - 1][1] = $multilangField;
+            } else {
+                $result[0]['rows'][] = [$multilangField, false];
             }
+
+            foreach ($this->getInputLanguageList() as $locale => $key) {
+                $names[] = ['name' => 'name' . $key];
+            }
+
+            if (count($names) % 2 != 0) {
+                $names[] = false;
+            }
+            $names = array_chunk($names, 2);
+        } else {
+            $names[] = false;
         }
+
+        $result[0]['rows'][] = [['name' => 'typeValue'], false];
+
+        $result[0]['rows'] = array_merge($result[0]['rows'], $names);
 
         $event->setArgument('result', Json::encode($result));
     }
