@@ -98,7 +98,9 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                         });
                         model.set('value', value);
                     } else {
-                        model.set('value', model.get('typeValue')[position]);
+                        if (model.get('typeValue') && model.get('typeValue')[position]) {
+                            model.set('value', model.get('typeValue')[position]);
+                        }
                     }
                 }
             });
