@@ -89,9 +89,8 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
 
             locales.forEach(locale => {
                 let viewName = locale ? `${id}~${locale}` : id;
-                let view = this.nestedViews[viewName].getView('valueField');
-                if (view && view.model) {
-                    let model = view.model;
+                if (this.nestedViews[viewName] && this.nestedViews[viewName].getView('valueField') && this.nestedViews[viewName].getView('valueField').model) {
+                    let model = this.nestedViews[viewName].getView('valueField').model;
                     if (model.get('id') !== originId) {
                         if (eventModel.get('attributeType') === 'multiEnum') {
                             let value = [];
