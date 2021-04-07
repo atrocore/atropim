@@ -13,7 +13,8 @@
     "code": "Code",
     "isRequired": "Ist Erforderlich",
     "isMultilang": "Mehrsprachig",
-    "assetType": "Asset-Typ"
+    "assetType": "Asset-Typ",
+    "name": "Attributname"
   },
   "links": {
     "products": "Produkte",
