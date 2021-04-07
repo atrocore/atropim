@@ -121,7 +121,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         // fields filter
                         hide = this.fieldsFilter(name, fieldView);
 
-                    if (this.getConfig().get('isMultilangActive')) {
+                    if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
                         if (!hide) {
                             // multi-language fields filter
                             hide = this.multiLangFieldsFilter(name, fieldView);

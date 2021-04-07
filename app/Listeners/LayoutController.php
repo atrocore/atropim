@@ -113,14 +113,13 @@ class LayoutController extends AbstractListener
             if (count($names) % 2 != 0) {
                 $names[] = false;
             }
-            $names = array_chunk($names, 2);
         } else {
             $names[] = false;
         }
 
         $result[0]['rows'][] = [['name' => 'typeValue'], false];
 
-        $result[0]['rows'] = array_merge($result[0]['rows'], $names);
+        $result[0]['rows'] = array_merge($result[0]['rows'], array_chunk($names, 2));
 
         $event->setArgument('result', Json::encode($result));
     }

@@ -592,7 +592,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     if (!hide) {
                         hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
                     }
-                    if (this.getConfig().get('isMultilangActive')) {
+                    if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
                         if (!hide) {
                             hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
                         }
