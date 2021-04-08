@@ -49,7 +49,8 @@
     "measuringUnit": "Maßeinheit",
     "packedAmount": "Gepackte Menge",
     "pcSorting": "Sortierreihenfolge",
-    "contents": "Contents"
+    "contents": "Contents",
+    "taskStatus": "Task status"
   },
   "links": {
     "associatedMainProducts": "zugehörige Produkte",
@@ -117,6 +118,15 @@
       "simpleProduct": "Einfaches Produkt",
       "bundleProduct": "Bündelprodukt",
       "packageProduct": "Produktpakett"
+    },
+    "taskStatus": {
+      "mar": "Mar",
+      "tech": "Tech",
+      "ass": "Ass",
+      "img": "Img",
+      "cat": "Cat",
+      "ch": "Ch",
+      "pr": "Pr"
     }
   },
   "boolFilters": {
