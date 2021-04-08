@@ -16,31 +16,7 @@
           "name": "name"
         },
         {
-          "name": "sku"
-        }
-      ],
-      [
-        {
           "name": "catalog"
-        },
-        {
-          "name": "tag"
-        }
-      ],
-      [
-        {
-          "name": "mpn"
-        },
-        {
-          "name": "ean"
-        }
-      ],
-      [
-        {
-          "name": "productStatus"
-        },
-        {
-          "name": "productSerie"
         }
       ],
       [
@@ -48,8 +24,22 @@
           "name": "brand"
         },
         {
-          "name": "productFamily"
+          "name": "productSerie"
         }
+      ],
+      [
+        {
+          "name": "sku"
+        },
+        {
+          "name": "mpn"
+        }
+      ],
+      [
+        {
+          "name": "ean"
+        },
+        false
       ],
       [
         {
@@ -61,10 +51,10 @@
       ],
       [
         {
-          "name": "tax"
+          "name": "uvp"
         },
         {
-          "name": "uvp"
+          "name": "tax"
         }
       ],
       [
@@ -73,14 +63,6 @@
         },
         {
           "name": "finalPrice"
-        }
-      ],
-      [
-        {
-          "name": "basePriceAmount"
-        },
-        {
-          "name": "packedAmount"
         }
       ],
       [

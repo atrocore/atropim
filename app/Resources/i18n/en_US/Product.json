@@ -37,7 +37,8 @@
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
-    "contents": "Contents"
+    "contents": "Contents",
+    "taskStatus": "Task status"
   },
   "links": {
     "productSerie": "Product Series",
@@ -97,6 +98,15 @@
       "your tag2": "your tag2",
       "your_tag1": "your tag1",
       "your_tag2": "your tag2"
+    },
+    "taskStatus": {
+      "mar": "Mar",
+      "tech": "Tech",
+      "ass": "Ass",
+      "img": "Img",
+      "cat": "Cat",
+      "ch": "Ch",
+      "pr": "Pr"
     }
   },
   "boolFilters": {

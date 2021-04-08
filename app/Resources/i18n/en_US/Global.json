@@ -85,7 +85,8 @@
     "ProductsByStatus": "Products by Status",
     "ProductTypes": "Product Types",
     "ProductsByTag": "Products by Tag",
-    "ProductStatusOverview": "Product Status Overview"
+    "ProductStatusOverview": "Product Status Overview",
+    "ProductsByTaskStatus": "Products by Task Status"
   },
   "exceptions": {
     "onlyForceDeletingAvailable": "Only force deleting available",

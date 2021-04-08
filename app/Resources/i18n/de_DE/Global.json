@@ -105,7 +105,8 @@
     "ProductStatusOverview": "Produktstatus Übersicht",
     "GeneralStatistics": "PIM Allgemeine Statistiken",
     "Channels": "Kanäle",
-    "ProductsByStatus": "Produkte nach Status"
+    "ProductsByStatus": "Produkte nach Status",
+    "ProductsByTaskStatus": "Products by Task Status"
   },
   "exceptions": {
     "onlyForceDeletingAvailable": "Nur erzwingtes Löschen verfügbar",

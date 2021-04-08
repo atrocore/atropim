@@ -201,14 +201,6 @@
       "type": "link",
       "required": false
     },
-    "basePriceAmount": {
-      "type": "float",
-      "default": 0
-    },
-    "packedAmount": {
-      "type": "float",
-      "default": 0
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -295,6 +287,12 @@
       "layoutFiltersDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
+    },
+    "taskStatus": {
+      "type": "multiEnum",
+      "optionColors": {},
+      "options": ["mar", "tech", "ass", "img", "cat", "ch", "pr"],
+      "default": []
     }
   },
   "links": {
