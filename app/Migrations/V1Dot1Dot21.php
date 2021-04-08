@@ -34,7 +34,7 @@ namespace Pim\Migrations;
 use Treo\Core\Migration\Base;
 
 /**
- * Migration class for version 1.1.19
+ * Migration class for version 1.1.21
  */
 class V1Dot1Dot21 extends Base
 {
@@ -44,6 +44,7 @@ class V1Dot1Dot21 extends Base
     public function up(): void
     {
         $this->execute("ALTER TABLE `product` ADD task_status MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT 'default={[]}'");
+        $this->execute("ALTER TABLE `product` DROP base_price_amount, DROP packed_amount");
     }
 
     /**

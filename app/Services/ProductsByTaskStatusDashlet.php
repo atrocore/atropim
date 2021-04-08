@@ -47,7 +47,7 @@ class ProductsByTaskStatusDashlet extends AbstractProductDashletService
     }
 
     /**
-     * Get Product types
+     * Get Products by Task status
      *
      * @return array
      * @throws \Espo\Core\Exceptions\Error

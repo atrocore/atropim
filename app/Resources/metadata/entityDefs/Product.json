@@ -201,14 +201,6 @@
       "type": "link",
       "required": false
     },
-    "basePriceAmount": {
-      "type": "float",
-      "default": 0
-    },
-    "packedAmount": {
-      "type": "float",
-      "default": 0
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
