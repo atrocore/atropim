@@ -228,7 +228,8 @@ abstract class AbstractRepository extends Base
         }
 
         if ($entity->isAttributeChanged('teamsIds')) {
-            $this->setInheritedOwnershipTeams($entity, $entity->get('teamsIds'));
+            $teamsIds = is_array($entity->get('teamsIds')) ? $entity->get('teamsIds') : [];
+            $this->setInheritedOwnershipTeams($entity, $teamsIds);
         }
     }
 
