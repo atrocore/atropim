@@ -75,6 +75,14 @@
         {
           "name": "longDescription"
         }
+      ],
+      [
+        {
+          "name": "productStatus"
+        },
+        {
+          "name": "taskStatus"
+        }
       ]
     ]
   }
