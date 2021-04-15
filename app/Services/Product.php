@@ -431,6 +431,8 @@ class Product extends AbstractService
 
                         if (is_null($data = $localePav->get('data'))) {
                             $data = new \stdClass();
+                        } else {
+                            $data = (object)$data;
                         }
 
                         $data->title = $localePav->get('attribute')->get("name{$camelCaseLocale}");
