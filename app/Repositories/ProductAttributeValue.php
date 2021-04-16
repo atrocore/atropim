@@ -393,4 +393,12 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('value' . $locale, Json::encode($values));
         }
     }
+
+    protected function createOwnNotification(Entity $entity, ?string $userId): void
+    {
+    }
+
+    protected function createAssignmentNotification(Entity $entity, ?string $userId): void
+    {
+    }
 }
