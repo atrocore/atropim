@@ -160,6 +160,10 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
                 let pageHeader = this.$el.parents('#main').find('.page-header');
                 pageHeader.addClass('collapsed');
 
+                let footer = $('#footer');
+                footer.addClass('collapsed');
+                footer.removeClass('not-collapsed');
+
                 if (this.model) {
                     let detailContainer = this.$el.parents('#main').find('.overview');
                     let detailButton = this.$el.parents('#main').find('.detail-button-container');
@@ -318,6 +322,10 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             pageHeader.removeClass('not-collapsed');
             pageHeader.addClass('collapsed');
 
+            let footer = $('#footer');
+            footer.addClass('collapsed');
+            footer.removeClass('not-collapsed');
+
             if (this.model) {
 
                 let detailContainer = this.$el.parents('#main').find('.overview');
@@ -347,6 +355,10 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             let pageHeader = this.$el.parents('#main').find('.page-header');
             pageHeader.addClass('not-collapsed');
             pageHeader.removeClass('collapsed');
+
+            let footer = $('#footer');
+            footer.removeClass('collapsed');
+            footer.addClass('not-collapsed');
 
             if (this.model) {
 

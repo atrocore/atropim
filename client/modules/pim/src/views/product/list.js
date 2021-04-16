@@ -123,6 +123,18 @@ Espo.define('pim:views/product/list', ['pim:views/list', 'search-manager'],
             if (catalogTreePanel) {
                 catalogTreePanel.trigger('resetFilters');
             }
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.getAcl().check('Catalog', 'read') && this.getAcl().check('Category', 'read')) {
+                let footer = $('#footer');
+
+                if (footer.length) {
+                    footer.addClass('is-collapsed');
+                }
+            }
         }
 
     })

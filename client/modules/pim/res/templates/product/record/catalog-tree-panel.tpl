@@ -24,7 +24,3 @@
     <div class="no-data">{{translate 'No Data'}}</div>
     {{/if}}
 </div>
-<button type="button" class="btn btn-default collapse-panel bottom-collapse" data-action="collapsePanel">
-    <span class="toggle-icon-left fas fa-angle-left"></span>
-    <span class="toggle-icon-right fas fa-angle-right hidden"></span>
-</button>
