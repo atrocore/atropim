@@ -156,6 +156,21 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
                 this.actionCollapsePanel();
             }
 
+            if (!this.getStorage().get('catalog-tree-panel', this.scope)) {
+                let pageHeader = this.$el.parents('#main').find('.page-header');
+                pageHeader.addClass('collapsed');
+
+                if (this.model) {
+                    let detailContainer = this.$el.parents('#main').find('.overview');
+                    let detailButton = this.$el.parents('#main').find('.detail-button-container');
+                    detailContainer.addClass('collapsed');
+                    detailButton.addClass('collapsed');
+                } else {
+                    let listContainer = this.$el.parents('#main').find('.list-container');
+                    listContainer.addClass('collapsed');
+                }
+            }
+
             this.expandFilters();
         },
 
@@ -298,15 +313,24 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             this.$el.removeClass('catalog-tree-panel-hidden');
 
             this.$el.addClass('col-xs-12 col-lg-3');
+
+            let pageHeader = this.$el.parents('#main').find('.page-header');
+            pageHeader.removeClass('not-collapsed');
+            pageHeader.addClass('collapsed');
+
             if (this.model) {
 
                 let detailContainer = this.$el.parents('#main').find('.overview');
-                detailContainer.removeClass('col-lg-9');
-                detailContainer.addClass('col-lg-6');
+                detailContainer.removeClass('col-lg-9 not-collapsed');
+                detailContainer.addClass('col-lg-6 collapsed');
+
+                let detailButton = this.$el.parents('#main').find('.detail-button-container');
+                detailButton.addClass('collapsed');
+                detailButton.removeClass('not-collapsed');
 
             } else {
                 let listContainer = this.$el.parents('#main').find('.list-container');
-                listContainer.addClass('col-xs-12 col-lg-9');
+                listContainer.addClass('col-xs-12 col-lg-9 collapsed');
             }
         },
 
@@ -319,15 +343,24 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             this.$el.addClass('catalog-tree-panel-hidden');
 
             this.$el.removeClass('col-xs-12 col-lg-3');
+
+            let pageHeader = this.$el.parents('#main').find('.page-header');
+            pageHeader.addClass('not-collapsed');
+            pageHeader.removeClass('collapsed');
+
             if (this.model) {
 
                 let detailContainer = this.$el.parents('#main').find('.overview');
-                detailContainer.addClass('col-lg-9');
-                detailContainer.removeClass('col-lg-6');
+                detailContainer.addClass('col-lg-9 not-collapsed');
+                detailContainer.removeClass('col-lg-6 collapsed');
+
+                let detailButton = this.$el.parents('#main').find('.detail-button-container');
+                detailButton.removeClass('collapsed');
+                detailButton.addClass('not-collapsed');
 
             } else {
                 let listContainer = this.$el.parents('#main').find('.list-container');
-                listContainer.removeClass('col-xs-12 col-lg-9');
+                listContainer.removeClass('col-xs-12 col-lg-9 collapsed');
             }
         },
 
