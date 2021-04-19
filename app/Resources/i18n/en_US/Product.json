@@ -71,7 +71,7 @@
     "Channels": "Channels",
     "Product Channel Attributes": "Channel Attributes",
     "associatedProducts": "Associated Products",
-    "withoutAnyCategory": "Without Any Category",
+    "withoutAnyCategory": "Without Category",
     "typeCategoryToSearch": "Type category to search...",
     "noGroup": "No Group",
     "sort": "Sort",
@@ -111,7 +111,7 @@
   },
   "boolFilters": {
     "withoutAssociatedProducts": "Without Associated Products",
-    "withoutAnyCategory": "Without Any Category",
+    "withoutAnyCategory": "Without Category",
     "withoutProductAttributes": "Without Product Attributes",
     "notAssociatedProducts": "Without Associated Products",
     "onlySimple": "Only Simple",
