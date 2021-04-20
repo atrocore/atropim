@@ -32,13 +32,24 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
-use Treo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Espo\Core\Utils\Util;
 
 /**
  * Service of Channel
  */
 class Channel extends AbstractService
 {
+    /**
+     * @inheritDoc
+     */
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $entity->set('hasLocales', $this->getConfig()->get('isMultilangActive', false) && !empty($this->getConfig()->get('inputLanguageList', [])));
+    }
+
     /**
      * Get product data for channel
      *
