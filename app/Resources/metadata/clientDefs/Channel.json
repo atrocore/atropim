@@ -38,5 +38,19 @@
   "recordViews": {
     "detail": "pim:views/record/detail",
     "list": "pim:views/record/list"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "locales": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasLocales"
+            }
+          ]
+        }
+      }
+    }
   }
 }
