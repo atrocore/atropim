@@ -90,17 +90,6 @@
       "layoutFiltersDisabled": true,
       "exportDisabled": true
     },
-    "finalPrice": {
-      "type": "currency",
-      "view": "pim:views/product/fields/price"
-    },
-    "finalPriceConverted": {
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
-      "exportDisabled": true
-    },
     "productStatus": {
       "type": "enum",
       "required": true,
