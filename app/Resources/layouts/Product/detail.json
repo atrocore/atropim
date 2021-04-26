@@ -61,9 +61,7 @@
         {
           "name": "price"
         },
-        {
-          "name": "finalPrice"
-        }
+        false
       ],
       [
         {
