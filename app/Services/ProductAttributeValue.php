@@ -378,14 +378,16 @@ class ProductAttributeValue extends AbstractService
     protected function getRequiredFields(Entity $entity, \stdClass $data): array
     {
         $fields = parent::getRequiredFields($entity, $data);
-
-        $newFields = [];
-        foreach ($fields as $field) {
-            if (strpos($field, 'value') === false || $field === 'value') {
-                $newFields[] = $field;
+        
+        if ($entity->isNew()) {
+            $newFields = [];
+            foreach ($fields as $field) {
+                if (strpos($field, 'value') === false || $field !== 'value') {
+                    $newFields[] = $field;
+                }
             }
+            $fields = $newFields;
         }
-        $fields = $newFields;
 
         return $fields;
     }
