@@ -179,6 +179,10 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
         },
 
         expandFilters() {
+            if ($('.filter-categories[data-name="categories"]').length > 0) {
+                this.getStorage().set('catalog-tree-panel-data', this.scope, null);
+            }
+            
             const catalogTreeData = this.getStorage().get('catalog-tree-panel-data', this.scope);
             if (catalogTreeData) {
                 const type = catalogTreeData.type;
