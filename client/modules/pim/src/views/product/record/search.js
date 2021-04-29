@@ -118,7 +118,7 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                         this.$el.find('.family-list .no-family-data').text(this.translate('Loading...', 'labels', 'Global'));
                         this.$el.find('.family-list').toggle();
 
-                        this.ajaxGetRequest('Markets/Attribute/filtersData')
+                        this.ajaxGetRequest('Attribute/action/filtersData')
                             .then(response => {
                                 this.attributesDownloaded = true;
                                 this.familiesAttributes = response;

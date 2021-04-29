@@ -42,11 +42,6 @@ class Attribute extends AbstractController
 {
 
     /**
-     * @ApiDescription(description="Get filters data for product entity")
-     * @ApiMethod(type="GET")
-     * @ApiRoute(name="/Markets/Attribute/filtersData")
-     * @ApiReturn(sample="'json'")
-     *
      * @param array   $params
      * @param array   $data
      * @param Request $request
@@ -56,7 +51,7 @@ class Attribute extends AbstractController
      * @throws Exceptions\Error
      * @throws Exceptions\Forbidden
      */
-    public function actionGetFiltersData($params, $data, Request $request): array
+    public function actionFiltersData($params, $data, Request $request): array
     {
         if ($this->isReadAction($request, $params)) {
             return $this->getRecordService()->getFiltersData();
