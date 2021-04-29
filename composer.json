@@ -8,7 +8,7 @@
     "atrocore/import-feeds-common": "~1.1.0",
     "atrocore/export-feeds-common": "~1.0.0",
     "atrocore/dam-common": "~1.2.0",
-    "atrocore/completeness-common": "~1.1.1"
+    "atrocore/completeness-common": "~1.2.0"
   },
   "autoload": {
     "psr-4": {
