@@ -49,8 +49,6 @@ Espo.define('pim:views/product/list', ['pim:views/list', 'search-manager'],
             if (this.getAcl().check('Catalog', 'read') && this.getAcl().check('Category', 'read')) {
                 this.setupCatalogTreePanel();
             }
-
-            this.getStorage().set('list-view', 'Product', 'list');
         },
 
         setupCatalogTreePanel() {
