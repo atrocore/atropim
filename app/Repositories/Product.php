@@ -564,6 +564,14 @@ class Product extends AbstractRepository
                     ]
                 );
 
+                if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
+                    $productAttributeValue->set([
+                        'assignedUserId' => $product->get('assignedUserId'),
+                        'ownerUserId' => $product->get('ownerUserId'),
+                        'teamsIds' => $product->get('teamsIds')
+                    ]);
+                }
+
                 $productAttributeValue->skipVariantValidation = true;
                 $productAttributeValue->skipProductChannelValidation = true;
 
