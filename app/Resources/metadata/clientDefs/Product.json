@@ -8,6 +8,8 @@
   },
   "boolFilterList": [
     "onlyMy",
+    "ownedByMe",
+    "assignedToMe",
     "notEntity",
     "notAssociatedProducts",
     "onlySimple",
