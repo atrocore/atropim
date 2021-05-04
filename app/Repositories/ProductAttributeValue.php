@@ -99,6 +99,22 @@ class ProductAttributeValue extends AbstractRepository
         $this->syncEnumValues($entity);
 
         $this->syncMultiEnumValues($entity);
+
+        if ($entity->isNew() && !$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
+            $product = $entity->get('product');
+
+            if (empty($entity->get('assignedUserId'))) {
+                $entity->set('assignedUserId', $product->get('assignedUserId'));
+            }
+
+            if (empty($entity->get('ownerUserId'))) {
+                $entity->set('ownerUserId', $product->get('ownerUserId'));
+            }
+
+            if (empty($entity->get('teamsIds'))) {
+                $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
+            }
+        }
     }
 
     /**
