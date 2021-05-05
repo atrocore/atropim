@@ -35,24 +35,38 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'treo-core:views/mo
             Dep.prototype.setup.call(this);
 
             let config = this.getConfig(),
-                assignedUser = config.get('assignedUserAttributeOwnership') || 'notInherit',
-                ownerUser = config.get('ownerUserAttributeOwnership') || 'notInherit',
-                teams = config.get('teamsAttributeOwnership') || 'notInherit';
+                assignedUser = config.get('assignedUserAttributeOwnership'),
+                ownerUser = config.get('ownerUserAttributeOwnership'),
+                teams = config.get('teamsAttributeOwnership');
 
-            if (this.getAcl().get('assignmentPermission') !== 'no'
-                && this.getAcl().checkScope('User')
-                && this.getEntityReadScopeLevel('User') !== 'no') {
-                this.setupOwnership(assignedUser, 'assignedUser');
+            if (!assignedUser && !ownerUser && !teams) {
+                if (!this.model.id) {
+                    let modelProduct = this.options.relate.model;
+                    this.model.set({
+                        assignedUserId: modelProduct.get('assignedUserId'),
+                        assignedUserName: modelProduct.get('assignedUserName'),
+                        ownerUserId: modelProduct.get('ownerUserId'),
+                        ownerUserName: modelProduct.get('ownerUserName'),
+                        teamsIds: modelProduct.get('teamsIds'),
+                        teamsNames: modelProduct.get('teamsNames'),
+                    });
+                }
+            } else {
+                if (this.getAcl().get('assignmentPermission') !== 'no'
+                    && this.getAcl().checkScope('User')
+                    && this.getEntityReadScopeLevel('User') !== 'no') {
+                    this.setupOwnership(assignedUser, 'assignedUser');
 
-                this.setupOwnership(ownerUser, 'ownerUser');
+                    this.setupOwnership(ownerUser, 'ownerUser');
+                }
+
+                if (this.getAcl().checkScope('Team')
+                    && this.getEntityReadScopeLevel('Team') !== 'no') {
+                    this.setupOwnership(teams, 'teams');
+                }
+
+                this.reRender();
             }
-
-            if (this.getAcl().checkScope('Team')
-                && this.getEntityReadScopeLevel('Team') !== 'no') {
-                this.setupOwnership(teams, 'teams');
-            }
-
-            this.reRender();
         },
 
         setupOwnership: function (param, field) {
