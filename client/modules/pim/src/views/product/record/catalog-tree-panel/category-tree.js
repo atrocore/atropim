@@ -102,8 +102,8 @@ Espo.define('pim:views/product/record/catalog-tree-panel/category-tree', 'view',
             return `
                 <li data-id="${category.id}" class="list-group-item child">
                     <button class="btn btn-link category category-icons" data-toggle="collapse" data-target=".category-${hash}" data-id="${category.id}" data-name="${category.name}">
-                        <span class="fas fa-chevron-right"></span>
-                        <span class="fas fa-chevron-down hidden"></span>
+                        <span class="fas fa-angle-right"></span>
+                        <span class="fas fa-angle-down hidden"></span>
                     </button>
                     <button class="btn btn-link category child-category" data-id="${category.id}">
                         ${category.name}
@@ -131,15 +131,15 @@ Espo.define('pim:views/product/record/catalog-tree-panel/category-tree', 'view',
 
         fold(id) {
             let button = this.$el.find(`button.category-icons[data-id="${id}"]`);
-            button.find('span.fa-chevron-right').removeClass('hidden');
-            button.find('span.fa-chevron-down').addClass('hidden');
+            button.find('span.fa-angle-right').removeClass('hidden');
+            button.find('span.fa-angle-down').addClass('hidden');
         },
 
         unfold(id) {
             this.setupCategoryTree(id, () => {
                 let button = this.$el.find(`button.category-icons[data-id="${id}"]`);
-                button.find('span.fa-chevron-right').addClass('hidden');
-                button.find('span.fa-chevron-down').removeClass('hidden');
+                button.find('span.fa-angle-right').addClass('hidden');
+                button.find('span.fa-angle-down').removeClass('hidden');
                 this.expandCategoriesFromRoute(id);
             });
         },
