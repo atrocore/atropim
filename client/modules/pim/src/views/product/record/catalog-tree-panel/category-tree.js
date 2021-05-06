@@ -167,29 +167,22 @@ Espo.define('pim:views/product/record/catalog-tree-panel/category-tree', 'view',
 
         getTreeCategories(id, callback) {
             this.getFullEntity('Category', {
-                select: 'name,categoryParentId,categoryRoute,childrenCount',
+                select: 'name,categoryParentId,categoryRoute,childrenCount,sortOrder',
                 where: [
                     {
                         type: 'equals',
                         attribute: 'categoryParentId',
                         value: id
                     }
-                ]
+                ],
+                sortBy: 'sortOrder',
+                asc: true
             }, categories => {
                 callback(categories);
             });
         },
 
         setCategoryChilds(category, categories) {
-            categories.sort((a, b) => {
-                if (a.childrenCount && !b.childrenCount) {
-                    return -1;
-                } else if (!a.childrenCount && b.childrenCount) {
-                    return 1;
-                } else {
-                    return a.name.localeCompare(b.name);
-                }
-            });
             category.childs = categories;
             this.loadedCategories.push(category);
         },
