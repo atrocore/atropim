@@ -379,8 +379,8 @@ class Product extends AbstractService
         }
 
         // for export by channel
-        if (isset($params['channelId'])) {
-            $selectParams['customWhere'] .= " AND asset.id IN (SELECT asset_id FROM product_asset WHERE deleted=0 AND product_id='$id' AND (channel IS NULL OR channel='{$params['channelId']}'))";
+        if (isset($params['exportByChannelId'])) {
+            $selectParams['customWhere'] .= " AND asset.id IN (SELECT asset_id FROM product_asset WHERE deleted=0 AND product_id='$id' AND (channel IS NULL OR channel='{$params['exportByChannelId']}'))";
         }
 
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
