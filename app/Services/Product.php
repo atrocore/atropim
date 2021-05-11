@@ -33,6 +33,7 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
@@ -329,6 +330,98 @@ class Product extends AbstractService
             'list'  => $this->getDBAssociationMainProducts($id, '', $params),
             'total' => $this->getDBTotalAssociationMainProducts($id, '')
         ];
+    }
+
+    protected function findLinkedEntitiesAssets(string $id, array $params): array
+    {
+        $event = $this->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'link' => 'assets', 'params' => $params]));
+
+        $id = $event->getArgument('id');
+        $link = $event->getArgument('link');
+        $params = $event->getArgument('params');
+
+        $entity = $this->getRepository()->get($id);
+        if (!$entity) {
+            throw new NotFound();
+        }
+        if (!$this->getAcl()->check($entity, 'read')) {
+            throw new Forbidden();
+        }
+        if (empty($link)) {
+            throw new Error();
+        }
+
+        $foreignEntityName = $entity->relations[$link]['entity'];
+
+        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+            throw new Forbidden();
+        }
+
+        $recordService = $this->getRecordService($foreignEntityName);
+
+        $disableCount = false;
+        if (in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))) {
+            $disableCount = true;
+        }
+
+        $maxSize = 0;
+        if ($disableCount) {
+            if (!empty($params['maxSize'])) {
+                $maxSize = $params['maxSize'];
+                $params['maxSize'] = $params['maxSize'] + 1;
+            }
+        }
+
+        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+
+        if (array_key_exists($link, $this->linkSelectParams)) {
+            $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
+        }
+
+        // for export by channel
+        if (isset($params['channelId'])) {
+            $selectParams['customWhere'] .= " AND asset.id IN (SELECT asset_id FROM product_asset WHERE deleted=0 AND product_id='$id' AND (channel IS NULL OR channel='{$params['channelId']}'))";
+        }
+
+        $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
+
+        $selectAttributeList = $recordService->getSelectAttributeList($params);
+        if ($selectAttributeList) {
+            $selectParams['select'] = $selectAttributeList;
+        } else {
+            $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
+        }
+
+        $total = 0;
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+
+        if (!empty($collection) && count($collection) > 0) {
+            foreach ($collection as $e) {
+                $recordService->loadAdditionalFieldsForList($e);
+                if (!empty($params['loadAdditionalFields'])) {
+                    $recordService->loadAdditionalFields($e);
+                }
+                if (!empty($selectAttributeList)) {
+                    $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+                }
+                $recordService->prepareEntityForOutput($e);
+            }
+
+            if (!$disableCount) {
+                $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+            } else {
+                if ($maxSize && count($collection) > $maxSize) {
+                    $total = -1;
+                    unset($collection[count($collection) - 1]);
+                } else {
+                    $total = -2;
+                }
+            }
+        }
+
+        return $this
+            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => ['total' => $total, 'collection' => $collection]]))
+            ->getArgument('result');
     }
 
     /**
