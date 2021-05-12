@@ -539,6 +539,14 @@ class Product extends AbstractService
 
                         $newCollection->append($localePav);
                     }
+                } else {
+                    $data = is_null($data = $pav->get('data')) ? new \stdClass() : (object)$data;
+
+                    foreach ($allLocales as $locale) {
+                        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+                        $data->{'title' . $camelCaseLocale} = $pav->get('attribute')->get("name{$camelCaseLocale}");
+                        $pav->set('data', $data);
+                    }
                 }
             }
 
