@@ -49,22 +49,49 @@ Espo.define('pim:views/fields/code-from-name', 'pim:views/fields/varchar-with-pa
         },
 
         transformToPattern(value) {
-            let replacementSymbols = {
-                    \u00e4: 'ae',
-                    \u00fc: 'ue',
-                    \u00df: 'ss',
-                    \u00f6: 'oe',
-                    \u00d6: 'oe',
-                    \u00e5: 'a'
-                };
-
-            return value
+            let result = value
                 .toLowerCase()
-                .replace(/ /g, '_')
-                .replace(new RegExp('[' + Object.keys(replacementSymbols).join('') + ']', 'gu'), function (str) {
-                    return replacementSymbols[str];
-                })
-                .replace(/[^a-z_0-9]/gu, '');
+                .replace(/ /g, '_');
+
+            return this.replaceDiacriticalCharacters(result).replace(/[^a-z_0-9]/gu, '');
+        },
+
+        replaceDiacriticalCharacters(value) {
+            let diacritalSymbolsReplaceMap = {
+                'a': 'ÀÁÂÃÄÅÆĀĂĄàáâãäåæāăą',
+                'c': 'ÇĆĈĊČçćĉċč',
+                'd': 'ĎĐďđ',
+                'e': 'ÈÉÊËÐĒĔĖĘĚèéêëðēĕėęě',
+                'g': 'ĜĞĠĢĝğġģ',
+                'h': 'ĤĦĥħ',
+                'i': 'ÌÍÎÏĨĪĬĮİĲìíîïĩīĭįıĳ',
+                'j': 'Ĵĵ',
+                'k': 'Ķķĸ',
+                'l': 'ĹĻĽĿŁĺļľŀł',
+                'n': 'ÑŃŅŇŊñńņňŉŋ',
+                'o': 'ÒÓÔÕÖØŌŎŐŒòóôõöøōŏőœ',
+                'p': 'Þþ',
+                'r': 'ŔŖŘŕŗř',
+                's': 'ßŚŜŞŠśŝşšſ',
+                't': 'ŢŤŦţťŧ',
+                'u': 'ÙÚÛÜŨŪŬŮŰŲùúûüũūŭůűų',
+                'w': 'Ŵŵ',
+                'y': 'ÝŶŸýÿŷ',
+                'z': 'ŹŻŽźżž'
+            };
+
+            let replaceMap = {};
+            for (let letter in diacritalSymbolsReplaceMap) {
+                let replaces = diacritalSymbolsReplaceMap[letter];
+
+                for (let j = 0; j < replaces.length; j++) {
+                    replaceMap[replaces[j]] = letter;
+                }
+            }
+
+            return value.replace(/[^\u0000-\u007F]/g, function (l) {
+                return replaceMap[l] || '';
+            })
         }
     })
 );
