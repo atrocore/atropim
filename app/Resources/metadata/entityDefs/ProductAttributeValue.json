@@ -95,7 +95,8 @@
       "emHidden": true
     },
     "data": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "exportDisabled": true
     },
     "scope": {
       "type": "enum",
@@ -119,11 +120,13 @@
     },
     "attributeType": {
       "type": "varchar",
-      "notStorable": true
+      "notStorable": true,
+      "exportDisabled": true
     },
     "attributeAssetType": {
       "type": "varchar",
-      "notStorable": true
+      "notStorable": true,
+      "exportDisabled": true
     },
     "attributeIsMultilang": {
       "type": "bool",
@@ -133,7 +136,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "attributeCode": {
       "type": "varchar",
@@ -143,7 +147,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "channelCode": {
       "type": "varchar",
@@ -153,7 +158,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "isLocale": {
       "type": "bool",
@@ -164,7 +170,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "locale": {
       "type": "varchar",
@@ -175,7 +182,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "createdAt": {
       "type": "datetime",
@@ -222,7 +230,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "attributeGroup": {
       "type": "link",
@@ -232,7 +241,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true
     },
     "isInheritAssignedUser": {
       "type": "bool",

@@ -3,10 +3,12 @@
     "Attribute": "Attribute"
   },
   "fields": {
-    "productAttribute": "Product attribute",
+    "productAttribute": "Product Attribute",
     "product": "Product",
     "attribute": "Attribute",
-    "isRequired": "Is required",
+    "isRequired": "Is Required",
+    "productFamilyAttribute": "Product Family Attribute",
+    "isCustom": "Is Custom",
     "value": "Value",
     "scope": "Scope",
     "channel": "Channel"

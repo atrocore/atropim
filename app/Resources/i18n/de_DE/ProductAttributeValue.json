@@ -6,6 +6,8 @@
     "product": "Produkt",
     "productAttribute": "Produktattribut",
     "channel": "Kanal",
+    "productFamilyAttribute": "Produktfamilienattribut",
+    "isCustom": "Ist benutzerdefiniert",
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
     "value": "Wert",
