@@ -40,6 +40,11 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
 
             this.listenTo(this, 'after:save', model => {
                 let panelView = this.getParentView();
+                let completeView = panelView.getParentView().getParentView().getView('side').getView('complete');
+                if (completeView) {
+                    completeView.actionRefresh();
+                }
+
                 if (panelView && panelView.model) {
                     panelView.model.trigger('after:attributesSave');
                     panelView.actionRefresh();
