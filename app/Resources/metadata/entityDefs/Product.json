@@ -44,7 +44,8 @@
       "type": "varchar",
       "required": true,
       "trim": true,
-      "layoutMassUpdateDisabled": true
+      "layoutMassUpdateDisabled": true,
+      "view": "pim:views/product/fields/sku"
     },
     "isActive": {
       "notNull": true,
