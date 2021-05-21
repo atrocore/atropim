@@ -419,6 +419,17 @@ class Product extends AbstractService
             }
         }
 
+        if ($total > 0) {
+            $assetsData = $this->getRepository()->getAssetsData($id);
+            foreach ($collection as $asset) {
+                foreach ($assetsData as $assetData) {
+                    if ($assetData['assetId'] === $asset->get('id')) {
+                        $asset->set('channelCode', $assetData['channelCode']);
+                    }
+                }
+            }
+        }
+
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => ['total' => $total, 'collection' => $collection]]))
             ->getArgument('result');

@@ -78,6 +78,24 @@ class Product extends AbstractRepository
         return $this->getConfig()->get('inputLanguageList', []);
     }
 
+    public function getAssetsData(string $productId): array
+    {
+        $sql
+            = "SELECT 
+                    pa.asset_id   as assetId, 
+                    c.id          as channelId, 
+                    c.code        as channelCode 
+               FROM product_asset pa 
+                   LEFT JOIN channel c ON c.id=pa.channel 
+               WHERE pa.deleted=0 
+                 AND pa.product_id='$productId'";
+
+        return $this
+            ->getEntityManager()
+            ->nativeQuery($sql)
+            ->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function findRelatedAssetsByType(Entity $entity, string $type): array
     {
         $id = $entity->get('id');

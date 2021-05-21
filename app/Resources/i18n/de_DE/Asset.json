@@ -3,7 +3,8 @@
     "categories": "Kategorien",
     "products": "Produkte",
     "scope": "Scope",
-    "channel": "Kanal"
+    "channel": "Kanal",
+    "channelCode": "Kanal Code"
   },
   "links": {
     "categories": "Kategorien",
