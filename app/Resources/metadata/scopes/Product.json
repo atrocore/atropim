@@ -24,7 +24,7 @@
   "addRelationEnabled": true,
   "searchInProductAttributeValues": false,
   "importTypeSimple": {
-    "handler": "Pim\\Import\\Types\\Simple\\Handlers\\ProductHandler"
+    "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },
   "completeness": {
     "service": "Completeness\\Services\\ProductCompleteness"
