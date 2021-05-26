@@ -8,7 +8,6 @@
     },
     {
         "name": "isActiveEntity",
-        "customLabel": "Active for Channel",
         "notSortable": true
     }
 ]

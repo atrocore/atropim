@@ -60,6 +60,29 @@ class ProductService extends AbstractEntityListener
     }
 
     /**
+     * @param Event $event
+     */
+    public function afterFindLinkedEntities(Event $event)
+    {
+        $result = $event->getArgument('result');
+
+        if (empty($result['total'])){
+            return;
+        }
+
+        $id = $event->getArgument('id');
+        $link = $event->getArgument('link');
+
+        if ($link === 'channels') {
+            $data = $this->getProductRepository()->getChannelRelationData($id);
+            foreach ($result['collection'] as $channel) {
+                $channel->set('isActiveEntity', !empty($data[$channel->get('id')]['isActive']));
+                $channel->set('isFromCategoryTree', !empty($data[$channel->get('id')]['isFromCategoryTree']));
+            }
+        }
+    }
+
+    /**
      * @return Product
      */
     protected function getProductRepository(): Product
