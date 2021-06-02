@@ -39,8 +39,8 @@
     "categoryHasChildren": "Kategorie hat untergeordnete Elemente.",
     "categoryHasChildCategoryAndCantBeDeleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden.",
     "youCanNotChooseChildCategory": "Sie können keine untergeordnete Kategorie auswählen.",
-    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "Es gibt keine Möglichkeit, die übergeordnete Kategorie für die Stammkategorie zu ändern",
-    "thereIsNoAbilityToChangeCategoryTree": "Es gibt keine Möglichkeit, den Kategoriebaum zu ändern",
+    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "Es gibt keine Möglichkeit, die übergeordnete Kategorie für die Stammkategorie zu ändern.",
+    "thereIsNoAbilityToChangeCategoryTree": "Es gibt keine Möglichkeit, den Kategoriebaum zu ändern.",
     "categoryHasProducts": "Kategorie mit verknüpften Produkten kann nicht gelöscht werden.",
     "categoryCannotBeUnRelatedFromCatalog": "Verknüpfung zwischen Katalog und Kategoriebaum mit verknüpften Produkten kann nicht aufgehoben werden.",
     "parentCategoryHasProducts": "Diese Kategorie kann nicht als Parent-Kategorie eingestellt werden, sie beinhaltet zugeordnete Produkte."
