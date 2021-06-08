@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "product": "Product",
+        "configurableProduct": "Configurable Product"
+    },
+    "links": {
+        "product": "Product",
+        "configurableProduct": "Configurable Product"
+    },
+    "labels": {
+        "Create ProductTypeConfigurable": "Create Product Type Configurable"
+    }
+}

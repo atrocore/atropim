@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "total": "Products Total",
+        "active": "Active",
+        "notActive": "Not Active"
+    }
+}

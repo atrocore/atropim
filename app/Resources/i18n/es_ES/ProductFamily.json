@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "products": "Products",
+    "description": "Description",
+    "code": "Code",
+    "isActive": "Active",
+    "productFamilies": "Product Families",
+    "productFamilyAttributes": "Product Family Attributes"
+  },
+  "links": {
+    "products": "Products",
+    "productFamilies": "Product Families",
+    "productFamilyAttributes": "Product Family Attributes"
+  },
+  "labels": {
+    "Create ProductFamily": "Create Product family",
+    "selectAttributeGroup": "Select Attribute Group"
+  },
+  "messages": {
+    "Can't remove system Product Family": "Can't remove system Product Family"
+  },
+  "exceptions": {
+    "productFamilyIsUsedInProducts": "Product Family is used in products"
+  }
+}

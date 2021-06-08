@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "products": "Products"
+    },
+    "links": {
+        "products": "Products"
+    },
+    "labels": {
+        "Create ProductSerie": "Create Product Serie"
+    }
+}

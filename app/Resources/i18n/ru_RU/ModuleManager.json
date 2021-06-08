@@ -1,0 +1,8 @@
+{
+    "moduleNames": {
+        "Pim": "PIM"
+    },
+    "moduleDescriptions": {
+        "Pim": "Management of products and its depending entities module"
+    }
+}

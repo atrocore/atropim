@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "products": "Products",
+        "description": "Description",
+        "isActive": "Active",
+        "code": "Code"
+    },
+    "links": {
+        "products": "Products"
+    },
+    "labels": {
+        "Create Brand": "Create Brand"
+    },
+    "exceptions": {
+        "brandWithSuchCodeAlreadyExist": "Brand with such CODE already exist",
+        "brandIsUsedInProducts": "Brand is used in products. Please, update products first"
+    }
+}

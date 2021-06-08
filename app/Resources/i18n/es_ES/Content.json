@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "tags": "Tags",
+    "name": "Title",
+    "status": "Status",
+    "type": "Type",
+    "description": "Description",
+    "text": "Text",
+    "metaTitle": "Meta Title",
+    "metaDescription": "Meta Description",
+    "contentGroup": "Content Group",
+    "products": "Products"
+  },
+  "links": {
+    "contentGroup": "Content Group",
+    "products": "Products"
+  },
+  "labels": {
+    "Create Content": "Create Content",
+    "draft": "Draft",
+    "written": "Written",
+    "reviewed": "Reviewed",
+    "published": "Published",
+    "review": "Review",
+    "news": "News",
+    "promotional": "Promotional"
+  }
+}
