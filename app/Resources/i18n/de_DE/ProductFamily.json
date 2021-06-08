@@ -1,5 +1,6 @@
 {
   "fields": {
+    "description": "Beschreibung",
     "isActive": "Aktiv",
     "isSystem": "Ist System",
     "productFamilies": "Produktfamilien",
