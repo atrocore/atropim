@@ -183,7 +183,6 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
       "exportType": "text",
       "noLoad": true
     },

@@ -32,6 +32,8 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Templates\Services\Base;
+use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 
 /**
  * Class ProductFamilyAttribute
@@ -42,4 +44,19 @@ class ProductFamilyAttribute extends Base
      * @var array
      */
     protected $mandatorySelectAttributeList = ['scope'];
+
+    /**
+     * @inheritDoc
+     */
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (!empty($attribute = $entity->get('attribute')) && !empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+                $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
+            }
+        }
+    }
 }

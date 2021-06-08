@@ -2,7 +2,9 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "trim": true
+      "trim": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "productFamily": {
       "type": "link",
@@ -51,7 +53,8 @@
       "layoutMassUpdateDisabled": true,
       "layoutFiltersDisabled": true,
       "noLoad": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "createdAt": {
       "type": "datetime",

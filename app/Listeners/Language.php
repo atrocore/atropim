@@ -32,13 +32,13 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
+use Treo\Core\EventManager\Event;
 
 /**
- * Class Metadata
+ * Class Language
  */
-class Metadata extends AbstractListener
+class Language extends AbstractListener
 {
     /**
      * @param Event $event
@@ -47,8 +47,6 @@ class Metadata extends AbstractListener
     {
         // get data
         $data = $event->getArgument('data');
-
-        $data = $this->enableExportDisabledParamForPav($data);
 
         $data = $this->prepareProductFamilyAttributeMetadata($data);
 
@@ -68,51 +66,10 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        foreach ($locales as $locale) {
-            $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-            $data['entityDefs']['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = [
-                "type"                      => "varchar",
-                "notStorable"               => true,
-                "default"                   => null,
-                "layoutListDisabled"        => true,
-                "layoutListSmallDisabled"   => true,
-                "layoutDetailDisabled"      => true,
-                "layoutDetailSmallDisabled" => true,
-                "layoutMassUpdateDisabled"  => true,
-                "layoutFiltersDisabled"     => true,
-                "importDisabled"            => true,
-                "emHidden"                  => true
-            ];
-        }
-
-        return $data;
-    }
-
-    /**
-     * Enable exportDisabled parameter for ProductAttributeValue multi-lang fields
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function enableExportDisabledParamForPav(array $data): array
-    {
-        // is multi-lang activated
-        if (empty($this->getConfig()->get('isMultilangActive'))) {
-            return $data;
-        }
-
-        // get locales
-        if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
-            return $data;
-        }
-
-        foreach (['value', 'ownerUser', 'assignedUser'] as $field) {
+        foreach ($data as $l => $rows) {
             foreach ($locales as $locale) {
-                $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-                if (isset($data['entityDefs']['ProductAttributeValue']['fields'][$field . $preparedLocale])) {
-                    $data['entityDefs']['ProductAttributeValue']['fields'][$field . $preparedLocale]['exportDisabled'] = true;
-                }
+                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+                $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' › ' . $locale;
             }
         }
 

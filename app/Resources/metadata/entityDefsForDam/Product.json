@@ -11,7 +11,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
+      "importDisabled": false,
       "noLoad": true,
       "columns": {
         "assetChannel": "channel"
