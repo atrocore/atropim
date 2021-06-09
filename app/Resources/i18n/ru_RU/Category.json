@@ -1,39 +1,39 @@
 {
   "fields": {
-    "name": "Name",
-    "description": "Description",
-    "code": "Code",
-    "isActive": "Active",
-    "assets": "Assets",
-    "categoryParent": "Parent Category",
-    "categories": "Categories",
-    "channels": "Channels",
-    "image": "Main Image",
-    "categoryRouteName": "Сategory Tree",
-    "scope": "Scope",
-    "productCategories": "Category Products",
-    "catalogs": "Catalogs"
+    "name": "Название",
+    "description": "Описание",
+    "code": "Код",
+    "isActive": "Активный",
+    "assets": "Ассеты",
+    "categoryParent": "Родительская категория",
+    "categories": "Категории",
+    "channels": "Каналы",
+    "image": "Основное изображение",
+    "categoryRouteName": "Дерево категорий",
+    "scope": "Область применения",
+    "productCategories": "Категории продукта",
+    "catalogs": "Каталоги"
   },
   "links": {
-    "categoryParent": "Parent Category",
-    "categories": "Categories",
-    "assets": "Assets",
-    "channels": "Channels",
-    "catalogs": "Catalogs",
-    "productCategories": "Category Products"
+    "categoryParent": "Родительская категория",
+    "categories": "Категории",
+    "assets": "Ассеты",
+    "channels": "Каналы",
+    "catalogs": "Каталоги",
+    "productCategories": "Категории продукта"
   },
   "labels": {
-    "Create Category": "Create Category"
+    "Create Category": "Создать категории"
   },
   "exceptions": {
-    "categoryHasChildren": "Selected category used by another category as parent and can not be selected as product category.",
-    "categoryHasChildCategoryAndCantBeDeleted": "Category has child category and can't be deleted.",
-    "youCanNotChooseChildCategory": "You can not choose a child category.",
-    "categoryHasProducts": "Category with related products can't be deleted.",
-    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "There is no ability to change category parent for root category.",
-    "thereIsNoAbilityToChangeCategoryTree": "There is no ability to change category tree.",
-    "categoryCannotBeUnRelatedFromCatalog": "Category tree with linked products can't be unlinked from catalog.",
-    "parentCategoryHasProducts": "This category cannot be assigned as a parent category, it has assigned products.",
-    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "You can not change parent category in root category with linked products."
+    "categoryHasChildren": "Выбранная категория используется другой категорией в качестве родительской и не может быть выбрана в качестве категории продукта.",
+    "categoryHasChildCategoryAndCantBeDeleted": "Категория имеет дочернюю категорию и не может быть удалена.",
+    "youCanNotChooseChildCategory": "Вы не можете выбрать дочернюю категорию.",
+    "categoryHasProducts": "Категория со связанными товарами не может быть удалена.",
+    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "Невозможно изменить родительскую категорию для корневой категории.",
+    "thereIsNoAbilityToChangeCategoryTree": "Нет возможности изменить дерево категорий.",
+    "categoryCannotBeUnRelatedFromCatalog": "Дерево категорий со связанными товарами нельзя отключить от каталога.",
+    "parentCategoryHasProducts": "Эту категорию нельзя назначить родительской, ей присвоены продукты.",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Вы не можете изменить родительскую категорию в корневой категории со связанными продуктами."
   }
 }
