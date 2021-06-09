@@ -1,18 +1,18 @@
 {
     "fields": {
-        "products": "Products",
-        "description": "Description",
-        "isActive": "Active",
-        "code": "Code"
+        "products": "Продукты",
+        "description": "Описание",
+        "isActive": "Активный",
+        "code": "Код"
     },
     "links": {
-        "products": "Products"
+        "products": "Продукты"
     },
     "labels": {
-        "Create Brand": "Create Brand"
+        "Create Brand": "Создать бренд"
     },
     "exceptions": {
-        "brandWithSuchCodeAlreadyExist": "Brand with such CODE already exist",
-        "brandIsUsedInProducts": "Brand is used in products. Please, update products first"
+        "brandWithSuchCodeAlreadyExist": "Бренд с таким кодом уже существует",
+        "brandIsUsedInProducts": "Такой бренд уже используется в продуктах. Пожалуйста, сначала оновите продукты"
     }
 }
