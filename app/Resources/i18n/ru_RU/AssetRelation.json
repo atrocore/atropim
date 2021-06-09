@@ -1,5 +1,5 @@
 {
   "exceptions": {
-    "assetMainRole": "The asset of the main role is already defined for the selected channels (all or several of them)"
+    "assetMainRole": "Ассет главной роли уже назначен для выбранных каналов (всех или нескольких)"
   }
 }
