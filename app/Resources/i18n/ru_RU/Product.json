@@ -99,13 +99,13 @@
       "your_tag2": "ваш тег2"
     },
     "taskStatus": {
-      "mar": "Mar",
-      "tech": "Tech",
-      "ass": "Ass",
-      "img": "Img",
-      "cat": "Cat",
-      "ch": "Ch",
-      "pr": "Pr"
+      "mar": "Марк.",
+      "tech": "Тех.",
+      "ass": "Связи",
+      "img": "Изоб.",
+      "cat": "Кат.",
+      "ch": "Каналы",
+      "pr": "PR"
     }
   },
   "boolFilters": {
