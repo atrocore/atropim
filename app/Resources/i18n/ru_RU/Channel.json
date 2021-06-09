@@ -1,24 +1,24 @@
 {
   "fields": {
-    "description": "Description",
-    "isActive": "Active",
-    "isActiveEntity": "Active for Channel",
-    "category": "Category",
-    "locales": "Languages",
-    "code": "Code",
-    "products": "Products"
+    "description": "Описание",
+    "isActive": "Активный",
+    "isActiveEntity": "Активен для канала",
+    "category": "Категория",
+    "locales": "Языки",
+    "code": "Код",
+    "products": "Продукты"
   },
   "links": {
-    "category": "Category",
-    "products": "Products"
+    "category": "Категория",
+    "products": "Продукты"
   },
   "labels": {
-    "Create Channel": "Create Channel",
-    "mainLocale": "Main Language"
+    "Create Channel": "Создать канал",
+    "mainLocale": "Основной язык"
   },
   "exceptions": {
-    "channelWithSuchCodeAlreadyExist": "Channel with such CODE already exist",
-    "channelHasProducts": "Channel with related products can't be deleted.",
-    "channelHasCategory": "Channel with related category tree can't be deleted."
+    "channelWithSuchCodeAlreadyExist": "Канал с таким КОДОМ уже существует.",
+    "channelHasProducts": "Канал со связанными товарами удалить нельзя.",
+    "channelHasCategory": "Канал со связанным деревом категорий удалить нельзя."
   }
 }
