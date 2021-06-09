@@ -1,7 +1,7 @@
 {
     "fields": {
-        "total": "Products Total",
-        "active": "Active",
-        "notActive": "Not Active"
+        "total": "Все продукты",
+        "active": "Активные",
+        "notActive": "Неактивные"
     }
 }
