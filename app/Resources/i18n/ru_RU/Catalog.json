@@ -1,22 +1,22 @@
 {
   "fields": {
-    "isActive": "Active",
-    "products": "Products",
-    "categories": "Categories",
-    "code": "Code"
+    "isActive": "Активный",
+    "products": "Продукты",
+    "categories": "Категории",
+    "code": "Код"
   },
   "links": {
-    "channels": "Channels",
-    "products": "Products",
-    "categories": "Categories"
+    "channels": "Каналы",
+    "products": "Продукты",
+    "categories": "Категории"
   },
   "labels": {
-    "Create Catalog": "Create Catalog"
+    "Create Catalog": "Создать каталог"
   },
   "queueManager": {
-    "createProductForCatalog": "Create product '%s' for catalog '%s'"
+    "createProductForCatalog": "Создать продукт '%s' для каталога '%s'"
   },
   "exceptions": {
-    "catalogCannotBeDeleted": "Catalog cannot be deleted. There are few channels that use current catalog."
+    "catalogCannotBeDeleted": "Каталог не может быть удален. Есть несколько каналов, которые используют текущий каталог."
   }
 }
