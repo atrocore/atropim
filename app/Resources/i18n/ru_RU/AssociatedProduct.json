@@ -13,7 +13,7 @@
         "mainProduct": "Главный продукт",
         "mainProductImage": "Изображение главного продукта",
         "relatedProduct": "Связанный продукт",
-        "relatedProductImage": "Изображение похожего товара"
+        "relatedProductImage": "Изображение похожего продукта"
     },
     "labels": {
         "Create AssociatedProduct": "Создать связанный продукт"
