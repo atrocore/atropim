@@ -37,3 +37,42 @@
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Вы не можете изменить родительскую категорию в корневой категории со связанными продуктами."
   }
 }
+{
+  "fields": {
+    "name": "Название",
+    "description": "Описание",
+    "code": "Код",
+    "isActive": "Активный",
+    "assets": "Ассеты",
+    "categoryParent": "Родительская категория",
+    "categories": "Категории",
+    "channels": "Каналы",
+    "image": "Основное изображение",
+    "categoryRouteName": "Дерево категорий",
+    "scope": "Область применения",
+    "productCategories": "Категории продукта",
+    "catalogs": "Каталоги"
+  },
+  "links": {
+    "categoryParent": "Родительская категория",
+    "categories": "Категории",
+    "assets": "Ассеты",
+    "channels": "Каналы",
+    "catalogs": "Каталоги",
+    "productCategories": "Категории продукта"
+  },
+  "labels": {
+    "Create Category": "Создать категории"
+  },
+  "exceptions": {
+    "categoryHasChildren": "Выбранная категория используется другой категорией в качестве родительской и не может быть выбрана в качестве категории продукта.",
+    "categoryHasChildCategoryAndCantBeDeleted": "Категория имеет дочернюю категорию и не может быть удалена.",
+    "youCanNotChooseChildCategory": "Вы не можете выбрать дочернюю категорию.",
+    "categoryHasProducts": "Категория со связанными товарами не может быть удалена.",
+    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "Невозможно изменить родительскую категорию для корневой категории.",
+    "thereIsNoAbilityToChangeCategoryTree": "Нет возможности изменить дерево категорий.",
+    "categoryCannotBeUnRelatedFromCatalog": "Дерево категорий со связанными товарами нельзя отключить от каталога.",
+    "parentCategoryHasProducts": "Эту категорию нельзя назначить родительской, ей присвоены продукты.",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Вы не можете изменить родительскую категорию в корневой категории со связанными продуктами."
+  }
+}
