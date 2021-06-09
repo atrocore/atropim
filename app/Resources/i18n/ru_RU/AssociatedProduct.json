@@ -1,24 +1,24 @@
 {
     "fields": {
-        "association": "Association",
-        "bothDirections": "Both Directions",
-        "backwardAssociation": "Backward Association",
-        "mainProduct": "Main Product",
-        "mainProductImage": "Main Product Image",
-        "relatedProduct": "Related Product",
-        "relatedProductImage": "Related Product Image"
+        "association": "Ассоциация",
+        "bothDirections": "Бидирекциональная",
+        "backwardAssociation": "Обратная ассоциация",
+        "mainProduct": "Главный продукт",
+        "mainProductImage": "Изображение главного продукта",
+        "relatedProduct": "Связанный продукт",
+        "relatedProductImage": "Изображение связанного продукта"
     },
     "links": {
-        "association": "Association",
-        "mainProduct": "Main Product",
-        "mainProductImage": "Main Product Image",
-        "relatedProduct": "Related Product",
-        "relatedProductImage": "Related Product Image"
+        "association": "Ассоциация",
+        "mainProduct": "Главный продукт",
+        "mainProductImage": "Изображение главного продукта",
+        "relatedProduct": "Связанный продукт",
+        "relatedProductImage": "Изображение похожего товара"
     },
     "labels": {
-        "Create AssociatedProduct": "Create Associated Product"
+        "Create AssociatedProduct": "Создать связанный продукт"
     },
     "exceptions": {
-        "isExistsAssociation": "This association already exists"
+        "isExistsAssociation": "Эта связь уже существует"
     }
 }
