@@ -1,8 +1,8 @@
 {
   "fields": {
-    "searchInProductAttributeValues": "Search in product attribute values"
+    "searchInProductAttributeValues": "Искать в значениях атрибутов продукта."
   },
   "tooltips": {
-    "searchInProductAttributeValues": "Search is done over text, varchar and  wysiwyg attributes types."
+    "searchInProductAttributeValues": "Поиск осуществляется по типам атрибутов текст, текст переменного размера и wysiwyg.."
   }
 }
