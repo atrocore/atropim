@@ -1,11 +1,11 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories."
+    "productCanLinkedWithNonLeafCategories": "Разрешить привязывать продукты к субкатегориям."
   },
   "exceptions": {
-    "languageUsedInChannel": "Language, used in some channel, cannot be removed."
+    "languageUsedInChannel": "Язык, используемый в каком-либо канале, не может быть удален."
   },
   "queueManager": {
-    "updatingOwnershipInformation": "Updating ownership information"
+    "updatingOwnershipInformation": "Обновление информации о владельце"
   }
 }
