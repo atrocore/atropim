@@ -1,6 +1,6 @@
 {
   "fields": {
-    "amount": "Amount",
-    "percent": "Percent"
+    "amount": "Количество",
+    "percent": "Процент"
   }
 }
