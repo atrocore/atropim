@@ -1,22 +1,22 @@
 {
     "fields": {
-        "name": "Group Name",
-        "description": "Description",
-        "code": "Code",
-        "isActive": "Active",
-        "attributes": "Attributes",
-        "sortOrder": "Sort Order"
+        "name": "Название группы",
+        "description": "Описание",
+        "code": "Код",
+        "isActive": "Активный",
+        "attributes": "Атрибуты",
+        "sortOrder": "Порядок сортировки"
     },
     "links": {
-        "attributes": "Attributes"
+        "attributes": "Атрибут"
     },
     "labels": {
-        "Create AttributeGroup": "Create Attribute Group"
+        "Create AttributeGroup": "Создать группу атрибутов"
     },
     "messages": {
-        "unlinkAttributeGroupConfirmation": "Are you sure you want to unlink all Attribute Group's Attributes?"
+        "unlinkAttributeGroupConfirmation": "Вы действительно хотите отключить все атрибуты группы атрибутов?"
     },
     "exceptions": {
-        "attributeGroupSsLinkedWithAttributes": "Attribute group is linked with attribute(s). Please, unlink attribute(s) first"
+        "attributeGroupSsLinkedWithAttributes": "Группа атрибутов связана с атрибутом(ами). Пожалуйста, сначала отключите атрибут(ы)"
     }
 }
