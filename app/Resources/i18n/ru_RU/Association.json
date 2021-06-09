@@ -11,7 +11,7 @@
     "backwardAssociation": "Обратная связь"
   },
   "labels": {
-    "Create Association": "Create Association"
+    "Create Association": "Создать связь"
   },
   "exceptions": {
     "associationIsLinkedWithProducts": "Ассоциация связана с продуктом (-ами). Пожалуйста, сначала отключите продукт(-ы)",
