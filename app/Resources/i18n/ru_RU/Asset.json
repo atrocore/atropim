@@ -1,19 +1,19 @@
 {
   "fields": {
-    "categories": "Categories",
-    "products": "Products",
-    "scope": "Scope",
-    "channel": "Channel",
-    "channelCode": "Channel Code"
+    "categories": "Категории",
+    "products": "Продукты",
+    "scope": "Область действия",
+    "channel": "Канал",
+    "channelCode": "Код канала"
   },
   "links": {
-    "categories": "Categories",
-    "products": "Products"
+    "categories": "Категории",
+    "products": "Продукты"
   },
   "labels": {
-    "setAsMainImage": "Set as Main Image"
+    "setAsMainImage": "Назначить основным изображением"
   },
   "exceptions": {
-    "scopeForTheImageMarkedAsMainCannotBeChanged": "Scope for the image marked as Main cannot be changed."
+    "scopeForTheImageMarkedAsMainCannotBeChanged": "Область действия изображения, помеченного как основное, изменить нельзя."
   }
 }
