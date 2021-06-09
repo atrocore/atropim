@@ -1,13 +1,13 @@
 {
   "fields": {
-    "value": "Value",
-    "unit": "Unit",
-    "products": "Products"
+    "value": "Значение",
+    "unit": "Ед. измерения",
+    "products": "Продукты"
   },
   "links": {
-    "products": "Products"
+    "products": "Продукты"
   },
   "labels": {
-    "Create MeasuringUnit": "Create Measuring Unit"
+    "Create MeasuringUnit": "Создать ед. измерения"
   }
 }
