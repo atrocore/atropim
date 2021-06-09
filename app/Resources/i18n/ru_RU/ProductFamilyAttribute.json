@@ -1,32 +1,32 @@
 {
   "fields": {
-    "productFamily": "Product Family",
-    "attribute": "Attribute",
-    "isRequired": "Is required",
-    "channel": "Channel",
-    "channels": "Channels",
-    "scope": "Scope"
+    "productFamily": "Продуктовая семья",
+    "attribute": "Атрибут",
+    "isRequired": "Обязательно",
+    "channel": "Канал",
+    "channels": "Каналы",
+    "scope": "Область действия"
   },
   "links": {
-    "productFamily": "Product Family",
-    "attribute": "Attribute",
-    "channel": "Channel",
-    "channels": "Channels"
+    "productFamily": "Продуктовая семья",
+    "attribute": "Атрибут",
+    "channel": "Канал",
+    "channels": "Каналы"
   },
   "labels": {
-    "Create ProductFamilyAttribute": "Create Product Family Attribute",
-    "unlinkPreserveValues": "Unlink, preserve values",
-    "unlinkRemoveValues": "Unlink, remove values"
+    "Create ProductFamilyAttribute": "Создать атрибут продукт. семьи",
+    "unlinkPreserveValues": "Отменить связь, сохранить значения",
+    "unlinkRemoveValues": "Отменить связь, удалить значения"
   },
   "options": {
     "scope": {
-      "Global": "Global",
-      "Channel": "Channel"
+      "Global": "Глобальный",
+      "Channel": "Канал"
     }
   },
   "messages": {
-    "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels.",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues": "Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues": "Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?"
+    "savedForNotAllChannels": "Атрибут '%s' был связан не со всеми выбранными каналами.",
+    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues": "Вы уверены, что хотите отключить атрибут от продуктовой семьи и сохранить все значения атрибутов?",
+    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues": "Вы уверены, что хотите отключить атрибут от продуктовой семьи и удалить все значения атрибутов?"
   }
 }
