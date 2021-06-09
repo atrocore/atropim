@@ -1,15 +1,15 @@
 {
     "fields": {
-        "association": "Ассоциация",
+        "association": "Связь",
         "bothDirections": "Бидирекциональная",
-        "backwardAssociation": "Обратная ассоциация",
+        "backwardAssociation": "Обратная связь",
         "mainProduct": "Главный продукт",
         "mainProductImage": "Изображение главного продукта",
         "relatedProduct": "Связанный продукт",
         "relatedProductImage": "Изображение связанного продукта"
     },
     "links": {
-        "association": "Ассоциация",
+        "association": "Связь",
         "mainProduct": "Главный продукт",
         "mainProductImage": "Изображение главного продукта",
         "relatedProduct": "Связанный продукт",
