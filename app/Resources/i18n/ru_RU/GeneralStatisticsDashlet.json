@@ -1,17 +1,17 @@
 {
     "listFields": {
         "generalStatistics": {
-            "product": "Products",
-            "category": "Categories",
-            "productFamily": "Product Families",
-            "attribute": "Attributes",
-            "productWithoutAssociatedProduct": "Products without Associated Products",
-            "productWithoutCategory": "Products without any Category",
-            "productWithoutAttribute": "Products without Product Attributes",
-            "productWithoutImage": "Products without Assets"
+            "product": "Продукты",
+            "category": "Категории",
+            "productFamily": "Продуктовые семьи",
+            "attribute": "Атрибуты",
+            "productWithoutAssociatedProduct": "Продукты без связанных продуктов",
+            "productWithoutCategory": "Продукты без категории",
+            "productWithoutAttribute": "Продукты без атрибутов продукта",
+            "productWithoutImage": "Продукты без ассетов"
         }
     },
     "fields": {
-        "amount": "Amount"
+        "amount": "Количество"
     }
 }
