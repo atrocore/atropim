@@ -1,61 +1,61 @@
 {
   "fields": {
-    "attributeGroup": "Attribute Group",
-    "productAttributes": "Product attributes",
-    "typeValue": "Values",
-    "isSystem": "Is system",
-    "type": "Attribute Type",
-    "code": "Code",
-    "name": "Attribute Name",
-    "products": "Products",
-    "productAttributeValues": "Product Attribute Values",
-    "isRequired": "Required",
-    "productFamilyAttributes": "Product Family Attributes",
-    "isMultilang": "Multilingual",
-    "sortOrder": "Sort Order",
-    "assetType": "Asset Type"
+    "attributeGroup": "Группа атрибутов",
+    "productAttributes": "Атрибуты продукта",
+    "typeValue": "Значения",
+    "isSystem": "Система",
+    "type": "Тип атрибута",
+    "code": "Код",
+    "name": "Название атрибута",
+    "products": "Продукты",
+    "productAttributeValues": "Значения атрибута продукта",
+    "isRequired": "Обязательно",
+    "productFamilyAttributes": "Атрибуты продуктовой семьи",
+    "isMultilang": "Многоязычность",
+    "sortOrder": "Порядок сортировки",
+    "assetType": "Тип ассета"
   },
   "links": {
-    "attributeGroup": "Attribute Group",
-    "productAttributes": "Product attributes",
-    "products": "Products",
-    "productAttributeValues": "Product Attribute Values",
-    "productFamilies": "Product families",
-    "productFamilyAttributes": "Product Family Attributes"
+    "attributeGroup": "Группа атрибутов",
+    "productAttributes": "Атрибуты продукта",
+    "products": "Продукты",
+    "productAttributeValues": "Значения атрибута продукта",
+    "productFamilies": "Продуктовые семьи",
+    "productFamilyAttributes": "Атрибуты продуктовой семьи"
   },
   "labels": {
-    "Create Attribute": "Create Attribute",
-    "productFamily": "Product Family",
-    "addNewValue": "Add new value",
-    "array": "Array",
-    "bool": "Boolean",
-    "currency": "Currency",
-    "date": "Date",
-    "datetime": "DateTime",
-    "enum": "Enum",
-    "float": "Float",
-    "int": "Int",
+    "Create Attribute": "Создать атрибут",
+    "productFamily": "Продуктовая семья",
+    "addNewValue": "Добавить новое значение",
+    "array": "Массив данных",
+    "bool": "Логическое значение",
+    "currency": "Валюта",
+    "date": "Дата",
+    "datetime": "Дата время",
+    "enum": "Перечисляемый тип",
+    "float": "Тип данных float",
+    "int": "Целое число",
     "multiEnum": "Multi-Enum",
-    "text": "Text",
-    "unit": "Unit",
+    "text": "Текст",
+    "unit": "Единца",
     "url": "Url",
-    "varchar": "Varchar",
+    "varchar": "Текст переменного размера varchar",
     "wysiwyg": "Wysiwyg",
-    "asset": "Asset"
+    "asset": "Ассет"
   },
   "messages": {
-    "sameNumberOptions": "You must set the same number of options",
-    "productsCountWithAttribute": "Count of products where this attribute is set: <strong>{count}</strong>"
+    "sameNumberOptions": "Вы должны установить такое же количество опций",
+    "productsCountWithAttribute": "Количество продуктов, у которых задан данный атрибут: <strong>{count}</strong>"
   },
   "filterLabels": {
     "All": "All"
   },
   "exceptions": {
-    "attributeValueShouldBeUnique": "Attribute value should be unique.",
-    "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",
-    "youCanNotUnlinkProductFamilyAttribute": "You cannot unlink product family attribute.",
-    "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
-    "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
-    "attributeIsUsedInProductFamilies": "Attribute is used in product families. Please, update product families first."
+    "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
+    "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
+    "youCanNotUnlinkProductFamilyAttribute": "Невозможно отменить связь атрибута продуктовой семьи.",
+    "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
+    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
+    "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи."
   }
 }
