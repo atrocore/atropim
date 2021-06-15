@@ -22,7 +22,7 @@
     "currency": "Currency",
     "tax": "Tax",
     "packaging": "Packaging",
-    "ean": "EAN",
+    "ean": "GTIN/EAN",
     "mpn": "MPN",
     "uvp": "UVP",
     "image": "Main Image",
@@ -138,6 +138,8 @@
     "isCategoryAlreadyRelated": "Category is already linked with product.",
     "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "This category is not available for the catalog of the selected product, and thus cannot be linked.",
-    "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Channel provided by category tree can't be unlinked from product"
+    "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Channel provided by category tree can't be unlinked from product",
+    "mpnShouldHaveUniqueValue": "MPN should have unique value.",
+    "eanShouldHaveUniqueValue": "GTIN should have unique value."
   }
 }

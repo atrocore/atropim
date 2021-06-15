@@ -490,6 +490,25 @@ class Product extends AbstractRepository
 
     /**
      * @param Entity $entity
+     * @param array $options
+     *
+     * @throws BadRequest
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!$this->isFieldUnique($entity, 'ean')) {
+            throw new BadRequest($this->translate('eanShouldHaveUniqueValue', 'exceptions', 'Product'));
+        }
+
+        if (!$this->isFieldUnique($entity, 'mpn')) {
+            throw new BadRequest($this->translate('mpnShouldHaveUniqueValue', 'exceptions', 'Product'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * @param Entity $entity
      * @param array  $options
      *
      * @throws Error
@@ -522,6 +541,35 @@ class Product extends AbstractRepository
         parent::afterSave($entity, $options);
 
         $this->setInheritedOwnership($entity);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param string $field
+     *
+     * @return bool
+     */
+    protected function isFieldUnique(Entity $entity, string $field): bool
+    {
+        $result = true;
+
+        if ($entity->hasField($field) && !empty($entity->get($field))) {
+            $products = $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->where([
+                    $field => $entity->get($field),
+                    'catalogId' => $entity->get('catalogId'),
+                    'id!=' => $entity->id
+                ])
+                ->count();
+
+            if ($products > 0) {
+                $result = false;
+            }
+        }
+
+        return $result;
     }
 
     /**
