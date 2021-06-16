@@ -43,6 +43,7 @@
     "sku": {
       "type": "varchar",
       "trim": true,
+      "view": "pim:views/product/fields/sku",
       "layoutMassUpdateDisabled": true
     },
     "isActive": {
