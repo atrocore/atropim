@@ -26,10 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/fields/sku', 'pim:views/fields/varchar-with-pattern',
+Espo.define('pim:views/product/fields/gtin', 'pim:views/fields/varchar-with-pattern',
     Dep => Dep.extend({
+        validationPattern: '^(\\d{8}|\\d{12,14})$',
 
-        validationPattern: '^[a-z0-9A-Z]{10,20}$',
+        setup() {
+            Dep.prototype.setup.call(this);
 
+            this.validations = Espo.utils.clone(this.validations);
+            this.validations.push('valid');
+        },
+
+        validateValid() {
+            if (!this.isGtinValid(this.model.get(this.name))) {
+                this.showValidationMessage(this.translate('Not valid', 'error'));
+
+                return true;
+            }
+
+            return false;
+        },
+
+        isGtinValid(value) {
+            while (value.length < 14) {
+                value = '0' + value;
+            }
+
+            let mult = [];
+            [...value].forEach((item, key) => {
+                if (key !== 13) {
+                    mult.push(parseInt(item) * ((key % 2 === 0) ? 3 : 1));
+                }
+            });
+
+            let sum = mult.reduce((acc, val) => acc + val);
+
+            return  (10 - (sum % 10)) % 10 === parseInt(value[13]);
+        }
     })
 );

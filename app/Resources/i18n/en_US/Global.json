@@ -62,7 +62,7 @@
     "price": "Price",
     "sku": "SKU",
     "tax": "Tax",
-    "ean": "EAN",
+    "ean": "GTIN/EAN",
     "uvp": "UVP",
     "tag": "Tag",
     "amount": "Amount",

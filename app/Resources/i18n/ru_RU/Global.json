@@ -62,7 +62,7 @@
     "price": "Цена",
     "sku": "Артикул",
     "tax": "Налог",
-    "ean": "EAN",
+    "ean": "GTIN/EAN",
     "uvp": "UVP",
     "tag": "Тег",
     "amount": "Количество",

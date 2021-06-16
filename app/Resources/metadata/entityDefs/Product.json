@@ -42,10 +42,8 @@
     },
     "sku": {
       "type": "varchar",
-      "required": true,
       "trim": true,
-      "layoutMassUpdateDisabled": true,
-      "view": "pim:views/product/fields/sku"
+      "layoutMassUpdateDisabled": true
     },
     "isActive": {
       "notNull": true,
@@ -123,7 +121,8 @@
     },
     "ean": {
       "type": "varchar",
-      "trim": true
+      "trim": true,
+      "view": "pim:views/product/fields/gtin"
     },
     "mpn": {
       "type": "varchar",

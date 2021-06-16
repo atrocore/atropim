@@ -54,11 +54,6 @@ class ProductEntity extends AbstractEntityListener
         // get entity
         $entity = $event->getArgument('entity');
 
-        // is sku valid
-        if (!$this->isSkuUnique($entity)) {
-            throw new BadRequest($this->exception('productWithSuchSkuAlreadyExist'));
-        }
-
         if ($entity->isAttributeChanged('catalogId') && !empty($entity->get('catalogId'))) {
             $this
                 ->getEntityManager()
@@ -194,31 +189,6 @@ class ProductEntity extends AbstractEntityListener
         foreach ($productAttributes as $attr) {
             $this->getEntityManager()->removeEntity($attr, ['skipProductAttributeValueHook' => true]);
         }
-    }
-
-    /**
-     * @param Entity $product
-     * @param string $field
-     *
-     * @return bool
-     */
-    protected function isSkuUnique(Entity $product): bool
-    {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['sku' => $product->get('sku'), 'catalogId' => $product->get('catalogId')])
-            ->find();
-
-        if (count($products) > 0) {
-            foreach ($products as $item) {
-                if ($item->get('id') != $product->get('id')) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     /**

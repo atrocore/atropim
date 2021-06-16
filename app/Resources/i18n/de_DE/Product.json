@@ -36,7 +36,7 @@
     "currency": "Währung",
     "tax": "MwSt.",
     "packaging": "Verpackung",
-    "ean": "EAN",
+    "ean": "GTIN/EAN",
     "uvp": "UVP",
     "image": "Hauptbild",
     "tag": "Etikett",
@@ -156,6 +156,8 @@
     "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "isCategoryAlreadyRelated": "Die Kategorie ist bereits mit dem Produkt verknüpft.",
-    "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden."
+    "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
+    "mpnShouldHaveUniqueValue": "MPN sollte einen eindeutigen Wert haben.",
+    "eanShouldHaveUniqueValue": "GTIN sollte einen eindeutigen Wert haben."
   }
 }
