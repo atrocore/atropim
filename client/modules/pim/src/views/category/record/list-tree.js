@@ -55,13 +55,10 @@ Espo.define('pim:views/category/record/list-tree', ['view', 'lib!JsTree'], funct
         },
 
         fetchCategoriesList(callback) {
-            this.collection.fetch({remove: false, more: true}).then(response => {
-                if (this.collection.total > this.collection.length) {
-                    this.fetchCategoriesList(callback);
-                } else {
-                    this.setupTree();
-                    this.wait(false);
-                }
+            this.collection.maxSize = Number.MAX_VALUE;
+            this.collection.fetch({remove: false, more: false}).then(response => {
+                this.setupTree();
+                this.wait(false);
             });
         },
 
