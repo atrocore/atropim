@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -26,36 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/varchar-with-pattern', 'views/fields/varchar',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        validationPattern: null,
+namespace Pim\Migrations;
 
-        setup() {
-            Dep.prototype.setup.call(this);
+use Treo\Core\Migration\Base;
 
-            this.validations = Espo.utils.clone(this.validations);
-            this.validations.push('pattern');
-        },
+/**
+ * Migration class for version 1.1.39
+ */
+class V1Dot1Dot39 extends Base
+{
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
+    {
+        $this->execute("ALTER TABLE `attribute` ADD pattern VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+    }
 
-        validatePattern() {
-            if (this.validationPattern) {
-                let regexp = new RegExp(this.validationPattern);
-                let value = this.model.get(this.name);
-                if (value !== '' && !regexp.test(value)) {
-                    let msg = this.getPatternValidationMessage();
-                    if (msg) {
-                        this.showValidationMessage(msg);
-                    }
-                    return true;
-                }
-            }
-            return false;
-        },
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE `attribute` DROP pattern");
+    }
 
-        getPatternValidationMessage() {
-            return null;
+    /**
+     * @param string $sql
+     */
+    protected function execute(string $sql)
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
         }
-
-    })
-);
+    }
+}

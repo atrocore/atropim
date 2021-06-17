@@ -16,6 +16,12 @@
                     "name": "attributeGroup"
                 },
                 false
+            ],
+            [
+                {
+                    "name": "pattern"
+                },
+                false
             ]
         ]
     }

@@ -29,6 +29,7 @@
     "noSuchChannelInProduct": "Um ein solches Produktattribut hinzuzufügen, wählen Sie bitte einen Kanal aus, der für das Produkt verfügbar ist.",
     "attributeInheritedFromProductFamilyCannotBeDeleted": "Von der Produktfamilie geerbtes Attribut kann nicht gelöscht werden.",
     "attributeInheritedFromProductFamilyCannotBeChanged": "Von der Produktfamilie geerbtes Attribut kann nicht geändert werden.",
-    "onlyValueOrOwnershipCanBeChanged": "Für benutzerdefinierte Produktattribute können nur Wert- oder Besitzerinformationen geändert werden."
+    "onlyValueOrOwnershipCanBeChanged": "Für benutzerdefinierte Produktattribute können nur Wert- oder Besitzerinformationen geändert werden.",
+    "attributeDontMatchToPattern": "Wert des Attributes \"{attribute}\" entspricht nicht dem Pattern \"/{pattern}/i\"."
   }
 }

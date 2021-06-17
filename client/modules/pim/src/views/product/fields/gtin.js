@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/fields/gtin', 'pim:views/fields/varchar-with-pattern',
+Espo.define('pim:views/product/fields/gtin', 'views/fields/varchar',
     Dep => Dep.extend({
-        validationPattern: '^(\\d{8}|\\d{12,14})$',
-
         setup() {
             Dep.prototype.setup.call(this);
 

@@ -13,7 +13,8 @@
     "productFamilyAttributes": "Product Family Attributes",
     "isMultilang": "Multilingual",
     "sortOrder": "Sort Order",
-    "assetType": "Asset Type"
+    "assetType": "Asset Type",
+    "pattern": "Regex Pattern"
   },
   "links": {
     "attributeGroup": "Attribute Group",

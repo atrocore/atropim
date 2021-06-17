@@ -290,6 +290,31 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
+     * @param Entity $entity
+     * @param string $field
+     * @param array $defs
+     */
+    protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
+    {
+        if ($field == 'value' || ((!empty($multilangField = $defs['multilangField']) && $multilangField == 'value'))) {
+            $attribute = $entity->get('attribute');
+            $typesWithPattern = ['varchar'];
+
+            if (in_array($attribute->get('type'), $typesWithPattern)
+                && !empty($pattern = $attribute->get('pattern'))
+                && !preg_match("/{$pattern}/i", $entity->get($field))) {
+                $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', $entity->getEntityType());
+                $message = str_replace('{attribute}', $attribute->get('name'), $message);
+                $message = str_replace('{pattern}', $pattern, $message);
+
+                throw new BadRequest($message);
+            }
+        } else {
+            parent::validateFieldWithPattern($entity, $field, $defs);
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     protected function beforeUpdateEntity(Entity $entity, $data)

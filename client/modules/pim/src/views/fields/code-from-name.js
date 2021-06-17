@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/code-from-name', 'pim:views/fields/varchar-with-pattern',
+Espo.define('pim:views/fields/code-from-name', 'views/fields/varchar',
     Dep => Dep.extend({
-
-        validationPattern: '^[a-z_0-9{}]+$',
 
         getPatternValidationMessage() {
             return this.translate('fieldHasPattern', 'messages').replace('{field}', this.translate(this.name, 'fields', this.model.name));
