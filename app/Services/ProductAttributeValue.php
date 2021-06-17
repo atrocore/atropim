@@ -302,7 +302,7 @@ class ProductAttributeValue extends AbstractService
 
             if (in_array($attribute->get('type'), $typesWithPattern)
                 && !empty($pattern = $attribute->get('pattern'))
-                && !preg_match("/{$pattern}/i", $entity->get($field))) {
+                && !preg_match($pattern, $entity->get($field))) {
                 $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', $entity->getEntityType());
                 $message = str_replace('{attribute}', $attribute->get('name'), $message);
                 $message = str_replace('{pattern}', $pattern, $message);

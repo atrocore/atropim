@@ -13,7 +13,7 @@
       "trim": true,
       "emHidden": true,
       "view": "pim:views/fields/code-from-name",
-      "pattern": "^[a-z_0-9{}]+$"
+      "pattern": "/^[a-z_0-9{}]+$/"
     },
     "description": {
       "type": "text",

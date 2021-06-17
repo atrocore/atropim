@@ -29,6 +29,6 @@
     "attributeInheritedFromProductFamilyCannotBeDeleted": "Атрибут, унаследованный от продуктовой семьи, не может быть удален.",
     "attributeInheritedFromProductFamilyCannotBeChanged": "Атрибут, унаследованный от продуктовой семьи, не может быть изменен.",
     "onlyValueOrOwnershipCanBeChanged": "Для настраиваемого атрибута продукта можно изменить только значение или информацию о владельце.",
-    "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"/{pattern}/i\"."
+    "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"{pattern}\"."
   }
 }
