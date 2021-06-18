@@ -163,6 +163,10 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
+    },
+    "unique": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

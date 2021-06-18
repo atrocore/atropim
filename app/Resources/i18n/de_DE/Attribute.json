@@ -14,7 +14,8 @@
     "isRequired": "Ist Erforderlich",
     "isMultilang": "Mehrsprachig",
     "assetType": "Asset-Typ",
-    "name": "Attributname"
+    "name": "Attributname",
+    "unique": "Unique"
   },
   "links": {
     "products": "Produkte",
