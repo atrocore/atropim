@@ -297,7 +297,7 @@ class ProductAttributeValue extends AbstractService
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
         if ($field == 'value' || ((!empty($multilangField = $defs['multilangField']) && $multilangField == 'value'))) {
-            $attribute = $entity->get('attribute');
+            $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             $typesWithPattern = ['varchar'];
 
             if (in_array($attribute->get('type'), $typesWithPattern)
