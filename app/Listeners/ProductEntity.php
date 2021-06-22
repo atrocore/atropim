@@ -77,10 +77,12 @@ class ProductEntity extends AbstractEntityListener
         $product = $event->getArgument('entity');
 
         if ($event->getArgument('relationName') == 'categories') {
-            $category = $event->getArgument('foreign');
-            if (is_string($category)) {
-                $category = $this->getEntityManager()->getEntity('Category', $category);
+            $id = $event->getArgument('foreign');
+            if (!is_string($id)) {
+                $id = $id->get('id');
             }
+
+            $category = $this->getEntityManager()->getEntity('Category', $id);
 
             $this->getProductRepository()->isCategoryAlreadyRelated($product, $category);
             $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
