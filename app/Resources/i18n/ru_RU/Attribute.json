@@ -13,7 +13,8 @@
     "productFamilyAttributes": "Атрибуты продуктовой семьи",
     "isMultilang": "Многоязычность",
     "sortOrder": "Порядок сортировки",
-    "assetType": "Тип ассета"
+    "assetType": "Тип ассета",
+    "unique": "Unique"
   },
   "links": {
     "attributeGroup": "Группа атрибутов",
