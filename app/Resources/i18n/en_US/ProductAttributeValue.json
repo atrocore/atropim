@@ -29,6 +29,7 @@
     "attributeInheritedFromProductFamilyCannotBeDeleted": "Attribute inherited from product family cannot be deleted.",
     "attributeInheritedFromProductFamilyCannotBeChanged": "Attribute inherited from product family cannot be changed.",
     "onlyValueOrOwnershipCanBeChanged": "For custom product attribute only value or ownership information can be changed.",
-    "attributeDontMatchToPattern": "The value of the attribute \"{attribute}\" does not correspond to the pattern \"{pattern}\"."
+    "attributeDontMatchToPattern": "The value of the attribute \"{attribute}\" does not correspond to the pattern \"{pattern}\".",
+    "attributeShouldHaveBeUnique": "%s attribute should have unique value."
   }
 }

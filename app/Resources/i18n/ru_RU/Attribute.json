@@ -14,7 +14,8 @@
     "isMultilang": "Многоязычность",
     "sortOrder": "Порядок сортировки",
     "assetType": "Тип ассета",
-    "pattern": "Regex Pattern"
+    "pattern": "Regex Pattern",
+    "unique": "Unique"
   },
   "links": {
     "attributeGroup": "Группа атрибутов",

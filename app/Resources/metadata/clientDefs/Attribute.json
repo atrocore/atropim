@@ -75,6 +75,27 @@
             }
           ]
         }
+      },
+      "unique": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "asset",
+                "currency",
+                "date",
+                "datetime",
+                "float",
+                "int",
+                "unit",
+                "url",
+                "varchar"
+              ]
+            }
+          ]
+        }
       }
     }
   }

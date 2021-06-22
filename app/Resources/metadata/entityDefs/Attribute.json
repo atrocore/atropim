@@ -170,6 +170,10 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutFiltersDisabled": true
+    },
+    "unique": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

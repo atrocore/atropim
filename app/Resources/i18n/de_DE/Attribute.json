@@ -15,7 +15,8 @@
     "isMultilang": "Mehrsprachig",
     "assetType": "Asset-Typ",
     "name": "Attributname",
-    "pattern": "Regex Pattern"
+    "pattern": "Regex Pattern",
+    "unique": "Unique"
   },
   "links": {
     "products": "Produkte",
