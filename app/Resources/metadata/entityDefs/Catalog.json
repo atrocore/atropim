@@ -12,7 +12,8 @@
       "required": true,
       "trim": true,
       "emHidden": true,
-      "view": "pim:views/fields/code-from-name"
+      "view": "pim:views/fields/code-from-name",
+      "pattern": "/^[a-z_0-9{}]+$/"
     },
     "description": {
       "type": "text",

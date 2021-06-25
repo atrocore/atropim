@@ -15,6 +15,7 @@
     "isMultilang": "Mehrsprachig",
     "assetType": "Asset-Typ",
     "name": "Attributname",
+    "pattern": "Regex Pattern",
     "unique": "Unique"
   },
   "links": {

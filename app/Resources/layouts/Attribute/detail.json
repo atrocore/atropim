@@ -25,7 +25,11 @@
             ],
             [
                 {
+<<<<<<< HEAD
+                    "name": "pattern"
+=======
                     "name": "unique"
+>>>>>>> master
                 },
                 false
             ]

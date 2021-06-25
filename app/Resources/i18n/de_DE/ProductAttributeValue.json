@@ -30,6 +30,7 @@
     "attributeInheritedFromProductFamilyCannotBeDeleted": "Von der Produktfamilie geerbtes Attribut kann nicht gelöscht werden.",
     "attributeInheritedFromProductFamilyCannotBeChanged": "Von der Produktfamilie geerbtes Attribut kann nicht geändert werden.",
     "onlyValueOrOwnershipCanBeChanged": "Für benutzerdefinierte Produktattribute können nur Wert- oder Besitzerinformationen geändert werden.",
+    "attributeDontMatchToPattern": "Wert des Attributes \"{attribute}\" entspricht nicht dem Pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Das Attribut %s sollte einen eindeutigen Wert haben."
   }
 }

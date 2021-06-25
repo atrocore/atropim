@@ -14,6 +14,7 @@
     "isMultilang": "Multilingual",
     "sortOrder": "Sort Order",
     "assetType": "Asset Type",
+    "pattern": "Regex Pattern",
     "unique": "Unique"
   },
   "links": {

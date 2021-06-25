@@ -43,6 +43,7 @@ class V1Dot1Dot39 extends Base
      */
     public function up(): void
     {
+        $this->execute("ALTER TABLE `attribute` ADD pattern VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `attribute` ADD `unique` TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
     }
 
@@ -51,6 +52,7 @@ class V1Dot1Dot39 extends Base
      */
     public function down(): void
     {
+        $this->execute("ALTER TABLE `attribute` DROP pattern");
         $this->execute("ALTER TABLE `attribute` DROP `unique`");
     }
 

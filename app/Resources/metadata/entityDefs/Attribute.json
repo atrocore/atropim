@@ -57,7 +57,8 @@
       "required": true,
       "trim": true,
       "emHidden": true,
-      "view": "pim:views/fields/code-from-name"
+      "view": "pim:views/fields/code-from-name",
+      "pattern": "/^[a-z_0-9{}]+$/"
     },
     "type": {
       "type": "enum",
@@ -163,6 +164,12 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
+    },
+    "pattern": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutFiltersDisabled": true
     },
     "unique": {
       "type": "bool",

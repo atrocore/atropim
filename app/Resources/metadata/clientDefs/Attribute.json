@@ -65,6 +65,17 @@
           ]
         }
       },
+      "pattern": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "varchar"
+            }
+          ]
+        }
+      },
       "unique": {
         "visible": {
           "conditionGroup": [
