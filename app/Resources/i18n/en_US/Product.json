@@ -124,7 +124,8 @@
     "withoutImageAssets": "Without Assets"
   },
   "messages": {
-    "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?"
+    "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?",
+    "productCatalogChangeConfirm": "Are you sure you want to remove/modify the product from the catalog \"%s\"? All categories allowed for the original catalog will be unlinked."
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Such channel is already related to the product.",
@@ -140,6 +141,7 @@
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "This category is not available for the catalog of the selected product, and thus cannot be linked.",
     "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Channel provided by category tree can't be unlinked from product",
     "mpnShouldHaveUniqueValue": "MPN should have unique value.",
-    "eanShouldHaveUniqueValue": "GTIN should have unique value."
+    "eanShouldHaveUniqueValue": "GTIN should have unique value.",
+    "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
   }
 }

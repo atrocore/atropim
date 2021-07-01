@@ -70,9 +70,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.setupCatalogTreePanel();
             }
 
-            // refresh attributes panel after any saving
             this.listenTo(this.model, 'after:save', () => {
+                // refresh attributes panel after any saving
                 $(".panel-productAttributeValues button[data-action='refresh']").click();
+
+                // refresh categories panel after any saving
+                $(".panel-categories button[data-action='refresh']").click();
             });
         },
 

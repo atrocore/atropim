@@ -1,6 +1,7 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken."
+    "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
+    "behaviorOnCatalogChange": "Verhalten beim Entfernen/Ändern eines Katalogs für ein Produkt"
   },
   "exceptions": {
     "languageUsedInChannel": "Diese Sprache wird in einem Kanal verwendet und kann nicht entfernt werden."

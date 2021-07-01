@@ -2,6 +2,15 @@
   "fields": {
     "productCanLinkedWithNonLeafCategories": {
       "type": "bool"
+    },
+    "behaviorOnCatalogChange": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "cascade",
+        "restrict"
+      ],
+      "default": "cascade"
     }
   }
 }

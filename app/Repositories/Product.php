@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
-use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
@@ -453,29 +452,46 @@ class Product extends AbstractRepository
         return true;
     }
 
-    /**
-     * @param Entity $product
-     * @param Entity $catalog
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    public function isProductCategoriesInSelectedCatalog(Entity $product, Entity $catalog): bool
+    public function onCatalogCascadeChange(Entity $product, ?Entity $catalog): void
     {
-        /** @var array $catalogTreesIds */
-        $catalogTreesIds = array_column($catalog->get('categories')->toArray(), 'id');
-
-        /** @var EntityCollection $categories */
         $categories = $product->get('categories');
-        if ($categories->count() > 0) {
-            foreach ($categories as $category) {
-                if (!in_array($category->getRoot()->get('id'), $catalogTreesIds)) {
-                    throw new BadRequest($this->translate("youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog", 'exceptions', 'Product'));
+        if (count($categories) == 0) {
+            return;
+        }
+
+        foreach ($categories as $category) {
+            $rootCatalogsIds = $category->getRoot()->getLinkMultipleIdList('catalogs');
+            if (empty($catalog)) {
+                if (!empty($rootCatalogsIds)) {
+                    $this->unrelate($product, 'categories', $category);
+                }
+            } else {
+                if (!in_array($catalog->get('id'), $rootCatalogsIds)) {
+                    $this->unrelate($product, 'categories', $category);
                 }
             }
         }
+    }
 
-        return true;
+    public function onCatalogRestrictChange(Entity $product, ?Entity $catalog): void
+    {
+        $categories = $product->get('categories');
+        if (count($categories) == 0) {
+            return;
+        }
+
+        foreach ($categories as $category) {
+            $rootCatalogsIds = $category->getRoot()->getLinkMultipleIdList('catalogs');
+            if (empty($catalog)) {
+                if (!empty($rootCatalogsIds)) {
+                    throw new BadRequest($this->translate("productCatalogChangeException", 'exceptions', 'Product'));
+                }
+            } else {
+                if (!in_array($catalog->get('id'), $rootCatalogsIds)) {
+                    throw new BadRequest($this->translate("productCatalogChangeException", 'exceptions', 'Product'));
+                }
+            }
+        }
     }
 
     /**
@@ -490,7 +506,7 @@ class Product extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      *
      * @throws BadRequest
      */
@@ -506,6 +522,15 @@ class Product extends AbstractRepository
 
         if (!$entity->isSkippedValidation('isProductMpnUnique') && !$this->isFieldUnique($entity, 'mpn')) {
             throw new BadRequest($this->translate('mpnShouldHaveUniqueValue', 'exceptions', 'Product'));
+        }
+
+        if ($entity->isAttributeChanged('catalogId')) {
+            $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
+            $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
+            throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
 
         parent::beforeSave($entity, $options);

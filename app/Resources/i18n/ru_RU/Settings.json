@@ -1,6 +1,7 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Разрешить привязывать продукты к субкатегориям."
+    "productCanLinkedWithNonLeafCategories": "Разрешить привязывать продукты к субкатегориям.",
+    "behaviorOnCatalogChange": "Поведение при удалении/изменении каталога для продукта"
   },
   "exceptions": {
     "languageUsedInChannel": "Язык, используемый в каком-либо канале, не может быть удален."

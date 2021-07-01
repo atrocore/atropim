@@ -7,6 +7,12 @@
           "name": "productCanLinkedWithNonLeafCategories"
         },
         false
+      ],
+      [
+        {
+          "name": "behaviorOnCatalogChange"
+        },
+        false
       ]
     ]
   }
