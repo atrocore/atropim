@@ -12,6 +12,14 @@
         {
           "name": "behaviorOnCatalogChange"
         },
+        {
+          "name": "behaviorOnCategoryDelete"
+        }
+      ],
+      [
+        {
+          "name": "behaviorOnCategoryTreeUnlinkFromCatalog"
+        },
         false
       ]
     ]

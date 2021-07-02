@@ -11,6 +11,24 @@
         "restrict"
       ],
       "default": "cascade"
+    },
+    "behaviorOnCategoryDelete": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "cascade",
+        "restrict"
+      ],
+      "default": "cascade"
+    },
+    "behaviorOnCategoryTreeUnlinkFromCatalog": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "cascade",
+        "restrict"
+      ],
+      "default": "cascade"
     }
   }
 }
