@@ -125,7 +125,7 @@
   },
   "messages": {
     "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?",
-    "productCatalogChangeConfirm": "Are you sure you want to unlink/modify the catalog for the current product? All categories allowed for the original catalog will be also unlinked for the product."
+    "productCatalogChangeConfirm": "Are you sure you want to set/unlink/modify the catalog for the current product? All categories allowed for the original catalog will be also unlinked for the product."
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Such channel is already related to the product.",
