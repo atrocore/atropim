@@ -34,7 +34,6 @@ namespace Pim\Services;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Exception;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
@@ -54,20 +53,6 @@ class Product extends AbstractService
      * @var string
      */
     protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
-
-    /**
-     * @inheritDoc
-     */
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        parent::beforeUpdateEntity($entity, $data);
-
-        if (!empty($data->_prev) && $entity->isAttributeChanged('catalogId')) {
-            if (!empty($catalogId = $entity->getFetched('catalogId')) && !empty($catalog = $this->getEntityManager()->getEntity('Catalog', $catalogId))) {
-                throw new Exception(sprintf($this->getInjection('language')->translate('productCatalogChangeConfirm', 'messages', 'Product'), $catalog->get('name')), 409);
-            }
-        }
-    }
 
     /**
      * @inheritDoc

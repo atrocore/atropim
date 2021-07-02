@@ -143,7 +143,7 @@
   },
   "messages": {
     "areYouSureYouWantToRemoveAllCustomAttributes": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?",
-    "productCatalogChangeConfirm": "Möchten Sie den Katalog \"%s\" für dieses Produkt entfernen/ändern? Alle für den ursprünglichen Katalog zulässigen Kategorien werden entkoppelt."
+    "productCatalogChangeConfirm": "Möchten Sie die Verknüpfung zwischen dem Produkt und dem bisherigen Katalog wirklich aufheben? Alle für den ursprünglichen Katalog zulässigen Kategorien werden vom Produkt entkoppelt."
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Dieser Kanal ist mit dem Produkt bereits verknüpft.",

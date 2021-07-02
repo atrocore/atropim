@@ -52,6 +52,12 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareProductFamilyAttributeMetadata($data);
 
+        if ($this->getConfig()->get('behaviorOnCatalogChange', 'cascade') == 'cascade') {
+            $data['clientDefs']['Product']['confirm']['catalogId'] = 'Product.messages.productCatalogChangeConfirm';
+            $data['clientDefs']['Catalog']['relationshipPanels']['products']['selectConfirm'] = 'Product.messages.productCatalogChangeConfirm';
+            $data['clientDefs']['Catalog']['relationshipPanels']['products']['unlinkConfirm'] = 'Product.messages.productCatalogChangeConfirm';
+        }
+
         // set data
         $event->setArgument('data', $data);
     }

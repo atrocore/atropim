@@ -18,11 +18,6 @@
       "view": "pim:views/catalog/record/panels/categories",
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": ["notEntity", "onlyRootCategory"]
-    },
-    "products": {
-      "select": false,
-      "create": false,
-      "rowActionsView": "views/record/row-actions/empty"
     }
   }
 }

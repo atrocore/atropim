@@ -86,4 +86,30 @@ class Catalog extends AbstractRepository
 
         $this->setInheritedOwnership($entity);
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'products') {
+            $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
+            $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, $entity);
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName == 'products') {
+            $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
+            $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, null);
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+    }
 }
