@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/category/record/panels/catalogs', 'views/record/panels/relationship',
+Espo.define('pim:views/category/record/panels/channels', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
         boolFilterData: {
@@ -39,8 +39,8 @@ Espo.define('pim:views/category/record/panels/catalogs', 'views/record/panels/re
             Dep.prototype.afterRender.call(this);
 
             if (this.model.get('categoryParentId')) {
-                $('.panel-catalogs .action[data-action=createRelated][data-panel=catalogs]').remove();
-                $('.panel-catalogs .dropdown-toggle').remove();
+                $('.panel-channels .action[data-action=createRelated][data-panel=channels]').remove();
+                $('.panel-channels .dropdown-toggle').remove();
             }
         },
 

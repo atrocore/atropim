@@ -137,25 +137,6 @@ class CategoryEntity extends AbstractEntityListener
      *
      * @throws BadRequest
      */
-    public function beforeRemove(Event $event)
-    {
-        /** @var Entity $entity */
-        $entity = $event->getArgument('entity');
-
-        if ($entity->get('products')->count() > 0) {
-            throw new BadRequest($this->exception("categoryHasProducts"));
-        }
-
-        if ($entity->get('categories')->count() > 0) {
-            throw new BadRequest($this->exception("categoryHasChildCategoryAndCantBeDeleted"));
-        }
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
     public function beforeRelate(Event $event)
     {
         if ($event->getArgument('relationName') == 'catalogs' && !empty($event->getArgument('entity')->get('categoryParent'))) {

@@ -138,6 +138,47 @@ class Category extends AbstractRepository
     }
 
     /**
+     * @param Entity $entity
+     * @param array  $options
+     *
+     * @throws BadRequest
+     */
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($this->getConfig()->get('behaviorOnCategoryDelete', 'cascade') !== 'cascade') {
+            if ($entity->get('products')->count() > 0) {
+                throw new BadRequest($this->exception("categoryHasProducts"));
+            }
+
+            if ($entity->get('categories')->count() > 0) {
+                throw new BadRequest($this->exception("categoryHasChildCategoryAndCantBeDeleted"));
+            }
+        } else {
+            $products = $entity->get('products');
+            if (count($products) > 0) {
+                $channels = $entity->getRoot()->get('channels');
+                foreach ($products as $product) {
+                    $this->unrelate($entity, 'products', $product);
+                    if (count($channels) > 0) {
+                        foreach ($channels as $channel) {
+                            $this->getEntityManager()->getRepository('Product')->unrelate($product, 'channels', $channel);
+                        }
+                    }
+                }
+            }
+
+            $children = $entity->get('categories');
+            if (count($children) > 0) {
+                foreach ($children as $child) {
+                    $this->getEntityManager()->removeEntity($child);
+                }
+            }
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    /**
      * @inheritdoc
      */
     protected function init()

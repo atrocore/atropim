@@ -1,6 +1,12 @@
 [
   {
+    "name": "categories"
+  },
+  {
     "name": "catalogs"
+  },
+  {
+    "name": "channels"
   },
   {
     "name": "products"
