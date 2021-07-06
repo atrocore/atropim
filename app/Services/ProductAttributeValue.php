@@ -33,10 +33,12 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\FieldManager\Types\Type;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
+use Pim\Core\Utils\FieldManager\Types\DefaultType;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -342,6 +344,30 @@ class ProductAttributeValue extends AbstractService
         }
 
         parent::processActionHistoryRecord($action, $entity);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFieldTypeHandler(Entity $entity, string $field): Type
+    {
+        if ($field == 'value' || in_array($field, array_values($this->getInputLanguageList()))) {
+            $attribute = $entity->get('attribute');
+            $defs = $this->getMetadata()->get(['fields', $attribute->get('type')]);
+
+            if (!empty($className = $defs['handler'])) {
+                try {
+                    return (new $className($this->getInjection('container')));
+                } catch (\Exception $e) {
+                    $name = $attribute->get('name');
+                    $GLOBALS['log']->error("Could not create handler class for attribute '$name'");
+                }
+            }
+
+            return new DefaultType($this->getInjection('container'));
+        }
+
+        return parent::getFieldTypeHandler($entity, $field);
     }
 
     /**

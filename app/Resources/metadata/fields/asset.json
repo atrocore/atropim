@@ -1,0 +1,3 @@
+{
+  "handler": "\\Pim\\Core\\Utils\\FieldManager\\Types\\Asset"
+}
