@@ -81,11 +81,6 @@ class LayoutController extends AbstractListener
         $event->setArgument('result', Json::encode($data));
     }
 
-    protected function modifyAssetListSmallForCategory(Event $event): void
-    {
-        $this->modifyAssetListSmallForProduct($event);
-    }
-
     /**
      * @param Event $event
      */

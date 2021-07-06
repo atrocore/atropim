@@ -78,22 +78,6 @@ class AssetEntity extends AbstractListener
         }
     }
 
-    public function afterSave(Event $event): void
-    {
-        /** @var Asset $asset */
-        $asset = $event->getArgument('entity');
-
-        if (!empty($entityName = $asset->get('entityName')) && !empty($entityId = $asset->get('entityId')) && in_array($entityName, $this->hasMainImage)) {
-            $table = Util::toCamelCase($entityName);
-            $assetId = $asset->get('id');
-            $channelId = empty($asset->get('channelId')) || $asset->get('scope') == 'Global' ? 'NULL' : "'" . $asset->get('channelId') . "'";
-            $entityId = $asset->get('entityId');
-            $this
-                ->getEntityManager()
-                ->nativeQuery("UPDATE {$table}_asset SET channel=$channelId WHERE asset_id='$assetId' AND {$table}_id='{$entityId}' AND deleted=0");
-        }
-    }
-
     /**
      * @param Event $event
      */
