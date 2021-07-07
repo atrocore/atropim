@@ -345,51 +345,6 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function prepareUniqueFieldsList(Entity $entity): array
-    {
-        $result = parent::prepareUniqueFieldsList($entity);
-
-        if (empty($attribute = $entity->get('attribute'))) {
-            $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-            $entity->attribute = $attribute;
-        }
-
-        if ($attribute->get('unique')) {
-            if (!empty($entity->get('value'))) {
-                $result[] = 'value';
-            }
-
-            if ($attribute->get('isMultilang') && !empty($locales = $this->getInputLanguageList())) {
-                foreach ($locales as $locale) {
-                    if (!empty($entity->get($locale))) {
-                        $result[] = $locale;
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function prepareUniqueErrorMessage(Entity $entity, string $field): string
-    {
-        $defs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field]);
-
-        if ($field == 'value' || (!empty($defs['multilangField']) && $defs['multilangField']) == 'value') {
-            $attribute = !empty($entity->attribute) ? $entity->attribute : $entity->get('attribute');
-
-            return sprintf($this->getTranslate('attributeShouldHaveBeUnique', 'exceptions', $entity->getEntityType()), $attribute->get('name'));
-        }
-
-        return parent::prepareUniqueErrorMessage($entity, $field);
-    }
-
-    /**
      * @param Entity $entity
      */
     protected function convertValue(Entity $entity)
