@@ -27,41 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Core\Utils\Database\Orm\Relations;
+declare(strict_types=1);
 
-use Espo\Core\Utils\Database\Orm\Relations\Base;
+namespace Pim\Migrations;
 
 /**
- * Class ProductAsset
+ * Migration class for version 1.1.44
  */
-class ProductAsset extends Base
+class V1Dot1Dot44 extends V1Dot1Dot21
 {
-    /**
-     * @inheritDoc
-     */
-    protected function load($linkName, $entityName)
+    public function up(): void
     {
-        $linkParams = $this->getLinkParams();
-        $foreignEntityName = $this->getForeignEntityName();
+        $this->execute("DROP INDEX UNIQ_A3F321004584665A5DA1941A2F98E47A2F98E47 ON `product_asset`");
+        $this->execute("CREATE UNIQUE INDEX UNIQ_A3F321005DA19414584665AA2F98E47A2F98E47 ON `product_asset` (asset_id, product_id, channel)");
+    }
 
-        return [
-            $entityName => [
-                'relations' => [
-                    $linkName => [
-                        'type'         => 'manyMany',
-                        'entity'       => $foreignEntityName,
-                        'relationName' => lcfirst($linkParams['relationName']),
-                        'midKeys'      => [
-                            lcfirst($entityName) . 'Id',
-                            lcfirst($foreignEntityName) . 'Id',
-                            'channel'
-                        ],
-                        'conditions'   => [
-                            'channel' => ''
-                        ]
-                    ]
-                ]
-            ]
-        ];
+    public function down(): void
+    {
+        $this->execute("DROP INDEX UNIQ_A3F321005DA19414584665AA2F98E47A2F98E47 ON `product_asset`");
+        $this->execute("CREATE UNIQUE INDEX UNIQ_A3F321004584665A5DA1941A2F98E47A2F98E47 ON `product_asset` (product_id, asset_id, channel)");
     }
 }
