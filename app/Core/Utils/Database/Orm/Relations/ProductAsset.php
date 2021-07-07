@@ -48,21 +48,16 @@ class ProductAsset extends Base
             $entityName => [
                 'relations' => [
                     $linkName => [
-                        'type'              => 'manyMany',
-                        'entity'            => $foreignEntityName,
-                        'relationName'      => lcfirst($linkParams['relationName']),
-                        'midKeys'           => [
+                        'type'         => 'manyMany',
+                        'entity'       => $foreignEntityName,
+                        'relationName' => lcfirst($linkParams['relationName']),
+                        'midKeys'      => [
                             'productId',
                             'assetId',
                             'channel'
                         ],
-                        'conditions'        => [
+                        'conditions'   => [
                             'channel' => ''
-                        ],
-                        'additionalColumns' => [
-                            'channel' => [
-                                'type' => 'varchar'
-                            ]
                         ]
                     ]
                 ]
