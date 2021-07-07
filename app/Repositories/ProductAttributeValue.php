@@ -115,6 +115,26 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
             }
         }
+
+        if (!$entity->isNew() && $entity->get('attribute')->get('unique')) {
+            $count = $this
+                ->getEntityManager()
+                ->getRepository($entity->getEntityType())
+                ->join(['product'])
+                ->where([
+                    'id!=' => $entity->id,
+                    'value' => $entity->get('value'),
+                    'attributeId' => $entity->get('attributeId'),
+                    'data' => !empty($entity->get('data')) ? Json::encode($entity->get('data')) : null,
+                    'product.deleted' => false
+                ])
+                ->count();
+
+            if ($count) {
+                $message = sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name'));
+                throw new BadRequest($message);
+            }
+        }
     }
 
     /**
