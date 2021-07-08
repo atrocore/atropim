@@ -58,6 +58,10 @@ class Metadata extends AbstractListener
             $data['clientDefs']['Catalog']['relationshipPanels']['products']['unlinkConfirm'] = 'Product.messages.productCatalogChangeConfirm';
         }
 
+        if ($this->getConfig()->get('behaviorOnCategoryDelete', 'cascade') == 'cascade') {
+            $data['clientDefs']['Category']['deleteConfirmation'] = 'Category.messages.categoryRemoveConfirm';
+        }
+
         // set data
         $event->setArgument('data', $data);
     }

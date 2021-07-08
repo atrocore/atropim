@@ -34,6 +34,9 @@
   "labels": {
     "Create Category": "Kategorie erstellen"
   },
+  "messages": {
+    "categoryRemoveConfirm": "Möchten Sie die Kategorie wirklich entfernen? Alle Unterkategorien dieser Kategorie werden ebenfalls entfernt und die Verknüpfungen der Produkte mit dieser Kategorie oder ihrer Unterkategorien werden aufgehoben."
+  },
   "exceptions": {
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",
     "categoryHasChildren": "Kategorie hat untergeordnete Elemente.",
