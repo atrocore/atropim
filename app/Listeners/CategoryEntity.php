@@ -145,19 +145,6 @@ class CategoryEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeUnrelate(Event $event)
-    {
-        if ($event->getArgument('relationName') == 'catalogs') {
-            $this->getCategoryRepository()->canUnRelateCatalog($event->getArgument('entity'), $event->getArgument('foreign'));
-        }
-    }
-
-
-    /**
-     * @param Event $event
      */
     public function afterUnrelate(Event $event)
     {

@@ -1,11 +1,12 @@
 {
+  "confirm": {
+    "categoryParentId": "Category.messages.categoryParentChangeConfirm"
+  },
   "controller": "pim:controllers/record-tree",
   "iconClass": "fas fa-th",
   "boolFilterList": [
     "onlyMy",
     "notEntity",
-    "notChildCategory",
-    "fromCategoryTree",
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
@@ -14,8 +15,6 @@
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "notChildCategory",
-    "fromCategoryTree",
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",

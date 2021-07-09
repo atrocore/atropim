@@ -113,21 +113,6 @@ class Category extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotChildCategory(array &$result)
-    {
-        $categoryId = (string)$this->getSelectCondition('notChildCategory');
-        if (empty($categoryId)) {
-            return;
-        }
-
-        $result['whereClause'][] = [
-            'categoryRoute!*' => "%|$categoryId|%"
-        ];
-    }
-
-    /**
-     * @param array $result
-     */
     protected function boolFilterOnlyLeafCategories(array &$result)
     {
         if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
@@ -142,37 +127,6 @@ class Category extends AbstractSelectManager
                     'id!=' => array_column($parents, 'categoryParentId')
                 ];
             }
-        }
-    }
-
-    /**
-     * @param array $result
-     */
-    protected function boolFilterFromCategoryTree(array &$result)
-    {
-        $categoryId = $this->getSelectCondition('fromCategoryTree');
-        if (empty($categoryId)) {
-            return;
-        }
-
-        // get category
-        $category = $this
-            ->getEntityManager()
-            ->getEntity('Category', $categoryId);
-
-        try {
-            $root = $category->getRoot();
-        } catch (\Throwable $e) {
-            // skip exceptions
-        }
-
-        if (!empty($root)) {
-            $result['whereClause'][] = [
-                'OR' => [
-                    'id'             => $root->id,
-                    'categoryRoute*' => "%|{$root->id}|%"
-                ]
-            ];
         }
     }
 

@@ -27,15 +27,14 @@
   },
   "messages": {
     "categoryRemoveConfirm": "Are you sure you want to remove the category? All subcategories of this category will be also removed and all products linked to this category or its subcategories will be unlinked.",
-    "categoryCatalogUnlinkConfirm": "Are you sure you want to unlink the category tree from the catalog? All products will be unlinked from the categories of this tree."
+    "categoryCatalogUnlinkConfirm": "Are you sure you want to unlink the category tree from the catalog? All products will be unlinked from the categories of this tree.",
+    "categoryParentChangeConfirm": "Are you sure, you want to change/unlink the parent category? Please consider, that the newly created or updated category tree will be additionally assigned to the same catalogs and channels as the original category tree."
   },
   "exceptions": {
     "categoryHasChildren": "Selected category used by another category as parent and can not be selected as product category.",
     "categoryHasChildCategoryAndCantBeDeleted": "Category has child category and can't be deleted.",
     "youCanNotChooseChildCategory": "You can not choose a child category.",
     "categoryHasProducts": "Category with related products can't be deleted.",
-    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "There is no ability to change category parent for root category.",
-    "thereIsNoAbilityToChangeCategoryTree": "There is no ability to change category tree.",
     "categoryCannotBeUnRelatedFromCatalog": "Category tree with linked products can't be unlinked from catalog.",
     "parentCategoryHasProducts": "This category cannot be assigned as a parent category, it has assigned products.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "You can not change parent category in root category with linked products."

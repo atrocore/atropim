@@ -37,14 +37,13 @@
   "messages": {
     "categoryRemoveConfirm": "Möchten Sie die Kategorie wirklich entfernen? Alle Unterkategorien dieser Kategorie werden ebenfalls entfernt und die Verknüpfungen der Produkte mit dieser Kategorie oder ihrer Unterkategorien werden aufgehoben.",
     "categoryCatalogUnlinkConfirm": "Möchten Sie die Verknüpfung des Kategoriebaums mit dem Katalog wirklich aufheben? Alle Verknüpfungen der Produkte mit den Kategorien dieses Baums werden entfernt.",
+    "categoryParentChangeConfirm": "Sind Sie sicher, dass Sie die übergeordnete Kategorie ändern/trennen möchten? Bitte beachten Sie, dass der neu erstellte oder aktualisierte Kategoriebaum zusätzlich denselben Katalogen und Kanälen wie der ursprüngliche Kategoriebaum zugeordnet wird."
   },
   "exceptions": {
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",
     "categoryHasChildren": "Kategorie hat untergeordnete Elemente.",
     "categoryHasChildCategoryAndCantBeDeleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden.",
     "youCanNotChooseChildCategory": "Sie können keine untergeordnete Kategorie auswählen.",
-    "thereIsNoAbilityToChangeCategoryParentForRootCategory": "Es gibt keine Möglichkeit, die übergeordnete Kategorie für die Stammkategorie zu ändern.",
-    "thereIsNoAbilityToChangeCategoryTree": "Es gibt keine Möglichkeit, den Kategoriebaum zu ändern.",
     "categoryHasProducts": "Kategorie mit verknüpften Produkten kann nicht gelöscht werden.",
     "categoryCannotBeUnRelatedFromCatalog": "Verknüpfung zwischen Katalog und Kategoriebaum mit verknüpften Produkten kann nicht aufgehoben werden.",
     "parentCategoryHasProducts": "Diese Kategorie kann nicht als Parent-Kategorie eingestellt werden, sie beinhaltet zugeordnete Produkte."

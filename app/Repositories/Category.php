@@ -88,6 +88,10 @@ class Category extends AbstractRepository
      */
     public function tryToUnRelateCatalog($category, $catalog): void
     {
+        if (is_bool($category) || is_bool($catalog)) {
+            return;
+        }
+
         if (!$category instanceof Entity) {
             $category = $this->getEntityManager()->getEntity('Category', $category);
         }
@@ -133,15 +137,35 @@ class Category extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId')) {
-            if (empty($entity->getFetched('categoryParentId'))) {
-                throw new BadRequest($this->exception('thereIsNoAbilityToChangeCategoryParentForRootCategory'));
-            }
+            if (empty($entity->get('categoryParentId'))) {
+                if (!empty($entity->getFetched('categoryParentId'))) {
+                    $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
 
-            // get fetched category
-            $fetchedCategory = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'));
+                    foreach ($fetchedRoot->get('catalogs') as $catalog) {
+                        $this->relate($entity, 'catalogs', $catalog);
+                    }
+                    foreach ($fetchedRoot->get('channels') as $channel) {
+                        $this->relate($entity, 'channels', $channel);
+                    }
+                }
+            } else {
+                if (empty($entity->getFetched('categoryParentId'))) {
+                    $fetchedRoot = $entity;
+                } else {
+                    $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
+                }
 
-            if (empty($entity->get('categoryParentId')) || $entity->get('categoryParent')->getRoot()->get('id') != $fetchedCategory->getRoot()->get('id')) {
-                throw new BadRequest($this->exception('thereIsNoAbilityToChangeCategoryTree'));
+                $root = $this->getEntityManager()->getEntity('Category', $entity->get('categoryParentId'))->getRoot();
+
+                foreach ($fetchedRoot->get('catalogs') as $catalog) {
+                    $this->relate($root, 'catalogs', $catalog);
+                }
+                foreach ($fetchedRoot->get('channels') as $channel) {
+                    $this->relate($root, 'channels', $channel);
+                }
+
+                $this->unrelate($entity, 'catalogs', true);
+                $this->unrelate($entity, 'channels', true);
             }
         }
 
