@@ -140,16 +140,13 @@ class Category extends AbstractRepository
             if (empty($entity->get('categoryParentId'))) {
                 if (!empty($entity->getFetched('categoryParentId'))) {
                     $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
-
                     foreach ($fetchedRoot->get('catalogs') as $catalog) {
                         $this->relate($entity, 'catalogs', $catalog);
-                    }
-                    foreach ($fetchedRoot->get('channels') as $channel) {
-                        $this->relate($entity, 'channels', $channel);
                     }
                 }
             } else {
                 if (empty($entity->getFetched('categoryParentId'))) {
+                    $this->unrelate($entity, 'channels', true);
                     $fetchedRoot = $entity;
                 } else {
                     $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
@@ -158,14 +155,10 @@ class Category extends AbstractRepository
                 $root = $this->getEntityManager()->getEntity('Category', $entity->get('categoryParentId'))->getRoot();
 
                 foreach ($fetchedRoot->get('catalogs') as $catalog) {
-                    $this->relate($root, 'catalogs', $catalog);
-                }
-                foreach ($fetchedRoot->get('channels') as $channel) {
-                    $this->relate($root, 'channels', $channel);
+                    $this->relate($root, 'catalogs', $catalog, null, ['skipCategoryParentValidation' => true]);
                 }
 
                 $this->unrelate($entity, 'catalogs', true);
-                $this->unrelate($entity, 'channels', true);
             }
         }
 
@@ -230,7 +223,7 @@ class Category extends AbstractRepository
      */
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
-        if ($relationName == 'catalogs') {
+        if ($relationName == 'catalogs' && empty($options['skipCategoryParentValidation'])) {
             if (!empty($entity->get('categoryParent'))) {
                 throw new BadRequest($this->exception('Only root category can be linked with catalog'));
             }

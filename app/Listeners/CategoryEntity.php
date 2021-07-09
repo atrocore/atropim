@@ -96,11 +96,6 @@ class CategoryEntity extends AbstractEntityListener
             throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
 
-        if ((count($entity->get('catalogs')) > 0 || !empty($entity->get('catalogsIds')))
-            && !empty($entity->get('categoryParent'))) {
-            throw new BadRequest($this->translate('Only root category can be linked with catalog', 'exceptions', 'Catalog'));
-        }
-
         if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
             if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
                 throw new BadRequest($this->exception('parentCategoryHasProducts'));
