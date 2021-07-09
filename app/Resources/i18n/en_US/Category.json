@@ -26,7 +26,8 @@
     "Create Category": "Create Category"
   },
   "messages": {
-    "categoryRemoveConfirm": "Are you sure you want to remove the category? All subcategories of this category will be also removed and all products linked to this category or its subcategories will be unlinked."
+    "categoryRemoveConfirm": "Are you sure you want to remove the category? All subcategories of this category will be also removed and all products linked to this category or its subcategories will be unlinked.",
+    "categoryCatalogUnlinkConfirm": "Are you sure you want to unlink the category tree from the catalog? All products will be unlinked from the categories of this tree."
   },
   "exceptions": {
     "categoryHasChildren": "Selected category used by another category as parent and can not be selected as product category.",

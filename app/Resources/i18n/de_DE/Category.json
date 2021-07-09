@@ -35,7 +35,8 @@
     "Create Category": "Kategorie erstellen"
   },
   "messages": {
-    "categoryRemoveConfirm": "Möchten Sie die Kategorie wirklich entfernen? Alle Unterkategorien dieser Kategorie werden ebenfalls entfernt und die Verknüpfungen der Produkte mit dieser Kategorie oder ihrer Unterkategorien werden aufgehoben."
+    "categoryRemoveConfirm": "Möchten Sie die Kategorie wirklich entfernen? Alle Unterkategorien dieser Kategorie werden ebenfalls entfernt und die Verknüpfungen der Produkte mit dieser Kategorie oder ihrer Unterkategorien werden aufgehoben.",
+    "categoryCatalogUnlinkConfirm": "Möchten Sie die Verknüpfung des Kategoriebaums mit dem Katalog wirklich aufheben? Alle Verknüpfungen der Produkte mit den Kategorien dieses Baums werden entfernt.",
   },
   "exceptions": {
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",

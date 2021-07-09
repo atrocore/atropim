@@ -59,22 +59,8 @@ class Category extends AbstractRepository
         return $this->prepareAssets($entity, $result);
     }
 
-    /**
-     * @param $category
-     * @param $catalog
-     *
-     * @throws BadRequest
-     */
-    public function canUnRelateCatalog($category, $catalog)
+    public function canUnRelateCatalog(Entity $category, Entity $catalog): void
     {
-        if (!$category instanceof Entity) {
-            $category = $this->getEntityManager()->getEntity('Category', $category);
-        }
-
-        if (!$catalog instanceof Entity) {
-            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalog);
-        }
-
         /** @var array $productsIds */
         $productsIds = array_column($catalog->get('products')->toArray(), 'id');
 
@@ -96,6 +82,43 @@ class Category extends AbstractRepository
         }
     }
 
+    /**
+     * @param Entity|string $category
+     * @param Entity|string $catalog
+     */
+    public function tryToUnRelateCatalog($category, $catalog): void
+    {
+        if (!$category instanceof Entity) {
+            $category = $this->getEntityManager()->getEntity('Category', $category);
+        }
+
+        if (!$catalog instanceof Entity) {
+            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalog);
+        }
+
+        if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
+            $this->canUnRelateCatalog($category, $catalog);
+        } else {
+            $this->cascadeUnRelateCatalog($category, $catalog);
+        }
+    }
+
+    public function cascadeUnRelateCatalog(Entity $category, Entity $catalog): void
+    {
+        $products = $catalog->get('products');
+        if (count($products) > 0) {
+            $root = $category->getRoot();
+            $children = $root->getChildren();
+            foreach ($products as $product) {
+                $this->getEntityManager()->getRepository('Product')->unrelate($product, 'categories', $root);
+                if (count($children) > 0) {
+                    foreach ($children as $cat) {
+                        $this->getEntityManager()->getRepository('Product')->unrelate($product, 'categories', $cat);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * @param Entity $entity
@@ -176,6 +199,37 @@ class Category extends AbstractRepository
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'catalogs') {
+            if (!empty($entity->get('categoryParent'))) {
+                throw new BadRequest($this->exception('Only root category can be linked with catalog'));
+            }
+        }
+
+        if ($relationName == 'products') {
+            $this->getEntityManager()->getRepository('Product')->isCategoryFromCatalogTrees($foreign, $entity);
+            $this->getEntityManager()->getRepository('Product')->isProductCanLinkToNonLeafCategory($entity);
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'catalogs') {
+            $this->tryToUnRelateCatalog($entity, $foreign);
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**

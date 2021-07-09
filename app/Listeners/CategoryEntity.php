@@ -134,29 +134,6 @@ class CategoryEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeRelate(Event $event)
-    {
-        if ($event->getArgument('relationName') == 'catalogs' && !empty($event->getArgument('entity')->get('categoryParent'))) {
-            throw new BadRequest($this->translate('Only root category can be linked with catalog', 'exceptions', 'Catalog'));
-        }
-
-        if ($event->getArgument('relationName') == 'products') {
-            $category = $event->getArgument('entity');
-            $product = $event->getArgument('foreign');
-            if (is_string($product)) {
-                $product = $this->getEntityManager()->getEntity('Product', $product);
-            }
-
-            $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
-            $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
-        }
-    }
-
-    /**
-     * @param Event $event
      */
     public function afterRelate(Event $event)
     {
