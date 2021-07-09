@@ -35,12 +35,26 @@ Espo.define('pim:views/category/record/panels/channels', 'views/record/panels/re
             }
         },
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.reRender();
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            let $create = $('.panel-channels .action[data-action=createRelated][data-panel=channels]');
+            let $dropdown = $('.panel-channels .dropdown-toggle');
+
             if (this.model.get('categoryParentId')) {
-                $('.panel-channels .action[data-action=createRelated][data-panel=channels]').remove();
-                $('.panel-channels .dropdown-toggle').remove();
+                $create.hide();
+                $dropdown.hide();
+            } else {
+                $create.show();
+                $dropdown.show();
             }
         },
 
