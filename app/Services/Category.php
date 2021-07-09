@@ -101,6 +101,21 @@ class Category extends AbstractService
     }
 
     /**
+     * @inheritDoc
+     */
+    public function findLinkedEntities($id, $link, $params)
+    {
+        if ($link == 'catalogs' || $link == 'channels') {
+            $category = $this->getEntityManager()->getEntity('Category', $id);
+            if (!empty($category)) {
+                $id = $category->getRoot()->get('id');
+            }
+        }
+
+        return parent::findLinkedEntities($id, $link, $params);
+    }
+
+    /**
      * Is child category
      *
      * @param string $categoryId

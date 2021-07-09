@@ -24,12 +24,6 @@
         {
           "name": "code"
         }
-      ],
-      [
-        {
-          "name": "channels"
-        },
-        false
       ]
     ]
   }

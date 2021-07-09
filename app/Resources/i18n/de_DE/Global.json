@@ -86,6 +86,8 @@
     }
   },
   "labels": {
+    "cascade": "Erweitern",
+    "restrict": "Einschränken",
     "Add Field": "Filter hinzufügen",
     "removeExplain": "Checkbox abhacken, um Attribute von anderen Entities vor dem Löschen loszubinden",
     "Add Group": "Gruppe hinzufügen",

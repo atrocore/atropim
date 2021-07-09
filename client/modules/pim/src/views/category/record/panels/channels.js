@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,31 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/category/record/panels/channels', 'views/record/panels/relationship',
+    Dep => Dep.extend({
 
-namespace Pim\Listeners;
+        boolFilterData: {
+            notEntity() {
+                return this.collection.map(model => model.id);
+            }
+        },
 
-use Espo\Core\Exceptions\BadRequest;
-use Treo\Core\EventManager\Event;
+        setup() {
+            Dep.prototype.setup.call(this);
 
-/**
- * Class CatalogEntity
- */
-class CatalogEntity extends AbstractEntityListener
-{
-    /**
-     * Before save
-     *
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Event $event)
-    {
-        if (!$this->isCodeValid($event->getArgument('entity'))) {
-            throw new BadRequest(
-                $this->translate('codeIsInvalid', 'exceptions', 'Global')
-            );
-        }
-    }
-}
+            this.listenTo(this.model, 'after:save', () => {
+                this.reRender();
+            });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            let $create = $('.panel-channels .action[data-action=createRelated][data-panel=channels]');
+            let $dropdown = $('.panel-channels .dropdown-toggle');
+
+            if (this.model.get('categoryParentId')) {
+                $create.hide();
+                $dropdown.hide();
+            } else {
+                $create.show();
+                $dropdown.show();
+            }
+        },
+
+    })
+);

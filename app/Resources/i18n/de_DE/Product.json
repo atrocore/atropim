@@ -142,7 +142,8 @@
     "onlyConfigurableProducts": "Nur konfigurierbare Produkte"
   },
   "messages": {
-    "areYouSureYouWantToRemoveAllCustomAttributes": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?"
+    "areYouSureYouWantToRemoveAllCustomAttributes": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?",
+    "productCatalogChangeConfirm": "Möchten Sie die Verknüpfung zwischen dem Produkt und dem bisherigen Katalog wirklich aufheben/ändern? Alle für den ursprünglichen Katalog zulässigen Kategorien werden vom Produkt entkoppelt."
   },
   "exceptions": {
     "isChannelAlreadyRelated": "Dieser Kanal ist mit dem Produkt bereits verknüpft.",
@@ -158,6 +159,7 @@
     "isCategoryAlreadyRelated": "Die Kategorie ist bereits mit dem Produkt verknüpft.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "mpnShouldHaveUniqueValue": "MPN sollte einen eindeutigen Wert haben.",
-    "eanShouldHaveUniqueValue": "GTIN sollte einen eindeutigen Wert haben."
+    "eanShouldHaveUniqueValue": "GTIN sollte einen eindeutigen Wert haben.",
+    "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
   }
 }

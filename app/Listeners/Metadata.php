@@ -52,6 +52,21 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareProductFamilyAttributeMetadata($data);
 
+        if ($this->getConfig()->get('behaviorOnCatalogChange', 'cascade') == 'cascade') {
+            $data['clientDefs']['Product']['confirm']['catalogId'] = 'Product.messages.productCatalogChangeConfirm';
+            $data['clientDefs']['Catalog']['relationshipPanels']['products']['selectConfirm'] = 'Product.messages.productCatalogChangeConfirm';
+            $data['clientDefs']['Catalog']['relationshipPanels']['products']['unlinkConfirm'] = 'Product.messages.productCatalogChangeConfirm';
+        }
+
+        if ($this->getConfig()->get('behaviorOnCategoryDelete', 'cascade') == 'cascade') {
+            $data['clientDefs']['Category']['deleteConfirmation'] = 'Category.messages.categoryRemoveConfirm';
+        }
+
+        if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') == 'cascade') {
+            $data['clientDefs']['Catalog']['relationshipPanels']['categories']['unlinkConfirm'] = 'Category.messages.categoryCatalogUnlinkConfirm';
+            $data['clientDefs']['Category']['relationshipPanels']['catalogs']['unlinkConfirm'] = 'Category.messages.categoryCatalogUnlinkConfirm';
+        }
+
         // set data
         $event->setArgument('data', $data);
     }

@@ -49,28 +49,6 @@ class ProductEntity extends AbstractEntityListener
      *
      * @throws BadRequest
      */
-    public function beforeSave(Event $event)
-    {
-        // get entity
-        $entity = $event->getArgument('entity');
-
-        if ($entity->isAttributeChanged('catalogId') && !empty($entity->get('catalogId'))) {
-            $this
-                ->getEntityManager()
-                ->getRepository('Product')
-                ->isProductCategoriesInSelectedCatalog($entity, $entity->get('catalog'));
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            throw new BadRequest($this->exception('You can\'t change field of Type'));
-        }
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
     public function beforeRelate(Event $event)
     {
         /** @var Entity $product */

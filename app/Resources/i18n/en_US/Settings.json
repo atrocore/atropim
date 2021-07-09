@@ -1,6 +1,9 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories."
+    "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
+    "behaviorOnCatalogChange": "Behavior on catalog unlink/change for a product",
+    "behaviorOnCategoryDelete": "Behavior on category delete",
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog"
   },
   "exceptions": {
     "languageUsedInChannel": "Language, used in some channel, cannot be removed."

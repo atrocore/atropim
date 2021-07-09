@@ -70,9 +70,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.setupCatalogTreePanel();
             }
 
-            // refresh attributes panel after any saving
             this.listenTo(this.model, 'after:save', () => {
+                // refresh attributes panel after any saving
                 $(".panel-productAttributeValues button[data-action='refresh']").click();
+
+                // refresh categories panel after any saving
+                $(".panel-categories button[data-action='refresh']").click();
             });
         },
 
@@ -194,9 +197,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         isEmptyRequiredField: function (field, value) {
-          return this.showEmptyRequiredFields
-              && this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) === true
-              && (value === null || value === '' || (Array.isArray(value) && !value.length));
+            return this.showEmptyRequiredFields
+                && this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) === true
+                && (value === null || value === '' || (Array.isArray(value) && !value.length));
         },
 
         hotKeySave: function (e) {
@@ -206,7 +209,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             } else {
                 let viewsFields = this.getFieldViews();
                 Object.keys(viewsFields).forEach(item => {
-                    if (viewsFields[item].mode === "edit" ) {
+                    if (viewsFields[item].mode === "edit") {
                         viewsFields[item].inlineEditSave();
                     }
                 });
@@ -340,7 +343,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 attrs = data;
             } else {
                 for (let name in data) {
-                    if (name !== 'id'&& gridInitPackages && Object.keys(gridInitPackages).indexOf(name) > -1) {
+                    if (name !== 'id' && gridInitPackages && Object.keys(gridInitPackages).indexOf(name) > -1) {
                         if (!_.isEqual(gridInitPackages[name], data[name])) {
                             (gridPackages || (gridPackages = {}))[name] = data[name];
                         }
@@ -407,6 +410,34 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             attrs['_prev'] = _prev;
             attrs['_silentMode'] = true;
 
+            let confirmMessage = null;
+            let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+            $.each(confirmations, (field, key) => {
+                if (_prev[field] !== attrs[field]) {
+                    let parts = key.split('.');
+                    confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                }
+            });
+
+            this.notify(false);
+            if (confirmMessage) {
+                Espo.Ui.confirm(confirmMessage, {
+                    confirmText: self.translate('Apply'),
+                    cancelText: self.translate('Cancel')
+                }, () => {
+                    this.saveModel(model, callback, skipExit, attrs);
+                });
+            } else {
+                this.saveModel(model, callback, skipExit, attrs);
+            }
+
+            return true;
+        },
+
+        saveModel(model, callback, skipExit, attrs) {
+            this.notify('Saving...');
+
+            let self = this;
             model.save(attrs, {
                 success: function () {
                     self.afterSave();
@@ -472,8 +503,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 },
                 patch: !model.isNew()
             });
-
-            return true;
         },
 
         hasCompleteness() {

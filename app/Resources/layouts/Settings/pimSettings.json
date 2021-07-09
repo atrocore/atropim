@@ -7,6 +7,20 @@
           "name": "productCanLinkedWithNonLeafCategories"
         },
         false
+      ],
+      [
+        {
+          "name": "behaviorOnCatalogChange"
+        },
+        {
+          "name": "behaviorOnCategoryDelete"
+        }
+      ],
+      [
+        {
+          "name": "behaviorOnCategoryTreeUnlinkFromCatalog"
+        },
+        false
       ]
     ]
   }

@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 /**
@@ -85,5 +86,66 @@ class Catalog extends AbstractRepository
         parent::afterSave($entity, $options);
 
         $this->setInheritedOwnership($entity);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'products') {
+            $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
+            $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, $entity);
+        }
+
+        if ($relationName == 'categories') {
+            if (!is_string($foreign)) {
+                $foreign = $foreign->get('id');
+            }
+            $foreign = $this->getEntityManager()->getEntity('Category', $foreign);
+
+            if (!empty($foreign->get('categoryParent'))) {
+                throw new BadRequest($this->exception('Only root category can be linked with catalog'));
+            }
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName == 'products') {
+            $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
+            $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, null);
+        }
+
+        if ($relationName === 'categories') {
+            $this->getEntityManager()->getRepository('Category')->tryToUnRelateCatalog($foreign, $entity);
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
+    protected function exception(string $key): string
+    {
+        return $this->getInjection('language')->translate($key, 'exceptions', 'Catalog');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

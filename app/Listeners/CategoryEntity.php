@@ -96,11 +96,6 @@ class CategoryEntity extends AbstractEntityListener
             throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
 
-        if ((count($entity->get('catalogs')) > 0 || !empty($entity->get('catalogsIds')))
-            && !empty($entity->get('categoryParent'))) {
-            throw new BadRequest($this->translate('Only root category can be linked with catalog', 'exceptions', 'Catalog'));
-        }
-
         if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
             if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
                 throw new BadRequest($this->exception('parentCategoryHasProducts'));
@@ -134,48 +129,6 @@ class CategoryEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeRemove(Event $event)
-    {
-        /** @var Entity $entity */
-        $entity = $event->getArgument('entity');
-
-        if ($entity->get('products')->count() > 0) {
-            throw new BadRequest($this->exception("categoryHasProducts"));
-        }
-
-        if ($entity->get('categories')->count() > 0) {
-            throw new BadRequest($this->exception("categoryHasChildCategoryAndCantBeDeleted"));
-        }
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeRelate(Event $event)
-    {
-        if ($event->getArgument('relationName') == 'catalogs' && !empty($event->getArgument('entity')->get('categoryParent'))) {
-            throw new BadRequest($this->translate('Only root category can be linked with catalog', 'exceptions', 'Catalog'));
-        }
-
-        if ($event->getArgument('relationName') == 'products') {
-            $category = $event->getArgument('entity');
-            $product = $event->getArgument('foreign');
-            if (is_string($product)) {
-                $product = $this->getEntityManager()->getEntity('Product', $product);
-            }
-
-            $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
-            $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
-        }
-    }
-
-    /**
-     * @param Event $event
      */
     public function afterRelate(Event $event)
     {
@@ -184,19 +137,6 @@ class CategoryEntity extends AbstractEntityListener
             $this->getProductRepository()->linkCategoryChannels($event->getArgument('foreign'), $event->getArgument('entity'));
         }
     }
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeUnrelate(Event $event)
-    {
-        if ($event->getArgument('relationName') == 'catalogs') {
-            $this->getCategoryRepository()->canUnRelateCatalog($event->getArgument('entity'), $event->getArgument('foreign'));
-        }
-    }
-
 
     /**
      * @param Event $event

@@ -201,7 +201,6 @@
     "categories": {
       "type": "hasMany",
       "foreign": "categoryParent",
-      "layoutRelationshipsDisabled": true,
       "entity": "Category",
       "disableMassRelation": true
     },
@@ -226,7 +225,6 @@
     "channels": {
       "type": "hasMany",
       "foreign": "category",
-      "layoutRelationshipsDisabled": true,
       "entity": "Channel",
       "audited": false
     }

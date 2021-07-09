@@ -39,22 +39,8 @@ use Espo\ORM\Entity;
  */
 class Category extends AbstractRepository
 {
-    /**
-     * @param $category
-     * @param $catalog
-     *
-     * @throws BadRequest
-     */
-    public function canUnRelateCatalog($category, $catalog)
+    public function canUnRelateCatalog(Entity $category, Entity $catalog): void
     {
-        if (!$category instanceof Entity) {
-            $category = $this->getEntityManager()->getEntity('Category', $category);
-        }
-
-        if (!$catalog instanceof Entity) {
-            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalog);
-        }
-
         /** @var array $productsIds */
         $productsIds = array_column($catalog->get('products')->toArray(), 'id');
 
@@ -76,6 +62,47 @@ class Category extends AbstractRepository
         }
     }
 
+    /**
+     * @param Entity|string $category
+     * @param Entity|string $catalog
+     */
+    public function tryToUnRelateCatalog($category, $catalog): void
+    {
+        if (is_bool($category) || is_bool($catalog)) {
+            return;
+        }
+
+        if (!$category instanceof Entity) {
+            $category = $this->getEntityManager()->getEntity('Category', $category);
+        }
+
+        if (!$catalog instanceof Entity) {
+            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalog);
+        }
+
+        if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
+            $this->canUnRelateCatalog($category, $catalog);
+        } else {
+            $this->cascadeUnRelateCatalog($category, $catalog);
+        }
+    }
+
+    public function cascadeUnRelateCatalog(Entity $category, Entity $catalog): void
+    {
+        $products = $catalog->get('products');
+        if (count($products) > 0) {
+            $root = $category->getRoot();
+            $children = $root->getChildren();
+            foreach ($products as $product) {
+                $this->getEntityManager()->getRepository('Product')->unrelate($product, 'categories', $root);
+                if (count($children) > 0) {
+                    foreach ($children as $cat) {
+                        $this->getEntityManager()->getRepository('Product')->unrelate($product, 'categories', $cat);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * @param Entity $entity
@@ -90,15 +117,28 @@ class Category extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId')) {
-            if (empty($entity->getFetched('categoryParentId'))) {
-                throw new BadRequest($this->exception('thereIsNoAbilityToChangeCategoryParentForRootCategory'));
-            }
+            if (empty($entity->get('categoryParentId'))) {
+                if (!empty($entity->getFetched('categoryParentId'))) {
+                    $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
+                    foreach ($fetchedRoot->get('catalogs') as $catalog) {
+                        $this->relate($entity, 'catalogs', $catalog);
+                    }
+                }
+            } else {
+                if (empty($entity->getFetched('categoryParentId'))) {
+                    $this->unrelate($entity, 'channels', true);
+                    $fetchedRoot = $entity;
+                } else {
+                    $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
+                }
 
-            // get fetched category
-            $fetchedCategory = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'));
+                $root = $this->getEntityManager()->getEntity('Category', $entity->get('categoryParentId'))->getRoot();
 
-            if (empty($entity->get('categoryParentId')) || $entity->get('categoryParent')->getRoot()->get('id') != $fetchedCategory->getRoot()->get('id')) {
-                throw new BadRequest($this->exception('thereIsNoAbilityToChangeCategoryTree'));
+                foreach ($fetchedRoot->get('catalogs') as $catalog) {
+                    $this->relate($root, 'catalogs', $catalog, null, ['skipCategoryParentValidation' => true]);
+                }
+
+                $this->unrelate($entity, 'catalogs', true);
             }
         }
 
@@ -115,6 +155,78 @@ class Category extends AbstractRepository
         }
 
         parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     *
+     * @throws BadRequest
+     */
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($this->getConfig()->get('behaviorOnCategoryDelete', 'cascade') !== 'cascade') {
+            if ($entity->get('products')->count() > 0) {
+                throw new BadRequest($this->exception("categoryHasProducts"));
+            }
+
+            if ($entity->get('categories')->count() > 0) {
+                throw new BadRequest($this->exception("categoryHasChildCategoryAndCantBeDeleted"));
+            }
+        } else {
+            $products = $entity->get('products');
+            if (count($products) > 0) {
+                $channels = $entity->getRoot()->get('channels');
+                foreach ($products as $product) {
+                    $this->unrelate($entity, 'products', $product);
+                    if (count($channels) > 0) {
+                        foreach ($channels as $channel) {
+                            $this->getEntityManager()->getRepository('Product')->unrelate($product, 'channels', $channel);
+                        }
+                    }
+                }
+            }
+
+            $children = $entity->get('categories');
+            if (count($children) > 0) {
+                foreach ($children as $child) {
+                    $this->getEntityManager()->removeEntity($child);
+                }
+            }
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'catalogs' && empty($options['skipCategoryParentValidation'])) {
+            if (!empty($entity->get('categoryParent'))) {
+                throw new BadRequest($this->exception('Only root category can be linked with catalog'));
+            }
+        }
+
+        if ($relationName == 'products') {
+            $this->getEntityManager()->getRepository('Product')->isCategoryFromCatalogTrees($foreign, $entity);
+            $this->getEntityManager()->getRepository('Product')->isProductCanLinkToNonLeafCategory($entity);
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'catalogs') {
+            $this->tryToUnRelateCatalog($entity, $foreign);
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**

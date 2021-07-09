@@ -1,11 +1,12 @@
 {
+  "confirm": {
+    "categoryParentId": "Category.messages.categoryParentChangeConfirm"
+  },
   "controller": "pim:controllers/record-tree",
   "iconClass": "fas fa-th",
   "boolFilterList": [
     "onlyMy",
     "notEntity",
-    "notChildCategory",
-    "fromCategoryTree",
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
@@ -14,8 +15,6 @@
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "notChildCategory",
-    "fromCategoryTree",
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
@@ -40,7 +39,16 @@
       "selectBoolFilterList": [
         "notEntity"
       ],
-      "view": "pim:views/category/record/panels/catalogs"
+      "view": "pim:views/category/record/panels/catalogs",
+      "rowActionsView": "pim:views/category/record/row-actions/catalogs"
+    },
+    "channels": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notEntity"
+      ],
+      "view": "pim:views/category/record/panels/channels",
+      "rowActionsView": "pim:views/category/record/row-actions/channels"
     },
     "products": {
       "view": "pim:views/category/record/panels/products",
@@ -73,32 +81,6 @@
           "style": "default"
         }
       ]
-    }
-  },
-  "dynamicLogic": {
-    "fields": {
-      "channels": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "categoryParentId"
-            }
-          ]
-        }
-      }
-    },
-    "panels": {
-      "catalogs": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "categoryRouteName"
-            }
-          ]
-        }
-      }
     }
   }
 }
