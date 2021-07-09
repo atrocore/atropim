@@ -99,7 +99,7 @@ class Product extends AbstractRepository
     {
         $id = $entity->get('id');
 
-        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName
+        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName, r.id as relationId
                 FROM product_asset r 
                 LEFT JOIN asset a ON a.id=r.asset_id
                 LEFT JOIN attachment at ON at.id=a.file_id 
@@ -113,6 +113,27 @@ class Product extends AbstractRepository
         $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
 
         return $this->prepareAssets($entity, $result);
+    }
+
+    public function updateSortOrder(string $entityId, array $ids): bool
+    {
+        foreach ($ids as $k => $id) {
+            $parts = explode('_', $id);
+            $id = array_shift($parts);
+            $channel = implode('_', $parts);
+
+            $sorting = $k * 10;
+
+            $sql = "UPDATE product_asset SET sorting=$sorting WHERE asset_id='$id' AND product_id='$entityId' AND deleted=0";
+            if (empty($channel)) {
+                $sql .= " AND (channel IS NULL OR channel='')";
+            } else {
+                $sql .= " AND channel='$channel'";
+            }
+            $this->getEntityManager()->nativeQuery($sql);
+        }
+
+        return true;
     }
 
     /**

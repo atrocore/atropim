@@ -55,6 +55,9 @@ abstract class AbstractService extends Base
      */
     public function setAsMainImage(string $assetId, string $entityId): array
     {
+        $parts = explode('_', $assetId);
+        $assetId = array_shift($parts);
+
         /** @var Asset $asset */
         $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
         if (empty($asset) || empty($attachment = $asset->get('file'))) {

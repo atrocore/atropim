@@ -1,7 +1,6 @@
 {
   "relationshipPanels": {
     "assets": {
-      "layoutName": "listSmallForCategory",
       "view": "pim:views/asset/record/panels/bottom-panel",
       "innerPanelView": "pim:views/asset/record/panels/asset-type-block"
     }

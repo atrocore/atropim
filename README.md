@@ -87,6 +87,11 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 ### Installation
 
 Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
+
+### Demo
+- URL: https://demo.atropim.com/
+- Login: admin
+- Password: admin
      
 ## License
 

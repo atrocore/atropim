@@ -12,10 +12,7 @@
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
-      "noLoad": true,
-      "columns": {
-        "assetChannel": "channel"
-      }
+      "noLoad": true
     }
   },
   "links": {
@@ -29,12 +26,7 @@
       "relationName": "categoryAsset",
       "foreign": "categories",
       "entity": "Asset",
-      "audited": false,
-      "additionalColumns": {
-        "channel": {
-          "type": "varchar"
-        }
-      }
+      "audited": false
     }
   }
 }

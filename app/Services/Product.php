@@ -57,6 +57,81 @@ class Product extends AbstractService
     /**
      * @inheritDoc
      */
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        if ($link == 'assets') {
+            return $this->unlinkAssets($id, $foreignId);
+        }
+
+        return parent::unlinkEntity($id, $link, $foreignId);
+    }
+
+    public function unlinkAssets(string $id, string $foreignId): bool
+    {
+        $link = 'assets';
+
+        $parts = explode('_', $foreignId);
+        $foreignId = array_shift($parts);
+        $channel = implode('_', $parts);
+
+        $event = $this->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
+
+        $id = $event->getArgument('id');
+        $link = $event->getArgument('link');
+        $foreignId = $event->getArgument('foreignId');
+
+        if (empty($id) || empty($link) || empty($foreignId)) {
+            throw new BadRequest;
+        }
+
+        if (in_array($link, $this->readOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->getRepository()->get($id);
+        if (!$entity) {
+            throw new NotFound();
+        }
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        if (!$foreignEntityType) {
+            throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
+        }
+
+        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $foreignId);
+        if (!$foreignEntity) {
+            throw new NotFound();
+        }
+
+        $accessActionRequired = 'edit';
+        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
+            $accessActionRequired = 'read';
+        }
+        if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
+            throw new Forbidden();
+        }
+
+        $sql = "DELETE FROM product_asset WHERE asset_id='$foreignId' AND product_id='$id'";
+
+        if (empty($channel)) {
+            $sql .= " AND (channel IS NULL OR channel='')";
+        } else {
+            $sql .= " AND channel='$channel'";
+        }
+
+        $this->getEntityManager()->nativeQuery($sql);
+
+        return $this
+            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->getArgument('result');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function updateEntity($id, $data)
     {
         $withTransaction = false;

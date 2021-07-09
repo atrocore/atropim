@@ -24,6 +24,18 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "relationId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
     "scope": {
       "type": "enum",
       "notStorable": true,
