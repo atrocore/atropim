@@ -150,7 +150,7 @@ Espo.define('pim:views/product/record/catalog-tree-panel/category-tree', 'view',
             if (!category) {
                 promise = new Promise(resolve => {
                     this.getTreeCategories(id, categories => {
-                        category = this.categories.find(item => item.id === id);
+                        category = this.categories.find(item => item.id === id.toString());
                         this.categories = this.categories.concat(categories);
                         this.setCategoryChilds(category, categories);
                         resolve();
@@ -274,10 +274,10 @@ Espo.define('pim:views/product/record/catalog-tree-panel/category-tree', 'view',
         },
 
         selectCategory(category) {
-            if (typeof category === 'string') {
-                category = this.categories.find(item => item.id === category);
-                category.catalogId = this.catalog.id;
-            }
+            category = category.toString();
+            category = this.categories.find(item => item.id === category);
+            category.catalogId = this.catalog.id;
+
             this.trigger('category-tree-select', category);
         },
 
