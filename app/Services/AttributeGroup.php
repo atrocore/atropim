@@ -29,6 +29,11 @@
 
 namespace Pim\Services;
 
+use Espo\ORM\Entity;
+
+/**
+ * Class AttributeGroup
+ */
 class AttributeGroup extends \Espo\Core\Templates\Services\Base
 {
     /**
@@ -40,7 +45,7 @@ class AttributeGroup extends \Espo\Core\Templates\Services\Base
      */
     public function findLinkedEntitiesAttributes(string $attributeGroupId): array
     {
-        $attributesTypes =  $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []);
+        $attributesTypes = $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []);
 
         $result = $this->getEntityManager()
             ->getRepository('Attribute')
@@ -53,7 +58,14 @@ class AttributeGroup extends \Espo\Core\Templates\Services\Base
 
         return [
             'total' => count($result),
-            'list' => $result
+            'list'  => $result
         ];
+    }
+
+    protected function duplicateAttributes(Entity $entity, Entity $duplicatingEntity): void
+    {
+        foreach ($duplicatingEntity->get('attributes') as $attribute) {
+            $this->getRepository()->relate($entity, 'attributes', $attribute);
+        }
     }
 }
