@@ -594,6 +594,18 @@ class Product extends AbstractRepository
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+
+        if ($relationName == 'channels') {
+            $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
+        }
+    }
+
+    /**
      * @param Entity $entity
      * @param string $field
      *

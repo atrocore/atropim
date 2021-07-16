@@ -1,5 +1,6 @@
 {
   "fields": {
+    "isActiveForChannel": "ist aktive Entität",
     "associatedMainProducts": "zugehörige Produkte",
     "associatedRelatedProduct": "Verknüpfung von ähnlichen Produkten",
     "attachments": "Zubehör",

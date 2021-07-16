@@ -27,34 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
+declare(strict_types=1);
+
 namespace Pim\Controllers;
 
-use Espo\Core\Exceptions;
-use Slim\Http\Request;
-use Treo\Core\Utils\Util;
-
 /**
- * Channel controller
+ * Class Channel
  */
 class Channel extends AbstractController
 {
-    /**
-     * Set IsActiveEntity for link Channel to Product
-     *
-     * @return array
-     * @throws Exceptions\Forbidden
-     * @throws Exceptions\BadRequest
-     */
-    public function actionSetIsActiveEntity($params, $data, Request $request): bool
-    {
-        if (!$request->isPut() && !empty($data->entityName) && !empty($data->value) && !empty($data->entityId)) {
-            throw new Exceptions\BadRequest();
-        }
-        $channelId = $params['channelId'];
-        if (!$this->isReadEntity($this->name, $channelId) && !$this->getAcl()->check('Product', 'edit')) {
-            throw new Exceptions\Forbidden();
-        }
-
-        return $this->getRecordService()->setIsActiveEntity($channelId, $data);
-    }
 }

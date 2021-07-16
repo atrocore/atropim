@@ -39,6 +39,11 @@
     "detail": "pim:views/record/detail",
     "list": "pim:views/record/list"
   },
+  "relationshipPanels": {
+    "products": {
+      "layout": "listForProductsInChannel"
+    }
+  },
   "dynamicLogic": {
     "fields": {
       "locales": {

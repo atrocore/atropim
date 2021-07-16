@@ -37,6 +37,23 @@ use Espo\ORM\Entity;
  */
 class Channel extends Base
 {
+    public function getProductsRelationData(string $id): array
+    {
+        $data = $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "SELECT product_id as productId, is_active AS isActive, from_category_tree as isFromCategoryTree FROM product_channel WHERE channel_id='$id' AND deleted=0"
+            )
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        $result = [];
+        foreach ($data as $row) {
+            $result[$row['productId']] = $row;
+        }
+
+        return $result;
+    }
+
     /**
      * @return array
      */
@@ -101,5 +118,17 @@ class Channel extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+
+        if ($relationName == 'products') {
+            $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
+        }
     }
 }
