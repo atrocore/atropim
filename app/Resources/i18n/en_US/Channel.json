@@ -2,7 +2,7 @@
   "fields": {
     "description": "Description",
     "isActive": "Active",
-    "isActiveEntity": "Active for Channel",
+    "isActiveForChannel": "Active for Channel",
     "category": "Category",
     "locales": "Languages",
     "code": "Code",

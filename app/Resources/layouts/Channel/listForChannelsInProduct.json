@@ -7,7 +7,7 @@
         "name": "code"
     },
     {
-        "name": "isActiveEntity",
+        "name": "isActiveForChannel",
         "notSortable": true
     }
 ]

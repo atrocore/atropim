@@ -104,7 +104,7 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "isActiveEntity": {
+    "isActiveForChannel": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,

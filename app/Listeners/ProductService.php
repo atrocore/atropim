@@ -76,7 +76,7 @@ class ProductService extends AbstractEntityListener
         if ($link === 'channels') {
             $data = $this->getProductRepository()->getChannelRelationData($id);
             foreach ($result['collection'] as $channel) {
-                $channel->set('isActiveEntity', !empty($data[$channel->get('id')]['isActive']));
+                $channel->set('isActiveForChannel', !empty($data[$channel->get('id')]['isActive']));
                 $channel->set('isFromCategoryTree', !empty($data[$channel->get('id')]['isFromCategoryTree']));
             }
         }
