@@ -39,6 +39,7 @@ Espo.define('pim:views/channel/modals/edit', 'treo-core:views/modals/edit',
                     $.ajax({
                         url: 'Product/action/UpdateActiveForChannel',
                         type: 'PUT',
+                        async: false,
                         data: JSON.stringify({
                             "channelId": channelId,
                             "productId": productId,
