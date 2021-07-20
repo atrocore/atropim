@@ -27,9 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Services;
+declare(strict_types=1);
 
-class MeasuringUnit extends \Espo\Core\Templates\Services\Base
+namespace Pim\Migrations;
+
+/**
+ * Migration class for version 1.1.45
+ */
+class V1Dot1Dot45 extends V1Dot1Dot21
 {
+    public function up(): void
+    {
+        $this->execute("DROP TABLE measuring_unit");
+    }
 
+    public function down(): void
+    {
+    }
 }

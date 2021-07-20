@@ -370,7 +370,7 @@
     },
     "measuringUnit": {
       "type": "belongsTo",
-      "entity": "MeasuringUnit"
+      "entity": "Unit"
     },
     "createdBy": {
       "type": "belongsTo",

@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "products": {
+      "type": "linkMultiple"
+    }
+  },
+  "links": {
+    "products": {
+      "type": "hasMany",
+      "foreign": "measuringUnit",
+      "entity": "Product"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}
