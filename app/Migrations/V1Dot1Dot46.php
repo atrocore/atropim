@@ -32,9 +32,9 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 /**
- * Migration class for version 1.1.45
+ * Migration class for version 1.1.46
  */
-class V1Dot1Dot45 extends V1Dot1Dot21
+class V1Dot1Dot46 extends V1Dot1Dot21
 {
     public function up(): void
     {
