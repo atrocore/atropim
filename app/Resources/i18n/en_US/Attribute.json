@@ -39,7 +39,7 @@
     "int": "Int",
     "multiEnum": "Multi-Enum",
     "text": "Text",
-    "unit": "Unit",
+    "unit": "Measuring Unit",
     "url": "Url",
     "varchar": "Varchar",
     "wysiwyg": "Wysiwyg",
