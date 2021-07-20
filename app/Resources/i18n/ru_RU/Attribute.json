@@ -58,6 +58,7 @@
     "youCanNotUnlinkProductFamilyAttribute": "Невозможно отменить связь атрибута продуктовой семьи.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
     "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи."
+    "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи.",
+    "attributeNotHaveUniqueValue": "Атрибут не имеет уникального значения."
   }
 }

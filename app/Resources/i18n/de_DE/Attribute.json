@@ -60,6 +60,7 @@
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCanNotUnlinkProductFamilyAttribute": "Sie können die Verknüpfung mit dem Attribut nicht aufheben.",
-    "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern"
+    "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
+    "attributeNotHaveUniqueValue": "Attribut hat keinen eindeutigen Wert."
   }
 }
