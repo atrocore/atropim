@@ -43,11 +43,9 @@
       ],
       [
         {
-          "name": "measuringUnit"
-        },
-        {
           "name": "packaging"
-        }
+        },
+        false
       ],
       [
         {

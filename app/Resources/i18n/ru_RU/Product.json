@@ -33,7 +33,6 @@
     "association": "Связь",
     "catalog": "Каталог",
     "channels": "Каналы",
-    "measuringUnit": "Ед. измерения",
     "basePriceAmount": "Базовая цена",
     "packedAmount": "Кол-во в упаковке",
     "pcSorting": "Порядок сортировки",
@@ -43,7 +42,6 @@
   "links": {
     "productSerie": "Серии продукта",
     "product": "Продукт",
-    "measuringUnit": "Ед. измерения",
     "image": "Изображение",
     "calls": "Звонки",
     "attachments": "Вложения",

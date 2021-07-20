@@ -33,7 +33,6 @@
     "association": "Association",
     "catalog": "Catalog",
     "channels": "Channels",
-    "measuringUnit": "Measuring Unit",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
@@ -43,7 +42,6 @@
   "links": {
     "productSerie": "Product Series",
     "product": "Product",
-    "measuringUnit": "Measuring Unit",
     "image": "Image",
     "calls": "Calls",
     "attachments": "Attachments",

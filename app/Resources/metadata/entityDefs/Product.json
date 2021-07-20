@@ -186,10 +186,6 @@
       "exportType": "text",
       "noLoad": true
     },
-    "measuringUnit": {
-      "type": "link",
-      "required": false
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -380,10 +376,6 @@
           "tooltip": false
         }
       }
-    },
-    "measuringUnit": {
-      "type": "belongsTo",
-      "entity": "Unit"
     },
     "createdBy": {
       "type": "belongsTo",
