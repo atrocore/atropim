@@ -39,6 +39,8 @@ class V1Dot1Dot46 extends V1Dot1Dot21
     public function up(): void
     {
         $this->execute("DROP TABLE measuring_unit");
+        $this->execute("DROP INDEX IDX_MEASURING_UNIT_ID ON `product`");
+        $this->execute("ALTER TABLE `product` DROP measuring_unit_id");
     }
 
     public function down(): void
