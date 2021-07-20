@@ -80,8 +80,6 @@
         "notLinkedWithProduct"
       ],
       "rowActionsView": "pim:views/product/record/row-actions/product-channels",
-      "view": "pim:views/product/record/panels/product-channels",
-      "recordListView": "pim:views/channel/record/list-in-product",
       "createAction": "createRelatedConfigured",
       "selectAction": "selectRelatedEntity",
       "layout": "listForChannelsInProduct"
@@ -123,6 +121,16 @@
                   "attribute": "_duplicatingEntityId"
                 }
               ]
+            }
+          ]
+        }
+      },
+      "isActiveForChannel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "isActiveForChannel"
             }
           ]
         }

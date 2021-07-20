@@ -35,9 +35,17 @@
     "detail": "pim:views/detail",
     "list": "pim:views/list"
   },
+  "modalViews": {
+    "edit": "pim:views/channel/modals/edit"
+  },
   "recordViews": {
     "detail": "pim:views/record/detail",
     "list": "pim:views/record/list"
+  },
+  "relationshipPanels": {
+    "products": {
+      "layout": "listForProductsInChannel"
+    }
   },
   "dynamicLogic": {
     "fields": {
@@ -47,6 +55,16 @@
             {
               "type": "isTrue",
               "attribute": "hasLocales"
+            }
+          ]
+        }
+      },
+      "isActiveForChannel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "isActiveForChannel"
             }
           ]
         }

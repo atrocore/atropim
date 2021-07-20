@@ -1,10 +1,10 @@
 {
-  "entity": false,
-  "layouts": false,
+  "entity": true,
+  "layouts": true,
   "tab": false,
   "acl": true,
   "aclPortal": true,
-  "customizable": false,
+  "customizable": true,
   "importable": true,
   "notifications": true,
   "stream": false,

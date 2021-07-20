@@ -123,22 +123,6 @@ class ProductEntity extends AbstractEntityListener
      */
     public function afterUnrelate(Event $event)
     {
-        //set default value in isActive for channel after deleted link
-        if ($event->getArgument('relationName') == 'channels' && $event->getArgument('foreign') instanceof Channel) {
-            $dataEntity = new \StdClass();
-            $dataEntity->entityName = 'Product';
-            $dataEntity->entityId = $event->getArgument('entity')->get('id');
-            $dataEntity->value = (int)!empty(
-            $event
-                ->getArgument('entity')
-                ->getRelations()['channels']['additionalColumns']['isActive']['default']
-            );
-
-            $this
-                ->getService('Channel')
-                ->setIsActiveEntity($event->getArgument('foreign')->get('id'), $dataEntity, true);
-        }
-
         if ($event->getArgument('relationName') == 'categories') {
             $this->getProductRepository()->linkCategoryChannels($event->getArgument('entity'), $event->getArgument('foreign'), true);
         }

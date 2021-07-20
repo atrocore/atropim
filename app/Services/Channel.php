@@ -31,9 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Util;
 
 /**
  * Service of Channel
@@ -48,6 +46,23 @@ class Channel extends AbstractService
         parent::prepareEntityForOutput($entity);
 
         $entity->set('hasLocales', $this->getConfig()->get('isMultilangActive', false) && !empty($this->getConfig()->get('inputLanguageList', [])));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        if ($link === 'products' && !empty($result['total'])) {
+            $data = $this->getRepository()->getProductsRelationData($id);
+            foreach ($result['collection'] as $product) {
+                $product->set('isActiveForChannel', !empty($data[$product->get('id')]['isActive']));
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -86,36 +101,6 @@ class Channel extends AbstractService
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $channelId
-     * @param \StdClass $data
-     * @param bool $useDeleted
-     * @return bool
-     * @throws BadRequest
-     */
-    public function setIsActiveEntity(string $channelId, \StdClass $data, bool $useDeleted = false): bool
-    {
-        $linkToChannel= $this->getMetadata()->get(['entityDefs', $data->entityName, 'links', 'channels']);
-        if (empty($linkToChannel['additionalColumns']['isActive'])) {
-            throw new BadRequest();
-        }
-
-        $nameTable = Util::fromCamelCase($linkToChannel['relationName']);
-        $fieldForeign = $data->entityName . '_id';
-        $deleted = (int)$useDeleted;
-        $sql = "UPDATE {$nameTable} linker 
-                        SET is_active = :isActive
-                        WHERE {$fieldForeign} = :entityId AND channel_id = :channelId AND deleted = {$deleted}";
-        $this
-            ->getEntityManager()
-            ->nativeQuery($sql, [
-                'isActive' => (int)$data->value,
-                'entityId' => (string)$data->entityId,
-                'channelId' => (string)$channelId]);
-
-        return true;
     }
 
     /**

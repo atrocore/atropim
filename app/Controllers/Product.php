@@ -39,6 +39,15 @@ use Slim\Http\Request;
  */
 class Product extends AbstractWithMainImageController
 {
+    public function actionUpdateActiveForChannel(array $params, \stdClass $data, Request $request): bool
+    {
+        if (!$request->isPut() || empty($data->channelId) || empty($data->productId) || !property_exists($data, 'isActiveForChannel')) {
+            return false;
+        }
+
+        return $this->getRecordService()->updateActiveForChannel((string)$data->channelId, (string)$data->productId, !empty($data->isActiveForChannel));
+    }
+
     /**
      * Action add associated products
      *

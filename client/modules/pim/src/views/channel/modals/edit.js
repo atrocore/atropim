@@ -26,34 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/channel/record/list-in-product', 'views/record/list',
+Espo.define('pim:views/channel/modals/edit', 'treo-core:views/modals/edit',
     Dep => Dep.extend({
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        setup() {
+            Dep.prototype.setup.call(this);
 
-            this.setEditModeIsActiveEntityField();
-        },
-
-        showMoreRecords: function (collection, $list, $showMore, callback) {
-            Dep.prototype.showMoreRecords.call(this, collection, $list, $showMore, () => {
-                if (typeof callback === 'function') {
-                    callback();
-                }
-                this.setEditModeIsActiveEntityField();
-            });
-        },
-
-        setEditModeIsActiveEntityField() {
-            (this.rowList || []).forEach(id => {
-                const rowView = this.getView(id);
-                if (rowView) {
-                    const fieldView = rowView.getView('isActiveEntityField');
-                    if (fieldView) {
-                        fieldView.setMode('edit');
-                        fieldView.reRender();
-                    }
+            this.listenTo(this, 'after:save', model => {
+                if (model.has('isActiveForChannel')) {
+                    const productId = window.location.hash.split('/').pop();
+                    const channelId = model.get('id');
+                    const isActiveForChannel = model.get('isActiveForChannel');
+                    $.ajax({
+                        url: 'Product/action/UpdateActiveForChannel',
+                        type: 'PUT',
+                        async: false,
+                        data: JSON.stringify({
+                            "channelId": channelId,
+                            "productId": productId,
+                            "isActiveForChannel": isActiveForChannel
+                        })
+                    });
                 }
             });
-        }
+        },
     })
 );

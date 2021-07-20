@@ -2,7 +2,7 @@
   "fields": {
     "description": "Описание",
     "isActive": "Активный",
-    "isActiveEntity": "Активен для канала",
+    "isActiveForChannel": "Активен для канала",
     "category": "Категория",
     "locales": "Языки",
     "code": "Код",

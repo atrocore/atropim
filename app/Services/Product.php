@@ -129,6 +129,21 @@ class Product extends AbstractService
             ->getArgument('result');
     }
 
+    public function updateActiveForChannel(string $channelId, string $productId, bool $isActive): bool
+    {
+        if (empty($channel = $this->getEntityManager()->getEntity('Channel', $channelId)) || !$this->getAcl()->check($channel, 'edit')) {
+            return false;
+        }
+
+        if (empty($product = $this->getEntityManager()->getEntity('Product', $productId)) || !$this->getAcl()->check($product, 'edit')) {
+            return false;
+        }
+
+        $this->getRepository()->updateChannelRelationData($productId, $channelId, $isActive);
+
+        return true;
+    }
+
     /**
      * @inheritDoc
      */

@@ -50,6 +50,24 @@ Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
             }
 
             this.reRender();
+
+            this.listenTo(this, 'after:save', model => {
+                if (model.has('isActiveForChannel')) {
+                    const channelId = window.location.hash.split('/').pop();
+                    const productId = model.get('id');
+                    const isActiveForChannel = model.get('isActiveForChannel');
+                    $.ajax({
+                        url: 'Product/action/UpdateActiveForChannel',
+                        type: 'PUT',
+                        async: false,
+                        data: JSON.stringify({
+                            "channelId": channelId,
+                            "productId": productId,
+                            "isActiveForChannel": isActiveForChannel
+                        })
+                    });
+                }
+            });
         },
 
         setupOwnership: function (param, field) {

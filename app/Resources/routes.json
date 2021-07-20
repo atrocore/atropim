@@ -31,13 +31,5 @@
       "controller": "ProductFamily",
       "action": "productsCount"
     }
-  },
-  {
-    "route": "/Channel/:channelId/setIsActiveEntity",
-    "method": "put",
-    "params": {
-      "controller": "Channel",
-      "action": "setIsActiveEntity"
-    }
   }
 ]
