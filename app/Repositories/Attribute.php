@@ -128,6 +128,37 @@ class Attribute extends AbstractRepository
             }
         }
 
+        if (!$entity->isNew() && $entity->isAttributeChanged('pattern')
+            && !empty($pattern = $entity->get('pattern'))) {
+
+            if (preg_match('/\^(.*)\$/', $pattern, $matches)) {
+                $sqlPattern = $matches[0];
+                $where = "pav.value IS NOT NULL AND pav.value != '' AND pav.value NOT REGEXP '{$sqlPattern}'";
+
+                if ($entity->get('isMultilang') && $this->getConfig()->get('isMultilangActive', false)) {
+                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                        $locale = strtolower($locale);
+                        $where .= " OR pav.value_$locale IS NOT NULL AND pav.value_$locale != '' AND pav.value_$locale NOT REGEXP '{$sqlPattern}'";
+                    }
+                }
+
+                $sql = "SELECT pav.id FROM product_attribute_value pav
+                    JOIN attribute a ON pav.attribute_id = a.id
+                        AND a.deleted = 0 AND a.type = 'varchar'
+                    WHERE pav.deleted = 0
+                        AND ({$where})";
+
+                $result = $this
+                    ->getEntityManager()
+                    ->nativeQuery($sql)
+                    ->fetch(\PDO::FETCH_ASSOC);
+
+                if (!empty($result)) {
+                    throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
+                }
+            }
+        }
+
         // call parent action
         parent::beforeSave($entity, $options);
     }
