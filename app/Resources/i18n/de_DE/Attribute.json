@@ -61,6 +61,7 @@
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCanNotUnlinkProductFamilyAttribute": "Sie können die Verknüpfung mit dem Attribut nicht aufheben.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
-    "attributeNotHaveUniqueValue": "Attribut hat keinen eindeutigen Wert."
+    "attributeNotHaveUniqueValue": "Attribut hat keinen eindeutigen Wert.",
+    "someAttributeDontMathToPattern": "Einige Attribute stimmen nicht mit dem Muster überein."
   }
 }
