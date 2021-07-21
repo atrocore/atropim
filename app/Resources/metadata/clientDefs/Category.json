@@ -43,6 +43,7 @@
       "rowActionsView": "pim:views/category/record/row-actions/catalogs"
     },
     "channels": {
+      "unlinkConfirm": "Category.messages.channelUnlinkConfirm",
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notEntity"
