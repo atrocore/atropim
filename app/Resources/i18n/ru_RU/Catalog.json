@@ -11,6 +11,7 @@
     "categories": "Категории"
   },
   "labels": {
+    "withoutCatalog": "Без каталога",
     "Create Catalog": "Создать каталог"
   },
   "queueManager": {

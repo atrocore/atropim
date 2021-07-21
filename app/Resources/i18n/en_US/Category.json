@@ -23,6 +23,7 @@
     "productCategories": "Category Products"
   },
   "labels": {
+    "withoutCatalog": "Without Catalog",
     "Create Category": "Create Category"
   },
   "messages": {

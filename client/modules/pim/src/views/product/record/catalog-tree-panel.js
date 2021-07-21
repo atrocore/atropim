@@ -64,6 +64,19 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
             this.wait(true);
             this.getFullEntity('Catalog', {select: 'name,categoriesIds,categoriesNames'}, catalogs => {
                 this.catalogs = catalogs;
+
+                this.ajaxGetRequest('Category?sortBy=sortOrder&asc=true&where%5B0%5D%5Btype%5D=isNotLinked&where%5B0%5D%5Battribute%5D=catalogs&where%5B1%5D%5Btype%5D=isNull&where%5B1%5D%5Battribute%5D=categoryParentId', null, {async: false}).then(response => {
+                    if (response.total > 0) {
+                        let categoriesWithoutCatalogsIds = [];
+                        let categoriesWithoutCatalogsNames = {};
+                        response.list.forEach(category => {
+                            categoriesWithoutCatalogsIds.push(category.id);
+                            categoriesWithoutCatalogsNames[category.id] = category.name;
+                        });
+                        this.catalogs.push({id: "no-catalog", name: this.translate("withoutCatalog", "labels", "Category"), categoriesIds: categoriesWithoutCatalogsIds, categoriesNames: categoriesWithoutCatalogsNames});
+                    }
+                });
+
                 this.rootCategoriesIds = this.getRootCategoriesIds();
                 this.getFullEntity('Category', {
                     select: 'name,categoryParentId,categoryRoute,childrenCount',
@@ -276,18 +289,28 @@ Espo.define('pim:views/product/record/catalog-tree-panel', 'view',
                 this.catalogTreeData.boolData = {
                     linkedWithCategory: category.id
                 };
-                this.catalogTreeData.advanced = {
-                    catalog: {
-                        type: 'equals',
-                        field: 'catalogId',
-                        value: category.catalogId,
-                        data: {
-                            type: 'is',
-                            idValue: category.catalogId,
-                            nameValue: (this.catalogs.find(catalog => catalog.id === category.catalogId) || {}).name
+
+                if (category.catalogId === 'no-catalog') {
+                    this.catalogTreeData.advanced = {
+                        catalog: {
+                            type: 'isNull',
+                            field: 'catalogId'
                         }
-                    }
-                };
+                    };
+                } else {
+                    this.catalogTreeData.advanced = {
+                        catalog: {
+                            type: 'equals',
+                            field: 'catalogId',
+                            value: category.catalogId,
+                            data: {
+                                type: 'is',
+                                idValue: category.catalogId,
+                                nameValue: (this.catalogs.find(catalog => catalog.id === category.catalogId) || {}).name
+                            }
+                        }
+                    };
+                }
             }
         },
 
