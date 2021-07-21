@@ -86,18 +86,18 @@ class Category extends AbstractSelectManager
     protected function boolFilterOnlyCatalogCategories(array &$result)
     {
         $catalogId = $this->getSelectCondition('onlyCatalogCategories');
-        if (empty($catalogId)) {
-            return;
+        if (!empty($catalogId)) {
+            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalogId);
+            if (empty($catalog)) {
+                throw new BadRequest('No such catalog');
+            }
+            $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
+        } else {
+            $treesIds = $this
+                ->getEntityManager()
+                ->nativeQuery("SELECT id FROM category WHERE deleted=0 AND category_parent_id IS NULL AND id NOT IN (SELECT category_id FROM catalog_category WHERE deleted=0)")
+                ->fetchAll(\PDO::FETCH_COLUMN);
         }
-
-        /** @var \Pim\Entities\Catalog $catalog */
-        $catalog = $this->getEntityManager()->getEntity('Catalog', $catalogId);
-        if (empty($catalog)) {
-            throw new BadRequest('No such catalog');
-        }
-
-        /** @var array $treesIds */
-        $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
 
         if (!empty($treesIds)) {
             $where[] = ['id' => $treesIds];
