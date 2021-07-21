@@ -124,7 +124,7 @@ class Category extends AbstractSelectManager
 
             if (!empty($parents)) {
                 $result['whereClause'][] = [
-                    'id!=' => array_column($parents, 'categoryParentId')
+                    'id!=' => array_unique(array_column($parents, 'categoryParentId'))
                 ];
             }
         }

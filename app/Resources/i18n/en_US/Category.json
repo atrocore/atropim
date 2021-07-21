@@ -16,7 +16,7 @@
   },
   "links": {
     "categoryParent": "Parent Category",
-    "categories": "Categories",
+    "categories": "Child Categories",
     "assets": "Assets",
     "channels": "Channels",
     "catalogs": "Catalogs",
