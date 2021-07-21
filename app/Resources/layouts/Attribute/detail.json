@@ -21,17 +21,13 @@
                 {
                     "name": "attributeGroup"
                 },
-                false
+                {
+                    "name": "unique"
+                }
             ],
             [
                 {
                     "name": "pattern"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "unique"
                 },
                 false
             ]

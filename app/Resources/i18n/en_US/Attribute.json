@@ -58,6 +58,8 @@
     "youCanNotUnlinkProductFamilyAttribute": "You cannot unlink product family attribute.",
     "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
     "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
-    "attributeIsUsedInProductFamilies": "Attribute is used in product families. Please, update product families first."
+    "attributeIsUsedInProductFamilies": "Attribute is used in product families. Please, update product families first.",
+    "attributeNotHaveUniqueValue": "Attribute have no unique value.",
+    "someAttributeDontMathToPattern": "Some attribute don't match to pattern."
   }
 }
