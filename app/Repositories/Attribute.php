@@ -110,6 +110,24 @@ class Attribute extends AbstractRepository
             $this->updateSortOrder($entity);
         }
 
+        if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
+            $sql = "SELECT COUNT(*)
+                FROM product_attribute_value
+                WHERE attribute_id = '{$entity->id}' AND value IS NOT NULL
+                    AND deleted = 0
+                GROUP BY value, data
+                HAVING COUNT(value) > 1 AND COUNT(data) > 1";
+
+            $exists = $this
+                ->getEntityManager()
+                ->nativeQuery($sql)
+                ->fetch(\PDO::FETCH_ASSOC);
+
+            if (!empty($exists)) {
+                throw new Error($this->exception('attributeNotHaveUniqueValue'));
+            }
+        }
+
         // call parent action
         parent::beforeSave($entity, $options);
     }
