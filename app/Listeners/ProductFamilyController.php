@@ -57,13 +57,13 @@ class ProductFamilyController extends AbstractListener
             if (count($attributes) > 0) {
                 foreach ($attributes as $attribute) {
                     foreach ($data['result']['list'] as $key => $item) {
-                        if ($item->attributeId == $attribute->get('id')) {
+                        if ($item['attributeId'] == $attribute->get('id')) {
                             // add to attribute group to result
-                            $data['result']['list'][$key]->attributeGroupId = $attribute->get('attributeGroupId');
-                            $data['result']['list'][$key]->attributeGroupName = $attribute->get('attributeGroupName');
+                            $data['result']['list'][$key]['attributeGroupId'] = $attribute->get('attributeGroupId');
+                            $data['result']['list'][$key]['attributeGroupName'] = $attribute->get('attributeGroupName');
 
                             // add sort order
-                            $data['result']['list'][$key]->sortOrder = $attribute->get('sortOrder');
+                            $data['result']['list'][$key]['sortOrder'] = $attribute->get('sortOrder');
                         }
                     }
                 }
