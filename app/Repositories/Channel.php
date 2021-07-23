@@ -68,46 +68,6 @@ class Channel extends Base
     }
 
     /**
-     * @param string $categoryRootId
-     * @param Entity $channel
-     * @param bool   $unrelate
-     *
-     * @return bool
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function cascadeProductsRelating(string $categoryRootId, Entity $channel, bool $unrelate = false): bool
-    {
-        $categoryRoot = $this->getEntityManager()->getEntity('Category', $categoryRootId);
-        if (empty($categoryRoot)) {
-            return false;
-        }
-
-        /** @var Product $productRepository */
-        $productRepository = $this->getEntityManager()->getRepository('Product');
-
-        // find products
-        $products = $productRepository
-            ->distinct()
-            ->select(['id'])
-            ->join('categories')
-            ->where(['categories.id' => array_column($categoryRoot->getChildren()->toArray(), 'id')])
-            ->find();
-
-        foreach ($products as $product) {
-            if ($unrelate) {
-                $product->skipIsFromCategoryTreeValidation = true;
-                $productRepository->unrelateForce($product, 'channels', $channel);
-            } else {
-                $product->skipValidation('isChannelAlreadyRelated');
-                $product->fromCategoryTree = true;
-                $productRepository->relate($product, 'channels', $channel);
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @param Entity $entity
      * @param array  $options
      */
@@ -115,6 +75,24 @@ class Channel extends Base
     {
         if (empty($entity->get('locales'))) {
             $entity->set('locales', ['mainLocale']);
+        }
+
+        if ($entity->isAttributeChanged('categoryId')) {
+            // unrelate from previous tree
+            if (!empty($prevRootId = $entity->getFetched('categoryId'))) {
+                $prevRoot = $this->getEntityManager()->getEntity('Category', $prevRootId);
+                foreach ($prevRoot->getTreeProducts() as $product) {
+                    $this->getEntityManager()->getRepository('Product')->unrelateChannel($product, $entity);
+                }
+            }
+
+            // relate to new tree
+            if (!empty($rootId = $entity->get('categoryId'))) {
+                $root = $this->getEntityManager()->getEntity('Category', $rootId);
+                foreach ($root->getTreeProducts() as $product) {
+                    $this->getEntityManager()->getRepository('Product')->relateChannel($product, $entity, true);
+                }
+            }
         }
 
         parent::beforeSave($entity, $options);

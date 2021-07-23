@@ -214,7 +214,29 @@ class Category extends AbstractRepository
             $this->getEntityManager()->getRepository('Product')->isProductCanLinkToNonLeafCategory($entity);
         }
 
+        if ($relationName === 'channels') {
+            if (!empty($root = $foreign->get('category'))) {
+                foreach ($root->getTreeProducts() as $product) {
+                    $this->getEntityManager()->getRepository('Product')->unrelateChannel($product, $foreign);
+                }
+            }
+        }
+
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+
+        if ($relationName === 'channels') {
+            foreach ($entity->getTreeProducts() as $product) {
+                $this->getEntityManager()->getRepository('Product')->relateChannel($product, $foreign, true);
+            }
+        }
     }
 
     /**
@@ -227,6 +249,20 @@ class Category extends AbstractRepository
         }
 
         parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'channels') {
+            foreach ($entity->getTreeProducts() as $product) {
+                $this->getEntityManager()->getRepository('Product')->unrelateChannel($product, $foreign);
+            }
+        }
+
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**

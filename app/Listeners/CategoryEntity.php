@@ -104,9 +104,6 @@ class CategoryEntity extends AbstractEntityListener
                 throw new BadRequest($this->exception('parentCategoryHasProducts'));
             }
         }
-
-        // cascade products relating
-        $this->cascadeProductsRelating($entity);
     }
 
     /**
@@ -280,39 +277,6 @@ class CategoryEntity extends AbstractEntityListener
         }
 
         return $children;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function cascadeProductsRelating(Entity $entity)
-    {
-        if ($entity->isAttributeChanged('channelsIds')) {
-            /** @var \Pim\Repositories\Channel $channelRepository */
-            $channelRepository = $this->getEntityManager()->getRepository('Channel');
-
-            /** @var EntityCollection $oldChannels */
-            $oldChannels = $entity->get('channels');
-
-            /** @var array $newChannelsIds */
-            $newChannelsIds = $entity->get('channelsIds');
-
-            foreach ($oldChannels as $oldChannel) {
-                if (!in_array($oldChannel->get('id'), $newChannelsIds)) {
-                    // unrelate prev
-                    $channelRepository->cascadeProductsRelating($entity->get('id'), $oldChannel, true);
-                }
-            }
-
-            foreach ($newChannelsIds as $newChannelId) {
-                if (!in_array($newChannelId, array_column($oldChannels->toArray(), 'id'))) {
-                    // relate new
-                    $channelRepository->cascadeProductsRelating($entity->get('id'), $channelRepository->get($newChannelId));
-                }
-            }
-        }
     }
 
     /**

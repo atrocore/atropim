@@ -61,9 +61,6 @@ class ChannelEntity extends AbstractEntityListener
                 )
             );
         }
-
-        // cascade products relating
-        $this->cascadeProductsRelating($entity);
     }
 
     /**
@@ -100,29 +97,6 @@ class ChannelEntity extends AbstractEntityListener
 
         if ($event->getArgument('relationName') == 'products') {
             $this->getEntityManager()->getRepository('Product')->isChannelAlreadyRelated($foreign, $entity);
-        }
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws Exceptions\Error
-     */
-    protected function cascadeProductsRelating(Entity $entity)
-    {
-        if ($entity->isAttributeChanged('categoryId')) {
-            /** @var \Pim\Repositories\Channel $channelRepository */
-            $channelRepository = $this->getEntityManager()->getRepository('Channel');
-
-            // unrelate prev
-            if (!empty($entity->getFetched('categoryId'))) {
-                $channelRepository->cascadeProductsRelating($entity->getFetched('categoryId'), $entity, true);
-            }
-
-            // relate new
-            if (!empty($entity->get('categoryId'))) {
-                $channelRepository->cascadeProductsRelating($entity->get('categoryId'), $entity);
-            }
         }
     }
 }

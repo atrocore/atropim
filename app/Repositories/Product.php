@@ -253,20 +253,32 @@ class Product extends AbstractRepository
         if ($channels->count() > 0) {
             foreach ($channels as $channel) {
                 if (!$unRelate) {
-                    $product->fromCategoryTree = true;
-                    try {
-                        $this->relate($product, 'channels', $channel);
-                    } catch (ChannelAlreadyRelatedToProduct $e) {
-                        $this->updateChannelRelationData($product, $channel, null, true);
-                    }
+                    $this->relateChannel($product, $channel, true);
                 } else {
-                    $product->skipIsFromCategoryTreeValidation = true;
-                    $this->unrelateForce($product, 'channels', $channel);
+                    $this->unrelateChannel($product, $channel);
                 }
             }
         }
 
         return true;
+    }
+
+    public function relateChannel(Entity $product, Entity $channel, bool $fromCategoryTree = false): bool
+    {
+        $product->fromCategoryTree = $fromCategoryTree;
+        try {
+            $this->relate($product, 'channels', $channel);
+        } catch (ChannelAlreadyRelatedToProduct $e) {
+            $this->updateChannelRelationData($product, $channel, null, true);
+        }
+
+        return true;
+    }
+
+    public function unrelateChannel(Entity $product, Entity $channel): bool
+    {
+        $product->skipIsFromCategoryTreeValidation = true;
+        return $this->unrelateForce($product, 'channels', $channel);
     }
 
     /**
