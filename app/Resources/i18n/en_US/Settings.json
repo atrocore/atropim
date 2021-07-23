@@ -5,6 +5,9 @@
     "behaviorOnCategoryDelete": "Behavior on category delete",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog"
   },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Are you sure you want to disable linking products to non-leaf categories? All products linked to them will be automatically unlinked."
+  },
   "exceptions": {
     "languageUsedInChannel": "Language, used in some channel, cannot be removed."
   },

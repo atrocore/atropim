@@ -5,6 +5,9 @@
     "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog"
   },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Möchten Sie die Verknüpfung von Produkten mit den Kategorien, die keine Blatt-Kategorien sind, wirklich verbieten? Alle mit diesen Kategorien verknüpften Produkte werden automatisch entkoppelt."
+  },
   "exceptions": {
     "languageUsedInChannel": "Diese Sprache wird in einem Kanal verwendet und kann nicht entfernt werden."
   },

@@ -41,14 +41,15 @@ use Treo\Core\EventManager\Event;
  */
 class SettingsController extends AbstractListener
 {
-    protected $removeFields = [
-        'assignedUserAttributeOwnership' => 'overrideAttributeAssignedUser',
-        'ownerUserAttributeOwnership' => 'overrideAttributeOwnerUser',
-        'teamsAttributeOwnership' => 'overrideAttributeTeams',
-        'assignedUserProductOwnership' => 'overrideProductAssignedUser',
-        'ownerUserProductOwnership' => 'overrideProductOwnerUser',
-        'teamsProductOwnership' => 'overrideProductTeams'
-    ];
+    protected array $removeFields
+        = [
+            'assignedUserAttributeOwnership' => 'overrideAttributeAssignedUser',
+            'ownerUserAttributeOwnership'    => 'overrideAttributeOwnerUser',
+            'teamsAttributeOwnership'        => 'overrideAttributeTeams',
+            'assignedUserProductOwnership'   => 'overrideProductAssignedUser',
+            'ownerUserProductOwnership'      => 'overrideProductOwnerUser',
+            'teamsProductOwnership'          => 'overrideProductTeams'
+        ];
 
     /**
      * @param Event $event
@@ -58,13 +59,22 @@ class SettingsController extends AbstractListener
      */
     public function beforeActionUpdate(Event $event): void
     {
-        $channelsLocales = $this->getEntityManager()->getRepository('Channel')->getUsedLocales();
+        $data = $event->getArgument('data');
 
-        if (isset($event->getArgument('data')->isMultilangActive) && empty($event->getArgument('data')->isMultilangActive) && count($channelsLocales) > 1) {
+        if (property_exists($data, 'productCanLinkedWithNonLeafCategories') && empty($data->productCanLinkedWithNonLeafCategories)) {
+            $this->getEntityManager()->getRepository('Product')->unlinkProductsFromNonLeafCategories();
+        }
+
+        $channelsLocales = $this
+            ->getEntityManager()
+            ->getRepository('Channel')
+            ->getUsedLocales();
+
+        if (property_exists($data, 'isMultilangActive') && empty($data->isMultilangActive) && count($channelsLocales) > 1) {
             throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
         }
 
-        if (!empty($event->getArgument('data')->inputLanguageList)) {
+        if (!empty($data->inputLanguageList)) {
             foreach ($channelsLocales as $locale) {
                 if ($locale !== 'mainLocale' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
                     throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
@@ -111,5 +121,10 @@ class SettingsController extends AbstractListener
             }
         }
         $config->save();
+    }
+
+    protected function isExistsProductsLinkedWithNonLeafCategories(): bool
+    {
+        return $this->getEntityManager()->getRepository('Product')->isExistsProductsLinkedWithNonLeafCategories();
     }
 }

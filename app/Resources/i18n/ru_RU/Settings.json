@@ -5,6 +5,9 @@
     "behaviorOnCategoryDelete": "Поведение при удалении категории",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведение при разрыве связи дерева категорий с каталогом"
   },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Вы уверены, что хотите запретить привязывать продукты к субкатегориям? Все продукты привязанные к ним будут автоматически отвязаны."
+  },
   "exceptions": {
     "languageUsedInChannel": "Язык, используемый в каком-либо канале, не может быть удален."
   },

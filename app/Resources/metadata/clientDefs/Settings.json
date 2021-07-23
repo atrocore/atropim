@@ -1,0 +1,10 @@
+{
+  "confirm": {
+    "productCanLinkedWithNonLeafCategories": {
+      "values": [
+        false
+      ],
+      "message": "Settings.messages.productCanLinkedWithNonLeafCategoriesChangeConfirm"
+    }
+  }
+}

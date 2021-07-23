@@ -77,6 +77,24 @@ class Product extends AbstractRepository
         return $this->getConfig()->get('inputLanguageList', []);
     }
 
+    public function unlinkProductsFromNonLeafCategories(): void
+    {
+        $data = $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "SELECT product_id as productId, category_id as categoryId FROM product_category WHERE category_id IN (SELECT DISTINCT category_parent_id FROM category WHERE category_parent_id IS NOT NULL AND deleted=0) AND deleted=0"
+            )
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($data as $row) {
+            $product = $this->get($row['productId']);
+            $category = $this->getEntityManager()->getRepository('Category')->get($row['categoryId']);
+            if (!empty($product) && !empty($category)) {
+                $this->unrelate($product, 'categories', $category);
+            }
+        }
+    }
+
     public function getAssetsData(string $productId): array
     {
         $sql
