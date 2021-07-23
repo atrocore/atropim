@@ -111,20 +111,30 @@ class Attribute extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
-            $sql = "SELECT COUNT(*)
+            $fields = ['value'];
+
+            if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $fields[] = 'value_' . strtolower($locale);
+                }
+            }
+
+            foreach ($fields as $field) {
+                $sql = "SELECT COUNT(*)
                 FROM product_attribute_value
-                WHERE attribute_id = '{$entity->id}' AND value IS NOT NULL
+                WHERE attribute_id = '{$entity->id}' AND $field IS NOT NULL
                     AND deleted = 0
-                GROUP BY value, data
-                HAVING COUNT(value) > 1 AND COUNT(data) > 1";
+                GROUP BY $field, data
+                HAVING COUNT(*) > 1";
 
-            $exists = $this
-                ->getEntityManager()
-                ->nativeQuery($sql)
-                ->fetch(\PDO::FETCH_ASSOC);
+                $exists = $this
+                    ->getEntityManager()
+                    ->nativeQuery($sql)
+                    ->fetch(\PDO::FETCH_ASSOC);
 
-            if (!empty($exists)) {
-                throw new Error($this->exception('attributeNotHaveUniqueValue'));
+                if (!empty($exists)) {
+                    throw new Error($this->exception('attributeNotHaveUniqueValue'));
+                }
             }
         }
 

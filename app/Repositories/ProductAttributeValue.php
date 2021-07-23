@@ -117,40 +117,50 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->get('attribute')->get('unique')) {
-            $changedField = null;
+            $valueChanged = null;
 
+            // check if value field changed
             if ($entity->isAttributeChanged('value') && !empty($entity->get('value'))) {
-                $changedField = 'value';
+                $valueChanged = 'value';
             } else {
                 if ($entity->get('attribute')->get('isMultilang') && $this->getConfig()->get('isMultilangActive', false)) {
                     foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                         $localeField = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
 
                         if (!empty($entity->get($localeField)) && $entity->isAttributeChanged($localeField)) {
-                            $changedField = $localeField;
+                            $valueChanged = $localeField;
                         }
                     }
                 }
             }
 
-            if (!empty($changedField)) {
-                $count = $this
-                    ->getEntityManager()
-                    ->getRepository($entity->getEntityType())
-                    ->join(['product'])
-                    ->where([
-                        'id!=' => $entity->id,
-                        'attributeId' => $entity->get('attributeId'),
-                        'data' => !empty($entity->get('data')) ? Json::encode($entity->get('data')) : null,
-                        'product.deleted' => false,
-                        $changedField => $entity->get($changedField)
-                    ])
-                    ->count();
+            $where = [
+                'id!=' => $entity->id,
+                'attributeId' => $entity->get('attributeId'),
+                'product.deleted' => false
+            ];
 
-                if ($count) {
-                    $message = sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name'));
-                    throw new BadRequest($message);
-                }
+            if (!empty($valueChanged)) {
+                $where[$valueChanged] = $entity->get($valueChanged);
+                $where['data'] = !empty($entity->get('data')) ? Json::encode($entity->get('data')) : null;
+            } elseif ($entity->isAttributeChanged('data') && !empty($entity->get('data'))) {
+                // if only data field changed (for unit or currency attributes)
+                $where['value'] = $entity->get('value');
+                $where['data'] = Json::encode($entity->get('data'));
+            } else {
+                return;
+            }
+
+            $count = $this
+                ->getEntityManager()
+                ->getRepository($entity->getEntityType())
+                ->join(['product'])
+                ->where($where)
+                ->count();
+
+            if ($count) {
+                $message = sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name'));
+                throw new BadRequest($message);
             }
         }
     }
