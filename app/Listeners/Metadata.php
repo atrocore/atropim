@@ -48,6 +48,8 @@ class Metadata extends AbstractListener
         // get data
         $data = $event->getArgument('data');
 
+        $data = $this->hideValuesForPavCreating($data);
+
         $data = $this->enableExportDisabledParamForPav($data);
 
         $data = $this->prepareProductFamilyAttributeMetadata($data);
@@ -69,6 +71,34 @@ class Metadata extends AbstractListener
 
         // set data
         $event->setArgument('data', $data);
+    }
+
+    protected function hideValuesForPavCreating(array $data): array
+    {
+        // is multi-lang activated
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return $data;
+        }
+
+        // get locales
+        if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
+            return $data;
+        }
+
+        foreach ($locales as $locale) {
+            $data['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields'][Util::toCamelCase('value_' . strtolower($locale))] = [
+                'visible' => [
+                    'conditionGroup' => [
+                        [
+                            'type'      => 'isNotEmpty',
+                            'attribute' => 'id'
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        return $data;
     }
 
     protected function prepareProductFamilyAttributeMetadata(array $data): array
