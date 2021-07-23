@@ -27,6 +27,9 @@
     "Create Channel": "Kanal erstellen",
     "mainLocale": "Hauptsprache"
   },
+  "messages": {
+    "categoryChangeConfirm": "Sind Sie sicher, dass Sie den Kategoriebaum für diesen Kanal aufheben (oder ändern) möchten? Alle mit dem ursprünglichen Kategoriebaum verknüpften Produkte werden von diesem Kanal getrennt (und die Produkte des neuen Kategoriebaums werden damit verknüpft)."
+  },
   "exceptions": {
     "youShouldChooseRootCategory": "Sie müssen eine Stammkategorie auswählen.",
     "categoryIsRequired": "Die Kategorie ist erforderlich.",
