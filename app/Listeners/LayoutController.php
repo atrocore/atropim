@@ -135,6 +135,38 @@ class LayoutController extends AbstractListener
     /**
      * @param Event $event
      */
+    protected function modifyProductAttributeValueDetailSmall(Event $event)
+    {
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return;
+        }
+
+        if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
+            return;
+        }
+
+        /** @var array $result */
+        $result = Json::decode($event->getArgument('result'), true);
+
+        foreach ($result as $k => $panel) {
+            foreach ($panel['rows'] as $k1 => $row) {
+                foreach ($row as $k2 => $field) {
+                    foreach ($locales as $locale) {
+                        $valueName = Util::toCamelCase('value_' . strtolower($locale));
+                        if ($field['name'] === $valueName) {
+                            $result[$k]['rows'][$k1][$k2] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    /**
+     * @param Event $event
+     */
     protected function modifyChannelDetailSmall(Event $event)
     {
         $this->modifyProductDetailSmall($event);
