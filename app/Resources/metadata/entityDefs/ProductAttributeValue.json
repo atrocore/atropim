@@ -176,7 +176,7 @@
     "locale": {
       "type": "varchar",
       "notStorable": true,
-      "default": false,
+      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,

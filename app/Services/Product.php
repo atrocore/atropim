@@ -605,6 +605,7 @@ class Product extends AbstractService
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
                 $pav->set('isLocale', false);
+                $pav->set('locale', null);
 
                 if ($pav->get('scope') === 'Global' || $pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav))) {
                     $newCollection->append($pav);
@@ -622,10 +623,15 @@ class Product extends AbstractService
                         $localePav = clone $pav;
                         $localePav->id = $localePav->id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
                         $localePav->set('isLocale', true);
+                        $localePav->set('locale', $locale);
                         $localePav->set('attributeName', $localePav->get('attributeName') . ' › ' . $locale);
                         $localePav->set('attributeCode', $localePav->get('attributeCode') . ' › ' . $locale);
                         $localePav->set('typeValue', $localePav->get("typeValue{$camelCaseLocale}"));
+                        $pav->clear("typeValue{$camelCaseLocale}");
+                        $localePav->clear("typeValue{$camelCaseLocale}");
                         $localePav->set('value', $localePav->get("value{$camelCaseLocale}"));
+                        $pav->clear("value{$camelCaseLocale}");
+                        $localePav->clear("value{$camelCaseLocale}");
                         $localePav->set('ownerUserId', $localePav->get("ownerUser{$camelCaseLocale}Id"));
                         $localePav->set('assignedUserId', $localePav->get("assignedUser{$camelCaseLocale}Id"));
 
@@ -647,6 +653,8 @@ class Product extends AbstractService
                         $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
                         $data->{'title' . $camelCaseLocale} = $pav->get('attribute')->get("name{$camelCaseLocale}");
                         $pav->set('data', $data);
+                        $pav->clear("typeValue{$camelCaseLocale}");
+                        $pav->clear("value{$camelCaseLocale}");
                     }
                 }
             }
