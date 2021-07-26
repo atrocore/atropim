@@ -1,10 +1,12 @@
 {
   "fields": {
     "productCanLinkedWithNonLeafCategories": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "behaviorOnCatalogChange": {
       "type": "enum",
+      "tooltip": true,
       "required": true,
       "options": [
         "cascade",
@@ -14,6 +16,7 @@
     },
     "behaviorOnCategoryDelete": {
       "type": "enum",
+      "tooltip": true,
       "required": true,
       "options": [
         "cascade",
@@ -23,6 +26,7 @@
     },
     "behaviorOnCategoryTreeUnlinkFromCatalog": {
       "type": "enum",
+      "tooltip": true,
       "required": true,
       "options": [
         "cascade",
