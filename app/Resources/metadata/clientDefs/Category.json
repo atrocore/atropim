@@ -52,14 +52,19 @@
       "rowActionsView": "pim:views/category/record/row-actions/channels"
     },
     "products": {
-      "view": "pim:views/category/record/panels/products",
       "create": false,
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notEntity",
+        "onlyCategoryCatalogsProducts"
+      ],
       "dragDrop": {
         "isActive": true,
         "sortField": "pcSorting"
       },
       "sortBy": "pcSorting",
-      "asc": true
+      "asc": true,
+      "view": "pim:views/category/record/panels/products"
     }
   },
   "menu": {

@@ -40,6 +40,14 @@ use Pim\Listeners\AbstractEntityListener;
  */
 class Category extends AbstractRepository
 {
+    public function getNotRelatedWithCatalogsTreeIds(): array
+    {
+        return $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT id FROM category WHERE deleted=0 AND category_parent_id IS NULL AND id NOT IN (SELECT category_id FROM catalog_category WHERE deleted=0)")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     public function canUnRelateCatalog(Entity $category, Entity $catalog): void
     {
         /** @var array $productsIds */

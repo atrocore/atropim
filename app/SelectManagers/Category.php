@@ -93,10 +93,7 @@ class Category extends AbstractSelectManager
             }
             $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
         } else {
-            $treesIds = $this
-                ->getEntityManager()
-                ->nativeQuery("SELECT id FROM category WHERE deleted=0 AND category_parent_id IS NULL AND id NOT IN (SELECT category_id FROM catalog_category WHERE deleted=0)")
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $treesIds = $this->getEntityManager()->getRepository('Category')->getNotRelatedWithCatalogsTreeIds();
         }
 
         if (!empty($treesIds)) {

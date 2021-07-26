@@ -495,15 +495,13 @@ class Product extends AbstractRepository
     public function isCategoryFromCatalogTrees(Entity $product, Entity $category): bool
     {
         if (!empty($catalog = $product->get('catalog'))) {
-            /** @var array $treesIds */
             $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
+        } else {
+            $treesIds = $this->getEntityManager()->getRepository('Category')->getNotRelatedWithCatalogsTreeIds();
+        }
 
-            /** @var string $rootId */
-            $rootId = $category->getRoot()->get('id');
-
-            if (!in_array($rootId, $treesIds)) {
-                throw new BadRequest($this->translate("youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog", 'exceptions', 'Product'));
-            }
+        if (!in_array($category->getRoot()->get('id'), $treesIds)) {
+            throw new BadRequest($this->translate("youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog", 'exceptions', 'Product'));
         }
 
         return true;
@@ -655,11 +653,13 @@ class Product extends AbstractRepository
             $products = $this
                 ->getEntityManager()
                 ->getRepository('Product')
-                ->where([
-                    $field => $entity->get($field),
-                    'catalogId' => $entity->get('catalogId'),
-                    'id!=' => $entity->id
-                ])
+                ->where(
+                    [
+                        $field      => $entity->get($field),
+                        'catalogId' => $entity->get('catalogId'),
+                        'id!='      => $entity->id
+                    ]
+                )
                 ->count();
 
             if ($products > 0) {
@@ -729,11 +729,13 @@ class Product extends AbstractRepository
                 );
 
                 if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
-                    $productAttributeValue->set([
-                        'assignedUserId' => $product->get('assignedUserId'),
-                        'ownerUserId' => $product->get('ownerUserId'),
-                        'teamsIds' => $product->get('teamsIds')
-                    ]);
+                    $productAttributeValue->set(
+                        [
+                            'assignedUserId' => $product->get('assignedUserId'),
+                            'ownerUserId'    => $product->get('ownerUserId'),
+                            'teamsIds'       => $product->get('teamsIds')
+                        ]
+                    );
                 }
 
                 $productAttributeValue->skipVariantValidation = true;
