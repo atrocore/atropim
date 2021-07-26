@@ -84,6 +84,7 @@
     }
   },
   "labels": {
+    "categorySettings": "Kategorieeinstellungen",
     "cascade": "Erweitern",
     "restrict": "Einschränken",
     "Add Field": "Filter hinzufügen",

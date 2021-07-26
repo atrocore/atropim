@@ -94,10 +94,10 @@ class Category extends AbstractRepository
             $root = $category->getRoot();
             $children = $root->getChildren();
             foreach ($products as $product) {
-                $this->getEntityManager()->getRepository('Product')->unrelate($product, 'categories', $root);
+                $this->getProductRepository()->unrelate($product, 'categories', $root);
                 if (count($children) > 0) {
                     foreach ($children as $cat) {
-                        $this->getEntityManager()->getRepository('Product')->unrelate($product, 'categories', $cat);
+                        $this->getProductRepository()->unrelate($product, 'categories', $cat);
                     }
                 }
             }
@@ -117,6 +117,21 @@ class Category extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId')) {
+            $products = $entity->getTreeProducts();
+            $hasProducts = count($products) > 0;
+
+            // unrelate channels from category
+            foreach ($entity->get('channels') as $channel) {
+                $this->unrelate($entity, 'channels', $channel);
+            }
+
+            // unrelate channels from products
+            if ($hasProducts) {
+                foreach ($products as $product) {
+                    $this->getProductRepository()->unrelateCategoryTreeChannels($product);
+                }
+            }
+
             if (empty($entity->get('categoryParentId'))) {
                 if (!empty($entity->getFetched('categoryParentId'))) {
                     $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
@@ -126,7 +141,6 @@ class Category extends AbstractRepository
                 }
             } else {
                 if (empty($entity->getFetched('categoryParentId'))) {
-                    $this->unrelate($entity, 'channels', true);
                     $fetchedRoot = $entity;
                 } else {
                     $fetchedRoot = $this->getEntityManager()->getEntity('Category', $entity->getFetched('categoryParentId'))->getRoot();
@@ -138,7 +152,21 @@ class Category extends AbstractRepository
                     $this->relate($root, 'catalogs', $catalog, null, ['skipCategoryParentValidation' => true]);
                 }
 
-                $this->unrelate($entity, 'catalogs', true);
+                // relate channel to products
+                if ($hasProducts) {
+                    $channels = $root->get('channels');
+                    if (count($channels) > 0) {
+                        foreach ($products as $product) {
+                            foreach ($channels as $channel) {
+                                $this->getProductRepository()->relateChannel($product, $channel, true);
+                            }
+                        }
+                    }
+                }
+
+                foreach ($entity->get('catalogs') as $catalog) {
+                    $this->unrelate($entity, 'catalogs', $catalog);
+                }
             }
         }
 
@@ -181,7 +209,7 @@ class Category extends AbstractRepository
                     $this->unrelate($entity, 'products', $product);
                     if (count($channels) > 0) {
                         foreach ($channels as $channel) {
-                            $this->getEntityManager()->getRepository('Product')->unrelate($product, 'channels', $channel);
+                            $this->getProductRepository()->unrelate($product, 'channels', $channel);
                         }
                     }
                 }
@@ -210,14 +238,14 @@ class Category extends AbstractRepository
         }
 
         if ($relationName == 'products') {
-            $this->getEntityManager()->getRepository('Product')->isCategoryFromCatalogTrees($foreign, $entity);
-            $this->getEntityManager()->getRepository('Product')->isProductCanLinkToNonLeafCategory($entity);
+            $this->getProductRepository()->isCategoryFromCatalogTrees($foreign, $entity);
+            $this->getProductRepository()->isProductCanLinkToNonLeafCategory($entity);
         }
 
         if ($relationName === 'channels') {
             if (!empty($root = $foreign->get('category'))) {
                 foreach ($root->getTreeProducts() as $product) {
-                    $this->getEntityManager()->getRepository('Product')->unrelateChannel($product, $foreign);
+                    $this->getProductRepository()->unrelateChannel($product, $foreign);
                 }
             }
         }
@@ -234,7 +262,7 @@ class Category extends AbstractRepository
 
         if ($relationName === 'channels') {
             foreach ($entity->getTreeProducts() as $product) {
-                $this->getEntityManager()->getRepository('Product')->relateChannel($product, $foreign, true);
+                $this->getProductRepository()->relateChannel($product, $foreign, true);
             }
         }
     }
@@ -258,7 +286,7 @@ class Category extends AbstractRepository
     {
         if ($relationName === 'channels') {
             foreach ($entity->getTreeProducts() as $product) {
-                $this->getEntityManager()->getRepository('Product')->unrelateChannel($product, $foreign);
+                $this->getProductRepository()->unrelateChannel($product, $foreign);
             }
         }
 
@@ -348,5 +376,10 @@ class Category extends AbstractRepository
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, 'exceptions', 'Category');
+    }
+
+    protected function getProductRepository(): Product
+    {
+        return $this->getEntityManager()->getRepository('Product');
     }
 }

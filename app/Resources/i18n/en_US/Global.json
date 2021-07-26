@@ -71,6 +71,7 @@
     "role": "Role"
   },
   "labels": {
+    "categorySettings": "Category settings",
     "cascade": "Cascade",
     "restrict": "Restrict",
     "Add Field": "Add Filter",

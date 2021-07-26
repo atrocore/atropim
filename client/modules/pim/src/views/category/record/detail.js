@@ -34,7 +34,11 @@ Espo.define('pim:views/category/record/detail', 'views/record/detail',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this, 'after:save', () => this.model.fetch());
+            this.listenTo(this.model, 'after:save', () => {
+                this.model.fetch();
+                $('.action[data-action=refresh][data-panel=catalogs]').click();
+                $('.action[data-action=refresh][data-panel=channels]').click();
+            });
         },
 
         save(callback, skipExit) {

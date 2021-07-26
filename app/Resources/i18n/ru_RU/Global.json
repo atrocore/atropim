@@ -71,6 +71,7 @@
     "role": "Роль"
   },
   "labels": {
+    "categorySettings": "Настройки категорий",
     "cascade": "Распространить",
     "restrict": "Ограничить",
     "Add Field": "Добавить фильтр",

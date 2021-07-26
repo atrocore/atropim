@@ -299,6 +299,12 @@ class Product extends AbstractRepository
         return $this->unrelateForce($product, 'channels', $channel);
     }
 
+    public function unrelateCategoryTreeChannels(Entity $product): bool
+    {
+        $this->getPDO()->exec("DELETE FROM product_channel WHERE deleted=0 AND product_id='{$product->get('id')}' AND from_category_tree=1");
+        return true;
+    }
+
     /**
      * @param string $productId
      *
