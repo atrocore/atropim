@@ -118,11 +118,8 @@ class Category extends AbstractRepository
             throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
 
-        if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
-            if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
-                throw new BadRequest($this->exception('parentCategoryHasProducts'));
-            }
-            if (!empty($parent = $entity->get('categoryParent')) && $parent->get('products')->count() > 0) {
+        if ($entity->isAttributeChanged('categoryParentId') && !$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
+            if (!empty($parent = $entity->get('categoryParent')) && count($parent->get('products')) > 0) {
                 throw new BadRequest($this->exception('parentCategoryHasProducts'));
             }
         }
