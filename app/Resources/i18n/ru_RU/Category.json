@@ -37,7 +37,7 @@
     "youCanNotChooseChildCategory": "Вы не можете выбрать дочернюю категорию.",
     "categoryHasProducts": "Категория со связанными товарами не может быть удалена.",
     "categoryCannotBeUnRelatedFromCatalog": "Дерево категорий со связанными товарами нельзя отключить от каталога.",
-    "parentCategoryHasProducts": "Эту категорию нельзя назначить родительской, ей присвоены продукты.",
+    "parentCategoryHasProducts": "Эту категорию нельзя установить как родительскую, так как она листовая и имеет назначенные ей продукты.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Вы не можете изменить родительскую категорию в корневой категории со связанными продуктами."
   }
 }

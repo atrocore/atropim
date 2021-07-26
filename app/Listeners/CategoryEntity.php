@@ -83,31 +83,6 @@ class CategoryEntity extends AbstractEntityListener
 
     /**
      * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Event $event)
-    {
-        /** @var Entity $entity */
-        $entity = $event->getArgument('entity');
-
-        // is code valid
-        if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
-        }
-
-        if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
-            if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
-                throw new BadRequest($this->exception('parentCategoryHasProducts'));
-            }
-            if (!empty($parent = $entity->get('categoryParent')) && $parent->get('products')->count() > 0) {
-                throw new BadRequest($this->exception('parentCategoryHasProducts'));
-            }
-        }
-    }
-
-    /**
-     * @param Event $event
      */
     public function afterSave(Event $event)
     {

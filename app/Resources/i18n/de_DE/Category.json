@@ -48,6 +48,6 @@
     "youCanNotChooseChildCategory": "Sie können keine untergeordnete Kategorie auswählen.",
     "categoryHasProducts": "Kategorie mit verknüpften Produkten kann nicht gelöscht werden.",
     "categoryCannotBeUnRelatedFromCatalog": "Verknüpfung zwischen Katalog und Kategoriebaum mit verknüpften Produkten kann nicht aufgehoben werden.",
-    "parentCategoryHasProducts": "Diese Kategorie kann nicht als Parent-Kategorie eingestellt werden, sie beinhaltet zugeordnete Produkte."
+    "parentCategoryHasProducts": "Diese Kategorie kann nicht als übergeordnete Kategorie festgelegt werden, es ist eine Blattkategorie, die zugeordnete Produkte hat."
   }
 }

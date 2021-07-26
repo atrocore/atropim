@@ -33,6 +33,7 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
+use Pim\Listeners\AbstractEntityListener;
 
 /**
  * Class Category
@@ -112,6 +113,20 @@ class Category extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
+        // is code valid
+        if (!$this->isCodeValid($entity)) {
+            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
+        }
+
+        if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
+            if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && count($entity->getTreeProducts()) > 0) {
+                throw new BadRequest($this->exception('parentCategoryHasProducts'));
+            }
+            if (!empty($parent = $entity->get('categoryParent')) && $parent->get('products')->count() > 0) {
+                throw new BadRequest($this->exception('parentCategoryHasProducts'));
+            }
+        }
+
         if ($entity->isNew()) {
             $entity->set('sortOrder', time());
         }
@@ -368,18 +383,35 @@ class Category extends AbstractRepository
         $this->getEntityManager()->nativeQuery($sql);
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string
-     */
     protected function exception(string $key): string
     {
-        return $this->getInjection('language')->translate($key, 'exceptions', 'Category');
+        return $this->translate($key, 'exceptions', 'Category');
+    }
+
+    protected function translate(string $key, string $label = 'labels', string $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translate($key, $label, $scope);
     }
 
     protected function getProductRepository(): Product
     {
         return $this->getEntityManager()->getRepository('Product');
+    }
+
+    protected function isCodeValid(Entity $entity): bool
+    {
+        if (!$entity->isAttributeChanged('code')) {
+            return true;
+        }
+
+        if (empty($entity->get('code'))) {
+            return true;
+        }
+
+        if (!preg_match(AbstractEntityListener::$codePattern, $entity->get('code'))) {
+            return false;
+        }
+
+        return empty($this->where(['id!=' => $entity->get('id'), 'code' => $entity->get('code')])->findOne());
     }
 }
