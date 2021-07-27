@@ -40,6 +40,8 @@ use Espo\Core\Exceptions\Error;
  */
 class Category extends \Espo\Core\Templates\Entities\Base
 {
+    public bool $recursiveSave = false;
+
     /**
      * @var string
      */

@@ -33,6 +33,7 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Pim\Listeners\AbstractEntityListener;
 
 /**
@@ -40,6 +41,37 @@ use Pim\Listeners\AbstractEntityListener;
  */
 class Category extends AbstractRepository
 {
+    public static function getCategoryRoute(Entity $entity, bool $isName = false): string
+    {
+        // prepare result
+        $result = '';
+
+        // prepare data
+        $data = [];
+
+        while (!empty($parent = $entity->get('categoryParent'))) {
+            // push id
+            if (!$isName) {
+                $data[] = $parent->get('id');
+            } else {
+                $data[] = trim($parent->get('name'));
+            }
+
+            // to next category
+            $entity = $parent;
+        }
+
+        if (!empty($data)) {
+            if (!$isName) {
+                $result = '|' . implode('|', array_reverse($data)) . '|';
+            } else {
+                $result = implode(' > ', array_reverse($data));
+            }
+        }
+
+        return $result;
+    }
+
     public function getNotRelatedWithCatalogsTreeIds(): array
     {
         return $this
@@ -202,6 +234,15 @@ class Category extends AbstractRepository
             $this->updateSortOrderInTree($entity);
         }
 
+        // build tree
+        $this->updateCategoryTree($entity);
+
+        // activate parents
+        $this->activateParents($entity);
+
+        // deactivate children
+        $this->deactivateChildren($entity);
+
         parent::afterSave($entity, $options);
     }
 
@@ -285,6 +326,11 @@ class Category extends AbstractRepository
                 $this->getProductRepository()->relateChannel($product, $foreign, true);
             }
         }
+
+        if ($relationName === 'products') {
+            $this->getProductRepository()->updateProductCategorySortOrder($foreign, $entity);
+            $this->getProductRepository()->linkCategoryChannels($foreign, $entity);
+        }
     }
 
     /**
@@ -308,6 +354,10 @@ class Category extends AbstractRepository
             foreach ($entity->getTreeProducts() as $product) {
                 $this->getProductRepository()->unrelateChannel($product, $foreign);
             }
+        }
+
+        if ($relationName === 'products') {
+            $this->getProductRepository()->linkCategoryChannels($foreign, $entity, true);
         }
 
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
@@ -418,5 +468,91 @@ class Category extends AbstractRepository
         }
 
         return empty($this->where(['id!=' => $entity->get('id'), 'code' => $entity->get('code')])->findOne());
+    }
+
+    protected function activateParents(Entity $entity): void
+    {
+        // is activate action
+        $isActivate = $entity->isAttributeChanged('isActive') && $entity->get('isActive');
+
+        if (empty($entity->recursiveSave) && $isActivate && !$entity->isNew()) {
+            // update all parents
+            foreach ($this->getEntityParents($entity, []) as $parent) {
+                $parent->set('isActive', true);
+                $this->saveEntity($parent);
+            }
+        }
+    }
+
+    protected function deactivateChildren(Entity $entity): void
+    {
+        // is deactivate action
+        $isDeactivate = $entity->isAttributeChanged('isActive') && !$entity->get('isActive');
+
+        if (empty($entity->recursiveSave) && $isDeactivate && !$entity->isNew()) {
+            // update all children
+            $children = $this->getEntityChildren($entity->get('categories'), []);
+            foreach ($children as $child) {
+                $child->set('isActive', false);
+                $this->saveEntity($child);
+            }
+        }
+    }
+
+    protected function saveEntity(Entity $entity): void
+    {
+        // set flag
+        $entity->recursiveSave = true;
+
+        $this->getEntityManager()->saveEntity($entity);
+    }
+
+    protected function getEntityParents(Entity $category, array $parents): array
+    {
+        $parent = $category->get('categoryParent');
+        if (!empty($parent)) {
+            $parents[] = $parent;
+            $parents = $this->getEntityParents($parent, $parents);
+        }
+
+        return $parents;
+    }
+
+    protected function getEntityChildren(EntityCollection $entities, array $children): array
+    {
+        if (!empty($entities)) {
+            foreach ($entities as $entity) {
+                $children[] = $entity;
+            }
+            foreach ($entities as $entity) {
+                $children = $this->getEntityChildren($entity->get('categories'), $children);
+            }
+        }
+
+        return $children;
+    }
+
+    protected function updateCategoryTree(Entity $entity): void
+    {
+        if (!empty($entity->recursiveSave)) {
+            return;
+        }
+
+        // set route for current category
+        $entity->set('categoryRoute', self::getCategoryRoute($entity));
+        $entity->set('categoryRouteName', self::getCategoryRoute($entity, true));
+
+        $this->saveEntity($entity);
+
+        // update all children
+        if (!$entity->isNew()) {
+            $children = $this->getEntityChildren($entity->get('categories'), []);
+            foreach ($children as $child) {
+                // set route for child category
+                $child->set('categoryRoute', self::getCategoryRoute($child));
+                $child->set('categoryRouteName', self::getCategoryRoute($child, true));
+                $this->saveEntity($child);
+            }
+        }
     }
 }

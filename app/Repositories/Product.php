@@ -236,8 +236,8 @@ class Product extends AbstractRepository
     /**
      * Link category(tree) channels to product
      *
-     * @param Entity|string                 $product
-     * @param \Pim\Entities\Category|string $category
+     * @param Entity|string $product
+     * @param Entity|string $category
      * @param bool
      *
      * @return bool
