@@ -42,7 +42,7 @@
     "edit": "pim:views/channel/modals/edit"
   },
   "recordViews": {
-    "detail": "pim:views/record/detail",
+    "detail": "pim:views/channel/record/detail",
     "list": "pim:views/record/list"
   },
   "relationshipPanels": {
