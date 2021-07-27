@@ -38,7 +38,7 @@
     "youCanNotChooseChildCategory": "You can not choose a child category.",
     "categoryHasProducts": "Category with related products can't be deleted.",
     "categoryCannotBeUnRelatedFromCatalog": "Category tree with linked products can't be unlinked from catalog.",
-    "parentCategoryHasProducts": "This category cannot be set as parent category, it is leaf-category with assigned products to it.",
+    "parentCategoryHasProducts": "This category cannot be set as a parent category, it is a leaf-category with assigned products.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "You can not change parent category in root category with linked products."
   }
 }
