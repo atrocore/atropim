@@ -47,8 +47,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         data() {
             return {
-                scope: this.scope,
-                isPanel: !this.options.isModalView,
+                scope: this.scope
             }
         },
 
@@ -121,15 +120,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             }).on('tree.click', e => {
                 e.preventDefault();
 
-                if (this.options.isModalView) {
-                    this.getModelFactory().create(null, model => {
-                        model.id = e.node.id;
-                        model.set('name', e.node.name);
-
-                        this.getParentView().trigger('select', model);
-                        this.getParentView().close();
-                    });
-                } else {
+                if ($(e.click_event.target).hasClass('jqtree-title')) {
                     window.location.href = `/#Category/view/${e.node.id}`;
                 }
             });
@@ -137,27 +128,13 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         buildSearch() {
             let elSelector = '.catalog-tree-panel > .category-panel > .category-search';
-            if (this.options.isModalView) {
-                elSelector = '.modal-tree > .category-panel > .category-search';
-            }
-
             this.createView('categorySearch', 'pim:views/category/record/tree-panel/category-search', {
                 el: elSelector,
                 scope: this.scope
             }, view => {
                 view.render();
                 this.listenTo(view, 'category-search-select', category => {
-                    if (this.options.isModalView) {
-                        this.getModelFactory().create(null, model => {
-                            model.id = category.id;
-                            model.set('name', category.name);
-
-                            this.getParentView().trigger('select', model);
-                            this.getParentView().close();
-                        });
-                    } else {
-                        window.location.href = `/#Category/view/${category.id}`;
-                    }
+                    window.location.href = `/#Category/view/${category.id}`;
                 });
             });
         },
