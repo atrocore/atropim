@@ -23,6 +23,7 @@
     "productCategories": "Категории продукта"
   },
   "labels": {
+    "typeCategoryToSearch": "Введите категорию для поиска...",
     "Create Category": "Создать категории"
   },
   "messages": {

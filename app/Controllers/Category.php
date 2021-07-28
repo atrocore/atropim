@@ -31,9 +31,33 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+
 /**
  * Controller Category
  */
 class Category extends AbstractWithMainImageController
 {
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return array
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function actionTree($params, $data, $request): array
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getCategoryTree((string)$request->get('node'));
+    }
 }
