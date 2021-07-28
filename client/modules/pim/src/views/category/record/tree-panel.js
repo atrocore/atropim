@@ -147,19 +147,27 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 isCollapsed = true;
             }
 
+            const $list = $('#category-list-table');
+
             if (isCollapsed) {
                 $categoryPanel.removeClass('hidden');
                 $('.page-header').addClass('collapsed').removeClass('not-collapsed');
-                $('.detail-button-container').addClass('collapsed').removeClass('not-collapsed');
-                $('.overview').addClass('collapsed').removeClass('not-collapsed');
-                $('.list-container').addClass('collapsed');
+                if ($list.length > 0) {
+                    $list.addClass('collapsed');
+                } else {
+                    $('.detail-button-container').addClass('collapsed').removeClass('not-collapsed');
+                    $('.overview').addClass('collapsed').removeClass('not-collapsed');
+                }
                 this.showUtilityElements();
             } else {
                 $categoryPanel.addClass('hidden');
                 $('.page-header').removeClass('collapsed').addClass('not-collapsed');
-                $('.detail-button-container').removeClass('collapsed').addClass('not-collapsed');
-                $('.overview').removeClass('collapsed').addClass('not-collapsed');
-                $('.list-container').removeClass('collapsed');
+                if ($list.length > 0) {
+                    $list.removeClass('collapsed');
+                } else {
+                    $('.detail-button-container').removeClass('collapsed').addClass('not-collapsed');
+                    $('.overview').removeClass('collapsed').addClass('not-collapsed');
+                }
                 this.hideUtilityElements();
             }
 
