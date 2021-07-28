@@ -30,7 +30,6 @@
   },
   "recordViews": {
     "list": "pim:views/category/record/list",
-    "listTree": "pim:views/category/record/list-tree",
     "detail": "pim:views/category/record/detail"
   },
   "relationshipPanels": {
@@ -65,28 +64,6 @@
       "sortBy": "pcSorting",
       "asc": true,
       "view": "pim:views/category/record/panels/products"
-    }
-  },
-  "menu": {
-    "listTree": {
-      "buttons": [
-        {
-          "label": "List View",
-          "link": "#Category",
-          "acl": "read",
-          "style": "default"
-        }
-      ]
-    },
-    "list": {
-      "buttons": [
-        {
-          "label": "Tree View",
-          "link": "#Category/listTree",
-          "acl": "read",
-          "style": "default"
-        }
-      ]
     }
   }
 }

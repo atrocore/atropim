@@ -48,6 +48,37 @@ class Category extends AbstractService
      */
     private $roots = [];
 
+    public function getCategoryTree(string $parentId): array
+    {
+        $params = [
+            'maxSize' => \PHP_INT_MAX,
+            'sortBy'  => 'sortOrder',
+            'asc'     => true
+        ];
+
+        if (empty($parentId)) {
+            $params['where'] = [['type' => 'isNull', 'attribute' => 'categoryParentId']];
+        } else {
+            $params['where'] = [['type' => 'equals', 'attribute' => 'categoryParentId', 'value' => $parentId]];
+        }
+
+        $data = $this->findEntities($params);
+
+        $result = [];
+
+        if (!empty($data['total'])) {
+            foreach ($data['collection'] as $category) {
+                $result[] = [
+                    'id'             => $category->get('id'),
+                    'name'           => $category->get('name'),
+                    'load_on_demand' => !empty($category->get('childrenCount'))
+                ];
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Get category entity
      *

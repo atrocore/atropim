@@ -29,11 +29,27 @@
 Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
     return Dep.extend({
 
+        template: 'pim:category/list',
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.setupTreePanel();
+        },
+
         afterRender() {
             this.collection.isFetched = false;
             this.clearView('list');
             Dep.prototype.afterRender.call(this);
-        }
+        },
+
+        setupTreePanel() {
+            this.createView('treePanel', 'pim:views/category/record/tree-panel', {
+                el: `${this.options.el} .catalog-tree-panel`,
+                scope: this.scope,
+                model: this.model
+            });
+        },
 
     });
 });
