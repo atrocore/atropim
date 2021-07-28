@@ -57,6 +57,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
             this.buildTree();
 
+            this.actionCollapsePanel('open');
             if ($(window).width() <= 767 || !!this.getStorage().get('catalog-tree-panel', this.scope)) {
                 this.actionCollapsePanel();
             }
@@ -116,7 +117,6 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
                 this.ajaxPatchRequest(`Category/${moveInfo.moved_node.id}`, data).success(response => {
                     moveInfo.do_move();
-                    this.model.trigger('category-moved');
                 });
             }).on('tree.click', e => {
                 e.preventDefault();
@@ -162,22 +162,34 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             });
         },
 
-        actionCollapsePanel(forceHide) {
-            let categoryPanel = this.$el.find('.category-panel');
-            if (categoryPanel.hasClass('hidden') && !forceHide) {
-                categoryPanel.removeClass('hidden');
+        actionCollapsePanel(type) {
+            const $categoryPanel = this.$el.find('.category-panel');
+
+            let isCollapsed = $categoryPanel.hasClass('hidden');
+            if (type === 'open') {
+                isCollapsed = true;
+            }
+
+            if (isCollapsed) {
+                $categoryPanel.removeClass('hidden');
                 $('.page-header').addClass('collapsed').removeClass('not-collapsed');
+                $('.detail-button-container').addClass('collapsed').removeClass('not-collapsed');
+                $('.overview').addClass('collapsed').removeClass('not-collapsed');
                 $('.list-container').addClass('collapsed');
                 this.showUtilityElements();
-                this.getStorage().set('catalog-tree-panel', this.scope, '');
             } else {
-                categoryPanel.addClass('hidden');
-
+                $categoryPanel.addClass('hidden');
                 $('.page-header').removeClass('collapsed').addClass('not-collapsed');
+                $('.detail-button-container').removeClass('collapsed').addClass('not-collapsed');
+                $('.overview').removeClass('collapsed').addClass('not-collapsed');
                 $('.list-container').removeClass('collapsed');
                 this.hideUtilityElements();
-                this.getStorage().set('catalog-tree-panel', this.scope, 'collapsed');
             }
+
+            if (!type) {
+                this.getStorage().set('catalog-tree-panel', this.scope, isCollapsed ? '' : 'collapsed');
+            }
+
             $(window).trigger('resize');
         },
 

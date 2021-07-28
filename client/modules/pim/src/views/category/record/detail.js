@@ -29,15 +29,35 @@
 Espo.define('pim:views/category/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
+        template: 'pim:category/record/detail',
+
         notSavedFields: ['image'],
 
         setup() {
             Dep.prototype.setup.call(this);
 
+            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
+                this.isTreePanel = true;
+                this.setupTreePanel();
+            }
+
             this.listenTo(this.model, 'after:save', () => {
                 this.model.fetch();
                 $('.action[data-action=refresh][data-panel=catalogs]').click();
                 $('.action[data-action=refresh][data-panel=channels]').click();
+            });
+        },
+
+        data() {
+            return _.extend({isTreePanel: this.isTreePanel}, Dep.prototype.data.call(this))
+        },
+
+        setupTreePanel() {
+            this.createView('treePanel', 'pim:views/category/record/tree-panel', {
+                el: `${this.options.el} .catalog-tree-panel`,
+                scope: this.scope,
+                model: this.model
+            }, view => {
             });
         },
 

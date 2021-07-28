@@ -5,7 +5,7 @@
 <div class="category-panel">
     <div class="panel-group text-center">
         <div class="btn-group category-buttons">
-            <button type="button" class="btn btn-default active" data-action="selectAll">{{translate 'All'}}</button>
+            <a href="/#Category" class="btn btn-default active">{{translate 'All'}}</a>
         </div>
     </div>
     <div class="panel-group category-search">
