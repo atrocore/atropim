@@ -62,7 +62,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             }
 
             let interval = setInterval(() => {
-                if ($('#category-list-table').length === 0) {
+                if ($('.catalog-tree-panel').length === 0) {
                     clearInterval(interval);
                     return;
                 }
