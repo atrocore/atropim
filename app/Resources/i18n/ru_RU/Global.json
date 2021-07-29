@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "AttributeTab": "Вкладка атрибута",
     "Product": "Продукт",
     "Attribute": "Атрибут",
     "Catalog": "Каталог",
@@ -22,13 +23,14 @@
     "ContentGroup": "Група контента"
   },
   "scopeNamesPlural": {
+    "AttributeTab": "Вкладки атрибутов",
     "Attribute": "Атрибуты",
     "Catalog": "Каталоги",
     "Category": "Категории",
     "Channel": "Каналы",
     "AssociatedProduct": "Связанные продукты",
     "Association": "Связи",
-    "AttributeGroup": "Групы атрибутов",
+    "AttributeGroup": "Группы атрибутов",
     "Brand": "Бренды",
     "ProductFamily": "Продуктовые семьи",
     "Packaging": "Упаковки",

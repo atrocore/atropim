@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "attributeGroups": "Attribut-Gruppen"
+  },
+  "links": {
+    "attributeGroups": "Attribut-Gruppen"
+  },
+  "labels": {
+    "Create AttributeTab": "Attributtab erstellen"
+  }
+}
