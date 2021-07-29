@@ -71,6 +71,7 @@
     "role": "Role"
   },
   "labels": {
+    "useDragAndDrop": "Use Drag & Drop to reorder",
     "categorySettings": "Category settings",
     "cascade": "Cascade",
     "restrict": "Restrict",

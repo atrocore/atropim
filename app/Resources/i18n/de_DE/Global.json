@@ -84,6 +84,7 @@
     }
   },
   "labels": {
+    "useDragAndDrop": "Per Drag & Drop neu anordnen",
     "categorySettings": "Kategorieeinstellungen",
     "cascade": "Erweitern",
     "restrict": "Einschränken",

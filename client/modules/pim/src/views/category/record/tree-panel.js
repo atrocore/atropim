@@ -60,6 +60,15 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             if ($(window).width() <= 767 || !!this.getStorage().get('catalog-tree-panel', this.scope)) {
                 this.actionCollapsePanel();
             }
+
+            let interval = setInterval(() => {
+                if ($('#category-list-table').length === 0) {
+                    clearInterval(interval);
+                    return;
+                }
+                const title = this.translate("useDragAndDrop");
+                $('.jqtree-title:not([title="' + title + '"])').attr('title', title);
+            }, 100);
         },
 
         selectTreeNode($tree, route, model) {
