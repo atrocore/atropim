@@ -89,6 +89,10 @@
       "readOnly": false,
       "tooltip": false,
       "isCustom": false
+    },
+    "attributeTab": {
+      "type": "link",
+      "required": false
     }
   },
   "links": {
@@ -120,6 +124,11 @@
       "entity": "Attribute",
       "audited": false,
       "isCustom": false
+    },
+    "attributeTab": {
+      "type": "belongsTo",
+      "entity": "AttributeTab",
+      "foreign": "attributeGroups"
     }
   },
   "collection": {
