@@ -31,24 +31,20 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Treo\Core\Migration\Base;
-
 /**
- * Migration class for version 1.1.39
+ * Migration class for version 1.1.49
  */
-class V1Dot1Dot39 extends Base
+class V1Dot1Dot49 extends V1Dot1Dot21
 {
-    /**
-     * @inheritDoc
-     */
     public function up(): void
     {
+        $this->execute("ALTER TABLE `attribute` ADD pattern VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("ALTER TABLE `attribute` ADD `unique` TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
     }
 
-    /**
-     * @inheritDoc
-     */
     public function down(): void
     {
+        $this->execute("ALTER TABLE `attribute` DROP pattern");
+        $this->execute("ALTER TABLE `attribute` DROP `unique`");
     }
 }
