@@ -746,15 +746,16 @@ class Product extends AbstractRepository
                 try {
                     $this->getEntityManager()->saveEntity($productAttributeValue);
                 } catch (ProductAttributeAlreadyExists $e) {
-                    $copy = $repository->findCopy($productAttributeValue);
-                    $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
-                    $copy->set('isRequired', $productAttributeValue->get('isRequired'));
+                    if (!empty($copy = $repository->findCopy($productAttributeValue))) {
+                        $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
+                        $copy->set('isRequired', $productAttributeValue->get('isRequired'));
 
-                    $copy->skipVariantValidation = true;
-                    $copy->skipPfValidation = true;
-                    $copy->skipProductChannelValidation = true;
+                        $copy->skipVariantValidation = true;
+                        $copy->skipPfValidation = true;
+                        $copy->skipProductChannelValidation = true;
 
-                    $this->getEntityManager()->saveEntity($copy);
+                        $this->getEntityManager()->saveEntity($copy);
+                    }
                 }
             }
         }
