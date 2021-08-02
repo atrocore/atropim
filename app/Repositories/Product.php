@@ -165,6 +165,7 @@ class Product extends AbstractRepository
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
+            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->actualizePfa((string)$entity->get('id'));
             $this->filterByChannel($entity, $params);
             $params['limit'] = 9999;
         }
@@ -835,13 +836,6 @@ class Product extends AbstractRepository
         return $this->getInjection('language')->translate($key, $label, $scope);
     }
 
-    /**
-     * @param string $target
-     * @param string $action
-     * @param Event  $event
-     *
-     * @return Event
-     */
     protected function dispatch(string $target, string $action, Event $event): Event
     {
         return $this->getInjection('eventManager')->dispatch($target, $action, $event);
