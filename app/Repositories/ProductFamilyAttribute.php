@@ -88,10 +88,8 @@ class ProductFamilyAttribute extends Base
                 $pav->set('isRequired', $pfa->get('isRequired'));
             }
 
-            if ($pav->isNew() || $pav->isAttributeChanged('productFamilyAttributeId') || $pav->isAttributeChanged('isRequired')) {
-                $pav->skipPfValidation = true;
-                $this->getEntityManager()->saveEntity($pav);
-            }
+            $pav->skipPfValidation = true;
+            $this->getEntityManager()->saveEntity($pav);
         }
 
         if (empty($updated)) {
