@@ -21,7 +21,6 @@
     "productFamily": {
       "type": "link",
       "layoutFiltersDisabled": false,
-      "layoutMassUpdateDisabled": true,
       "required": false,
       "view": "pim:views/product/fields/product-family"
     },
