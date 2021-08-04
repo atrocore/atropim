@@ -377,6 +377,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     productId: this.model.id
                 }).then(response => {
                     this.notify('Saved', 'success');
+                    this.model.trigger('after:unrelate', this.link);
                     this.actionRefresh();
                 });
             }, this);
