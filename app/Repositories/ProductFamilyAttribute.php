@@ -89,6 +89,7 @@ class ProductFamilyAttribute extends Base
             }
 
             $pav->skipPfValidation = true;
+            $pav->skipProductChannelValidation = true;
             $this->getEntityManager()->saveEntity($pav);
         }
 
