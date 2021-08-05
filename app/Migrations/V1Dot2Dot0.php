@@ -45,7 +45,8 @@ class V1Dot2Dot0 extends V1Dot1Dot21
 
     public function down(): void
     {
-        $this->execute("DELETE FROM scheduled_job WHERE id='updatepfa'");
-        $this->execute("DELETE FROM job WHERE scheduled_job_id='updatepfa'");
+        $this->execute("DROP TABLE attribute_tab");
+        $this->execute("DROP INDEX IDX_ATTRIBUTE_TAB_ID ON `attribute`");
+        $this->execute("ALTER TABLE `attribute` DROP attribute_tab_id");
     }
 }
