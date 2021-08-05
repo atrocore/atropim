@@ -1,9 +1,9 @@
 {
   "fields": {
-    "attributeGroups": "Группы атрибутов"
+    "attributes": "Атрибуты"
   },
   "links": {
-    "attributeGroups": "Группы атрибутов"
+    "attributes": "Атрибуты"
   },
   "labels": {
     "Create AttributeTab": "Создать таб атрибутов"

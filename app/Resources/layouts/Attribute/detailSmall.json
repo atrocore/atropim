@@ -1,28 +1,32 @@
 [
-    {
-        "label": "",
-        "style": "default",
-        "rows": [
-            [
-                {
-                    "name": "type"
-                },
-                {
-                    "name": "code"
-                }
-            ],
-            [
-                {
-                    "name": "attributeGroup"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "pattern"
-                },
-                false
-            ]
-        ]
-    }
+  {
+    "label": "",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "attributeGroup"
+        },
+        {
+          "name": "attributeTab"
+        }
+      ],
+      [
+        {
+          "name": "pattern"
+        },
+        {
+          "name": "unique"
+        }
+      ]
+    ]
+  }
 ]

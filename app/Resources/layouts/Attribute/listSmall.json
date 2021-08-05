@@ -1,18 +1,21 @@
 [
-    {
-        "name": "name",
-        "link": true
-    },
-    {
-        "name": "code"
-    },
-    {
-        "name": "attributeGroup"
-    },
-    {
-        "name": "type"
-    },
-    {
-        "name": "isMultilang"
-    }
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "attributeGroup"
+  },
+  {
+    "name": "attributeTab"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "isMultilang"
+  }
 ]

@@ -1,9 +1,9 @@
 {
   "fields": {
-    "attributeGroups": "Attribute Groups"
+    "attributes": "Attributes"
   },
   "links": {
-    "attributeGroups": "Attribute Groups"
+    "attributes": "Attributes"
   },
   "labels": {
     "Create AttributeTab": "Create Attribute Tab"
