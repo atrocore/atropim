@@ -1,6 +1,7 @@
 {
   "fields": {
     "attributeGroup": "Attribute Group",
+    "attributeTab": "Attribute Tab",
     "productAttributes": "Product attributes",
     "typeValue": "Values",
     "isSystem": "Is system",
@@ -18,6 +19,7 @@
     "unique": "Unique"
   },
   "links": {
+    "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",
     "productAttributes": "Product attributes",
     "products": "Products",

@@ -59,6 +59,15 @@
     "edit": "pim:views/product/modals/edit"
   },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "tab1",
+        "label": "Tab 1",
+        "view": "pim:views/product/record/panels/tab"
+      }
+    ]
+  },
   "relationshipPanels": {
     "productAttributeValues": {
       "createAction": "createRelatedConfigured",
