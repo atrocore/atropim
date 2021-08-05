@@ -29,22 +29,17 @@
 
 declare(strict_types=1);
 
-namespace Pim\Migrations;
+namespace Pim\Jobs;
+
+use Espo\Core\Jobs\Base;
 
 /**
- * Migration class for version 1.1.49
+ * Class UpdatePfa
  */
-class V1Dot1Dot49 extends V1Dot1Dot21
+class UpdatePfa extends Base
 {
-    public function up(): void
+    public function run(): void
     {
-        $this->execute("ALTER TABLE `attribute` ADD pattern VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("ALTER TABLE `attribute` ADD `unique` TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
-    }
-
-    public function down(): void
-    {
-        $this->execute("ALTER TABLE `attribute` DROP pattern");
-        $this->execute("ALTER TABLE `attribute` DROP `unique`");
+        $this->getEntityManager()->getRepository('ProductFamilyAttribute')->actualizePfa();
     }
 }

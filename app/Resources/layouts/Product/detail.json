@@ -15,8 +15,14 @@
         {
           "name": "name"
         },
+        false
+      ],
+      [
         {
           "name": "catalog"
+        },
+        {
+          "name": "productFamily"
         }
       ],
       [

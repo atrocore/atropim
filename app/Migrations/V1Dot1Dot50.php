@@ -32,19 +32,18 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 /**
- * Migration class for version 1.1.49
+ * Migration class for version 1.1.50
  */
-class V1Dot1Dot49 extends V1Dot1Dot21
+class V1Dot1Dot50 extends V1Dot1Dot21
 {
     public function up(): void
     {
-        $this->execute("ALTER TABLE `attribute` ADD pattern VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("ALTER TABLE `attribute` ADD `unique` TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("INSERT INTO scheduled_job (id, name, job, status, scheduling, created_at, modified_at, is_internal, created_by_id, modified_by_id) VALUES ('updatepfa','UpdatePfa','UpdatePfa','Active','* * * * *','2021-08-02 12:40:02','2021-08-02 12:40:02',1,'system','system')");
     }
 
     public function down(): void
     {
-        $this->execute("ALTER TABLE `attribute` DROP pattern");
-        $this->execute("ALTER TABLE `attribute` DROP `unique`");
+        $this->execute("DELETE FROM scheduled_job WHERE id='updatepfa'");
+        $this->execute("DELETE FROM job WHERE scheduled_job_id='updatepfa'");
     }
 }
