@@ -28,8 +28,14 @@
 
 Espo.define('pim:views/product/record/panels/tab', 'pim:views/product/record/panels/product-attribute-values',
     Dep => Dep.extend({
-
-        link: 'productAttributeValues'
+        //
+        // setup() {
+        //     this.tabId = "610b98a924cf2749d";
+        //
+        //     console.log(this.defs)
+        //
+        //     Dep.prototype.setup.call(this);
+        // },
 
     })
 );

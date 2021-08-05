@@ -30,10 +30,48 @@
 namespace Pim\Repositories;
 
 use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
 /**
  * Class AttributeTab
  */
 class AttributeTab extends Base
 {
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        $this->clearCache();
+
+        parent::afterSave($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->clearCache();
+
+        parent::afterRemove($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('dataManager');
+    }
+
+    /**
+     * Clearing cache
+     */
+    protected function clearCache(): void
+    {
+        $this->getInjection('dataManager')->clearCache();
+    }
 }

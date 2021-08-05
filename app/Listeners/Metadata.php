@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
@@ -40,6 +41,8 @@ use Treo\Listeners\AbstractListener;
  */
 class Metadata extends AbstractListener
 {
+    protected const ATTRIBUTE_TABS_FILE = 'data/cache/attribute_tabs.json';
+
     /**
      * @param Event $event
      */
@@ -67,8 +70,43 @@ class Metadata extends AbstractListener
             $data['clientDefs']['Category']['relationshipPanels']['catalogs']['unlinkConfirm'] = 'Category.messages.categoryCatalogUnlinkConfirm';
         }
 
+        $data = $this->addTabPanels($data);
+
         // set data
         $event->setArgument('data', $data);
+    }
+
+    protected function addTabPanels(array $data): array
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return $data;
+        }
+
+        if (!file_exists(self::ATTRIBUTE_TABS_FILE)) {
+            try {
+                $sth = $this->getContainer()->get('pdo')->prepare("SELECT id, name FROM attribute_tab WHERE deleted=0");
+                $sth->execute();
+                $tabs = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            } catch (\Throwable $e) {
+                $tabs = [];
+            }
+
+            Util::createDir('data/cache');
+            file_put_contents(self::ATTRIBUTE_TABS_FILE, Json::encode($tabs));
+        } else {
+            $tabs = Json::decode(file_get_contents(self::ATTRIBUTE_TABS_FILE), true);
+        }
+
+        foreach ($tabs as $tab) {
+            $data['clientDefs']['Product']['bottomPanels']['detail'][] = [
+                'name'  => "tab_{$tab['id']}",
+                'label' => $tab['name'],
+                'tabId' => $tab['id'],
+                'view'  => 'pim:views/product/record/panels/tab',
+            ];
+        }
+
+        return $data;
     }
 
     protected function prepareProductFamilyAttributeMetadata(array $data): array

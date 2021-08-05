@@ -31,6 +31,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         template: 'pim:product/record/panels/product-attribute-values',
 
+        link: 'productAttributeValues',
+
         baseSelectFields: [
             'channelId',
             'channelName',
@@ -234,6 +236,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 if (asc) {
                     collection.asc = asc;
                 }
+
+                collection.where.push({
+                    type: 'bool',
+                    value: 'onlyTabAttributes',
+                    data: {"onlyTabAttributes": this.defs.tabId}
+                });
 
                 this.prepareCollection(collection);
 

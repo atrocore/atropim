@@ -59,15 +59,6 @@
     "edit": "pim:views/product/modals/edit"
   },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
-  "bottomPanels": {
-    "detail": [
-      {
-        "name": "tab1",
-        "label": "Tab 1",
-        "view": "pim:views/product/record/panels/tab"
-      }
-    ]
-  },
   "relationshipPanels": {
     "productAttributeValues": {
       "createAction": "createRelatedConfigured",
@@ -75,6 +66,7 @@
       "selectBoolFilterList": [
         "notLinkedProductAttributeValues"
       ],
+      "tabId": null,
       "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
       "view": "pim:views/product/record/panels/product-attribute-values",
       "recordListView": "pim:views/product-attribute-value/record/list-in-product",
