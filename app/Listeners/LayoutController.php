@@ -58,8 +58,10 @@ class LayoutController extends AbstractListener
 
         if (!$isAdminPage && method_exists($this, $method)) {
             $this->{$method}($event);
-        } else if ($isAdminPage && method_exists($this, $methodAdmin)) {
-            $this->{$methodAdmin}($event);
+        } else {
+            if ($isAdminPage && method_exists($this, $methodAdmin)) {
+                $this->{$methodAdmin}($event);
+            }
         }
     }
 
@@ -185,6 +187,33 @@ class LayoutController extends AbstractListener
      */
     protected function modifyProductRelationshipsAdmin(Event $event)
     {
+        if ($this->getContainer()->get('layout')->isCustom('Product', 'relationships')) {
+            return;
+        }
+
+        $result = Json::decode($event->getArgument('result'), true);
+        $newResult = [];
+        foreach ($result as $row) {
+            if ($row['name'] == 'productAttributeValues') {
+                $panels = $this->getMetadata()->get(['clientDefs', 'Product', 'bottomPanels', 'detail'], []);
+                foreach ($panels as $panel) {
+                    if (!empty($panel['tabId'])) {
+                        $newResult[] = ['name' => $panel['name']];
+                    }
+                }
+            }
+            $newResult[] = $row;
+        }
+
+        $event->setArgument('result', Json::encode($newResult));
+    }
+
+    /**
+     * @param Event $event
+     */
+    protected function modifyProductRelationships(Event $event)
+    {
+        $this->modifyProductRelationshipsAdmin($event);
     }
 
     /**
