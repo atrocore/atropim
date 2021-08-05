@@ -29,7 +29,7 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "attributeGroups": {
+    "attributes": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
@@ -46,10 +46,10 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "attributeGroups": {
+    "attributes": {
       "type": "hasMany",
       "foreign": "attributeTab",
-      "entity": "AttributeGroup"
+      "entity": "Attribute"
     }
   },
   "collection": {
