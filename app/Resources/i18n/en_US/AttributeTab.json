@@ -6,6 +6,7 @@
     "attributes": "Attributes"
   },
   "labels": {
+    "selectAttributeGroup": "Select Attribute Group",
     "Create AttributeTab": "Create Attribute Tab"
   }
 }
