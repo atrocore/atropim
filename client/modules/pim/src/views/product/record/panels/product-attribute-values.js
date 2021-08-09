@@ -31,8 +31,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         template: 'pim:product/record/panels/product-attribute-values',
 
-        link: 'productAttributeValues',
-
         baseSelectFields: [
             'channelId',
             'channelName',
@@ -73,6 +71,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 return {
                     productId: this.model.id,
                     scope: 'Global'
+                }
+            },
+            fromAttributesTab() {
+                return {
+                    tabId: this.defs.tabId
                 }
             }
         },

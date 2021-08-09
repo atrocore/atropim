@@ -5,6 +5,7 @@
     "onlyMy",
     "notLinkedWithProduct",
     "notLinkedProductAttributeValues",
+    "fromAttributesTab",
     "notLinkedProductFamilyAttributes",
     "unitTypeDisabled",
     "notLinkedWithProductFamilyAttribute",
@@ -13,6 +14,7 @@
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "notLinkedProductAttributeValues",
+    "fromAttributesTab",
     "notLinkedProductFamilyAttributes",
     "unitTypeDisabled",
     "notLinkedWithProductFamilyAttribute",

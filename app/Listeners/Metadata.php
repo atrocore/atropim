@@ -99,10 +99,14 @@ class Metadata extends AbstractListener
 
         foreach ($tabs as $tab) {
             $data['clientDefs']['Product']['bottomPanels']['detail'][] = [
-                'name'  => "tab_{$tab['id']}",
-                'label' => $tab['name'],
-                'tabId' => $tab['id'],
-                'view'  => 'pim:views/product/record/panels/tab',
+                'name'                 => "tab_{$tab['id']}",
+                'link'                 => 'productAttributeValues',
+                'label'                => $tab['name'],
+                'createAction'         => 'createRelatedConfigured',
+                'selectAction'         => 'selectRelatedEntity',
+                'selectBoolFilterList' => ['notLinkedProductAttributeValues', 'fromAttributesTab'],
+                'tabId'                => $tab['id'],
+                'view'                 => 'pim:views/product/record/panels/tab',
             ];
         }
 
