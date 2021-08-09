@@ -53,7 +53,7 @@
     "All": "All"
   },
   "tooltips": {
-    "isSorted": "Options will be sorted after saving page."
+    "isSorted": "Options will be sorted after saving."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Attribute value should be unique.",

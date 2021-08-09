@@ -1,36 +1,42 @@
 [
-    {
-        "label": "Overview",
-        "style": "default",
-        "rows": [
-            [
-                {
-                    "name": "type"
-                },
-                {
-                    "name": "code"
-                }
-            ],
-            [
-                {
-                    "name": "assetType"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "attributeGroup"
-                },
-                {
-                    "name": "unique"
-                }
-            ],
-            [
-                {
-                    "name": "pattern"
-                },
-                false
-            ]
-        ]
-    }
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "assetType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "attributeGroup"
+        },
+        {
+          "name": "unique"
+        }
+      ],
+      [
+        {
+          "name": "pattern"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isSorted"
+        },
+        false
+      ]
+    ]
+  }
 ]
