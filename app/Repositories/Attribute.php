@@ -314,7 +314,7 @@ class Attribute extends AbstractRepository
         }
     }
 
-    protected function updateMultiEnumPav(Entity $attribute, array $deletedPositions): void
+    protected function updateMultiEnumPav(Entity $attribute): void
     {
         return;
 

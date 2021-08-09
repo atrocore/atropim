@@ -39,12 +39,14 @@ class V1Dot2Dot0 extends V1Dot1Dot21
     public function up(): void
     {
         $this->execute("ALTER TABLE `attribute` ADD is_sorted TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("ALTER TABLE `attribute` ADD type_value_ids MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `attribute` DROP is_system");
     }
 
     public function down(): void
     {
         $this->execute("ALTER TABLE `attribute` DROP is_sorted");
+        $this->execute("ALTER TABLE `attribute` DROP type_value_ids");
         $this->execute("ALTER TABLE `attribute` ADD is_system TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
     }
 }
