@@ -2,7 +2,6 @@
   "fields": {
     "description": "Beschreibung",
     "isActive": "Aktiv",
-    "isSystem": "Ist System",
     "productFamilies": "Produktfamilien",
     "productFamilyAttributes": "Attribute der  Produktfamilie",
     "productFamilyTemplate": "Vorlage der Produktfamilie",

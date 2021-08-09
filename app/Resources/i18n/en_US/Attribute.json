@@ -3,7 +3,6 @@
     "attributeGroup": "Attribute Group",
     "productAttributes": "Product attributes",
     "typeValue": "Values",
-    "isSystem": "Is system",
     "type": "Attribute Type",
     "code": "Code",
     "name": "Attribute Name",
@@ -15,7 +14,8 @@
     "sortOrder": "Sort Order",
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "isSorted": "Is Sorted (alphabetically)"
   },
   "links": {
     "attributeGroup": "Attribute Group",
@@ -51,6 +51,9 @@
   },
   "filterLabels": {
     "All": "All"
+  },
+  "tooltips": {
+    "isSorted": "Options will be sorted after saving page."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Attribute value should be unique.",

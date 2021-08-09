@@ -115,18 +115,9 @@
       "layoutDetailDisabled": true,
       "view": "pim:views/fields/array-extended"
     },
-    "isSystem": {
-      "notNull": true,
+    "isSorted": {
       "type": "bool",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutFiltersDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "default": false,
-      "audited": false,
-      "readOnly": false,
-      "tooltip": false,
-      "importDisabled": true
+      "tooltip": true
     },
     "productAttributeValues": {
       "type": "linkMultiple",
