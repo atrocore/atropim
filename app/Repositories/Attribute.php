@@ -245,7 +245,6 @@ class Attribute extends AbstractRepository
 
     protected function updateEnumPav(Entity $attribute): void
     {
-        return;
         if ($attribute->get('type') != 'enum') {
             return;
         }
@@ -254,18 +253,18 @@ class Attribute extends AbstractRepository
             return;
         }
 
-        // old type value
-        $oldTypeValue = $attribute->getFetched('typeValue');
-
-        // delete
-        foreach ($deletedPositions as $deletedPosition) {
-            unset($oldTypeValue[$deletedPosition]);
+        if (empty($attribute->getFetched('typeValueIds'))) {
+            return;
         }
 
         // prepare became values
         $becameValues = [];
-        foreach (array_values($oldTypeValue) as $k => $v) {
-            $becameValues[$v] = $attribute->get('typeValue')[$k];
+        foreach ($attribute->get('typeValueIds') as $k => $v) {
+            foreach ($attribute->getFetched('typeValueIds') as $k1 => $v1) {
+                if ($v1 === $v) {
+                    $becameValues[$attribute->getFetched('typeValue')[$k1]] = $attribute->get('typeValue')[$k];
+                }
+            }
         }
 
         /** @var array $pavs */
@@ -316,8 +315,6 @@ class Attribute extends AbstractRepository
 
     protected function updateMultiEnumPav(Entity $attribute): void
     {
-        return;
-
         if ($attribute->get('type') != 'multiEnum') {
             return;
         }
@@ -326,18 +323,18 @@ class Attribute extends AbstractRepository
             return;
         }
 
-        // old type value
-        $oldTypeValue = $attribute->getFetched('typeValue');
-
-        // delete
-        foreach ($deletedPositions as $deletedPosition) {
-            unset($oldTypeValue[$deletedPosition]);
+        if (empty($attribute->getFetched('typeValueIds'))) {
+            return;
         }
 
         // prepare became values
         $becameValues = [];
-        foreach (array_values($oldTypeValue) as $k => $v) {
-            $becameValues[$v] = $attribute->get('typeValue')[$k];
+        foreach ($attribute->get('typeValueIds') as $k => $v) {
+            foreach ($attribute->getFetched('typeValueIds') as $k1 => $v1) {
+                if ($v1 === $v) {
+                    $becameValues[$attribute->getFetched('typeValue')[$k1]] = $attribute->get('typeValue')[$k];
+                }
+            }
         }
 
         /** @var array $pavs */
