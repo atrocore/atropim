@@ -41,6 +41,22 @@ class V1Dot2Dot0 extends V1Dot1Dot21
         $this->execute("ALTER TABLE `attribute` ADD is_sorted TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `attribute` ADD type_value_ids MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `attribute` DROP is_system");
+
+        try {
+            $data = $this
+                ->getPDO()
+                ->query("SELECT id,type_value FROM `attribute` WHERE deleted=0 AND type IN ('enum','multiEnum') AND type_value_ids IS NULL")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($data as $v) {
+                if (!empty($v['type_value'])) {
+                    $typeValueIds = json_encode(array_map('strval', array_keys(json_decode($v['type_value'], true))));
+                    $this->execute("UPDATE `attribute` SET type_value_ids='$typeValueIds' WHERE id='{$v['id']}'");
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore all
+        }
     }
 
     public function down(): void
