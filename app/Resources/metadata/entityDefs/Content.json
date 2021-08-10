@@ -15,11 +15,13 @@
     },
     "status": {
       "type": "enum",
-      "options": ["draft", "written", "reviewed", "published"]
+      "options": ["draft", "written", "reviewed", "published"],
+      "optionsIds": ["draft", "written", "reviewed", "published"]
     },
     "type": {
       "type": "enum",
-      "options": ["review", "news", "promotional"]
+      "options": ["review", "news", "promotional"],
+      "optionsIds": ["review", "news", "promotional"]
     },
     "description": {
       "type": "text",

@@ -98,6 +98,13 @@
         "notReady",
         "ready"
       ],
+      "optionsIds": [
+        "draft",
+        "prepared",
+        "reviewed",
+        "notReady",
+        "ready"
+      ],
       "optionColors": [
         "00BFFF",
         "004DFF",
@@ -276,6 +283,7 @@
       "type": "multiEnum",
       "optionColors": {},
       "options": ["mar", "tech", "ass", "img", "cat", "ch", "pr"],
+      "optionsIds": ["mar", "tech", "ass", "img", "cat", "ch", "pr"],
       "default": []
     },
     "isActiveForChannel": {

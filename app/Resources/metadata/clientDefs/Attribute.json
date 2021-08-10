@@ -96,6 +96,20 @@
             }
           ]
         }
+      },
+      "isSorted": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "enum",
+                "multiEnum"
+              ]
+            }
+          ]
+        }
       }
     }
   }
