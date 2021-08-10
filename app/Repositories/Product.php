@@ -569,15 +569,15 @@ class Product extends AbstractRepository
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->isSkippedValidation('isProductSkuUnique') && !$this->isFieldUnique($entity, 'sku')) {
-            throw new BadRequest($this->translate('productWithSuchSkuAlreadyExist', 'exceptions', 'Product'));
+            throw new BadRequest(sprintf($this->translate('productWithSuchSkuAlreadyExist', 'exceptions', 'Product'), $entity->get('sku')));
         }
 
         if (!$entity->isSkippedValidation('isProductEanUnique') && !$this->isFieldUnique($entity, 'ean')) {
-            throw new BadRequest($this->translate('eanShouldHaveUniqueValue', 'exceptions', 'Product'));
+            throw new BadRequest(sprintf($this->translate('eanShouldHaveUniqueValue', 'exceptions', 'Product'), $entity->get('ean')));
         }
 
         if (!$entity->isSkippedValidation('isProductMpnUnique') && !$this->isFieldUnique($entity, 'mpn')) {
-            throw new BadRequest($this->translate('mpnShouldHaveUniqueValue', 'exceptions', 'Product'));
+            throw new BadRequest(sprintf($this->translate('mpnShouldHaveUniqueValue', 'exceptions', 'Product'), $entity->get('mpn')));
         }
 
         if ($entity->isAttributeChanged('catalogId')) {
