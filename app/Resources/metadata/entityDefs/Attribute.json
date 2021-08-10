@@ -83,6 +83,23 @@
         "wysiwyg",
         "asset"
       ],
+      "optionsIds": [
+        "array",
+        "bool",
+        "currency",
+        "date",
+        "datetime",
+        "enum",
+        "float",
+        "int",
+        "multiEnum",
+        "text",
+        "unit",
+        "url",
+        "varchar",
+        "wysiwyg",
+        "asset"
+      ],
       "default": "text",
       "layoutMassUpdateDisabled": true,
       "isSorted": false,
@@ -118,18 +135,21 @@
       "layoutDetailDisabled": true,
       "view": "pim:views/fields/array-extended"
     },
-    "isSystem": {
-      "notNull": true,
-      "type": "bool",
+    "typeValueIds": {
+      "type": "array",
       "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutFiltersDisabled": true,
+      "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "default": false,
-      "audited": false,
-      "readOnly": false,
-      "tooltip": false,
-      "importDisabled": true
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "isSorted": {
+      "type": "bool",
+      "tooltip": true
     },
     "productAttributeValues": {
       "type": "linkMultiple",

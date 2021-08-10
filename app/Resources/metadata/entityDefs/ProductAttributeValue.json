@@ -107,6 +107,10 @@
         "Global",
         "Channel"
       ],
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
       "default": "Global"
     },
     "channel": {

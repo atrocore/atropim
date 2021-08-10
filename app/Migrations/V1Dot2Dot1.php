@@ -32,37 +32,21 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 /**
- * Migration class for version 1.2.0
+ * Migration class for version 1.2.1
  */
-class V1Dot2Dot0 extends V1Dot1Dot21
+class V1Dot2Dot1 extends V1Dot1Dot21
 {
     public function up(): void
     {
-        $this->execute("ALTER TABLE `attribute` ADD is_sorted TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("ALTER TABLE `attribute` ADD type_value_ids MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("ALTER TABLE `attribute` DROP is_system");
-
-        try {
-            $data = $this
-                ->getPDO()
-                ->query("SELECT id,type_value FROM `attribute` WHERE deleted=0 AND type IN ('enum','multiEnum') AND type_value_ids IS NULL")
-                ->fetchAll(\PDO::FETCH_ASSOC);
-
-            foreach ($data as $v) {
-                if (!empty($v['type_value'])) {
-                    $typeValueIds = json_encode(array_map('strval', array_keys(json_decode($v['type_value'], true))));
-                    $this->execute("UPDATE `attribute` SET type_value_ids='$typeValueIds' WHERE id='{$v['id']}'");
-                }
-            }
-        } catch (\Throwable $e) {
-            // ignore all
-        }
+        $this->execute("CREATE TABLE `attribute_tab` (`id` VARCHAR(24) NOT NULL COLLATE utf8mb4_unicode_ci, `name` VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, `description` MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci, `created_at` DATETIME DEFAULT NULL COLLATE utf8mb4_unicode_ci, `modified_at` DATETIME DEFAULT NULL COLLATE utf8mb4_unicode_ci, `created_by_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `modified_by_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, INDEX `IDX_CREATED_BY_ID` (created_by_id), INDEX `IDX_MODIFIED_BY_ID` (modified_by_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
+        $this->execute("ALTER TABLE `attribute` ADD attribute_tab_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("CREATE INDEX IDX_ATTRIBUTE_TAB_ID ON `attribute` (attribute_tab_id)");
     }
 
     public function down(): void
     {
-        $this->execute("ALTER TABLE `attribute` DROP is_sorted");
-        $this->execute("ALTER TABLE `attribute` DROP type_value_ids");
-        $this->execute("ALTER TABLE `attribute` ADD is_system TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("DROP TABLE attribute_tab");
+        $this->execute("DROP INDEX IDX_ATTRIBUTE_TAB_ID ON `attribute`");
+        $this->execute("ALTER TABLE `attribute` DROP attribute_tab_id");
     }
 }

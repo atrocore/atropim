@@ -88,17 +88,9 @@ class Attribute extends AbstractRepository
             throw new BadRequest("The number of 'Values' items should be identical for all locales");
         }
 
-        // get deleted positions
-        $deletedPositions = !empty($entity->get('typeValue')) ? $this->getDeletedPositions($entity->get('typeValue')) : [];
-
-        // delete positions
-        if (!empty($deletedPositions)) {
-            $this->deletePositions($entity, $deletedPositions);
-        }
-
         if (!$entity->isNew()) {
-            $this->updateEnumPav($entity, $deletedPositions);
-            $this->updateMultiEnumPav($entity, $deletedPositions);
+            $this->updateEnumPav($entity);
+            $this->updateMultiEnumPav($entity);
         }
 
         // set sort order
@@ -251,35 +243,28 @@ class Attribute extends AbstractRepository
         }
     }
 
-    /**
-     * @param Entity $attribute
-     * @param array  $deletedPositions
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    protected function updateEnumPav(Entity $attribute, array $deletedPositions): bool
+    protected function updateEnumPav(Entity $attribute): void
     {
         if ($attribute->get('type') != 'enum') {
-            return true;
+            return;
         }
 
         if (!$this->isEnumTypeValueValid($attribute)) {
-            return true;
+            return;
         }
 
-        // old type value
-        $oldTypeValue = $attribute->getFetched('typeValue');
-
-        // delete
-        foreach ($deletedPositions as $deletedPosition) {
-            unset($oldTypeValue[$deletedPosition]);
+        if (empty($attribute->getFetched('typeValueIds'))) {
+            return;
         }
 
         // prepare became values
         $becameValues = [];
-        foreach (array_values($oldTypeValue) as $k => $v) {
-            $becameValues[$v] = $attribute->get('typeValue')[$k];
+        foreach ($attribute->get('typeValueIds') as $k => $v) {
+            foreach ($attribute->getFetched('typeValueIds') as $k1 => $v1) {
+                if ($v1 === $v) {
+                    $becameValues[$attribute->getFetched('typeValue')[$k1]] = $attribute->get('typeValue')[$k];
+                }
+            }
         }
 
         /** @var array $pavs */
@@ -326,39 +311,30 @@ class Attribute extends AbstractRepository
                 ->getEntityManager()
                 ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav['id'] . "'");
         }
-
-        return true;
     }
 
-    /**
-     * @param Entity $attribute
-     * @param array  $deletedPositions
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    protected function updateMultiEnumPav(Entity $attribute, array $deletedPositions): bool
+    protected function updateMultiEnumPav(Entity $attribute): void
     {
         if ($attribute->get('type') != 'multiEnum') {
-            return true;
+            return;
         }
 
         if (!$this->isEnumTypeValueValid($attribute)) {
-            return true;
+            return;
         }
 
-        // old type value
-        $oldTypeValue = $attribute->getFetched('typeValue');
-
-        // delete
-        foreach ($deletedPositions as $deletedPosition) {
-            unset($oldTypeValue[$deletedPosition]);
+        if (empty($attribute->getFetched('typeValueIds'))) {
+            return;
         }
 
         // prepare became values
         $becameValues = [];
-        foreach (array_values($oldTypeValue) as $k => $v) {
-            $becameValues[$v] = $attribute->get('typeValue')[$k];
+        foreach ($attribute->get('typeValueIds') as $k => $v) {
+            foreach ($attribute->getFetched('typeValueIds') as $k1 => $v1) {
+                if ($v1 === $v) {
+                    $becameValues[$attribute->getFetched('typeValue')[$k1]] = $attribute->get('typeValue')[$k];
+                }
+            }
         }
 
         /** @var array $pavs */
@@ -411,8 +387,6 @@ class Attribute extends AbstractRepository
                 ->getEntityManager()
                 ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav['id'] . "'");
         }
-
-        return true;
     }
 
     /**
@@ -520,52 +494,5 @@ class Attribute extends AbstractRepository
         }
 
         return true;
-    }
-
-    /**
-     * @param array $typeValue
-     *
-     * @return array
-     */
-    protected function getDeletedPositions(array $typeValue): array
-    {
-        $deletedPositions = [];
-        foreach ($typeValue as $pos => $value) {
-            if ($value === 'todel') {
-                $deletedPositions[] = $pos;
-            }
-        }
-
-        return $deletedPositions;
-    }
-
-    /**
-     * @param Entity $entity
-     * @param array  $deletedPositions
-     */
-    protected function deletePositions(Entity $entity, array $deletedPositions): void
-    {
-        foreach ($this->getTypeValuesFields() as $field) {
-            $typeValue = $entity->get($field);
-            foreach ($deletedPositions as $pos) {
-                unset($typeValue[$pos]);
-            }
-            $entity->set($field, array_values($typeValue));
-        }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getTypeValuesFields(): array
-    {
-        $fields[] = 'typeValue';
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $fields[] = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($locale)));
-            }
-        }
-
-        return $fields;
     }
 }

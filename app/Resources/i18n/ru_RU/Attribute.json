@@ -3,7 +3,6 @@
     "attributeGroup": "Группа атрибутов",
     "productAttributes": "Атрибуты продукта",
     "typeValue": "Значения",
-    "isSystem": "Система",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Название атрибута",
@@ -15,7 +14,8 @@
     "sortOrder": "Порядок сортировки",
     "assetType": "Тип ассета",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "isSorted": "Сортировать (по алфавиту)"
   },
   "links": {
     "attributeGroup": "Группа атрибутов",
@@ -51,6 +51,9 @@
   },
   "filterLabels": {
     "All": "All"
+  },
+  "tooltips": {
+    "isSorted": "Опции будут отсортированы после сохранения."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",

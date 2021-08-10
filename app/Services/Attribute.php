@@ -325,4 +325,14 @@ class Attribute extends AbstractService
 
         return $result;
     }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        return true;
+    }
+
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
 }

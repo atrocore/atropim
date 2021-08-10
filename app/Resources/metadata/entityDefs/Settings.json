@@ -12,6 +12,10 @@
         "cascade",
         "restrict"
       ],
+      "optionsIds": [
+        "cascade",
+        "restrict"
+      ],
       "default": "cascade"
     },
     "behaviorOnCategoryDelete": {

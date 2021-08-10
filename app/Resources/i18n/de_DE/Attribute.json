@@ -1,7 +1,6 @@
 {
   "fields": {
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
-    "isSystem": "Ist das System",
     "productAttributes": "Produktattribute",
     "productAttributeValues": "Werte des Produktattributes",
     "productFamilyAttributes": "Attribute der Produktfamilie",
@@ -17,7 +16,8 @@
     "assetType": "Asset-Typ",
     "name": "Attributname",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "isSorted": "Sortiert (alphabetisch)"
   },
   "links": {
     "attributeTab": "Attributtab",
@@ -55,6 +55,9 @@
   },
   "filterLabels": {
     "All": "Alle"
+  },
+  "tooltips": {
+    "isSorted": "Optionen werden nach dem Speichern der Seite sortiert."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",

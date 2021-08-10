@@ -4,7 +4,6 @@
     "attributeTab": "Attribute Tab",
     "productAttributes": "Product attributes",
     "typeValue": "Values",
-    "isSystem": "Is system",
     "type": "Attribute Type",
     "code": "Code",
     "name": "Attribute Name",
@@ -16,7 +15,8 @@
     "sortOrder": "Sort Order",
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "isSorted": "Is Sorted (alphabetically)"
   },
   "links": {
     "attributeTab": "Attribute Tab",
@@ -53,6 +53,9 @@
   },
   "filterLabels": {
     "All": "All"
+  },
+  "tooltips": {
+    "isSorted": "Options will be sorted after saving."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Attribute value should be unique.",

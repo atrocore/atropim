@@ -27,7 +27,7 @@
  */
 
 Espo.define('pim:views/product-family/record/row-actions/optioned-remove', 'views/record/row-actions/default',
-    Dep=> Dep.extend({
+    Dep => Dep.extend({
 
         getActionList: function () {
             var list = [{
@@ -48,17 +48,15 @@ Espo.define('pim:views/product-family/record/row-actions/optioned-remove', 'view
                     }
                 ]);
 
-                if (!this.model.get('isSystem')) {
-                    list = list.concat([
-                        {
-                            action: 'quickRemove',
-                            label: 'Remove',
-                            data: {
-                                id: this.model.id
-                            }
+                list = list.concat([
+                    {
+                        action: 'quickRemove',
+                        label: 'Remove',
+                        data: {
+                            id: this.model.id
                         }
-                    ]);
-                }
+                    }
+                ]);
             }
             return list;
         },

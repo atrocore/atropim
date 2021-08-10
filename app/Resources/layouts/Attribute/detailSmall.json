@@ -21,11 +21,21 @@
       ],
       [
         {
+          "name": "unique"
+        },
+        false
+      ],
+      [
+        {
           "name": "pattern"
         },
+        false
+      ],
+      [
         {
-          "name": "unique"
-        }
+          "name": "isSorted"
+        },
+        false
       ]
     ]
   }
