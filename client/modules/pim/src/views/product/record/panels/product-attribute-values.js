@@ -151,7 +151,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }
 
             if (this.defs.select && this.getAcl().check('ProductAttributeValue', 'create')) {
-                var data = {link: this.link};
+                var data = {link: this.defs.name};
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
                 }

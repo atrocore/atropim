@@ -85,9 +85,9 @@ class Attribute extends AbstractSelectManager
                 ->select(['attributeId'])
                 ->where(
                     [
-                        'channelId'       => $data['channelsIds'],
+                        'channelId' => $data['channelsIds'],
                         'productFamilyId' => $data['productFamilyId'],
-                        'scope'           => 'Channel',
+                        'scope' => 'Channel',
                     ]
                 )
                 ->find()
@@ -192,6 +192,17 @@ class Attribute extends AbstractSelectManager
         if (count($unitAttributes) > 0) {
             $result['whereClause'][] = [
                 'id!=' => array_column($unitAttributes, 'id')
+            ];
+        }
+    }
+
+    protected function boolFilterFromAttributesTab(array &$result): void
+    {
+        $data = (array)$this->getSelectCondition('fromAttributesTab');
+
+        if (isset($data['tabId'])) {
+            $result['whereClause'][] = [
+                'attributeTabId=' => empty($data['tabId']) ? null : $data['tabId']
             ];
         }
     }

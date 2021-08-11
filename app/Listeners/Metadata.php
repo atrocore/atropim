@@ -82,17 +82,16 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        if (!file_exists(self::ATTRIBUTE_TABS_FILE)) {
+        if (!file_exists(self::ATTRIBUTE_TABS_FILE) || empty(file_get_contents(self::ATTRIBUTE_TABS_FILE))) {
             try {
-                $sth = $this->getContainer()->get('pdo')->prepare("SELECT id, name FROM attribute_tab WHERE deleted=0");
-                $sth->execute();
-                $tabs = $sth->fetchAll(\PDO::FETCH_ASSOC);
+                $tabs = $this->getContainer()->get('pdo')->query("SELECT id, name FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
                 $tabs = [];
             }
-
-            Util::createDir('data/cache');
-            file_put_contents(self::ATTRIBUTE_TABS_FILE, Json::encode($tabs));
+            if (!empty($tabs)) {
+                Util::createDir('data/cache');
+                file_put_contents(self::ATTRIBUTE_TABS_FILE, Json::encode($tabs));
+            }
         } else {
             $tabs = Json::decode(file_get_contents(self::ATTRIBUTE_TABS_FILE), true);
         }
@@ -106,7 +105,16 @@ class Metadata extends AbstractListener
                 'selectAction'         => 'selectRelatedEntity',
                 'selectBoolFilterList' => ['notLinkedProductAttributeValues', 'fromAttributesTab'],
                 'tabId'                => $tab['id'],
-                'view'                 => 'pim:views/product/record/panels/tab',
+                'view'                 => 'pim:views/product/record/panels/product-attribute-values',
+                "rowActionsView"       => "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
+                "recordListView"       => "pim:views/product-attribute-value/record/list-in-product",
+                "aclScopesList"        => [
+                    "Attribute",
+                    "AttributeGroup",
+                    "ProductAttributeValue"
+                ],
+                "sortBy"               => "attribute.sortOrder",
+                "asc"                  => true
             ];
         }
 
