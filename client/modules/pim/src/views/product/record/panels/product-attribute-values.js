@@ -335,8 +335,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                boolFilterList: ['withNotLinkedAttributesToProduct'],
-                boolFilterData: {withNotLinkedAttributesToProduct: this.model.id},
+                boolFilterList: ['withNotLinkedAttributesToProduct', 'fromAttributesTab'],
+                boolFilterData: {withNotLinkedAttributesToProduct: this.model.id, fromAttributesTab: {tabId: this.defs.tabId}},
                 whereAdditional: [
                     {
                         type: 'isLinked',
@@ -386,7 +386,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }, function () {
                 this.notify('Saving...');
                 this.ajaxPostRequest(`ProductAttributeValue/action/RemoveAllNotInheritedAttributes`, {
-                    productId: this.model.id
+                    productId: this.model.id,
+                    tabId: this.defs.tabId,
                 }).then(response => {
                     this.notify('Saved', 'success');
                     this.model.trigger('after:unrelate', this.link);

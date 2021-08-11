@@ -249,6 +249,48 @@ class ProductAttributeValue extends AbstractService
         return parent::updateEntity($id, $data);
     }
 
+    public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool
+    {
+        // check acl
+        if (!$this->getAcl()->check('ProductAttributeValue', 'remove')) {
+            throw new Forbidden();
+        }
+
+        $attributes = $this
+            ->getEntityManager()
+            ->getRepository('Attribute')
+            ->select(['id'])
+            ->where([
+                'attributeTabId' => empty($tabId) ? null : $tabId
+            ])
+            ->find();
+
+        /** @var EntityCollection $pavs */
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(
+                [
+                    'productId'                => $productId,
+                    'productFamilyAttributeId' => null,
+                    'attributeId'              => array_column($attributes->toArray(), 'id')
+                ]
+            )
+            ->find();
+
+        foreach ($pavs as $pav) {
+            if ($this->getAcl()->check($pav, 'remove')) {
+                try {
+                    $this->getEntityManager()->removeEntity($pav);
+                } catch (BadRequest $e) {
+                    // skip validation errors
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param string $productId
      *
@@ -292,7 +334,7 @@ class ProductAttributeValue extends AbstractService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array $defs
+     * @param array  $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
