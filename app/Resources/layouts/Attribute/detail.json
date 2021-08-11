@@ -8,14 +8,22 @@
           "name": "type"
         },
         {
-          "name": "code"
+          "name": "assetType"
         }
       ],
       [
         {
-          "name": "assetType"
+          "name": "name"
         },
         false
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "unique"
+        }
       ],
       [
         {
@@ -24,12 +32,6 @@
         {
           "name": "attributeTab"
         }
-      ],
-      [
-        {
-          "name": "unique"
-        },
-        false
       ],
       [
         {
