@@ -146,6 +146,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     html: '<span class="fas fa-plus"></span>',
                     data: {
                         link: this.link,
+                        tabId: this.defs.tabId
                     }
                 });
             }
