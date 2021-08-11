@@ -51,6 +51,9 @@
       "readOnly": false,
       "tooltip": false
     },
+    "attributeTab": {
+      "type": "link"
+    },
     "code": {
       "type": "varchar",
       "layoutMassUpdateDisabled": true,
@@ -223,6 +226,12 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "AttributeGroup",
+      "audited": false
+    },
+    "attributeTab": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "AttributeTab",
       "audited": false
     },
     "productAttributeValues": {

@@ -7,14 +7,6 @@
         {
           "name": "name"
         },
-        {
-          "name": "code"
-        }
-      ],
-      [
-        {
-          "name": "sortOrder"
-        },
         false
       ],
       [

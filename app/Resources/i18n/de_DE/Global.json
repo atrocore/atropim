@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "AttributeTab": "Attributtab",
     "ProductPrice": "Produktpreis",
     "ChannelPricing": "Kanal Pricing",
     "AssetCategory": "Asset Kategorie",
@@ -24,6 +25,7 @@
     "ContentGroup": "Content Gruppe"
   },
   "scopeNamesPlural": {
+    "AttributeTab": "Attributtabs",
     "ProductPrice": "Produktpreise",
     "AssetCategory": "Asset Kategorien",
     "Catalog": "Kataloge",

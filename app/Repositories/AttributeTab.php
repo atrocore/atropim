@@ -27,36 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+namespace Pim\Repositories;
 
-namespace Pim\Controllers;
-
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Controllers\Base;
+use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
 /**
- * Class ProductAttributeValue
+ * Class AttributeTab
  */
-class ProductAttributeValue extends Base
+class AttributeTab extends Base
 {
     /**
-     * @param mixed $params
-     * @param mixed $data
-     * @param mixed $request
-     *
-     * @return bool
-     * @throws BadRequest
+     * @inheritDoc
      */
-    public function actionRemoveAllNotInheritedAttributes($params, $data, $request): bool
+    protected function afterSave(Entity $entity, array $options = [])
     {
-        if (!$request->isPost() || !property_exists($data, 'productId')) {
-            throw new BadRequest();
-        }
+        $this->clearCache();
 
-        if (property_exists($data, 'tabId')) {
-            return $this->getRecordService()->removeByTabAllNotInheritedAttributes((string)$data->productId, (string)$data->tabId);
-        }
+        parent::afterSave($entity, $options);
+    }
 
-        return $this->getRecordService()->removeAllNotInheritedAttributes((string)$data->productId);
+    /**
+     * @inheritDoc
+     */
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->clearCache();
+
+        $this
+            ->getEntityManager()
+            ->nativeQuery("UPDATE attribute SET attribute_tab_id=NULL WHERE attribute_tab_id='{$entity->get('id')}'");
+
+        parent::afterRemove($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('dataManager');
+    }
+
+    /**
+     * Clearing cache
+     */
+    protected function clearCache(): void
+    {
+        $this->getInjection('dataManager')->clearCache();
     }
 }

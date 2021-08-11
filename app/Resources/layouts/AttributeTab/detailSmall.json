@@ -1,19 +1,11 @@
 [
   {
-    "label": "Overview",
+    "label": "",
     "style": "default",
     "rows": [
       [
         {
           "name": "name"
-        },
-        {
-          "name": "code"
-        }
-      ],
-      [
-        {
-          "name": "sortOrder"
         },
         false
       ],

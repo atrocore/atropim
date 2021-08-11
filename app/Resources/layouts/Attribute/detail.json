@@ -22,8 +22,14 @@
           "name": "attributeGroup"
         },
         {
-          "name": "unique"
+          "name": "attributeTab"
         }
+      ],
+      [
+        {
+          "name": "unique"
+        },
+        false
       ],
       [
         {

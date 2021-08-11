@@ -27,36 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+namespace Pim\Entities;
 
-namespace Pim\Controllers;
-
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Controllers\Base;
+use Espo\Core\Templates\Entities\Base;
 
 /**
- * Class ProductAttributeValue
+ * Class AttributeTab
  */
-class ProductAttributeValue extends Base
+class AttributeTab extends Base
 {
     /**
-     * @param mixed $params
-     * @param mixed $data
-     * @param mixed $request
-     *
-     * @return bool
-     * @throws BadRequest
+     * @var string
      */
-    public function actionRemoveAllNotInheritedAttributes($params, $data, $request): bool
-    {
-        if (!$request->isPost() || !property_exists($data, 'productId')) {
-            throw new BadRequest();
-        }
-
-        if (property_exists($data, 'tabId')) {
-            return $this->getRecordService()->removeByTabAllNotInheritedAttributes((string)$data->productId, (string)$data->tabId);
-        }
-
-        return $this->getRecordService()->removeAllNotInheritedAttributes((string)$data->productId);
-    }
+    protected $entityType = "AttributeTab";
 }

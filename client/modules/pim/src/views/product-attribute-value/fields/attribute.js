@@ -29,13 +29,21 @@
 Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductAttributeValue'],
+        selectBoolFilterList: ['notLinkedWithProductAttributeValue', 'fromAttributesTab'],
 
         listTemplate: 'pim:product-attribute-value/fields/attribute',
 
         boolFilterData: {
             notLinkedWithProductAttributeValue() {
-                return {productId: this.model.get('productId'), channelId: this.model.get('channelId')};
+                return {
+                    productId: this.model.get('productId'),
+                    channelId: this.model.get('channelId')
+                };
+            },
+            fromAttributesTab() {
+                return {
+                    tabId: this.model.tabId ? this.model.tabId : null
+                };
             }
         },
 

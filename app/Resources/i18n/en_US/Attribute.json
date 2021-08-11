@@ -1,6 +1,7 @@
 {
   "fields": {
     "attributeGroup": "Attribute Group",
+    "attributeTab": "Attribute Tab",
     "productAttributes": "Product attributes",
     "typeValue": "Values",
     "type": "Attribute Type",
@@ -18,6 +19,7 @@
     "isSorted": "Is Sorted (alphabetically)"
   },
   "links": {
+    "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",
     "productAttributes": "Product attributes",
     "products": "Products",

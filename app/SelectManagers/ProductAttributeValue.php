@@ -55,7 +55,13 @@ class ProductAttributeValue extends AbstractSelectManager
                         }
                     }
                 }
+
+                if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
+                    $this->onlyTabAttributesFilter($params, (string)$v['data']['onlyTabAttributes']);
+//                    unset($params['where'][$k]);
+                }
             }
+            $params['where'] = array_values($params['where']);
         }
         // get select params
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
@@ -227,5 +233,25 @@ class ProductAttributeValue extends AbstractSelectManager
                 'id' => array_column($attributes, 'id')
             ];
         }
+    }
+
+    protected function onlyTabAttributesFilter(array &$params, string $tabId)
+    {
+        if (empty($tabId)) {
+            $tabId = null;
+        }
+
+        $attributes = $this
+            ->getEntityManager()
+            ->getRepository('Attribute')
+            ->select(['id'])
+            ->where(['attributeTabId' => $tabId])
+            ->find();
+
+        $params['where'][] = [
+            'type'      => 'in',
+            'attribute' => 'attributeId',
+            'value'     => array_column($attributes->toArray(), 'id')
+        ];
     }
 }

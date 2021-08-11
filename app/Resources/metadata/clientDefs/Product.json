@@ -64,8 +64,10 @@
       "createAction": "createRelatedConfigured",
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
-        "notLinkedProductAttributeValues"
+        "notLinkedProductAttributeValues",
+        "fromAttributesTab"
       ],
+      "tabId": null,
       "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
       "view": "pim:views/product/record/panels/product-attribute-values",
       "recordListView": "pim:views/product-attribute-value/record/list-in-product",

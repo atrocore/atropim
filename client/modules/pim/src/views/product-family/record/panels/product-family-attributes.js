@@ -131,7 +131,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                 }
                 data.boolFilterListCallback = 'getSelectBoolFilterList';
                 data.boolFilterDataCallback = 'getSelectBoolFilterData';
-                data.afterSelectCallback = 'createProductFamilyAttribute';
+                data.afterSelectCallback = 'relateAttributes';
                 data.scope = 'Attribute';
 
                 this.actionList.unshift({
@@ -227,7 +227,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             this.setupFilterActions();
         },
 
-        createProductFamilyAttribute(selectObj) {
+        relateAttributes(selectObj) {
             let promises = [];
             selectObj.forEach(attributeModel => {
                 this.getModelFactory().create(this.scope, model => {
@@ -347,7 +347,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                                 models.push(model);
                             });
                         });
-                        this.createProductFamilyAttribute(models);
+                        this.relateAttributes(models);
                     });
                 });
             });
@@ -500,57 +500,74 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
         buildGroups() {
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
-                    group.rowList.forEach(id => {
-                        collection.add(this.collection.get(id));
-                    });
-
-                    collection.url = `ProductFamily/${this.model.id}/productFamilyAttributes`;
-                    collection.where = [
-                        {
-                            type: 'bool',
-                            value: ['linkedWithAttributeGroup'],
-                            data: {
-                                linkedWithAttributeGroup: {
-                                    productFamilyId: this.model.id,
-                                    attributeGroupId: group.key !== 'no_group' ? group.key : null
-                                }
-                            }
-                        }
-                    ];
-                    collection.data.select = 'attributeId,attributeName,value,valueEnUs,valueDeDe,scope,channelsIds,channelsNames';
-
-                    this.listenTo(collection, 'sync', () => {
-                        collection.models.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
-                    });
-
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-
-                    this.createView(group.key, viewName, {
-                        collection: collection,
-                        layoutName: this.layoutName,
-                        listLayout: this.listLayout,
-                        checkboxes: false,
-                        rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
-                        buttonsDisabled: true,
-                        el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                        showMore: false
-                    }, view => {
-                        this.listenTo(view, 'after:render', () => {
-                            (view.rowList || []).forEach(id => {
-                                const rowView = view.getView(id);
-                                if (rowView) {
-                                    const fieldView = rowView.getView('isRequiredField');
-                                    if (fieldView && !rowView.model.get('isInherited')) {
-                                        fieldView.setMode('edit');
-                                        fieldView.reRender();
-                                    }
-                                }
-                            });
+                    this.getHelper().layoutManager.get(this.scope, this.layoutName, layout => {
+                        this.createView(group.key, viewName, {
+                            collection: this.prepareGroupCollection(group, collection),
+                            layoutName: this.layoutName,
+                            listLayout: this.prepareListLayout(layout),
+                            checkboxes: false,
+                            rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                            buttonsDisabled: true,
+                            el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
+                            showMore: false
+                        }, view => {
+                            this.onGroupViewCreated(view);
+                            view.render();
                         });
-                        view.render();
                     });
                 });
             });
+        },
+
+        onGroupViewCreated(view) {
+            this.listenTo(view, 'after:render', () => {
+                (view.rowList || []).forEach(id => {
+                    const rowView = view.getView(id);
+                    if (rowView) {
+                        const fieldView = rowView.getView('isRequiredField');
+                        if (fieldView && !rowView.model.get('isInherited')) {
+                            fieldView.setMode('edit');
+                            fieldView.reRender();
+                        }
+                    }
+                });
+            });
+        },
+
+        prepareGroupCollection(group, collection) {
+            group.rowList.forEach(id => {
+                collection.add(this.collection.get(id));
+            });
+
+            collection.url = `ProductFamily/${this.model.id}/productFamilyAttributes`;
+            collection.where = [
+                {
+                    type: 'bool',
+                    value: ['linkedWithAttributeGroup'],
+                    data: {
+                        linkedWithAttributeGroup: {
+                            productFamilyId: this.model.id,
+                            attributeGroupId: group.key !== 'no_group' ? group.key : null
+                        }
+                    }
+                }
+            ];
+            collection.data.select = 'attributeId,attributeName,value,valueEnUs,valueDeDe,scope,channelsIds,channelsNames';
+
+            this.listenTo(collection, 'sync', () => {
+                collection.models.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+            });
+
+            return collection;
+        },
+
+        prepareListLayout(layout) {
+            layout.forEach((v, k) => {
+                layout[k]['notSortable'] = true;
+            });
+
+            return layout;
         },
 
         getSelectBoolFilterData(boolFilterList) {

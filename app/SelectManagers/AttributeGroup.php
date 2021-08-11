@@ -117,4 +117,25 @@ class AttributeGroup extends AbstractSelectManager
 
         return $result;
     }
+
+    protected function boolFilterFromAttributesTab(array &$result): void
+    {
+        $data = (array)$this->getSelectCondition('fromAttributesTab');
+
+        if (isset($data['tabId'])) {
+            $attributes = $this
+                ->getEntityManager()
+                ->getRepository('Attribute')
+                ->select(['attributeGroupId'])
+                ->where([
+                    'attributeTabId'      => empty($data['tabId']) ? null : $data['tabId'],
+                    'attributeGroupId !=' => null
+                ])
+                ->find();
+
+            $result['whereClause'][] = [
+                'id' => array_unique(array_column($attributes->toArray(), 'attributeGroupId'))
+            ];
+        }
+    }
 }

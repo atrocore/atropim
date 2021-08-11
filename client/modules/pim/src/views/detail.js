@@ -80,6 +80,7 @@ Espo.define('pim:views/detail', 'views/detail',
                 attributes: attributes,
                 fullFormDisabled: fullFormDisabled
             }, function (view) {
+                view.model.tabId = data.tabId ?? data.tabId;
                 view.render();
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {

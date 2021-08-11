@@ -9,6 +9,7 @@
     "type": "Typ",
     "sortOrder": "Sortierreihenfolge",
     "attributeGroup": "Attributgruppe",
+    "attributeTab": "Attributtab",
     "code": "Code",
     "isRequired": "Ist Erforderlich",
     "isMultilang": "Mehrsprachig",
@@ -19,6 +20,7 @@
     "isSorted": "Sortiert (alphabetisch)"
   },
   "links": {
+    "attributeTab": "Attributtab",
     "products": "Produkte",
     "productAttributes": "Produktattribute",
     "productAttributeValues": "Werte der Produktattribute",

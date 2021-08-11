@@ -72,6 +72,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     productId: this.model.id,
                     scope: 'Global'
                 }
+            },
+            fromAttributesTab() {
+                return {
+                    tabId: this.defs.tabId
+                }
             }
         },
 
@@ -141,12 +146,13 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     html: '<span class="fas fa-plus"></span>',
                     data: {
                         link: this.link,
+                        tabId: this.defs.tabId
                     }
                 });
             }
 
             if (this.defs.select && this.getAcl().check('ProductAttributeValue', 'create')) {
-                var data = {link: this.link};
+                var data = {link: this.defs.name};
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
                 }
@@ -234,6 +240,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 if (asc) {
                     collection.asc = asc;
                 }
+
+                collection.where.push({
+                    type: 'bool',
+                    value: 'onlyTabAttributes',
+                    data: {"onlyTabAttributes": this.defs.tabId}
+                });
 
                 this.prepareCollection(collection);
 
@@ -323,8 +335,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                boolFilterList: ['withNotLinkedAttributesToProduct'],
-                boolFilterData: {withNotLinkedAttributesToProduct: this.model.id},
+                boolFilterList: ['withNotLinkedAttributesToProduct', 'fromAttributesTab'],
+                boolFilterData: {withNotLinkedAttributesToProduct: this.model.id, fromAttributesTab: {tabId: this.defs.tabId}},
                 whereAdditional: [
                     {
                         type: 'isLinked',
@@ -374,7 +386,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }, function () {
                 this.notify('Saving...');
                 this.ajaxPostRequest(`ProductAttributeValue/action/RemoveAllNotInheritedAttributes`, {
-                    productId: this.model.id
+                    productId: this.model.id,
+                    tabId: this.defs.tabId,
                 }).then(response => {
                     this.notify('Saved', 'success');
                     this.model.trigger('after:unrelate', this.link);
