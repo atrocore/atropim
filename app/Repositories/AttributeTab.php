@@ -54,6 +54,10 @@ class AttributeTab extends Base
     {
         $this->clearCache();
 
+        $this
+            ->getEntityManager()
+            ->nativeQuery("UPDATE attribute SET attribute_tab_id=NULL WHERE attribute_tab_id='{$entity->get('id')}'");
+
         parent::afterRemove($entity, $options);
     }
 
