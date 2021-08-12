@@ -112,7 +112,10 @@ abstract class AbstractRepository extends Base
                 $result[$k]['channelName'] = $channels[$v['channel']];
             }
             $result[$k]['channel'] = '-';
-            $result[$k]['id'] = $result[$k]['id'] . '_' . (string)$result[$k]['channelId'];
+
+            if (!empty($result[$k]['channelId'])) {
+                $result[$k]['id'] = $result[$k]['id'] . '_' . (string)$result[$k]['channelId'];
+            }
         }
 
         return $result;
