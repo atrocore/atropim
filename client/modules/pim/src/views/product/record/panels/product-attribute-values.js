@@ -270,6 +270,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }, this);
 
             this.setupFilterActions();
+
+            this.listenTo(this.model, 'after:relate after:unrelate', link => {
+                if (link === 'channels') {
+                    this.actionRefresh();
+                }
+            });
         },
 
         prepareCollection(collection) {
