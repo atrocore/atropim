@@ -96,18 +96,31 @@ class RevisionField extends MultilangRevisionField
                                 $was[$fieldName . 'Id'] = $data['attributes']['was'][$field];
                                 $became[$fieldName . 'Id'] = $data['attributes']['became'][$field];
                             }
+
                             $was[$fieldName] = $data['attributes']['was'][$field];
                             $became[$fieldName] = $data['attributes']['became'][$field];
 
-                            if (isset($data['attributes']['was'][$field . 'Unit'])
-                                && isset($data['attributes']['became'][$field . 'Unit'])) {
+                            // for unit
+                            if (isset($data['attributes']['was'][$field . 'Unit'])) {
                                 $was[$fieldName . 'Unit'] = $data['attributes']['was'][$field . 'Unit'];
+                                $became[$fieldName . 'Unit'] = null;
+                            }
+                            if (isset($data['attributes']['became'][$field . 'Unit'])) {
+                                if (!isset($was[$fieldName . 'Unit'])) {
+                                    $was[$fieldName . 'Unit'] = null;
+                                }
                                 $became[$fieldName . 'Unit'] = $data['attributes']['became'][$field . 'Unit'];
                             }
 
-                            if (isset($data['attributes']['was'][$field . 'Currency'])
-                                && isset($data['attributes']['became'][$field . 'Currency'])) {
+                            // for currency
+                            if (isset($data['attributes']['was'][$field . 'Currency'])) {
                                 $was[$fieldName . 'Currency'] = $data['attributes']['was'][$field . 'Currency'];
+                                $became[$fieldName . 'Currency'] = null;
+                            }
+                            if (isset($data['attributes']['became'][$field . 'Currency'])) {
+                                if (!isset($was[$fieldName . 'Currency'])) {
+                                    $was[$fieldName . 'Currency'] = null;
+                                }
                                 $became[$fieldName . 'Currency'] = $data['attributes']['became'][$field . 'Currency'];
                             }
 
