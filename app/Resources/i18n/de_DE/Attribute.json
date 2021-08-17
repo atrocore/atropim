@@ -16,7 +16,7 @@
     "assetType": "Asset-Typ",
     "name": "Attributname",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
+    "unique": "Eindeutig, wenn nicht leer",
     "isSorted": "Sortiert (alphabetisch)"
   },
   "links": {

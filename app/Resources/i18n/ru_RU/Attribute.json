@@ -14,7 +14,7 @@
     "sortOrder": "Порядок сортировки",
     "assetType": "Тип ассета",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
+    "unique": "Уникальный, если не пустой",
     "isSorted": "Сортировать (по алфавиту)"
   },
   "links": {

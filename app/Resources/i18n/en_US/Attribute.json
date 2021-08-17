@@ -15,7 +15,7 @@
     "sortOrder": "Sort Order",
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
+    "unique": "Unique, if not empty",
     "isSorted": "Is Sorted (alphabetically)"
   },
   "links": {
