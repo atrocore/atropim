@@ -558,6 +558,7 @@ class Product extends AbstractService
 
         // get select params
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams['orderBy'] = 'id';
 
         // get record service
         $recordService = $this->getRecordService($foreignEntityName);

@@ -32,7 +32,7 @@ declare(strict_types=1);
 namespace Pim\SelectManagers;
 
 use Pim\Core\SelectManagers\AbstractSelectManager;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * ProductAttributeValue select manager
@@ -76,14 +76,8 @@ class ProductAttributeValue extends AbstractSelectManager
         }
 
         // add filtering by product types
-        $selectParams['customWhere'] .= " 
-            AND product_attribute_value.product_id IN (SELECT id 
-                                                        FROM product 
-                                                        WHERE type IN ('$types') AND deleted=0)";
-        $selectParams['customWhere'] .= " 
-            AND product_attribute_value.attribute_id IN (SELECT id 
-                                                            FROM attribute 
-                                                            WHERE type IN ('{$attributesTypes}') AND deleted=0)";
+        $selectParams['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM product WHERE type IN ('$types') AND deleted=0)";
+        $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE type IN ('{$attributesTypes}') AND deleted=0)";
 
         return $selectParams;
     }
