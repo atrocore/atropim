@@ -86,6 +86,10 @@ class Category extends AbstractSelectManager
     protected function boolFilterOnlyCatalogCategories(array &$result)
     {
         $catalogId = $this->getSelectCondition('onlyCatalogCategories');
+        if ($catalogId === false){
+            return;
+        }
+
         if (!empty($catalogId)) {
             $catalog = $this->getEntityManager()->getEntity('Catalog', $catalogId);
             if (empty($catalog)) {
