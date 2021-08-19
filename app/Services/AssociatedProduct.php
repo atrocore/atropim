@@ -31,9 +31,28 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
+use Espo\ORM\Entity;
+
 /**
  * AssociatedProduct service
  */
-class AssociatedProduct extends \Espo\Core\Templates\Services\Base
+class AssociatedProduct extends Base
 {
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $mainProduct->get('image'))) {
+            $entity->set('mainProductImageId', $image->get('id'));
+            $entity->set('mainProductImageName', $image->get('name'));
+            $entity->set('mainProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+        }
+
+        if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $relatedProduct->get('image'))) {
+            $entity->set('relatedProductImageId', $image->get('id'));
+            $entity->set('relatedProductImageName', $image->get('name'));
+            $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+        }
+    }
 }
