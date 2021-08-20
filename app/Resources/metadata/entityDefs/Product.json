@@ -91,6 +91,7 @@
     "productStatus": {
       "type": "enum",
       "required": true,
+      "prohibitedEmptyValue": true,
       "options": [
         "draft",
         "prepared",
