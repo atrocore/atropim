@@ -233,19 +233,13 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     collection.where = searchManager.getWhere();
                 }
 
-                collection.url = collection.urlRoot = url;
+                collection.url = collection.urlRoot = url + '?tabId=' + this.defs.tabId;
                 if (sortBy) {
                     collection.sortBy = sortBy;
                 }
                 if (asc) {
                     collection.asc = asc;
                 }
-
-                collection.where.push({
-                    type: 'bool',
-                    value: 'onlyTabAttributes',
-                    data: {"onlyTabAttributes": this.defs.tabId}
-                });
 
                 this.prepareCollection(collection);
 

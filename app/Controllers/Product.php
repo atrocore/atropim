@@ -101,4 +101,19 @@ class Product extends AbstractWithMainImageController
 
         return $this->getRecordService()->removeAssociateProducts($data);
     }
+
+    public function actionListLinked($params, $data, $request)
+    {
+        if ($params['link'] === 'productAttributeValues') {
+            $where = $request->get('where');
+            $where[] = [
+                'type'  => 'bool',
+                'value' => 'onlyTabAttributes',
+                'data'  => ['onlyTabAttributes' => $request->get('tabId')],
+            ];
+            $request->setQuery('where', $where);
+        }
+
+        return parent::actionListLinked($params, $data, $request);
+    }
 }
