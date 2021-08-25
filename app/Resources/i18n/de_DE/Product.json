@@ -47,7 +47,8 @@
     "packedAmount": "Gepackte Menge",
     "pcSorting": "Sortierreihenfolge",
     "contents": "Contents",
-    "taskStatus": "Task status"
+    "taskStatus": "Task status",
+    "new": "Neuheit"
   },
   "links": {
     "associatedMainProducts": "zugehörige Produkte",

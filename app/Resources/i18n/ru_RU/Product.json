@@ -37,7 +37,8 @@
     "packedAmount": "Кол-во в упаковке",
     "pcSorting": "Порядок сортировки",
     "contents": "Контент",
-    "taskStatus": "Статус задачи"
+    "taskStatus": "Статус задачи",
+    "new": "Новинка"
   },
   "links": {
     "productSerie": "Серии продукта",

@@ -12,7 +12,8 @@
     "categoryRouteName": "Сategory Tree",
     "scope": "Scope",
     "productCategories": "Category Products",
-    "catalogs": "Catalogs"
+    "catalogs": "Catalogs",
+    "popular": "Popular"
   },
   "links": {
     "categoryParent": "Parent Category",

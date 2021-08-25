@@ -30,6 +30,12 @@
           "name": "pcSorting"
         },
         false
+      ],
+      [
+        {
+          "name": "new"
+        },
+        false
       ]
     ]
   }

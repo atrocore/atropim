@@ -37,7 +37,8 @@
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
     "contents": "Contents",
-    "taskStatus": "Task status"
+    "taskStatus": "Task status",
+    "new": "New"
   },
   "links": {
     "productSerie": "Product Series",

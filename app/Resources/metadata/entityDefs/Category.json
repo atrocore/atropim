@@ -168,6 +168,9 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
+    },
+    "popular": {
+      "type": "bool"
     }
   },
   "links": {
