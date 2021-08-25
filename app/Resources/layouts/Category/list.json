@@ -18,5 +18,8 @@
   },
   {
     "name": "isActive"
+  },
+  {
+    "name": "popular"
   }
 ]

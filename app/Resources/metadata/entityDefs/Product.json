@@ -299,6 +299,9 @@
       "importDisabled": true,
       "exportDisabled": true,
       "emHidden": true
+    },
+    "new": {
+      "type": "bool"
     }
   },
   "links": {

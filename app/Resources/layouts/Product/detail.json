@@ -85,6 +85,12 @@
         {
           "name": "taskStatus"
         }
+      ],
+      [
+        {
+          "name": "new"
+        },
+        false
       ]
     ]
   }
