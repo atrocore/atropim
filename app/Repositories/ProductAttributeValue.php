@@ -83,7 +83,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         $attribute = $entity->get('attribute');
-        if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value'))) {
+        if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
             $entity->set('value', $attribute->get('enumDefault'));
         }
 
