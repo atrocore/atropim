@@ -44,6 +44,14 @@
           "name": "isSorted"
         },
         false
+      ],
+      [
+        {
+          "name": "prohibitedEmptyValue"
+        },
+        {
+          "name": "enumDefault"
+        }
       ]
     ]
   }

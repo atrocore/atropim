@@ -17,7 +17,9 @@
     "name": "Attributname",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Sortiert (alphabetisch)"
+    "isSorted": "Sortiert (alphabetisch)",
+    "prohibitedEmptyValue": "Leeren Wert deaktivieren",
+    "enumDefault": "Standard"
   },
   "links": {
     "attributeTab": "Attributtab",

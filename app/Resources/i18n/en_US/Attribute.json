@@ -16,7 +16,9 @@
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Is Sorted (alphabetically)"
+    "isSorted": "Is Sorted (alphabetically)",
+    "prohibitedEmptyValue": "Disable empty value",
+    "enumDefault": "Default"
   },
   "links": {
     "attributeTab": "Attribute Tab",
