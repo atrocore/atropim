@@ -56,6 +56,11 @@ class AttributeGroup extends \Espo\Core\Templates\Services\Base
             ->find()
             ->toArray();
 
+        foreach ($result as $k => $v) {
+            $result[$k]['sortOrder'] = $k * 10;
+            $this->getEntityManager()->nativeQuery("UPDATE `attribute` SET sort_order={$result[$k]['sortOrder']} WHERE id='{$v['id']}'");
+        }
+
         return [
             'total' => count($result),
             'list'  => $result
