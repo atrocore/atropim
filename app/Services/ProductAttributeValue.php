@@ -512,8 +512,10 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
         $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
         $entity->set('attributeCode', !empty($attribute) ? $attribute->get('code') : null);
+        $entity->set('prohibitedEmptyValue', false);
 
         if (!empty($attribute)) {
+            $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));

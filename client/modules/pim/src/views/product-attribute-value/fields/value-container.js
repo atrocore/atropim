@@ -83,7 +83,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 model: this.model,
                 name: this.name,
                 mode: this.mode,
-                prohibitedEmptyValue: true,
+                prohibitedEmptyValue: !!this.model.get('prohibitedEmptyValue'),
                 inlineEditDisabled: true
             }, view => {
                 view.render();
