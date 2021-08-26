@@ -196,6 +196,14 @@
     "unique": {
       "type": "bool",
       "default": false
+    },
+    "prohibitedEmptyValue": {
+      "type": "bool",
+      "default": false
+    },
+    "enumDefault": {
+      "type": "enum",
+      "view": "pim:views/fields/enum-default"
     }
   },
   "links": {

@@ -15,7 +15,9 @@
     "assetType": "Тип ассета",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Сортировать (по алфавиту)"
+    "isSorted": "Сортировать (по алфавиту)",
+    "prohibitedEmptyValue": "Запретить пустые значения",
+    "enumDefault": "По умолчанию"
   },
   "links": {
     "attributeGroup": "Группа атрибутов",

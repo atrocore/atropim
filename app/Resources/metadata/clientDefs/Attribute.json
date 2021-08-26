@@ -112,6 +112,32 @@
             }
           ]
         }
+      },
+      "prohibitedEmptyValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "enum"
+              ]
+            }
+          ]
+        }
+      },
+      "enumDefault": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "enum"
+              ]
+            }
+          ]
+        }
       }
     }
   }
