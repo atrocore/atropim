@@ -42,6 +42,11 @@ use Treo\Core\Utils\Util;
 class Attribute extends AbstractService
 {
     /**
+     * @var array
+     */
+    protected $mandatorySelectAttributeList = ['sortOrder'];
+
+    /**
      * @inheritDoc
      */
     public function getEntity($id = null)

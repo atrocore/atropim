@@ -513,6 +513,12 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
         $entity->set('attributeCode', !empty($attribute) ? $attribute->get('code') : null);
 
+        if (!empty($attribute)) {
+            $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
+            $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+            $entity->set('sortOrder', $attribute->get('sortOrder'));
+        }
+
         $channel = $entity->get('channel');
         $entity->set('channelCode', !empty($channel) ? $channel->get('code') : null);
 

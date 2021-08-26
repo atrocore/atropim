@@ -52,10 +52,15 @@ class ProductFamilyAttribute extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($attribute = $entity->get('attribute')) && !empty($this->getConfig()->get('isMultilangActive'))) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-                $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
+        if (!empty($attribute = $entity->get('attribute'))) {
+            $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
+            $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+            $entity->set('sortOrder', $attribute->get('sortOrder'));
+            if (!empty($this->getConfig()->get('isMultilangActive'))) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+                    $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
+                }
             }
         }
     }
