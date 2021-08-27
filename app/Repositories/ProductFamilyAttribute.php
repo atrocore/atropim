@@ -88,6 +88,7 @@ class ProductFamilyAttribute extends Base
                 $pav->set('isRequired', $pfa->get('isRequired'));
             }
 
+            $pav->skipVariantValidation = true;
             $pav->skipPfValidation = true;
             $pav->skipProductChannelValidation = true;
             $this->getEntityManager()->saveEntity($pav);
@@ -141,6 +142,19 @@ class ProductFamilyAttribute extends Base
      */
     public function afterSave(Entity $entity, array $options = [])
     {
+        if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('channelId') || $entity->isAttributeChanged('scope')) {
+                foreach ($entity->get('productAttributeValues') as $pav) {
+                    $pav->set('scope', $entity->get('scope'));
+                    $pav->set('channelId', $entity->get('channelId'));
+                    $pav->skipVariantValidation = true;
+                    $pav->skipPfValidation = true;
+                    $pav->skipProductChannelValidation = true;
+                    $this->getEntityManager()->saveEntity($pav);
+                }
+            }
+        }
+
         // update product attribute values
         $this->updateProductAttributeValues($entity);
 
