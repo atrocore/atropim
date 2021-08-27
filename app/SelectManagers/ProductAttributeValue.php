@@ -58,7 +58,7 @@ class ProductAttributeValue extends AbstractSelectManager
 
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
                     $this->onlyTabAttributesFilter($params, (string)$v['data']['onlyTabAttributes']);
-//                    unset($params['where'][$k]);
+                    unset($params['where'][$k]);
                 }
             }
             $params['where'] = array_values($params['where']);
@@ -231,7 +231,7 @@ class ProductAttributeValue extends AbstractSelectManager
 
     protected function onlyTabAttributesFilter(array &$params, string $tabId)
     {
-        if (empty($tabId)) {
+        if (empty($tabId) || $tabId === 'null') {
             $tabId = null;
         }
 
