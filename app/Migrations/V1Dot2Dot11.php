@@ -34,9 +34,9 @@ namespace Pim\Migrations;
 use Treo\Core\Migration\Base;
 
 /**
- * Migration class for version 1.2.10
+ * Migration class for version 1.2.11
  */
-class V1Dot2Dot10 extends Base
+class V1Dot2Dot11 extends Base
 {
     /**
      * @inheritDoc
