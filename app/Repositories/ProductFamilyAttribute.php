@@ -58,7 +58,13 @@ class ProductFamilyAttribute extends Base
             ->dispatch('ProductFamilyAttributeRepository', 'actualizePfa', new Event(['productId' => $productId]))
             ->getArgument('productId');
 
-        foreach (self::getUpdatePfaData() as $k => $v) {
+        $pfaData = self::getUpdatePfaData();
+
+        if (empty($pfaData)) {
+            return;
+        }
+
+        foreach ($pfaData as $k => $v) {
             $parts = explode('_', $k);
 
             if (!empty($productId) && $parts[0] !== $productId) {
@@ -74,8 +80,25 @@ class ProductFamilyAttribute extends Base
             $pav = $this
                 ->getEntityManager()
                 ->getRepository('ProductAttributeValue')
-                ->where(['productId' => $parts[0], 'attributeId' => $pfa->get('attributeId')])
+                ->where([
+                    'productId'                => $parts[0],
+                    'attributeId'              => $pfa->get('attributeId'),
+                    'productFamilyAttributeId' => $pfa->get('id')
+                ])
                 ->findOne();
+
+            if (empty($pav)) {
+                $pav = $this
+                    ->getEntityManager()
+                    ->getRepository('ProductAttributeValue')
+                    ->where([
+                        'productId'   => $parts[0],
+                        'attributeId' => $pfa->get('attributeId'),
+                        'scope'       => $pfa->get('scope'),
+                        'channelId'   => $pfa->get('channelId'),
+                    ])
+                    ->findOne();
+            }
 
             if (empty($pav)) {
                 $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
@@ -83,10 +106,10 @@ class ProductFamilyAttribute extends Base
                 $pav->set('attributeId', $pfa->get('attributeId'));
             }
 
-            if ($pav->get('scope') == $pfa->get('scope') && $pav->get('channelId') == $pfa->get('channelId')) {
-                $pav->set('productFamilyAttributeId', $pfa->get('id'));
-                $pav->set('isRequired', $pfa->get('isRequired'));
-            }
+            $pav->set('scope', $pfa->get('scope'));
+            $pav->set('channelId', $pfa->get('channelId'));
+            $pav->set('productFamilyAttributeId', $pfa->get('id'));
+            $pav->set('isRequired', $pfa->get('isRequired'));
 
             $pav->skipVariantValidation = true;
             $pav->skipPfValidation = true;
@@ -142,19 +165,6 @@ class ProductFamilyAttribute extends Base
      */
     public function afterSave(Entity $entity, array $options = [])
     {
-        if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('channelId') || $entity->isAttributeChanged('scope')) {
-                foreach ($entity->get('productAttributeValues') as $pav) {
-                    $pav->set('scope', $entity->get('scope'));
-                    $pav->set('channelId', $entity->get('channelId'));
-                    $pav->skipVariantValidation = true;
-                    $pav->skipPfValidation = true;
-                    $pav->skipProductChannelValidation = true;
-                    $this->getEntityManager()->saveEntity($pav);
-                }
-            }
-        }
-
         // update product attribute values
         $this->updateProductAttributeValues($entity);
 

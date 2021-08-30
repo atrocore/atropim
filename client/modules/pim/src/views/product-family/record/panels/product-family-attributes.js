@@ -211,16 +211,6 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                     this.actionRefresh();
                 });
 
-                this.listenTo(collection, 'change:isRequired', model => {
-                    if (!model.hasChanged('modifiedAt')) {
-                        model.save().error(function () {
-                            this.actionRefresh();
-                        }.bind(this)).success(function () {
-                            this.notify('Saved', 'success');
-                        }.bind(this));
-                    }
-                });
-
                 this.fetchCollectionGroups(() => this.wait(false));
             }, this);
 
@@ -512,25 +502,9 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                             el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
                             showMore: false
                         }, view => {
-                            this.onGroupViewCreated(view);
                             view.render();
                         });
                     });
-                });
-            });
-        },
-
-        onGroupViewCreated(view) {
-            this.listenTo(view, 'after:render', () => {
-                (view.rowList || []).forEach(id => {
-                    const rowView = view.getView(id);
-                    if (rowView) {
-                        const fieldView = rowView.getView('isRequiredField');
-                        if (fieldView && !rowView.model.get('isInherited')) {
-                            fieldView.setMode('edit');
-                            fieldView.reRender();
-                        }
-                    }
                 });
             });
         },
