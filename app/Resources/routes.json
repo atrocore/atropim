@@ -23,13 +23,5 @@
       "controller": "Product",
       "action": "removeAssociatedProducts"
     }
-  },
-  {
-    "route": "/ProductFamily/:productFamilyId/productsCount",
-    "method": "get",
-    "params": {
-      "controller": "ProductFamily",
-      "action": "productsCount"
-    }
   }
 ]
