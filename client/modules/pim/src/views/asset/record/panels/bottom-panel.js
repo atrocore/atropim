@@ -30,9 +30,13 @@ Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/recor
     Dep => Dep.extend({
 
         actionSetAsMainImage: function (data) {
+            const pathData = window.location.hash.replace('#', '').split('/view/');
+            const entityName = pathData.shift();
+            const entityId = pathData.pop();
+
             this.notify('Saving...');
-            this.ajaxPostRequest(`${data.entity_name}/action/SetAsMainImage`, {
-                entityId: data.entity_id,
+            this.ajaxPostRequest(`${entityName}/action/SetAsMainImage`, {
+                entityId: entityId,
                 assetId: data.asset_id
             }).then(response => {
                 this.notify('Saved', 'success');
