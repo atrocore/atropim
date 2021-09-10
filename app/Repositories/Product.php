@@ -170,6 +170,12 @@ class Product extends AbstractRepository
             $params['limit'] = 9999;
         }
 
+        if ($relationName == 'categories' && !empty($params)) {
+            if (isset($params['additionalColumns']['pcSorting'])) {
+                unset($params['additionalColumns']['pcSorting']);
+            }
+        }
+
         return parent::findRelated($entity, $relationName, $params);
     }
 
