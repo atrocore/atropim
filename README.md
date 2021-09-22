@@ -82,7 +82,7 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 
 * Unix-based system. Ubuntu is recommended.
 * PHP 7.4 or above.
-* MySQL 5.5.3 or above.
+* MySQL 5.5.3 or above **(not MariaDB)**.
 
 ### Installation
 
