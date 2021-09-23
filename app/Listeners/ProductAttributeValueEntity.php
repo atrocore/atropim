@@ -107,27 +107,6 @@ class ProductAttributeValueEntity extends AbstractListener
     }
 
     /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeRemove(Event $event)
-    {
-        // get data
-        $entity = $event->getArgument('entity');
-        $options = $event->getArgument('options');
-
-        // exit
-        if (!empty($options['skipProductAttributeValueHook'])) {
-            return true;
-        }
-
-        if (!empty($entity->get('productFamilyAttributeId'))) {
-            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
-        }
-    }
-
-    /**
      * @param Entity $entity
      * @param string $locale
      *

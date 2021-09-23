@@ -196,6 +196,15 @@ class ProductAttributeValue extends AbstractRepository
         parent::afterSave($entity, $options);
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if (empty($options['skipProductAttributeValueHook']) && empty($entity->force) && !empty($entity->get('productFamilyAttributeId'))) {
+            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     /**
      * @param string $id
      * @param string $locale
