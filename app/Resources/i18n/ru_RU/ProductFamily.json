@@ -5,12 +5,16 @@
     "code": "Код",
     "isActive": "Активный",
     "productFamilies": "Продуктовые семьи",
-    "productFamilyAttributes": "Атрибуты продуктовой семьи"
+    "productFamilyAttributes": "Атрибуты продуктовой семьи",
+    "parent": "Родитель",
+    "children": "Дети"
   },
   "links": {
     "products": "Продукты",
     "productFamilies": "Продуктовые семьи",
-    "productFamilyAttributes": "Атрибуты продуктовой семьи"
+    "productFamilyAttributes": "Атрибуты продуктовой семьи",
+    "parent": "Родитель",
+    "children": "Дети"
   },
   "labels": {
     "Create ProductFamily": "Создать продуктовую семью",

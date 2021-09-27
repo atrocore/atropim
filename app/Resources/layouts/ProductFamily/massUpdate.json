@@ -1,5 +1,6 @@
 [
-    "isActive",
-    "assignedUser",
-    "teams"
+  "parent",
+  "isActive",
+  "assignedUser",
+  "teams"
 ]

@@ -5,12 +5,16 @@
     "code": "Code",
     "isActive": "Active",
     "productFamilies": "Product Families",
-    "productFamilyAttributes": "Product Family Attributes"
+    "productFamilyAttributes": "Product Family Attributes",
+    "parent": "Parent",
+    "children": "Children"
   },
   "links": {
     "products": "Products",
     "productFamilies": "Product Families",
-    "productFamilyAttributes": "Product Family Attributes"
+    "productFamilyAttributes": "Product Family Attributes",
+    "parent": "Parent",
+    "children": "Children"
   },
   "labels": {
     "Create ProductFamily": "Create Product family",

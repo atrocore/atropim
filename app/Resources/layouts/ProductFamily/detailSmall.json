@@ -7,7 +7,9 @@
         {
           "name": "isActive"
         },
-        false
+        {
+          "name": "parent"
+        }
       ],
       [
         {

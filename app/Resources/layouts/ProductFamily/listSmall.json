@@ -1,12 +1,15 @@
 [
-    {
-        "name": "name",
-        "link": true
-    },
-    {
-        "name": "code"
-    },
-    {
-        "name": "isActive"
-    }
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "parent"
+  },
+  {
+    "name": "isActive"
+  }
 ]

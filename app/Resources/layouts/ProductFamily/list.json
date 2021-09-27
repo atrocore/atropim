@@ -7,6 +7,9 @@
         "name": "code"
     },
     {
+        "name": "parent"
+    },
+    {
         "name": "isActive"
     }
 ]
