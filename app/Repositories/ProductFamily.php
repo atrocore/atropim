@@ -139,9 +139,41 @@ class ProductFamily extends AbstractRepository
         return array_column($data, 'id');
     }
 
-    /**
-     * @inheritdoc
-     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isAttributeChanged('parentId')) {
+            if ($this->isChildProductFamily($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('childProductFamily', 'exceptions', 'ProductFamily'));
+            }
+
+            if ($entity->get('id') === $entity->get('parentId')) {
+                throw new BadRequest($this->getInjection('language')->translate('itselfProductFamily', 'exceptions', 'ProductFamily'));
+            }
+        }
+
+        if (!$this->isCodeValid($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        $this->setInheritedOwnership($entity);
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($this->hasProducts($entity->get('id'))) {
+            throw new BadRequest($this->getInjection('language')->translate('productFamilyIsUsedInProducts', 'exceptions', 'ProductFamily'));
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -153,15 +185,73 @@ class ProductFamily extends AbstractRepository
                 $this->getEntityManager()->saveEntity($product);
             }
         }
+
+        $this->removeProductFamilyAttribute($entity);
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function afterSave(Entity $entity, array $options = array())
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
-        parent::afterSave($entity, $options);
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
-        $this->setInheritedOwnership($entity);
+        if ($relationName == 'productFamilyAttributes' && !empty($foreign) && !is_string($foreign)) {
+            $this
+                ->getEntityManager()
+                ->getRepository('ProductAttributeValue')
+                ->removeCollectionByProductFamilyAttribute($foreign->get('id'));
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
+
+    protected function isChildProductFamily(Entity $entity): bool
+    {
+        return false;
+    }
+
+    protected function isCodeValid(Entity $entity): bool
+    {
+        if (!$entity->isAttributeChanged('code')) {
+            return true;
+        }
+
+        if (!empty($entity->get('code')) && preg_match(self::CODE_PATTERN, $entity->get('code'))) {
+            $exists = $this->where(['code' => $entity->get('code')])->findOne();
+            if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function hasProducts(string $id): bool
+    {
+        $count = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['productFamilyId' => $id])
+            ->count();
+
+        return !empty($count);
+    }
+
+    protected function removeProductFamilyAttribute(Entity $entity): void
+    {
+        // @todo
+//        $productFamilyAttributes = $this
+//            ->getEntityManager()
+//            ->getRepository('ProductFamilyAttribute')
+//            ->select(['id'])
+//            ->where(['productFamilyId' => $entity->get('id')])
+//            ->find();
+//
+//        foreach ($productFamilyAttributes as $productFamilyAttribute) {
+//            $this->getEntityManager()->removeEntity($productFamilyAttribute);
+//        }
     }
 }

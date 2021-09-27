@@ -24,6 +24,8 @@
     "Can't remove system Product Family": "Can't remove system Product Family"
   },
   "exceptions": {
-    "productFamilyIsUsedInProducts": "Product Family is used in products"
+    "productFamilyIsUsedInProducts": "Product Family is used in products",
+    "childProductFamily": "Child Product Family can't be chosen as parent.",
+    "itselfProductFamily": "Product Family can't be chosen as its own parent."
   }
 }

@@ -41,6 +41,8 @@ use Treo\Core\Utils\Util;
  */
 abstract class AbstractRepository extends Base
 {
+    public const CODE_PATTERN = '/^[\p{Ll}0-9_]*$/u';
+
     /**
      * @var string
      */

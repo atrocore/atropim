@@ -27,6 +27,8 @@
     "Can't remove system Product Family": "Das System Produktfamilie kann nicht entfernt werden"
   },
   "exceptions": {
-    "productFamilyIsUsedInProducts": "Die Produktfamilie wird in den Produkten verwendet"
+    "productFamilyIsUsedInProducts": "Die Produktfamilie wird in den Produkten verwendet",
+    "childProductFamily": "Die untergeordnete Produktfamilie kann nicht als übergeordnete ausgewählt werden.",
+    "itselfProductFamily": "Die Produktfamilie kann nicht als eigene übergeordnete Produktfamilie ausgewählt werden."
   }
 }
