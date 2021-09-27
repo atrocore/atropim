@@ -175,16 +175,6 @@ class ProductFamily extends AbstractRepository
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if (self::isAdvancedClassificationInstalled() && $entity->isAttributeChanged('parentId')) {
-            if ($this->isChildProductFamily($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('childProductFamily', 'exceptions', 'ProductFamily'));
-            }
-
-            if ($entity->get('id') === $entity->get('parentId')) {
-                throw new BadRequest($this->getInjection('language')->translate('itselfProductFamily', 'exceptions', 'ProductFamily'));
-            }
-        }
-
         if (!$this->isCodeValid($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
@@ -201,24 +191,13 @@ class ProductFamily extends AbstractRepository
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if ($this->hasProducts($entity->get('id'))) {
-            throw new BadRequest($this->getInjection('language')->translate('productFamilyIsUsedInProducts', 'exceptions', 'ProductFamily'));
+        // unlink from products
+        foreach ($entity->get('products') as $product) {
+            $product->set('productFamilyId', null);
+            $this->getEntityManager()->saveEntity($product);
         }
 
         parent::beforeRemove($entity, $options);
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        // unlink products
-        if (!empty($products = $entity->get('products'))) {
-            foreach ($products as $product) {
-                $product->set('productFamilyId', null);
-                $this->getEntityManager()->saveEntity($product);
-            }
-        }
     }
 
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -240,11 +219,6 @@ class ProductFamily extends AbstractRepository
         $this->addDependency('language');
     }
 
-    protected function isChildProductFamily(Entity $entity): bool
-    {
-        return false;
-    }
-
     protected function isCodeValid(Entity $entity): bool
     {
         if (!$entity->isAttributeChanged('code')) {
@@ -259,16 +233,5 @@ class ProductFamily extends AbstractRepository
         }
 
         return true;
-    }
-
-    protected function hasProducts(string $id): bool
-    {
-        $count = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['productFamilyId' => $id])
-            ->count();
-
-        return !empty($count);
     }
 }

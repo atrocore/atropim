@@ -18,10 +18,5 @@
   },
   "messages": {
     "Can't remove system Product Family": "Невозможно удалить продуктовую семью"
-  },
-  "exceptions": {
-    "productFamilyIsUsedInProducts": "Продуктовая семья уже используется в продуктах",
-    "childProductFamily": "Дочернюю продуктовую семью нельзя выбрать в качестве родительской.",
-    "itselfProductFamily": "Продуктовая семья не может быть выбрано в качестве собственной родительской."
   }
 }
