@@ -64,8 +64,18 @@ class ProductFamily extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
+    public static function isAdvancedClassificationInstalled(): bool
+    {
+        if (!class_exists(\AdvancedClassification\Module::class)) {
+            throw new BadRequest("Advanced Classification module isn't installed.");
+        }
+
+        return true;
+    }
+
     public function getParentsIds(Entity $entity, array $ids = []): array
     {
+        self::isAdvancedClassificationInstalled();
         if (!empty($entity->get('parentId'))) {
             $ids[] = $entity->get('parentId');
             $ids = array_unique(array_merge($ids, $this->getParentsIds($entity->get('parent'), $ids)));
@@ -76,6 +86,7 @@ class ProductFamily extends AbstractRepository
 
     public function getChildrenIds(Entity $entity, array $ids = []): array
     {
+        self::isAdvancedClassificationInstalled();
         foreach ($entity->get('children') as $child) {
             $ids[] = $child->get('id');
             $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
