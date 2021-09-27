@@ -86,16 +86,6 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
-    },
-    "parent": {
-      "type": "link",
-      "view": "pim:views/product-family/fields/parent"
-    },
-    "children": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "noLoad": true
     }
   },
   "links": {
@@ -130,16 +120,6 @@
       "type": "hasMany",
       "foreign": "productFamily",
       "entity": "ProductFamilyAttribute"
-    },
-    "parent": {
-      "type": "belongsTo",
-      "foreign": "children",
-      "entity": "ProductFamily"
-    },
-    "children": {
-      "type": "hasMany",
-      "foreign": "parent",
-      "entity": "ProductFamily"
     }
   },
   "collection": {

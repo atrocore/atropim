@@ -6,18 +6,14 @@
     "productFamilyAttributes": "Attribute der  Produktfamilie",
     "productFamilyTemplate": "Vorlage der Produktfamilie",
     "products": "Produkte",
-    "code": "Code",
-    "parent": "Elternteil",
-    "children": "Kinder"
+    "code": "Code"
   },
   "links": {
     "productFamilies": "Produktfamilien",
     "productFamilyAttributes": "Attribute der Produktfamilie",
     "productFamilyTemplate": "Vorlage der Produktfamilie",
     "products": "Produkte",
-    "attributes": "Attribute",
-    "parent": "Elternteil",
-    "children": "Kinder"
+    "attributes": "Attribute"
   },
   "labels": {
     "selectAttributeGroup": "Attributgruppe auswählen",
