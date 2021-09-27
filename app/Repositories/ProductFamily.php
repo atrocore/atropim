@@ -66,16 +66,19 @@ class ProductFamily extends AbstractRepository
 
     public static function isAdvancedClassificationInstalled(): bool
     {
-        if (!class_exists(\AdvancedClassification\Module::class)) {
+        return class_exists(\AdvancedClassification\Module::class);
+    }
+
+    public static function onlyForAdvancedClassification(): void
+    {
+        if (!self::isAdvancedClassificationInstalled()) {
             throw new BadRequest("Advanced Classification module isn't installed.");
         }
-
-        return true;
     }
 
     public function getParentsIds(Entity $entity, array $ids = []): array
     {
-        self::isAdvancedClassificationInstalled();
+        self::onlyForAdvancedClassification();
         if (!empty($entity->get('parentId'))) {
             $ids[] = $entity->get('parentId');
             $ids = array_unique(array_merge($ids, $this->getParentsIds($entity->get('parent'), $ids)));
@@ -86,7 +89,7 @@ class ProductFamily extends AbstractRepository
 
     public function getChildrenIds(Entity $entity, array $ids = []): array
     {
-        self::isAdvancedClassificationInstalled();
+        self::onlyForAdvancedClassification();
         foreach ($entity->get('children') as $child) {
             $ids[] = $child->get('id');
             $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
@@ -172,7 +175,7 @@ class ProductFamily extends AbstractRepository
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('parentId')) {
+        if (self::isAdvancedClassificationInstalled() && $entity->isAttributeChanged('parentId')) {
             if ($this->isChildProductFamily($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('childProductFamily', 'exceptions', 'ProductFamily'));
             }
