@@ -88,7 +88,8 @@
       "importDisabled": true
     },
     "parent": {
-      "type": "link"
+      "type": "link",
+      "view": "pim:views/product-family/fields/parent"
     },
     "children": {
       "type": "linkMultiple",

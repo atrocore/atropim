@@ -64,6 +64,26 @@ class ProductFamily extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
+    public function getParentsIds(Entity $entity, array $ids = []): array
+    {
+        if (!empty($entity->get('parentId'))) {
+            $ids[] = $entity->get('parentId');
+            $ids = array_unique(array_merge($ids, $this->getParentsIds($entity->get('parent'), $ids)));
+        }
+
+        return $ids;
+    }
+
+    public function getChildrenIds(Entity $entity, array $ids = []): array
+    {
+        foreach ($entity->get('children') as $child) {
+            $ids[] = $child->get('id');
+            $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
+        }
+
+        return $ids;
+    }
+
     /**
      * @inheritDoc
      */
@@ -185,8 +205,6 @@ class ProductFamily extends AbstractRepository
                 $this->getEntityManager()->saveEntity($product);
             }
         }
-
-        $this->removeProductFamilyAttribute($entity);
     }
 
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -238,20 +256,5 @@ class ProductFamily extends AbstractRepository
             ->count();
 
         return !empty($count);
-    }
-
-    protected function removeProductFamilyAttribute(Entity $entity): void
-    {
-        // @todo
-//        $productFamilyAttributes = $this
-//            ->getEntityManager()
-//            ->getRepository('ProductFamilyAttribute')
-//            ->select(['id'])
-//            ->where(['productFamilyId' => $entity->get('id')])
-//            ->find();
-//
-//        foreach ($productFamilyAttributes as $productFamilyAttribute) {
-//            $this->getEntityManager()->removeEntity($productFamilyAttribute);
-//        }
     }
 }
