@@ -117,6 +117,24 @@ class ProductFamily extends AbstractRepository
         return array_column($data, 'attributeId');
     }
 
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName === 'products') {
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Product that we should be related with Product Family.');
+            }
+            if (is_string($foreign)) {
+                $foreign = $this->getEntityManager()->getEntity('Product', $foreign);
+            }
+            $foreign->set('productFamilyId', $entity->get('id'));
+            $this->getEntityManager()->saveEntity($foreign);
+
+            return true;
+        }
+
+        return parent::relate($entity, $relationName, $foreign, $data, $options);
+    }
+
     /**
      * @param array       $productFamiliesIds
      * @param string|null $attributeGroupId

@@ -42,9 +42,7 @@
       "selectBoolFilterList": [
         "notLinkedWithProductFamily"
       ],
-      "select": false,
-      "createAction": "createRelatedConfigured",
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "createAction": "createRelatedConfigured"
     }
   },
   "dynamicLogic": {

@@ -213,6 +213,7 @@ class Product extends AbstractRepository
         $params['customWhere'] .= " AND (product_attribute_value.scope='Global' OR (product_attribute_value.scope='Channel' AND product_attribute_value.channel_id IN ('$channelsIds')))";
     }
 
+
     /**
      * Is product can linked with non-lead category
      *
@@ -633,16 +634,91 @@ class Product extends AbstractRepository
         $this->setInheritedOwnership($entity);
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $entity->get('id')])
+            ->find();
+
+        foreach ($pavs as $pav) {
+            $this->getEntityManager()->removeEntity($pav, ['skipProductAttributeValueHook' => true]);
+        }
+
+        parent::afterRemove($entity, $options);
+    }
+
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'categories') {
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Category that we should be related with Product.');
+            }
+
+            if (is_string($foreign)) {
+                $foreign = $this->getEntityManager()->getEntity('Product', $foreign);
+            }
+
+            $this->isCategoryAlreadyRelated($entity, $foreign);
+            $this->isCategoryFromCatalogTrees($entity, $foreign);
+            $this->isProductCanLinkToNonLeafCategory($foreign);
+        }
+
+        if ($relationName == 'channels' && !$entity->isSkippedValidation('isChannelAlreadyRelated')) {
+            $this->isChannelAlreadyRelated($entity, $foreign);
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'categories') {
+            $this->updateProductCategorySortOrder($entity, $foreign);
+            $this->linkCategoryChannels($entity, $foreign);
+        }
+
+        if ($relationName == 'channels') {
+            // set from_category_tree param
+            if (!empty($entity->fromCategoryTree)) {
+                $this->updateChannelRelationData($entity, $foreign, null, true);
+            }
+        }
+
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName == 'channels' && empty($entity->skipIsFromCategoryTreeValidation)) {
+            $productId = (string)$entity->get('id');
+            $channelId = (string)$foreign->get('id');
+
+            $channelRelationData = $this->getChannelRelationData($productId);
+
+            if (!empty($channelRelationData[$channelId]['isFromCategoryTree'])) {
+                throw new BadRequest($this->translate("channelProvidedByCategoryTreeCantBeUnlinkedFromProduct", 'exceptions', 'Product'));
+            }
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+    }
+
     /**
      * @inheritDoc
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+        if ($relationName == 'categories') {
+            $this->linkCategoryChannels($entity, $foreign, true);
+        }
 
         if ($relationName == 'channels') {
             $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
         }
+
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**
