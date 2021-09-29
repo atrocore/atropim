@@ -99,36 +99,6 @@ class ProductFamily extends AbstractRepository
     }
 
     /**
-     * @inheritDoc
-     */
-    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName == 'productFamilyAttributes') {
-            // prepare id
-            if ($foreign instanceof Entity) {
-                $id = $foreign->get('id');
-            } elseif (is_string($foreign)) {
-                $id = $foreign;
-            } else {
-                throw new BadRequest("'Remove all relations' action is blocked for such relation");
-            }
-
-            // make product attribute as custom
-            $sql = "UPDATE product_attribute_value SET product_family_attribute_id=NULL,is_required=1 WHERE product_family_attribute_id='$id';";
-
-            // unlink
-            $sql .= "UPDATE product_family_attribute SET deleted=1 WHERE id='$id'";
-
-            // execute
-            $this->getEntityManager()->nativeQuery($sql);
-
-            return true;
-        }
-
-        return parent::unrelate($entity, $relationName, $foreign, $options);
-    }
-
-    /**
      * @param string $id
      * @param string $scope
      *
@@ -206,15 +176,6 @@ class ProductFamily extends AbstractRepository
 
         foreach ($entity->get('productFamilyAttributes') as $pfa) {
             $this->getEntityManager()->removeEntity($pfa);
-        }
-    }
-
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
-
-        if ($relationName == 'productFamilyAttributes' && !empty($foreign) && !is_string($foreign)) {
-            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->deleteProductAttributeValues($foreign);
         }
     }
 
