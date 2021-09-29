@@ -14,7 +14,6 @@
       "seeMoreDisabled": false,
       "readOnly": false,
       "tooltip": false,
-      "isCustom": false,
       "isMultilang": true
     },
     "code": {
@@ -33,7 +32,6 @@
       "audited": false,
       "readOnly": true,
       "tooltip": false,
-      "isCustom": false,
       "layoutDetailDisabled": true,
       "layoutFiltersDisabled": true,
       "layoutMassUpdateDisabled": true,
@@ -77,8 +75,7 @@
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
       "noLoad": true,
-      "importDisabled": true,
-      "isCustom": false
+      "importDisabled": true
     },
     "sortOrder": {
       "type": "int",
@@ -87,8 +84,7 @@
       "disableFormatting": false,
       "audited": false,
       "readOnly": false,
-      "tooltip": false,
-      "isCustom": false
+      "tooltip": false
     }
   },
   "links": {
@@ -118,8 +114,7 @@
       "type": "hasMany",
       "foreign": "attributeGroup",
       "entity": "Attribute",
-      "audited": false,
-      "isCustom": false
+      "audited": false
     }
   },
   "collection": {

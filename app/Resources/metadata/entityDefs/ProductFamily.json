@@ -14,7 +14,6 @@
       "seeMoreDisabled": false,
       "readOnly": false,
       "tooltip": false,
-      "isCustom": false,
       "isMultilang": true
     },
     "code": {
@@ -32,8 +31,7 @@
       "default": false,
       "audited": false,
       "readOnly": false,
-      "tooltip": false,
-      "isCustom": false
+      "tooltip": false
     },
     "createdAt": {
       "type": "datetime",
@@ -74,8 +72,7 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true,
-      "exportDisabled": true,
-      "isCustom": false
+      "exportDisabled": true
     },
     "productFamilyAttributes": {
       "type": "linkMultiple",

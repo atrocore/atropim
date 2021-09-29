@@ -14,7 +14,6 @@
             "seeMoreDisabled": false,
             "readOnly": false,
             "tooltip": false,
-            "isCustom": false,
             "isMultilang": true
         },
         "isActive": {
@@ -23,8 +22,7 @@
             "default": false,
             "audited": false,
             "readOnly": false,
-            "tooltip": false,
-            "isCustom": false
+            "tooltip": false
         },
         "createdAt": {
             "type": "datetime",
@@ -64,8 +62,7 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "noLoad": true,
-            "importDisabled": true,
-            "isCustom": false
+            "importDisabled": true
         },
         "code": {
             "type": "varchar",
@@ -104,8 +101,7 @@
             "type": "hasMany",
             "foreign": "brand",
             "entity": "Product",
-            "audited": false,
-            "isCustom": false
+            "audited": false
         }
     },
     "collection": {

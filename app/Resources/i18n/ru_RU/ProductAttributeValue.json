@@ -8,7 +8,6 @@
     "attribute": "Атрибут",
     "isRequired": "Обязательно",
     "productFamilyAttribute": "Атрибут продуктовой семьи",
-    "isCustom": "Настраевамый",
     "value": "Значение",
     "scope": "Область действия",
     "channel": "Канал"

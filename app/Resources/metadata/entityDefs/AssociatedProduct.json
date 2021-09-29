@@ -67,8 +67,7 @@
       "type": "belongsTo",
       "foreign": "associatedProducts",
       "entity": "Association",
-      "audited": false,
-      "isCustom": false
+      "audited": false
     },
     "createdBy": {
       "type": "belongsTo",
@@ -96,22 +95,19 @@
       "type": "belongsTo",
       "foreign": "associatedMainProducts",
       "entity": "Product",
-      "audited": false,
-      "isCustom": false
+      "audited": false
     },
     "relatedProduct": {
       "type": "belongsTo",
       "foreign": "associatedRelatedProduct",
       "entity": "Product",
-      "audited": false,
-      "isCustom": false
+      "audited": false
     },
     "backwardAssociation": {
       "type": "belongsTo",
       "foreign": "associatedProducts",
       "entity": "Association",
-      "audited": false,
-      "isCustom": false
+      "audited": false
     }
   }
 }

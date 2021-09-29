@@ -502,8 +502,6 @@ class ProductAttributeValue extends AbstractService
             return;
         }
 
-        $entity->set('isCustom', $this->isCustom($entity));
-
         $attribute = $entity->get('attribute');
 
         $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
@@ -557,24 +555,6 @@ class ProductAttributeValue extends AbstractService
                 $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
             }
         }
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    private function isCustom(Entity $entity): bool
-    {
-        // prepare is custom field
-        $isCustom = true;
-
-        if (!empty($productFamilyAttribute = $entity->get('productFamilyAttribute'))
-            && !empty($productFamilyAttribute->get('productFamily'))) {
-            $isCustom = false;
-        }
-
-        return $isCustom;
     }
 
     private function prepareValueForAssetType(\stdClass $data): void
