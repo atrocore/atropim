@@ -272,7 +272,6 @@ class ProductAttributeValue extends AbstractService
             ->where(
                 [
                     'productId'                => $productId,
-                    'productFamilyAttributeId' => null,
                     'attributeId'              => array_column($attributes->toArray(), 'id')
                 ]
             )
@@ -310,8 +309,7 @@ class ProductAttributeValue extends AbstractService
             ->getRepository('ProductAttributeValue')
             ->where(
                 [
-                    'productId'                => $productId,
-                    'productFamilyAttributeId' => null
+                    'productId'                => $productId
                 ]
             )
             ->find();

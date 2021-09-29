@@ -4,14 +4,12 @@
     "attribute": "Attribute",
     "isRequired": "Is required",
     "channel": "Channel",
-    "channels": "Channels",
     "scope": "Scope"
   },
   "links": {
     "productFamily": "Product Family",
     "attribute": "Attribute",
-    "channel": "Channel",
-    "channels": "Channels"
+    "channel": "Channel"
   },
   "labels": {
     "Create ProductFamilyAttribute": "Create Product Family Attribute",

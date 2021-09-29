@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -26,17 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family-attribute/fields/channels', 'treo-core:views/fields/filtered-link-multiple',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        selectBoolFilterList: ['notLinkedWithProductFamilyAttribute'],
+namespace Pim\Migrations;
 
-        boolFilterData: {
-            notLinkedWithProductFamilyAttribute() {
-                return {productFamilyId: this.model.get('productFamilyId'), attributeId: this.model.get('attributeId')};
-            }
-        },
+class V1Dot3Dot0 extends V1Dot2Dot11
+{
+    public function up(): void
+    {
+        $this->execute("DELETE FROM scheduled_job WHERE job='UpdatePfa'");
+        $this->execute("DELETE FROM job WHERE name='UpdatePfa'");
+    }
 
-    })
-);
-
+    public function down(): void
+    {
+    }
+}

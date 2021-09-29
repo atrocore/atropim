@@ -4,14 +4,12 @@
     "attribute": "Атрибут",
     "isRequired": "Обязательно",
     "channel": "Канал",
-    "channels": "Каналы",
     "scope": "Область действия"
   },
   "links": {
     "productFamily": "Продуктовая семья",
     "attribute": "Атрибут",
-    "channel": "Канал",
-    "channels": "Каналы"
+    "channel": "Канал"
   },
   "labels": {
     "Create ProductFamilyAttribute": "Создать атрибут продукт. семьи",

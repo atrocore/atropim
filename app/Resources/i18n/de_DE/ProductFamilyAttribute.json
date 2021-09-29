@@ -5,14 +5,12 @@
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
     "channel": "Kanal",
-    "channels": "Kanäle",
     "scope": "Scope"
   },
   "links": {
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
-    "channel": "Kanal",
-    "channels": "Kanäle"
+    "channel": "Kanal"
   },
   "labels": {
     "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen",

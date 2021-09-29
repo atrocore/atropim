@@ -40,7 +40,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             'attributeId',
             'attributeName',
             'isRequired',
-            'productFamilyAttributeId',
             'scope',
             'value',
             'attributeIsMultilang',

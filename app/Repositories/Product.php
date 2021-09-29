@@ -165,7 +165,6 @@ class Product extends AbstractRepository
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
-            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->actualizePfa((string)$entity->get('id'));
             $this->filterByChannel($entity, $params);
             $params['limit'] = 9999;
         }

@@ -21,12 +21,6 @@
       ],
       [
         {
-          "name": "channels"
-        },
-        false
-      ],
-      [
-        {
           "name": "isRequired"
         },
         false

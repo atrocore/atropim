@@ -33,171 +33,121 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
-use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
 
-/**
- * Class ProductFamilyAttribute
- */
 class ProductFamilyAttribute extends Base
 {
-    const UPDATE_PFA_FILE_PATH = 'data/update-pfa.json';
-
-    public static function getUpdatePfaData(): array
+    public function createProductAttributeValues(Entity $pfa): void
     {
-        return !empty($content = @file_get_contents(self::UPDATE_PFA_FILE_PATH)) ? Json::decode($content, true) : [];
-    }
-
-    public function actualizePfa(string $productId = null): void
-    {
-        $productId = $this
-            ->getInjection('eventManager')
-            ->dispatch('ProductFamilyAttributeRepository', 'actualizePfa', new Event(['productId' => $productId]))
-            ->getArgument('productId');
-
-        $pfaData = self::getUpdatePfaData();
-
-        if (empty($pfaData)) {
-            return;
-        }
-
-        foreach ($pfaData as $k => $v) {
-            $parts = explode('_', $k);
-
-            if (!empty($productId) && $parts[0] !== $productId) {
-                continue;
-            }
-
-            $updated[] = $k;
-
-            if (empty($pfa = $this->get($parts[1]))) {
-                continue;
-            }
-
-            $pav = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->where([
-                    'productId'                => $parts[0],
-                    'attributeId'              => $pfa->get('attributeId'),
-                    'productFamilyAttributeId' => $pfa->get('id')
-                ])
-                ->findOne();
-
-            if (empty($pav)) {
-                $pav = $this
-                    ->getEntityManager()
-                    ->getRepository('ProductAttributeValue')
-                    ->where([
-                        'productId'   => $parts[0],
-                        'attributeId' => $pfa->get('attributeId'),
-                        'scope'       => $pfa->get('scope'),
-                        'channelId'   => $pfa->get('channelId'),
-                    ])
-                    ->findOne();
-            }
-
-            if (empty($pav)) {
-                $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
-                $pav->set('productId', $parts[0]);
-                $pav->set('attributeId', $pfa->get('attributeId'));
-            }
-
+        $productFamily = $pfa->get('productFamily');
+        foreach ($productFamily->get('products') as $product) {
+            $pav = $this->getPavRepository()->get();
+            $pav->set('productId', $product->get('id'));
+            $pav->set('attributeId', $pfa->get('attributeId'));
+            $pav->set('isRequired', $pfa->get('isRequired'));
             $pav->set('scope', $pfa->get('scope'));
             $pav->set('channelId', $pfa->get('channelId'));
-            $pav->set('productFamilyAttributeId', $pfa->get('id'));
-            $pav->set('isRequired', $pfa->get('isRequired'));
-
-            $pav->skipVariantValidation = true;
-            $pav->skipPfValidation = true;
-            $pav->skipProductChannelValidation = true;
             $this->getEntityManager()->saveEntity($pav);
         }
-
-        if (empty($updated)) {
-            return;
-        }
-
-        $data = self::getUpdatePfaData();
-        foreach ($updated as $v) {
-            if (isset($data[$v])) {
-                unset($data[$v]);
-            }
-        }
-        file_put_contents(self::UPDATE_PFA_FILE_PATH, Json::encode($data));
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @return bool|void
-     * @throws BadRequest
-     */
-    public function beforeSave(Entity $entity, array $options = [])
+    public function updateProductAttributeValues(Entity $pfa): void
     {
-        parent::beforeSave($entity, $options);
+        $productFamily = $pfa->get('productFamily');
+        foreach ($productFamily->get('products') as $product) {
+            $where = [
+                'productId'   => $product->get('id'),
+                'attributeId' => $pfa->get('attributeId'),
+                'scope'       => $pfa->getFetched('scope')
+            ];
 
-        // exit
-        if (!empty($options['skipValidation'])) {
-            return true;
+            if ($pfa->getFetched('scope') === 'Channel') {
+                $where['channelId'] = $pfa->getFetched('channelId');
+            }
+
+            if (!empty($pav = $this->getPavRepository()->where($where)->findOne())) {
+                $pav->set('scope', $pfa->get('scope'));
+                if ($pfa->get('scope') === 'Channel') {
+                    $pav->set('channelId', $pfa->get('channelId'));
+                } else {
+                    $pav->set('channelId', null);
+                }
+                if (!empty($pfa->getFetched('isRequired')) == !empty($pav->get('isRequired'))) {
+                    $pav->set('isRequired', $pfa->get('isRequired'));
+                }
+                $this->getEntityManager()->saveEntity($pav);
+            }
+        }
+    }
+
+    public function deleteProductAttributeValues(Entity $pfa): void
+    {
+        $productFamily = $pfa->get('productFamily');
+        foreach ($productFamily->get('products') as $product) {
+            $where = [
+                'productId'   => $product->get('id'),
+                'attributeId' => $pfa->get('attributeId'),
+                'scope'       => $pfa->get('scope')
+            ];
+
+            if ($pfa->get('scope') === 'Channel') {
+                $where['channelId'] = $pfa->get('channelId');
+            }
+
+            if (!empty($pav = $this->getPavRepository()->where($where)->findOne())) {
+                $this->getEntityManager()->removeEntity($pav);
+            }
+        }
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            if ($entity->isNew()) {
+                $this->createProductAttributeValues($entity);
+            } else {
+                $this->updateProductAttributeValues($entity);
+            }
+            $result = parent::save($entity, $options);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            if (!($e instanceof ProductAttributeAlreadyExists && $entity->isNew())) {
+                $this->getEntityManager()->getPDO()->rollBack();
+                throw $e;
+            }
         }
 
-        // when customer try to create records for few channels
-        $this->prepareForChannels($entity);
+        return $result;
+    }
 
-        // is valid
-        $this->isValid($entity);
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->deleteProductAttributeValues($entity);
+            $result = parent::remove($entity, $options);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
 
-        // clearing channel id if it needs
-        if ($entity->get('scope') == 'Global') {
+        return $result;
+    }
+
+    public function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('scope') === 'Global') {
             $entity->set('channelId', null);
         }
 
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterSave(Entity $entity, array $options = [])
-    {
-        // update product attribute values
-        $this->updateProductAttributeValues($entity);
-
-        parent::afterSave($entity, $options);
-
-        // when customer try to create records for few channels
-        if (!empty($entity->tmpChannelsId)) {
-            foreach ($entity->tmpChannelsId as $channelId) {
-                $newEntity = $this->get();
-                $newEntity->set($entity->toArray());
-                $newEntity->id = Util::generateId();
-                $newEntity->set('channelId', $channelId);
-
-                try {
-                    $this->getEntityManager()->saveEntity($newEntity);
-                } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("ProductFamilyAttribute ERROR: " . $e->getMessage());
-                }
-            }
+        if (empty($options['skipValidation'])) {
+            $this->isValid($entity);
         }
-    }
 
-    /**
-     * @inheritDoc
-     */
-    public function afterRemove(Entity $entity, array $options = [])
-    {
-        $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->removeCollectionByProductFamilyAttribute($entity->get('id'));
-
-        parent::afterRemove($entity, $options);
+        parent::beforeSave($entity, $options);
     }
 
     /**
@@ -217,49 +167,6 @@ class ProductFamilyAttribute extends Base
 
         if (!$this->isUnique($entity)) {
             throw new BadRequest($this->exception($this->createUnUniqueValidationMessage($entity, $entity->get('channelId'))));
-        }
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws BadRequest
-     */
-    protected function prepareForChannels(Entity $entity)
-    {
-        if (empty($entity->get('channelId')) && !empty($channelsIds = $entity->get('channelsIds'))) {
-            // find exists records
-            $exists = $this
-                ->select(['channelId'])
-                ->where(
-                    [
-                        'productFamilyId' => $entity->get('productFamilyId'),
-                        'attributeId'     => $entity->get('attributeId'),
-                        'scope'           => 'Channel',
-                        'channelId'       => $channelsIds
-                    ]
-                )
-                ->find()
-                ->toArray();
-            $exists = array_column($exists, 'channelId');
-
-            $notExistsChannelIds = [];
-            foreach ($channelsIds as $channelId) {
-                if (!in_array($channelId, $exists)) {
-                    $notExistsChannelIds[] = $channelId;
-                }
-            }
-
-            if (empty($notExistsChannelIds)) {
-                throw new ProductAttributeAlreadyExists($this->createUnUniqueValidationMessage($entity, array_shift($channelsIds)));
-            }
-
-            $entity->set('channelId', array_shift($notExistsChannelIds));
-            $entity->set('channelsIds', null);
-            $entity->set('channelsNames', !empty($exists));
-            if (!empty($notExistsChannelIds)) {
-                $entity->tmpChannelsId = $notExistsChannelIds;
-            }
         }
     }
 
@@ -311,31 +218,6 @@ class ProductFamilyAttribute extends Base
         return empty($item);
     }
 
-    protected function updateProductAttributeValues(Entity $entity): void
-    {
-        $products = $entity->get('productFamily')->get('products');
-
-        $productsIds = [];
-        foreach ($products as $product) {
-            if ($product->get('type') === 'productVariant') {
-                continue;
-            }
-            $productsIds[] = $product->get('id');
-        }
-
-        if (empty($productsIds)) {
-            return;
-        }
-
-        $data = !empty($content = @file_get_contents(self::UPDATE_PFA_FILE_PATH)) ? Json::decode($content, true) : [];
-
-        foreach ($productsIds as $productId) {
-            $data["{$productId}_{$entity->get('id')}"] = true;
-        }
-
-        file_put_contents(self::UPDATE_PFA_FILE_PATH, Json::encode($data));
-    }
-
     /**
      * @inheritDoc
      */
@@ -364,5 +246,10 @@ class ProductFamilyAttribute extends Base
     protected function exception(string $key): string
     {
         return $this->translate($key, 'exceptions');
+    }
+
+    protected function getPavRepository(): ProductAttributeValue
+    {
+        return $this->getEntityManager()->getRepository('ProductAttributeValue');
     }
 }

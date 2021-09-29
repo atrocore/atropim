@@ -59,16 +59,6 @@ class ProductAttributeValue extends AbstractRepository
     }
 
     /**
-     * @param string $productFamilyAttributeId
-     */
-    public function removeCollectionByProductFamilyAttribute(string $productFamilyAttributeId)
-    {
-        $this
-            ->where(['productFamilyAttributeId' => $productFamilyAttributeId])
-            ->removeCollection(['skipProductAttributeValueHook' => true]);
-    }
-
-    /**
      * @param Entity $entity
      * @param array  $options
      *
@@ -77,12 +67,13 @@ class ProductAttributeValue extends AbstractRepository
     public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+        return;
 
         if (!$this->isValidForSave($entity, $options)) {
             return;
         }
 
-        $attribute = $entity->get('attribute');
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
         if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
             $entity->set('value', $attribute->get('enumDefault'));
         }
@@ -140,8 +131,8 @@ class ProductAttributeValue extends AbstractRepository
             }
 
             $where = [
-                'id!=' => $entity->id,
-                'attributeId' => $entity->get('attributeId'),
+                'id!='            => $entity->id,
+                'attributeId'     => $entity->get('attributeId'),
                 'product.deleted' => false
             ];
 
@@ -176,6 +167,7 @@ class ProductAttributeValue extends AbstractRepository
      */
     public function afterSave(Entity $entity, array $options = array())
     {
+        return;
         if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'assignedUser', 'isInheritAssignedUser'))) {
             $this->inheritOwnership($entity, $field, $this->getConfig()->get('assignedUserAttributeOwnership', null));
         }
@@ -315,10 +307,13 @@ class ProductAttributeValue extends AbstractRepository
             return true;
         }
 
+        $product = $this->getEntityManager()->getEntity('Product', $entity->get('productId'));
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+
         /**
          * Validation. Product and Attribute can't by empty
          */
-        if (empty($entity->get('product')) || empty($entity->get('attribute'))) {
+        if (empty($product) || empty($attribute)) {
             throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
         }
 
@@ -395,7 +390,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // get attribute
-        $attribute = $entity->get('attribute');
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($attribute->get('type') !== 'enum' || empty($attribute->get('isMultilang'))) {
             return;
@@ -434,7 +429,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // get attribute
-        $attribute = $entity->get('attribute');
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($attribute->get('type') !== 'multiEnum' || empty($attribute->get('isMultilang'))) {
             return;

@@ -9,9 +9,6 @@
       "required": true,
       "view": "pim:views/product-attribute-value/fields/attribute"
     },
-    "productFamilyAttribute": {
-      "type": "link"
-    },
     "isRequired": {
       "type": "bool",
       "default": false
@@ -344,11 +341,6 @@
     "product": {
       "type": "belongsTo",
       "entity": "Product"
-    },
-    "productFamilyAttribute": {
-      "type": "belongsTo",
-      "foreign": "productAttributeValues",
-      "entity": "ProductFamilyAttribute"
     },
     "attribute": {
       "type": "belongsTo",

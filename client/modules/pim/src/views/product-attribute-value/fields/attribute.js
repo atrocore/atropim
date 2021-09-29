@@ -88,7 +88,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
                 data.titleValue = data.nameValue;
             }
 
-            data.isCustom = this.model.get('productFamilyAttributeId') === null;
+            data.isCustom = true;
 
             return data;
         },

@@ -37,7 +37,6 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Pim\Entities\ProductAttributeValue;
-use Pim\Import\Types\Simple\FieldConverters\Unit;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
 
@@ -92,7 +91,8 @@ class ProductAttributeValueEntity extends AbstractListener
             $this->createNote($entity);
         }
 
-        if (!in_array($entity->get('attribute')->get('type'), ['enum', 'multiEnum'])) {
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        if (!in_array($attribute->get('type'), ['enum', 'multiEnum'])) {
             $langList = $this->getConfig()->get('inputLanguageList', []);
             foreach ($langList as $locale) {
                 $field = Util::toCamelCase('value_' . strtolower($locale));

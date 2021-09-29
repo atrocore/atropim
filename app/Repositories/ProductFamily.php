@@ -200,15 +200,21 @@ class ProductFamily extends AbstractRepository
         parent::beforeRemove($entity, $options);
     }
 
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    protected function afterRemove(Entity $entity, array $options = [])
     {
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+        parent::afterRemove($entity, $options);
+
+        foreach ($entity->get('productFamilyAttributes') as $pfa) {
+            $this->getEntityManager()->removeEntity($pfa);
+        }
+    }
+
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
 
         if ($relationName == 'productFamilyAttributes' && !empty($foreign) && !is_string($foreign)) {
-            $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->removeCollectionByProductFamilyAttribute($foreign->get('id'));
+            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->deleteProductAttributeValues($foreign);
         }
     }
 
