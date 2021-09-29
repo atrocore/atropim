@@ -556,6 +556,26 @@ class Product extends AbstractRepository
         }
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
+                $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
+                foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
+                    $pfaRepository->createProductAttributeValues($pfa);
+                }
+            }
+            $result = parent::save($entity, $options);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
     /**
      * @inheritDoc
      */
