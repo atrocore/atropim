@@ -18,8 +18,5 @@
   "labels": {
     "selectAttributeGroup": "Attributgruppe auswählen",
     "Create ProductFamily": "Produktfamilie erstellen"
-  },
-  "messages": {
-    "Can't remove system Product Family": "Das System Produktfamilie kann nicht entfernt werden"
   }
 }

@@ -15,8 +15,5 @@
   "labels": {
     "Create ProductFamily": "Создать продуктовую семью",
     "selectAttributeGroup": "Выбрать группу атрибутов"
-  },
-  "messages": {
-    "Can't remove system Product Family": "Невозможно удалить продуктовую семью"
   }
 }
