@@ -48,7 +48,12 @@ class ProductFamilyAttribute extends Base
             $pav->set('isRequired', $pfa->get('isRequired'));
             $pav->set('scope', $pfa->get('scope'));
             $pav->set('channelId', $pfa->get('channelId'));
-            $this->getEntityManager()->saveEntity($pav);
+
+            try {
+                $this->getEntityManager()->saveEntity($pav);
+            } catch (ProductAttributeAlreadyExists $e) {
+                // ignore
+            }
         }
     }
 
@@ -76,7 +81,12 @@ class ProductFamilyAttribute extends Base
                 if (!empty($pfa->getFetched('isRequired')) == !empty($pav->get('isRequired'))) {
                     $pav->set('isRequired', $pfa->get('isRequired'));
                 }
-                $this->getEntityManager()->saveEntity($pav);
+
+                try {
+                    $this->getEntityManager()->saveEntity($pav);
+                } catch (ProductAttributeAlreadyExists $e) {
+                    // ignore
+                }
             }
         }
     }
@@ -113,10 +123,8 @@ class ProductFamilyAttribute extends Base
             $result = parent::save($entity, $options);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
-            if (!($e instanceof ProductAttributeAlreadyExists && $entity->isNew())) {
-                $this->getEntityManager()->getPDO()->rollBack();
-                throw $e;
-            }
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
         }
 
         return $result;
