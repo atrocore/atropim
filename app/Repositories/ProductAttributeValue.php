@@ -43,22 +43,6 @@ use Espo\Core\Utils\Util;
 class ProductAttributeValue extends AbstractRepository
 {
     /**
-     * @param string $pavId
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function getLocaleTeamsIds(string $pavId, string $locale): array
-    {
-        $localeId = $pavId . \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
-
-        return $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT team_id FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$localeId'")
-            ->fetchAll(\PDO::FETCH_COLUMN);
-    }
-
-    /**
      * @param Entity $entity
      * @param array  $options
      *
@@ -66,30 +50,15 @@ class ProductAttributeValue extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
-        parent::beforeSave($entity, $options);
-        return;
+        $this->isValidForSave($entity, $options);
 
-        if (!$this->isValidForSave($entity, $options)) {
-            return;
+        if ($entity->get('scope') == 'Global') {
+            $entity->set('channelId', null);
         }
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
         if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
             $entity->set('value', $attribute->get('enumDefault'));
-        }
-
-        /**
-         * Custom attributes are always required
-         */
-        if (empty($entity->get('productFamilyAttributeId'))) {
-            $entity->set('isRequired', true);
-        }
-
-        /**
-         * If scope Global then channelId should be empty
-         */
-        if ($entity->get('scope') == 'Global') {
-            $entity->set('channelId', null);
         }
 
         $this->syncEnumValues($entity);
@@ -112,7 +81,7 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
-        if (!$entity->isNew() && $entity->get('attribute')->get('unique')) {
+        if (!$entity->isNew() && $attribute->get('unique')) {
             $valueChanged = null;
 
             // check if value field changed
@@ -159,6 +128,8 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest($message);
             }
         }
+
+        parent::beforeSave($entity, $options);
     }
 
     /**
@@ -167,7 +138,6 @@ class ProductAttributeValue extends AbstractRepository
      */
     public function afterSave(Entity $entity, array $options = array())
     {
-        return;
         if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'assignedUser', 'isInheritAssignedUser'))) {
             $this->inheritOwnership($entity, $field, $this->getConfig()->get('assignedUserAttributeOwnership', null));
         }
@@ -186,15 +156,6 @@ class ProductAttributeValue extends AbstractRepository
             ->nativeQuery("UPDATE `product` SET modified_at='{$entity->get('modifiedAt')}' WHERE id='{$entity->get('productId')}'");
 
         parent::afterSave($entity, $options);
-    }
-
-    protected function beforeRemove(Entity $entity, array $options = [])
-    {
-        if (empty($options['skipProductAttributeValueHook']) && empty($entity->force) && !empty($entity->get('productFamilyAttributeId'))) {
-            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
-        }
-
-        parent::beforeRemove($entity, $options);
     }
 
     /**
@@ -292,14 +253,6 @@ class ProductAttributeValue extends AbstractRepository
         $this->addDependency('language');
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @return bool
-     * @throws BadRequest
-     * @throws ProductAttributeAlreadyExists
-     */
     protected function isValidForSave(Entity $entity, array $options): bool
     {
         // exit
@@ -315,27 +268,6 @@ class ProductAttributeValue extends AbstractRepository
          */
         if (empty($product) || empty($attribute)) {
             throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
-        }
-
-        /**
-         * Validation. ProductFamilyAttribute doesn't changeable
-         */
-        if (!$entity->isNew() && !empty($entity->get('productFamilyAttributeId')) && empty($entity->skipPfValidation)) {
-            if ($entity->isAttributeChanged('scope')
-                || $entity->isAttributeChanged('isRequired')
-                || ($entity->getFetched('channelId') != $entity->get('channelId'))
-                || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeChanged'));
-            }
-        }
-
-        /**
-         * Validation. Custom attribute doesn't changeable
-         */
-        if (!$entity->isNew() && !empty($entity->get('isCustom'))) {
-            if ($entity->isAttributeChanged('scope') || ($entity->getFetched('channelId') != $entity->get('channelId')) || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('onlyValueOrOwnershipCanBeChanged'));
-            }
         }
 
         /**

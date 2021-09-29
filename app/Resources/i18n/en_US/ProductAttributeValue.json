@@ -26,9 +26,6 @@
     "youHaveNoAclRightsToReadAttributeValues": "You have no rights to read attribute values.",
     "productAttributeAlreadyExists": "Attribute '%s' for the channel %s is already linked.",
     "noSuchChannelInProduct": "For adding such a product atribute please choose a channel, available for the product.",
-    "attributeInheritedFromProductFamilyCannotBeDeleted": "Attribute inherited from product family cannot be deleted.",
-    "attributeInheritedFromProductFamilyCannotBeChanged": "Attribute inherited from product family cannot be changed.",
-    "onlyValueOrOwnershipCanBeChanged": "For custom product attribute only value or ownership information can be changed.",
     "attributeDontMatchToPattern": "The value of the attribute \"{attribute}\" does not correspond to the pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "%s attribute should have unique value."
   }

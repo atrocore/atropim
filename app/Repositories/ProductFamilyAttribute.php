@@ -158,7 +158,7 @@ class ProductFamilyAttribute extends Base
     protected function isValid(Entity $entity): void
     {
         if (!$entity->isNew() && $entity->isAttributeChanged('attributeId')) {
-            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeChanged'));
+            throw new BadRequest('Attribute change blocked.');
         }
 
         if (empty($entity->get('productFamilyId')) || empty($entity->get('attributeId'))) {
