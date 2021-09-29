@@ -40,7 +40,7 @@ class ProductFamilyAttribute extends Base
 {
     public function createProductAttributeValues(Entity $pfa): void
     {
-        $productFamily = $pfa->get('productFamily');
+        $productFamily = $this->getEntityManager()->getEntity('ProductFamily', $pfa->get('productFamilyId'));
         foreach ($productFamily->get('products') as $product) {
             $pav = $this->getPavRepository()->get();
             $pav->set('productId', $product->get('id'));
@@ -54,7 +54,7 @@ class ProductFamilyAttribute extends Base
 
     public function updateProductAttributeValues(Entity $pfa): void
     {
-        $productFamily = $pfa->get('productFamily');
+        $productFamily = $this->getEntityManager()->getEntity('ProductFamily', $pfa->get('productFamilyId'));
         foreach ($productFamily->get('products') as $product) {
             $where = [
                 'productId'   => $product->get('id'),
@@ -83,7 +83,7 @@ class ProductFamilyAttribute extends Base
 
     public function deleteProductAttributeValues(Entity $pfa): void
     {
-        $productFamily = $pfa->get('productFamily');
+        $productFamily = $this->getEntityManager()->getEntity('ProductFamily', $pfa->get('productFamilyId'));
         foreach ($productFamily->get('products') as $product) {
             $where = [
                 'productId'   => $product->get('id'),

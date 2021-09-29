@@ -42,6 +42,8 @@ use Espo\Core\Utils\Util;
  */
 class ProductAttributeValue extends AbstractRepository
 {
+    protected static $beforeSaveData = [];
+
     /**
      * @param Entity $entity
      * @param array  $options
@@ -51,6 +53,10 @@ class ProductAttributeValue extends AbstractRepository
     public function beforeSave(Entity $entity, array $options = [])
     {
         $this->isValidForSave($entity, $options);
+
+        if (!$entity->isNew()) {
+            self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
+        }
 
         if ($entity->get('scope') == 'Global') {
             $entity->set('channelId', null);
@@ -129,6 +135,27 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
+        // exit
+        if (!empty($options['skipProductAttributeValueHook'])) {
+            return;
+        }
+
+        // create note
+        if (!$entity->isNew() && ($entity->isAttributeChanged('value') || $entity->isAttributeChanged('data'))) {
+            $this->createNote($entity);
+        }
+
+        if (!in_array($attribute->get('type'), ['enum', 'multiEnum'])) {
+            $langList = $this->getConfig()->get('inputLanguageList', []);
+            foreach ($langList as $locale) {
+                $field = Util::toCamelCase('value_' . strtolower($locale));
+
+                if (!$entity->isNew() && $entity->isAttributeChanged($field)) {
+                    $this->createNote($entity, $locale);
+                }
+            }
+        }
+
         parent::beforeSave($entity, $options);
     }
 
@@ -154,6 +181,8 @@ class ProductAttributeValue extends AbstractRepository
         $this
             ->getEntityManager()
             ->nativeQuery("UPDATE `product` SET modified_at='{$entity->get('modifiedAt')}' WHERE id='{$entity->get('productId')}'");
+
+        $this->moveImageFromTmp($entity);
 
         parent::afterSave($entity, $options);
     }
@@ -251,6 +280,7 @@ class ProductAttributeValue extends AbstractRepository
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('serviceFactory');
     }
 
     protected function isValidForSave(Entity $entity, array $options): bool
@@ -405,5 +435,91 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function createAssignmentNotification(Entity $entity, ?string $userId): void
     {
+    }
+
+    protected function moveImageFromTmp(Entity $attributeValue): void
+    {
+        if (!empty($attribute = $attributeValue->get('attribute')) && $attribute->get('type') === 'image' && !empty($attributeValue->get('value'))) {
+            $file = $this->getEntityManager()->getEntity('Attachment', $attributeValue->get('value'));
+            $this->getInjection('serviceFactory')->create($file->getEntityType())->moveFromTmp($file);
+            $this->getEntityManager()->saveEntity($file);
+        }
+    }
+
+    protected function createNote(Entity $entity, string $locale = '')
+    {
+        if (!empty($data = $this->getNoteData($entity, $locale))) {
+            $note = $this->getEntityManager()->getEntity('Note');
+            $note->set('type', 'Update');
+            $note->set('parentId', $entity->get('productId'));
+            $note->set('parentType', 'Product');
+            $note->set('data', $data);
+            $note->set('attributeId', $entity->get('id'));
+
+            $this->getEntityManager()->saveEntity($note);
+        }
+    }
+
+    protected function getNoteData(Entity $entity, string $locale = ''): array
+    {
+        // get attribute
+        $attribute = $entity->get('attribute');
+
+        // prepare field name
+        $fieldName = $this->getInjection('language')->translate('Attribute', 'custom', 'ProductAttributeValue') . ' ' . $attribute->get('name');
+
+        // prepare result
+        $result = [];
+
+        // prepare field name
+        if ($locale) {
+            $field = Util::toCamelCase('value_' . strtolower($locale));
+            $fieldName .= " ($locale)";
+        } else {
+            $field = 'value';
+        }
+
+        if (
+            self::$beforeSaveData[$field] != $entity->get($field)
+            || ($entity->isAttributeChanged('data') && !empty(array_diff((array)self::$beforeSaveData['data'], (array)$entity->get('data'))))
+        ) {
+            $result['fields'][] = $fieldName;
+            $result['locale'] = $locale;
+            $type = $attribute->get('type');
+
+            $result['attributes']['was'][$fieldName] = $this->convertAttributeValue($type, self::$beforeSaveData[$field]);
+            $result['attributes']['became'][$fieldName] = $this->convertAttributeValue($type, $entity->get($field));
+
+            if ($entity->get('attribute')->get('type') == 'unit') {
+                $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['data']->unit;
+                $result['attributes']['became'][$fieldName . 'Unit'] = $entity->get('data')->unit;
+            } elseif ($entity->get('attribute')->get('type') == 'currency') {
+                $result['attributes']['was'][$fieldName . 'Currency'] = self::$beforeSaveData['data']->currency;
+                $result['attributes']['became'][$fieldName . 'Currency'] = $entity->get('data')->currency;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function convertAttributeValue(string $type, $value)
+    {
+        $result = null;
+
+        switch ($type) {
+            case 'array':
+            case 'multiEnum':
+                $result = Json::decode($value, true);
+                break;
+            case 'bool':
+                $result = (bool)$value;
+                break;
+            default:
+                if (!empty($value)) {
+                    $result = $value;
+                }
+        }
+
+        return $result;
     }
 }
