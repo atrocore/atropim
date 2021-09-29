@@ -291,45 +291,6 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
-     * @param string $productId
-     *
-     * @return bool
-     * @throws Forbidden
-     */
-    public function removeAllNotInheritedAttributes(string $productId): bool
-    {
-        // check acl
-        if (!$this->getAcl()->check('ProductAttributeValue', 'remove')) {
-            throw new Forbidden();
-        }
-
-        /** @var EntityCollection $pavs */
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->where(
-                [
-                    'productId'                => $productId
-                ]
-            )
-            ->find();
-
-        if ($pavs->count() > 0) {
-            foreach ($pavs as $pav) {
-                if ($this->getAcl()->check($pav, 'remove')) {
-                    try {
-                        $this->getEntityManager()->removeEntity($pav);
-                    } catch (BadRequest $e) {
-                        // skip validation errors
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @param Entity $entity
      * @param string $field
      * @param array  $defs

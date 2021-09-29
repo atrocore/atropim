@@ -179,13 +179,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
             }
 
-            if (this.getAcl().check('ProductAttributeValue', 'remove')) {
-                this.actionList.push({
-                    label: 'removeAllCustomAttributes',
-                    action: 'removeAllNotInheritedAttributes'
-                });
-            }
-
             this.setupActions();
 
             var layoutName = 'listSmall';
@@ -378,23 +371,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     });
                 });
             });
-        },
-
-        actionRemoveAllNotInheritedAttributes() {
-            this.confirm({
-                message: this.translate("areYouSureYouWantToRemoveAllCustomAttributes", 'messages', 'Product'),
-                confirmText: this.translate('Apply')
-            }, function () {
-                this.notify('Saving...');
-                this.ajaxPostRequest(`ProductAttributeValue/action/RemoveAllNotInheritedAttributes`, {
-                    productId: this.model.id,
-                    tabId: this.defs.tabId,
-                }).then(response => {
-                    this.notify('Saved', 'success');
-                    this.model.trigger('after:unrelate', this.link);
-                    this.actionRefresh();
-                });
-            }, this);
         },
 
         getFullEntityList(url, params, callback, container) {
