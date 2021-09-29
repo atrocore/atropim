@@ -1,6 +1,6 @@
 {{#if nameValue}}
   {{#if idValue}}
-    <a href="#{{foreignScope}}/view/{{idValue}}" {{#if isCustom}} style="font-style: italic;" {{/if}} title="{{titleValue}}">{{nameValue}}</a>
+    <a href="#{{foreignScope}}/view/{{idValue}}" title="{{titleValue}}">{{nameValue}}</a>
   {{else}}
     {{nameValue}}
   {{/if}}

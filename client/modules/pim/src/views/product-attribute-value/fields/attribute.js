@@ -88,8 +88,6 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
                 data.titleValue = data.nameValue;
             }
 
-            data.isCustom = true;
-
             return data;
         },
 
