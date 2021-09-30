@@ -87,7 +87,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             const $tree = this.$el.find('.category-tree');
 
             $tree.tree({
-                dataUrl: 'Category/action/Tree',
+                dataUrl: this.scope + '/action/Tree',
                 selectable: true,
                 dragAndDrop: true,
                 useContextMenu: false,
