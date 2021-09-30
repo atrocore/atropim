@@ -13,8 +13,8 @@
   },
   "labels": {
     "Create ProductFamilyAttribute": "Создать атрибут продукт. семьи",
-    "unlinkPreserveValues": "Отменить связь, сохранить значения",
-    "unlinkRemoveValues": "Отменить связь, удалить значения"
+    "unlinkRelatedAttribute": "Отменить связь",
+    "cascadeUnlinkRelatedAttribute": "Отменить связь иерархично"
   },
   "options": {
     "scope": {
@@ -24,7 +24,7 @@
   },
   "messages": {
     "savedForNotAllChannels": "Атрибут '%s' был связан не со всеми выбранными каналами.",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues": "Вы уверены, что хотите отключить атрибут от продуктовой семьи и сохранить все значения атрибутов?",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues": "Вы уверены, что хотите отключить атрибут от продуктовой семьи и удалить все значения атрибутов?"
+    "unlinkRelatedAttribute": "Вы уверены, что хотите отменить связь выбранного атрибута только для текущей продуктовой семьи?",
+    "cascadeUnlinkRelatedAttribute": "Вы уверены, что хотите отменить связь выбранного атрибута для текущей продуктовой семьи? Все продукты и продуктовые семьи которые наследуют текущую продуктовую семью также потеряют связь."
   }
 }

@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
+use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
 
 class ProductFamilyAttribute extends Base
 {
@@ -64,7 +65,8 @@ class ProductFamilyAttribute extends Base
             $where = [
                 'productId'   => $product->get('id'),
                 'attributeId' => $pfa->get('attributeId'),
-                'scope'       => $pfa->getFetched('scope')
+                'scope'       => $pfa->getFetched('scope'),
+                'isRequired'  => !empty($pfa->getFetched('isRequired'))
             ];
 
             if ($pfa->getFetched('scope') === 'Channel') {
@@ -73,14 +75,8 @@ class ProductFamilyAttribute extends Base
 
             if (!empty($pav = $this->getPavRepository()->where($where)->findOne())) {
                 $pav->set('scope', $pfa->get('scope'));
-                if ($pfa->get('scope') === 'Channel') {
-                    $pav->set('channelId', $pfa->get('channelId'));
-                } else {
-                    $pav->set('channelId', null);
-                }
-                if (!empty($pfa->getFetched('isRequired')) == !empty($pav->get('isRequired'))) {
-                    $pav->set('isRequired', $pfa->get('isRequired'));
-                }
+                $pav->set('channelId', $pfa->get('scope') === 'Channel' ? $pfa->get('channelId') : null);
+                $pav->set('isRequired', !empty($pfa->get('isRequired')));
 
                 try {
                     $this->getEntityManager()->saveEntity($pav);
@@ -98,7 +94,8 @@ class ProductFamilyAttribute extends Base
             $where = [
                 'productId'   => $product->get('id'),
                 'attributeId' => $pfa->get('attributeId'),
-                'scope'       => $pfa->get('scope')
+                'scope'       => $pfa->get('scope'),
+                'isRequired'  => !empty($pfa->get('isRequired'))
             ];
 
             if ($pfa->get('scope') === 'Channel') {
@@ -113,14 +110,13 @@ class ProductFamilyAttribute extends Base
 
     public function save(Entity $entity, array $options = [])
     {
+        if (!empty($options['noTransaction'])) {
+            return $this->runSave($entity, $options);
+        }
+
         $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            if ($entity->isNew()) {
-                $this->createProductAttributeValues($entity);
-            } else {
-                $this->updateProductAttributeValues($entity);
-            }
-            $result = parent::save($entity, $options);
+            $result = $this->runSave($entity, $options);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getEntityManager()->getPDO()->rollBack();
@@ -130,12 +126,26 @@ class ProductFamilyAttribute extends Base
         return $result;
     }
 
+    protected function runSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew()) {
+            $this->createProductAttributeValues($entity);
+        } else {
+            $this->updateProductAttributeValues($entity);
+        }
+
+        return parent::save($entity, $options);
+    }
+
     public function remove(Entity $entity, array $options = [])
     {
+        if (!empty($options['noTransaction'])) {
+            return $this->runRemove($entity, $options);
+        }
+
         $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            $this->deleteProductAttributeValues($entity);
-            $result = parent::remove($entity, $options);
+            $result = $this->runRemove($entity, $options);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getEntityManager()->getPDO()->rollBack();
@@ -143,6 +153,12 @@ class ProductFamilyAttribute extends Base
         }
 
         return $result;
+    }
+
+    protected function runRemove(Entity $entity, array $options = [])
+    {
+        $this->deleteProductAttributeValues($entity);
+        return parent::remove($entity, $options);
     }
 
     public function beforeSave(Entity $entity, array $options = [])
@@ -174,7 +190,7 @@ class ProductFamilyAttribute extends Base
         }
 
         if (!$this->isUnique($entity)) {
-            throw new BadRequest($this->exception($this->createUnUniqueValidationMessage($entity, $entity->get('channelId'))));
+            throw new ProductFamilyAttributeAlreadyExists($this->exception($this->createUnUniqueValidationMessage($entity, $entity->get('channelId'))));
         }
     }
 

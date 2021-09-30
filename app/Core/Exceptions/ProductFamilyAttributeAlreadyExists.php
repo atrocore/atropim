@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -26,34 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family/record/row-actions/product-family-attribute', 'views/record/row-actions/relationship-view-and-edit',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        getActionList: function () {
-            let list = Dep.prototype.getActionList.call(this);
+namespace Pim\Core\Exceptions;
 
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'unlinkRelatedAttribute',
-                    label: this.translate('unlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
-                    data: {
-                        id: this.model.id
-                    }
-                });
+use Espo\Core\Exceptions\BadRequest;
 
-                list.push({
-                    action: 'removeRelatedAttribute',
-                    label: this.translate('cascadeUnlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
-
-            return list;
-        },
-
-    })
-);
+class ProductFamilyAttributeAlreadyExists extends BadRequest
+{
+}
 
 

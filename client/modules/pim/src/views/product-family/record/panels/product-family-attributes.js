@@ -247,7 +247,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: this.translate('areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('unlinkRelatedAttribute', 'messages', 'ProductFamilyAttribute'),
                 confirmText: this.translate('Unlink')
             }, function () {
                 var model = this.collection.get(id);
@@ -275,7 +275,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: this.translate('areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ProductFamilyAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 var model = this.collection.get(id);
