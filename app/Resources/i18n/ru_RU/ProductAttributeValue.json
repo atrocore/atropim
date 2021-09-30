@@ -24,7 +24,6 @@
   "exceptions": {
     "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",
     "productAttributeAlreadyExists": "Атрибут '%s' для канала %s уже связан.",
-    "noSuchChannelInProduct": "Для добавления такого атрибута продукта выберите канал, доступный для продукта.",
     "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Атрибут %s должен иметь уникальное значение."
   }

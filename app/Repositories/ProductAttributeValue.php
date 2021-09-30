@@ -312,16 +312,6 @@ class ProductAttributeValue extends AbstractRepository
             throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
         }
 
-        /**
-         * Validation. Only product channels can be used.
-         */
-        if ($entity->get('scope') == 'Channel' && empty($entity->skipProductChannelValidation)) {
-            $productChannelsIds = array_column($entity->get('product')->get('channels')->toArray(), 'id');
-            if (!in_array($entity->get('channelId'), $productChannelsIds)) {
-                throw new BadRequest($this->exception('noSuchChannelInProduct'));
-            }
-        }
-
         return true;
     }
 
