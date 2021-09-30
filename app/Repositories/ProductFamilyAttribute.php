@@ -41,8 +41,13 @@ class ProductFamilyAttribute extends Base
 {
     public function createProductAttributeValues(Entity $pfa): void
     {
-        $productFamily = $this->getEntityManager()->getEntity('ProductFamily', $pfa->get('productFamilyId'));
-        foreach ($productFamily->get('products') as $product) {
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['productFamilyId' => $pfa->get('productFamilyId')])
+            ->find();
+
+        foreach ($products as $product) {
             $pav = $this->getPavRepository()->get();
             $pav->set('productId', $product->get('id'));
             $pav->set('attributeId', $pfa->get('attributeId'));
@@ -60,8 +65,13 @@ class ProductFamilyAttribute extends Base
 
     public function updateProductAttributeValues(Entity $pfa): void
     {
-        $productFamily = $this->getEntityManager()->getEntity('ProductFamily', $pfa->get('productFamilyId'));
-        foreach ($productFamily->get('products') as $product) {
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['productFamilyId' => $pfa->get('productFamilyId')])
+            ->find();
+
+        foreach ($products as $product) {
             $where = [
                 'productId'   => $product->get('id'),
                 'attributeId' => $pfa->get('attributeId'),
@@ -89,8 +99,13 @@ class ProductFamilyAttribute extends Base
 
     public function deleteProductAttributeValues(Entity $pfa): void
     {
-        $productFamily = $this->getEntityManager()->getEntity('ProductFamily', $pfa->get('productFamilyId'));
-        foreach ($productFamily->get('products') as $product) {
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['productFamilyId' => $pfa->get('productFamilyId')])
+            ->find();
+
+        foreach ($products as $product) {
             $where = [
                 'productId'   => $product->get('id'),
                 'attributeId' => $pfa->get('attributeId'),

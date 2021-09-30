@@ -132,6 +132,20 @@ class ProductFamily extends AbstractRepository
             return true;
         }
 
+        if ($relationName === 'children') {
+            self::onlyForAdvancedClassification();
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Product that we should be related with Product Family.');
+            }
+            if (is_string($foreign)) {
+                $foreign = $this->getEntityManager()->getEntity('ProductFamily', $foreign);
+            }
+            $foreign->set('parentId', $entity->get('id'));
+            $this->getEntityManager()->saveEntity($foreign);
+
+            return true;
+        }
+
         return parent::relate($entity, $relationName, $foreign, $data, $options);
     }
 
