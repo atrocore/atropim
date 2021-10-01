@@ -123,14 +123,14 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                     data.categoryParentName = moveInfo.target_node.parent.name;
                 }
 
-                this.ajaxPatchRequest(`Category/${moveInfo.moved_node.id}`, data).success(response => {
+                this.ajaxPatchRequest(`${this.scope}/${moveInfo.moved_node.id}`, data).success(response => {
                     moveInfo.do_move();
                 });
             }).on('tree.click', e => {
                 e.preventDefault();
 
                 if ($(e.click_event.target).hasClass('jqtree-title')) {
-                    window.location.href = `/#Category/view/${e.node.id}`;
+                    window.location.href = `/#${this.scope}/view/${e.node.id}`;
                 }
             });
         },
@@ -143,7 +143,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             }, view => {
                 view.render();
                 this.listenTo(view, 'category-search-select', category => {
-                    window.location.href = `/#Category/view/${category.id}`;
+                    window.location.href = `/#${this.scope}/view/${category.id}`;
                 });
             });
         },
