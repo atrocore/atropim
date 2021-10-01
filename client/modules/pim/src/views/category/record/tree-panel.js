@@ -107,20 +107,24 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 }
             ).on('tree.move', e => {
                 e.preventDefault();
+
+                const parentName = this.scope === 'Category' ? 'categoryParent' : 'parent';
+
                 let moveInfo = e.move_info;
                 let data = {
                     _position: moveInfo.position,
-                    _target: moveInfo.target_node.id,
-                    categoryParentId: null,
-                    categoryParentName: null
+                    _target: moveInfo.target_node.id
                 };
 
+                data[parentName + 'Id'] = null;
+                data[parentName + 'Name'] = null;
+
                 if (moveInfo.position === 'inside') {
-                    data.categoryParentId = moveInfo.target_node.id;
-                    data.categoryParentName = moveInfo.target_node.name;
+                    data[parentName + 'Id'] = moveInfo.target_node.id;
+                    data[parentName + 'Name'] = moveInfo.target_node.name;
                 } else if (moveInfo.target_node.parent.id) {
-                    data.categoryParentId = moveInfo.target_node.parent.id;
-                    data.categoryParentName = moveInfo.target_node.parent.name;
+                    data[parentName + 'Id'] = moveInfo.target_node.parent.id
+                    data[parentName + 'Name'] = moveInfo.target_node.parent.name;
                 }
 
                 this.ajaxPatchRequest(`${this.scope}/${moveInfo.moved_node.id}`, data).success(response => {
