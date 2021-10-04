@@ -26,25 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family-attribute/modals/edit', 'views/modals/edit',
+Espo.define('pim:views/product-family-attribute/fields/attribute-with-inheritance-sign', 'pim:views/product-family-attribute/fields/attribute',
     Dep => Dep.extend({
 
-        fullFormDisabled: true,
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-        setup() {
-            Dep.prototype.setup.call(this);
+            if (this.model.get('isInherited')) {
+                const $a = this.$el.find('a');
+                $a.html($a.html() + ' <i class="fas fa-link fa-sm"></i>');
+            }
 
-            this.listenTo(this, 'after:save', model => {
-                $('.action[data-action=refresh][data-panel=productFamilyAttributes]').click();
-                /**
-                 * Show another notify message if attribute '%s' was linked not for all chosen channels
-                 */
-                if (model.get('channelsNames') === true) {
-                    let message = this.getLanguage().translate('savedForNotAllChannels', 'messages', 'ProductFamilyAttribute');
-                    Espo.Ui.notify(message.replace('%s', model.get('attributeName')), 'success', 1000 * 60 * 60 * 2, true);
-                }
-            });
-        }
+        },
 
     })
 );
