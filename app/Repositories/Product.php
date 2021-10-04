@@ -558,15 +558,13 @@ class Product extends AbstractRepository
 
     public function save(Entity $entity, array $options = [])
     {
+        if ($this->getEntityManager()->getPDO()->inTransaction()) {
+            return $this->runSave($entity, $options);
+        }
+
         $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
-                $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
-                foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
-                    $pfaRepository->createProductAttributeValues($pfa);
-                }
-            }
-            $result = parent::save($entity, $options);
+            $result = $this->runSave($entity, $options);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getEntityManager()->getPDO()->rollBack();
@@ -574,6 +572,17 @@ class Product extends AbstractRepository
         }
 
         return $result;
+    }
+
+    protected function runSave(Entity $entity, array $options)
+    {
+        if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
+            $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
+            foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
+                $pfaRepository->createProductAttributeValues($pfa);
+            }
+        }
+        return parent::save($entity, $options);
     }
 
     /**

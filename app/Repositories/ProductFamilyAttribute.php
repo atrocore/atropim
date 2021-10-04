@@ -125,7 +125,7 @@ class ProductFamilyAttribute extends Base
 
     public function save(Entity $entity, array $options = [])
     {
-        if (!empty($options['noTransaction'])) {
+        if ($this->getEntityManager()->getPDO()->inTransaction()) {
             return $this->runSave($entity, $options);
         }
 
@@ -154,7 +154,7 @@ class ProductFamilyAttribute extends Base
 
     public function remove(Entity $entity, array $options = [])
     {
-        if (!empty($options['noTransaction'])) {
+        if ($this->getEntityManager()->getPDO()->inTransaction()) {
             return $this->runRemove($entity, $options);
         }
 
