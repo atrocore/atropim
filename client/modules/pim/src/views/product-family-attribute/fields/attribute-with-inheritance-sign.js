@@ -36,7 +36,6 @@ Espo.define('pim:views/product-family-attribute/fields/attribute-with-inheritanc
                 const $a = this.$el.find('a');
                 $a.html($a.html() + ' <i class="fas fa-link fa-sm"></i>');
             }
-
         },
 
     })
