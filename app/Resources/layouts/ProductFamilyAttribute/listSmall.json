@@ -5,10 +5,6 @@
     "view": "pim:views/product-family-attribute/fields/attribute-with-inheritance-sign"
   },
   {
-    "name": "isRequired",
-    "notSortable": true
-  },
-  {
     "name": "channel",
     "notSortable": true
   }

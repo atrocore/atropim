@@ -43,7 +43,7 @@ class ProductFamilyAttribute extends Base
     /**
      * @var array
      */
-    protected $mandatorySelectAttributeList = ['scope'];
+    protected $mandatorySelectAttributeList = ['scope', 'isRequired'];
 
     /**
      * @inheritDoc

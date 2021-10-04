@@ -32,9 +32,14 @@ Espo.define('pim:views/product-family-attribute/fields/attribute-with-inheritanc
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            const $a = this.$el.find('a');
+
             if (this.model.get('isInherited')) {
-                const $a = this.$el.find('a');
-                $a.html($a.html() + ' <i class="fas fa-link fa-sm"></i>');
+                $a.attr('style', 'font-style: italic');
+            }
+
+            if (this.model.get('isRequired')) {
+                $a.html($a.html() + ' *');
             }
         },
 
