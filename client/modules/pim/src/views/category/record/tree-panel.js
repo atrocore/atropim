@@ -129,6 +129,10 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
                 this.ajaxPatchRequest(`${this.scope}/${moveInfo.moved_node.id}`, data).success(response => {
                     moveInfo.do_move();
+                    if (this.model) {
+                        this.model.fetch();
+                        $('.action[data-action=refresh]').click();
+                    }
                 });
             }).on('tree.click', e => {
                 e.preventDefault();
