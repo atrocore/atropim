@@ -62,10 +62,13 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
         },
 
         updateCollectionWithTree(id) {
-            let data = {
-                bool: {linkedWithCategory: true},
-                boolData: {linkedWithCategory: id},
-            };
+            let data = {bool: {}, boolData: {}};
+
+            const filterName = "linkedWith" + this.treeScope;
+
+            data['bool'][filterName] = true;
+            data['boolData'][filterName] = id;
+
             const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
             const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
 

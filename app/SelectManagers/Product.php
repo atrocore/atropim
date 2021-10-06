@@ -571,6 +571,23 @@ class Product extends AbstractSelectManager
         $result['customWhere'] .= " AND product.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=0 AND category_id IN ('$ids'))";
     }
 
+    protected function boolFilterLinkedWithProductFamily(array &$result)
+    {
+        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+
+        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        if (empty($pf = $repository->get($this->getSelectCondition('linkedWithProductFamily')))) {
+            throw new BadRequest('No such Product Family');
+        }
+
+        $ids = $repository->getChildrenIds($pf);
+        $ids[] = $pf->get('id');
+
+        $result['whereClause'][] = [
+            'productFamilyId' => $ids
+        ];
+    }
+
     /**
      * @param array $params
      *
