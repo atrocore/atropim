@@ -53,8 +53,6 @@ Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
                 model: this.model
             }, view => {
                 view.listenTo(view, 'select-node', data => {
-                    console.log(data)
-
                     this.selectNode(data);
                 });
             });
