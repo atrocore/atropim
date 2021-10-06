@@ -111,7 +111,34 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 openedIcon: $('<i class="fa fa-angle-down"></i>')
             }).on('tree.init', () => {
                     if (self.model && self.model.get('id')) {
-                        self.selectTreeNode(this.parseRoute(self.model.get('categoryRoute')), self.model.get('id'));
+                        let id = self.model.get('id');
+                        let route = self.model.get('categoryRoute');
+
+                        if (this.scope === 'Product') {
+                            id = null;
+                            route = null;
+
+                            if (this.treeScope === 'Category') {
+                                const categoriesIds = self.model.get('categoriesIds');
+                                if (categoriesIds.length > 0) {
+                                    id = categoriesIds.shift();
+                                    $.ajax({url: `Category/${id}`, type: 'GET', async: false,}).done(pf => {
+                                        route = pf.categoryRoute;
+                                    });
+                                }
+                            }
+
+                            if (this.treeScope === 'ProductFamily') {
+                                if (self.model.get('productFamilyId')) {
+                                    id = self.model.get('productFamilyId');
+                                    $.ajax({url: `ProductFamily/${id}`, type: 'GET', async: false,}).done(pf => {
+                                        route = pf.categoryRoute;
+                                    });
+                                }
+                            }
+                        }
+
+                        self.selectTreeNode(this.parseRoute(route), id);
                     }
                 }
             ).on('tree.move', e => {
@@ -147,7 +174,20 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 e.preventDefault();
 
                 if ($(e.click_event.target).hasClass('jqtree-title')) {
-                    this.trigger('select-node', {id: e.node.id, route: ''});
+                    let node = e.node;
+
+                    let route = [];
+                    while (node.parent.id) {
+                        route.push(node.parent.id);
+                        node = node.parent;
+                    }
+
+                    let data = {id: e.node.id, route: ''};
+                    if (route.length > 0) {
+                        data['route'] = "|" + route.reverse().join('|') + "|";
+                    }
+
+                    this.trigger('select-node', data);
                 }
             });
         },

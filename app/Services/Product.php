@@ -66,6 +66,16 @@ class Product extends AbstractService
         return parent::unlinkEntity($id, $link, $foreignId);
     }
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $categories = $entity->get('categories')->toArray();
+
+        $entity->set('categoriesIds', array_column($categories, 'id'));
+        $entity->set('categoriesNames', array_column($categories, 'name'));
+    }
+
     public function unlinkAssets(string $id, string $foreignId): bool
     {
         $link = 'assets';

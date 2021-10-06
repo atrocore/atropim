@@ -31,8 +31,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         template: 'pim:product/record/detail',
 
-        catalogTreeData: null,
-
         notSavedFields: ['image'],
 
         isCatalogTreePanel: false,
@@ -64,8 +62,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall'
-                && this.getAcl().check('Catalog', 'read') && this.getAcl().check('Category', 'read')) {
+            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
                 this.isCatalogTreePanel = true;
                 this.setupCatalogTreePanel();
             }
@@ -85,28 +82,16 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         setupCatalogTreePanel() {
-            this.createView('catalogTreePanel', 'pim:views/product/record/catalog-tree-panel', {
+            this.createView('catalogTreePanel', 'pim:views/category/record/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
+                treeScope: localStorage.getItem('treeScope') || 'Category',
                 model: this.model
             }, view => {
-                view.listenTo(view, 'select-category', data => this.navigateToList(data));
+                view.listenTo(view, 'select-node', data => {
+                    this.getRouter().navigate(`#${this.scope}`);
+                });
             });
-        },
-
-        navigateToList(data) {
-            this.catalogTreeData = Espo.Utils.cloneDeep(data || {});
-            const options = {
-                isReturn: true,
-                callback: this.expandCatalogTree.bind(this)
-            };
-            this.getRouter().navigate(`#${this.scope}`);
-            this.getRouter().dispatch(this.scope, null, options);
-        },
-
-        expandCatalogTree(list) {
-            list.sortCollectionWithCatalogTree(this.catalogTreeData);
-            list.render();
         },
 
         data() {
@@ -434,7 +419,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 Espo.Ui.confirm(confirmMessage, {
                     confirmText: self.translate('Apply'),
                     cancelText: self.translate('Cancel'),
-                    cancelCallback(){
+                    cancelCallback() {
                         self.enableButtons();
                         self.trigger('cancel:save');
                     }
