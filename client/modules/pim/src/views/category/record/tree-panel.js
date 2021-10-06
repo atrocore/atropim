@@ -39,7 +39,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         setup() {
             this.scope = this.options.scope || this.scope;
-            this.treeScope = this.options.treeScope || this.treeScope;
+            this.treeScope = this.options.treeScope || this.scope;
 
             this.wait(true);
             this.buildSearch();

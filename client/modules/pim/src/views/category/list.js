@@ -36,10 +36,6 @@ Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
         setup() {
             Dep.prototype.setup.call(this);
 
-            if (!this.treeScope) {
-                this.treeScope = this.scope;
-            }
-
             this.setupTreePanel();
         },
 
