@@ -39,6 +39,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         setup() {
             this.scope = this.options.scope || this.scope;
+            this.treeScope = this.options.treeScope || this.treeScope;
 
             this.wait(true);
             this.buildSearch();
@@ -47,7 +48,8 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         data() {
             return {
-                scope: this.scope
+                scope: this.scope,
+                treeScope: this.treeScope
             }
         },
 
@@ -88,7 +90,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
             $tree.tree('destroy');
             $tree.tree({
-                dataUrl: this.scope + '/action/Tree',
+                dataUrl: this.treeScope + '/action/Tree',
                 selectable: true,
                 dragAndDrop: true,
                 useContextMenu: false,
@@ -109,7 +111,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             ).on('tree.move', e => {
                 e.preventDefault();
 
-                const parentName = this.scope === 'Category' ? 'categoryParent' : 'parent';
+                const parentName = this.treeScope === 'Category' ? 'categoryParent' : 'parent';
 
                 let moveInfo = e.move_info;
                 let data = {
@@ -128,7 +130,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                     data[parentName + 'Name'] = moveInfo.target_node.parent.name;
                 }
 
-                this.ajaxPatchRequest(`${this.scope}/${moveInfo.moved_node.id}`, data).success(response => {
+                this.ajaxPatchRequest(`${this.treeScope}/${moveInfo.moved_node.id}`, data).success(response => {
                     moveInfo.do_move();
                     if (this.model) {
                         this.model.fetch();
@@ -139,7 +141,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 e.preventDefault();
 
                 if ($(e.click_event.target).hasClass('jqtree-title')) {
-                    window.location.href = `/#${this.scope}/view/${e.node.id}`;
+                    window.location.href = `/#${this.treeScope}/view/${e.node.id}`;
                 }
             });
         },
@@ -147,19 +149,19 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
         buildSearch() {
             this.createView('categorySearch', 'pim:views/category/record/tree-panel/category-search', {
                 el: '.catalog-tree-panel > .category-panel > .category-search',
-                scope: this.scope,
+                scope: this.treeScope,
             }, view => {
                 view.render();
                 this.listenTo(view, 'category-search-select', category => {
-                    window.location.href = `/#${this.scope}/view/${category.id}`;
+                    window.location.href = `/#${this.treeScope}/view/${category.id}`;
                 });
             });
 
-            if (this.options.hasScopesEnum) {
+            const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            if (treeScopes) {
                 this.getModelFactory().create(this.scope, model => {
-                    let options = this.getMetadata().get('clientDefs.Product.treeScopes');
+                    let options = treeScopes;
                     let translatedOptions = {};
-
                     options.forEach(scope => {
                         translatedOptions[scope] = this.translate(scope, 'scopeNames', 'Global');
                     });
@@ -179,7 +181,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                     }, view => {
                         view.render();
                         this.listenTo(model, 'change:scopesEnum', () => {
-                            this.scope = model.get('scopesEnum');
+                            this.treeScope = model.get('scopesEnum');
                             this.buildTree();
                         });
                     });

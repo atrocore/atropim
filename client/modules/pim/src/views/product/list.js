@@ -31,6 +31,8 @@ Espo.define('pim:views/product/list', 'pim:views/category/list',
 
         createButton: false,
 
+        treeScope: 'Category',
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -42,15 +44,6 @@ Espo.define('pim:views/product/list', 'pim:views/category/list',
                 acl: 'create',
                 cssStyle: "margin-left: 15px",
                 aclScope: this.entityType || this.scope
-            });
-        },
-
-        setupTreePanel() {
-            this.createView('treePanel', 'pim:views/category/record/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: 'Category',
-                hasScopesEnum: true,
-                model: this.model
             });
         },
 
