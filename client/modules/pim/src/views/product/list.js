@@ -31,9 +31,10 @@ Espo.define('pim:views/product/list', 'pim:views/category/list',
 
         createButton: false,
 
-        treeScope: 'Category',
 
         setup() {
+            this.treeScope = localStorage.getItem('treeScope') || 'Category';
+
             Dep.prototype.setup.call(this);
 
             this.menu.buttons.push({

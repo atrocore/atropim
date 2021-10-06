@@ -160,6 +160,8 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
             if (treeScopes) {
                 this.getModelFactory().create(this.scope, model => {
+                    model.set('scopesEnum', localStorage.getItem('treeScope') || 'Category');
+
                     let options = treeScopes;
                     let translatedOptions = {};
                     options.forEach(scope => {
@@ -182,9 +184,9 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                         view.render();
                         this.listenTo(model, 'change:scopesEnum', () => {
                             this.treeScope = model.get('scopesEnum');
-
+                            localStorage.setItem('treeScope', this.treeScope);
                             const searchPanel = this.getView('categorySearch');
-                            searchPanel.scope = model.get('scopesEnum');
+                            searchPanel.scope = this.treeScope;
                             searchPanel.reRender();
 
                             this.buildTree();
