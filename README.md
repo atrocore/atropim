@@ -99,7 +99,7 @@ AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Support
 
-- Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg
+- Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg/videos
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Ask the Community - https://github.com/atrocore/atrocore/discussions
 - Сontact us - https://atrocore.com/contact
