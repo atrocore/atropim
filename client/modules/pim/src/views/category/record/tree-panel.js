@@ -182,6 +182,11 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                         view.render();
                         this.listenTo(model, 'change:scopesEnum', () => {
                             this.treeScope = model.get('scopesEnum');
+
+                            const searchPanel = this.getView('categorySearch');
+                            searchPanel.scope = model.get('scopesEnum');
+                            searchPanel.reRender();
+
                             this.buildTree();
                         });
                     });
