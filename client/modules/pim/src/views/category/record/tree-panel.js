@@ -73,20 +73,33 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             }, 100);
         },
 
-        selectTreeNode($tree, route, model) {
+        selectTreeNode(route, id) {
+            const $tree = this.getTreeEl();
             if (route.length > 0) {
-                let first = route.shift();
-                $tree.tree('openNode', $tree.tree('getNodeById', first), () => {
-                    this.selectTreeNode($tree, route, model);
+                let node = $tree.tree('getNodeById', route.shift());
+                $tree.tree('closeNode', node, false);
+                $tree.tree('openNode', node, () => {
+                    this.selectTreeNode(route, id);
                 });
             } else {
-                $tree.tree('selectNode', $tree.tree('getNodeById', model.get('id')));
+                $tree.tree('selectNode', $tree.tree('getNodeById', id));
             }
+        },
+
+        parseRoute(routeStr) {
+            let route = [];
+            (routeStr || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
+
+            return route;
         },
 
         buildTree() {
             const self = this;
-            const $tree = this.$el.find('.category-tree');
+            const $tree = this.getTreeEl();
 
             $tree.tree('destroy');
             $tree.tree({
@@ -98,14 +111,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 openedIcon: $('<i class="fa fa-angle-down"></i>')
             }).on('tree.init', () => {
                     if (self.model && self.model.get('id')) {
-                        let route = [];
-                        (self.model.get('categoryRoute') || '').split('|').forEach(item => {
-                            if (item) {
-                                route.push(item);
-                            }
-                        });
-
-                        self.selectTreeNode($tree, route, self.model);
+                        self.selectTreeNode(this.parseRoute(self.model.get('categoryRoute')), self.model.get('id'));
                     }
                 }
             ).on('tree.move', e => {
@@ -141,9 +147,13 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 e.preventDefault();
 
                 if ($(e.click_event.target).hasClass('jqtree-title')) {
-                    window.location.href = `/#${this.treeScope}/view/${e.node.id}`;
+                    this.trigger('select-node', {id: e.node.id, route: ''});
                 }
             });
+        },
+
+        getTreeEl() {
+            return this.$el.find('.category-tree');
         },
 
         buildSearch() {
@@ -152,8 +162,8 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 scope: this.treeScope,
             }, view => {
                 view.render();
-                this.listenTo(view, 'category-search-select', category => {
-                    window.location.href = `/#${this.treeScope}/view/${category.id}`;
+                this.listenTo(view, 'category-search-select', item => {
+                    this.trigger('select-node', {id: item.id, route: item.categoryRoute});
                 });
             });
 

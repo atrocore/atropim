@@ -26,11 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/list', 'pim:views/category/list',
-    Dep => Dep.extend({
+Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manager'],
+    (Dep, SearchManager) => Dep.extend({
 
         createButton: false,
-
 
         setup() {
             this.treeScope = localStorage.getItem('treeScope') || 'Category';
@@ -46,6 +45,37 @@ Espo.define('pim:views/product/list', 'pim:views/category/list',
                 cssStyle: "margin-left: 15px",
                 aclScope: this.entityType || this.scope
             });
+        },
+
+        resetSorting() {
+            Dep.prototype.resetSorting.call(this);
+
+            this.getView('treePanel').buildTree();
+        },
+
+        selectNode(data) {
+            const $treeView = this.getView('treePanel');
+            $treeView.selectTreeNode($treeView.parseRoute(data.route), data.id);
+            this.notify('Please wait...');
+            this.updateCollectionWithTree(data.id);
+            this.collection.fetch().then(() => this.notify(false));
+        },
+
+        updateCollectionWithTree(id) {
+            let data = {
+                bool: {linkedWithCategory: true},
+                boolData: {linkedWithCategory: id},
+            };
+            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
+            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
+
+            $.each(data, (key, value) => {
+                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
+            });
+
+            this.searchManager.set(extendedFilters);
+            this.collection.where = this.searchManager.getWhere();
+            this.searchManager.set(defaultFilters);
         },
 
     })
