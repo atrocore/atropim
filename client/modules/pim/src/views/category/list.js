@@ -29,7 +29,7 @@
 Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
     return Dep.extend({
 
-        template: 'pim:category/list',
+        template: 'pim:category/tree-list',
 
         setup() {
             Dep.prototype.setup.call(this);

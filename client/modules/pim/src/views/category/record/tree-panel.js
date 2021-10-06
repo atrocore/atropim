@@ -164,7 +164,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 isCollapsed = true;
             }
 
-            const $list = $('#category-list-table');
+            const $list = $('#tree-list-table');
 
             if (isCollapsed) {
                 $categoryPanel.removeClass('hidden');
