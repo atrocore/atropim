@@ -12,7 +12,7 @@
         {{{categorySearch}}}
     </div>
     {{#if scopesEnum}}
-    <div class="panel-group">
+    <div class="panel-group scopes-enum">
         {{{scopesEnum}}}
     </div>
     {{/if}}

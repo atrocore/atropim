@@ -86,6 +86,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             const self = this;
             const $tree = this.$el.find('.category-tree');
 
+            $tree.tree('destroy');
             $tree.tree({
                 dataUrl: this.scope + '/action/Tree',
                 selectable: true,
@@ -144,16 +145,39 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
         },
 
         buildSearch() {
-            let elSelector = '.catalog-tree-panel > .category-panel > .category-search';
             this.createView('categorySearch', 'pim:views/category/record/tree-panel/category-search', {
-                el: elSelector,
-                scope: this.scope
+                el: '.catalog-tree-panel > .category-panel > .category-search',
+                scope: this.scope,
             }, view => {
                 view.render();
                 this.listenTo(view, 'category-search-select', category => {
                     window.location.href = `/#${this.scope}/view/${category.id}`;
                 });
             });
+
+            if (this.options.hasScopesEnum) {
+                this.getModelFactory().create(this.scope, model => {
+                    this.createView('scopesEnum', 'views/fields/enum', {
+                        prohibitedEmptyValue: true,
+                        model: model,
+                        el: `.catalog-tree-panel > .category-panel > .scopes-enum`,
+                        defs: {
+                            name: 'scopesEnum',
+                            params: {
+                                options: ['Category', 'ProductFamily'],
+                                translatedOptions: {"Category": "Category", "ProductFamily": "ProductFamily"}
+                            }
+                        },
+                        mode: 'edit'
+                    }, view => {
+                        view.render();
+                        this.listenTo(model, 'change:scopesEnum', () => {
+                            this.scope = model.get('scopesEnum');
+                            this.buildTree();
+                        });
+                    });
+                });
+            }
         },
 
         actionCollapsePanel(type) {

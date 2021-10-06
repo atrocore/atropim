@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manager'],
-    (Dep, SearchManager) => Dep.extend({
+Espo.define('pim:views/product/list', 'pim:views/category/list',
+    Dep => Dep.extend({
 
         createButton: false,
 
@@ -49,6 +49,7 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             this.createView('treePanel', 'pim:views/category/record/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: 'Category',
+                hasScopesEnum: true,
                 model: this.model
             });
         },
