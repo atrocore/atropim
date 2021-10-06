@@ -6,6 +6,9 @@
   "quickCreateOptions": {
     "fullFormDisabled": true
   },
+  "treeScopes": [
+    "Category"
+  ],
   "boolFilterList": [
     "onlyMy",
     "ownedByMe",

@@ -157,6 +157,13 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
             if (this.options.hasScopesEnum) {
                 this.getModelFactory().create(this.scope, model => {
+                    let options = this.getMetadata().get('clientDefs.Product.treeScopes');
+                    let translatedOptions = {};
+
+                    options.forEach(scope => {
+                        translatedOptions[scope] = this.translate(scope, 'scopeNames', 'Global');
+                    });
+
                     this.createView('scopesEnum', 'views/fields/enum', {
                         prohibitedEmptyValue: true,
                         model: model,
@@ -164,8 +171,8 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                         defs: {
                             name: 'scopesEnum',
                             params: {
-                                options: ['Category', 'ProductFamily'],
-                                translatedOptions: {"Category": "Category", "ProductFamily": "ProductFamily"}
+                                options: options,
+                                translatedOptions: translatedOptions
                             }
                         },
                         mode: 'edit'
