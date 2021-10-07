@@ -94,6 +94,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 view.listenTo(view, 'tree-init', () => {
                     this.treeInit(view);
                 });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
             });
         },
 
@@ -134,6 +137,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             view.selectTreeNode(view.parseRoute(route), id);
+        },
+
+        treeReset(view) {
+            localStorage.removeItem('selectedNodeId');
+            localStorage.removeItem('selectedNodeRoute');
         },
 
         applyOverviewFilters() {

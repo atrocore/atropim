@@ -58,10 +58,17 @@ Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
                 view.listenTo(view, 'tree-init', () => {
                     this.treeInit(view);
                 });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
             });
         },
 
         treeInit(view) {
+        },
+
+        treeReset(view) {
+            window.location.href = `/#${this.scope}`;
         },
 
         selectNode(data) {

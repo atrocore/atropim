@@ -34,6 +34,10 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
         events: {
             'click button[data-action="collapsePanel"]': function () {
                 this.actionCollapsePanel();
+            },
+
+            'click .reset-tree-filter': function () {
+                this.trigger('tree-reset');
             }
         },
 
@@ -75,14 +79,14 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         selectTreeNode(route, id) {
             const $tree = this.getTreeEl();
+
+            $tree.tree('selectNode', $tree.tree('getNodeById', id));
+
             if (route.length > 0) {
                 let node = $tree.tree('getNodeById', route.shift());
-                $tree.tree('closeNode', node, false);
                 $tree.tree('openNode', node, () => {
                     this.selectTreeNode(route, id);
                 });
-            } else {
-                $tree.tree('selectNode', $tree.tree('getNodeById', id));
             }
         },
 
@@ -210,7 +214,11 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                         view.render();
                         this.listenTo(model, 'change:scopesEnum', () => {
                             this.treeScope = model.get('scopesEnum');
+
                             localStorage.setItem('treeScope', this.treeScope);
+                            localStorage.removeItem('selectedNodeId');
+                            localStorage.removeItem('selectedNodeRoute');
+
                             const searchPanel = this.getView('categorySearch');
                             searchPanel.scope = this.treeScope;
                             searchPanel.reRender();

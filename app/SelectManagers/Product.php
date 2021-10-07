@@ -554,9 +554,11 @@ class Product extends AbstractSelectManager
      */
     protected function boolFilterLinkedWithCategory(array &$result)
     {
-        /** @var \Pim\Entities\Category $category */
-        $category = $this->getEntityManager()->getEntity('Category', $this->getSelectCondition('linkedWithCategory'));
-        if (empty($category)) {
+        if (empty($id = $this->getSelectCondition('linkedWithCategory'))) {
+            return;
+        }
+
+        if (empty($category = $this->getEntityManager()->getEntity('Category', $id))) {
             throw new BadRequest('No such category');
         }
 
@@ -575,8 +577,12 @@ class Product extends AbstractSelectManager
     {
         \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
 
+        if (empty($id = $this->getSelectCondition('linkedWithProductFamily'))) {
+            return;
+        }
+
         $repository = $this->getEntityManager()->getRepository('ProductFamily');
-        if (empty($pf = $repository->get($this->getSelectCondition('linkedWithProductFamily')))) {
+        if (empty($pf = $repository->get($id))) {
             throw new BadRequest('No such Product Family');
         }
 

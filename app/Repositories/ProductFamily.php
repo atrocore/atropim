@@ -79,9 +79,10 @@ class ProductFamily extends AbstractRepository
     public function getParentsIds(Entity $entity, array $ids = []): array
     {
         self::onlyForAdvancedClassification();
+        $ids = [];
         if (!empty($entity->get('parentId'))) {
-            $ids[] = $entity->get('parentId');
             $ids = array_unique(array_merge($ids, $this->getParentsIds($entity->get('parent'), $ids)));
+            $ids[] = $entity->get('parentId');
         }
 
         return $ids;
@@ -90,9 +91,14 @@ class ProductFamily extends AbstractRepository
     public function getChildrenIds(Entity $entity, array $ids = []): array
     {
         self::onlyForAdvancedClassification();
-        foreach ($entity->get('children') as $child) {
-            $ids[] = $child->get('id');
-            $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
+        $ids = [];
+
+        $children = $entity->get('children');
+        if (!empty($children) && count($children) > 0) {
+            foreach ($children as $child) {
+                $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
+                $ids[] = $child->get('id');
+            }
         }
 
         return $ids;

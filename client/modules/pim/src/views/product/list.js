@@ -47,6 +47,12 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             });
         },
 
+        setupTreePanel() {
+            if (this.getAcl().check('Category', 'read')) {
+                Dep.prototype.setupTreePanel.call(this);
+            }
+        },
+
         resetSorting() {
             Dep.prototype.resetSorting.call(this);
 
@@ -65,17 +71,30 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
         },
 
         treeInit(view) {
-            view.selectTreeNode(view.parseRoute(localStorage.getItem('selectedNodeRoute')), localStorage.getItem('selectedNodeId'));
+            if (localStorage.getItem('selectedNodeId')) {
+                view.selectTreeNode(view.parseRoute(localStorage.getItem('selectedNodeRoute')), localStorage.getItem('selectedNodeId'));
 
+                this.notify('Please wait...');
+                this.updateCollectionWithTree(localStorage.getItem('selectedNodeId'));
+                this.collection.fetch().then(() => this.notify(false));
+            }
+        },
+
+        treeReset(view) {
             this.notify('Please wait...');
-            this.updateCollectionWithTree(localStorage.getItem('selectedNodeId'));
+
+            localStorage.removeItem('selectedNodeId');
+            localStorage.removeItem('selectedNodeRoute');
+
+            view.buildTree();
+            this.updateCollectionWithTree(null);
             this.collection.fetch().then(() => this.notify(false));
         },
 
         updateCollectionWithTree(id) {
             let data = {bool: {}, boolData: {}};
 
-            const filterName = "linkedWith" + this.treeScope;
+            const filterName = "linkedWith" + localStorage.getItem('treeScope');
 
             data['bool'][filterName] = true;
             data['boolData'][filterName] = id;
