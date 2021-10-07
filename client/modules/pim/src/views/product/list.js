@@ -32,8 +32,6 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
         createButton: false,
 
         setup() {
-            this.treeScope = localStorage.getItem('treeScope') || 'Category';
-
             Dep.prototype.setup.call(this);
 
             this.menu.buttons.push({
@@ -53,6 +51,9 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             this.getMetadata().get('clientDefs.Product.treeScopes').forEach(scope => {
                 if (this.getAcl().check(scope, 'read')) {
                     result = true;
+                    if (!localStorage.getItem('treeScope')) {
+                        localStorage.setItem('treeScope', scope);
+                    }
                 }
             })
 

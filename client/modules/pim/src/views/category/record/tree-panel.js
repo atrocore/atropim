@@ -43,7 +43,11 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         setup() {
             this.scope = this.options.scope || this.scope;
-            this.treeScope = this.options.treeScope || this.scope;
+            this.treeScope = this.scope;
+
+            if (this.scope === 'Product') {
+                this.treeScope = localStorage.getItem('treeScope');
+            }
 
             this.wait(true);
             this.buildSearch();
@@ -195,7 +199,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                     let options = [];
 
                     treeScopes.forEach(scope => {
-                        if (this.getAcl().check(scope, 'read')){
+                        if (this.getAcl().check(scope, 'read')) {
                             options.push(scope);
                         }
                     })

@@ -87,6 +87,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             this.getMetadata().get('clientDefs.Product.treeScopes').forEach(scope => {
                 if (this.getAcl().check(scope, 'read')) {
                     result = true;
+                    if (!localStorage.getItem('treeScope')) {
+                        localStorage.setItem('treeScope', scope);
+                    }
                 }
             })
 
@@ -101,7 +104,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             this.createView('catalogTreePanel', 'pim:views/category/record/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
-                treeScope: localStorage.getItem('treeScope') || 'Category',
                 model: this.model
             }, view => {
                 view.listenTo(view, 'select-node', data => {

@@ -31,8 +31,6 @@ Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
 
         template: 'pim:category/tree-list',
 
-        treeScope: null,
-
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -49,7 +47,6 @@ Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
             this.createView('treePanel', 'pim:views/category/record/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
-                treeScope: this.treeScope,
                 model: this.model
             }, view => {
                 view.listenTo(view, 'select-node', data => {
