@@ -63,7 +63,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
-                this.isCatalogTreePanel = true;
+                this.isCatalogTreePanel = this.isTreeAllowed();
                 this.setupCatalogTreePanel();
             }
 
@@ -81,7 +81,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             });
         },
 
+        isTreeAllowed() {
+            return this.getAcl().check('Category', 'read');
+        },
+
         setupCatalogTreePanel() {
+            if (!this.isTreeAllowed()) {
+                return;
+            }
+
             this.createView('catalogTreePanel', 'pim:views/category/record/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,

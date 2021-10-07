@@ -47,10 +47,16 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             });
         },
 
+        isTreeAllowed() {
+            return this.getAcl().check('Category', 'read');
+        },
+
         setupTreePanel() {
-            if (this.getAcl().check('Category', 'read')) {
-                Dep.prototype.setupTreePanel.call(this);
+            if (!this.isTreeAllowed()) {
+                return;
             }
+
+            Dep.prototype.setupTreePanel.call(this);
         },
 
         resetSorting() {
