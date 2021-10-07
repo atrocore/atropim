@@ -192,7 +192,14 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', localStorage.getItem('treeScope') || 'Category');
 
-                    let options = treeScopes;
+                    let options = [];
+
+                    treeScopes.forEach(scope => {
+                        if (this.getAcl().check(scope, 'read')){
+                            options.push(scope);
+                        }
+                    })
+
                     let translatedOptions = {};
                     options.forEach(scope => {
                         translatedOptions[scope] = this.translate(scope, 'scopeNames', 'Global');

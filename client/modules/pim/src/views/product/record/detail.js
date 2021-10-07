@@ -82,7 +82,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         isTreeAllowed() {
-            return this.getAcl().check('Category', 'read');
+            let result = false;
+
+            this.getMetadata().get('clientDefs.Product.treeScopes').forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                }
+            })
+
+            return result;
         },
 
         setupCatalogTreePanel() {
