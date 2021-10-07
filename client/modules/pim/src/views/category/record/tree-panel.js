@@ -98,7 +98,6 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
         },
 
         buildTree() {
-            const self = this;
             const $tree = this.getTreeEl();
 
             $tree.tree('destroy');
@@ -110,36 +109,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>')
             }).on('tree.init', () => {
-                    if (self.model && self.model.get('id')) {
-                        let id = self.model.get('id');
-                        let route = self.model.get('categoryRoute');
-
-                        if (this.scope === 'Product') {
-                            id = null;
-                            route = null;
-
-                            if (this.treeScope === 'Category') {
-                                const categoriesIds = self.model.get('categoriesIds');
-                                if (categoriesIds.length > 0) {
-                                    id = categoriesIds.shift();
-                                    $.ajax({url: `Category/${id}`, type: 'GET', async: false,}).done(pf => {
-                                        route = pf.categoryRoute;
-                                    });
-                                }
-                            }
-
-                            if (this.treeScope === 'ProductFamily') {
-                                if (self.model.get('productFamilyId')) {
-                                    id = self.model.get('productFamilyId');
-                                    $.ajax({url: `ProductFamily/${id}`, type: 'GET', async: false,}).done(pf => {
-                                        route = pf.categoryRoute;
-                                    });
-                                }
-                            }
-                        }
-
-                        self.selectTreeNode(this.parseRoute(route), id);
-                    }
+                    this.trigger('tree-init');
                 }
             ).on('tree.move', e => {
                 e.preventDefault();
@@ -187,9 +157,15 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                         data['route'] = "|" + route.reverse().join('|') + "|";
                     }
 
-                    this.trigger('select-node', data);
+                    this.selectNode(data);
                 }
             });
+        },
+
+        selectNode(data) {
+            localStorage.setItem('selectedNodeId', data.id);
+            localStorage.setItem('selectedNodeRoute', data.route);
+            this.trigger('select-node', data);
         },
 
         getTreeEl() {
@@ -203,7 +179,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             }, view => {
                 view.render();
                 this.listenTo(view, 'category-search-select', item => {
-                    this.trigger('select-node', {id: item.id, route: item.categoryRoute});
+                    this.selectNode({id: item.id, route: item.categoryRoute});
                 });
             });
 

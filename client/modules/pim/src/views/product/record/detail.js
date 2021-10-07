@@ -89,7 +89,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 model: this.model
             }, view => {
                 view.listenTo(view, 'select-node', data => {
-                    this.getRouter().navigate(`#${this.scope}`);
+                    this.selectNode(data);
+                });
+                view.listenTo(view, 'tree-init', () => {
+                    this.treeInit(view);
                 });
             });
         },
@@ -101,6 +104,36 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return _.extend({
                 isCatalogTreePanel: this.isCatalogTreePanel
             }, data)
+        },
+
+        selectNode(data) {
+            window.location.href = `/#Product`;
+        },
+
+        treeInit(view) {
+            let id = null;
+            let route = null;
+
+            if (view.treeScope === 'Category') {
+                const categoriesIds = view.model.get('categoriesIds');
+                if (categoriesIds.length > 0) {
+                    id = categoriesIds.shift();
+                    $.ajax({url: `Category/${id}`, type: 'GET', async: false,}).done(pf => {
+                        route = pf.categoryRoute;
+                    });
+                }
+            }
+
+            if (view.treeScope === 'ProductFamily') {
+                if (view.model.get('productFamilyId')) {
+                    id = view.model.get('productFamilyId');
+                    $.ajax({url: `ProductFamily/${id}`, type: 'GET', async: false,}).done(pf => {
+                        route = pf.categoryRoute;
+                    });
+                }
+            }
+
+            view.selectTreeNode(view.parseRoute(route), id);
         },
 
         applyOverviewFilters() {

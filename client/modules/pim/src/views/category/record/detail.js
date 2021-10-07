@@ -58,7 +58,23 @@ Espo.define('pim:views/category/record/detail', 'views/record/detail',
                 scope: this.scope,
                 model: this.model
             }, view => {
+                view.listenTo(view, 'select-node', data => {
+                    this.selectNode(data);
+                });
+                view.listenTo(view, 'tree-init', () => {
+                    this.treeInit(view);
+                });
             });
+        },
+
+        selectNode(data) {
+            window.location.href = `/#${this.scope}/view/${data.id}`;
+        },
+
+        treeInit(view) {
+            if (view.model && view.model.get('id')) {
+                view.selectTreeNode(view.parseRoute(view.model.get('categoryRoute')), view.model.get('id'));
+            }
         },
 
         save(callback, skipExit) {

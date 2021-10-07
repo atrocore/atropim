@@ -50,6 +50,9 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
         resetSorting() {
             Dep.prototype.resetSorting.call(this);
 
+            localStorage.removeItem('selectedNodeId');
+            localStorage.removeItem('selectedNodeRoute');
+
             this.getView('treePanel').buildTree();
         },
 
@@ -58,6 +61,14 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             $treeView.selectTreeNode($treeView.parseRoute(data.route), data.id);
             this.notify('Please wait...');
             this.updateCollectionWithTree(data.id);
+            this.collection.fetch().then(() => this.notify(false));
+        },
+
+        treeInit(view) {
+            view.selectTreeNode(view.parseRoute(localStorage.getItem('selectedNodeRoute')), localStorage.getItem('selectedNodeId'));
+
+            this.notify('Please wait...');
+            this.updateCollectionWithTree(localStorage.getItem('selectedNodeId'));
             this.collection.fetch().then(() => this.notify(false));
         },
 
