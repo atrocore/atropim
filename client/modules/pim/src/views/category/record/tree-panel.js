@@ -224,6 +224,8 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                             searchPanel.reRender();
 
                             this.buildTree();
+
+                            $('button[data-action="search"]').click();
                         });
                     });
                 });
