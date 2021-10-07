@@ -78,6 +78,9 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
         },
 
         selectNode(data) {
+            localStorage.setItem('selectedNodeId', data.id);
+            localStorage.setItem('selectedNodeRoute', data.route);
+
             const $treeView = this.getView('treePanel');
             $treeView.selectTreeNode($treeView.parseRoute(data.route), data.id);
             this.notify('Please wait...');

@@ -171,8 +171,6 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
         },
 
         selectNode(data) {
-            localStorage.setItem('selectedNodeId', data.id);
-            localStorage.setItem('selectedNodeRoute', data.route);
             this.trigger('select-node', data);
         },
 

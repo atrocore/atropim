@@ -128,6 +128,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         selectNode(data) {
+            localStorage.setItem('selectedNodeId', data.id);
+            localStorage.setItem('selectedNodeRoute', data.route);
+
             window.location.href = `/#Product`;
         },
 
