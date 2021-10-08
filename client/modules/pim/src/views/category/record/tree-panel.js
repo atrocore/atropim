@@ -46,7 +46,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             this.treeScope = this.scope;
 
             if (this.scope === 'Product') {
-                this.treeScope = localStorage.getItem('treeScope');
+                this.treeScope = localStorage.getItem('treeScope') || 'Category';
             }
 
             this.wait(true);

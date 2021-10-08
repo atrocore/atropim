@@ -135,29 +135,23 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         treeInit(view) {
-            let id = null;
-            let route = null;
-
-            if (view.treeScope === 'Category') {
-                const categoriesIds = view.model.get('categoriesIds');
-                if (categoriesIds.length > 0) {
-                    id = categoriesIds.shift();
-                    $.ajax({url: `Category/${id}`, type: 'GET', async: false,}).done(pf => {
-                        route = pf.categoryRoute;
-                    });
-                }
-            }
-
             if (view.treeScope === 'ProductFamily') {
                 if (view.model.get('productFamilyId')) {
-                    id = view.model.get('productFamilyId');
-                    $.ajax({url: `ProductFamily/${id}`, type: 'GET', async: false,}).done(pf => {
-                        route = pf.categoryRoute;
+                    $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
+                        view.selectTreeNode(view.parseRoute(pf.categoryRoute), view.model.get('productFamilyId'));
                     });
                 }
             }
 
-            view.selectTreeNode(view.parseRoute(route), id);
+            if (view.treeScope === 'Category') {
+                $.ajax({url: `Product/${view.model.get('id')}/categories?maxSize=1&offset=0&sortBy=sortOrder&asc=true`}).done(response => {
+                    if (response.total && response.total > 0) {
+                        response.list.forEach(category => {
+                            view.selectTreeNode(view.parseRoute(category.categoryRoute), category.id);
+                        });
+                    }
+                });
+            }
         },
 
         treeReset(view) {
