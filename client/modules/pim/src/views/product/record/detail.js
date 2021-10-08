@@ -156,14 +156,16 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         selectCategoryNode($tree, route, id) {
+            let node = $tree.tree('getNodeById', id);
+            if (node){
+                $(node.element).addClass('jqtree-selected');
+            }
+
             if (route.length > 0) {
                 let node = $tree.tree('getNodeById', route.shift());
                 $tree.tree('openNode', node, () => {
                     this.selectCategoryNode($tree, route, id);
                 });
-            } else {
-                let node = $tree.tree('getNodeById', id);
-                $(node.element).addClass('jqtree-selected');
             }
         },
 
