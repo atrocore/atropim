@@ -157,15 +157,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         selectCategoryNode($tree, route, id) {
             let node = $tree.tree('getNodeById', id);
-            if (node){
+            if (node) {
                 $(node.element).addClass('jqtree-selected');
-            }
-
-            if (route.length > 0) {
-                let node = $tree.tree('getNodeById', route.shift());
-                $tree.tree('openNode', node, () => {
-                    this.selectCategoryNode($tree, route, id);
-                });
+            } else {
+                if (route.length > 0) {
+                    let node = $tree.tree('getNodeById', route.shift());
+                    $tree.tree('openNode', node, () => {
+                        this.selectCategoryNode($tree, route, id);
+                    });
+                }
             }
         },
 
