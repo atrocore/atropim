@@ -146,26 +146,42 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (view.treeScope === 'Category') {
                 $.ajax({url: `Product/${view.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
                     if (response.total && response.total > 0) {
-                        const $tree = view.getTreeEl();
-                        response.list.forEach(category => {
-                            this.selectCategoryNode($tree, view.parseRoute(category.categoryRoute), category.id);
-                        });
+                        let opened = {};
+                        this.selectCategoryNode(response.list, view, opened);
                     }
                 });
             }
         },
 
-        selectCategoryNode($tree, route, id) {
-            let node = $tree.tree('getNodeById', id);
-            if (node) {
-                $(node.element).addClass('jqtree-selected');
+        selectCategoryNode(categories, view, opened) {
+            if (categories.length > 0) {
+                let category = categories.shift();
+                let route = [];
+                view.parseRoute(category.categoryRoute).forEach(id => {
+                    if (!opened[id]) {
+                        route.push(id);
+                    }
+                });
+
+                let $tree = view.getTreeEl();
+                this.openCategoryNodes($tree, route, opened, () => {
+                    this.selectCategoryNode(categories, view, opened);
+                    let node = $tree.tree('getNodeById', category.id);
+                    $(node.element).addClass('jqtree-selected');
+                });
+            }
+        },
+
+        openCategoryNodes($tree, route, opened, callback) {
+            if (route.length > 0) {
+                let id = route.shift();
+                let node = $tree.tree('getNodeById', id);
+                $tree.tree('openNode', node, () => {
+                    opened[id] = true;
+                    this.openCategoryNodes($tree, route, opened, callback);
+                });
             } else {
-                if (route.length > 0) {
-                    let node = $tree.tree('getNodeById', route.shift());
-                    $tree.tree('openNode', node, () => {
-                        this.selectCategoryNode($tree, route, id);
-                    });
-                }
+                callback();
             }
         },
 
