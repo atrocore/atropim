@@ -144,13 +144,26 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             if (view.treeScope === 'Category') {
-                $.ajax({url: `Product/${view.model.get('id')}/categories?maxSize=1&offset=0&sortBy=sortOrder&asc=true`}).done(response => {
+                $.ajax({url: `Product/${view.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
                     if (response.total && response.total > 0) {
+                        const $tree = view.getTreeEl();
                         response.list.forEach(category => {
-                            view.selectTreeNode(view.parseRoute(category.categoryRoute), category.id);
+                            this.selectCategoryNode($tree, view.parseRoute(category.categoryRoute), category.id);
                         });
                     }
                 });
+            }
+        },
+
+        selectCategoryNode($tree, route, id) {
+            if (route.length > 0) {
+                let node = $tree.tree('getNodeById', route.shift());
+                $tree.tree('openNode', node, () => {
+                    this.selectCategoryNode($tree, route, id);
+                });
+            } else {
+                let node = $tree.tree('getNodeById', id);
+                $(node.element).addClass('jqtree-selected');
             }
         },
 
