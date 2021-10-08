@@ -271,8 +271,8 @@ class ProductAttributeValue extends AbstractService
             ->getRepository('ProductAttributeValue')
             ->where(
                 [
-                    'productId'                => $productId,
-                    'attributeId'              => array_column($attributes->toArray(), 'id')
+                    'productId' => $productId,
+                    'attributeId' => array_column($attributes->toArray(), 'id')
                 ]
             )
             ->find();
@@ -470,6 +470,7 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
         $entity->set('attributeCode', !empty($attribute) ? $attribute->get('code') : null);
         $entity->set('prohibitedEmptyValue', false);
+        $entity->set('isInherited', $this->isInheritedFromPf($entity));
 
         if (!empty($attribute)) {
             $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
@@ -523,5 +524,36 @@ class ProductAttributeValue extends AbstractService
         if (empty($data->value) && !empty($data->valueId)) {
             $data->value = $data->valueId;
         }
+    }
+
+    private function isInheritedFromPf(Entity $pav): bool
+    {
+        if (empty($product = $this->getEntityManager()->getEntity('Product', $pav->get('productId')))) {
+            return false;
+        }
+
+        if (empty($productFamily = $this->getEntityManager()->getEntity('ProductFamily', $product->get('productFamilyId')))) {
+            return false;
+        }
+
+        $where = [
+            'productFamilyId' => $productFamily->get('id'),
+            'attributeId'     => $pav->get('attributeId'),
+            'scope'           => $pav->get('scope'),
+            'isRequired'      => $pav->get('isRequired'),
+        ];
+
+        if ($where['scope'] === 'Channel') {
+            $where['channelId'] = $pav->get('channelId');
+        }
+
+        $pfa = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->select(['id'])
+            ->where($where)
+            ->findOne();
+
+        return !empty($pfa);
     }
 }
