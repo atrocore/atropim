@@ -155,20 +155,7 @@ class ProductFamily extends AbstractRepository
             return true;
         }
 
-        if ($relationName === 'categories') {
-            return $this->relateProductFamilyWithCategory($entity, $foreign);
-        }
-
         return parent::relate($entity, $relationName, $foreign, $data, $options);
-    }
-
-    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName === 'categories') {
-            return $this->relateProductFamilyWithCategory($entity, $foreign, true);
-        }
-
-        return parent::unrelate($entity, $relationName, $foreign, $options);
     }
 
     /**
