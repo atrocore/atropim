@@ -536,6 +536,10 @@ class ProductAttributeValue extends AbstractService
             return false;
         }
 
+        if (empty($product->get('productFamilyId'))) {
+            return false;
+        }
+
         $where = [
             'productFamilyId' => $product->get('productFamilyId'),
             'attributeId'     => $pav->get('attributeId'),
