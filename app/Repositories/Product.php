@@ -643,6 +643,9 @@ class Product extends AbstractRepository
             if (empty($entity->skipUpdateProductAttributesByProductFamily) && empty($entity->isDuplicate)) {
                 $this->updateProductAttributesByProductFamily($entity);
             }
+            if (empty($entity->skipUpdateCategoriesByProductFamily) && empty($entity->isDuplicate)) {
+                $this->updateCategoriesByProductFamily($entity);
+            }
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isInheritAssignedUser') && $entity->get('isInheritAssignedUser')) {
@@ -797,6 +800,25 @@ class Product extends AbstractRepository
         return $result;
     }
 
+    protected function updateCategoriesByProductFamily(Entity $product): bool
+    {
+        if (empty($productFamily = $product->get('productFamily'))) {
+            return true;
+        }
+
+        if (!empty($categories = $productFamily->get('categories')) && count($categories) > 0) {
+            foreach ($categories as $category) {
+                try {
+                    $this->relate($product, 'categories', $category);
+                } catch (BadRequest $e) {
+                    // ignore
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param Entity $product
      *
@@ -804,38 +826,20 @@ class Product extends AbstractRepository
      */
     protected function updateProductAttributesByProductFamily(Entity $product): bool
     {
-        // unlink attributes from old product family
-        if (!$product->isNew() && !empty($pavs = $product->get('productAttributeValues')) && $pavs->count() > 0) {
-            foreach ($pavs as $pav) {
-                if (!empty($pav->get('productFamilyAttributeId'))) {
-                    $pav->set('productFamilyAttributeId', null);
-                    $this->getEntityManager()->saveEntity($pav);
-                }
-            }
-        }
-
         if (empty($productFamily = $product->get('productFamily'))) {
             return true;
         }
 
-        // get product family attributes
-        $productFamilyAttributes = $productFamily->get('productFamilyAttributes');
-
-        if (count($productFamilyAttributes) > 0) {
-            /** @var \Pim\Repositories\ProductAttributeValue $repository */
-            $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
-
+        if (!empty($productFamilyAttributes = $productFamily->get('productFamilyAttributes')) && count($productFamilyAttributes) > 0) {
             foreach ($productFamilyAttributes as $productFamilyAttribute) {
-                // create
-                $productAttributeValue = $repository->get();
+                $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
                 $productAttributeValue->set(
                     [
-                        'productId'                => $product->get('id'),
-                        'attributeId'              => $productFamilyAttribute->get('attributeId'),
-                        'productFamilyAttributeId' => $productFamilyAttribute->get('id'),
-                        'isRequired'               => $productFamilyAttribute->get('isRequired'),
-                        'scope'                    => $productFamilyAttribute->get('scope'),
-                        'channelId'                => $productFamilyAttribute->get('channelId')
+                        'productId'   => $product->get('id'),
+                        'attributeId' => $productFamilyAttribute->get('attributeId'),
+                        'isRequired'  => $productFamilyAttribute->get('isRequired'),
+                        'scope'       => $productFamilyAttribute->get('scope'),
+                        'channelId'   => $productFamilyAttribute->get('channelId')
                     ]
                 );
 
@@ -852,20 +856,10 @@ class Product extends AbstractRepository
                 $productAttributeValue->skipVariantValidation = true;
                 $productAttributeValue->skipProductChannelValidation = true;
 
-                // save
                 try {
                     $this->getEntityManager()->saveEntity($productAttributeValue);
-                } catch (ProductAttributeAlreadyExists $e) {
-                    if (!empty($copy = $repository->findCopy($productAttributeValue))) {
-                        $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
-                        $copy->set('isRequired', $productAttributeValue->get('isRequired'));
-
-                        $copy->skipVariantValidation = true;
-                        $copy->skipPfValidation = true;
-                        $copy->skipProductChannelValidation = true;
-
-                        $this->getEntityManager()->saveEntity($copy);
-                    }
+                } catch (BadRequest $e) {
+                    // ignore
                 }
             }
         }

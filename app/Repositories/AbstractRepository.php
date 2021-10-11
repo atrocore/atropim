@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
@@ -75,7 +76,7 @@ abstract class AbstractRepository extends Base
 
     /**
      * @param string $id
-     * @param array $teamsIds
+     * @param array  $teamsIds
      */
     public function changeMultilangTeams(string $id, string $entityType, array $teamsIds)
     {
@@ -158,14 +159,15 @@ abstract class AbstractRepository extends Base
         $underscoreField = Util::toUnderScore($field);
 
         if ($config == $this->ownership) {
-            $sql = "UPDATE {$table} SET {$underscoreField}_id = '{$entity->get($field . 'Id')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_{$underscoreField} = 1 AND deleted = 0;";
+            $sql
+                = "UPDATE {$table} SET {$underscoreField}_id = '{$entity->get($field . 'Id')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_{$underscoreField} = 1 AND deleted = 0;";
             $this->getEntityManager()->nativeQuery($sql);
         }
     }
 
     /**
      * @param Entity $entity
-     * @param array $teamsIds
+     * @param array  $teamsIds
      */
     public function setInheritedOwnershipTeams(Entity $entity, array $teamsIds, string $locale = '')
     {
@@ -221,7 +223,7 @@ abstract class AbstractRepository extends Base
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function setInheritedOwnership(Entity $entity)
     {
@@ -240,8 +242,8 @@ abstract class AbstractRepository extends Base
     }
 
     /**
-     * @param Entity $entity
-     * @param string $target
+     * @param Entity      $entity
+     * @param string      $target
      * @param string|null $config
      *
      */
@@ -285,7 +287,7 @@ abstract class AbstractRepository extends Base
                         $inheritedField = $target;
                     }
                     $entity->set($target . 'Id', $inheritedEntity->get($inheritedField . 'Id'));
-                    $entity->set($target . 'Name', $inheritedEntity->get($inheritedField .  'Name'));
+                    $entity->set($target . 'Name', $inheritedEntity->get($inheritedField . 'Name'));
                 }
 
                 $this->getEntityManager()->saveEntity($entity, ['skipAll' => true]);
@@ -302,5 +304,56 @@ abstract class AbstractRepository extends Base
     protected function getInheritedEntity(Entity $entity, string $config): ?Entity
     {
         return null;
+    }
+
+    protected function relateProductFamilyWithCategory(Entity $pf, Entity $category, bool $unrelate = false): bool
+    {
+        if (is_bool($pf)) {
+            throw new BadRequest('Action blocked. Please, specify Product Family.');
+        }
+
+        if (is_string($pf)) {
+            $pf = $this->getEntityManager()->getEntity('ProductFamily', $pf);
+        }
+
+        if (is_bool($category)) {
+            throw new BadRequest('Action blocked. Please, specify Category.');
+        }
+
+        if (is_string($category)) {
+            $category = $this->getEntityManager()->getEntity('Category', $category);
+        }
+
+        if ($this->getPDO()->inTransaction()) {
+            return $this->runRelateProductFamilyWithCategory($pf, $category, $unrelate);
+        }
+
+        $this->getPDO()->beginTransaction();
+        try {
+            $this->runRelateProductFamilyWithCategory($pf, $category, $unrelate);
+            $this->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return true;
+    }
+
+    protected function runRelateProductFamilyWithCategory(Entity $pf, Entity $category, bool $unrelate)
+    {
+        $method = $unrelate ? "unrelate" : "relate";
+        $result = $this->getMapper()->$method($pf, 'categories', $category);
+        if ($result && !empty($products = $pf->get('products')) && count($products) > 0) {
+            foreach ($products as $product) {
+                try {
+                    $this->getEntityManager()->getRepository('Product')->$method($product, 'categories', $category);
+                } catch (BadRequest $e) {
+                    // ignore
+                }
+            }
+        }
+
+        return true;
     }
 }

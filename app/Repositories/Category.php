@@ -72,6 +72,24 @@ class Category extends AbstractRepository
         return $result;
     }
 
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName === 'productFamilies') {
+            return $this->relateProductFamilyWithCategory($foreign, $entity);
+        }
+
+        return parent::relate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'productFamilies') {
+            return $this->relateProductFamilyWithCategory($foreign, $entity, true);
+        }
+
+        return parent::unrelate($entity, $relationName, $foreign, $options);
+    }
+
     public function getNotRelatedWithCatalogsTreeIds(): array
     {
         return $this
