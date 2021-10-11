@@ -16,6 +16,5 @@
     "disabled": false,
     "type": "Base",
     "module": "Pim",
-    "object": true,
-    "isCustom": false
+    "object": true
 }

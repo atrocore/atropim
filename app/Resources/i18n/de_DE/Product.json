@@ -95,7 +95,6 @@
     "noGroup": "Keine Gruppe",
     "productImage": "Produktbild",
     "selectAttributeGroup": "Attributgruppe auswählen",
-    "removeAllCustomAttributes": "Alle benutzerdefinierten Attribute entfernen",
     "draft": "Entwurf",
     "prepared": "Vorbereitet",
     "reviewed": "Überprüft",
@@ -142,7 +141,6 @@
     "onlyConfigurableProducts": "Nur konfigurierbare Produkte"
   },
   "messages": {
-    "areYouSureYouWantToRemoveAllCustomAttributes": "Sind Sie sicher, dass Sie alle benutzerdefinierten Attribute entfernen möchten?",
     "productCatalogChangeConfirm": "Möchten Sie die Verknüpfung zwischen dem Produkt und dem bisherigen Katalog wirklich aufheben/ändern? Alle für den ursprünglichen Katalog zulässigen Kategorien werden vom Produkt entkoppelt."
   },
   "exceptions": {

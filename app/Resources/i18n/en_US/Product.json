@@ -77,7 +77,6 @@
     "itemsInRow": "Items in row",
     "productImage": "Product Image",
     "selectAttributeGroup": "Select Attribute Group",
-    "removeAllCustomAttributes": "Remove all custom attributes",
     "draft": "Draft",
     "prepared": "Prepared",
     "reviewed": "Reviewed",
@@ -124,7 +123,6 @@
     "withoutImageAssets": "Without Assets"
   },
   "messages": {
-    "areYouSureYouWantToRemoveAllCustomAttributes": "Are you sure, you want to remove all сustom attributes?",
     "productCatalogChangeConfirm": "Are you sure you want to set/unlink/modify the catalog for the current product? All categories allowed for the original catalog will be also unlinked for the product."
   },
   "exceptions": {

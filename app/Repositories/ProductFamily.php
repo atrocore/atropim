@@ -64,34 +64,44 @@ class ProductFamily extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
-    /**
-     * @inheritDoc
-     */
-    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    public static function isAdvancedClassificationInstalled(): bool
     {
-        if ($relationName == 'productFamilyAttributes') {
-            // prepare id
-            if ($foreign instanceof Entity) {
-                $id = $foreign->get('id');
-            } elseif (is_string($foreign)) {
-                $id = $foreign;
-            } else {
-                throw new BadRequest("'Remove all relations' action is blocked for such relation");
-            }
+        return class_exists(\AdvancedClassification\Module::class);
+    }
 
-            // make product attribute as custom
-            $sql = "UPDATE product_attribute_value SET product_family_attribute_id=NULL,is_required=1 WHERE product_family_attribute_id='$id';";
+    public static function onlyForAdvancedClassification(): void
+    {
+        if (!self::isAdvancedClassificationInstalled()) {
+            throw new BadRequest("Advanced Classification module isn't installed.");
+        }
+    }
 
-            // unlink
-            $sql .= "UPDATE product_family_attribute SET deleted=1 WHERE id='$id'";
-
-            // execute
-            $this->getEntityManager()->nativeQuery($sql);
-
-            return true;
+    public function getParentsIds(Entity $entity, array $ids = []): array
+    {
+        self::onlyForAdvancedClassification();
+        $ids = [];
+        if (!empty($entity->get('parentId'))) {
+            $ids = array_unique(array_merge($ids, $this->getParentsIds($entity->get('parent'), $ids)));
+            $ids[] = $entity->get('parentId');
         }
 
-        return parent::unrelate($entity, $relationName, $foreign, $options);
+        return $ids;
+    }
+
+    public function getChildrenIds(Entity $entity, array $ids = []): array
+    {
+        self::onlyForAdvancedClassification();
+        $ids = [];
+
+        $children = $entity->get('children');
+        if (!empty($children) && count($children) > 0) {
+            foreach ($children as $child) {
+                $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
+                $ids[] = $child->get('id');
+            }
+        }
+
+        return $ids;
     }
 
     /**
@@ -111,6 +121,41 @@ class ProductFamily extends AbstractRepository
             ->toArray();
 
         return array_column($data, 'attributeId');
+    }
+
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName === 'products') {
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Product that we should be related with Product Family.');
+            }
+            if (is_string($foreign)) {
+                $foreign = $this->getEntityManager()->getEntity('Product', $foreign);
+            }
+            $foreign->set('productFamilyId', $entity->get('id'));
+            $this->getEntityManager()->saveEntity($foreign);
+
+            return true;
+        }
+
+        if ($relationName === 'children') {
+            self::onlyForAdvancedClassification();
+
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Product Family.');
+            }
+
+            if (is_string($foreign)) {
+                $foreign = $this->getEntityManager()->getEntity('ProductFamily', $foreign);
+            }
+
+            $foreign->set('parentId', $entity->get('id'));
+            $this->getEntityManager()->saveEntity($foreign);
+
+            return true;
+        }
+
+        return parent::relate($entity, $relationName, $foreign, $data, $options);
     }
 
     /**
@@ -139,29 +184,62 @@ class ProductFamily extends AbstractRepository
         return array_column($data, 'id');
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function afterRemove(Entity $entity, array $options = [])
+    protected function beforeSave(Entity $entity, array $options = [])
     {
-        parent::afterRemove($entity, $options);
-
-        // unlink products
-        if (!empty($products = $entity->get('products'))) {
-            foreach ($products as $product) {
-                $product->set('productFamilyId', null);
-                $this->getEntityManager()->saveEntity($product);
-            }
+        if (!$this->isCodeValid($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
         }
+
+        parent::beforeSave($entity, $options);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
 
         $this->setInheritedOwnership($entity);
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        // unlink from products
+        foreach ($entity->get('products') as $product) {
+            $product->set('productFamilyId', null);
+            $this->getEntityManager()->saveEntity($product);
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        foreach ($entity->get('productFamilyAttributes') as $pfa) {
+            $this->getEntityManager()->removeEntity($pfa);
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
+
+    protected function isCodeValid(Entity $entity): bool
+    {
+        if (!$entity->isAttributeChanged('code')) {
+            return true;
+        }
+
+        if (!empty($entity->get('code')) && preg_match(self::CODE_PATTERN, $entity->get('code'))) {
+            $exists = $this->where(['code' => $entity->get('code')])->findOne();
+            if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

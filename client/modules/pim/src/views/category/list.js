@@ -29,7 +29,7 @@
 Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
     return Dep.extend({
 
-        template: 'pim:category/list',
+        template: 'pim:category/tree-list',
 
         setup() {
             Dep.prototype.setup.call(this);
@@ -48,7 +48,28 @@ Espo.define('pim:views/category/list', 'pim:views/list', function (Dep) {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
                 model: this.model
+            }, view => {
+                view.listenTo(view, 'select-node', data => {
+                    this.selectNode(data);
+                });
+                view.listenTo(view, 'tree-init', () => {
+                    this.treeInit(view);
+                });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
             });
+        },
+
+        treeInit(view) {
+        },
+
+        treeReset(view) {
+            window.location.href = `/#${this.scope}`;
+        },
+
+        selectNode(data) {
+            window.location.href = `/#${this.scope}/view/${data.id}`;
         },
 
     });

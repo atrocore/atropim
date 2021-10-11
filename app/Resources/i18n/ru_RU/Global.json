@@ -73,6 +73,8 @@
     "role": "Роль"
   },
   "labels": {
+    "Reset selection": "Сбросить выбор",
+    "typeToSearch": "Введите для поиска...",
     "useDragAndDrop": "Перетаскивайте для изменения порядка",
     "categorySettings": "Настройки категорий",
     "cascade": "Распространить",

@@ -42,31 +42,7 @@ use Espo\Core\Utils\Util;
  */
 class ProductAttributeValue extends AbstractRepository
 {
-    /**
-     * @param string $pavId
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function getLocaleTeamsIds(string $pavId, string $locale): array
-    {
-        $localeId = $pavId . \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
-
-        return $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT team_id FROM entity_team WHERE entity_type='ProductAttributeValue' AND entity_id='$localeId'")
-            ->fetchAll(\PDO::FETCH_COLUMN);
-    }
-
-    /**
-     * @param string $productFamilyAttributeId
-     */
-    public function removeCollectionByProductFamilyAttribute(string $productFamilyAttributeId)
-    {
-        $this
-            ->where(['productFamilyAttributeId' => $productFamilyAttributeId])
-            ->removeCollection(['skipProductAttributeValueHook' => true]);
-    }
+    protected static $beforeSaveData = [];
 
     /**
      * @param Entity $entity
@@ -76,29 +52,19 @@ class ProductAttributeValue extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
-        parent::beforeSave($entity, $options);
+        $this->isValidForSave($entity, $options);
 
-        if (!$this->isValidForSave($entity, $options)) {
-            return;
+        if (!$entity->isNew()) {
+            self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
         }
 
-        $attribute = $entity->get('attribute');
-        if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
-            $entity->set('value', $attribute->get('enumDefault'));
-        }
-
-        /**
-         * Custom attributes are always required
-         */
-        if (empty($entity->get('productFamilyAttributeId'))) {
-            $entity->set('isRequired', true);
-        }
-
-        /**
-         * If scope Global then channelId should be empty
-         */
         if ($entity->get('scope') == 'Global') {
             $entity->set('channelId', null);
+        }
+
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
+            $entity->set('value', $attribute->get('enumDefault'));
         }
 
         $this->syncEnumValues($entity);
@@ -121,7 +87,7 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
-        if (!$entity->isNew() && $entity->get('attribute')->get('unique')) {
+        if (!$entity->isNew() && $attribute->get('unique')) {
             $valueChanged = null;
 
             // check if value field changed
@@ -140,8 +106,8 @@ class ProductAttributeValue extends AbstractRepository
             }
 
             $where = [
-                'id!=' => $entity->id,
-                'attributeId' => $entity->get('attributeId'),
+                'id!='            => $entity->id,
+                'attributeId'     => $entity->get('attributeId'),
                 'product.deleted' => false
             ];
 
@@ -168,6 +134,29 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest($message);
             }
         }
+
+        // exit
+        if (!empty($options['skipProductAttributeValueHook'])) {
+            return;
+        }
+
+        // create note
+        if (!$entity->isNew() && ($entity->isAttributeChanged('value') || $entity->isAttributeChanged('data'))) {
+            $this->createNote($entity);
+        }
+
+        if (!in_array($attribute->get('type'), ['enum', 'multiEnum'])) {
+            $langList = $this->getConfig()->get('inputLanguageList', []);
+            foreach ($langList as $locale) {
+                $field = Util::toCamelCase('value_' . strtolower($locale));
+
+                if (!$entity->isNew() && $entity->isAttributeChanged($field)) {
+                    $this->createNote($entity, $locale);
+                }
+            }
+        }
+
+        parent::beforeSave($entity, $options);
     }
 
     /**
@@ -193,16 +182,9 @@ class ProductAttributeValue extends AbstractRepository
             ->getEntityManager()
             ->nativeQuery("UPDATE `product` SET modified_at='{$entity->get('modifiedAt')}' WHERE id='{$entity->get('productId')}'");
 
+        $this->moveImageFromTmp($entity);
+
         parent::afterSave($entity, $options);
-    }
-
-    protected function beforeRemove(Entity $entity, array $options = [])
-    {
-        if (empty($options['skipProductAttributeValueHook']) && empty($entity->force) && !empty($entity->get('productFamilyAttributeId'))) {
-            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
-        }
-
-        parent::beforeRemove($entity, $options);
     }
 
     /**
@@ -298,16 +280,9 @@ class ProductAttributeValue extends AbstractRepository
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('serviceFactory');
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @return bool
-     * @throws BadRequest
-     * @throws ProductAttributeAlreadyExists
-     */
     protected function isValidForSave(Entity $entity, array $options): bool
     {
         // exit
@@ -315,32 +290,14 @@ class ProductAttributeValue extends AbstractRepository
             return true;
         }
 
+        $product = $this->getEntityManager()->getEntity('Product', $entity->get('productId'));
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+
         /**
          * Validation. Product and Attribute can't by empty
          */
-        if (empty($entity->get('product')) || empty($entity->get('attribute'))) {
+        if (empty($product) || empty($attribute)) {
             throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
-        }
-
-        /**
-         * Validation. ProductFamilyAttribute doesn't changeable
-         */
-        if (!$entity->isNew() && !empty($entity->get('productFamilyAttributeId')) && empty($entity->skipPfValidation)) {
-            if ($entity->isAttributeChanged('scope')
-                || $entity->isAttributeChanged('isRequired')
-                || ($entity->getFetched('channelId') != $entity->get('channelId'))
-                || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeChanged'));
-            }
-        }
-
-        /**
-         * Validation. Custom attribute doesn't changeable
-         */
-        if (!$entity->isNew() && !empty($entity->get('isCustom'))) {
-            if ($entity->isAttributeChanged('scope') || ($entity->getFetched('channelId') != $entity->get('channelId')) || $entity->isAttributeChanged('attributeId')) {
-                throw new BadRequest($this->exception('onlyValueOrOwnershipCanBeChanged'));
-            }
         }
 
         /**
@@ -353,16 +310,6 @@ class ProductAttributeValue extends AbstractRepository
             }
 
             throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
-        }
-
-        /**
-         * Validation. Only product channels can be used.
-         */
-        if ($entity->get('scope') == 'Channel' && empty($entity->skipProductChannelValidation)) {
-            $productChannelsIds = array_column($entity->get('product')->get('channels')->toArray(), 'id');
-            if (!in_array($entity->get('channelId'), $productChannelsIds)) {
-                throw new BadRequest($this->exception('noSuchChannelInProduct'));
-            }
         }
 
         return true;
@@ -395,7 +342,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // get attribute
-        $attribute = $entity->get('attribute');
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($attribute->get('type') !== 'enum' || empty($attribute->get('isMultilang'))) {
             return;
@@ -434,7 +381,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // get attribute
-        $attribute = $entity->get('attribute');
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($attribute->get('type') !== 'multiEnum' || empty($attribute->get('isMultilang'))) {
             return;
@@ -478,5 +425,91 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function createAssignmentNotification(Entity $entity, ?string $userId): void
     {
+    }
+
+    protected function moveImageFromTmp(Entity $attributeValue): void
+    {
+        if (!empty($attribute = $attributeValue->get('attribute')) && $attribute->get('type') === 'image' && !empty($attributeValue->get('value'))) {
+            $file = $this->getEntityManager()->getEntity('Attachment', $attributeValue->get('value'));
+            $this->getInjection('serviceFactory')->create($file->getEntityType())->moveFromTmp($file);
+            $this->getEntityManager()->saveEntity($file);
+        }
+    }
+
+    protected function createNote(Entity $entity, string $locale = '')
+    {
+        if (!empty($data = $this->getNoteData($entity, $locale))) {
+            $note = $this->getEntityManager()->getEntity('Note');
+            $note->set('type', 'Update');
+            $note->set('parentId', $entity->get('productId'));
+            $note->set('parentType', 'Product');
+            $note->set('data', $data);
+            $note->set('attributeId', $entity->get('id'));
+
+            $this->getEntityManager()->saveEntity($note);
+        }
+    }
+
+    protected function getNoteData(Entity $entity, string $locale = ''): array
+    {
+        // get attribute
+        $attribute = $entity->get('attribute');
+
+        // prepare field name
+        $fieldName = $this->getInjection('language')->translate('Attribute', 'custom', 'ProductAttributeValue') . ' ' . $attribute->get('name');
+
+        // prepare result
+        $result = [];
+
+        // prepare field name
+        if ($locale) {
+            $field = Util::toCamelCase('value_' . strtolower($locale));
+            $fieldName .= " ($locale)";
+        } else {
+            $field = 'value';
+        }
+
+        if (
+            self::$beforeSaveData[$field] != $entity->get($field)
+            || ($entity->isAttributeChanged('data') && !empty(array_diff((array)self::$beforeSaveData['data'], (array)$entity->get('data'))))
+        ) {
+            $result['fields'][] = $fieldName;
+            $result['locale'] = $locale;
+            $type = $attribute->get('type');
+
+            $result['attributes']['was'][$fieldName] = $this->convertAttributeValue($type, self::$beforeSaveData[$field]);
+            $result['attributes']['became'][$fieldName] = $this->convertAttributeValue($type, $entity->get($field));
+
+            if ($entity->get('attribute')->get('type') == 'unit') {
+                $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['data']->unit;
+                $result['attributes']['became'][$fieldName . 'Unit'] = $entity->get('data')->unit;
+            } elseif ($entity->get('attribute')->get('type') == 'currency') {
+                $result['attributes']['was'][$fieldName . 'Currency'] = self::$beforeSaveData['data']->currency;
+                $result['attributes']['became'][$fieldName . 'Currency'] = $entity->get('data')->currency;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function convertAttributeValue(string $type, $value)
+    {
+        $result = null;
+
+        switch ($type) {
+            case 'array':
+            case 'multiEnum':
+                $result = Json::decode($value, true);
+                break;
+            case 'bool':
+                $result = (bool)$value;
+                break;
+            default:
+                if (!empty($value)) {
+                    $result = $value;
+                }
+        }
+
+        return $result;
     }
 }

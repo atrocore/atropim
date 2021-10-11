@@ -7,7 +7,6 @@
     "productAttribute": "Produktattribut",
     "channel": "Kanal",
     "productFamilyAttribute": "Produktfamilienattribut",
-    "isCustom": "Ist benutzerdefiniert",
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
     "value": "Wert",
@@ -26,10 +25,6 @@
     "youHaveNoAclRightsToReadAttributeValues": "Sie haben keine Rechte, Attributwerte zu lesen.",
     "You can't change product in attribute from Product Family": "Sie können das Produkt im Attribut der Produktfamilie nicht ändern.",
     "productAttributeAlreadyExists": "Attribut '%s' für den Kanal %s ist bereits verknüpft.",
-    "noSuchChannelInProduct": "Um ein solches Produktattribut hinzuzufügen, wählen Sie bitte einen Kanal aus, der für das Produkt verfügbar ist.",
-    "attributeInheritedFromProductFamilyCannotBeDeleted": "Von der Produktfamilie geerbtes Attribut kann nicht gelöscht werden.",
-    "attributeInheritedFromProductFamilyCannotBeChanged": "Von der Produktfamilie geerbtes Attribut kann nicht geändert werden.",
-    "onlyValueOrOwnershipCanBeChanged": "Für benutzerdefinierte Produktattribute können nur Wert- oder Besitzerinformationen geändert werden.",
     "attributeDontMatchToPattern": "Wert des Attributes \"{attribute}\" entspricht nicht dem Pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Das Attribut %s sollte einen eindeutigen Wert haben."
   }

@@ -73,4 +73,14 @@ class ProductFamily extends AbstractService
             }
         }
     }
+
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        return true;
+    }
 }

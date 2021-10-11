@@ -9,12 +9,22 @@
       "required": true,
       "view": "pim:views/product-attribute-value/fields/attribute"
     },
-    "productFamilyAttribute": {
-      "type": "link"
-    },
     "isRequired": {
       "type": "bool",
       "default": false
+    },
+    "isInherited": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "attributeGroupId": {
       "type": "varchar",
@@ -168,11 +178,6 @@
     "channel": {
       "type": "link",
       "view": "pim:views/product-attribute-value/fields/channel"
-    },
-    "isCustom": {
-      "type": "bool",
-      "default": true,
-      "notStorable": true
     },
     "attributeType": {
       "type": "varchar",
@@ -344,11 +349,6 @@
     "product": {
       "type": "belongsTo",
       "entity": "Product"
-    },
-    "productFamilyAttribute": {
-      "type": "belongsTo",
-      "foreign": "productAttributeValues",
-      "entity": "ProductFamilyAttribute"
     },
     "attribute": {
       "type": "belongsTo",

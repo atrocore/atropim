@@ -23,7 +23,6 @@
             "seeMoreDisabled": false,
             "readOnly": false,
             "tooltip": false,
-            "isCustom": false,
             "isMultilang": true
         },
         "isActive": {
@@ -32,8 +31,7 @@
             "default": false,
             "audited": false,
             "readOnly": false,
-            "tooltip": false,
-            "isCustom": false
+            "tooltip": false
         },
         "createdAt": {
             "type": "datetime",
@@ -74,8 +72,7 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "noLoad": true,
-            "importDisabled": true,
-            "isCustom": false
+            "importDisabled": true
         },
         "backwardAssociation": {
             "type": "link",
@@ -88,8 +85,7 @@
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
             "noLoad": true,
-            "importDisabled": true,
-            "isCustom": true
+            "importDisabled": true
         }
     },
     "links": {
@@ -120,22 +116,19 @@
             "foreign": "association",
             "entity": "AssociatedProduct",
             "layoutRelationshipsDisabled": true,
-            "audited": false,
-            "isCustom": false
+            "audited": false
         },
         "backwardAssociation": {
             "type": "belongsTo",
             "foreign": "associations",
             "entity": "Association",
-            "audited": false,
-            "isCustom": true
+            "audited": false
         },
         "associations": {
             "type": "hasMany",
             "foreign": "backwardAssociation",
             "entity": "Association",
             "audited": false,
-            "isCustom": true,
             "layoutRelationshipsDisabled": true
         }
     },

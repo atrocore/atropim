@@ -31,8 +31,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         template: 'pim:product/record/detail',
 
-        catalogTreeData: null,
-
         notSavedFields: ['image'],
 
         isCatalogTreePanel: false,
@@ -64,9 +62,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall'
-                && this.getAcl().check('Catalog', 'read') && this.getAcl().check('Category', 'read')) {
-                this.isCatalogTreePanel = true;
+            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
+                this.isCatalogTreePanel = this.isTreeAllowed();
                 this.setupCatalogTreePanel();
             }
 
@@ -84,29 +81,41 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             });
         },
 
+        isTreeAllowed() {
+            let result = false;
+
+            this.getMetadata().get('clientDefs.Product.treeScopes').forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                    if (!localStorage.getItem('treeScope')) {
+                        localStorage.setItem('treeScope', scope);
+                    }
+                }
+            })
+
+            return result;
+        },
+
         setupCatalogTreePanel() {
-            this.createView('catalogTreePanel', 'pim:views/product/record/catalog-tree-panel', {
+            if (!this.isTreeAllowed()) {
+                return;
+            }
+
+            this.createView('catalogTreePanel', 'pim:views/category/record/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
                 model: this.model
             }, view => {
-                view.listenTo(view, 'select-category', data => this.navigateToList(data));
+                view.listenTo(view, 'select-node', data => {
+                    this.selectNode(data);
+                });
+                view.listenTo(view, 'tree-init', () => {
+                    this.treeInit(view);
+                });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
             });
-        },
-
-        navigateToList(data) {
-            this.catalogTreeData = Espo.Utils.cloneDeep(data || {});
-            const options = {
-                isReturn: true,
-                callback: this.expandCatalogTree.bind(this)
-            };
-            this.getRouter().navigate(`#${this.scope}`);
-            this.getRouter().dispatch(this.scope, null, options);
-        },
-
-        expandCatalogTree(list) {
-            list.sortCollectionWithCatalogTree(this.catalogTreeData);
-            list.render();
         },
 
         data() {
@@ -116,6 +125,69 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return _.extend({
                 isCatalogTreePanel: this.isCatalogTreePanel
             }, data)
+        },
+
+        selectNode(data) {
+            localStorage.setItem('selectedNodeId', data.id);
+            localStorage.setItem('selectedNodeRoute', data.route);
+
+            window.location.href = `/#Product`;
+        },
+
+        treeInit(view) {
+            if (view.treeScope === 'ProductFamily') {
+                if (view.model.get('productFamilyId')) {
+                    $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
+                        view.selectTreeNode(view.parseRoute(pf.categoryRoute), view.model.get('productFamilyId'));
+                    });
+                }
+            }
+
+            if (view.treeScope === 'Category') {
+                $.ajax({url: `Product/${view.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
+                    if (response.total && response.total > 0) {
+                        let opened = {};
+                        this.selectCategoryNode(response.list, view, opened);
+                    }
+                });
+            }
+        },
+
+        selectCategoryNode(categories, view, opened) {
+            if (categories.length > 0) {
+                let category = categories.shift();
+                let route = [];
+                view.parseRoute(category.categoryRoute).forEach(id => {
+                    if (!opened[id]) {
+                        route.push(id);
+                    }
+                });
+
+                let $tree = view.getTreeEl();
+                this.openCategoryNodes($tree, route, opened, () => {
+                    this.selectCategoryNode(categories, view, opened);
+                    let node = $tree.tree('getNodeById', category.id);
+                    $(node.element).addClass('jqtree-selected');
+                });
+            }
+        },
+
+        openCategoryNodes($tree, route, opened, callback) {
+            if (route.length > 0) {
+                let id = route.shift();
+                let node = $tree.tree('getNodeById', id);
+                $tree.tree('openNode', node, () => {
+                    opened[id] = true;
+                    this.openCategoryNodes($tree, route, opened, callback);
+                });
+            } else {
+                callback();
+            }
+        },
+
+        treeReset(view) {
+            localStorage.removeItem('selectedNodeId');
+            localStorage.removeItem('selectedNodeRoute');
         },
 
         applyOverviewFilters() {
@@ -434,7 +506,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 Espo.Ui.confirm(confirmMessage, {
                     confirmText: self.translate('Apply'),
                     cancelText: self.translate('Cancel'),
-                    cancelCallback(){
+                    cancelCallback() {
                         self.enableButtons();
                         self.trigger('cancel:save');
                     }

@@ -77,7 +77,6 @@
     "itemsInRow": "Элементов в ряд",
     "productImage": "Изображение продукта",
     "selectAttributeGroup": "Выбрать группу атрибута",
-    "removeAllCustomAttributes": "Удалить все нестандартные атрибуты",
     "draft": "Черновик",
     "prepared": "Подготовлено",
     "reviewed": "Отредактировано",
@@ -124,7 +123,6 @@
     "withoutImageAssets": "Без ассетов"
   },
   "messages": {
-    "areYouSureYouWantToRemoveAllCustomAttributes": "Вы уверены, что хотите удалить все пользовательские атрибуты?",
     "productCatalogChangeConfirm": "Вы уверены, что хотите установить/удалить/изменить каталог для продукта? Все категории разрешенные для оригинального(предыдущего) каталога потеряют связь с продуктом."
   },
   "exceptions": {

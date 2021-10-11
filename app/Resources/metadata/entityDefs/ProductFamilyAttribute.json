@@ -78,27 +78,6 @@
       "type": "link",
       "view": "pim:views/product-family-attribute/fields/channel"
     },
-    "channels": {
-      "type": "linkMultiple",
-      "notStorable": true,
-      "view": "pim:views/product-family-attribute/fields/channels",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
-      "noLoad": false
-    },
-    "productAttributeValues": {
-      "type": "linkMultiple",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
-      "noLoad": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -142,16 +121,6 @@
       "type": "belongsTo",
       "foreign": "productFamilyAttributes",
       "entity": "Channel"
-    },
-    "channels": {
-      "type": "hasMany",
-      "entity": "Channel"
-    },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "productFamilyAttribute",
-      "entity": "ProductAttributeValue",
-      "layoutRelationshipsDisabled": true
     },
     "createdBy": {
       "type": "belongsTo",

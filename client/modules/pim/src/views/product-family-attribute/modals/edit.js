@@ -35,6 +35,7 @@ Espo.define('pim:views/product-family-attribute/modals/edit', 'views/modals/edit
             Dep.prototype.setup.call(this);
 
             this.listenTo(this, 'after:save', model => {
+                $('.action[data-action=refresh][data-panel=productFamilyAttributes]').click();
                 /**
                  * Show another notify message if attribute '%s' was linked not for all chosen channels
                  */

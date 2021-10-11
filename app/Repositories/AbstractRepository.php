@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
@@ -41,6 +42,8 @@ use Treo\Core\Utils\Util;
  */
 abstract class AbstractRepository extends Base
 {
+    public const CODE_PATTERN = '/^[\p{Ll}0-9_]*$/u';
+
     /**
      * @var string
      */
@@ -73,7 +76,7 @@ abstract class AbstractRepository extends Base
 
     /**
      * @param string $id
-     * @param array $teamsIds
+     * @param array  $teamsIds
      */
     public function changeMultilangTeams(string $id, string $entityType, array $teamsIds)
     {
@@ -156,14 +159,15 @@ abstract class AbstractRepository extends Base
         $underscoreField = Util::toUnderScore($field);
 
         if ($config == $this->ownership) {
-            $sql = "UPDATE {$table} SET {$underscoreField}_id = '{$entity->get($field . 'Id')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_{$underscoreField} = 1 AND deleted = 0;";
+            $sql
+                = "UPDATE {$table} SET {$underscoreField}_id = '{$entity->get($field . 'Id')}' WHERE {$relatedField} = '{$entity->id}' AND is_inherit_{$underscoreField} = 1 AND deleted = 0;";
             $this->getEntityManager()->nativeQuery($sql);
         }
     }
 
     /**
      * @param Entity $entity
-     * @param array $teamsIds
+     * @param array  $teamsIds
      */
     public function setInheritedOwnershipTeams(Entity $entity, array $teamsIds, string $locale = '')
     {
@@ -219,7 +223,7 @@ abstract class AbstractRepository extends Base
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function setInheritedOwnership(Entity $entity)
     {
@@ -238,8 +242,8 @@ abstract class AbstractRepository extends Base
     }
 
     /**
-     * @param Entity $entity
-     * @param string $target
+     * @param Entity      $entity
+     * @param string      $target
      * @param string|null $config
      *
      */
@@ -283,7 +287,7 @@ abstract class AbstractRepository extends Base
                         $inheritedField = $target;
                     }
                     $entity->set($target . 'Id', $inheritedEntity->get($inheritedField . 'Id'));
-                    $entity->set($target . 'Name', $inheritedEntity->get($inheritedField .  'Name'));
+                    $entity->set($target . 'Name', $inheritedEntity->get($inheritedField . 'Name'));
                 }
 
                 $this->getEntityManager()->saveEntity($entity, ['skipAll' => true]);

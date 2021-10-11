@@ -29,39 +29,12 @@
 
 declare(strict_types=1);
 
-namespace Pim\Services;
+namespace Pim\Core\Exceptions;
 
-use Espo\Core\Templates\Services\Base;
-use Espo\Core\Utils\Util;
-use Espo\ORM\Entity;
+use Espo\Core\Exceptions\BadRequest;
 
-/**
- * Class ProductFamilyAttribute
- */
-class ProductFamilyAttribute extends Base
+class ProductFamilyAttributeAlreadyExists extends BadRequest
 {
-    /**
-     * @var array
-     */
-    protected $mandatorySelectAttributeList = ['scope', 'isRequired'];
-
-    /**
-     * @inheritDoc
-     */
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        if (!empty($attribute = $entity->get('attribute'))) {
-            $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
-            $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-            $entity->set('sortOrder', $attribute->get('sortOrder'));
-            if (!empty($this->getConfig()->get('isMultilangActive'))) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-                    $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
-                }
-            }
-        }
-    }
 }
+
+

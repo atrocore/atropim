@@ -34,11 +34,20 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
         events: {
             'click button[data-action="collapsePanel"]': function () {
                 this.actionCollapsePanel();
+            },
+
+            'click .reset-tree-filter': function () {
+                this.trigger('tree-reset');
             }
         },
 
         setup() {
             this.scope = this.options.scope || this.scope;
+            this.treeScope = this.scope;
+
+            if (this.scope === 'Product') {
+                this.treeScope = localStorage.getItem('treeScope') || 'Category';
+            }
 
             this.wait(true);
             this.buildSearch();
@@ -47,7 +56,8 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
 
         data() {
             return {
-                scope: this.scope
+                scope: this.scope,
+                treeScope: this.treeScope
             }
         },
 
@@ -71,81 +81,164 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             }, 100);
         },
 
-        selectTreeNode($tree, route, model) {
+        selectTreeNode(route, id) {
+            const $tree = this.getTreeEl();
+
+            $tree.tree('selectNode', $tree.tree('getNodeById', id));
+
             if (route.length > 0) {
-                let first = route.shift();
-                $tree.tree('openNode', $tree.tree('getNodeById', first), () => {
-                    this.selectTreeNode($tree, route, model);
+                let node = $tree.tree('getNodeById', route.shift());
+                $tree.tree('openNode', node, () => {
+                    this.selectTreeNode(route, id);
                 });
-            } else {
-                $tree.tree('selectNode', $tree.tree('getNodeById', model.get('id')));
             }
         },
 
-        buildTree() {
-            const self = this;
-            const $tree = this.$el.find('.category-tree');
+        parseRoute(routeStr) {
+            let route = [];
+            (routeStr || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
 
+            return route;
+        },
+
+        buildTree() {
+            const $tree = this.getTreeEl();
+
+            $tree.tree('destroy');
             $tree.tree({
-                dataUrl: 'Category/action/Tree',
+                dataUrl: this.treeScope + '/action/Tree',
                 selectable: true,
                 dragAndDrop: true,
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>')
             }).on('tree.init', () => {
-                    if (self.model && self.model.get('id')) {
-                        let route = [];
-                        (self.model.get('categoryRoute') || '').split('|').forEach(item => {
-                            if (item) {
-                                route.push(item);
-                            }
-                        });
-
-                        self.selectTreeNode($tree, route, self.model);
-                    }
+                    this.trigger('tree-init');
                 }
             ).on('tree.move', e => {
                 e.preventDefault();
+
+                const parentName = this.treeScope === 'Category' ? 'categoryParent' : 'parent';
+
                 let moveInfo = e.move_info;
                 let data = {
                     _position: moveInfo.position,
-                    _target: moveInfo.target_node.id,
-                    categoryParentId: null,
-                    categoryParentName: null
+                    _target: moveInfo.target_node.id
                 };
 
+                data[parentName + 'Id'] = null;
+                data[parentName + 'Name'] = null;
+
                 if (moveInfo.position === 'inside') {
-                    data.categoryParentId = moveInfo.target_node.id;
-                    data.categoryParentName = moveInfo.target_node.name;
+                    data[parentName + 'Id'] = moveInfo.target_node.id;
+                    data[parentName + 'Name'] = moveInfo.target_node.name;
                 } else if (moveInfo.target_node.parent.id) {
-                    data.categoryParentId = moveInfo.target_node.parent.id;
-                    data.categoryParentName = moveInfo.target_node.parent.name;
+                    data[parentName + 'Id'] = moveInfo.target_node.parent.id
+                    data[parentName + 'Name'] = moveInfo.target_node.parent.name;
                 }
 
-                this.ajaxPatchRequest(`Category/${moveInfo.moved_node.id}`, data).success(response => {
+                this.ajaxPatchRequest(`${this.treeScope}/${moveInfo.moved_node.id}`, data).success(response => {
                     moveInfo.do_move();
+                    if (this.model) {
+                        this.model.fetch();
+                        $('.action[data-action=refresh]').click();
+                    }
                 });
             }).on('tree.click', e => {
                 e.preventDefault();
 
                 if ($(e.click_event.target).hasClass('jqtree-title')) {
-                    window.location.href = `/#Category/view/${e.node.id}`;
+                    let node = e.node;
+
+                    let route = [];
+                    while (node.parent.id) {
+                        route.push(node.parent.id);
+                        node = node.parent;
+                    }
+
+                    let data = {id: e.node.id, route: ''};
+                    if (route.length > 0) {
+                        data['route'] = "|" + route.reverse().join('|') + "|";
+                    }
+
+                    this.selectNode(data);
                 }
             });
         },
 
+        selectNode(data) {
+            this.trigger('select-node', data);
+        },
+
+        getTreeEl() {
+            return this.$el.find('.category-tree');
+        },
+
         buildSearch() {
-            let elSelector = '.catalog-tree-panel > .category-panel > .category-search';
             this.createView('categorySearch', 'pim:views/category/record/tree-panel/category-search', {
-                el: elSelector,
-                scope: this.scope
+                el: '.catalog-tree-panel > .category-panel > .category-search',
+                scope: this.treeScope,
             }, view => {
                 view.render();
-                this.listenTo(view, 'category-search-select', category => {
-                    window.location.href = `/#Category/view/${category.id}`;
+                this.listenTo(view, 'category-search-select', item => {
+                    this.selectNode({id: item.id, route: item.categoryRoute});
                 });
             });
+
+            const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            if (treeScopes) {
+                this.getModelFactory().create(this.scope, model => {
+                    model.set('scopesEnum', localStorage.getItem('treeScope') || 'Category');
+
+                    let options = [];
+
+                    treeScopes.forEach(scope => {
+                        if (this.getAcl().check(scope, 'read')) {
+                            options.push(scope);
+                        }
+                    })
+
+                    let translatedOptions = {};
+                    options.forEach(scope => {
+                        translatedOptions[scope] = this.translate(scope, 'scopeNames', 'Global');
+                    });
+
+                    this.createView('scopesEnum', 'views/fields/enum', {
+                        prohibitedEmptyValue: true,
+                        model: model,
+                        el: `.catalog-tree-panel > .category-panel > .scopes-enum`,
+                        defs: {
+                            name: 'scopesEnum',
+                            params: {
+                                options: options,
+                                translatedOptions: translatedOptions
+                            }
+                        },
+                        mode: 'edit'
+                    }, view => {
+                        view.render();
+                        this.listenTo(model, 'change:scopesEnum', () => {
+                            this.treeScope = model.get('scopesEnum');
+
+                            localStorage.setItem('treeScope', this.treeScope);
+                            localStorage.removeItem('selectedNodeId');
+                            localStorage.removeItem('selectedNodeRoute');
+
+                            const searchPanel = this.getView('categorySearch');
+                            searchPanel.scope = this.treeScope;
+                            searchPanel.reRender();
+
+                            this.buildTree();
+
+                            $('button[data-action="search"]').click();
+                        });
+                    });
+                });
+            }
         },
 
         actionCollapsePanel(type) {
@@ -156,7 +249,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
                 isCollapsed = true;
             }
 
-            const $list = $('#category-list-table');
+            const $list = $('#tree-list-table');
 
             if (isCollapsed) {
                 $categoryPanel.removeClass('hidden');

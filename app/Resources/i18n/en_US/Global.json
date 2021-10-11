@@ -73,6 +73,8 @@
     "role": "Role"
   },
   "labels": {
+    "Reset selection": "Reset selection",
+    "typeToSearch": "Type to search...",
     "useDragAndDrop": "Use Drag & Drop to reorder",
     "categorySettings": "Category settings",
     "cascade": "Cascade",

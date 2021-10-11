@@ -8,7 +8,6 @@
     "attribute": "Атрибут",
     "isRequired": "Обязательно",
     "productFamilyAttribute": "Атрибут продуктовой семьи",
-    "isCustom": "Настраевамый",
     "value": "Значение",
     "scope": "Область действия",
     "channel": "Канал"
@@ -25,10 +24,6 @@
   "exceptions": {
     "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",
     "productAttributeAlreadyExists": "Атрибут '%s' для канала %s уже связан.",
-    "noSuchChannelInProduct": "Для добавления такого атрибута продукта выберите канал, доступный для продукта.",
-    "attributeInheritedFromProductFamilyCannotBeDeleted": "Атрибут, унаследованный от продуктовой семьи, не может быть удален.",
-    "attributeInheritedFromProductFamilyCannotBeChanged": "Атрибут, унаследованный от продуктовой семьи, не может быть изменен.",
-    "onlyValueOrOwnershipCanBeChanged": "Для настраиваемого атрибута продукта можно изменить только значение или информацию о владельце.",
     "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Атрибут %s должен иметь уникальное значение."
   }

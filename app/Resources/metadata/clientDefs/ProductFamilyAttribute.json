@@ -22,10 +22,6 @@
             {
               "type": "isNotEmpty",
               "attribute": "attributeId"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
             }
           ]
         },
@@ -39,46 +35,6 @@
             {
               "type": "isNotEmpty",
               "attribute": "attributeId"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      },
-      "channels": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "scope",
-              "value": "Channel"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "attributeId"
-            },
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "scope",
-              "value": "Channel"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "attributeId"
-            },
-            {
-              "type": "isEmpty",
-              "attribute": "id"
             }
           ]
         }

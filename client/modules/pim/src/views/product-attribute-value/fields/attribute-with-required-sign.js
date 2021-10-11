@@ -29,15 +29,19 @@
 Espo.define('pim:views/product-attribute-value/fields/attribute-with-required-sign', 'pim:views/product-attribute-value/fields/attribute',
     Dep => Dep.extend({
 
-        data() {
-            let data = Dep.prototype.data.call(this);
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            const $a = this.$el.find('a');
+
+            if (this.model.get('isInherited')) {
+                $a.attr('style', 'font-style: italic');
+            }
 
             if (this.model.get('isRequired')) {
-                data.nameValue += ' *';
-                data.titleValue += ' *';
+                $a.html($a.html() + ' *');
             }
-            return data;
-        }
+        },
 
     })
 );

@@ -36,6 +36,25 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
  */
 class ProductFamily extends AbstractSelectManager
 {
+    protected function boolFilterNotParents(&$result): void
+    {
+        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+
+        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        $result['whereClause'][] = [
+            'id!=' => $repository->getParentsIds($repository->get((string)$this->getSelectCondition('notParents')))
+        ];
+    }
+
+    protected function boolFilterNotChildren(&$result): void
+    {
+        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+
+        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        $result['whereClause'][] = [
+            'id!=' => $repository->getChildrenIds($repository->get((string)$this->getSelectCondition('notChildren')))
+        ];
+    }
 
     /**
      * NotLinkedWithAttribute filter
@@ -44,7 +63,6 @@ class ProductFamily extends AbstractSelectManager
      */
     protected function boolFilterNotLinkedWithAttribute(&$result)
     {
-
         $productFamiliesIds = $this->getEntityManager()
             ->getRepository('ProductFamily')
             ->select(['id'])

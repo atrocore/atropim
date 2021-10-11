@@ -2,7 +2,15 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-sitemap",
   "boolFilterList": [
-    "onlyMy"
+    "onlyMy",
+    "notEntity",
+    "notParents",
+    "notChildren"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity",
+    "notParents",
+    "notChildren"
   ],
   "disabledMassActions": [
     "merge"
@@ -34,9 +42,7 @@
       "selectBoolFilterList": [
         "notLinkedWithProductFamily"
       ],
-      "select": false,
-      "createAction": "createRelatedConfigured",
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "createAction": "createRelatedConfigured"
     }
   },
   "dynamicLogic": {

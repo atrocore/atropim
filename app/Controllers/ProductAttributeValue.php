@@ -39,24 +39,4 @@ use Espo\Core\Templates\Controllers\Base;
  */
 class ProductAttributeValue extends Base
 {
-    /**
-     * @param mixed $params
-     * @param mixed $data
-     * @param mixed $request
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    public function actionRemoveAllNotInheritedAttributes($params, $data, $request): bool
-    {
-        if (!$request->isPost() || !property_exists($data, 'productId')) {
-            throw new BadRequest();
-        }
-
-        if (property_exists($data, 'tabId')) {
-            return $this->getRecordService()->removeByTabAllNotInheritedAttributes((string)$data->productId, (string)$data->tabId);
-        }
-
-        return $this->getRecordService()->removeAllNotInheritedAttributes((string)$data->productId);
-    }
 }

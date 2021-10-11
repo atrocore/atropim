@@ -1,11 +1,8 @@
 [
   {
     "name": "attribute",
-    "notSortable": true
-  },
-  {
-    "name": "isRequired",
-    "notSortable": true
+    "notSortable": true,
+    "view": "pim:views/product-family-attribute/fields/attribute-with-inheritance-sign"
   },
   {
     "name": "channel",

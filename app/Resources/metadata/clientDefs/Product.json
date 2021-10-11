@@ -6,6 +6,9 @@
   "quickCreateOptions": {
     "fullFormDisabled": true
   },
+  "treeScopes": [
+    "Category"
+  ],
   "boolFilterList": [
     "onlyMy",
     "ownedByMe",
@@ -24,6 +27,7 @@
     "notLinkedWithProductSerie",
     "onlyCatalogProducts",
     "linkedWithCategory",
+    "linkedWithProductFamily",
     "activeForChannel"
   ],
   "hiddenBoolFilterList": [
@@ -38,6 +42,7 @@
     "notLinkedWithProductSerie",
     "onlyCatalogProducts",
     "linkedWithCategory",
+    "linkedWithProductFamily",
     "activeForChannel"
   ],
   "disabledMassActions": [

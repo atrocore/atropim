@@ -4,19 +4,17 @@
     "attribute": "Attribute",
     "isRequired": "Is required",
     "channel": "Channel",
-    "channels": "Channels",
     "scope": "Scope"
   },
   "links": {
     "productFamily": "Product Family",
     "attribute": "Attribute",
-    "channel": "Channel",
-    "channels": "Channels"
+    "channel": "Channel"
   },
   "labels": {
     "Create ProductFamilyAttribute": "Create Product Family Attribute",
-    "unlinkPreserveValues": "Unlink, preserve values",
-    "unlinkRemoveValues": "Unlink, remove values"
+    "unlinkRelatedAttribute": "Unlink",
+    "cascadeUnlinkRelatedAttribute": "Unlink Hierarchically"
   },
   "options": {
     "scope": {
@@ -26,7 +24,7 @@
   },
   "messages": {
     "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels.",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues": "Are you sure, you want to unlink the attribute from the product family and preserve all the attribute values?",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues": "Are you sure, you want to unlink the attribute from the product family and remove all the attribute values?"
+    "unlinkRelatedAttribute": "Are you sure you want to unlink the selected attribute only from the selected Product Family? All the Child Product Families and related Products will retain this link.",
+    "cascadeUnlinkRelatedAttribute": "Are you sure you want to unlink the selected attribute from the selected Product Family, its childs and related Products? All related Attribute Values will be removed."
   }
 }

@@ -554,9 +554,11 @@ class Product extends AbstractSelectManager
      */
     protected function boolFilterLinkedWithCategory(array &$result)
     {
-        /** @var \Pim\Entities\Category $category */
-        $category = $this->getEntityManager()->getEntity('Category', $this->getSelectCondition('linkedWithCategory'));
-        if (empty($category)) {
+        if (empty($id = $this->getSelectCondition('linkedWithCategory'))) {
+            return;
+        }
+
+        if (empty($category = $this->getEntityManager()->getEntity('Category', $id))) {
             throw new BadRequest('No such category');
         }
 
@@ -569,6 +571,27 @@ class Product extends AbstractSelectManager
 
         // set custom where
         $result['customWhere'] .= " AND product.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=0 AND category_id IN ('$ids'))";
+    }
+
+    protected function boolFilterLinkedWithProductFamily(array &$result)
+    {
+        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+
+        if (empty($id = $this->getSelectCondition('linkedWithProductFamily'))) {
+            return;
+        }
+
+        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        if (empty($pf = $repository->get($id))) {
+            throw new BadRequest('No such Product Family');
+        }
+
+        $ids = $repository->getChildrenIds($pf);
+        $ids[] = $pf->get('id');
+
+        $result['whereClause'][] = [
+            'productFamilyId' => $ids
+        ];
     }
 
     /**

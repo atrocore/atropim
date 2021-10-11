@@ -40,7 +40,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             'attributeId',
             'attributeName',
             'isRequired',
-            'productFamilyAttributeId',
             'scope',
             'value',
             'attributeIsMultilang',
@@ -178,13 +177,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                         action: 'selectAttributeGroup'
                     });
                 }
-            }
-
-            if (this.getAcl().check('ProductAttributeValue', 'remove')) {
-                this.actionList.push({
-                    label: 'removeAllCustomAttributes',
-                    action: 'removeAllNotInheritedAttributes'
-                });
             }
 
             this.setupActions();
@@ -381,23 +373,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             });
         },
 
-        actionRemoveAllNotInheritedAttributes() {
-            this.confirm({
-                message: this.translate("areYouSureYouWantToRemoveAllCustomAttributes", 'messages', 'Product'),
-                confirmText: this.translate('Apply')
-            }, function () {
-                this.notify('Saving...');
-                this.ajaxPostRequest(`ProductAttributeValue/action/RemoveAllNotInheritedAttributes`, {
-                    productId: this.model.id,
-                    tabId: this.defs.tabId,
-                }).then(response => {
-                    this.notify('Saved', 'success');
-                    this.model.trigger('after:unrelate', this.link);
-                    this.actionRefresh();
-                });
-            }, this);
-        },
-
         getFullEntityList(url, params, callback, container) {
             if (url) {
                 container = container || [];
@@ -515,7 +490,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         setGroup(params, model, groups) {
             let group = groups.find(item => item.key === params.key);
             if (group) {
-                group.editable = group.editable && model.get('isCustom');
                 group.rowList.push(model.id);
                 group.rowList.sort((a, b) => this.collection.get(a).get('sortOrder') - this.collection.get(b).get('sortOrder'));
             } else {
@@ -524,7 +498,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     id: !this.groupsWithoutId.includes(params.key) ? params.key : null,
                     label: params.label,
                     rowList: [model.id],
-                    editable: model.get('isCustom')
+                    editable: true
                 });
             }
         },

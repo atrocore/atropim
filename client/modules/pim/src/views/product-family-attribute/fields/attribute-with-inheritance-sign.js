@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,19 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/product-family-attribute/fields/attribute-with-inheritance-sign', 'pim:views/product-family-attribute/fields/attribute',
+    Dep => Dep.extend({
 
-namespace Pim\Jobs;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-use Espo\Core\Jobs\Base;
+            const $a = this.$el.find('a');
 
-/**
- * Class UpdatePfa
- */
-class UpdatePfa extends Base
-{
-    public function run(): void
-    {
-        $this->getEntityManager()->getRepository('ProductFamilyAttribute')->actualizePfa();
-    }
-}
+            if (this.model.get('isInherited')) {
+                $a.attr('style', 'font-style: italic');
+            }
+
+            if (this.model.get('isRequired')) {
+                $a.html($a.html() + ' *');
+            }
+        },
+
+    })
+);
+

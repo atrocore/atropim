@@ -35,7 +35,7 @@ Espo.define('pim:views/product-family/record/row-actions/product-family-attribut
             if (this.options.acl.delete) {
                 list.push({
                     action: 'unlinkRelatedAttribute',
-                    label: this.translate('unlinkPreserveValues', 'labels', 'ProductFamilyAttribute'),
+                    label: this.translate('unlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
                     data: {
                         id: this.model.id
                     }
@@ -43,7 +43,7 @@ Espo.define('pim:views/product-family/record/row-actions/product-family-attribut
 
                 list.push({
                     action: 'removeRelatedAttribute',
-                    label: this.translate('unlinkRemoveValues', 'labels', 'ProductFamilyAttribute'),
+                    label: this.translate('cascadeUnlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
                     data: {
                         id: this.model.id
                     }

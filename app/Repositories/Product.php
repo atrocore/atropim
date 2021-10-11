@@ -165,7 +165,6 @@ class Product extends AbstractRepository
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
-            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->actualizePfa((string)$entity->get('id'));
             $this->filterByChannel($entity, $params);
             $params['limit'] = 9999;
         }
@@ -213,6 +212,7 @@ class Product extends AbstractRepository
 
         $params['customWhere'] .= " AND (product_attribute_value.scope='Global' OR (product_attribute_value.scope='Channel' AND product_attribute_value.channel_id IN ('$channelsIds')))";
     }
+
 
     /**
      * Is product can linked with non-lead category
@@ -556,6 +556,35 @@ class Product extends AbstractRepository
         }
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        if ($this->getEntityManager()->getPDO()->inTransaction()) {
+            return $this->runSave($entity, $options);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = $this->runSave($entity, $options);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function runSave(Entity $entity, array $options)
+    {
+        if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
+            $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
+            foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
+                $pfaRepository->createProductAttributeValues($pfa);
+            }
+        }
+        return parent::save($entity, $options);
+    }
+
     /**
      * @inheritDoc
      */
@@ -609,7 +638,6 @@ class Product extends AbstractRepository
         // save attributes
         $this->saveAttributes($entity);
 
-        // update pavs by product family
         if ($entity->isAttributeChanged('productFamilyId')) {
             if (empty($entity->skipUpdateProductAttributesByProductFamily) && empty($entity->isDuplicate)) {
                 $this->updateProductAttributesByProductFamily($entity);
@@ -634,16 +662,91 @@ class Product extends AbstractRepository
         $this->setInheritedOwnership($entity);
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $entity->get('id')])
+            ->find();
+
+        foreach ($pavs as $pav) {
+            $this->getEntityManager()->removeEntity($pav, ['skipProductAttributeValueHook' => true]);
+        }
+
+        parent::afterRemove($entity, $options);
+    }
+
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'categories') {
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Category that we should be related with Product.');
+            }
+
+            if (is_string($foreign)) {
+                $foreign = $this->getEntityManager()->getEntity('Product', $foreign);
+            }
+
+            $this->isCategoryAlreadyRelated($entity, $foreign);
+            $this->isCategoryFromCatalogTrees($entity, $foreign);
+            $this->isProductCanLinkToNonLeafCategory($foreign);
+        }
+
+        if ($relationName == 'channels' && !$entity->isSkippedValidation('isChannelAlreadyRelated')) {
+            $this->isChannelAlreadyRelated($entity, $foreign);
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'categories') {
+            $this->updateProductCategorySortOrder($entity, $foreign);
+            $this->linkCategoryChannels($entity, $foreign);
+        }
+
+        if ($relationName == 'channels') {
+            // set from_category_tree param
+            if (!empty($entity->fromCategoryTree)) {
+                $this->updateChannelRelationData($entity, $foreign, null, true);
+            }
+        }
+
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName == 'channels' && empty($entity->skipIsFromCategoryTreeValidation)) {
+            $productId = (string)$entity->get('id');
+            $channelId = (string)$foreign->get('id');
+
+            $channelRelationData = $this->getChannelRelationData($productId);
+
+            if (!empty($channelRelationData[$channelId]['isFromCategoryTree'])) {
+                throw new BadRequest($this->translate("channelProvidedByCategoryTreeCantBeUnlinkedFromProduct", 'exceptions', 'Product'));
+            }
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+    }
+
     /**
      * @inheritDoc
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+        if ($relationName == 'categories') {
+            $this->linkCategoryChannels($entity, $foreign, true);
+        }
 
         if ($relationName == 'channels') {
             $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
         }
+
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**
@@ -700,38 +803,20 @@ class Product extends AbstractRepository
      */
     protected function updateProductAttributesByProductFamily(Entity $product): bool
     {
-        // unlink attributes from old product family
-        if (!$product->isNew() && !empty($pavs = $product->get('productAttributeValues')) && $pavs->count() > 0) {
-            foreach ($pavs as $pav) {
-                if (!empty($pav->get('productFamilyAttributeId'))) {
-                    $pav->set('productFamilyAttributeId', null);
-                    $this->getEntityManager()->saveEntity($pav);
-                }
-            }
-        }
-
         if (empty($productFamily = $product->get('productFamily'))) {
             return true;
         }
 
-        // get product family attributes
-        $productFamilyAttributes = $productFamily->get('productFamilyAttributes');
-
-        if (count($productFamilyAttributes) > 0) {
-            /** @var \Pim\Repositories\ProductAttributeValue $repository */
-            $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
-
+        if (!empty($productFamilyAttributes = $productFamily->get('productFamilyAttributes')) && count($productFamilyAttributes) > 0) {
             foreach ($productFamilyAttributes as $productFamilyAttribute) {
-                // create
-                $productAttributeValue = $repository->get();
+                $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
                 $productAttributeValue->set(
                     [
-                        'productId'                => $product->get('id'),
-                        'attributeId'              => $productFamilyAttribute->get('attributeId'),
-                        'productFamilyAttributeId' => $productFamilyAttribute->get('id'),
-                        'isRequired'               => $productFamilyAttribute->get('isRequired'),
-                        'scope'                    => $productFamilyAttribute->get('scope'),
-                        'channelId'                => $productFamilyAttribute->get('channelId')
+                        'productId'   => $product->get('id'),
+                        'attributeId' => $productFamilyAttribute->get('attributeId'),
+                        'isRequired'  => $productFamilyAttribute->get('isRequired'),
+                        'scope'       => $productFamilyAttribute->get('scope'),
+                        'channelId'   => $productFamilyAttribute->get('channelId')
                     ]
                 );
 
@@ -748,20 +833,10 @@ class Product extends AbstractRepository
                 $productAttributeValue->skipVariantValidation = true;
                 $productAttributeValue->skipProductChannelValidation = true;
 
-                // save
                 try {
                     $this->getEntityManager()->saveEntity($productAttributeValue);
-                } catch (ProductAttributeAlreadyExists $e) {
-                    if (!empty($copy = $repository->findCopy($productAttributeValue))) {
-                        $copy->set('productFamilyAttributeId', $productFamilyAttribute->get('id'));
-                        $copy->set('isRequired', $productAttributeValue->get('isRequired'));
-
-                        $copy->skipVariantValidation = true;
-                        $copy->skipPfValidation = true;
-                        $copy->skipProductChannelValidation = true;
-
-                        $this->getEntityManager()->saveEntity($copy);
-                    }
+                } catch (BadRequest $e) {
+                    // ignore
                 }
             }
         }

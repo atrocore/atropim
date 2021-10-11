@@ -4,12 +4,17 @@
 </button>
 <div class="category-panel">
     <div class="panel-group text-center">
-        <div class="btn-group category-buttons">
-            <a href="/#Category" class="btn btn-default active">{{translate 'All'}}</a>
+        <div class="btn-group">
+            <a href="/#{{scope}}" class="btn btn-default active reset-tree-filter">{{translate 'Reset selection'}}</a>
         </div>
     </div>
     <div class="panel-group category-search">
         {{{categorySearch}}}
     </div>
+    {{#if scopesEnum}}
+    <div class="panel-group scopes-enum">
+        {{{scopesEnum}}}
+    </div>
+    {{/if}}
     <div class="panel-group category-tree"></div>
 </div>

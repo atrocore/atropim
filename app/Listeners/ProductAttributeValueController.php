@@ -70,33 +70,4 @@ class ProductAttributeValueController extends AbstractListener
             $event->setArgument('result', $data['result']);
         }
     }
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     * @throws Error
-     */
-    public function beforeActionUpdate(Event $event)
-    {
-        // get data
-        $data = $event->getArguments();
-
-        if (isset($data['params']['id']) && isset($data['data']->productId)) {
-            $productAttribute = $this->getEntityManager()->getEntity('ProductAttributeValue', $data['params']['id']);
-
-            // check is ProductFamily attribute
-            if (!empty($productAttribute->get('productFamilyAttributeId'))) {
-                $message = $this
-                    ->getLanguage()
-                    ->translate(
-                        'You can\'t change product in attribute from Product Family',
-                        'exceptions',
-                        'ProductAttributeValue'
-                    );
-
-                throw new BadRequest($message);
-            }
-        }
-    }
 }

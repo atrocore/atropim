@@ -5,19 +5,17 @@
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
     "channel": "Kanal",
-    "channels": "Kanäle",
     "scope": "Scope"
   },
   "links": {
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
-    "channel": "Kanal",
-    "channels": "Kanäle"
+    "channel": "Kanal"
   },
   "labels": {
     "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen",
-    "unlinkPreserveValues": "Link entfernen, Werte beibehalten",
-    "unlinkRemoveValues": "Link und Werte entfernen"
+    "unlinkRelatedAttribute": "Verknüpfung aufheben",
+    "cascadeUnlinkRelatedAttribute": "Verknüpfung hierarchisch aufheben"
   },
   "options": {
     "scope": {
@@ -27,7 +25,7 @@
   },
   "messages": {
     "savedForNotAllChannels": "Attribut '%s' wurde nicht für alle ausgewählten Kanäle verknüpft.",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndPreserveAllTheAttributeValues": "Sind Sie sicher, dass Sie den Link vom Attribut zur Produktfamilie löschen und dessen Werte beibehalten wollen?",
-    "areYouSureYouWantToUnlinkTheAttributeFromTheProductFamilyAndRemoveAllTheAttributeValues": "Sind Sie sicher, dass Sie den Link vom Attribut zur Produktfamilie und alle Attributwerte löschen wollen?"
+    "unlinkRelatedAttribute": "Möchten Sie die Verknüpfung des ausgewählten Attributs mit der Produktfamilie wirklich aufheben? Alle untergeordneten Produktfamilien und verwandten Produkte werden diesen Link beibehalten.",
+    "cascadeUnlinkRelatedAttribute": "Möchten Sie die Verknüpfung des ausgewählten Attributs mit der Produktfamilie, ihren untergeordneten Elementen und verwandten Produkten wirklich aufheben? Alle Attributwerte werden dabei entfernt."
   }
 }

@@ -50,30 +50,21 @@ class Category extends AbstractService
 
     public function getCategoryTree(string $parentId): array
     {
-        $params = [
-            'maxSize' => \PHP_INT_MAX,
-            'sortBy'  => 'sortOrder',
-            'asc'     => true
-        ];
-
         if (empty($parentId)) {
-            $params['where'] = [['type' => 'isNull', 'attribute' => 'categoryParentId']];
+            $where = ['categoryParentId' => null];
         } else {
-            $params['where'] = [['type' => 'equals', 'attribute' => 'categoryParentId', 'value' => $parentId]];
+            $where = ['categoryParentId' => $parentId];
         }
-
-        $data = $this->findEntities($params);
 
         $result = [];
 
-        if (!empty($data['total'])) {
-            foreach ($data['collection'] as $category) {
-                $result[] = [
-                    'id'             => $category->get('id'),
-                    'name'           => $category->get('name'),
-                    'load_on_demand' => !empty($category->get('childrenCount'))
-                ];
-            }
+        foreach ($this->getRepository()->where($where)->order('sortOrder')->find() as $category) {
+            $children = $category->get('categories');
+            $result[] = [
+                'id'             => $category->get('id'),
+                'name'           => $category->get('name'),
+                'load_on_demand' => !empty($children) && count($children) > 0
+            ];
         }
 
         return $result;

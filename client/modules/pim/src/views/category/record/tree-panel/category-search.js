@@ -71,7 +71,7 @@ Espo.define('pim:views/category/record/tree-panel/category-search', 'view',
         },
 
         getAutocompleteUrl() {
-            return 'Category?sortBy=createdAt';
+            return this.scope + '?sortBy=createdAt';
         }
 
     })
