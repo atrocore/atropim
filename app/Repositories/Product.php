@@ -638,13 +638,9 @@ class Product extends AbstractRepository
         // save attributes
         $this->saveAttributes($entity);
 
-        // update pavs by product family
         if ($entity->isAttributeChanged('productFamilyId')) {
             if (empty($entity->skipUpdateProductAttributesByProductFamily) && empty($entity->isDuplicate)) {
                 $this->updateProductAttributesByProductFamily($entity);
-            }
-            if (empty($entity->skipUpdateCategoriesByProductFamily) && empty($entity->isDuplicate)) {
-                $this->updateCategoriesByProductFamily($entity);
             }
         }
 
@@ -798,25 +794,6 @@ class Product extends AbstractRepository
         }
 
         return $result;
-    }
-
-    protected function updateCategoriesByProductFamily(Entity $product): bool
-    {
-        if (empty($productFamily = $product->get('productFamily'))) {
-            return true;
-        }
-
-        if (!empty($categories = $productFamily->get('categories')) && count($categories) > 0) {
-            foreach ($categories as $category) {
-                try {
-                    $this->relate($product, 'categories', $category);
-                } catch (BadRequest $e) {
-                    // ignore
-                }
-            }
-        }
-
-        return true;
     }
 
     /**
