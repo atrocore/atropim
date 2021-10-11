@@ -29,5 +29,13 @@
 Espo.define('pim:views/product-family/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this, 'after:save', () => {
+                $('.action[data-action=refresh][data-panel=productFamilyAttributes]').click();
+            });
+        },
+
     })
 );

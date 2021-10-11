@@ -45,6 +45,7 @@ Espo.define('pim:views/category/record/detail', 'views/record/detail',
                 this.model.fetch();
                 $('.action[data-action=refresh][data-panel=catalogs]').click();
                 $('.action[data-action=refresh][data-panel=channels]').click();
+                $('.action[data-action=refresh][data-panel=productFamilyAttributes]').click();
             });
         },
 
