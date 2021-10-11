@@ -171,12 +171,6 @@
     },
     "popular": {
       "type": "bool"
-    },
-    "productFamilies": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "noLoad": true
     }
   },
   "links": {
@@ -236,12 +230,6 @@
       "foreign": "category",
       "entity": "Channel",
       "audited": false
-    },
-    "productFamilies": {
-      "type": "hasMany",
-      "relationName": "productFamilyCategory",
-      "foreign": "categories",
-      "entity": "ProductFamily"
     }
   },
   "collection": {
