@@ -36,9 +36,9 @@ Espo.define('pim:views/product/fields/gtin', 'views/fields/varchar',
         },
 
         validateValid() {
-            if (!this.isGtinValid(this.model.get(this.name))) {
+            const value = this.model.get(this.name);
+            if (value !== null && !this.isGtinValid(value)) {
                 this.showValidationMessage(this.translate('Not valid', 'error'));
-
                 return true;
             }
 
