@@ -318,6 +318,33 @@ class Product extends AbstractService
     }
 
     /**
+     * Remove product associations
+     *
+     * @param Entity $entity
+     */
+    public function afterDeleteEntity(Entity $entity)
+    {
+        parent::afterDeleteEntity($entity);
+
+        $associations = $this
+            ->getEntityManager()
+            ->getRepository('AssociatedProduct')
+            ->where([
+                'OR' =>[
+                    ['mainProductId' => $entity->id],
+                    ['relatedProductId' => $entity->id]
+                ]
+            ])
+            ->find();
+
+        if (count($associations) > 0) {
+            foreach ($associations as $association) {
+                $this->getEntityManager()->removeEntity($association);
+            }
+        }
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $duplicatingProduct
      */
