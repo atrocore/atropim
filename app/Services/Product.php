@@ -318,8 +318,6 @@ class Product extends AbstractService
     }
 
     /**
-     * Remove product associations
-     *
      * @param Entity $entity
      */
     public function afterDeleteEntity(Entity $entity)
