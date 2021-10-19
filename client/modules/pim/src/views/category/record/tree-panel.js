@@ -254,6 +254,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             if (isCollapsed) {
                 $categoryPanel.removeClass('hidden');
                 $('.page-header').addClass('collapsed').removeClass('not-collapsed');
+                $('#footer').addClass('collapsed').removeClass('not-collapsed');
                 if ($list.length > 0) {
                     $list.addClass('collapsed');
                 } else {
@@ -264,6 +265,7 @@ Espo.define('pim:views/category/record/tree-panel', ['view', 'lib!JsTree'],
             } else {
                 $categoryPanel.addClass('hidden');
                 $('.page-header').removeClass('collapsed').addClass('not-collapsed');
+                $('#footer').addClass('not-collapsed').removeClass('collapsed');
                 if ($list.length > 0) {
                     $list.removeClass('collapsed');
                 } else {
