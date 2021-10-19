@@ -363,6 +363,10 @@ class ProductAttributeValue extends AbstractRepository
 
         $key = array_search($entity->get('value' . $locale), $attribute->get('typeValue' . $locale));
 
+        if ($key === false) {
+            return;
+        }
+
         $locales = [''];
         foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
             $locales[] = ucfirst(Util::toCamelCase(strtolower($v)));
@@ -413,7 +417,9 @@ class ProductAttributeValue extends AbstractRepository
 
             $values = [];
             foreach ($keys as $key) {
-                $values[] = isset($typeValue[$key]) ? $typeValue[$key] : null;
+                if ($key !== false) {
+                    $values[] = isset($typeValue[$key]) ? $typeValue[$key] : null;
+                }
             }
             $entity->set('value' . $locale, Json::encode($values));
         }
