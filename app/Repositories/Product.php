@@ -674,6 +674,23 @@ class Product extends AbstractRepository
             $this->getEntityManager()->removeEntity($pav, ['skipProductAttributeValueHook' => true]);
         }
 
+        $associations = $this
+            ->getEntityManager()
+            ->getRepository('AssociatedProduct')
+            ->where([
+                'OR' =>[
+                    ['mainProductId' => $entity->id],
+                    ['relatedProductId' => $entity->id]
+                ]
+            ])
+            ->find();
+
+        if (count($associations) > 0) {
+            foreach ($associations as $association) {
+                $this->getEntityManager()->removeEntity($association);
+            }
+        }
+
         parent::afterRemove($entity, $options);
     }
 
