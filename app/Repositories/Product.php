@@ -702,7 +702,7 @@ class Product extends AbstractRepository
             }
 
             if (is_string($foreign)) {
-                $foreign = $this->getEntityManager()->getEntity('Product', $foreign);
+                $foreign = $this->getEntityManager()->getEntity('Category', $foreign);
             }
 
             $this->isCategoryAlreadyRelated($entity, $foreign);
