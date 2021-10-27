@@ -4,7 +4,7 @@
     "itemList": [
       {
         "url": "#Admin/moduleSettings/id=pim:views_settings_edit",
-        "label": "Settings",
+        "label": "pimSettings",
         "description": "pimSettings"
       }
     ],
