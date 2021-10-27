@@ -4,7 +4,7 @@
   },
   "labels": {
     "pim": "PIM",
-    "Settings": "General Settings"
+    "pimSettings": "General Settings"
   },
   "descriptions": {
     "pimSettings": "PIM system settings"
