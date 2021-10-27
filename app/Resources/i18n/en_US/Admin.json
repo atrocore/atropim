@@ -3,7 +3,8 @@
     "available-currency": "Currency List"
   },
   "labels": {
-    "pim": "PIM"
+    "pim": "PIM",
+    "Settings": "General Settings"
   },
   "descriptions": {
     "pimSettings": "PIM system settings"
