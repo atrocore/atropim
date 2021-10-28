@@ -73,6 +73,7 @@
     "role": "Роль"
   },
   "labels": {
+    "productSettings": "Настройки продукта",
     "Reset selection": "Сбросить выбор",
     "typeToSearch": "Введите для поиска...",
     "useDragAndDrop": "Перетаскивайте для изменения порядка",

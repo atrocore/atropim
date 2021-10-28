@@ -37,6 +37,17 @@
         "restrict"
       ],
       "default": "cascade"
+    },
+    "behaviorOnProductFamilyChange": {
+      "type": "enum",
+      "tooltip": false,
+      "required": true,
+      "options": [
+        "retainAllInheritedAttributes",
+        "removeAllInheritedAttributes",
+        "removeOnlyInheritedAttributesWithNoValue"
+      ],
+      "default": "retainAllInheritedAttributes"
     }
   }
 }

@@ -3,7 +3,13 @@
     "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
     "behaviorOnCatalogChange": "Behavior on catalog unlink/change for a product",
     "behaviorOnCategoryDelete": "Behavior on category delete",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog"
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog",
+    "behaviorOnProductFamilyChange": "Behavior by product family change/removal"
+  },
+  "labels": {
+    "retainAllInheritedAttributes": "Retain all inherited attributes",
+    "removeAllInheritedAttributes": "Remove all inherited attributes",
+    "removeOnlyInheritedAttributesWithNoValue": "Remove only inherited attributes with no value"
   },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Are you sure you want to disable linking products to non-leaf categories? All products linked to them will be automatically unlinked."
