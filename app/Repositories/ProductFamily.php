@@ -158,6 +158,21 @@ class ProductFamily extends AbstractRepository
         return parent::relate($entity, $relationName, $foreign, $data, $options);
     }
 
+    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'products') {
+            if (is_bool($foreign)) {
+                throw new BadRequest('Action blocked. Please, specify Product that we should be unrelated with Product Family.');
+            }
+            $foreign->set('productFamilyId', null);
+            $this->getEntityManager()->saveEntity($foreign);
+
+            return true;
+        }
+
+        return parent::unrelate($entity, $relationName, $foreign, $options);
+    }
+
     /**
      * @param array       $productFamiliesIds
      * @param string|null $attributeGroupId

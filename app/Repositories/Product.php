@@ -556,6 +556,63 @@ class Product extends AbstractRepository
         }
     }
 
+    public function onProductFamilyChange(string $productId, ?string $prevPfId): void
+    {
+        if (empty($prevPfId)) {
+            return;
+        }
+
+        $mode = $this->getConfig()->get('behaviorOnProductFamilyChange', 'retainAllInheritedAttributes');
+
+        if ($mode == 'retainAllInheritedAttributes') {
+            return;
+        }
+
+        $pfas = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->where(['productFamilyId' => $prevPfId])
+            ->find();
+
+        if (count($pfas) === 0) {
+            return;
+        }
+
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $productId, 'attributeId' => array_column($pfas->toArray(), 'attributeId')])
+            ->find();
+
+        if (count($pavs) === 0) {
+            return;
+        }
+
+        foreach ($pfas as $pfa) {
+            foreach ($pavs as $pav) {
+                if ($pav->get('attributeId') === $pfa->get('attributeId') && $pav->get('scope') === $pfa->get('scope') && $pav->get('isRequired') === $pfa->get('isRequired')) {
+                    if ($pfa->get('scope') === 'Channel' && $pav->get('channelId') !== $pfa->get('channelId')) {
+                        continue 1;
+                    }
+                    if ($mode === 'removeOnlyInheritedAttributesWithNoValue') {
+                        if ($pav->get('value') !== null) {
+                            continue 1;
+                        }
+                        if ($this->getConfig()->get('isMultilangActive', false)) {
+                            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                                if ($pav->get('value' . ucfirst(Util::toCamelCase(strtolower($locale)))) !== null) {
+                                    continue 2;
+                                }
+                            }
+                        }
+                    }
+
+                    $this->getEntityManager()->removeEntity($pav);
+                }
+            }
+        }
+    }
+
     public function save(Entity $entity, array $options = [])
     {
         if ($this->getEntityManager()->getPDO()->inTransaction()) {
@@ -620,6 +677,10 @@ class Product extends AbstractRepository
             $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
         }
 
+        if ($entity->isAttributeChanged('productFamilyId')) {
+            $this->onProductFamilyChange($entity->get('id'), $entity->getFetched('productFamilyId'));
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
@@ -678,7 +739,7 @@ class Product extends AbstractRepository
             ->getEntityManager()
             ->getRepository('AssociatedProduct')
             ->where([
-                'OR' =>[
+                'OR' => [
                     ['mainProductId' => $entity->id],
                     ['relatedProductId' => $entity->id]
                 ]
@@ -765,6 +826,7 @@ class Product extends AbstractRepository
 
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
     }
+
 
     /**
      * @param Entity $entity
