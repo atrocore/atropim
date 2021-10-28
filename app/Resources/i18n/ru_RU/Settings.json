@@ -3,7 +3,13 @@
     "productCanLinkedWithNonLeafCategories": "Разрешить привязывать продукты к субкатегориям.",
     "behaviorOnCatalogChange": "Поведение при удалении/изменении каталога для продукта",
     "behaviorOnCategoryDelete": "Поведение при удалении категории",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведение при разрыве связи дерева категорий с каталогом"
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведение при разрыве связи дерева категорий с каталогом",
+    "behaviorOnProductFamilyChange": "Действия при изменении / удалении продукт семьи"
+  },
+  "labels": {
+    "retainAllInheritedAttributes": "Сохранить все унаследованные атрибуты",
+    "removeAllInheritedAttributes": "Удалить все унаследованные атрибуты",
+    "removeOnlyInheritedAttributesWithNoValue": "Удалить только унаследованные атрибуты без значения"
   },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Вы уверены, что хотите запретить привязывать продукты к субкатегориям? Все продукты привязанные к ним будут автоматически отвязаны."

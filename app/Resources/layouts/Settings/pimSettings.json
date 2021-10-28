@@ -23,5 +23,16 @@
         false
       ]
     ]
+  },
+  {
+    "label": "productSettings",
+    "rows": [
+      [
+        {
+          "name": "behaviorOnProductFamilyChange"
+        },
+        false
+      ]
+    ]
   }
 ]

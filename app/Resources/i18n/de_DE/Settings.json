@@ -3,7 +3,13 @@
     "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
     "behaviorOnCatalogChange": "Verhalten beim Entfernen/Ändern eines Katalogs für ein Produkt",
     "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog"
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog",
+    "behaviorOnProductFamilyChange": "Verhalten bei Änderung/Entfernung der Produktfamilie"
+  },
+  "labels": {
+    "retainAllInheritedAttributes": "Alle vererbte Attribute beibehalten",
+    "removeAllInheritedAttributes": "Alle vererbte Attribute entfernen",
+    "removeOnlyInheritedAttributesWithNoValue": "Nur vererbte Attribute ohne Wert entfernen"
   },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Möchten Sie die Verknüpfung von Produkten mit den Kategorien, die keine Blatt-Kategorien sind, wirklich verbieten? Alle mit diesen Kategorien verknüpften Produkte werden automatisch entkoppelt."
