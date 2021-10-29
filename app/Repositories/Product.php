@@ -817,12 +817,13 @@ class Product extends AbstractRepository
                         continue 1;
                     }
                     if ($mode === 'removeOnlyInheritedAttributesWithNoValue') {
-                        if ($pav->get('value') !== null) {
+                        if ($pav->get('value') !== null && $pav->get('value') !== '') {
                             continue 1;
                         }
                         if ($this->getConfig()->get('isMultilangActive', false)) {
                             foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                                if ($pav->get('value' . ucfirst(Util::toCamelCase(strtolower($locale)))) !== null) {
+                                $valueLocale = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
+                                if ($pav->get($valueLocale) !== null && $pav->get($valueLocale) !== '') {
                                     continue 2;
                                 }
                             }
