@@ -518,4 +518,44 @@ class ProductAttributeValue extends AbstractRepository
 
         return $result;
     }
+
+    protected function validateEnum(Entity $entity): void
+    {
+        if (empty($attribute = $entity->get('attribute'))) {
+            return;
+        }
+
+        $type = $attribute->get('type');
+
+        if (!in_array($type, ['enum', 'multiEnum'])) {
+            return;
+        }
+
+        $fieldNames = ['value'];
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $fieldNames[] = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
+            }
+        }
+
+        foreach ($fieldNames as $fieldName) {
+            if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
+                $optionsField = 'type' . ucfirst($fieldName);
+                $fieldOptions = empty($attribute->get($optionsField)) ? [] : $attribute->get($optionsField);
+                $value = $entity->get($fieldName);
+                if ($type == 'enum') {
+                    $value = [$value];
+                }
+                if ($type == 'multiEnum') {
+                    $value = Json::decode($value, true);
+                }
+
+                foreach ($value as $v) {
+                    if (!in_array($v, $fieldOptions)) {
+                        throw new BadRequest(sprintf($this->getInjection('container')->get('language')->translate('noSuchAttributeOptions', 'exceptions', 'ProductAttributeValue'), $attribute->get('name')));
+                    }
+                }
+            }
+        }
+    }
 }

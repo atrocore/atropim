@@ -22,6 +22,7 @@
     "Create ProductAttributeValue": "Создать значение атрибута"
   },
   "exceptions": {
+    "noSuchAttributeOptions": "Значение для атрибута '%s' не допустимо.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",
     "productAttributeAlreadyExists": "Атрибут '%s' для канала %s уже связан.",
     "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"{pattern}\".",
