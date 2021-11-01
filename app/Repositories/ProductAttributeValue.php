@@ -542,6 +542,11 @@ class ProductAttributeValue extends AbstractRepository
             if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
                 $optionsField = 'type' . ucfirst($fieldName);
                 $fieldOptions = empty($attribute->get($optionsField)) ? [] : $attribute->get($optionsField);
+
+                if (empty($fieldOptions) && $type === 'multiEnum') {
+                    continue 1;
+                }
+
                 $value = $entity->get($fieldName);
                 if ($type == 'enum') {
                     $value = [$value];
