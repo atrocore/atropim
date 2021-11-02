@@ -4,7 +4,7 @@
     "behaviorOnCatalogChange": "Behavior on catalog unlink/change for a product",
     "behaviorOnCategoryDelete": "Behavior on category delete",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog",
-    "behaviorOnProductFamilyChange": "Behavior by product family change/removal"
+    "behaviorOnProductFamilyChange": "Behavior on product family change/removal"
   },
   "labels": {
     "retainAllInheritedAttributes": "Retain all inherited attributes",
