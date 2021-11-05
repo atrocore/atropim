@@ -4,14 +4,12 @@
       "type": "image",
       "previewSize": "medium",
       "readOnly": true,
-      "view": "pim:views/product/fields/image",
-      "importDisabled": true
+      "view": "pim:views/product/fields/image"
     },
     "assets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": false,
       "noLoad": true
     }
   },

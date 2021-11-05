@@ -37,29 +37,60 @@ use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Espo\Core\Utils\Util;
 
-/**
- * Class ProductAttributeValue
- */
 class ProductAttributeValue extends AbstractRepository
 {
     protected static $beforeSaveData = [];
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Entity $entity, array $options = [])
+    public function removeDeletedDuplicate(Entity $entity): void
     {
+        $sql = "DELETE FROM `product_attribute_value` 
+                       WHERE deleted=1 
+                         AND product_id='{$entity->get('productId')}' 
+                         AND attribute_id='{$entity->get('attributeId')}' 
+                         AND scope='{$entity->get('scope')}'";
+        if ($entity->get('scope') === 'Channel') {
+            $sql .= "AND channel_id='{$entity->get('channelId')}'";
+        }
+
+        $this->getPDO()->exec($sql);
+    }
+
+    public function getMultilangAttributeId(string $id, string $locale): array
+    {
+        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+
+        $sql = "SELECT CONCAT(pav.attribute_id, '{$separator}', '{$locale}') AS id
+                FROM product_attribute_value pav
+                WHERE pav.id = '{$id}'";
+
+        return $this->getEntityManager()->nativeQuery($sql)->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function findCopy(Entity $entity): ?Entity
+    {
+        $where = [
+            'id!='        => $entity->get('id'),
+            'productId'   => $entity->get('productId'),
+            'attributeId' => $entity->get('attributeId'),
+            'scope'       => $entity->get('scope'),
+        ];
+        if ($entity->get('scope') == 'Channel') {
+            $where['channelId'] = $entity->get('channelId');
+        }
+
+        return $this->where($where)->findOne();
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (empty($entity->get('channelId'))) {
+            $entity->set('channelId', '');
+        }
+
         $this->isValidForSave($entity, $options);
 
         if (!$entity->isNew()) {
             self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
-        }
-
-        if ($entity->get('scope') == 'Global') {
-            $entity->set('channelId', null);
         }
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
@@ -163,7 +194,7 @@ class ProductAttributeValue extends AbstractRepository
      * @param Entity $entity
      * @param array  $options
      */
-    public function afterSave(Entity $entity, array $options = array())
+    protected function afterSave(Entity $entity, array $options = array())
     {
         if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'assignedUser', 'isInheritAssignedUser'))) {
             $this->inheritOwnership($entity, $field, $this->getConfig()->get('assignedUserAttributeOwnership', null));
@@ -187,21 +218,11 @@ class ProductAttributeValue extends AbstractRepository
         parent::afterSave($entity, $options);
     }
 
-    /**
-     * @param string $id
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function getMultilangAttributeId(string $id, string $locale): array
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
-        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+        $this->removeDeletedDuplicate($entity);
 
-        $sql = "SELECT CONCAT(pav.attribute_id, '{$separator}', '{$locale}') AS id
-                FROM product_attribute_value pav
-                WHERE pav.id = '{$id}'";
-
-        return $this->getEntityManager()->nativeQuery($sql)->fetch(\PDO::FETCH_ASSOC);
+        parent::beforeRemove($entity, $options);
     }
 
     /**
@@ -250,26 +271,6 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return $result;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return Entity|null
-     */
-    public function findCopy(Entity $entity): ?Entity
-    {
-        $where = [
-            'id!='        => $entity->get('id'),
-            'productId'   => $entity->get('productId'),
-            'attributeId' => $entity->get('attributeId'),
-            'scope'       => $entity->get('scope'),
-        ];
-        if ($entity->get('scope') == 'Channel') {
-            $where['channelId'] = $entity->get('channelId');
-        }
-
-        return $this->where($where)->findOne();
     }
 
     /**
@@ -557,7 +558,12 @@ class ProductAttributeValue extends AbstractRepository
 
                 foreach ($value as $v) {
                     if (!in_array($v, $fieldOptions)) {
-                        throw new BadRequest(sprintf($this->getInjection('container')->get('language')->translate('noSuchAttributeOptions', 'exceptions', 'ProductAttributeValue'), $attribute->get('name')));
+                        throw new BadRequest(
+                            sprintf(
+                                $this->getInjection('container')->get('language')->translate('noSuchAttributeOptions', 'exceptions', 'ProductAttributeValue'),
+                                $attribute->get('name')
+                            )
+                        );
                     }
                 }
             }
