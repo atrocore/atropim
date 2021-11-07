@@ -23,7 +23,7 @@ AtroPIM is a single page application (SPA) with an API-centric and service-orien
 
 AtroPIM is an effective solution for storing, processing and managing your product information. All product data are extracted from different sources, classified, translated and enriched. AtroPIM helps you publish the relevant data on different sales channels with minimum efforts. 
 
-![unctions_banne](_assets/how_it_works_scheme_new_en.png)
+![unctions_banne](_assets/how_it_works_scheme__en.png)
 
 ## Features
 
