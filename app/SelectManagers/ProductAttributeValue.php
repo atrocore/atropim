@@ -57,7 +57,11 @@ class ProductAttributeValue extends AbstractSelectManager
                 }
 
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
-                    $this->onlyTabAttributesFilter($params, (string)$v['data']['onlyTabAttributes']);
+                    $onlyTabAttributes = true;
+                    $tabId = $v['data']['onlyTabAttributes'];
+                    if (empty($tabId) || $tabId === 'null'){
+                        $tabId = null;
+                    }
                     unset($params['where'][$k]);
                 }
             }
@@ -78,6 +82,15 @@ class ProductAttributeValue extends AbstractSelectManager
         // add filtering by product types
         $selectParams['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM product WHERE type IN ('$types') AND deleted=0)";
         $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE type IN ('{$attributesTypes}') AND deleted=0)";
+
+        if (!empty($onlyTabAttributes)) {
+            if (empty($tabId)) {
+                $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id IS NULL AND deleted=0)";
+            } else {
+                $tabId = $this->getEntityManager()->getPDO()->quote($tabId);
+                $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=$tabId AND deleted=0)";
+            }
+        }
 
         return $selectParams;
     }
@@ -216,8 +229,7 @@ class ProductAttributeValue extends AbstractSelectManager
                 ->where(
                     [
                         'productId' => $data['productId'],
-                        'attribute.attributeGroupId'
-                                    => ($data['attributeGroupId'] != '') ? $data['attributeGroupId'] : null
+                        'attribute.attributeGroupId' => ($data['attributeGroupId'] != '') ? $data['attributeGroupId'] : null
                     ]
                 )
                 ->find()
@@ -227,25 +239,5 @@ class ProductAttributeValue extends AbstractSelectManager
                 'id' => array_column($attributes, 'id')
             ];
         }
-    }
-
-    protected function onlyTabAttributesFilter(array &$params, string $tabId)
-    {
-        if (empty($tabId) || $tabId === 'null') {
-            $tabId = null;
-        }
-
-        $attributes = $this
-            ->getEntityManager()
-            ->getRepository('Attribute')
-            ->select(['id'])
-            ->where(['attributeTabId' => $tabId])
-            ->find();
-
-        $params['where'][] = [
-            'type'      => 'in',
-            'attribute' => 'attributeId',
-            'value'     => array_column($attributes->toArray(), 'id')
-        ];
     }
 }
