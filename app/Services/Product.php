@@ -669,6 +669,8 @@ class Product extends AbstractService
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
+        parent::beforeCreateEntity($entity, $data);
+
         if (isset($data->_duplicatingEntityId)) {
             $entity->isDuplicate = true;
         }
