@@ -362,7 +362,7 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
-        $key = array_search($entity->get('value' . $locale), $attribute->get('typeValue' . $locale));
+        $key = array_search($entity->get('value' . $locale), $this->prepareTypeValue($attribute, $locale));
 
         if ($key === false) {
             return;
@@ -374,9 +374,30 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         foreach ($locales as $locale) {
-            $typeValue = $attribute->get('typeValue' . $locale);
+            $typeValue = $this->prepareTypeValue($attribute, $locale);
             $entity->set('value' . $locale, $typeValue[$key]);
         }
+    }
+
+    /**
+     * @param \Pim\Entities\Attribute $attribute
+     * @param string $locale
+     *
+     * @return array|null
+     */
+    protected function prepareTypeValue(\Pim\Entities\Attribute $attribute, string $locale): ?array
+    {
+        $result = null;
+
+        if ($attribute->get('type') == 'enum') {
+            $result = $attribute->get('typeValue' . $locale);
+
+            if (!$attribute->get('prohibitedEmptyValue')) {
+                array_unshift($result, '');
+            }
+        }
+
+        return $result;
     }
 
     protected function syncMultiEnumValues(Entity $entity): void
