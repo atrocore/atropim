@@ -76,6 +76,10 @@ class ProductAttributeValue extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
+        if (empty($entity->get('channelId'))) {
+            $entity->set('channelId', '');
+        }
+
         parent::beforeSave($entity, $options);
 
         if (!$this->isValidForSave($entity, $options)) {

@@ -88,15 +88,20 @@ class ProductFamilyAttribute extends Base
                 ->findOne();
 
             if (empty($pav)) {
+                $where = [
+                    'productId'   => $parts[0],
+                    'attributeId' => $pfa->get('attributeId'),
+                    'scope'       => $pfa->get('scope')
+                ];
+
+                if ($pfa->get('scope') === 'Channel') {
+                    $where['channelId'] = $pfa->get('channelId');
+                }
+
                 $pav = $this
                     ->getEntityManager()
                     ->getRepository('ProductAttributeValue')
-                    ->where([
-                        'productId'   => $parts[0],
-                        'attributeId' => $pfa->get('attributeId'),
-                        'scope'       => $pfa->get('scope'),
-                        'channelId'   => $pfa->get('channelId'),
-                    ])
+                    ->where($where)
                     ->findOne();
             }
 
@@ -114,7 +119,11 @@ class ProductFamilyAttribute extends Base
             $pav->skipVariantValidation = true;
             $pav->skipPfValidation = true;
             $pav->skipProductChannelValidation = true;
-            $this->getEntityManager()->saveEntity($pav);
+            try {
+                $this->getEntityManager()->saveEntity($pav);
+            } catch (ProductAttributeAlreadyExists $e) {
+                // ignore
+            }
         }
 
         if (empty($updated)) {

@@ -382,6 +382,15 @@
       "layoutRelationshipsDisabled": true
     }
   },
+  "uniqueIndexes": {
+    "unique_pav": [
+      "product_id",
+      "attribute_id",
+      "scope",
+      "channel_id",
+      "deleted"
+    ]
+  },
   "indexes": {
     "ownerUser": {
       "columns": [
