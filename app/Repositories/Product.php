@@ -628,6 +628,10 @@ class Product extends AbstractRepository
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
 
+        if ($entity->isAttributeChanged('imageId') && !empty($image = $entity->get('image')) && !empty($asset = $image->getAsset())) {
+            $this->relate($entity, 'assets', $asset->get('id'));
+        }
+
         parent::beforeSave($entity, $options);
     }
 
