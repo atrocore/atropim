@@ -31,28 +31,6 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Treo\Core\Migration\Base;
-
-class V1Dot3Dot6 extends Base
+class V1Dot3Dot6 extends V1Dot2Dot19
 {
-    public function up(): void
-    {
-        $pavs = $this->getPDO()->query("SELECT * FROM `product_attribute_value`")->fetchAll(\PDO::FETCH_ASSOC);
-        if (!empty($pavs)) {
-            foreach ($pavs as $pav) {
-                $where = "id !='{$pav['id']}' AND product_id='{$pav['product_id']}' AND attribute_id='{$pav['attribute_id']}' AND scope='{$pav['scope']}'";
-                if ($pav['scope'] === 'Channel') {
-                    $where .= "AND channel_id='{$pav['channel_id']}'";
-                }
-                $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE $where");
-            }
-        }
-        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, deleted)");
-        $this->getPDO()->exec("UPDATE `product_attribute_value` SET `channel_id`='' WHERE `channel_id` IS NULL");
-    }
-
-    public function down(): void
-    {
-        $this->getPDO()->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value`");
-    }
 }

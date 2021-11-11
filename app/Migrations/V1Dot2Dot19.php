@@ -42,7 +42,7 @@ class V1Dot2Dot19 extends Base
         $pavs = $this->getPDO()->query("SELECT * FROM `product_attribute_value`")->fetchAll(\PDO::FETCH_ASSOC);
         if (!empty($pavs)) {
             foreach ($pavs as $pav) {
-                $where = "id !='{$pav['id']}' AND product_id='{$pav['product_id']}' AND attribute_id='{$pav['attribute_id']}' AND scope='{$pav['scope']}'";
+                $where = "id!='{$pav['id']}' AND product_id='{$pav['product_id']}' AND attribute_id='{$pav['attribute_id']}' AND scope='{$pav['scope']}'";
                 if ($pav['scope'] === 'Channel') {
                     $where .= "AND channel_id='{$pav['channel_id']}'";
                 }
@@ -61,6 +61,10 @@ class V1Dot2Dot19 extends Base
 
     public function down(): void
     {
-        $this->getPDO()->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value`");
+        try {
+            $this->getPDO()->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value`");
+        }catch (\Throwable $e){
+            // ignore
+        }
     }
 }
