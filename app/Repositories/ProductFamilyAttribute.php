@@ -112,7 +112,12 @@ class ProductFamilyAttribute extends Base
             }
 
             $pav->set('scope', $pfa->get('scope'));
-            $pav->set('channelId', $pfa->get('channelId'));
+            $pav->set('channelId', '');
+
+            if ($pfa->get('scope') === 'Channel') {
+                $pav->set('channelId', $pfa->get('channelId'));
+            }
+
             $pav->set('productFamilyAttributeId', $pfa->get('id'));
             $pav->set('isRequired', $pfa->get('isRequired'));
 

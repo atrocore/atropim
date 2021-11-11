@@ -102,7 +102,7 @@ class ProductAttributeValue extends AbstractRepository
          * If scope Global then channelId should be empty
          */
         if ($entity->get('scope') == 'Global') {
-            $entity->set('channelId', null);
+            $entity->set('channelId', '');
         }
 
         $this->syncEnumValues($entity);

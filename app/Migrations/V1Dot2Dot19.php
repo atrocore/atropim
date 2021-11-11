@@ -49,7 +49,13 @@ class V1Dot2Dot19 extends Base
                 $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE $where");
             }
         }
-        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, deleted)");
+
+        try {
+            $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, deleted)");
+        }catch (\Throwable $e){
+            // ignore
+        }
+
         $this->getPDO()->exec("UPDATE `product_attribute_value` SET `channel_id`='' WHERE `channel_id` IS NULL");
     }
 
