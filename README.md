@@ -73,10 +73,7 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 
 ## Documentation
 
-- Documentation for users is available [here](https://github.com/atrocore/atropim-docs/tree/master/en/user-guide).
-- Documentation for administrators is available [here](https://github.com/atrocore/atropim-docs/tree/master/en/administration).
-- API Documentation is available [here](https://demo.atropim.com/apidocs/index.html).
-- Documentation for developers is currently not available.
+- Please visit our Help Center: https://help.atrocore.com/
 
 ### Requirements
 
