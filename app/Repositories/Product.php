@@ -746,7 +746,7 @@ class Product extends AbstractRepository
     {
         if ($relationName == 'channels' && empty($entity->skipIsFromCategoryTreeValidation)) {
             $productId = (string)$entity->get('id');
-            $channelId = (string)$foreign->get('id');
+            $channelId = is_string($foreign) ? $foreign : (string)$foreign->get('id');
 
             $channelRelationData = $this->getChannelRelationData($productId);
 
