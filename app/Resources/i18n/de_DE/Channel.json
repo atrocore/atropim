@@ -24,6 +24,9 @@
     "products": "Produkte"
   },
   "labels": {
+    "unLinkCategoryFromChannel": "Verknüpfung der Kategorie '%s' mit Kanal '%s' aufgeben",
+    "linkCategoryWithChannel": "Kategorie '%s' mit Kanal '%s' verknüpfen",
+    "changeCategoryForChannel": "Kategorieänderung auf '%s' für Kanal '%s'",
     "Create Channel": "Kanal erstellen",
     "mainLocale": "Hauptsprache"
   },

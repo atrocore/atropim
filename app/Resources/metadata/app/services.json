@@ -8,5 +8,6 @@
   "QueueManagerCreateLocaleAttribute": "\\Pim\\Services\\QueueManagerCreateLocaleAttribute",
   "QueueManagerDuplicateProduct": "\\Pim\\Services\\QueueManagerDuplicateProduct",
   "RevisionField": "\\Pim\\Services\\RevisionField",
-  "QueueManagerOwnership": "\\Pim\\Services\\QueueManagerOwnership"
+  "QueueManagerOwnership": "\\Pim\\Services\\QueueManagerOwnership",
+  "QueueManagerChannel": "\\Pim\\Services\\QueueManagerChannel"
 }

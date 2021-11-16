@@ -78,21 +78,32 @@ class Channel extends Base
         }
 
         if ($entity->isAttributeChanged('categoryId')) {
-            // unrelate from previous tree
-            if (!empty($prevRootId = $entity->getFetched('categoryId'))) {
-                $prevRoot = $this->getEntityManager()->getEntity('Category', $prevRootId);
-                foreach ($prevRoot->getTreeProducts() as $product) {
-                    $this->getEntityManager()->getRepository('Product')->unrelateChannel($product, $entity);
-                }
+            $categoryId = $entity->get('categoryId');
+            if (!empty($categoryId)) {
+                $category = $this->getEntityManager()->getEntity('Category', $categoryId);
             }
 
-            // relate to new tree
-            if (!empty($rootId = $entity->get('categoryId'))) {
-                $root = $this->getEntityManager()->getEntity('Category', $rootId);
-                foreach ($root->getTreeProducts() as $product) {
-                    $this->getEntityManager()->getRepository('Product')->relateChannel($product, $entity, true);
-                }
+            $fetchedCategoryId = $entity->getFetched('categoryId');
+            if (!empty($fetchedCategoryId)) {
+                $fetchedCategory = $this->getEntityManager()->getEntity('Category', $fetchedCategoryId);
             }
+
+            if (empty($category)) {
+                $name = sprintf($this->getInjection('language')->translate('unLinkCategoryFromChannel', 'labels', 'Channel'), $fetchedCategory->get('name'), $entity->get('name'));
+            } elseif (empty($fetchedCategory)) {
+                $name = sprintf($this->getInjection('language')->translate('linkCategoryWithChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
+            } else {
+                $name = sprintf($this->getInjection('language')->translate('changeCategoryForChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
+            }
+
+            $qmData = [
+                'action'            => 'updateCategory',
+                'fetchedCategoryId' => $fetchedCategoryId,
+                'categoryId'        => $categoryId,
+                'channelId'         => $entity->get('id')
+            ];
+
+            $this->getInjection('queueManager')->push($name, 'QueueManagerChannel', $qmData);
         }
 
         parent::beforeSave($entity, $options);
@@ -108,5 +119,13 @@ class Channel extends Base
         if ($relationName == 'products') {
             $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
         }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('queueManager');
+        $this->addDependency('language');
     }
 }

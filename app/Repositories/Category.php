@@ -145,13 +145,61 @@ class Category extends AbstractRepository
         }
     }
 
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName === 'channels') {
+            if (!empty($channel = $this->getForeignChannel($foreign))) {
+                $channel->set('categoryId', $entity->get('id'));
+                $this->getEntityManager()->saveEntity($channel);
+            }
+
+            return true;
+        }
+
+        return parent::relate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'channels') {
+            if (!empty($channel = $this->getForeignChannel($foreign))) {
+                $channel->set('categoryId', null);
+                $this->getEntityManager()->saveEntity($channel);
+            }
+
+            return true;
+        }
+
+        return parent::unrelate($entity, $relationName, $foreign, $options);
+    }
+
+    protected function getForeignChannel($foreign): ?Entity
+    {
+        if (is_string($foreign)) {
+            $channelId = $foreign;
+        } elseif ($foreign instanceof Entity) {
+            $channelId = $foreign->get('id');
+        } else {
+            $channelId = null;
+        }
+
+        if (!empty($channelId)) {
+            $channel = $this->getEntityManager()->getEntity('Channel', $channelId);
+            if (!empty($channel)) {
+                return $channel;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param Entity $entity
      * @param array  $options
      *
      * @throws BadRequest
      */
-    public function beforeSave(Entity $entity, array $options = [])
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         // is code valid
         if (!$this->isCodeValid($entity)) {
@@ -228,7 +276,7 @@ class Category extends AbstractRepository
     /**
      * @inheritDoc
      */
-    public function afterSave(Entity $entity, array $options = [])
+    protected function afterSave(Entity $entity, array $options = [])
     {
         if (!empty($entity->get('_position'))) {
             $this->updateSortOrderInTree($entity);
@@ -303,14 +351,6 @@ class Category extends AbstractRepository
             $this->getProductRepository()->isProductCanLinkToNonLeafCategory($entity);
         }
 
-        if ($relationName === 'channels') {
-            if (!empty($root = $foreign->get('category'))) {
-                foreach ($root->getTreeProducts() as $product) {
-                    $this->getProductRepository()->unrelateChannel($product, $foreign);
-                }
-            }
-        }
-
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
     }
 
@@ -320,12 +360,6 @@ class Category extends AbstractRepository
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
-
-        if ($relationName === 'channels') {
-            foreach ($entity->getTreeProducts() as $product) {
-                $this->getProductRepository()->relateChannel($product, $foreign, true);
-            }
-        }
 
         if ($relationName === 'products') {
             $this->getProductRepository()->updateProductCategorySortOrder($foreign, $entity);
