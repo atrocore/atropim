@@ -13,6 +13,9 @@
     "products": "Продукты"
   },
   "labels": {
+    "unLinkCategoryFromChannel": "Разорвать связь категории '%s' с каналом '%s'",
+    "linkCategoryWithChannel": "Связать категорию '%s' с каналом '%s'",
+    "changeCategoryForChannel": "Изменить категорию на '%s' для канала '%s'",
     "Create Channel": "Создать канал",
     "mainLocale": "Основной язык"
   },
