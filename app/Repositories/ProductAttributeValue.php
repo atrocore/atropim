@@ -203,7 +203,14 @@ class ProductAttributeValue extends AbstractRepository
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if (empty($options['skipProductAttributeValueHook']) && empty($entity->force) && !empty($entity->get('productFamilyAttributeId'))) {
-            throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
+            $pfa = $this->getEntityManager()->getEntity('ProductFamilyAttribute', $entity->get('productFamilyAttributeId'));
+            if (!empty($pfa)) {
+                if ($pfa->get('scope') === $entity->get('scope')) {
+                    if ($entity->get('scope') === 'Global' || ($entity->get('scope') === 'Channel' && $entity->get('channelId') === $pfa->get('channelId'))) {
+                        throw new BadRequest($this->exception('attributeInheritedFromProductFamilyCannotBeDeleted'));
+                    }
+                }
+            }
         }
 
         parent::beforeRemove($entity, $options);
