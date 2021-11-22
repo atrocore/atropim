@@ -314,7 +314,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             });
             Promise.all(promises).then(() => {
                 this.notify('Linked', 'success');
-                this.model.trigger('after:relate', this.link);
+                this.model.trigger('after:relate', this.link, this.defs);
                 this.actionRefresh();
             });
         },
@@ -756,7 +756,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     contentType: 'application/json',
                     success: function () {
                         this.notify('Unlinked', 'success');
-                        this.model.trigger('after:unrelate');
+                        this.model.trigger('after:unrelate', this.link, this.defs);
                         this.actionRefresh();
                     }.bind(this),
                     error: function () {
