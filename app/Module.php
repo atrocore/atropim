@@ -51,7 +51,8 @@ class Module extends AbstractModule
             'multiEnum',
             'varchar',
             'text',
-            'wysiwyg'
+            'wysiwyg',
+            'asset'
         ];
 
     /**
