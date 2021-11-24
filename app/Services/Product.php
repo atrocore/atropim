@@ -623,6 +623,14 @@ class Product extends AbstractService
                         $data->title = $localePav->get('attribute')->get("name{$camelCaseLocale}");
                         $localePav->set('data', $data);
 
+                        if ($localePav->get('attributeType') == 'asset') {
+                            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $localePav->get('value')))) {
+                                $localePav->set('valueId', $attachment->get('id'));
+                                $localePav->set('valueName', $attachment->get('name'));
+                                $localePav->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+                            }
+                        }
+
                         $newCollection->append($localePav);
                     }
                 } else {
