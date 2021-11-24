@@ -625,7 +625,7 @@ class Product extends AbstractService
                         $data->title = $localePav->get('attribute')->get("name{$camelCaseLocale}");
                         $localePav->set('data', $data);
 
-                        if ($localePav->get('attributeType') == 'asset') {
+                        if ($localePav->get('attributeType') == 'asset' && !empty($localePav->get('value'))) {
                             $localeAssets[$localePav->id] = $localePav->get('value');
                         }
 
