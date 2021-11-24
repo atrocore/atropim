@@ -581,6 +581,8 @@ class Product extends AbstractService
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
             $allLocales = $this->getConfig()->get('inputLanguageList', []);
 
+            $localeAssets = [];
+
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
                 $pav->set('isLocale', false);
@@ -624,11 +626,7 @@ class Product extends AbstractService
                         $localePav->set('data', $data);
 
                         if ($localePav->get('attributeType') == 'asset') {
-                            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $localePav->get('value')))) {
-                                $localePav->set('valueId', $attachment->get('id'));
-                                $localePav->set('valueName', $attachment->get('name'));
-                                $localePav->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-                            }
+                            $localeAssets[$localePav->id] = $localePav->get('value');
                         }
 
                         $newCollection->append($localePav);
@@ -642,6 +640,30 @@ class Product extends AbstractService
                         $pav->set('data', $data);
                         $pav->clear("typeValue{$camelCaseLocale}");
                         $pav->clear("value{$camelCaseLocale}");
+                    }
+                }
+            }
+
+            if (!empty($localeAssets)) {
+                $attachments = $this
+                    ->getEntityManager()
+                    ->getRepository('Attachment')
+                    ->where(['id' => array_values($localeAssets)])
+                    ->find();
+
+                if (count($attachments) > 0) {
+                    foreach ($newCollection as $pav) {
+                        if (isset($localeAssets[$pav->id])) {
+                            foreach ($attachments as $attachment) {
+                                if ($attachment->id == $localeAssets[$pav->id]) {
+                                    $pav->set('valueId', $attachment->get('id'));
+                                    $pav->set('valueName', $attachment->get('name'));
+                                    $pav->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+
+                                    continue 2;
+                                }
+                            }
+                        }
                     }
                 }
             }
