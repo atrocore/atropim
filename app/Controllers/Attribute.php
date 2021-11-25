@@ -69,4 +69,24 @@ class Attribute extends AbstractController
 
         return $this->getRecordService()->updateAttributeReadData($result);
     }
+
+    /**
+     * @param $params
+     * @param $data
+     * @param Request $request
+     *
+     * @return array
+     *
+     * @throws Exceptions\BadRequest
+     * @throws Exceptions\Error
+     * @throws Exceptions\Forbidden
+     */
+    public function actionGetAttributesIdsFilter($params, $data, Request $request): array
+    {
+        if ($this->isReadAction($request, $params)) {
+            return $this->getRecordService()->getAttributesIdsFilter();
+        }
+
+        throw new Exceptions\Error();
+    }
 }

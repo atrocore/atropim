@@ -33,6 +33,8 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
 
         familiesAttributes: [],
 
+        existsAttributes: [],
+
         attributesDownloaded: false,
 
         selectedAttributesWithOneFilter: [],
@@ -140,6 +142,36 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 e.preventDefault();
             }
         }),
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.ajaxGetRequest('Attribute/action/getAttributesIdsFilter')
+                .then(function (response) {
+                    this.existsAttributes = response;
+
+                    for (var field in this.advanced) {
+                        let fieldName = field.split('-').shift();
+
+                        if (this.advanced[field].fieldParams && this.advanced[field].fieldParams.isAttribute && !this.existsAttributes.includes(fieldName)) {
+                            let view = this.getView('filter-' + field);
+                            if (view) {
+                                view.remove();
+                            }
+
+                            delete this.advanced[field];
+                        }
+                    }
+
+                    this.reRender();
+                })
+        },
+
+        isFieldExist(name, filterField) {
+            let field = name.split('-').shift();
+
+            return !!(this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || filterField.fieldParams.isAttribute);
+        },
 
         data() {
             var data = Dep.prototype.data.call(this);

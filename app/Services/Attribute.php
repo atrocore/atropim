@@ -231,6 +231,27 @@ class Attribute extends AbstractService
     /**
      * @return array
      */
+    public function getAttributesIdsFilter(): array
+    {
+        $result = [];
+
+        $attributes = $this
+            ->getEntityManager()
+            ->getRepository('Attribute')
+            ->select(['id'])
+            ->find()
+            ->toArray();
+
+        if (count($attributes) > 0) {
+            $result = array_column($attributes, 'id');
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
     protected function getAttributesForFilter(): array
     {
         $sql

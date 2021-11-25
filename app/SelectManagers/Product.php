@@ -708,10 +708,9 @@ class Product extends AbstractSelectManager
                 ->getRepository('Attribute')
                 ->select(['isMultilang'])
                 ->where(['id' => $attributeId])
-                ->findOne()
-                ->get('isMultilang');
+                ->findOne();
 
-            if ($isMultiLang) {
+            if ($isMultiLang && $isMultiLang->get('isMultilang')) {
                 foreach ($locales as $locale) {
                     $result[] = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
                 }
