@@ -212,6 +212,24 @@ class Attribute extends AbstractRepository
                 }
             }
         }
+
+        if ($entity->isAttributeChanged('isMultilang') && !$entity->get('isMultilang') && $this->getConfig()->get('isMultilangActive', false)) {
+            $fields = [];
+
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                $fields[] = '`value_' . strtolower($locale) . '`=null';
+            }
+
+            if (!empty($fields)) {
+                $fields = implode(',', $fields);
+
+                $sth = $this
+                    ->getEntityManager()
+                    ->getPDO()
+                    ->prepare("UPDATE product_attribute_value SET {$fields} WHERE deleted = 0");
+                $sth->execute();
+            }
+        }
     }
 
     /**
