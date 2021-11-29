@@ -183,7 +183,7 @@ class ProductAttributeValue extends AbstractService
              * Set locale for asset type
              */
             if (isset($data->valueId) && isset($data->valueName)) {
-                $data->{"value{$camelCaseLocale}Id"} = $data->value;
+                $data->{"value{$camelCaseLocale}Id"} = $data->valueId;
                 $data->{"value{$camelCaseLocale}Name"} = $data->valueName;
                 unset($data->valueId);
                 unset($data->valueName);
