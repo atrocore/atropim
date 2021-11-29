@@ -37,13 +37,16 @@ Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/recor
             this.notify('Saving...');
             this.ajaxPostRequest(`${entityName}/action/SetAsMainImage`, {
                 entityId: entityId,
-                assetId: data.asset_id
+                assetId: data.asset_id,
+                scope: data.scope
             }).then(response => {
                 this.notify('Saved', 'success');
 
-                this.model.set('imagePathsData', response.imagePathsData);
-                this.model.set('imageName', response.imageName);
-                this.model.set('imageId', response.imageId);
+                if (response.length) {
+                    this.model.set('imagePathsData', response.imagePathsData);
+                    this.model.set('imageName', response.imageName);
+                    this.model.set('imageId', response.imageId);
+                }
             });
         }
 

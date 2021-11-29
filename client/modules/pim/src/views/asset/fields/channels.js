@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,38 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Controllers;
+Espo.define('pim:views/asset/fields/channels', 'treo-core:views/fields/multi-enum',
+    Dep => Dep.extend({
+        setup() {
+            if (this.model.get('entityName') === 'Product') {
+                this.ajaxGetRequest(`Product/${this.model.get('entityId')}/channels`, {
+                    select: 'name'
+                }, {async: false}).then(function (response) {
+                    if (response.list) {
+                        this.params.options = this.params.translatedOptions = [];
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Slim\Http\Request;
+                        response.list.forEach(function(item) {
+                            this.params.options.push(item.id);
+                            this.params.translatedOptions[item.id] = item.name;
+                        }.bind(this));
+                    }
+                });
+            }
 
-/**
- * Class AbstractWithMainImageController
- */
-abstract class AbstractWithMainImageController extends AbstractController
-{
-    /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function actionSetAsMainImage(array $params, \stdClass $data, Request $request): array
-    {
-        if (!$request->isPost()) {
-            throw new BadRequest();
+            Dep.prototype.setup.call(this);
         }
-        if (empty($data->assetId) || empty($data->entityId)) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->setAsMainImage($data->assetId, $data->entityId, $data->scope ?? null);
-    }
-}
+    })
+);

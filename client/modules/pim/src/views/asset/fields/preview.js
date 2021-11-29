@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,38 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Controllers;
+Espo.define('pim:views/asset/fields/preview', 'dam:views/asset/fields/preview',
+    Dep => Dep.extend({
+        template: "pim:asset/fields/preview/list",
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Slim\Http\Request;
+        data() {
+            let result = Dep.prototype.data.call(this);
 
-/**
- * Class AbstractWithMainImageController
- */
-abstract class AbstractWithMainImageController extends AbstractController
-{
-    /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function actionSetAsMainImage(array $params, \stdClass $data, Request $request): array
-    {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-        if (empty($data->assetId) || empty($data->entityId)) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
+            let isChannelMainImage = this.model.get('isMainImage');
+            let isGlobalMainImage = this.isMainProductImage(this.model.get('fileId'));
 
-        return $this->getRecordService()->setAsMainImage($data->assetId, $data->entityId, $data->scope ?? null);
-    }
-}
+            if (isChannelMainImage || isGlobalMainImage) {
+                result['isMainImage'] = true;
+
+                if (isGlobalMainImage) {
+                    result['globalMainImage'] = true;
+                }
+            }
+
+            return result;
+        },
+
+        isMainProductImage(assetFileId) {
+            if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView().getParentView() && this.getParentView().getParentView().getParentView().getParentView()) {
+                let fileId = this.getParentView().getParentView().getParentView().getParentView().model.get('imageId');
+
+                return fileId === assetFileId;
+            }
+
+            return false;
+        }
+    })
+);

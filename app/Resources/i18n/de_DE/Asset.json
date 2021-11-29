@@ -4,7 +4,9 @@
     "products": "Produkte",
     "scope": "Scope",
     "channel": "Kanal",
-    "channelCode": "Kanal Code"
+    "channelCode": "Kanal Code",
+    "isMainImage": "Hauptbild",
+    "channels": "Hauptbild für Kanal"
   },
   "links": {
     "categories": "Kategorien",

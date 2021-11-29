@@ -43,6 +43,26 @@
             }
           ]
         }
+      },
+      "channels": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "and",
+              "value": [
+                {
+                  "type": "equals",
+                  "attribute": "scope",
+                  "value": "Global"
+                },
+                {
+                  "type": "isFalse",
+                  "attribute": "isMainImage"
+                }
+              ]
+            }
+          ]
+        }
       }
     }
   }
