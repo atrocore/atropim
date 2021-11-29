@@ -34,6 +34,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Treo\Core\Utils\Util;
 
@@ -103,6 +104,8 @@ abstract class AbstractRepository extends Base
             $channels = array_column($dbChannels, 'name', 'id');
         }
 
+        $productData = Json::decode(Json::encode($entity->get('data')), true);
+
         foreach ($result as $k => $v) {
             $result[$k]['entityName'] = $entity->getEntityType();
             $result[$k]['entityId'] = $entity->get('id');
@@ -113,6 +116,16 @@ abstract class AbstractRepository extends Base
                 $result[$k]['scope'] = 'Channel';
                 $result[$k]['channelId'] = $v['channel'];
                 $result[$k]['channelName'] = $channels[$v['channel']];
+            }
+
+            if (isset($productData['mainImages'][$result[$k]['id']])) {
+                $assetProductData = $productData['mainImages'][$result[$k]['id']];
+
+                $result[$k]['isMainImage'] = $assetProductData['isMainImage'];
+                $result[$k]['channels'] = $assetProductData['channels'];
+            } else {
+                $result[$k]['isMainImage'] = false;
+                $result[$k]['channels'] = [];
             }
             $result[$k]['channel'] = '-';
 

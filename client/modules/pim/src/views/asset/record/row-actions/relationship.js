@@ -33,7 +33,7 @@ Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
 
-            if (this.isImage() && !this.model.get('channelId')) {
+            if (this.isImage()) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage', 'labels', 'Asset'),
@@ -41,6 +41,7 @@ Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row
                         asset_id: this.model.id,
                         entity_id: this.model.get('entityId'),
                         entity_name: this.model.get('entityName'),
+                        scope: this.model.get('scope')
                     }
                 });
             }

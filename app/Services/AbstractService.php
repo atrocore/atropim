@@ -49,11 +49,13 @@ abstract class AbstractService extends Base
     /**
      * @param string $assetId
      * @param string $entityId
+     * @param string|null $scope
      *
      * @return array
      * @throws NotFound
+     * @throws \Espo\Core\Exceptions\Error
      */
-    public function setAsMainImage(string $assetId, string $entityId): array
+    public function setAsMainImage(string $assetId, string $entityId, ?string $scope): array
     {
         $parts = explode('_', $assetId);
         $assetId = array_shift($parts);

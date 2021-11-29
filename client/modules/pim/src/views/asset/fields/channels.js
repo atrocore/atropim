@@ -26,34 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/record/panels/bottom-panel',
+Espo.define('pim:views/asset/fields/channels', 'treo-core:views/fields/multi-enum',
     Dep => Dep.extend({
+        setup() {
+            if (this.model.get('entityName') === 'Product') {
+                this.ajaxGetRequest(`Product/${this.model.get('entityId')}/channels`, {
+                    select: 'name'
+                }, {async: false}).then(function (response) {
+                    if (response.list) {
+                        this.params.options = this.params.translatedOptions = [];
 
-        actionSetAsMainImage: function (data) {
-            const pathData = window.location.hash.replace('#', '').split('/view/');
-            const entityName = pathData.shift();
-            const entityId = pathData.pop();
+                        response.list.forEach(function(item) {
+                            this.params.options.push(item.id);
+                            this.params.translatedOptions[item.id] = item.name;
+                        }.bind(this));
+                    }
+                });
+            }
 
-            this.notify('Saving...');
-            this.ajaxPostRequest(`${entityName}/action/SetAsMainImage`, {
-                entityId: entityId,
-                assetId: data.asset_id,
-                scope: data.scope
-            }).then(response => {
-                this.notify('Saved', 'success');
-
-                if (response.length) {
-                    this.model.set('imagePathsData', response.imagePathsData);
-                    this.model.set('imageName', response.imageName);
-                    this.model.set('imageId', response.imageId);
-                }
-            }).done(function () {
-                if (this.getParentView() && this.getParentView().getParentView()) {
-                    this.getParentView().getParentView().model.fetch();
-                }
-                this.actionRefresh();
-            });
+            Dep.prototype.setup.call(this);
         }
-
     })
 );

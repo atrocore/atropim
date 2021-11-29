@@ -26,34 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/record/panels/bottom-panel',
+Espo.define('pim:views/asset/fields/preview', 'dam:views/asset/fields/preview',
     Dep => Dep.extend({
+        template: "pim:asset/fields/preview/list",
 
-        actionSetAsMainImage: function (data) {
-            const pathData = window.location.hash.replace('#', '').split('/view/');
-            const entityName = pathData.shift();
-            const entityId = pathData.pop();
+        data() {
+            let result = Dep.prototype.data.call(this);
 
-            this.notify('Saving...');
-            this.ajaxPostRequest(`${entityName}/action/SetAsMainImage`, {
-                entityId: entityId,
-                assetId: data.asset_id,
-                scope: data.scope
-            }).then(response => {
-                this.notify('Saved', 'success');
+            let isChannelMainImage = this.model.get('isMainImage');
+            let isGlobalMainImage = this.isMainProductImage(this.model.get('fileId'));
 
-                if (response.length) {
-                    this.model.set('imagePathsData', response.imagePathsData);
-                    this.model.set('imageName', response.imageName);
-                    this.model.set('imageId', response.imageId);
+            if (isChannelMainImage || isGlobalMainImage) {
+                result['isMainImage'] = true;
+
+                if (isGlobalMainImage) {
+                    result['globalMainImage'] = true;
                 }
-            }).done(function () {
-                if (this.getParentView() && this.getParentView().getParentView()) {
-                    this.getParentView().getParentView().model.fetch();
-                }
-                this.actionRefresh();
-            });
+            }
+
+            return result;
+        },
+
+        isMainProductImage(assetFileId) {
+            if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView().getParentView() && this.getParentView().getParentView().getParentView().getParentView()) {
+                let fileId = this.getParentView().getParentView().getParentView().getParentView().model.get('imageId');
+
+                return fileId === assetFileId;
+            }
+
+            return false;
         }
-
     })
 );
