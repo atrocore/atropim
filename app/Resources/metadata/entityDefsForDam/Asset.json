@@ -90,6 +90,31 @@
       "layoutFiltersDisabled": true,
       "importDisabled": true
     },
+    "isMainImage": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "channels": {
+      "type": "multiEnum",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "view": "pim:views/asset/fields/channels"
+    },
     "products": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

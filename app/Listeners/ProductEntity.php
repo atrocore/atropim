@@ -27,38 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Controllers;
+declare(strict_types=1);
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Slim\Http\Request;
+namespace Pim\Listeners;
+
+use Espo\Core\Utils\Json;
+use Treo\Core\EventManager\Event;
+use Treo\Listeners\AbstractListener;
 
 /**
- * Class AbstractWithMainImageController
+ * Class ProductEntity
  */
-abstract class AbstractWithMainImageController extends AbstractController
+class ProductEntity extends AbstractListener
 {
     /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     * @throws BadRequest
-     * @throws Forbidden
+     * @param Event $event
      */
-    public function actionSetAsMainImage(array $params, \stdClass $data, Request $request): array
+    public function afterUnrelate(Event $event): void
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-        if (empty($data->assetId) || empty($data->entityId)) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
+        $relationName = $event->getArgument('relationName');
 
-        return $this->getRecordService()->setAsMainImage($data->assetId, $data->entityId, $data->scope ?? null);
+        if ($relationName == 'channels') {
+            $product = $event->getArgument('entity');
+            $channel = $event->getArgument('foreign');
+
+            $productData = Json::decode(Json::encode($product->get('data')), true);
+            $productData = $this->getService('Product')->getPreparedProductAssetData($productData, [$channel->id]);
+
+            $product->set('data', $productData);
+            $this->getEntityManager()->saveEntity($product);
+        }
     }
 }

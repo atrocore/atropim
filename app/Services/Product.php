@@ -318,6 +318,82 @@ class Product extends AbstractService
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setAsMainImage(string $assetId, string $entityId, ?string $scope): array
+    {
+        $parts = explode('_', $assetId);
+        $assetId = array_shift($parts);
+
+        /** @var Asset $asset */
+        $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
+        if (empty($asset) || empty($attachment = $asset->get('file'))) {
+            throw new NotFound();
+        }
+
+        $entity = $this->getRepository()->get($entityId);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (empty($scope)) {
+            throw new BadRequest();
+        }
+
+        $data = Json::decode(Json::encode($entity->get('data')), true);
+
+        if ($scope == 'Global') {
+            $entity->set('imageId', $asset->get('fileId'));
+            if (isset($data['mainImages'][$asset->id])) {
+                unset($data['mainImages'][$asset->id]);
+
+                $entity->set('data', $data);
+            }
+
+            $this->getEntityManager()->saveEntity($entity);
+
+            return [
+                'imageId'        => $asset->get('fileId'),
+                'imageName'      => $asset->get('name'),
+                'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
+            ];
+        } elseif ($scope == 'Channel') {
+            $channels = [array_shift($parts)];
+
+            $data = $this->getPreparedProductAssetData($data, $channels);
+            $data['mainImages'][$asset->id] = ['channels' => $channels, 'isMainImage' => true];
+
+            $entity->set('data', $data);
+            $this->getEntityManager()->saveEntity($entity);
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array $data
+     * @param array $channelsIds
+     *
+     * @return array
+     */
+    public function getPreparedProductAssetData(array $data, array $channelsIds): array
+    {
+        if (isset($data['mainImages'])) {
+            foreach ($data['mainImages'] as $assetId => $assetData) {
+                $diff = array_values(array_diff($assetData['channels'], $channelsIds));
+
+                if (!empty($diff)) {
+                    $data['mainImages'][$assetId]['channels'] = $diff;
+                } else {
+                    unset($data['mainImages'][$assetId]);
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $duplicatingProduct
      */
