@@ -89,25 +89,24 @@ class AssetEntity extends AbstractListener
         /** @var Asset $asset */
         $asset = $event->getArgument('entity');
 
-        if (!empty($entityId = $asset->get('entityId')) && !empty($entityName = $asset->get('entityName'))
-            && ($asset->isAttributeChanged('isMainImage') || $asset->isAttributeChanged('channels'))) {
+        if (!empty($entityId = $asset->get('entityId')) && !empty($entityName = $asset->get('entityName')) && $entityName == 'Product') {
+            /** @var \Pim\Entities\Product $entity */
             $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
 
             if ($entity) {
-                $data = Json::decode(Json::encode($entity->get('data')), true);
-                if (!isset($data['mainImages'])) {
-                    $data['mainImages'] = [];
+                if (!is_array($data = $entity->getDataField('mainImages'))) {
+                    $data = [];
                 }
 
                 if ($asset->isAttributeChanged('isMainImage')) {
                     if ($asset->get('isMainImage')) {
-                        $channels = $asset->get('scope') == 'Channel' ? [$asset->get('channelId')] : [];
+                        $channels = $asset->get('scope') == 'Channel' ? [$asset->get('channelId')] : $asset->get('channels');
 
-                        if (empty($channels)) {
+                        if ($asset->get('scope') == 'Global') {
                             $entity->set('imageId', $asset->get('fileId'));
-                            if (isset($data['mainImages'][$asset->id])) {
-                                unset($data['mainImages'][$asset->id]);
-                                $entity->set('data', $data);
+                            if (isset($data[$asset->id])) {
+                                unset($data[$asset->id]);
+                                $entity->setDataField('mainImages', $data);
                             }
 
                             $this->getEntityManager()->saveEntity($entity);
@@ -115,17 +114,18 @@ class AssetEntity extends AbstractListener
                         }
 
                         $data = $this->getService('Product')->getPreparedProductAssetData($data, $channels);
-                    } elseif (isset($data['mainImages'][$asset->id])) {
-                        $data['mainImages'][$asset->id]['isMainImage'] = false;
+                        $data[$asset->id] = $channels;
+                    } elseif (isset($data[$asset->id])) {
+                        unset($data[$asset->id]);
                     }
                 }
 
                 if ($asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
                     $data = $this->getService('Product')->getPreparedProductAssetData($data, $asset->get('channels'));
-                    $data['mainImages'][$asset->id]['channels'] = $asset->get('channels');
+                    $data[$asset->id] = $asset->get('channels');
                 }
 
-                $entity->set('data', $data);
+                $entity->setDataField('mainImages', $data);
                 $this->getEntityManager()->saveEntity($entity);
             }
         }

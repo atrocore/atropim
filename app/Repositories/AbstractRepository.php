@@ -104,7 +104,15 @@ abstract class AbstractRepository extends Base
             $channels = array_column($dbChannels, 'name', 'id');
         }
 
-        $productData = Json::decode(Json::encode($entity->get('data')), true);
+        if ($entity->getEntityName() == 'Product') {
+            $productChannelsIds = array_column($entity->get('channels')->toArray(), 'id');
+
+            if (!is_array($data = $entity->getDataField('mainImages'))) {
+                $data = [];
+            }
+        } else {
+            $data = [];
+        }
 
         foreach ($result as $k => $v) {
             $result[$k]['entityName'] = $entity->getEntityType();
@@ -117,16 +125,24 @@ abstract class AbstractRepository extends Base
                 $result[$k]['channelId'] = $v['channel'];
                 $result[$k]['channelName'] = $channels[$v['channel']];
             }
-
-            if (isset($productData['mainImages'][$result[$k]['id']])) {
-                $assetProductData = $productData['mainImages'][$result[$k]['id']];
-
-                $result[$k]['isMainImage'] = $assetProductData['isMainImage'];
-                $result[$k]['channels'] = $assetProductData['channels'];
+            if ($result[$k]['fileId'] === $entity->get('imageId')) {
+                $result[$k]['isMainImage'] = true;
+                $result[$k]['isGlobalMainImage'] = true;
             } else {
-                $result[$k]['isMainImage'] = false;
-                $result[$k]['channels'] = [];
+                if (isset($data[$result[$k]['id']])) {
+                    $assetChannels = $data[$result[$k]['id']];
+
+                    if ($result[$k]['scope'] == 'Channel') {
+                        $result[$k]['isMainImage'] = true;
+                    } elseif (isset($productChannelsIds)) {
+                        $result[$k]['channels'] = array_values(array_intersect($productChannelsIds, $assetChannels));
+                    }
+                } else {
+                    $result[$k]['isMainImage'] = false;
+                    $result[$k]['channels'] = [];
+                }
             }
+
             $result[$k]['channel'] = '-';
 
             if (!empty($result[$k]['channelId'])) {
