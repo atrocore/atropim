@@ -331,6 +331,7 @@ class Product extends AbstractService
             throw new NotFound();
         }
 
+        /** @var \Pim\Entities\Product $entity */
         $entity = $this->getRepository()->get($entityId);
         if (empty($entity)) {
             throw new NotFound();
@@ -340,14 +341,16 @@ class Product extends AbstractService
             throw new BadRequest();
         }
 
-        $data = Json::decode(Json::encode($entity->get('data')), true);
+        if (!is_array($data = $entity->getDataField('mainImages'))) {
+            $data = [];
+        }
 
         if ($scope == 'Global') {
             $entity->set('imageId', $asset->get('fileId'));
-            if (isset($data['mainImages'][$asset->id])) {
-                unset($data['mainImages'][$asset->id]);
+            if (isset($data[$asset->id])) {
+                unset($data[$asset->id]);
 
-                $entity->set('data', $data);
+                $entity->setDataField('mainImages', $data);
             }
 
             $this->getEntityManager()->saveEntity($entity);
@@ -361,9 +364,9 @@ class Product extends AbstractService
             $channels = [array_shift($parts)];
 
             $data = $this->getPreparedProductAssetData($data, $channels);
-            $data['mainImages'][$asset->id] = ['channels' => $channels, 'isMainImage' => true];
+            $data[$asset->id] = $channels;
 
-            $entity->set('data', $data);
+            $entity->setDataField('mainImages', $data);
             $this->getEntityManager()->saveEntity($entity);
         }
 
@@ -378,15 +381,11 @@ class Product extends AbstractService
      */
     public function getPreparedProductAssetData(array $data, array $channelsIds): array
     {
-        if (isset($data['mainImages'])) {
-            foreach ($data['mainImages'] as $assetId => $assetData) {
-                $diff = array_values(array_diff($assetData['channels'], $channelsIds));
+        foreach ($data as $assetId => $assetData) {
+            $diff = array_values(array_diff($assetData, $channelsIds));
 
-                if (!empty($diff)) {
-                    $data['mainImages'][$assetId]['channels'] = $diff;
-                } else {
-                    unset($data['mainImages'][$assetId]);
-                }
+            if (empty($diff)) {
+                unset($data[$assetId]);
             }
         }
 

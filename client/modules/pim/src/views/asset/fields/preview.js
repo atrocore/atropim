@@ -28,33 +28,25 @@
 
 Espo.define('pim:views/asset/fields/preview', 'dam:views/asset/fields/preview',
     Dep => Dep.extend({
-        template: "pim:asset/fields/preview/list",
 
-        data() {
-            let result = Dep.prototype.data.call(this);
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-            let isChannelMainImage = this.model.get('isMainImage');
-            let isGlobalMainImage = this.isMainProductImage(this.model.get('fileId'));
+            if (this.$el) {
+                let mainImage = null;
 
-            if (isChannelMainImage || isGlobalMainImage) {
-                result['isMainImage'] = true;
+                if (this.model.get('isMainImage') || (this.model.has('channels') && this.model.get('channels').length)) {
+                    mainImage = $('<div class="main-image"></div>');
 
-                if (isGlobalMainImage) {
-                    result['globalMainImage'] = true;
+                    if (this.model.get('isGlobalMainImage')) {
+                        mainImage.addClass('global-main-image');
+                    }
+                }
+
+                if (mainImage) {
+                    this.$el.append(mainImage);
                 }
             }
-
-            return result;
-        },
-
-        isMainProductImage(assetFileId) {
-            if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView().getParentView() && this.getParentView().getParentView().getParentView().getParentView()) {
-                let fileId = this.getParentView().getParentView().getParentView().getParentView().model.get('imageId');
-
-                return fileId === assetFileId;
-            }
-
-            return false;
         }
     })
 );

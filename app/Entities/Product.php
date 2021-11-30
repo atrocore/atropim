@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace Pim\Entities;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Entities\Base;
 use Espo\ORM\EntityCollection;
@@ -243,6 +244,59 @@ class Product extends Base
             ->join('productCategories')
             ->where(['productCategories.productId' => $this->get('id')])
             ->find();
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        $result = [];
+
+        if (!empty($this->get('data'))) {
+            $result = Json::decode(Json::encode($this->get('data')), true);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function setData(array $data): Product
+    {
+        $this->set('data', $data);
+
+        return $this;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return mixed|null
+     */
+    public function getDataField(string $field)
+    {
+        $data = $this->getData();
+
+        return $data[$field] ?? null;
+    }
+
+    /**
+     * @param string $field
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setDataField(string $field, $value): Product
+    {
+        $data = $this->getData();
+
+        $data[$field] = $value;
+
+        return $this->setData($data);
     }
 
     /**

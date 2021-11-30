@@ -32,13 +32,18 @@ Espo.define('pim:views/asset/fields/channels', 'treo-core:views/fields/multi-enu
             if (this.model.get('entityName') === 'Product') {
                 this.ajaxGetRequest(`Product/${this.model.get('entityId')}/channels`, {
                     select: 'name'
-                }, {async: false}).then(function (response) {
+                }).then(function (response) {
                     if (response.list) {
-                        this.params.options = this.params.translatedOptions = [];
+                        this.params.options = [];
+                        this.params.translatedOptions = [];
+                        this.translatedOptions = [];
 
                         response.list.forEach(function(item) {
                             this.params.options.push(item.id);
                             this.params.translatedOptions[item.id] = item.name;
+                            this.translatedOptions = this.params.translatedOptions;
+
+                            this.reRender();
                         }.bind(this));
                     }
                 });
