@@ -180,6 +180,23 @@ class ProductAttributeValue extends AbstractService
             }
 
             /**
+             * Set locale for asset type
+             */
+            if (isset($data->valueId) && isset($data->valueName)) {
+                $data->{"value{$camelCaseLocale}Id"} = $data->valueId;
+                $data->{"value{$camelCaseLocale}Name"} = $data->valueName;
+                unset($data->valueId);
+                unset($data->valueName);
+
+                if (isset($data->_prev) && property_exists($data->_prev, 'valueId') && property_exists($data->_prev, 'valueName')) {
+                    $data->_prev->{"value{$camelCaseLocale}Id"} = $data->_prev->valueId;
+                    $data->_prev->{"value{$camelCaseLocale}Name"} = $data->_prev->valueName;
+                    unset($data->_prev->valueId);
+                    unset($data->_prev->valueName);
+                }
+            }
+
+            /**
              * Set locale ownerUser
              */
             if (isset($data->ownerUserId)) {
