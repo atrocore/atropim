@@ -155,8 +155,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     _.extend(data, {data: additionalData});
                 }
             }
-            if (view.type === 'asset') {
-                _.extend(data, {[this.name]: data[`${this.name}Id`]});
+            if (['asset', 'image'].includes(view.type)) {
+                _.extend(data, {
+                    [this.name]: data[`${this.name}Id`]
+                });
             }
         },
 
