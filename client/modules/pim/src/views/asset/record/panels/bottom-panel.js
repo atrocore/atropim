@@ -47,6 +47,11 @@ Espo.define('pim:views/asset/record/panels/bottom-panel', 'dam:views/asset/recor
                     this.model.set('imageName', response.imageName);
                     this.model.set('imageId', response.imageId);
                 }
+            }).done(function () {
+                if (this.getParentView() && this.getParentView().getParentView()) {
+                    this.getParentView().getParentView().model.fetch();
+                }
+                this.actionRefresh();
             });
         }
 
