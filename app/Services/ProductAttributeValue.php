@@ -169,11 +169,11 @@ class ProductAttributeValue extends AbstractService
             /**
              * Set locale value
              */
-            if (isset($data->value)) {
+            if (property_exists($data, 'value')) {
                 $data->{"value{$camelCaseLocale}"} = $data->value;
                 unset($data->value);
 
-                if (isset($data->_prev) && property_exists($data->_prev, 'value')) {
+                if (property_exists($data, '_prev') && property_exists($data->_prev, 'value')) {
                     $data->_prev->{"value{$camelCaseLocale}"} = $data->_prev->value;
                     unset($data->_prev->value);
                 }
@@ -182,13 +182,13 @@ class ProductAttributeValue extends AbstractService
             /**
              * Set locale for asset type
              */
-            if (isset($data->valueId) && isset($data->valueName)) {
+            if (property_exists($data, 'valueId') && property_exists($data, 'valueName')) {
                 $data->{"value{$camelCaseLocale}Id"} = $data->valueId;
                 $data->{"value{$camelCaseLocale}Name"} = $data->valueName;
                 unset($data->valueId);
                 unset($data->valueName);
 
-                if (isset($data->_prev) && property_exists($data->_prev, 'valueId') && property_exists($data->_prev, 'valueName')) {
+                if (property_exists($data, '_prev') && property_exists($data->_prev, 'valueId') && property_exists($data->_prev, 'valueName')) {
                     $data->_prev->{"value{$camelCaseLocale}Id"} = $data->_prev->valueId;
                     $data->_prev->{"value{$camelCaseLocale}Name"} = $data->_prev->valueName;
                     unset($data->_prev->valueId);
