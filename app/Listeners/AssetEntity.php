@@ -115,8 +115,14 @@ class AssetEntity extends AbstractListener
 
                         $data = $this->getService('Product')->getPreparedProductAssetData($data, $channels);
                         $data[$asset->id] = $channels;
-                    } elseif (isset($data[$asset->id])) {
-                        unset($data[$asset->id]);
+                    } else {
+                        if (isset($data[$asset->id])) {
+                            unset($data[$asset->id]);
+                        }
+
+                        if ($asset->get('fileId') == $entity->get('imageId')) {
+                            $entity->set('imageId', null);
+                        }
                     }
                 }
 
