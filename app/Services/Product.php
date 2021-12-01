@@ -386,6 +386,8 @@ class Product extends AbstractService
 
             if (empty($diff)) {
                 unset($data[$assetId]);
+            } else {
+                $data[$assetId] = $diff;
             }
         }
 
