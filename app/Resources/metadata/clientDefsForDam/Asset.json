@@ -44,12 +44,26 @@
           ]
         }
       },
+      "isMainImage": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isImage"
+            }
+          ]
+        }
+      },
       "channels": {
         "visible": {
           "conditionGroup": [
             {
               "type": "and",
               "value": [
+                {
+                  "type": "isTrue",
+                  "attribute": "isImage"
+                },
                 {
                   "type": "equals",
                   "attribute": "scope",

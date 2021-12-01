@@ -89,6 +89,19 @@ abstract class AbstractRepository extends Base
     }
 
     /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isImage(string $name): bool
+    {
+        $parts = explode('.', $name);
+        $fileExt = strtolower(array_pop($parts));
+
+        return in_array($fileExt, $this->getMetadata()->get('dam.image.extensions', []));
+    }
+
+    /**
      * @param Entity $entity
      * @param array  $result
      *
@@ -125,21 +138,25 @@ abstract class AbstractRepository extends Base
                 $result[$k]['channelId'] = $v['channel'];
                 $result[$k]['channelName'] = $channels[$v['channel']];
             }
-            if ($result[$k]['fileId'] === $entity->get('imageId')) {
-                $result[$k]['isMainImage'] = true;
-                $result[$k]['isGlobalMainImage'] = true;
-            } else {
-                if (isset($data[$result[$k]['id']])) {
-                    $assetChannels = $data[$result[$k]['id']];
 
-                    if ($result[$k]['scope'] == 'Channel') {
-                        $result[$k]['isMainImage'] = true;
-                    } elseif (isset($productChannelsIds)) {
-                        $result[$k]['channels'] = array_values(array_intersect($productChannelsIds, $assetChannels));
-                    }
+            if ($this->isImage($result[$k]['fileName'])) {
+                $result[$k]['isImage'] = true;
+                if ($result[$k]['fileId'] === $entity->get('imageId')) {
+                    $result[$k]['isMainImage'] = true;
+                    $result[$k]['isGlobalMainImage'] = true;
                 } else {
-                    $result[$k]['isMainImage'] = false;
-                    $result[$k]['channels'] = [];
+                    if (isset($data[$result[$k]['id']])) {
+                        $assetChannels = $data[$result[$k]['id']];
+
+                        if ($result[$k]['scope'] == 'Channel') {
+                            $result[$k]['isMainImage'] = true;
+                        } elseif (isset($productChannelsIds)) {
+                            $result[$k]['channels'] = array_values(array_intersect($productChannelsIds, $assetChannels));
+                        }
+                    } else {
+                        $result[$k]['isMainImage'] = false;
+                        $result[$k]['channels'] = [];
+                    }
                 }
             }
 
