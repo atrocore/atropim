@@ -521,12 +521,14 @@ class ProductAttributeValue extends AbstractService
                 $data = new \stdClass();
                 $data->unit = null;
 
-                $unitType = $attribute->get('typeValue')[0];
+                $unitType = $attribute->get('measure');
                 $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure', []);
-                if (!empty($unitsOfMeasure->{$unitType}) && !empty($unitsOfMeasure->{$unitType}->unitList)) {
-                    $data->unit = $unitsOfMeasure->{$unitType}->unitList[0];
+                if (!empty($unitsOfMeasure)) {
+                    $unitsOfMeasure = Json::decode(Json::encode($unitsOfMeasure), true);
                 }
-
+                if (!empty($unitsOfMeasure[$unitType]['unitList'])) {
+                    $data->unit = $unitsOfMeasure[$unitType]['unitList'][0];
+                }
                 $entity->set('data', $data);
             }
             $entity->set('valueUnit', get_object_vars($entity->get('data'))['unit']);

@@ -94,8 +94,16 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-        if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
-            $entity->set('value', $attribute->get('enumDefault'));
+
+        if ($entity->isNew()) {
+            if ($attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
+                $entity->set('value', $attribute->get('enumDefault'));
+            }
+
+            if ($attribute->get('type') === 'unit' && empty($entity->get('value'))) {
+                $entity->set('value', $attribute->get('unitDefault'));
+                $entity->set('valueUnit', $attribute->get('unitDefaultUnit'));
+            }
         }
 
         $this->syncEnumValues($entity);
