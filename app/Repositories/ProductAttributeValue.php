@@ -103,6 +103,7 @@ class ProductAttributeValue extends AbstractRepository
             if ($attribute->get('type') === 'unit' && empty($entity->get('value'))) {
                 $entity->set('value', $attribute->get('unitDefault'));
                 $entity->set('valueUnit', $attribute->get('unitDefaultUnit'));
+                $entity->setDataParameter('unit', $attribute->get('unitDefaultUnit'));
             }
         }
 
