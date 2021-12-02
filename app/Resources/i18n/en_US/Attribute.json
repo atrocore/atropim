@@ -18,7 +18,9 @@
     "unique": "Unique",
     "isSorted": "Is Sorted (alphabetically)",
     "prohibitedEmptyValue": "Disable empty value",
-    "enumDefault": "Default"
+    "enumDefault": "Default",
+    "measure": "Measure",
+    "unitDefault": "Default"
   },
   "links": {
     "attributeTab": "Attribute Tab",

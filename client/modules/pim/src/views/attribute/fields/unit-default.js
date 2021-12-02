@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,41 +26,36 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/attribute/fields/unit-default', 'views/fields/unit',
+    Dep => {
 
-namespace Pim\Entities;
+        return Dep.extend({
 
-use Espo\Core\Templates\Entities\Base;
-use Espo\Core\Utils\Json;
+            setup: function () {
+                this.setMeasure();
 
-class ProductAttributeValue extends Base
-{
-    protected $entityType = "ProductAttributeValue";
+                Dep.prototype.setup.call(this);
 
-    public function setData(array $data): void
-    {
-        $this->set('data', $data);
-    }
+                this.listenTo(this.model, 'change:measure', () => {
+                    this.setMeasure();
+                    this.loadUnitList();
+                    this.reRender();
+                });
+            },
 
-    public function setDataParameter(string $key, $value): void
-    {
-        $data = $this->getData();
-        $data[$key] = $value;
+            validate() {
+                if (this.model.get('prohibitedEmptyValue') && this.model.get('unitDefaultUnit') === '') {
+                    this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
+                    return true;
+                }
 
-        $this->set('data', $data);
-    }
+                return false;
+            },
 
-    public function getDataParameter(string $key)
-    {
-        $data = $this->getData();
+            setMeasure() {
+                const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
+                this.params.measure = this.model.get('measure') || measures.shift();
+            },
 
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    public function getData(): array
-    {
-        $data = $this->get('data');
-
-        return empty($data) ? [] : Json::decode(Json::encode($data), true);
-    }
-}
+        });
+    });

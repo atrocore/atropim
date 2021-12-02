@@ -94,8 +94,17 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-        if ($entity->isNew() && $attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
-            $entity->set('value', $attribute->get('enumDefault'));
+
+        if ($entity->isNew()) {
+            if ($attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
+                $entity->set('value', $attribute->get('enumDefault'));
+            }
+
+            if ($attribute->get('type') === 'unit' && empty($entity->get('value'))) {
+                $entity->set('value', $attribute->get('unitDefault'));
+                $entity->set('valueUnit', $attribute->get('unitDefaultUnit'));
+                $entity->setDataParameter('unit', $attribute->get('unitDefaultUnit'));
+            }
         }
 
         $this->syncEnumValues($entity);
@@ -587,6 +596,42 @@ class ProductAttributeValue extends AbstractRepository
                         );
                     }
                 }
+            }
+        }
+    }
+
+    protected function validateUnit(Entity $entity): void
+    {
+        if (empty($attribute = $entity->get('attribute'))) {
+            return;
+        }
+
+        $type = $attribute->get('type');
+
+        if ($type !== 'unit') {
+            return;
+        }
+
+        $language = $this->getInjection('container')->get('language');
+
+        $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
+        $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
+
+        $value = $entity->get('value');
+        $unit = $entity->get('valueUnit');
+
+        $label = $attribute->get('name');
+
+        if ($value !== null && $value !== '' && empty($unit)) {
+            throw new BadRequest(sprintf($language->translate('attributeUnitValueIsRequired', 'exceptions', 'ProductAttributeValue'), $label));
+        }
+
+        $measure = empty($attribute->get('typeValue') || !is_array($attribute->get('typeValue'))) ? '' : $attribute->get('typeValue')[0];
+
+        if (!empty($unit)) {
+            $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
+            if (!in_array($unit, $units)) {
+                throw new BadRequest(sprintf($language->translate('noSuchAttributeUnit', 'exceptions', 'ProductAttributeValue'), $label));
             }
         }
     }

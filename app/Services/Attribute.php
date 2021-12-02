@@ -34,17 +34,20 @@ namespace Pim\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
-/**
- * Attribute service
- */
 class Attribute extends AbstractService
 {
-    /**
-     * @var array
-     */
-    protected $mandatorySelectAttributeList = ['sortOrder'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'data'];
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        foreach ($entity->getDataFields() as $name => $value) {
+            $entity->set($name, $value);
+        }
+    }
 
     /**
      * @inheritDoc

@@ -22,6 +22,8 @@
     "Create ProductAttributeValue": "Produktattributwert erstellen"
   },
   "exceptions": {
+    "attributeUnitValueIsRequired": "Die Einheit für das Attribut '%s' erforderlich.",
+    "noSuchAttributeUnit": "Die Einheit für das Attribut '%s' ist ungültig.",
     "noSuchAttributeOptions": "Der Wert für das Attribut '%s' ist ungültig.",
     "youHaveNoAclRightsToReadAttributeValues": "Sie haben keine Rechte, Attributwerte zu lesen.",
     "You can't change product in attribute from Product Family": "Sie können das Produkt im Attribut der Produktfamilie nicht ändern.",

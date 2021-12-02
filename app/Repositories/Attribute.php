@@ -513,4 +513,15 @@ class Attribute extends AbstractRepository
 
         return true;
     }
+
+    protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string
+    {
+        if ($fieldName === 'unitDefault') {
+            $typeValue = $entity->get('typeValue');
+
+            return empty($typeValue) ? '' : array_shift($typeValue);
+        }
+
+        return parent::getUnitFieldMeasure($fieldName, $entity);
+    }
 }

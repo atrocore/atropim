@@ -22,6 +22,8 @@
     "Create ProductAttributeValue": "Create Attribute Value"
   },
   "exceptions": {
+    "attributeUnitValueIsRequired": "Unit for the attribute '%s' is required.",
+    "noSuchAttributeUnit": "Unit for the attribute '%s' is not valid.",
     "noSuchAttributeOptions": "Value for the attribute '%s' is not valid.",
     "youHaveNoAclRightsToReadAttributeValues": "You have no rights to read attribute values.",
     "productAttributeAlreadyExists": "Attribute '%s' for the channel %s is already linked.",

@@ -19,7 +19,9 @@
     "unique": "Unique",
     "isSorted": "Sortiert (alphabetisch)",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
-    "enumDefault": "Standard"
+    "enumDefault": "Standard",
+    "measure": "Maß",
+    "unitDefault": "Standard"
   },
   "links": {
     "attributeTab": "Attributtab",

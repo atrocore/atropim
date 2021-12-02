@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,41 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/attribute/fields/measure', 'views/fields/enum',
+    (Dep) => Dep.extend({
 
-namespace Pim\Entities;
+        inlineEditDisabled: true,
 
-use Espo\Core\Templates\Entities\Base;
-use Espo\Core\Utils\Json;
+        setupOptions() {
+            this.params.options = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {}));
+        },
 
-class ProductAttributeValue extends Base
-{
-    protected $entityType = "ProductAttributeValue";
+    })
+);
 
-    public function setData(array $data): void
-    {
-        $this->set('data', $data);
-    }
-
-    public function setDataParameter(string $key, $value): void
-    {
-        $data = $this->getData();
-        $data[$key] = $value;
-
-        $this->set('data', $data);
-    }
-
-    public function getDataParameter(string $key)
-    {
-        $data = $this->getData();
-
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    public function getData(): array
-    {
-        $data = $this->get('data');
-
-        return empty($data) ? [] : Json::decode(Json::encode($data), true);
-    }
-}

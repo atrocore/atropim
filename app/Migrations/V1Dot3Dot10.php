@@ -29,39 +29,23 @@
 
 declare(strict_types=1);
 
-namespace Pim\Entities;
+namespace Pim\Migrations;
 
-use Espo\Core\Templates\Entities\Base;
-use Espo\Core\Utils\Json;
+use Treo\Core\Migration\Base;
 
-class ProductAttributeValue extends Base
+class V1Dot3Dot10 extends Base
 {
-    protected $entityType = "ProductAttributeValue";
-
-    public function setData(array $data): void
+    public function up(): void
     {
-        $this->set('data', $data);
+        $this->exec("ALTER TABLE `attribute` ADD data MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
     }
 
-    public function setDataParameter(string $key, $value): void
+    protected function exec(string $query): void
     {
-        $data = $this->getData();
-        $data[$key] = $value;
-
-        $this->set('data', $data);
-    }
-
-    public function getDataParameter(string $key)
-    {
-        $data = $this->getData();
-
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    public function getData(): array
-    {
-        $data = $this->get('data');
-
-        return empty($data) ? [] : Json::decode(Json::encode($data), true);
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+            // ignore
+        }
     }
 }

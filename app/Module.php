@@ -109,8 +109,7 @@ class Module extends AbstractModule
                 'attribute' => 'type',
                 'value'     => [
                     'enum',
-                    'multiEnum',
-                    'unit'
+                    'multiEnum'
                 ]
             ]
         ];

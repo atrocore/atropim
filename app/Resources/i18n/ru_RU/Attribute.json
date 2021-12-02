@@ -17,7 +17,9 @@
     "unique": "Unique",
     "isSorted": "Сортировать (по алфавиту)",
     "prohibitedEmptyValue": "Запретить пустые значения",
-    "enumDefault": "По умолчанию"
+    "enumDefault": "По умолчанию",
+    "measure": "Мера",
+    "unitDefault": "По умолчанию"
   },
   "links": {
     "attributeGroup": "Группа атрибутов",

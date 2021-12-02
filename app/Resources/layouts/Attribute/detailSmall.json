@@ -49,8 +49,20 @@
         {
           "name": "prohibitedEmptyValue"
         },
+        false
+      ],
+      [
         {
           "name": "enumDefault"
+        },
+        false
+      ],
+      [
+        {
+          "name": "measure"
+        },
+        {
+          "name": "unitDefault"
         }
       ]
     ]
