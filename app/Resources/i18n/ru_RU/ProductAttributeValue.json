@@ -22,6 +22,8 @@
     "Create ProductAttributeValue": "Создать значение атрибута"
   },
   "exceptions": {
+    "attributeUnitValueIsRequired": "attributeUnitValueIsRequired",
+    "noSuchAttributeUnit": "noSuchAttributeUnit",
     "noSuchAttributeOptions": "Значение для атрибута '%s' не допустимо.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",
     "productAttributeAlreadyExists": "Атрибут '%s' для канала %s уже связан.",

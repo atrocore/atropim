@@ -590,4 +590,40 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
     }
+
+    protected function validateUnit(Entity $entity): void
+    {
+        if (empty($attribute = $entity->get('attribute'))) {
+            return;
+        }
+
+        $type = $attribute->get('type');
+
+        if ($type !== 'unit') {
+            return;
+        }
+
+        $language = $this->getInjection('container')->get('language');
+
+        $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
+        $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
+
+        $value = $entity->get('value');
+        $unit = $entity->get('valueUnit');
+
+        $label = $attribute->get('name');
+
+        if ($value !== null && $value !== '' && empty($unit)) {
+            throw new BadRequest(sprintf($language->translate('attributeUnitValueIsRequired', 'exceptions', 'ProductAttributeValue'), $label));
+        }
+
+        $measure = empty($attribute->get('typeValue') || !is_array($attribute->get('typeValue'))) ? '' : $attribute->get('typeValue')[0];
+
+        if (!empty($unit)) {
+            $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
+            if (!in_array($unit, $units)) {
+                throw new BadRequest(sprintf($language->translate('noSuchAttributeUnit', 'exceptions', 'ProductAttributeValue'), $label));
+            }
+        }
+    }
 }
