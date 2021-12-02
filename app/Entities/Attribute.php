@@ -32,14 +32,55 @@ declare(strict_types=1);
 namespace Pim\Entities;
 
 use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Utils\Json;
 
-/**
- * Class Attribute
- */
 class Attribute extends Base
 {
-    /**
-     * @var string
-     */
+    protected const DATA_FIELD = 'field';
+
     protected $entityType = "Attribute";
+
+    public function _setMeasure($value)
+    {
+        $this->setDataField('measure', $value);
+    }
+
+    public function _getMeasure()
+    {
+        return $this->getDataField('measure');
+    }
+
+    public function setData(array $data): void
+    {
+        $this->set('data', $data);
+    }
+
+    public function setDataField(string $key, $value): void
+    {
+        $data = $this->getData();
+        $data[self::DATA_FIELD][$key] = $value;
+
+        $this->set('data', $data);
+        $this->valuesContainer[$key] = $value;
+    }
+
+    public function getDataField(string $key)
+    {
+        $data = $this->getDataFields();
+
+        return isset($data[$key]) ? $data[$key] : null;
+    }
+
+    public function getDataFields()
+    {
+        $data = $this->getData();
+
+        return isset($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
+    }
+
+    public function getData(): array
+    {
+        $data = $this->get('data');
+        return empty($data) ? [] : Json::decode(Json::encode($data), true);
+    }
 }

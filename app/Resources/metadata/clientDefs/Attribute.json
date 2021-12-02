@@ -140,6 +140,30 @@
           ]
         }
       },
+      "measure": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "unit"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "unit"
+              ]
+            }
+          ]
+        }
+      },
       "unitDefault": {
         "visible": {
           "conditionGroup": [

@@ -59,9 +59,11 @@
       ],
       [
         {
-          "name": "unitDefault"
+          "name": "measure"
         },
-        false
+        {
+          "name": "unitDefault"
+        }
       ]
     ]
   }

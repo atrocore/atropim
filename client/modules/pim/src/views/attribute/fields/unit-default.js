@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/unit-default', 'views/fields/unit',
+Espo.define('pim:views/attribute/fields/unit-default', 'views/fields/unit',
     Dep => {
 
         return Dep.extend({
@@ -36,9 +36,7 @@ Espo.define('pim:views/fields/unit-default', 'views/fields/unit',
 
                 Dep.prototype.setup.call(this);
 
-                this.listenTo(this.model, 'change:typeValue', () => {
-                    console.log('1')
-
+                this.listenTo(this.model, 'change:measure', () => {
                     this.setMeasure();
                     this.loadUnitList();
                     this.reRender();
@@ -56,14 +54,7 @@ Espo.define('pim:views/fields/unit-default', 'views/fields/unit',
 
             setMeasure() {
                 const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-                const typeValue = Espo.Utils.clone(this.model.get('typeValue'));
-
-                if (typeValue) {
-                    this.params.measure = typeValue.shift();
-                } else {
-                    this.params.measure = measures.shift();
-                }
+                this.params.measure = this.model.get('measure') || measures.shift();
             },
 
         });

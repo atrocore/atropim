@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,25 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/attribute/fields/measure', 'views/fields/enum',
+    (Dep) => Dep.extend({
 
-namespace Pim\Migrations;
+        inlineEditDisabled: true,
 
-use Treo\Core\Migration\Base;
+        setupOptions() {
+            this.params.options = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {}));
+        },
 
-class V1Dot3Dot10 extends Base
-{
-    public function up(): void
-    {
-        $this->exec("ALTER TABLE `attribute` ADD data MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-    }
+    })
+);
 
-    protected function exec(string $query): void
-    {
-        try {
-            $this->getPDO()->exec($query);
-        } catch (\Throwable $e) {
-            // ignore
-        }
-    }
-}

@@ -18,6 +18,7 @@
     "isSorted": "Сортировать (по алфавиту)",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "enumDefault": "По умолчанию",
+    "measure": "Мера",
     "unitDefault": "По умолчанию"
   },
   "links": {

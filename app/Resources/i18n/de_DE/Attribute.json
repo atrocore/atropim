@@ -20,6 +20,7 @@
     "isSorted": "Sortiert (alphabetisch)",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "enumDefault": "Standard",
+    "measure": "Maß",
     "unitDefault": "Standard"
   },
   "links": {

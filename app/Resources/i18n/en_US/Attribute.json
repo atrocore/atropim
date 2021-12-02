@@ -19,6 +19,7 @@
     "isSorted": "Is Sorted (alphabetically)",
     "prohibitedEmptyValue": "Disable empty value",
     "enumDefault": "Default",
+    "measure": "Measure",
     "unitDefault": "Default"
   },
   "links": {
