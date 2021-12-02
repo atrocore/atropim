@@ -53,6 +53,26 @@ class Attribute extends Base
         return $this->getDataField('measure');
     }
 
+    public function _setUnitDefault($value)
+    {
+        $this->setDataField('unitDefault', $value);
+    }
+
+    public function _getUnitDefault()
+    {
+        return $this->getDataField('unitDefault');
+    }
+
+    public function _setUnitDefaultUnit($value)
+    {
+        $this->setDataField('unitDefaultUnit', $value);
+    }
+
+    public function _getUnitDefaultUnit()
+    {
+        return $this->getDataField('unitDefaultUnit');
+    }
+
     public function setData(array $data): void
     {
         $this->set('data', $data);
