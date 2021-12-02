@@ -204,6 +204,10 @@
     "enumDefault": {
       "type": "enum",
       "view": "pim:views/fields/enum-default"
+    },
+    "unitDefault": {
+      "type": "unit",
+      "view": "pim:views/fields/unit-default"
     }
   },
   "links": {

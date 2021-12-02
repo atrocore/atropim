@@ -49,9 +49,19 @@
         {
           "name": "prohibitedEmptyValue"
         },
+        false
+      ],
+      [
         {
           "name": "enumDefault"
-        }
+        },
+        false
+      ],
+      [
+        {
+          "name": "unitDefault"
+        },
+        false
       ]
     ]
   }
