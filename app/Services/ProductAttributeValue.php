@@ -566,4 +566,34 @@ class ProductAttributeValue extends AbstractService
 
         return !empty($pfa);
     }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        $entity = $this->getRepository()->get($entity->get('id'));
+
+        $this->prepareEntity($entity);
+        $this->convertValue($entity);
+
+        return parent::isEntityUpdated($entity, $data);
+    }
+
+    protected function areValuesEqual(Entity $entity, string $field, $value1, $value2): bool
+    {
+        if (in_array($field, array_merge(['value'], array_values($this->getInputLanguageList())))) {
+            $type = $entity->get('attributeType');
+            $type = $this->getMetadata()->get(['fields', $type, 'fieldDefs', 'type'], $type);
+        } else {
+            $type = isset($entity->getFields()[$field]['type']) ? $entity->getFields()[$field]['type'] : 'varchar';
+        }
+
+        if ($type === Entity::JSON_ARRAY && is_string($value1)) {
+            $value1 = Json::decode($value1, true);
+        }
+
+        if ($type === Entity::JSON_OBJECT && is_string($value1)) {
+            $value1 = Json::decode($value1);
+        }
+
+        return Entity::areValuesEqual($type, $value1, $value2);
+    }
 }
