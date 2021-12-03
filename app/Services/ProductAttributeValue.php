@@ -46,6 +46,8 @@ class ProductAttributeValue extends AbstractService
 {
     public const LOCALE_IN_ID_SEPARATOR = '~';
 
+    protected $mandatorySelectAttributeList = ['attributeId','attributeName'];
+
     /**
      * @inheritdoc
      */
