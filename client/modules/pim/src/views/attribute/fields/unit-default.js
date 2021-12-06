@@ -49,7 +49,7 @@ Espo.define('pim:views/attribute/fields/unit-default', 'views/fields/unit',
                     return true;
                 }
 
-                return false;
+                return Dep.prototype.validate.call(this);
             },
 
             setMeasure() {
