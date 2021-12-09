@@ -77,9 +77,12 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 
 ### Requirements
 
-* Unix-based system. Ubuntu is recommended.
+* Dedicated (virtual) Linux-based server with root permissions. 
+* Ubuntu as Operating System is recommended but not required.
 * PHP 7.4 or above.
 * MySQL 5.5.3 or above **(not MariaDB)**.
+
+> Please note, system will definitely NOT work on usual hostings, managed server hostings should be checked on a case-by-case basis - with a high probability it will NOT work.
 
 ### Installation
 
