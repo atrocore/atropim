@@ -82,7 +82,7 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 * PHP 7.4 or above.
 * MySQL 5.5.3 or above **(not MariaDB)**.
 
-> Please note, system will definitely NOT work on usual hostings, managed server hostings should be checked on a case-by-case basis - with a high probability it will NOT work.
+> Please note, system will definitely NOT work on usual hostings, managed server hostings should be checked on a case-by-case basis – with a high probability it will NOT work.
 
 ### Installation
 
