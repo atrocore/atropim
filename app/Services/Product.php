@@ -585,6 +585,7 @@ class Product extends AbstractService
          */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
             $allLocales = $this->getConfig()->get('inputLanguageList', []);
+            $headerLanguage = self::getHeaderLanguage($this->getConfig());
 
             $localeAssets = [];
 
@@ -594,7 +595,9 @@ class Product extends AbstractService
                 $pav->set('locale', null);
 
                 if ($pav->get('scope') === 'Global' || $pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav))) {
-                    $newCollection->append($pav);
+                    if (!($pav->get('attributeIsMultilang') && !empty($headerLanguage))) {
+                        $newCollection->append($pav);
+                    }
                 }
 
                 if (!empty($pav->get('attributeIsMultilang'))) {
@@ -604,6 +607,10 @@ class Product extends AbstractService
                     }
 
                     foreach ($locales as $locale) {
+                        if (!empty($headerLanguage) && $locale !== $headerLanguage) {
+                            continue 1;
+                        }
+
                         $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
 
                         $localePav = clone $pav;
