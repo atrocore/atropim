@@ -453,7 +453,7 @@ class ProductAttributeValue extends AbstractService
     {
         $this->prepareEntity($entity);
 
-        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum', 'unit'])) {
             return [];
         }
 
@@ -514,7 +514,10 @@ class ProductAttributeValue extends AbstractService
 
         // set unit value
         if ($entity->get('attributeType') == 'unit') {
-            $entity->set('valueUnit', $entity->getDataParameter('unit'));
+            $dataUnit = $entity->getDataParameter('unit');
+            $entity->set('valueUnit', $dataUnit);
+            $this->prepareUnitFieldValue($entity, 'value', $entity->get('attribute')->get('measure'));
+            $entity->get('data')->unit = $entity->get('valueUnit');
         }
 
         // set asset value

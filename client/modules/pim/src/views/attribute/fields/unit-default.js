@@ -31,6 +31,8 @@ Espo.define('pim:views/attribute/fields/unit-default', 'views/fields/unit',
 
         return Dep.extend({
 
+            localedOptions: false,
+
             setup: function () {
                 this.setMeasure();
 
