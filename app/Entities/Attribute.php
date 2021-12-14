@@ -101,7 +101,7 @@ class Attribute extends Base
         $result = isset($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
 
         // for backward compatibility
-        if (empty($result['measure']) && !empty($this->get('typeValue')) && isset($this->get('typeValue')[0])) {
+        if ($this->get('type') === 'unit' && empty($result['measure']) && !empty($this->get('typeValue')) && isset($this->get('typeValue')[0])) {
             $result['measure'] = $this->get('typeValue')[0];
         }
 
