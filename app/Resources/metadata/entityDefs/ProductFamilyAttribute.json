@@ -27,7 +27,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
+      "layoutFilterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -40,7 +40,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
+      "layoutFilterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -53,7 +53,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
+      "layoutFilterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
