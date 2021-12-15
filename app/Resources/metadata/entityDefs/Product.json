@@ -13,7 +13,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "exportType": "text",
@@ -21,7 +21,7 @@
     },
     "productFamily": {
       "type": "link",
-      "layoutFilterDisabled": false,
+      "filterDisabled": false,
       "required": false,
       "view": "pim:views/product/fields/product-family"
     },
@@ -34,7 +34,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "noLoad": true,
       "importDisabled": true,
       "exportDisabled": true,
@@ -72,7 +72,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "noLoad": true,
       "exportDisabled": true,
       "importDisabled": true,
@@ -86,7 +86,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "productStatus": {
@@ -120,7 +120,7 @@
       "type": "available-currency",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "tax": {
@@ -163,7 +163,7 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "emHidden": true,
       "exportDisabled": true
     },
@@ -243,7 +243,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "contents": {
@@ -256,7 +256,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -267,7 +267,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -278,7 +278,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -297,7 +297,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
       "emHidden": true

@@ -8,7 +8,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -20,7 +20,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -32,7 +32,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -50,7 +50,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -63,7 +63,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -75,7 +75,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -87,7 +87,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true
     },
     "isImage": {
@@ -98,7 +98,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -110,7 +110,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -122,7 +122,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
       "view": "pim:views/asset/fields/channels"

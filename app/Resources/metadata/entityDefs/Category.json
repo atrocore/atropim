@@ -65,7 +65,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "_position": {
       "type": "varchar",
@@ -75,7 +75,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "_target": {
       "type": "varchar",
@@ -85,7 +85,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "childrenCount": {
       "type": "int",
@@ -95,7 +95,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "categoryParent": {
       "type": "link",
@@ -107,14 +107,14 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true
     },
     "categoryRouteName": {
       "type": "text",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true
     },
     "categories": {
@@ -122,7 +122,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "noLoad": true,
       "importDisabled": true
     },
@@ -133,7 +133,7 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "catalogs": {
       "type": "linkMultiple",
@@ -160,7 +160,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "channels": {
       "type": "linkMultiple",

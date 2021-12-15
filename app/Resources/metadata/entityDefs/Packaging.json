@@ -52,7 +52,7 @@
             "type": "linkMultiple",
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
-            "layoutFilterDisabled": true,
+            "filterDisabled": true,
             "layoutMassUpdateDisabled": true,
             "exportDisabled": true
         }

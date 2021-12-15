@@ -70,7 +70,7 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "layoutFilterDisabled": true,
+            "filterDisabled": true,
             "noLoad": true,
             "importDisabled": true
         },
@@ -80,7 +80,7 @@
         },
         "associations": {
             "type": "linkMultiple",
-            "layoutFilterDisabled": true,
+            "filterDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,

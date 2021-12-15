@@ -33,7 +33,7 @@
       "readOnly": true,
       "tooltip": false,
       "layoutDetailDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "layoutMassUpdateDisabled": true,
       "layoutListDisabled": true
     },

@@ -21,7 +21,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -34,7 +34,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -47,7 +47,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -60,7 +60,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -73,7 +73,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -95,7 +95,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -109,7 +109,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -123,7 +123,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -137,7 +137,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -151,7 +151,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -165,7 +165,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -211,7 +211,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "attributeCode": {
@@ -222,7 +222,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "channelCode": {
@@ -233,7 +233,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "isLocale": {
@@ -245,7 +245,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "locale": {
@@ -257,7 +257,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "createdAt": {
@@ -305,7 +305,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "attributeGroup": {
@@ -316,7 +316,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true
     },
     "isInheritAssignedUser": {
@@ -326,7 +326,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
       "isMultilang": true,
@@ -339,7 +339,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
       "isMultilang": true,
@@ -352,7 +352,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
       "isMultilang": true,

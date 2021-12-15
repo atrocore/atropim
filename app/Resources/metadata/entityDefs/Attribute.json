@@ -141,7 +141,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
@@ -157,7 +157,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "importDisabled": true,
       "noLoad": true
     },
@@ -167,7 +167,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "isRequired": {
       "notStorable": true,
@@ -175,7 +175,7 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "productFamilyAttributes": {
       "type": "linkMultiple",
@@ -191,7 +191,7 @@
       "type": "varchar",
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
-      "layoutFilterDisabled": true
+      "filterDisabled": true
     },
     "unique": {
       "type": "bool",
@@ -212,7 +212,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFilterDisabled": true,
+      "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
