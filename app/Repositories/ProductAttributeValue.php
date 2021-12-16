@@ -390,7 +390,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param \Pim\Entities\Attribute $attribute
-     * @param string $locale
+     * @param string                  $locale
      *
      * @return array|null
      */
@@ -550,7 +550,16 @@ class ProductAttributeValue extends AbstractRepository
         return $result;
     }
 
-    protected function validateEnum(Entity $entity): void
+    protected function validateFieldsByType(Entity $entity): void
+    {
+        parent::validateFieldsByType($entity);
+
+        $this->validateEnumAttribute($entity);
+        $this->validateUnitAttribute($entity);
+    }
+
+
+    protected function validateEnumAttribute(Entity $entity): void
     {
         if (empty($attribute = $entity->get('attribute'))) {
             return;
@@ -600,7 +609,7 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
-    protected function validateUnit(Entity $entity): void
+    protected function validateUnitAttribute(Entity $entity): void
     {
         if (empty($attribute = $entity->get('attribute'))) {
             return;
