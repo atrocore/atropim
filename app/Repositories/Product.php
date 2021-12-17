@@ -747,6 +747,7 @@ class Product extends AbstractRepository
 
                 $productAttributeValue->skipVariantValidation = true;
                 $productAttributeValue->skipProductChannelValidation = true;
+                $productAttributeValue->clearCompletenessFields = true;
 
                 // save
                 try {
