@@ -39,12 +39,12 @@ class Product extends Base
 {
     public function checkInAccount(User $user, Entity $entity)
     {
-        $accountIds = $user->getLinkMultipleIdList('accounts');
-        if (empty($accountIds)) {
+        $accountId = $user->get('accountId');
+        if (empty($accountId)) {
             return false;
         }
 
-        $productsIds = $this->getEntityManager()->getRepository('Product')->getProductsIdsViaAccounts($accountIds);
+        $productsIds = $this->getEntityManager()->getRepository('Product')->getProductsIdsViaAccountId($accountId);
         if (empty($productsIds)) {
             return false;
         }

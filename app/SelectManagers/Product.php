@@ -1027,9 +1027,10 @@ class Product extends AbstractSelectManager
 
     protected function accessPortalOnlyAccount(&$result)
     {
-        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
-        if (count($accountIdList)) {
-            $d['id'] = $this->getEntityManager()->getRepository('Product')->getProductsIdsViaAccounts($accountIdList);
+        $accountId = $this->getUser()->get('accountId');
+
+        if (!empty($accountId)) {
+            $d['id'] = $this->getEntityManager()->getRepository('Product')->getProductsIdsViaAccountId($accountId);
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
