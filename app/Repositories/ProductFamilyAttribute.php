@@ -124,6 +124,8 @@ class ProductFamilyAttribute extends Base
             $pav->skipVariantValidation = true;
             $pav->skipPfValidation = true;
             $pav->skipProductChannelValidation = true;
+            $pav->clearCompletenessFields = true;
+            
             try {
                 $this->getEntityManager()->saveEntity($pav);
             } catch (ProductAttributeAlreadyExists $e) {
