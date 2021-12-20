@@ -59,6 +59,7 @@
       "options": [
         "simpleProduct"
       ],
+      "emHidden": true,
       "importDisabled": true,
       "prohibitedEmptyValue": true
     },
