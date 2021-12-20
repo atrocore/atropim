@@ -585,7 +585,7 @@ class Product extends AbstractService
          */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
             $allLocales = $this->getConfig()->get('inputLanguageList', []);
-            $headerLanguage = self::getHeaderLanguage($this->getConfig());
+            $headerLanguage = $this->getHeaderLanguage();
 
             $localeAssets = [];
 
