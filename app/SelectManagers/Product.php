@@ -1024,4 +1024,23 @@ class Product extends AbstractSelectManager
 
         return $products;
     }
+
+    protected function accessPortalOnlyAccount(&$result)
+    {
+        $accountId = $this->getUser()->get('accountId');
+
+        if (!empty($accountId)) {
+            $d['id'] = $this->getEntityManager()->getRepository('Product')->getProductsIdsViaAccountId($accountId);
+        }
+
+        if ($this->getSeed()->hasAttribute('createdById')) {
+            $d['createdById'] = $this->getUser()->id;
+        }
+
+        if (!empty($d)) {
+            $result['whereClause'][] = ['OR' => $d];
+        } else {
+            $result['whereClause'][] = ['id' => null];
+        }
+    }
 }

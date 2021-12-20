@@ -69,6 +69,22 @@ class Product extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsAttributeOwnership';
 
+    public function getProductsIdsViaAccountId(string $accountId): array
+    {
+        $accountId = $this->getPDO()->quote($accountId);
+        $query = "SELECT DISTINCT p.id 
+                  FROM `product_channel` pc 
+                  JOIN `product` p ON pc.product_id=p.id AND p.deleted=0 
+                  JOIN `channel` c ON pc.channel_id=c.id AND c.deleted=0
+                  JOIN `account` a ON a.channel_id=c.id AND a.deleted=0
+                  WHERE pc.deleted=0 AND a.id=$accountId";
+
+        return $this
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     /**
      * @return array
      */

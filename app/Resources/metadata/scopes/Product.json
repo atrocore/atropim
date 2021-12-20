@@ -6,6 +6,7 @@
   "aclPortal": true,
   "aclPortalLevelList": [
     "all",
+    "account",
     "own",
     "no"
   ],
