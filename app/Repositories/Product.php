@@ -146,6 +146,18 @@ class Product extends AbstractRepository
 
         $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
 
+        if (!empty($result)) {
+            $channelId = $this->getInjection('serviceFactory')->create('Product')->getPrismChannelId();
+            if (!empty($channelId)) {
+                foreach ($result as $k => $v) {
+                    if (!empty($v['channel']) && $v['channel'] !== $channelId) {
+                        unset($result[$k]);
+                    }
+                }
+                $result = array_values($result);
+            }
+        }
+
         return $this->prepareAssets($entity, $result);
     }
 
@@ -609,6 +621,7 @@ class Product extends AbstractRepository
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('serviceFactory');
     }
 
     /**

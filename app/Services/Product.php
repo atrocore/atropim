@@ -394,6 +394,19 @@ class Product extends AbstractService
         return $data;
     }
 
+    public function getPrismChannelId(): ?string
+    {
+        $channel = null;
+        if (!empty($account = $this->getUser()->get('account')) && !empty($account->get('channelId'))) {
+            $channel = $account->get('channel');
+        }
+        if (empty($channel) && !empty($channelCode = self::getHeader('Channel-Code'))) {
+            $channel = $this->getEntityManager()->getRepository('Channel')->where(['code' => $channelCode])->findOne();
+        }
+
+        return empty($channel) ? null : $channel->get('id');
+    }
+
     /**
      * @param Entity $product
      * @param Entity $duplicatingProduct
@@ -485,17 +498,15 @@ class Product extends AbstractService
         $link = $event->getArgument('link');
         $params = $event->getArgument('params');
 
-        $result = [
-            'list'  => [],
-            'total' => 0
-        ];
+        $result = ['list' => []];
 
         $productAssets = $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $id);
         if (!empty($productAssets['count'])) {
+            $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
             foreach ($productAssets['list'] as $assetType) {
                 if (!empty($assetType['assets'])) {
                     foreach ($assetType['assets'] as $asset) {
-                        if (isset($params['exportByChannelId']) && $asset['scope'] === 'Channel' && $asset['channelId'] !== $params['exportByChannelId']) {
+                        if (!empty($channelId) && $asset['scope'] === 'Channel' && $asset['channelId'] !== $channelId) {
                             continue 1;
                         }
                         $result['list'][] = $asset;
@@ -562,7 +573,7 @@ class Product extends AbstractService
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
-        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+        $collection = $this->filterPavsViaChannel($this->getRepository()->findRelated($entity, $link, $selectParams));
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -701,6 +712,31 @@ class Product extends AbstractService
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
             ->getArgument('result');
+    }
+
+    protected function filterPavsViaChannel(EntityCollection $collection): EntityCollection
+    {
+        if (count($collection) > 0 && !empty($channelId = $this->getPrismChannelId())) {
+            $newCollection = new EntityCollection();
+
+            $channelSpecificAttributeIds = [];
+            foreach ($collection as $pav) {
+                if ($pav->get('channelId') === $channelId) {
+                    $channelSpecificAttributeIds[] = $pav->get('attributeId');
+                    $newCollection->append($pav);
+                }
+            }
+
+            foreach ($collection as $pav) {
+                if ($pav->get('scope') === 'Global' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
+                    $newCollection->append($pav);
+                }
+            }
+
+            $collection = $newCollection;
+        }
+
+        return $collection;
     }
 
     /**
