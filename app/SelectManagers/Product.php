@@ -601,16 +601,15 @@ class Product extends AbstractSelectManager
      */
     protected function getProductAttributeFilter(array &$params): array
     {
-        // prepare result
         $result = [];
 
         if (!empty($params['where']) && is_array($params['where'])) {
             $where = [];
             foreach ($params['where'] as $row) {
-                if (empty($row['isAttribute'])) {
-                    $where[] = $row;
-                } else {
+                if (!empty($row['isAttribute']) || !empty($row['value'][0]['isAttribute'])) {
                     $result[] = $row;
+                } else {
+                    $where[] = $row;
                 }
             }
             $params['where'] = $where;
@@ -634,6 +633,10 @@ class Product extends AbstractSelectManager
 
             // prepare where
             $where = $this->{$method}($row);
+
+//            echo '<pre>';
+//            print_r($where);
+//            die();
 
             // create select params
             $sp = $this
@@ -932,6 +935,33 @@ class Product extends AbstractSelectManager
 
         return $where;
     }
+
+//    protected function prepareTypeAnd(array $row): array
+//    {
+//        echo '<pre>';
+//        print_r($row);
+//        die();
+//        $where = ['type' => 'or', 'value' => []];
+//        foreach ($this->getValues($row['attribute']) as $v) {
+//            $where['value'][] = [
+//                'type'  => 'and',
+//                'value' => [
+//                    [
+//                        'type'      => 'equals',
+//                        'attribute' => 'attributeId',
+//                        'value'     => $row['attribute']
+//                    ],
+//                    [
+//                        'type'      => $row['type'],
+//                        'attribute' => $v,
+//                        'value'     => $row['value']
+//                    ]
+//                ]
+//            ];
+//        }
+//
+//        return $where;
+//    }
 
 
     /**
