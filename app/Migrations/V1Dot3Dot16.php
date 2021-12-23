@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
@@ -150,11 +151,15 @@ class V1Dot3Dot16 extends Base
                 }
             }
         }
+
+        foreach ($languages as $language) {
+            $this->exec("ALTER TABLE `product_attribute_value` DROP value{$language}");
+        }
     }
 
     public function down(): void
     {
-        $this->exec("DROP TABLE `product_attribute_value_data`");
+        throw new Error('Downgrade is blocked!');
     }
 
     protected function exec(string $query): void
