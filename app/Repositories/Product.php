@@ -165,7 +165,7 @@ class Product extends AbstractRepository
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
-            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->actualizePfa((string)$entity->get('id'));
+            $this->actualizePfas($entity);
             $this->filterByChannel($entity, $params);
             $params['limit'] = 9999;
         }
@@ -177,6 +177,103 @@ class Product extends AbstractRepository
         }
 
         return parent::findRelated($entity, $relationName, $params);
+    }
+
+    protected function actualizePfas(Entity $product): void
+    {
+        if ($product->get('type') === 'productVariant') {
+            $product = $this->getEntityManager()->getEntity('Product', $product->get('configurableProductId'));
+            if (empty($product)) {
+                return;
+            }
+        }
+
+        if (empty($product->get('productFamilyId'))) {
+            return;
+        }
+
+        $pfas = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->where(['productFamilyId' => $product->get('productFamilyId')])
+            ->find();
+
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $product->get('id')])
+            ->find();
+
+        foreach ($pfas as $pfa) {
+            $pav = null;
+            foreach ($pavs as $v) {
+                if ($v->get('productFamilyAttributeId') === $pfa->get('id')) {
+                    $pav = $v;
+                    break;
+                }
+            }
+
+            if (empty($pav)) {
+                foreach ($pavs as $v) {
+                    if ($v->get('attributeId') === $pfa->get('attributeId')) {
+                        if ($pfa->get('scope') === 'Channel' && $v->get('channelId') === $pfa->get('channelId')) {
+                            $pav = $v;
+                            break;
+                        }
+
+                        if ($pfa->get('scope') === 'Global' && $v->get('scope') === $pfa->get('scope')) {
+                            $pav = $v;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (empty($pav)) {
+                $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
+                $pav->set('productId', $product->get('id'));
+                $pav->set('productName', $product->get('name'));
+                $pav->set('product', $product);
+                $pav->set('attributeId', $pfa->get('attributeId'));
+                $pav->set('attributeName', $pfa->get('attributeName'));
+                $pav->set('attribute', $pfa->get('attribute'));
+            }
+
+            $isChanged = false;
+
+            if ($pfa->get('scope') !== $pav->get('scope')) {
+                $isChanged = true;
+                $pav->set('scope', $pfa->get('scope'));
+            }
+
+            if ($pfa->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
+                $isChanged = true;
+                $pav->set('channelId', $pfa->get('channelId'));
+            }
+
+            if ($pfa->get('id') !== $pav->get('productFamilyAttributeId')) {
+                $isChanged = true;
+                $pav->set('productFamilyAttributeId', $pfa->get('id'));
+            }
+
+            if ($pfa->get('isRequired') !== $pav->get('isRequired')) {
+                $isChanged = true;
+                $pav->set('isRequired', $pfa->get('isRequired'));
+            }
+
+            if ($isChanged) {
+                $pav->skipVariantValidation = true;
+                $pav->skipPfValidation = true;
+                $pav->skipProductChannelValidation = true;
+                $pav->clearCompletenessFields = true;
+
+                try {
+                    $this->getEntityManager()->saveEntity($pav);
+                } catch (ProductAttributeAlreadyExists $e) {
+                    // ignore
+                }
+            }
+        }
     }
 
     /**

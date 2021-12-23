@@ -68,6 +68,17 @@ class ProductAttributeValue extends AbstractRepository
             ->removeCollection(['skipProductAttributeValueHook' => true]);
     }
 
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->beforeRemove($entity, $options);
+        $result = $this->deleteFromDb($entity->get('id'));
+        if ($result) {
+            $this->afterRemove($entity, $options);
+        }
+
+        return $result;
+    }
+
     /**
      * @param Entity $entity
      * @param array  $options

@@ -48,7 +48,25 @@ class ProductFamilyAttribute extends Base
 
     public static function getUpdatePfaData(): array
     {
-        return !empty($content = @file_get_contents(self::UPDATE_PFA_FILE_PATH)) ? Json::decode($content, true) : [];
+        $data = [];
+
+        if (file_exists(self::UPDATE_PFA_FILE_PATH)) {
+            $jsonData = @json_decode(file_get_contents(self::UPDATE_PFA_FILE_PATH), true);
+            if (!empty($jsonData)) {
+                $data = $jsonData;
+            }
+        }
+
+        return $data;
+    }
+
+    public function setUpdatePfaData(array $data): void
+    {
+        if (empty($data) && file_exists(self::UPDATE_PFA_FILE_PATH)) {
+            unlink(self::UPDATE_PFA_FILE_PATH);
+            return;
+        }
+        file_put_contents(self::UPDATE_PFA_FILE_PATH, json_encode($data));
     }
 
     public function actualizePfa(string $productId = null): void
@@ -143,7 +161,7 @@ class ProductFamilyAttribute extends Base
                 unset($data[$v]);
             }
         }
-        file_put_contents(self::UPDATE_PFA_FILE_PATH, Json::encode($data));
+        self::setUpdatePfaData($data);
     }
 
     /**
@@ -343,13 +361,11 @@ class ProductFamilyAttribute extends Base
             return;
         }
 
-        $data = !empty($content = @file_get_contents(self::UPDATE_PFA_FILE_PATH)) ? Json::decode($content, true) : [];
-
+        $data = self::getUpdatePfaData();
         foreach ($productsIds as $productId) {
             $data["{$productId}_{$entity->get('id')}"] = true;
         }
-
-        file_put_contents(self::UPDATE_PFA_FILE_PATH, Json::encode($data));
+        self::setUpdatePfaData($data);
     }
 
     /**
