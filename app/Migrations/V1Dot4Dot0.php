@@ -150,6 +150,7 @@ class V1Dot4Dot0 extends Base
 
 
                     $updateData = array_merge($record, $dataValues);
+                    $updateData['attribute_type'] = $attributeType;
 
                     if (isset($updateData["is_inherit_assigned_user_$language"])) {
                         $updateData['is_inherit_assigned_user'] = $updateData["is_inherit_assigned_user_$language"];
