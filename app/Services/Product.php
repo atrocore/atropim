@@ -564,12 +564,6 @@ class Product extends AbstractService
         if ($selectAttributeList) {
             $selectAttributeList[] = 'ownerUserId';
             $selectAttributeList[] = 'assignedUserId';
-            if ($this->getConfig()->get('isMultilangActive')) {
-                foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                    $selectAttributeList[] = Util::toCamelCase('owner_user_' . strtolower($locale) . '_id');
-                    $selectAttributeList[] = Util::toCamelCase('assigned_user_' . strtolower($locale) . '_id');
-                }
-            }
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
@@ -595,99 +589,10 @@ class Product extends AbstractService
          * For attribute locales
          */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
-            $allLocales = $this->getConfig()->get('inputLanguageList', []);
-            $headerLanguage = $this->getHeaderLanguage();
-
-            $localeAssets = [];
-
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
-                $pav->set('isLocale', false);
-                $pav->set('locale', null);
-
-                if ($pav->get('scope') === 'Global' || $pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav))) {
-                    if (!($pav->get('attributeIsMultilang') && !empty($headerLanguage))) {
-                        $newCollection->append($pav);
-                    }
-                }
-
-                if (!empty($pav->get('attributeIsMultilang'))) {
-                    $locales = $allLocales;
-                    if ($pav->get('scope') === 'Channel') {
-                        $locales = $this->getPavLocales($pav, true);
-                    }
-
-                    foreach ($locales as $locale) {
-                        if (!empty($headerLanguage) && $locale !== $headerLanguage) {
-                            continue 1;
-                        }
-
-                        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-
-                        $localePav = clone $pav;
-                        $localePav->id = $localePav->id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
-                        $localePav->set('isLocale', true);
-                        $localePav->set('locale', $locale);
-                        $localePav->set('attributeName', $localePav->get('attributeName') . ' › ' . $locale);
-                        $localePav->set('attributeCode', $localePav->get('attributeCode') . ' › ' . $locale);
-                        $localePav->set('typeValue', $localePav->get("typeValue{$camelCaseLocale}"));
-                        $pav->clear("typeValue{$camelCaseLocale}");
-                        $localePav->clear("typeValue{$camelCaseLocale}");
-                        $localePav->set('value', $localePav->get("value{$camelCaseLocale}"));
-                        $pav->clear("value{$camelCaseLocale}");
-                        $localePav->clear("value{$camelCaseLocale}");
-                        $localePav->set('ownerUserId', $localePav->get("ownerUser{$camelCaseLocale}Id"));
-                        $localePav->set('assignedUserId', $localePav->get("assignedUser{$camelCaseLocale}Id"));
-
-                        if (is_null($data = $localePav->get('data'))) {
-                            $data = new \stdClass();
-                        } else {
-                            $data = (object)$data;
-                        }
-
-                        $data->title = $localePav->get('attribute')->get("name{$camelCaseLocale}");
-                        $localePav->set('data', $data);
-
-                        if ($localePav->get('attributeType') == 'asset' && !empty($localePav->get('value'))) {
-                            $localeAssets[$localePav->id] = $localePav->get('value');
-                        }
-
-                        $newCollection->append($localePav);
-                    }
-                } else {
-                    $data = is_null($data = $pav->get('data')) ? new \stdClass() : (object)$data;
-
-                    foreach ($allLocales as $locale) {
-                        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-                        $data->{'title' . $camelCaseLocale} = $pav->get('attribute')->get("name{$camelCaseLocale}");
-                        $pav->set('data', $data);
-                        $pav->clear("typeValue{$camelCaseLocale}");
-                        $pav->clear("value{$camelCaseLocale}");
-                    }
-                }
-            }
-
-            if (!empty($localeAssets)) {
-                $attachments = $this
-                    ->getEntityManager()
-                    ->getRepository('Attachment')
-                    ->where(['id' => array_values($localeAssets)])
-                    ->find();
-
-                if (count($attachments) > 0) {
-                    foreach ($newCollection as $pav) {
-                        if (isset($localeAssets[$pav->id])) {
-                            foreach ($attachments as $attachment) {
-                                if ($attachment->id == $localeAssets[$pav->id]) {
-                                    $pav->set('valueId', $attachment->get('id'));
-                                    $pav->set('valueName', $attachment->get('name'));
-                                    $pav->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-
-                                    continue 2;
-                                }
-                            }
-                        }
-                    }
+                if ($pav->get('scope') === 'Global' || ($pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav)))) {
+                    $newCollection->append($pav);
                 }
             }
 

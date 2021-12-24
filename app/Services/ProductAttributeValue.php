@@ -33,6 +33,7 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
@@ -46,7 +47,19 @@ class ProductAttributeValue extends AbstractService
 {
     public const LOCALE_IN_ID_SEPARATOR = '~';
 
-    protected $mandatorySelectAttributeList = ['attributeId', 'attributeName'];
+    protected $mandatorySelectAttributeList
+        = [
+            'attributeId',
+            'attributeName',
+            'attributeType',
+            'intValue',
+            'boolValue',
+            'dateValue',
+            'datetimeValue',
+            'floatValue',
+            'varcharValue',
+            'textValue'
+        ];
 
     /**
      * @inheritdoc
@@ -56,8 +69,6 @@ class ProductAttributeValue extends AbstractService
         parent::prepareEntityForOutput($entity);
 
         $this->prepareEntity($entity);
-
-        $this->convertValue($entity);
     }
 
     /**
@@ -375,104 +386,57 @@ class ProductAttributeValue extends AbstractService
      */
     protected function convertValue(Entity $entity)
     {
-        $fields = ['valueDataId'];
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                $fields[] = 'valueData' . ucfirst(Util::toCamelCase(strtolower($language))) . 'Id';
-            }
-        }
-
-        $type = $entity->get('attributeType');
-
-        if (!empty($type)) {
-            foreach ($fields as $field) {
-                switch ($type) {
-                    case 'array':
-                    case 'multiEnum':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'text':
-                    case 'wysiwyg':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'bool':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'currency':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'unit':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'int':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'float':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'date':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    case 'datetime':
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
-                    default:
-                        echo '<pre>';
-                        print_r('123');
-                        die();
-                        break;
+        switch ($entity->get('attributeType')) {
+            case 'array':
+            case 'multiEnum':
+                $entity->set('value', @json_decode($entity->get('textValue'), true));
+                break;
+            case 'text':
+            case 'wysiwyg':
+                $entity->set('value', $entity->get('textValue'));
+                break;
+            case 'bool':
+                $entity->set('value', $entity->get('boolValue'));
+                break;
+            case 'currency':
+                $entity->set('value', $entity->get('floatValue'));
+                $entity->set('valueCurrency', $entity->get('varcharValue'));
+                break;
+            case 'unit':
+                $entity->set('value', $entity->get('floatValue'));
+                $entity->set('valueUnit', $entity->get('varcharValue'));
+                break;
+            case 'int':
+                $entity->set('value', $entity->get('intValue'));
+                break;
+            case 'float':
+                $entity->set('value', $entity->get('floatValue'));
+                break;
+            case 'date':
+                $entity->set('value', $entity->get('dateValue'));
+                break;
+            case 'datetime':
+                $entity->set('value', $entity->get('datetimeValue'));
+                break;
+            case 'asset':
+                if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('varcharValue')))) {
+                    $entity->set('valueId', $attachment->get('id'));
+                    $entity->set('valueName', $attachment->get('name'));
+                    $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
                 }
-            }
-
-            echo '<pre>';
-            print_r($entity->toArray());
-            die();
-
-
-//            switch ($type) {
-//                case 'array':
-//                    $entity->set('value', ((string)$entity->get('value') === '') ? null : Json::decode($entity->get('value'), true));
-//                    break;
-//                case 'bool':
-//                    $entity->set('value', ((string)$entity->get('value') === '1' || (string)$entity->get('value') === 'true'));
-//                    foreach ($this->getInputLanguageList() as $multiLangField) {
-//                        $entity->set($multiLangField, ((string)$entity->get($multiLangField) === '1' || (string)$entity->get($multiLangField) === 'true'));
-//                    }
-//                    break;
-//                case 'int':
-//                    $entity->set('value', ((string)$entity->get('value') === '') ? null : (int)$entity->get('value'));
-//                    break;
-//                case 'unit':
-//                case 'currency':
-//                case 'float':
-//                    $entity->set('value', ((string)$entity->get('value') === '') ? null : (float)$entity->get('value'));
-//                    break;
-//                case 'multiEnum':
-//                    $entity->set('value', ((string)$entity->get('value') === '') ? null : Json::decode($entity->get('value'), true));
-//                    foreach ($this->getInputLanguageList() as $multiLangField) {
-//                        $entity->set($multiLangField, ((string)$entity->get($multiLangField) === '') ? null : Json::decode($entity->get($multiLangField), true));
-//                    }
-//                    break;
-//            }
+                break;
+            default:
+                $entity->set('value', $entity->get('varcharValue'));
+                break;
         }
+
+        $entity->clear('intValue');
+        $entity->clear('boolValue');
+        $entity->clear('dateValue');
+        $entity->clear('datetimeValue');
+        $entity->clear('floatValue');
+        $entity->clear('varcharValue');
+        $entity->clear('textValue');
     }
 
     /**
@@ -553,50 +517,29 @@ class ProductAttributeValue extends AbstractService
     protected function prepareEntity(Entity $entity): void
     {
         // exit if already prepared
-        if (!empty($entity->get('attributeType'))) {
+        if (!empty($entity->get('attributeCode'))) {
             return;
         }
 
-        $attribute = $entity->get('attribute');
+        if (empty($attribute = $entity->get('attribute'))) {
+            throw new NotFound();
+        }
 
-        $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
-        $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
-        $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
-        $entity->set('attributeCode', !empty($attribute) ? $attribute->get('code') : null);
+        $entity->set('attributeAssetType', $attribute->get('assetType'));
+        $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
+        $entity->set('attributeCode', $attribute->get('code'));
         $entity->set('prohibitedEmptyValue', false);
         $entity->set('isInherited', $this->isInheritedFromPf($entity->get('id')));
-
-        if (!empty($attribute)) {
-            $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
-            $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
-            $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-            $entity->set('sortOrder', $attribute->get('sortOrder'));
+        $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
+        $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
+        $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+        $entity->set('sortOrder', $attribute->get('sortOrder'));
+        $entity->set('channelCode', null);
+        if (!empty($channel = $entity->get('channel'))) {
+            $entity->set('channelCode', $channel->get('code'));
         }
 
-        $channel = $entity->get('channel');
-        $entity->set('channelCode', !empty($channel) ? $channel->get('code') : null);
-
-        // set currency value
-        if ($entity->get('attributeType') == 'currency') {
-            $entity->set('valueCurrency', $entity->getDataParameter('currency'));
-        }
-
-        // set unit value
-        if ($entity->get('attributeType') == 'unit') {
-            $dataUnit = $entity->getDataParameter('unit');
-            $entity->set('valueUnit', $dataUnit);
-            $this->prepareUnitFieldValue($entity, 'value', $entity->get('attribute')->get('measure'));
-            $entity->get('data')->unit = $entity->get('valueUnit');
-        }
-
-        // set asset value
-        if ($entity->get('attributeType') === 'asset') {
-            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value')))) {
-                $entity->set('valueId', $attachment->get('id'));
-                $entity->set('valueName', $attachment->get('name'));
-                $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-            }
-        }
+        $this->convertValue($entity);
     }
 
     private function prepareValueForAssetType(\stdClass $data): void
@@ -646,7 +589,6 @@ class ProductAttributeValue extends AbstractService
         $entity = $this->getRepository()->get($entity->get('id'));
 
         $this->prepareEntity($entity);
-        $this->convertValue($entity);
 
         return parent::isEntityUpdated($entity, $data);
     }

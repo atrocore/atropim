@@ -238,7 +238,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 this.collection = collection;
 
                 this.setFilter(this.filter);
-                this.updateBaseSelectFields();
                 this.listenTo(this.model, 'updateAttributes change:productFamilyId update-all after:relate after:unrelate', link => {
                     if (!link || link === 'productAttributeValues') {
                         this.actionRefresh();
@@ -266,20 +265,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         prepareCollection(collection) {
 
-        },
-
-        updateBaseSelectFields() {
-            let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
-            if (this.getConfig().get('isMultilangActive') && inputLanguageList.length) {
-                inputLanguageList.forEach(lang => {
-                    ['isInheritAssignedUser', 'isInheritOwnerUser', 'isInheritTeams', 'value'].forEach(field => {
-                        let multilangField = lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), field);
-                        if (!this.baseSelectFields.includes(multilangField)) {
-                            this.baseSelectFields.push(multilangField);
-                        }
-                    })
-                });
-            }
         },
 
         createProductAttributeValue(selectObj) {
