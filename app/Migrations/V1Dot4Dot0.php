@@ -85,10 +85,14 @@ class V1Dot4Dot0 extends Base
                     continue 1;
                 }
 
+                $attributeType = $attributes[$record['attribute_id']];
+
+                $record['attribute_type'] = $attributeType;
+                $this->exec("UPDATE `product_attribute_value` SET attribute_type='$attributeType' WHERE id='{$record['id']}'");
+
                 foreach (array_merge(['main' => ''], $languages) as $locale => $language) {
                     $dataValues = [];
 
-                    $attributeType = $attributes[$record['attribute_id']];
                     $attributeValue = $record['value' . $language];
 
                     if ($attributeValue !== null) {
@@ -150,7 +154,6 @@ class V1Dot4Dot0 extends Base
 
 
                     $updateData = array_merge($record, $dataValues);
-                    $updateData['attribute_type'] = $attributeType;
 
                     if (isset($updateData["is_inherit_assigned_user_$language"])) {
                         $updateData['is_inherit_assigned_user'] = $updateData["is_inherit_assigned_user_$language"];
