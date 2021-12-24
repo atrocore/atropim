@@ -18,8 +18,7 @@
     "categoryParent": "Hauptkategorie",
     "image": "Hauptbild",
     "categoryRouteName": "Kategoriebaum",
-    "catalogs": "Kataloge",
-    "popular": "Beliebt"
+    "catalogs": "Kataloge"
   },
   "links": {
     "categoryRoot": "Stammkategorie",
