@@ -94,13 +94,12 @@ class V1Dot4Dot0 extends Base
                 }
 
                 $attributeType = $attributes[$record['attribute_id']]['type'];
-                $attributeIsMultilang = !empty($attributes[$record['attribute_id']]['is_multilang']);
 
                 $record['attribute_type'] = $attributeType;
                 $this->exec("UPDATE `product_attribute_value` SET attribute_type='$attributeType' WHERE id='{$record['id']}'");
 
                 foreach (array_merge(['main' => ''], $languages) as $locale => $language) {
-                    if ($locale !== 'main' && !$attributeIsMultilang) {
+                    if ($locale !== 'main' && empty($attributes[$record['attribute_id']]['is_multilang'])) {
                         continue;
                     }
 
@@ -206,7 +205,6 @@ class V1Dot4Dot0 extends Base
             }
         }
 
-        $this->exec("ALTER TABLE `product_attribute_value` DROP value");
         foreach ($languages as $language) {
             $this->exec("ALTER TABLE `product_attribute_value` DROP value_$language");
             $this->exec("DROP INDEX IDX_OWNER_USER_" . strtoupper($language) . " ON `product_attribute_value`");
@@ -217,6 +215,7 @@ class V1Dot4Dot0 extends Base
             $this->exec("ALTER TABLE `product_attribute_value` DROP owner_user_{$language}_id");
             $this->exec("ALTER TABLE `product_attribute_value` DROP assigned_user_{$language}_id");
         }
+        $this->exec("ALTER TABLE `product_attribute_value` DROP value");
     }
 
     public function down(): void
