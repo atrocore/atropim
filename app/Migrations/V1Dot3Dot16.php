@@ -159,7 +159,7 @@ class V1Dot3Dot16 extends Base
 
     public function down(): void
     {
-        throw new Error('Downgrade is blocked!');
+        throw new Error('Downgrade is prohibited!');
     }
 
     protected function exec(string $query): void

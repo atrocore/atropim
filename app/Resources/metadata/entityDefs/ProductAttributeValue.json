@@ -93,6 +93,7 @@
     },
     "value": {
       "type": "text",
+      "notStorable": true,
       "rows": 4,
       "lengthOfCut": 400,
       "isMultilang": true,

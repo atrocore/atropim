@@ -59,7 +59,7 @@ class ProductAttributeValue extends AbstractSelectManager
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
                     $onlyTabAttributes = true;
                     $tabId = $v['data']['onlyTabAttributes'];
-                    if (empty($tabId) || $tabId === 'null'){
+                    if (empty($tabId) || $tabId === 'null') {
                         $tabId = null;
                     }
                     unset($params['where'][$k]);
@@ -101,31 +101,50 @@ class ProductAttributeValue extends AbstractSelectManager
     public function applyAdditional(array &$result, array $params)
     {
         if ($this->isSubQuery) {
-            return false;
+            return;
         }
 
-        // prepare additional select columns
         $additionalSelectColumns = [
             'typeValue'          => 'attribute.type_value',
             'attributeGroupId'   => 'ag1.id',
-            'attributeGroupName' => 'ag1.name'
+            'attributeGroupName' => 'ag1.name',
+            'intValue'           => 'pavd1.int_value',
+            'floatValue'         => 'pavd1.float_value',
+            'boolValue'          => 'pavd1.bool_value',
+            'dateValue'          => 'pavd1.date_value',
+            'datetimeValue'      => 'pavd1.datetime_value',
+            'varcharValue'       => 'pavd1.varchar_value',
+            'textValue'          => 'pavd1.text_value',
         ];
 
-        // prepare for multiLang fields
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                $field = Util::toCamelCase('typeValue_' . strtolower($locale));
-                $dbField = 'attribute.type_value_' . strtolower($locale);
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $lcLanguage = strtolower($language);
+                $camelCaseLanguage = ucfirst(Util::toCamelCase($lcLanguage));
 
-                $additionalSelectColumns[$field] = $dbField;
+                $result['customJoin'] .= " LEFT JOIN product_attribute_value_data pavd_{$lcLanguage} ON pavd_{$lcLanguage}.id=product_attribute_value.value_data_{$lcLanguage}_id";
+
+                $additionalSelectColumns["typeValue$camelCaseLanguage"] = "attribute.type_value_$lcLanguage";
+                $additionalSelectColumns["intValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.int_value";
+                $additionalSelectColumns["floatValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.float_value";
+                $additionalSelectColumns["boolValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.bool_value";
+                $additionalSelectColumns["dateValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.date_value";
+                $additionalSelectColumns["datetimeValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.datetime_value";
+                $additionalSelectColumns["varcharValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.varchar_value";
+                $additionalSelectColumns["textValue$camelCaseLanguage"] = "pavd_{$lcLanguage}.text_value";
             }
         }
 
         $result['customJoin'] .= " LEFT JOIN attribute_group AS ag1 ON ag1.id=attribute.attribute_group_id AND ag1.deleted=0";
+        $result['customJoin'] .= " LEFT JOIN product_attribute_value_data pavd ON pavd.id=product_attribute_value.value_data_id";
 
         foreach ($additionalSelectColumns as $alias => $sql) {
             $result['additionalSelectColumns'][$sql] = $alias;
         }
+
+        echo '<pre>';
+        print_r($result);
+        die();
     }
 
     /**
@@ -228,7 +247,7 @@ class ProductAttributeValue extends AbstractSelectManager
                 ->join('attribute')
                 ->where(
                     [
-                        'productId' => $data['productId'],
+                        'productId'                  => $data['productId'],
                         'attribute.attributeGroupId' => ($data['attributeGroupId'] != '') ? $data['attributeGroupId'] : null
                     ]
                 )
