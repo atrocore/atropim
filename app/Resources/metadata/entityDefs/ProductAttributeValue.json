@@ -486,6 +486,7 @@
       "attribute_id",
       "scope",
       "channel_id",
+      "language",
       "deleted"
     ]
   },

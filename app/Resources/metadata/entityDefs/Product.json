@@ -319,7 +319,7 @@
       "exportDisabled": true,
       "emHidden": true
     },
-    "isInconsistentAttributes": {
+    "hasInconsistentAttributes": {
       "type": "bool",
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,

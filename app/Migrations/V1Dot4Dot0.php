@@ -46,6 +46,8 @@ class V1Dot4Dot0 extends Base
             }
         }
 
+        $this->exec("DELETE FROM `product_attribute_value` WHERE deleted=1");
+
         $this->exec("ALTER TABLE `product_attribute_value` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD text_value MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD float_value DOUBLE PRECISION DEFAULT NULL COLLATE utf8mb4_unicode_ci");
@@ -63,8 +65,10 @@ class V1Dot4Dot0 extends Base
         $this->exec("CREATE INDEX IDX_FLOAT_VALUE ON `product_attribute_value` (float_value, deleted)");
         $this->exec("CREATE INDEX IDX_VARCHAR_VALUE ON `product_attribute_value` (varchar_value, deleted)");
         $this->exec("CREATE INDEX IDX_TEXT_VALUE ON `product_attribute_value` (text_value(500), deleted)");
-        $this->exec("ALTER TABLE `product` ADD is_inconsistent_attributes TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("ALTER TABLE `product` ADD has_inconsistent_attributes TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
 
+        $this->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value`");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, language, deleted)");
 
         $offset = 0;
         $limit = 1000;
@@ -151,7 +155,6 @@ class V1Dot4Dot0 extends Base
                                 break;
                         }
                     }
-
 
                     $updateData = array_merge($record, $dataValues);
 
