@@ -100,13 +100,9 @@ class V1Dot4Dot0 extends Base
                 $this->exec("UPDATE `product_attribute_value` SET attribute_type='$attributeType' WHERE id='{$record['id']}'");
 
                 foreach (array_merge(['main' => ''], $languages) as $locale => $language) {
-                    if (!empty($language) && !$attributeIsMultilang) {
+                    if ($locale !== 'main' && !$attributeIsMultilang) {
                         continue;
                     }
-
-                    echo '<pre>';
-                    print_r($language);
-                    die();
 
                     $dataValues = [];
 
