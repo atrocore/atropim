@@ -84,7 +84,7 @@ class V1Dot4Dot0 extends Base
 
             $attributes = [];
             foreach ($attrs as $v) {
-                $attributes['id'] = $v;
+                $attributes[$v['id']] = $v;
             }
 
             foreach ($records as $record) {
@@ -103,6 +103,10 @@ class V1Dot4Dot0 extends Base
                     if (!empty($language) && !$attributeIsMultilang) {
                         continue;
                     }
+
+                    echo '<pre>';
+                    print_r($language);
+                    die();
 
                     $dataValues = [];
 
