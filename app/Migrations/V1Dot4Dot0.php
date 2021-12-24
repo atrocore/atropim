@@ -186,7 +186,7 @@ class V1Dot4Dot0 extends Base
                         $updateQueryParts[] = "$field=$val";
                     }
 
-                    $this->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='$id'");
+                    $this->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='{$updateData['id']}'");
                 }
             }
         }
