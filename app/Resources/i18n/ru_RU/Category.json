@@ -12,8 +12,7 @@
     "categoryRouteName": "Дерево категорий",
     "scope": "Область применения",
     "productCategories": "Категории продукта",
-    "catalogs": "Каталоги",
-    "popular": "Популярная"
+    "catalogs": "Каталоги"
   },
   "links": {
     "categoryParent": "Родительская категория",
