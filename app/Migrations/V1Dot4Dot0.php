@@ -101,7 +101,7 @@ class V1Dot4Dot0 extends Base
                             case 'multiEnum':
                             case 'text':
                             case 'wysiwyg':
-                                $dataValues['text_value'] = $this->getPDO()->quote($attributeValue);
+                                $dataValues['text_value'] = (string)$attributeValue;
                                 break;
                             case 'bool':
                                 $dataValues['bool_value'] = !empty($attributeValue) ? 1 : 0;
@@ -111,7 +111,7 @@ class V1Dot4Dot0 extends Base
                                 if (!empty($record['data'])) {
                                     $jsonData = @json_decode($record['data'], true);
                                     if (!empty($jsonData['currency'])) {
-                                        $dataValues['varchar_value'] = $this->getPDO()->quote($jsonData['currency']);
+                                        $dataValues['varchar_value'] = (string)$jsonData['currency'];
                                     }
                                 }
                                 break;
@@ -120,7 +120,7 @@ class V1Dot4Dot0 extends Base
                                 if (!empty($record['data'])) {
                                     $jsonData = @json_decode($record['data'], true);
                                     if (!empty($jsonData['unit'])) {
-                                        $dataValues['varchar_value'] = $this->getPDO()->quote($jsonData['unit']);
+                                        $dataValues['varchar_value'] = (string)$jsonData['unit'];
                                     }
                                 }
                                 break;
@@ -133,7 +133,7 @@ class V1Dot4Dot0 extends Base
                             case 'date':
                                 try {
                                     $date = (new \DateTime($attributeValue))->format("Y-m-d");
-                                    $dataValues['date_value'] = $this->getPDO()->quote($date);
+                                    $dataValues['date_value'] = (string)$date;
                                 } catch (\Throwable $e) {
                                     // ignore
                                 }
@@ -141,13 +141,13 @@ class V1Dot4Dot0 extends Base
                             case 'datetime':
                                 try {
                                     $date = (new \DateTime($attributeValue))->format("Y-m-d H:i:s");
-                                    $dataValues['datetime_value'] = $this->getPDO()->quote($date);
+                                    $dataValues['datetime_value'] = (string)$date;
                                 } catch (\Throwable $e) {
                                     // ignore
                                 }
                                 break;
                             default:
-                                $dataValues['varchar_value'] = $this->getPDO()->quote($attributeValue);
+                                $dataValues['varchar_value'] = (string)$attributeValue;
                                 break;
                         }
                     }
