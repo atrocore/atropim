@@ -77,11 +77,15 @@ class V1Dot4Dot0 extends Base
         while (!empty($records = $this->getPDO()->query(sprintf($query, $offset, $limit))->fetchAll(\PDO::FETCH_ASSOC))) {
             $offset = $offset + $limit;
 
-            $attributes = $this
+            $attrs = $this
                 ->getPDO()
-                ->query("SELECT id, type FROM `attribute` WHERE deleted=0 AND id IN ('" . implode("','", array_column($records, 'attribute_id')) . "')")
+                ->query("SELECT id, type, is_multilang FROM `attribute` WHERE deleted=0 AND id IN ('" . implode("','", array_column($records, 'attribute_id')) . "')")
                 ->fetchAll(\PDO::FETCH_ASSOC);
-            $attributes = array_column($attributes, 'type', 'id');
+
+            $attributes = [];
+            foreach ($attrs as $v) {
+                $attributes['id'] = $v;
+            }
 
             foreach ($records as $record) {
                 if (!isset($attributes[$record['attribute_id']])) {
@@ -89,12 +93,17 @@ class V1Dot4Dot0 extends Base
                     continue 1;
                 }
 
-                $attributeType = $attributes[$record['attribute_id']];
+                $attributeType = $attributes[$record['attribute_id']]['type'];
+                $attributeIsMultilang = !empty($attributes[$record['attribute_id']]['is_multilang']);
 
                 $record['attribute_type'] = $attributeType;
                 $this->exec("UPDATE `product_attribute_value` SET attribute_type='$attributeType' WHERE id='{$record['id']}'");
 
                 foreach (array_merge(['main' => ''], $languages) as $locale => $language) {
+                    if (!empty($language) && !$attributeIsMultilang) {
+                        continue;
+                    }
+
                     $dataValues = [];
 
                     $attributeValue = $record['value' . $language];
