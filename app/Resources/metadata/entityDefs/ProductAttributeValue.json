@@ -457,10 +457,6 @@
       "foreign": "productAttributeValues",
       "entity": "Channel"
     },
-    "valueData": {
-      "type": "belongsTo",
-      "entity": "ProductAttributeValueData"
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
