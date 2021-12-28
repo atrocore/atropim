@@ -17,7 +17,7 @@
     "linkCategoryWithChannel": "Link category '%s' with channel '%s'",
     "changeCategoryForChannel": "Change category to '%s' for channel '%s'",
     "Create Channel": "Create Channel",
-    "mainLocale": "Main Language"
+    "main": "Main Language"
   },
   "messages": {
     "categoryChangeConfirm": "Are you sure you want to unlink (or change) the category tree for this channel? All the product linked with original category tree, will be unlinked from this channel (and the the products of the new category tree will be linked with it)."
