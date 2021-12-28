@@ -50,7 +50,7 @@ class ProductAttributeValue extends AbstractRepository
         switch ($entity->get('attributeType')) {
             case 'array':
             case 'multiEnum':
-                $entity->set('value', @json_decode($entity->get('textValue'), true));
+                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 break;
             case 'text':
             case 'wysiwyg':
@@ -135,27 +135,38 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if (empty($entity->get('channelId'))) {
-            $entity->set('channelId', '');
+        /**
+         * Validation. Is such ProductAttribute exist?
+         */
+        if (empty($options['skipProductAttributeValueHook']) && !$this->isUnique($entity)) {
+            $channelName = $entity->get('scope');
+            if ($channelName == 'Channel') {
+                $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
+            }
+
+            throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
         }
 
-        $this->isValidForSave($entity, $options);
 
         if (!$entity->isNew()) {
             self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
         }
 
+        if (empty($entity->get('channelId'))) {
+            $entity->set('channelId', '');
+        }
+
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($entity->isNew()) {
-            if ($attribute->get('type') === 'enum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
-                $entity->set('value', $attribute->get('enumDefault'));
+            $entity->set('attributeType', $attribute->get('type'));
+            if ($attribute->get('type') === 'enum' && !empty($attribute->get('enumDefault'))) {
+                $entity->set('varcharValue', $attribute->get('enumDefault'));
             }
 
-            if ($attribute->get('type') === 'unit' && empty($entity->get('value'))) {
-                $entity->set('value', $attribute->get('unitDefault'));
-                $entity->set('valueUnit', $attribute->get('unitDefaultUnit'));
-                $entity->setDataParameter('unit', $attribute->get('unitDefaultUnit'));
+            if ($attribute->get('type') === 'unit') {
+                $entity->set('floatValue', $attribute->get('unitDefault'));
+                $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
             }
         }
 
@@ -288,28 +299,6 @@ class ProductAttributeValue extends AbstractRepository
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
-    }
-
-    protected function isValidForSave(Entity $entity, array $options): bool
-    {
-        // exit
-        if (!empty($options['skipProductAttributeValueHook'])) {
-            return true;
-        }
-
-        /**
-         * Validation. Is such ProductAttribute exist?
-         */
-        if (!$this->isUnique($entity)) {
-            $channelName = $entity->get('scope');
-            if ($channelName == 'Channel') {
-                $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
-            }
-
-            throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
-        }
-
-        return true;
     }
 
     /**

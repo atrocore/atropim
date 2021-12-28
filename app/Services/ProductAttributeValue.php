@@ -115,7 +115,7 @@ class ProductAttributeValue extends AbstractService
             switch ($entity->get('attributeType')) {
                 case 'array':
                 case 'multiEnum':
-                    $entity->set('textValue', json_encode($data->value));
+                    $entity->set('textValue', $data->value);
                     break;
                 case 'text':
                 case 'wysiwyg':
@@ -155,6 +155,7 @@ class ProductAttributeValue extends AbstractService
                     $entity->set('varcharValue', $data->value);
                     break;
             }
+            $this->getRepository()->convertValue($entity);
         }
     }
 

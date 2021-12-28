@@ -32,25 +32,10 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Exceptions;
-use Espo\Core\Exceptions\NotFound;
 use Slim\Http\Request;
 
-/**
- * Attribute controller
- */
 class Attribute extends AbstractController
 {
-
-    /**
-     * @param array   $params
-     * @param array   $data
-     * @param Request $request
-     *
-     * @return bool
-     * @throws Exceptions\BadRequest
-     * @throws Exceptions\Error
-     * @throws Exceptions\Forbidden
-     */
     public function actionFiltersData($params, $data, Request $request): array
     {
         if ($this->isReadAction($request, $params)) {
@@ -58,16 +43,6 @@ class Attribute extends AbstractController
         }
 
         throw new Exceptions\Error();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function actionRead($params, $data, $request)
-    {
-        $result = parent::actionRead($params, $data, $request);
-
-        return $this->getRecordService()->updateAttributeReadData($result);
     }
 
     /**
