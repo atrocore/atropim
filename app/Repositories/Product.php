@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
+use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
@@ -86,6 +87,67 @@ class Product extends AbstractRepository
         }
 
         $this->updateProductsAttributes(implode(',', $ids));
+    }
+
+    public function updateInconsistentAttributes(Entity $product): void
+    {
+        if (empty($product->get('hasInconsistentAttributes'))) {
+            return;
+        }
+
+        if (empty($pavs = $product->get('productAttributeValues')) || count($pavs) === 0) {
+            return;
+        }
+
+        $languages = [];
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            $languages = $this->getConfig()->get('inputLanguageList', []);
+        }
+
+        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => array_column($pavs->toArray(), 'attributeId')])->find() as $attribute) {
+            $attributes[$attribute->get('id')] = $attribute;
+        }
+
+        if (empty($attributes)) {
+            return;
+        }
+
+        $mainLanguagePavs = new EntityCollection();
+
+        // remove language records
+        foreach ($pavs as $pav) {
+            if (!empty($pav->get('language'))) {
+                if (!in_array($pav->get('language'), $languages) || empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
+                    $this->getEntityManager()->removeEntity($pav);
+                }
+            } else {
+                if (!empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
+                    $mainLanguagePavs->append($pav);
+                }
+            }
+        }
+
+        // create language records
+        foreach ($mainLanguagePavs as $mainLanguagePav) {
+            foreach ($languages as $language) {
+                // skip if exist
+                foreach ($pavs as $pav) {
+                    if ($pav->get('mainLanguageId') === $mainLanguagePav->get('id') && $language === $pav->get('language')) {
+                        continue 2;
+                    }
+                }
+
+                $languagePav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
+                $languagePav->set($mainLanguagePav->toArray());
+                $languagePav->id = Util::generateId();
+                $languagePav->set('mainLanguageId', $mainLanguagePav->get('id'));
+                $languagePav->set('language', $language);
+
+                $this->getEntityManager()->saveEntity($languagePav);
+            }
+        }
+
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
     }
 
     public function getProductsIdsViaAccountId(string $accountId): array

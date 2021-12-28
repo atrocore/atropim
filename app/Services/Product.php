@@ -544,7 +544,7 @@ class Product extends AbstractService
             throw new Forbidden();
         }
 
-        $this->updateInconsistentAttributes($entity);
+        $this->getRepository()->updateInconsistentAttributes($entity);
 
         $link = 'productAttributeValues';
 
@@ -602,67 +602,6 @@ class Product extends AbstractService
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
             ->getArgument('result');
-    }
-
-    protected function updateInconsistentAttributes(Entity $product): void
-    {
-        if (empty($product->get('hasInconsistentAttributes'))) {
-            return;
-        }
-
-        if (empty($pavs = $product->get('productAttributeValues')) || count($pavs) === 0) {
-            return;
-        }
-
-        $languages = [];
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            $languages = $this->getConfig()->get('inputLanguageList', []);
-        }
-
-        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => array_column($pavs->toArray(), 'attributeId')])->find() as $attribute) {
-            $attributes[$attribute->get('id')] = $attribute;
-        }
-
-        if (empty($attributes)) {
-            return;
-        }
-
-        $mainLanguagePavs = new EntityCollection();
-
-        // remove language records
-        foreach ($pavs as $pav) {
-            if (!empty($pav->get('language'))) {
-                if (!in_array($pav->get('language'), $languages) || empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
-                    $this->getEntityManager()->removeEntity($pav);
-                }
-            } else {
-                if (!empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
-                    $mainLanguagePavs->append($pav);
-                }
-            }
-        }
-
-        // create language records
-        foreach ($mainLanguagePavs as $mainLanguagePav) {
-            foreach ($languages as $language) {
-                // skip if exist
-                foreach ($pavs as $pav) {
-                    if ($pav->get('mainLanguageId') === $mainLanguagePav->get('id') && $language === $pav->get('language')) {
-                        continue 2;
-                    }
-                }
-
-                $languagePav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
-                $languagePav->set($mainLanguagePav->toArray());
-                $languagePav->id = Util::generateId();
-                $languagePav->set('mainLanguageId', $mainLanguagePav->get('id'));
-                $languagePav->set('language', $language);
-
-                $this->getEntityManager()->saveEntity($languagePav);
-            }
-        }
-
-        $this->getInjection('pdo')->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
     }
 
     protected function filterPavsViaChannel(EntityCollection $collection): EntityCollection
@@ -844,7 +783,6 @@ class Product extends AbstractService
         parent::init();
 
         $this->addDependency('serviceFactory');
-        $this->addDependency('pdo');
     }
 
     /**

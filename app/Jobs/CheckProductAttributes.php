@@ -29,53 +29,29 @@
 
 declare(strict_types=1);
 
-namespace Pim\Services;
+namespace Pim\Jobs;
 
-use Espo\Services\QueueManagerBase;
+use Espo\Core\Jobs\Base;
 
-class QueueManagerProduct extends QueueManagerBase
+class CheckProductAttributes extends Base
 {
-    /**
-     * @inheritdoc
-     */
-    public function run(array $data = []): bool
+    public function run(): bool
     {
-        if (empty($data['action'])) {
-            return false;
-        }
+        $exist = $this
+            ->getEntityManager()
+            ->getRepository('QueueItem')
+            ->select(['id'])
+            ->where([
+                'data*'  => '%"updateProductsWithInconsistentAttributes"%',
+                'status' => ["Pending", "Running"]
+            ])
+            ->findOne();
 
-        return $this->{$data['action']}($data);
-    }
-
-    protected function updateProductsWithInconsistentAttributes(array $data): bool
-    {
-        /** @var \Pim\Repositories\Product $productRepository */
-        $productRepository = $this->getEntityManager()->getRepository('Product');
-
-        while (!empty($products = $this->getProductsWithInconsistentAttributes())) {
-            foreach ($products as $product) {
-                $productRepository->updateInconsistentAttributes($product);
-            }
+        if (empty($exist)) {
+            $name = $this->getContainer()->get('language')->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
+            $this->getContainer()->get('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
         }
 
         return true;
-    }
-
-    protected function getProductsWithInconsistentAttributes(): array
-    {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['hasInconsistentAttributes' => true])
-            ->limit(0, 1000)
-            ->order('id', true)
-            ->find();
-
-        $result = [];
-        foreach ($products as $product) {
-            $result[] = $product;
-        }
-
-        return $result;
     }
 }
