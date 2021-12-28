@@ -326,18 +326,6 @@
       "filterDisabled": true,
       "exportDisabled": true
     },
-    "isLocale": {
-      "type": "bool",
-      "notStorable": true,
-      "default": false,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true
-    },
     "language": {
       "type": "varchar",
       "default": null,

@@ -41,6 +41,68 @@ class ProductAttributeValue extends AbstractRepository
 {
     protected static $beforeSaveData = [];
 
+    public function convertValue(Entity $entity): void
+    {
+        if (empty($entity->get('attributeType'))) {
+            return;
+        }
+
+        switch ($entity->get('attributeType')) {
+            case 'array':
+            case 'multiEnum':
+                $entity->set('value', @json_decode($entity->get('textValue'), true));
+                break;
+            case 'text':
+            case 'wysiwyg':
+                $entity->set('value', $entity->get('textValue'));
+                break;
+            case 'bool':
+                $entity->set('value', $entity->get('boolValue'));
+                break;
+            case 'currency':
+                $entity->set('value', $entity->get('floatValue'));
+                $entity->set('valueCurrency', $entity->get('varcharValue'));
+                break;
+            case 'unit':
+                $entity->set('value', $entity->get('floatValue'));
+                $entity->set('valueUnit', $entity->get('varcharValue'));
+                break;
+            case 'int':
+                $entity->set('value', $entity->get('intValue'));
+                break;
+            case 'float':
+                $entity->set('value', $entity->get('floatValue'));
+                break;
+            case 'date':
+                $entity->set('value', $entity->get('dateValue'));
+                break;
+            case 'datetime':
+                $entity->set('value', $entity->get('datetimeValue'));
+                break;
+            case 'asset':
+                $entity->set('value', $entity->get('varcharValue'));
+                $entity->set('valueId', $entity->get('varcharValue'));
+                if (!empty($entity->get('valueId'))) {
+                    if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
+                        $entity->set('valueName', $attachment->get('name'));
+                        $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+                    }
+                }
+                break;
+            default:
+                $entity->set('value', $entity->get('varcharValue'));
+                break;
+        }
+    }
+
+    public function get($id = null)
+    {
+        $entity = parent::get($id);
+        $this->convertValue($entity);
+
+        return $entity;
+    }
+
     public function removeDeletedDuplicate(Entity $entity): void
     {
         $sql = "DELETE FROM `product_attribute_value` 
@@ -55,21 +117,11 @@ class ProductAttributeValue extends AbstractRepository
         $this->getPDO()->exec($sql);
     }
 
-    public function getMultilangAttributeId(string $id, string $locale): array
-    {
-        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
-
-        $sql = "SELECT CONCAT(pav.attribute_id, '{$separator}', '{$locale}') AS id
-                FROM product_attribute_value pav
-                WHERE pav.id = '{$id}'";
-
-        return $this->getEntityManager()->nativeQuery($sql)->fetch(\PDO::FETCH_ASSOC);
-    }
-
     public function findCopy(Entity $entity): ?Entity
     {
         $where = [
             'id!='        => $entity->get('id'),
+            'language'    => $entity->get('language'),
             'productId'   => $entity->get('productId'),
             'attributeId' => $entity->get('attributeId'),
             'scope'       => $entity->get('scope'),
@@ -127,51 +179,23 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
-        if (!$entity->isNew() && $attribute->get('unique')) {
-            $valueChanged = null;
-
-            // check if value field changed
-            if ($entity->isAttributeChanged('value') && !empty($entity->get('value'))) {
-                $valueChanged = 'value';
-            } else {
-                if ($entity->get('attribute')->get('isMultilang') && $this->getConfig()->get('isMultilangActive', false)) {
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                        $localeField = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
-
-                        if (!empty($entity->get($localeField)) && $entity->isAttributeChanged($localeField)) {
-                            $valueChanged = $localeField;
-                        }
-                    }
-                }
-            }
-
+        if (!$entity->isNew() && $attribute->get('unique') && $entity->isAttributeChanged('value')) {
             $where = [
                 'id!='            => $entity->id,
+                'boolValue'       => $entity->get('boolValue'),
+                'dateValue'       => $entity->get('dateValue'),
+                'datetimeValue'   => $entity->get('datetimeValue'),
+                'intValue'        => $entity->get('intValue'),
+                'floatValue'      => $entity->get('floatValue'),
+                'varcharValue'    => $entity->get('varcharValue'),
+                'textValue'       => $entity->get('textValue'),
+                'language'        => $entity->get('language'),
                 'attributeId'     => $entity->get('attributeId'),
                 'product.deleted' => false
             ];
 
-            if (!empty($valueChanged)) {
-                $where[$valueChanged] = $entity->get($valueChanged);
-                $where['data'] = !empty($entity->get('data')) ? Json::encode($entity->get('data')) : null;
-            } elseif ($entity->isAttributeChanged('data') && !empty($entity->get('data'))) {
-                // if only data field changed (for unit or currency attributes)
-                $where['value'] = $entity->get('value');
-                $where['data'] = Json::encode($entity->get('data'));
-            } else {
-                return;
-            }
-
-            $count = $this
-                ->getEntityManager()
-                ->getRepository($entity->getEntityType())
-                ->join(['product'])
-                ->where($where)
-                ->count();
-
-            if ($count) {
-                $message = sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name'));
-                throw new BadRequest($message);
+            if (!empty($this->select(['id'])->join(['product'])->where($where)->findOne())) {
+                throw new BadRequest(sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name')));
             }
         }
 
@@ -181,19 +205,8 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // create note
-        if (!$entity->isNew() && ($entity->isAttributeChanged('value') || $entity->isAttributeChanged('data'))) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('value')) {
             $this->createNote($entity);
-        }
-
-        if (!in_array($attribute->get('type'), ['enum', 'multiEnum'])) {
-            $langList = $this->getConfig()->get('inputLanguageList', []);
-            foreach ($langList as $locale) {
-                $field = Util::toCamelCase('value_' . strtolower($locale));
-
-                if (!$entity->isNew() && $entity->isAttributeChanged($field)) {
-                    $this->createNote($entity, $locale);
-                }
-            }
         }
 
         parent::beforeSave($entity, $options);
@@ -247,22 +260,6 @@ class ProductAttributeValue extends AbstractRepository
             return $field;
         }
 
-        if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isLocale')) {
-
-            if (isset($entity->locale)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                    if ($locale == $entity->locale) {
-                        $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
-                        $param .= $camelCaseLocale;
-
-                        if ($entity->isAttributeChanged($param) && $entity->get($param)) {
-                            return $field;
-                        }
-                    }
-                }
-            }
-        }
-
         return null;
     }
 
@@ -298,16 +295,6 @@ class ProductAttributeValue extends AbstractRepository
         // exit
         if (!empty($options['skipProductAttributeValueHook'])) {
             return true;
-        }
-
-        $product = $this->getEntityManager()->getEntity('Product', $entity->get('productId'));
-        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-
-        /**
-         * Validation. Product and Attribute can't by empty
-         */
-        if (empty($product) || empty($attribute)) {
-            throw new BadRequest($this->exception('Product and Attribute cannot be empty'));
         }
 
         /**
@@ -357,6 +344,12 @@ class ProductAttributeValue extends AbstractRepository
         if ($attribute->get('type') !== 'enum' || empty($attribute->get('isMultilang'))) {
             return;
         }
+
+        // @todo
+
+        echo '<pre>';
+        print_r('syncEnumValues');
+        die();
 
         $locale = '';
         if (!empty($entity->get('isLocale'))) {
@@ -421,6 +414,12 @@ class ProductAttributeValue extends AbstractRepository
         if ($attribute->get('type') !== 'multiEnum' || empty($attribute->get('isMultilang'))) {
             return;
         }
+
+        // @todo
+
+        echo '<pre>';
+        print_r('syncMultiEnumValues');
+        die();
 
         $locale = '';
         if (!empty($entity->get('isLocale'))) {

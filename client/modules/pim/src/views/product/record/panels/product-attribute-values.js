@@ -610,7 +610,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             let filter = (this.model.advancedEntityView || {}).localesFilter;
 
             if (filter !== null && filter !== '') {
-                if ((fieldView.model.get('isLocale') && fieldView.model.get('id').indexOf(filter) === -1)
+                if ((fieldView.model.get('language') && fieldView.model.get('id').indexOf(filter) === -1)
                     || !fieldView.model.get('attributeIsMultilang')) {
                     hide = true;
                 }
@@ -623,7 +623,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             let hide = false;
             let filter = (this.model.advancedEntityView || {}).showGenericFields;
 
-            if (!fieldView.model.get('isLocale') && !filter) {
+            if (!fieldView.model.get('language') && !filter) {
                 hide = true;
             }
 
