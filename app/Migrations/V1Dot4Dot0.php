@@ -70,6 +70,9 @@ class V1Dot4Dot0 extends Base
         $this->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value`");
         $this->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, language, deleted)");
 
+        $this->exec("ALTER TABLE `product_attribute_value` ADD main_language_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("CREATE INDEX IDX_MAIN_LANGUAGE_ID ON `product_attribute_value` (main_language_id)");
+
         $offset = 0;
         $limit = 1000;
         $query = "SELECT * FROM `product_attribute_value` WHERE deleted=0 ORDER BY id LIMIT %s, %s";
@@ -183,8 +186,8 @@ class V1Dot4Dot0 extends Base
                     }
 
                     if (!empty($language)) {
-                        $updateData['id'] .= '~' . $locale;
-                        $this->exec("INSERT INTO `product_attribute_value` (id, language) VALUES ('{$updateData['id']}', '$locale')");
+                        $this->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('{$updateData['id']}', '$locale', '{$updateData['id']}')");
+                        $updateData['id'] = Util::generateId();
                     }
 
                     $updateQueryParts = [];

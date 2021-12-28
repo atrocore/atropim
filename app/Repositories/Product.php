@@ -71,7 +71,7 @@ class Product extends AbstractRepository
 
     public function updateProductsAttributes(string $subQuery): void
     {
-        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery)");
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery) AND deleted=0");
 
         $name = $this->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
         $this->getInjection('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
