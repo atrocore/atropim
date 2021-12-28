@@ -30,8 +30,8 @@ Espo.define('pim:views/channel/fields/locales', 'views/fields/multi-enum',
     Dep => Dep.extend({
 
         setup() {
-            this.params.options = ["mainLocale"];
-            this.params.translatedOptions = {"mainLocale": this.translate("mainLocale", "labels", "Channel")};
+            this.params.options = ["main"];
+            this.params.translatedOptions = {"main": this.translate("main", "labels", "Channel")};
 
             if (this.getConfig().get('isMultilangActive')) {
                 const locales = this.getConfig().get('inputLanguageList') || [];
@@ -42,7 +42,7 @@ Espo.define('pim:views/channel/fields/locales', 'views/fields/multi-enum',
             }
 
             if (!this.model.get('locales') || this.model.get('locales').length === 0) {
-                this.model.set('locales', ["mainLocale"])
+                this.model.set('locales', ["main"])
             }
 
             Dep.prototype.setup.call(this);

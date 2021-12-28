@@ -74,7 +74,7 @@ class Channel extends Base
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (empty($entity->get('locales'))) {
-            $entity->set('locales', ['mainLocale']);
+            $entity->set('locales', ['main']);
         }
 
         if ($entity->isAttributeChanged('categoryId')) {

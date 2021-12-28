@@ -76,7 +76,7 @@ class SettingsController extends AbstractListener
 
         if (!empty($data->inputLanguageList)) {
             foreach ($channelsLocales as $locale) {
-                if ($locale !== 'mainLocale' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
+                if ($locale !== 'main' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
                     throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
                 }
             }
