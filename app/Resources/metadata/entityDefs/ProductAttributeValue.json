@@ -340,7 +340,8 @@
     },
     "language": {
       "type": "varchar",
-      "default": null,
+      "default": "main",
+      "required": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,

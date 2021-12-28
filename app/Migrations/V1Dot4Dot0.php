@@ -39,6 +39,11 @@ class V1Dot4Dot0 extends Base
 {
     public function up(): void
     {
+        foreach ($this->getPDO()->query("SELECT * FROM `channel` WHERE deleted=0 ORDER BY id")->fetchAll(\PDO::FETCH_ASSOC) as $channel) {
+            $locales = str_replace("mainLocale", "main", $channel['locales']);
+            $this->exec("UPDATE `channel` SET locales='$locales' WHERE id='{$channel['id']}'");
+        }
+
         $this->exec("DELETE FROM scheduled_job WHERE id='check_product_attributes'");
         $this->exec("INSERT INTO scheduled_job (id, name, job, status, scheduling, is_internal) VALUES ('check_product_attributes', 'CheckProductAttributes', 'CheckProductAttributes', 'Active', '0 * * * *', 1)");
 
@@ -52,7 +57,8 @@ class V1Dot4Dot0 extends Base
         $this->exec("DELETE FROM `product_attribute_value` WHERE deleted=1");
 
         $this->exec("ALTER TABLE `product_attribute_value` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-        $this->exec("UPDATE `product_attribute_value` SET language='' WHERE language IS NULL");
+        $this->exec("UPDATE `product_attribute_value` SET language='main' WHERE language IS NULL");
+        $this->exec("ALTER TABLE `product_attribute_value` CHANGE `language` language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD text_value MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD float_value DOUBLE PRECISION DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD varchar_value VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");

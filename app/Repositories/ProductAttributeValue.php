@@ -191,7 +191,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if (empty($entity->get('language'))) {
-            $entity->set('language', '');
+            $entity->set('language', 'main');
         }
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));

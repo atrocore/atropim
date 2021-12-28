@@ -325,9 +325,7 @@ class Product extends AbstractService
         $parts = explode('_', $assetId);
         $assetId = array_shift($parts);
 
-        /** @var Asset $asset */
-        $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
-        if (empty($asset) || empty($attachment = $asset->get('file'))) {
+        if (empty($asset = $this->getEntityManager()->getEntity('Asset', $assetId)) || empty($attachment = $asset->get('file'))) {
             throw new NotFound();
         }
 
@@ -590,7 +588,9 @@ class Product extends AbstractService
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
-                if ($pav->get('scope') === 'Global' || ($pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav)))) {
+                if ($pav->get('scope') === 'Global') {
+                    $newCollection->append($pav);
+                } elseif ($pav->get('scope') === 'Channel' && !empty($channel = $pav->get('channel')) && in_array($pav->get('language'), $channel->get('locales'))) {
                     $newCollection->append($pav);
                 }
             }
@@ -783,28 +783,5 @@ class Product extends AbstractService
         parent::init();
 
         $this->addDependency('serviceFactory');
-    }
-
-    /**
-     * @param Entity $pav
-     * @param bool   $ignoreMainLocale
-     *
-     * @return array
-     */
-    private function getPavLocales(Entity $pav, bool $ignoreMainLocale = false): array
-    {
-        if ($pav->get('scope') !== 'Channel' || empty($channel = $pav->get('channel'))) {
-            return [];
-        }
-
-        $locales = [];
-        foreach ($pav->get('channel')->get('locales') as $locale) {
-            if ($locale === 'mainLocale' && $ignoreMainLocale) {
-                continue 1;
-            }
-            $locales[] = $locale;
-        }
-
-        return $locales;
     }
 }
