@@ -116,7 +116,7 @@ class Product extends AbstractRepository
 
         // remove language records
         foreach ($pavs as $pav) {
-            if (!empty($pav->get('language'))) {
+            if ($pav->get('language') !== 'main') {
                 if (!in_array($pav->get('language'), $languages) || empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
                     $this->getEntityManager()->removeEntity($pav);
                 }
