@@ -69,6 +69,25 @@ class Product extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsAttributeOwnership';
 
+    public function updateProductsAttributes(string $subQuery): void
+    {
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery)");
+
+        $name = $this->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
+        $this->getInjection('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
+    }
+
+    public function updateProductsAttributesViaProductIds(array $productIds): void
+    {
+        // prepare ids
+        $ids = [];
+        foreach ($productIds as $id) {
+            $ids[] = $this->getPDO()->quote($id);
+        }
+
+        $this->updateProductsAttributes(implode(',', $ids));
+    }
+
     public function getProductsIdsViaAccountId(string $accountId): array
     {
         $accountId = $this->getPDO()->quote($accountId);
@@ -622,6 +641,7 @@ class Product extends AbstractRepository
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
+        $this->addDependency('queueManager');
     }
 
     /**

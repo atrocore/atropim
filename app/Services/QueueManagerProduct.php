@@ -29,45 +29,26 @@
 
 declare(strict_types=1);
 
-namespace Pim\Listeners;
+namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
-use Treo\Listeners\AbstractListener;
-use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
+use Espo\Services\QueueManagerBase;
 
-/**
- * Class ProductAttributeValueController
- */
-class ProductAttributeValueController extends AbstractListener
+class QueueManagerProduct extends QueueManagerBase
 {
     /**
-     * @param Event $event
+     * @inheritdoc
      */
-    public function beforeActionCreate(Event $event)
+    public function run(array $data = []): bool
     {
-        // get data
-        $data = $event->getArguments();
-
-        if (is_array($data['data']->value)) {
-            $data['data']->value = Json::encode($data['data']->value);
+        if (empty($data['action'])) {
+            return false;
         }
 
-        // for multiLang fields
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                $multiLangField = Util::toCamelCase('value_' . strtolower($locale));
-                if (isset($data['data']->$multiLangField) && is_array($data['data']->$multiLangField)) {
-                    $data['data']->$multiLangField = Json::encode($data['data']->$multiLangField);
-                }
-            }
-        }
+        return $this->{$data['action']}($data);
+    }
 
-        // set data
-        if (isset($data['result'])) {
-            $event->setArgument('result', $data['result']);
-        }
+    protected function updateProductsWithInconsistentAttributes(array $data): bool
+    {
+        return true;
     }
 }

@@ -168,6 +168,10 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('floatValue', $attribute->get('unitDefault'));
                 $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
             }
+
+            if (!empty($attribute->get('isMultilang'))) {
+                $this->getEntityManager()->getRepository('Product')->updateProductsAttributesViaProductIds([$entity->get('productId')]);
+            }
         }
 
         $this->syncEnumValues($entity);

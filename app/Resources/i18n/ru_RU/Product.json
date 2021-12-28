@@ -62,6 +62,7 @@
     "contents": "Контент"
   },
   "labels": {
+    "updateProductsWithInconsistentAttributes": "Обновление продуктов с инконсистентными атрибутами",
     "Create Product": "Создать продукт",
     "Product Attributes": "Атрибуты",
     "thereIsNoValidAttributesForChannel": "Для канала нет допустимых атрибутов",
