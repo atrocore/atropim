@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class Attribute
@@ -190,46 +190,6 @@ class Attribute extends AbstractRepository
         parent::afterSave($entity, $options);
 
         $this->setInheritedOwnership($entity);
-
-        if ($entity->get('isMultilang') == true && $this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
-
-                if ($entity->isAttributeChanged("assignedUser{$camelCaseLocale}Id")) {
-                    $this->setInheritedOwnershipUser(
-                        $entity,
-                        "assignedUser{$camelCaseLocale}",
-                        $this->getConfig()->get($this->assignedUserOwnership, '')
-                    );
-                }
-
-                if ($entity->isAttributeChanged("ownerUser{$camelCaseLocale}Id")) {
-                    $this->setInheritedOwnershipUser(
-                        $entity,
-                        "ownerUser{$camelCaseLocale}",
-                        $this->getConfig()->get($this->ownerUserOwnership, '')
-                    );
-                }
-            }
-        }
-
-        if ($entity->isAttributeChanged('isMultilang') && !$entity->get('isMultilang') && $this->getConfig()->get('isMultilangActive', false)) {
-            $fields = [];
-
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $fields[] = '`value_' . strtolower($locale) . '`=null';
-            }
-
-            if (!empty($fields)) {
-                $fields = implode(',', $fields);
-
-                $sth = $this
-                    ->getEntityManager()
-                    ->getPDO()
-                    ->prepare("UPDATE product_attribute_value SET {$fields} WHERE deleted = 0");
-                $sth->execute();
-            }
-        }
     }
 
     /**

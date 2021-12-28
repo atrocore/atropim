@@ -585,9 +585,6 @@ class Product extends AbstractService
             'collection' => $collection
         ];
 
-        /**
-         * For attribute locales
-         */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
             $newCollection = new EntityCollection();
             foreach ($result['collection'] as $pav) {
@@ -596,23 +593,9 @@ class Product extends AbstractService
                 }
             }
 
+            $result['total'] = count($newCollection);
             $result['collection'] = $newCollection;
         }
-
-        /**
-         * Check every pav by ACL
-         */
-        if (!empty($result['collection']->count())) {
-            $newCollection = new EntityCollection();
-            foreach ($result['collection'] as $pav) {
-                if ($this->getAcl()->check($pav, 'read')) {
-                    $newCollection->append($pav);
-                }
-            }
-            $result['collection'] = $newCollection;
-        }
-
-        $result['total'] = $result['collection']->count();
 
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))

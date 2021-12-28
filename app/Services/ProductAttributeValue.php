@@ -115,8 +115,6 @@ class ProductAttributeValue extends AbstractService
             switch ($entity->get('attributeType')) {
                 case 'array':
                 case 'multiEnum':
-                    $entity->set('textValue', $data->value);
-                    break;
                 case 'text':
                 case 'wysiwyg':
                     $entity->set('textValue', $data->value);
