@@ -6,7 +6,7 @@
     },
     "CheckProductAttributes": {
       "isSystem": true,
-      "scheduling": "* * * * *"
+      "scheduling": "* */1 * * *"
     }
   }
 }

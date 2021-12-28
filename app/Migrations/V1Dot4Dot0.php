@@ -40,7 +40,7 @@ class V1Dot4Dot0 extends Base
     public function up(): void
     {
         $this->exec("DELETE FROM scheduled_job WHERE id='check_product_attributes'");
-        $this->exec("INSERT INTO scheduled_job (id, name, job, status, scheduling, is_internal) VALUES ('check_product_attributes', 'CheckProductAttributes', 'CheckProductAttributes', 'Active', '* * * * *', 1)");
+        $this->exec("INSERT INTO scheduled_job (id, name, job, status, scheduling, is_internal) VALUES ('check_product_attributes', 'CheckProductAttributes', 'CheckProductAttributes', 'Active', '* */1 * * *', 1)");
 
         $languages = [];
         if ($this->getConfig()->get('isMultilangActive', false)) {
