@@ -52,6 +52,7 @@ class V1Dot4Dot0 extends Base
         $this->exec("DELETE FROM `product_attribute_value` WHERE deleted=1");
 
         $this->exec("ALTER TABLE `product_attribute_value` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("UPDATE `product_attribute_value` SET language='' WHERE language IS NULL");
         $this->exec("ALTER TABLE `product_attribute_value` ADD text_value MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD float_value DOUBLE PRECISION DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_attribute_value` ADD varchar_value VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");

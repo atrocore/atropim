@@ -103,25 +103,52 @@ class ProductAttributeValue extends AbstractRepository
         return $entity;
     }
 
-    public function remove(Entity $entity, array $options = [])
+    public function save(Entity $entity, array $options = [])
     {
-        $this->beforeRemove($entity, $options);
-
         if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
         }
 
-        $queries[] = "DELETE FROM `product_attribute_value` WHERE deleted=1";
-        $queries[] = "DELETE FROM `product_attribute_value` WHERE id='{$entity->get('id')}'";
-        $queries[] = "DELETE FROM `product_attribute_value` WHERE main_language_id='{$entity->get('id')}'";
+        try {
+            $result = parent::save($entity, $options);
+            if ($result) {
+                $this->updateIsRequiredForLanguages($entity);
+            }
 
-        if (!empty($entity->get('mainLanguageId'))) {
-            $queries[] = "DELETE FROM `product_attribute_value` WHERE id='{$entity->get('mainLanguageId')}'";
-            $queries[] = "DELETE FROM `product_attribute_value` WHERE main_language_id='{$entity->get('mainLanguageId')}'";
+            if ($this->getPDO()->inTransaction()) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($this->getPDO()->inTransaction()) {
+                $this->getPDO()->rollBack();
+            }
+
+            // if duplicate
+            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                $channelName = $entity->get('scope');
+                if ($channelName == 'Channel') {
+                    $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
+                }
+                throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
+            }
+
+            throw $e;
         }
 
+        return $result;
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+        }
+
+        $this->beforeRemove($entity, $options);
+
         try {
-            $this->getPDO()->exec(implode(";", $queries));
+            $this->deleteFromDb($entity->get('id'));
+            $this->removeLanguages($entity);
             if ($this->getPDO()->inTransaction()) {
                 $this->getPDO()->commit();
             }
@@ -155,25 +182,16 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        /**
-         * Validation. Is such ProductAttribute exist?
-         */
-        if (empty($options['skipProductAttributeValueHook']) && !$this->isUnique($entity)) {
-            $channelName = $entity->get('scope');
-            if ($channelName == 'Channel') {
-                $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
-            }
-
-            throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
-        }
-
-
         if (!$entity->isNew()) {
             self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
         }
 
         if (empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
+        }
+
+        if (empty($entity->get('language'))) {
+            $entity->set('language', '');
         }
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
@@ -648,5 +666,28 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest(sprintf($language->translate('noSuchAttributeUnit', 'exceptions', 'ProductAttributeValue'), $label));
             }
         }
+    }
+
+    protected function updateIsRequiredForLanguages(Entity $entity): void
+    {
+        if ($entity->has('isRequired')) {
+            $isRequired = empty($entity->get('isRequired')) ? 0 : 1;
+            $queries[] = "UPDATE `product_attribute_value` SET is_required=$isRequired WHERE main_language_id='{$entity->get('id')}'";
+            if (!empty($entity->get('mainLanguageId'))) {
+                $queries[] = "UPDATE `product_attribute_value` SET is_required=$isRequired WHERE id='{$entity->get('mainLanguageId')}'";
+                $queries[] = "UPDATE `product_attribute_value` SET is_required=$isRequired WHERE main_language_id='{$entity->get('mainLanguageId')}'";
+            }
+            $this->getPDO()->exec(implode(";", $queries));
+        }
+    }
+
+    protected function removeLanguages(Entity $entity): void
+    {
+        $queries[] = "DELETE FROM `product_attribute_value` WHERE main_language_id='{$entity->get('id')}'";
+        if (!empty($entity->get('mainLanguageId'))) {
+            $queries[] = "DELETE FROM `product_attribute_value` WHERE id='{$entity->get('mainLanguageId')}'";
+            $queries[] = "DELETE FROM `product_attribute_value` WHERE main_language_id='{$entity->get('mainLanguageId')}'";
+        }
+        $this->getPDO()->exec(implode(";", $queries));
     }
 }

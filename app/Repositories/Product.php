@@ -145,10 +145,8 @@ class Product extends AbstractRepository
 
                 try {
                     $this->getEntityManager()->saveEntity($languagePav);
-                } catch (\PDOException $e) {
-                    if (strpos($e->getMessage(), '1062') === false) {
-                        throw $e;
-                    }
+                } catch (ProductAttributeAlreadyExists $e) {
+                    // ignore
                 }
             }
         }
