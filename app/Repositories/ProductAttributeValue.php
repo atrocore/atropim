@@ -103,18 +103,38 @@ class ProductAttributeValue extends AbstractRepository
         return $entity;
     }
 
-    public function removeDeletedDuplicate(Entity $entity): void
+    public function remove(Entity $entity, array $options = [])
     {
-        $sql = "DELETE FROM `product_attribute_value` 
-                       WHERE deleted=1 
-                         AND product_id='{$entity->get('productId')}' 
-                         AND attribute_id='{$entity->get('attributeId')}' 
-                         AND scope='{$entity->get('scope')}'";
-        if ($entity->get('scope') === 'Channel') {
-            $sql .= "AND channel_id='{$entity->get('channelId')}'";
+        $this->beforeRemove($entity, $options);
+
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
         }
 
-        $this->getPDO()->exec($sql);
+        $queries[] = "DELETE FROM `product_attribute_value` WHERE deleted=1";
+        $queries[] = "DELETE FROM `product_attribute_value` WHERE id='{$entity->get('id')}'";
+        $queries[] = "DELETE FROM `product_attribute_value` WHERE main_language_id='{$entity->get('id')}'";
+
+        if (!empty($entity->get('mainLanguageId'))) {
+            $queries[] = "DELETE FROM `product_attribute_value` WHERE id='{$entity->get('mainLanguageId')}'";
+            $queries[] = "DELETE FROM `product_attribute_value` WHERE main_language_id='{$entity->get('mainLanguageId')}'";
+        }
+
+        try {
+            $this->getPDO()->exec(implode(";", $queries));
+            if ($this->getPDO()->inTransaction()) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($this->getPDO()->inTransaction()) {
+                $this->getPDO()->rollBack();
+            }
+            return false;
+        }
+
+        $this->afterRemove($entity, $options);
+
+        return true;
     }
 
     public function findCopy(Entity $entity): ?Entity
@@ -253,13 +273,6 @@ class ProductAttributeValue extends AbstractRepository
         $this->moveImageFromTmp($entity);
 
         parent::afterSave($entity, $options);
-    }
-
-    protected function beforeRemove(Entity $entity, array $options = [])
-    {
-        $this->removeDeletedDuplicate($entity);
-
-        parent::beforeRemove($entity, $options);
     }
 
     /**

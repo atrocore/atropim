@@ -143,7 +143,13 @@ class Product extends AbstractRepository
                 $languagePav->set('mainLanguageId', $mainLanguagePav->get('id'));
                 $languagePav->set('language', $language);
 
-                $this->getEntityManager()->saveEntity($languagePav);
+                try {
+                    $this->getEntityManager()->saveEntity($languagePav);
+                } catch (\PDOException $e) {
+                    if (strpos($e->getMessage(), '1062') === false) {
+                        throw $e;
+                    }
+                }
             }
         }
 
