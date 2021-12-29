@@ -95,7 +95,13 @@ class Product extends AbstractRepository
             return;
         }
 
-        if (empty($pavs = $product->get('productAttributeValues')) || count($pavs) === 0) {
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $product->get('id')])
+            ->find();
+
+        if (count($pavs) === 0) {
             return;
         }
 
@@ -136,9 +142,6 @@ class Product extends AbstractRepository
 
         // create language records
         foreach ($mainLanguagePavs as $mainLanguagePav) {
-            /** @var \Pim\Entities\Attribute $attribute */
-            $attribute = $attributes[$mainLanguagePav->get('attributeId')];
-
             foreach ($languages as $language) {
                 // skip if exist
                 foreach ($pavs as $pav) {
