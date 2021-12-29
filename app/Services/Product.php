@@ -149,13 +149,11 @@ class Product extends AbstractService
      */
     public function updateEntity($id, $data)
     {
-        $withTransaction = false;
-
         $conflicts = [];
         if ($this->isProductAttributeUpdating($data)) {
-            $withTransaction = true;
             if (!$this->getEntityManager()->getPDO()->inTransaction()) {
                 $this->getEntityManager()->getPDO()->beginTransaction();
+                $inTransaction = true;
             }
             $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
             foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
@@ -180,18 +178,14 @@ class Product extends AbstractService
         }
 
         if (!empty($conflicts)) {
-            if ($withTransaction) {
-                if ($this->getEntityManager()->getPDO()->inTransaction()) {
-                    $this->getEntityManager()->getPDO()->rollBack();
-                }
+            if (!empty($inTransaction)) {
+                $this->getEntityManager()->getPDO()->rollBack();
             }
             throw new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts)));
         }
 
-        if ($withTransaction) {
-            if ($this->getEntityManager()->getPDO()->inTransaction()) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
+        if (!empty($inTransaction)) {
+            $this->getEntityManager()->getPDO()->commit();
         }
 
         return $result;

@@ -107,6 +107,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
@@ -115,11 +116,11 @@ class ProductAttributeValue extends AbstractRepository
                 $this->updateIsRequiredForLanguages($entity);
             }
 
-            if ($this->getPDO()->inTransaction()) {
+            if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
         } catch (\Throwable $e) {
-            if ($this->getPDO()->inTransaction()) {
+            if (!empty($inTransaction)) {
                 $this->getPDO()->rollBack();
             }
 
@@ -142,6 +143,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         $this->beforeRemove($entity, $options);
@@ -151,11 +153,11 @@ class ProductAttributeValue extends AbstractRepository
             if (empty($options['ignoreLanguages'])) {
                 $this->removeLanguages($entity);
             }
-            if ($this->getPDO()->inTransaction()) {
+            if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
         } catch (\Throwable $e) {
-            if ($this->getPDO()->inTransaction()) {
+            if (!empty($inTransaction)) {
                 $this->getPDO()->rollBack();
             }
             return false;
