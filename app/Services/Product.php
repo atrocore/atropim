@@ -585,18 +585,29 @@ class Product extends AbstractService
             'collection' => $collection
         ];
 
+        /**
+         * Filtering result
+         */
         if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
-            $newCollection = new EntityCollection();
+            $records = [];
             foreach ($result['collection'] as $pav) {
                 if ($pav->get('scope') === 'Global') {
-                    $newCollection->append($pav);
+                    $records[$pav->get('id')] = $pav;
                 } elseif ($pav->get('scope') === 'Channel' && !empty($channel = $pav->get('channel')) && in_array($pav->get('language'), $channel->get('locales'))) {
-                    $newCollection->append($pav);
+                    $records[$pav->get('id')] = $pav;
                 }
             }
 
-            $result['total'] = count($newCollection);
-            $result['collection'] = $newCollection;
+            if (!empty(self::getHeader('language'))) {
+                foreach ($records as $pav) {
+                    if (!empty($pav->get('mainLanguageId')) && isset($records[$pav->get('mainLanguageId')])) {
+                        unset($records[$pav->get('mainLanguageId')]);
+                    }
+                }
+            }
+
+            $result['total'] = count($records);
+            $result['collection'] = new EntityCollection(array_values($records));
         }
 
         return $this

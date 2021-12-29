@@ -44,6 +44,7 @@ class ProductAttributeValue extends AbstractService
     protected $mandatorySelectAttributeList
         = [
             'language',
+            'mainLanguageId',
             'attributeId',
             'attributeName',
             'attributeType',

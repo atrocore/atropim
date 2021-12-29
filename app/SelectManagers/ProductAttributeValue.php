@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Espo\Core\Utils\Util;
 
@@ -82,6 +83,14 @@ class ProductAttributeValue extends AbstractSelectManager
         // add filtering by product types
         $selectParams['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM product WHERE type IN ('$types') AND deleted=0)";
         $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE type IN ('{$attributesTypes}') AND deleted=0)";
+
+        $language = \Pim\Services\ProductAttributeValue::getHeader('language');
+        if (!empty($language)) {
+            if (!$this->getConfig()->get('isMultilangActive') || !in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+                throw new BadRequest('No such language is available.');
+            }
+            $selectParams['customWhere'] .= " AND language IN ('main','$language')";
+        }
 
         if (!empty($onlyTabAttributes)) {
             if (empty($tabId)) {
