@@ -180,7 +180,7 @@ class ProductAttributeValue extends AbstractRepository
         return $this->where($where)->findOne();
     }
 
-    protected function getAttributeEnumOptions(Entity $attribute, string $language): ?array
+    protected function getAttributeOptions(Entity $attribute, string $language): ?array
     {
         if ($language !== 'main') {
             $language = ucfirst(Util::toCamelCase(strtolower($language)));
@@ -210,7 +210,7 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
-        $key = array_search($entity->get('varcharValue'), $this->getAttributeEnumOptions($attribute, $entity->get('language')));
+        $key = array_search($entity->get('varcharValue'), $this->getAttributeOptions($attribute, $entity->get('language')));
         if ($key === false) {
             return;
         }
@@ -222,7 +222,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         foreach (array_merge(['main'], $this->getConfig()->get('inputLanguageList', [])) as $v) {
-            $options = $this->getAttributeEnumOptions($attribute, $v);
+            $options = $this->getAttributeOptions($attribute, $v);
             $value = !empty($options[$key]) ? $options[$key] : $key;
             if ($v === 'main') {
                 $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='$value' WHERE id='$id'");
@@ -232,56 +232,53 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
-    protected function syncMultiEnumValues(Entity $entity): void
+    protected function syncMultiEnumValues(Entity $entity, Entity $attribute): void
     {
-        if (empty($this->getConfig()->get('isMultilangActive'))) {
+        if ($entity->isNew()) {
             return;
         }
 
-        // get attribute
-        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return;
+        }
 
         if ($attribute->get('type') !== 'multiEnum' || empty($attribute->get('isMultilang'))) {
             return;
         }
 
-        // @todo
-
-        echo '<pre>';
-        print_r('syncMultiEnumValues');
-        die();
-
-        $locale = '';
-        if (!empty($entity->get('isLocale'))) {
-            $locale = ucfirst(Util::toCamelCase(strtolower($entity->get('locale'))));
-        }
-
-        if (!$entity->isAttributeChanged('value' . $locale)) {
+        if (!$entity->isAttributeChanged('value')) {
             return;
         }
 
-        $values = Json::decode($entity->get('value' . $locale), true);
+        $values = $entity->get('value');
 
         $keys = [];
         foreach ($values as $value) {
-            $keys[] = array_search($value, $attribute->get('typeValue' . $locale));
+            $keys[] = array_search($value, $this->getAttributeOptions($attribute, $entity->get('language')));
         }
 
-        $locales = [''];
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
-            $locales[] = ucfirst(Util::toCamelCase(strtolower($v)));
+        if (!empty($entity->get('mainLanguageId'))) {
+            $id = $entity->get('mainLanguageId');
+        } else {
+            $id = $entity->get('id');
         }
 
-        foreach ($locales as $locale) {
-            $typeValue = $attribute->get('typeValue' . $locale);
-
+        foreach (array_merge(['main'], $this->getConfig()->get('inputLanguageList', [])) as $v) {
+            $options = $this->getAttributeOptions($attribute, $v);
             $values = [];
             foreach ($keys as $key) {
                 if ($key !== false) {
-                    $values[] = isset($typeValue[$key]) ? $typeValue[$key] : null;
+                    $values[] = isset($options[$key]) ? $options[$key] : null;
                 }
             }
-            $entity->set('value' . $locale, Json::encode($values));
+
+            $value = Json::encode($values);
+
+            if ($v === 'main') {
+                $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value='$value' WHERE id='$id'");
+            } else {
+                $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value='$value' WHERE main_language_id='$id' AND language='$v'");
+            }
         }
     }
 
@@ -300,9 +297,9 @@ class ProductAttributeValue extends AbstractRepository
         if ($attribute->get('type') === 'enum' && !empty($attribute->get('enumDefault'))) {
             $enumDefault = $attribute->get('enumDefault');
             if ($entity->get('language') !== 'main') {
-                $key = array_search($enumDefault, $this->getAttributeEnumOptions($attribute, 'main'));
+                $key = array_search($enumDefault, $this->getAttributeOptions($attribute, 'main'));
                 if ($key !== false) {
-                    $options = $this->getAttributeEnumOptions($attribute, $entity->get('language'));
+                    $options = $this->getAttributeOptions($attribute, $entity->get('language'));
                     if (isset($options[$key])) {
                         $enumDefault = $options[$key];
                     }
