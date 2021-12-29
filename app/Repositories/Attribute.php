@@ -168,7 +168,7 @@ class Attribute extends AbstractRepository
             $this
                 ->getEntityManager()
                 ->getRepository('Product')
-                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE attribute_id='{$entity->get('id')}' AND deleted=0");
+                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE attribute_id='{$entity->get('id')}' AND deleted=0", true);
         }
 
         $this->setInheritedOwnership($entity);

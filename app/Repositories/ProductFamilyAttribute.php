@@ -138,6 +138,9 @@ class ProductFamilyAttribute extends Base
             }
             $result = parent::save($entity, $options);
 
+            // actualize inconsistent attributes
+            $this->getEntityManager()->getRepository('Product')->pushJobForUpdateInconsistentAttributes();
+
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }

@@ -94,7 +94,7 @@ class SettingsController extends AbstractListener
             $this
                 ->getEntityManager()
                 ->getRepository('Product')
-                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE deleted=0 AND attribute_id IN (SELECT id FROM `attribute` WHERE is_multilang=1 AND deleted=0)");
+                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE deleted=0 AND attribute_id IN (SELECT id FROM `attribute` WHERE is_multilang=1 AND deleted=0)", true);
         }
 
         $qm = false;

@@ -70,23 +70,31 @@ class Product extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsAttributeOwnership';
 
-    public function updateProductsAttributes(string $subQuery): void
+    public function pushJobForUpdateInconsistentAttributes(): void
     {
-        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery) AND deleted=0");
-
         $name = $this->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
         $this->getInjection('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
     }
 
-    public function updateProductsAttributesViaProductIds(array $productIds): void
+    public function updateProductsAttributes(string $subQuery, bool $createJob = false): void
     {
-        // prepare ids
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery) AND deleted=0");
+
+        if ($createJob) {
+            $this->pushJobForUpdateInconsistentAttributes();
+        }
+    }
+
+    public function updateProductsAttributesViaProductIds(array $productIds, bool $createJob = false): void
+    {
         $ids = [];
         foreach ($productIds as $id) {
             $ids[] = $this->getPDO()->quote($id);
         }
 
-        $this->updateProductsAttributes(implode(',', $ids));
+        if (!empty($ids)) {
+            $this->updateProductsAttributes(implode(',', $ids), $createJob);
+        }
     }
 
     public function updateInconsistentAttributes(Entity $product): void
