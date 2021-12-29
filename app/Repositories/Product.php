@@ -127,8 +127,14 @@ class Product extends AbstractRepository
             }
         }
 
+        /** @var \Pim\Repositories\ProductAttributeValue $pavRepository */
+        $pavRepository = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
         // create language records
         foreach ($mainLanguagePavs as $mainLanguagePav) {
+            /** @var \Pim\Entities\Attribute $attribute */
+            $attribute = $attributes[$mainLanguagePav->get('attributeId')];
+
             foreach ($languages as $language) {
                 // skip if exist
                 foreach ($pavs as $pav) {
@@ -137,11 +143,21 @@ class Product extends AbstractRepository
                     }
                 }
 
-                $languagePav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
+                $languagePav = $pavRepository->get();
                 $languagePav->set($mainLanguagePav->toArray());
                 $languagePav->id = Util::generateId();
                 $languagePav->set('mainLanguageId', $mainLanguagePav->get('id'));
                 $languagePav->set('language', $language);
+
+                // clear value
+                $languagePav->clear('value');
+                $languagePav->clear('boolValue');
+                $languagePav->clear('dateValue');
+                $languagePav->clear('datetimeValue');
+                $languagePav->clear('intValue');
+                $languagePav->clear('floatValue');
+                $languagePav->clear('varcharValue');
+                $languagePav->clear('textValue');
 
                 try {
                     $this->getEntityManager()->saveEntity($languagePav);
