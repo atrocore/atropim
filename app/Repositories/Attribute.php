@@ -111,7 +111,8 @@ class Attribute extends AbstractRepository
             }
 
             foreach ($languages as $language) {
-                $query = "SELECT COUNT(*) FROM product_attribute_value WHERE attribute_id='{$entity->id}' AND language='$language' AND deleted=0 %s GROUP BY %s HAVING COUNT(*) > 1";
+                $query
+                    = "SELECT COUNT(*) FROM product_attribute_value WHERE attribute_id='{$entity->id}' AND language='$language' AND deleted=0 %s GROUP BY %s HAVING COUNT(*) > 1";
                 switch ($entity->get('type')) {
                     case 'unit':
                     case 'currency':
@@ -163,6 +164,13 @@ class Attribute extends AbstractRepository
     {
         parent::afterSave($entity, $options);
 
+        if ($entity->isAttributeChanged('isMultilang')) {
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE attribute_id='{$entity->get('id')}' AND deleted=0");
+        }
+
         $this->setInheritedOwnership($entity);
     }
 
@@ -172,8 +180,8 @@ class Attribute extends AbstractRepository
     public function max($field)
     {
         $data = $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT MAX(sort_order) AS max FROM attribute WHERE deleted=0")
+            ->getPDO()
+            ->query("SELECT MAX(sort_order) AS max FROM attribute WHERE deleted=0")
             ->fetch(\PDO::FETCH_ASSOC);
 
         return $data['max'];

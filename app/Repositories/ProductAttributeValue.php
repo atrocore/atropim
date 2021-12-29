@@ -148,7 +148,9 @@ class ProductAttributeValue extends AbstractRepository
 
         try {
             $this->deleteFromDb($entity->get('id'));
-            $this->removeLanguages($entity);
+            if (empty($options['ignoreLanguages'])) {
+                $this->removeLanguages($entity);
+            }
             if ($this->getPDO()->inTransaction()) {
                 $this->getPDO()->commit();
             }

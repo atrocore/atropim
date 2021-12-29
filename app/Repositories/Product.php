@@ -118,13 +118,17 @@ class Product extends AbstractRepository
         foreach ($pavs as $pav) {
             if ($pav->get('language') !== 'main') {
                 if (!in_array($pav->get('language'), $languages) || empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
-                    $this->getEntityManager()->removeEntity($pav);
+                    $this->getEntityManager()->removeEntity($pav, ['ignoreLanguages' => true]);
                 }
             } else {
                 if (!empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
                     $mainLanguagePavs->append($pav);
                 }
             }
+        }
+
+        if (count($mainLanguagePavs) === 0) {
+            return;
         }
 
         /** @var \Pim\Repositories\ProductAttributeValue $pavRepository */
