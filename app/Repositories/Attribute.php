@@ -103,61 +103,52 @@ class Attribute extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
-            $fields = ['value'];
-
+            $languages = ['main'];
             if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                    $fields[] = 'value_' . strtolower($locale);
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                    $languages[] = $language;
                 }
             }
 
-            foreach ($fields as $field) {
-                $sql = "SELECT COUNT(*)
-                FROM product_attribute_value
-                WHERE attribute_id = '{$entity->id}' AND $field IS NOT NULL
-                    AND deleted = 0
-                GROUP BY $field, data
-                HAVING COUNT(*) > 1";
+            foreach ($languages as $language) {
+                $query = "SELECT COUNT(*) FROM product_attribute_value WHERE attribute_id='{$entity->id}' AND language='$language' AND deleted=0 %s GROUP BY %s HAVING COUNT(*) > 1";
+                switch ($entity->get('type')) {
+                    case 'unit':
+                    case 'currency':
+                        $query = sprintf($query, 'AND float_value IS NOT NULL AND varchar_value IS NOT NULL', 'float_value, varchar_value');
+                        break;
+                    case 'float':
+                        $query = sprintf($query, 'AND float_value IS NOT NULL', 'float_value');
+                        break;
+                    case 'int':
+                        $query = sprintf($query, 'AND int_value IS NOT NULL', 'int_value');
+                    case 'date':
+                        $query = sprintf($query, 'AND date_value IS NOT NULL', 'date_value');
+                    case 'datetime':
+                        $query = sprintf($query, 'AND datetime_value IS NOT NULL', 'datetime_value');
+                        break;
+                    default:
+                        $query = sprintf($query, 'AND varchar_value IS NOT NULL', 'varchar_value');
+                        break;
+                }
 
-                $exists = $this
-                    ->getEntityManager()
-                    ->nativeQuery($sql)
-                    ->fetch(\PDO::FETCH_ASSOC);
-
-                if (!empty($exists)) {
+                if (!empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
                     throw new Error($this->exception('attributeNotHaveUniqueValue'));
                 }
             }
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('pattern')
-            && !empty($pattern = $entity->get('pattern'))) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('pattern') && !empty($pattern = $entity->get('pattern')) && preg_match('/\^(.*)\$/', $pattern, $matches)) {
+            $query = "SELECT id 
+                      FROM product_attribute_value 
+                      WHERE deleted=0 
+                        AND attribute_type='varchar' 
+                        AND varchar_value IS NOT NULL 
+                        AND varchar_value!='' 
+                        AND varchar_value NOT REGEXP '$matches[0]'";
 
-            if (preg_match('/\^(.*)\$/', $pattern, $matches)) {
-                $sqlPattern = $matches[0];
-                $where = "pav.value IS NOT NULL AND pav.value != '' AND pav.value NOT REGEXP '{$sqlPattern}'";
-
-                if ($entity->get('isMultilang') && $this->getConfig()->get('isMultilangActive', false)) {
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                        $locale = strtolower($locale);
-                        $where .= " OR pav.value_$locale IS NOT NULL AND pav.value_$locale != '' AND pav.value_$locale NOT REGEXP '{$sqlPattern}'";
-                    }
-                }
-
-                $sql = "SELECT pav.id FROM product_attribute_value pav
-                    JOIN attribute a ON pav.attribute_id = a.id
-                        AND a.deleted = 0 AND a.type = 'varchar'
-                    WHERE pav.deleted = 0
-                        AND ({$where})";
-
-                $result = $this
-                    ->getEntityManager()
-                    ->nativeQuery($sql)
-                    ->fetch(\PDO::FETCH_ASSOC);
-
-                if (!empty($result)) {
-                    throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
-                }
+            if (!empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
+                throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
             }
         }
 
