@@ -585,10 +585,8 @@ class Product extends AbstractService
             'collection' => $collection
         ];
 
-        /**
-         * Filtering result
-         */
-        if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
+        // prepare result
+        if (!empty($result['total'])) {
             $records = [];
             foreach ($result['collection'] as $pav) {
                 if ($pav->get('scope') === 'Global') {
@@ -598,12 +596,33 @@ class Product extends AbstractService
                 }
             }
 
-            if (!empty(self::getHeader('language'))) {
+            $headerLanguage = self::getHeader('language');
+
+            // filtering via header language
+            if (!empty($headerLanguage)) {
                 foreach ($records as $pav) {
                     if (!empty($pav->get('mainLanguageId')) && isset($records[$pav->get('mainLanguageId')])) {
                         unset($records[$pav->get('mainLanguageId')]);
                     }
                 }
+            }
+
+            // sorting via languages
+            if (empty($headerLanguage)) {
+                $newRecords = [];
+                foreach ($records as $pav) {
+                    if (empty($pav->get('mainLanguageId'))) {
+                        $newRecords[] = $pav;
+                        foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                            foreach ($records as $pav1) {
+                                if ($pav1->get('mainLanguageId') === $pav->get('id') && $language === $pav1->get('language')) {
+                                    $newRecords[] = $pav1;
+                                }
+                            }
+                        }
+                    }
+                }
+                $records = $newRecords;
             }
 
             $result['total'] = count($records);
