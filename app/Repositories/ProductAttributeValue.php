@@ -285,11 +285,9 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
-    protected function beforeSave(Entity $entity, array $options = [])
+    protected function populateDefault(Entity $entity, Entity $attribute): void
     {
-        if (!$entity->isNew()) {
-            self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
-        }
+        $entity->set('attributeType', $attribute->get('type'));
 
         if (empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
@@ -299,29 +297,36 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('language', 'main');
         }
 
+        if ($attribute->get('type') === 'enum' && !empty($attribute->get('enumDefault'))) {
+            $enumDefault = $attribute->get('enumDefault');
+            if ($entity->get('language') !== 'main') {
+                $key = array_search($enumDefault, $this->getAttributeEnumOptions($attribute, 'main'));
+                if ($key !== false) {
+                    $options = $this->getAttributeEnumOptions($attribute, $entity->get('language'));
+                    if (isset($options[$key])) {
+                        $enumDefault = $options[$key];
+                    }
+                }
+            }
+            $entity->set('varcharValue', $enumDefault);
+        }
+
+        if ($attribute->get('type') === 'unit') {
+            $entity->set('floatValue', $attribute->get('unitDefault'));
+            $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
+        }
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!$entity->isNew()) {
+            self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
+        }
+
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($entity->isNew()) {
-            $entity->set('attributeType', $attribute->get('type'));
-            if ($attribute->get('type') === 'enum' && !empty($attribute->get('enumDefault'))) {
-                $enumDefault = $attribute->get('enumDefault');
-                if ($entity->get('language') !== 'main') {
-                    $key = array_search($enumDefault, $this->getAttributeEnumOptions($attribute, 'main'));
-                    if ($key !== false) {
-                        $options = $this->getAttributeEnumOptions($attribute, $entity->get('language'));
-                        if (isset($options[$key])) {
-                            $enumDefault = $options[$key];
-                        }
-                    }
-                }
-                $entity->set('varcharValue', $enumDefault);
-            }
-
-            if ($attribute->get('type') === 'unit') {
-                $entity->set('floatValue', $attribute->get('unitDefault'));
-                $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
-            }
-
+            $this->populateDefault($entity, $attribute);
             if (!empty($attribute->get('isMultilang'))) {
                 $this->getEntityManager()->getRepository('Product')->updateProductsAttributesViaProductIds([$entity->get('productId')]);
             }
@@ -399,8 +404,8 @@ class ProductAttributeValue extends AbstractRepository
 
         // update modifiedAt for product
         $this
-            ->getEntityManager()
-            ->nativeQuery("UPDATE `product` SET modified_at='{$entity->get('modifiedAt')}' WHERE id='{$entity->get('productId')}'");
+            ->getPDO()
+            ->exec("UPDATE `product` SET modified_at='{$entity->get('modifiedAt')}' WHERE id='{$entity->get('productId')}'");
 
         $this->moveImageFromTmp($entity);
 
