@@ -228,25 +228,24 @@ class Attribute extends AbstractRepository
             }
         }
 
-        /** @var array $pavs */
         $pavs = $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
-            ->select(['id', 'value'])
-            ->where(['attributeId' => $attribute->get('id')])
+            ->select(['id', 'language', 'varcharValue'])
+            ->where(['attributeId' => $attribute->get('id'), 'language' => 'main'])
             ->find()
             ->toArray();
 
         foreach ($pavs as $pav) {
-            $sqlValues = [];
+            $queries = [];
 
             /**
              * First, prepare main value
              */
-            if (!empty($becameValues[$pav['value']])) {
-                $sqlValues[] = "value='{$becameValues[$pav['value']]}'";
+            if (!empty($becameValues[$pav['varcharValue']])) {
+                $queries[] = "UPDATE product_attribute_value SET varchar_value='{$becameValues[$pav['varcharValue']]}' WHERE id='{$pav['id']}'";
             } else {
-                $sqlValues[] = "value=null";
+                $queries[] = "UPDATE product_attribute_value SET varchar_value=NULL WHERE id='{$pav['id']}'";
             }
 
             /**
@@ -254,23 +253,21 @@ class Attribute extends AbstractRepository
              */
             if ($this->getConfig()->get('isMultilangActive', false)) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    if (!empty($becameValues[$pav['value']])) {
-                        $locale = ucfirst(Util::toCamelCase(strtolower($language)));
-                        $localeValue = "'" . $attribute->get("typeValue{$locale}")[array_search($pav['value'], $attribute->getFetched('typeValue'))] . "'";
+                    if (!empty($becameValues[$pav['varcharValue']])) {
+                        $options = $attribute->get("typeValue" . ucfirst(Util::toCamelCase(strtolower($language))));
+                        $key = array_search($pav['varcharValue'], $attribute->getFetched('typeValue'));
+                        $value = isset($options[$key]) ? $options[$key] : $becameValues[$pav['varcharValue']];
+                        $queries[] = "UPDATE product_attribute_value SET varchar_value='$value' WHERE main_language_id='{$pav['id']}' AND language='$language'";
                     } else {
-                        $localeValue = 'null';
+                        $queries[] = "UPDATE product_attribute_value SET varchar_value=NULL WHERE main_language_id='{$pav['id']}' AND language='$language'";
                     }
-
-                    $sqlValues[] = "value_" . strtolower($language) . "=$localeValue";
                 }
             }
 
             /**
              * Third, set to DB
              */
-            $this
-                ->getEntityManager()
-                ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav['id'] . "'");
+            $this->getPDO()->exec(implode(';', $queries));
         }
     }
 
@@ -302,18 +299,25 @@ class Attribute extends AbstractRepository
         $pavs = $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
-            ->select(['id', 'value'])
-            ->where(['attributeId' => $attribute->get('id')])
+            ->select(['id', 'language', 'textValue'])
+            ->where(['attributeId' => $attribute->get('id'), 'language' => 'main'])
             ->find()
             ->toArray();
 
         foreach ($pavs as $pav) {
-            $sqlValues = [];
+            $queries = [];
 
             /**
              * First, prepare main value
              */
-            $values = !empty($pav['value']) ? Json::decode($pav['value'], true) : [];
+            $values = [];
+            if (!empty($pav['textValue'])) {
+                $jsonData = @json_decode($pav['textValue'], true);
+                if (!empty($jsonData)) {
+                    $values = $jsonData;
+                }
+            }
+
             if (!empty($values)) {
                 $newValues = [];
                 foreach ($values as $value) {
@@ -321,32 +325,32 @@ class Attribute extends AbstractRepository
                         $newValues[] = $becameValues[$value];
                     }
                 }
-                $pav['value'] = Json::encode($newValues);
+                $pav['textValue'] = Json::encode($newValues);
                 $values = $newValues;
             }
 
-            $sqlValues[] = "value='" . $pav['value'] . "'";
+            $queries[] = "UPDATE product_attribute_value SET text_value='{$pav['textValue']}' WHERE id='{$pav['id']}'";
 
             /**
              * Second, update locales
              */
             if ($this->getConfig()->get('isMultilangActive', false)) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    $locale = ucfirst(Util::toCamelCase(strtolower($language)));
+                    $options = $attribute->get("typeValue" . ucfirst(Util::toCamelCase(strtolower($language))));
                     $localeValues = [];
                     foreach ($values as $value) {
-                        $localeValues[] = $attribute->get("typeValue{$locale}")[array_search($value, $attribute->get('typeValue'))];
+                        $key = array_search($value, $attribute->get('typeValue'));
+                        $localeValues[] = isset($options[$key]) ? $options[$key] : $value;
                     }
-                    $sqlValues[] = "value_" . strtolower($language) . "='" . Json::encode($localeValues) . "'";
+                    $localeValues = Json::encode($localeValues);
+                    $queries[] = "UPDATE product_attribute_value SET text_value='$localeValues' WHERE main_language_id='{$pav['id']}' AND language='$language'";
                 }
             }
 
             /**
              * Third, set to DB
              */
-            $this
-                ->getEntityManager()
-                ->nativeQuery("UPDATE product_attribute_value SET " . implode(",", $sqlValues) . " WHERE id='" . $pav['id'] . "'");
+            $this->getPDO()->exec(implode(';', $queries));
         }
     }
 
