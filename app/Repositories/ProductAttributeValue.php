@@ -230,7 +230,7 @@ class ProductAttributeValue extends AbstractRepository
 
         foreach (array_merge(['main'], $this->getConfig()->get('inputLanguageList', [])) as $v) {
             $options = $this->getAttributeOptions($attribute, $v);
-            $value = !empty($options[$key]) ? $options[$key] : $key;
+            $value = !empty($options[$key]) ? $options[$key] : '';
             if ($v === 'main') {
                 $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='$value' WHERE id='$id'");
             } else {
@@ -275,7 +275,7 @@ class ProductAttributeValue extends AbstractRepository
             $values = [];
             foreach ($keys as $key) {
                 if ($key !== false) {
-                    $values[] = isset($options[$key]) ? $options[$key] : null;
+                    $values[] = isset($options[$key]) ? $options[$key] : '';
                 }
             }
 
@@ -321,6 +321,30 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
+    protected function findMainLanguage(Entity $entity): Entity
+    {
+        $pavWhere = [
+            'productId'   => $entity->get('productId'),
+            'attributeId' => $entity->get('attributeId'),
+            'scope'       => $entity->get('scope'),
+            'language'    => 'main',
+        ];
+        if ($entity->get('scope') === 'Channel') {
+            $pavWhere['channelId'] = $entity->get('channelId');
+        }
+        $mainLanguage = $this->where($pavWhere)->findOne();
+        if (empty($mainLanguage)) {
+            $mainLanguage = $this->get();
+            $mainLanguage->set($entity->toArray());
+
+            $mainLanguage->id = Util::generateId();
+            $mainLanguage->set('language', 'main');
+            $this->getEntityManager()->saveEntity($mainLanguage);
+        }
+
+        return $mainLanguage;
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->isNew()) {
@@ -330,6 +354,9 @@ class ProductAttributeValue extends AbstractRepository
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($entity->isNew()) {
+            if ($entity->get('language') !== 'main' && empty($entity->get('mainLanguageId'))) {
+                $entity->set('mainLanguageId', $this->findMainLanguage($entity)->get('id'));
+            }
             $this->populateDefault($entity, $attribute);
             if (!empty($attribute->get('isMultilang'))) {
                 $this->getEntityManager()->getRepository('Product')->updateProductsAttributesViaProductIds([$entity->get('productId')]);

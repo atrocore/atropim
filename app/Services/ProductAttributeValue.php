@@ -113,6 +113,18 @@ class ProductAttributeValue extends AbstractService
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
         if (property_exists($data, 'value')) {
+            // set attribute type if it needs
+            if (empty($entity->get('attributeType')) && !empty($entity->get('attributeId'))) {
+                $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+                if (!empty($attribute)) {
+                    $entity->set('attributeType', $attribute->get('type'));
+                }
+            }
+
+            if (empty($entity->get('attributeType'))) {
+                throw new BadRequest('No such attribute.');
+            }
+
             switch ($entity->get('attributeType')) {
                 case 'array':
                 case 'multiEnum':
