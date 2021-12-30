@@ -82,13 +82,12 @@ class V1Dot4Dot0 extends Base
         $this->exec("ALTER TABLE `product_attribute_value` ADD main_language_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("CREATE INDEX IDX_MAIN_LANGUAGE_ID ON `product_attribute_value` (main_language_id)");
 
-        $offset = 0;
-        $limit = 1000;
-        $query = "SELECT * FROM `product_attribute_value` WHERE deleted=0 AND language='main' ORDER BY id LIMIT %s, %s";
+        $records = $this
+            ->getPDO()
+            ->query("SELECT * FROM `product_attribute_value` WHERE deleted=0")
+            ->fetchAll(\PDO::FETCH_ASSOC);
 
-        while (!empty($records = $this->getPDO()->query(sprintf($query, $offset, $limit))->fetchAll(\PDO::FETCH_ASSOC))) {
-            $offset = $offset + $limit;
-
+        if (!empty($records)) {
             $attrs = $this
                 ->getPDO()
                 ->query("SELECT id, type, is_multilang FROM `attribute` WHERE deleted=0 AND id IN ('" . implode("','", array_column($records, 'attribute_id')) . "')")
