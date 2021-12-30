@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
 class V1Dot4Dot0 extends Base
@@ -85,7 +84,7 @@ class V1Dot4Dot0 extends Base
 
         $offset = 0;
         $limit = 1000;
-        $query = "SELECT * FROM `product_attribute_value` WHERE deleted=0 ORDER BY id LIMIT %s, %s";
+        $query = "SELECT * FROM `product_attribute_value` WHERE deleted=0 AND language='main' ORDER BY id LIMIT %s, %s";
 
         while (!empty($records = $this->getPDO()->query(sprintf($query, $offset, $limit))->fetchAll(\PDO::FETCH_ASSOC))) {
             $offset = $offset + $limit;
