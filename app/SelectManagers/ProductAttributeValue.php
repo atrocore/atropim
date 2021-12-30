@@ -35,9 +35,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Espo\Core\Utils\Util;
 
-/**
- * ProductAttributeValue select manager
- */
 class ProductAttributeValue extends AbstractSelectManager
 {
     /**
@@ -45,18 +42,8 @@ class ProductAttributeValue extends AbstractSelectManager
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $arrayWhereTypes = ['arrayAnyOf', 'arrayNoneOf', 'arrayIsEmpty', 'arrayIsNotEmpty'];
-
         if (isset($params['where']) && is_array($params['where'])) {
             foreach ($params['where'] as $k => $v) {
-                if (is_array($v['value']) && !empty($v['value'])) {
-                    foreach ($v['value'] as $key => $value) {
-                        if (isset($value['type']) && in_array($value['type'], $arrayWhereTypes)) {
-                            $params['where'][$k]['value'][$key] = $this->prepareWhere($value);
-                        }
-                    }
-                }
-
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
                     $onlyTabAttributes = true;
                     $tabId = $v['data']['onlyTabAttributes'];
@@ -68,28 +55,19 @@ class ProductAttributeValue extends AbstractSelectManager
             }
             $params['where'] = array_values($params['where']);
         }
-        // get select params
+
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
-        // prepare product types
-        $types = implode("','", array_keys($this->getMetadata()->get('pim.productType', [])));
-        $attributesTypes = implode("','", $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []));
-
-        // prepare custom where
         if (!isset($selectParams['customWhere'])) {
             $selectParams['customWhere'] = '';
         }
-
-        // add filtering by product types
-        $selectParams['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM product WHERE type IN ('$types') AND deleted=0)";
-        $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE type IN ('{$attributesTypes}') AND deleted=0)";
 
         $language = \Pim\Services\ProductAttributeValue::getHeader('language');
         if (!empty($language)) {
             if (!$this->getConfig()->get('isMultilangActive') || !in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
                 throw new BadRequest('No such language is available.');
             }
-            $selectParams['customWhere'] .= " AND language IN ('main','$language')";
+            $selectParams['customWhere'] .= " AND product_attribute_value.language IN ('main','$language')";
         }
 
         if (!empty($onlyTabAttributes)) {
@@ -147,70 +125,6 @@ class ProductAttributeValue extends AbstractSelectManager
         $result['whereClause'][] = array(
             'OR' => $d
         );
-    }
-
-    /**
-     * Prepare where for array attributes
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function prepareWhere(array $data): array
-    {
-        $where = [];
-
-        switch ($data['type']) {
-            case 'arrayAnyOf':
-            case 'arrayNoneOf':
-                $where = [
-                    'type'  => $data['type'] == 'arrayAnyOf' ? 'or' : 'and',
-                    'value' => []
-                ];
-
-                foreach ($data['value'] as $value) {
-                    $where['value'][] = [
-                        'type'      => $data['type'] == 'arrayAnyOf' ? 'contains' : 'notContains',
-                        'attribute' => 'value',
-                        'value'     => "\"$value\""
-                    ];
-                }
-                break;
-            case 'arrayIsEmpty':
-                $where = [
-                    'type'  => 'or',
-                    'value' => [
-                        [
-                            'type'      => 'isNull',
-                            'attribute' => 'value'
-                        ],
-                        [
-                            'type'      => 'equals',
-                            'attribute' => 'value',
-                            'value'     => '[]'
-                        ]
-                    ]
-                ];
-                break;
-            case 'arrayIsNotEmpty':
-                $where = [
-                    'type'  => 'and',
-                    'value' => [
-                        [
-                            'type'      => 'isNotNull',
-                            'attribute' => 'value'
-                        ],
-                        [
-                            'type'      => 'notEquals',
-                            'attribute' => 'value',
-                            'value'     => '[]'
-                        ]
-                    ]
-                ];
-                break;
-        }
-
-        return $where;
     }
 
     /**

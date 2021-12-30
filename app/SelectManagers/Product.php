@@ -30,9 +30,10 @@
 namespace Pim\SelectManagers;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Pim\Services\GeneralStatisticsDashlet;
-use Treo\Core\Utils\Util;
+use Pim\Entities\Attribute;
 
 /**
  * Product select manager
@@ -43,6 +44,8 @@ class Product extends AbstractSelectManager
      * @var string
      */
     protected $customWhere = '';
+
+    private array $attributes = [];
 
     /**
      * @inheritdoc
@@ -69,7 +72,9 @@ class Product extends AbstractSelectManager
         $selectParams['customWhere'] .= $this->customWhere;
 
         // add product attributes filter
-        $this->addProductAttributesFilter($selectParams, $productAttributes);
+        if (!empty($productAttributes)) {
+            $this->addProductAttributesFilter($selectParams, $productAttributes);
+        }
 
         // for products in category page
         if ($params['sortBy'] == 'pcSorting') {
@@ -618,63 +623,170 @@ class Product extends AbstractSelectManager
         return $result;
     }
 
-    /**
-     * @param array $selectParams
-     * @param array $attributes
-     */
+    protected function getAttribute(string $id): Attribute
+    {
+        if (!isset($this->attributes[$id])) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $id);
+            if (empty($attribute)) {
+                throw new NotFound();
+            }
+            $this->attributes[$id] = $attribute;
+        }
+
+        return $this->attributes[$id];
+    }
+
+    protected function convertAttributeWhere(array $row): array
+    {
+        if (in_array($row['type'], ['or', 'and']) && !empty($row['value'])) {
+            foreach ($row['value'] as $k => $v) {
+                $row['value'][$k] = $this->convertAttributeWhere($v);
+            }
+            return $row;
+        }
+
+        $attribute = $this->getAttribute($row['attribute']);
+
+        if (isset($row['isAttribute'])) {
+            unset($row['isAttribute']);
+        }
+
+        $where = [
+            'type'  => 'and',
+            'value' => [
+                [
+                    'type'      => 'equals',
+                    'attribute' => 'attributeId',
+                    'value'     => $attribute->get('id')
+                ],
+            ]
+        ];
+
+        switch ($attribute->get('type')) {
+            case 'array':
+            case 'multiEnum':
+                if ($row['type'] === 'arrayIsEmpty') {
+                    $where['value'][] = [
+                        'type'  => 'or',
+                        'value' => [
+                            [
+                                'type'      => 'isNull',
+                                'attribute' => 'textValue'
+                            ],
+                            [
+                                'type'      => 'equals',
+                                'attribute' => 'textValue',
+                                'value'     => ''
+                            ],
+                            [
+                                'type'      => 'equals',
+                                'attribute' => 'textValue',
+                                'value'     => '[]'
+                            ]
+                        ]
+                    ];
+                } elseif ($row['type'] === 'arrayIsNotEmpty') {
+                    $where['value'][] = [
+                        'type'  => 'or',
+                        'value' => [
+                            [
+                                'type'      => 'isNotNull',
+                                'attribute' => 'textValue'
+                            ],
+                            [
+                                'type'      => 'notEquals',
+                                'attribute' => 'textValue',
+                                'value'     => ''
+                            ],
+                            [
+                                'type'      => 'notEquals',
+                                'attribute' => 'textValue',
+                                'value'     => '[]'
+                            ]
+                        ]
+                    ];
+                } else {
+                    $where['value'][] = [
+                        'type'  => 'or',
+                        'value' => []
+                    ];
+
+                    $values = (empty($row['value'])) ? [md5('no-such-value-' . time())] : $row['value'];
+                    foreach ($values as $value) {
+                        $where['value'][1]['value'][] = [
+                            'type'      => 'like',
+                            'attribute' => 'textValue',
+                            'value'     => "%\"$value\"%"
+                        ];
+                    }
+                }
+                break;
+            case 'text':
+            case 'wysiwyg':
+                $row['attribute'] = 'textValue';
+                $where['value'][] = $row;
+                break;
+            case 'bool':
+                $row['attribute'] = 'boolValue';
+                $where['value'][] = $row;
+                break;
+            case 'currency':
+            case 'unit':
+                // @todo we should do it in the future
+                break;
+            case 'int':
+                $row['attribute'] = 'intValue';
+                $where['value'][] = $row;
+                break;
+            case 'float':
+                $row['attribute'] = 'floatValue';
+                $where['value'][] = $row;
+                break;
+            case 'date':
+                $row['attribute'] = 'dateValue';
+                $where['value'][] = $row;
+                break;
+            case 'datetime':
+                $row['attribute'] = 'datetimeValue';
+                $where['value'][] = $row;
+                break;
+            case 'enum':
+                $row['attribute'] = 'varcharValue';
+                $where['value'][] = $row;
+                $where['value'][] = [
+                    'type'      => 'equals',
+                    'attribute' => 'language',
+                    'value'     => 'main',
+                ];
+                break;
+            default:
+                $row['attribute'] = 'varcharValue';
+                $where['value'][] = $row;
+                break;
+        }
+
+        if ($attribute->get('type') === 'multiEnum') {
+            $where['value'][] = [
+                'type'      => 'equals',
+                'attribute' => 'language',
+                'value'     => 'main',
+            ];
+        }
+
+        return $where;
+    }
+
     protected function addProductAttributesFilter(array &$selectParams, array $attributes): void
     {
         foreach ($attributes as $row) {
-            // find prepare method
-            $method = 'prepareType' . ucfirst($row['type']);
-            if (!method_exists($this, $method)) {
-                $method = 'prepareTypeDefault';
-            }
-
-            // prepare where
-            $where = $this->{$method}($row);
-
-//            echo '<pre>';
-//            print_r($where);
-//            die();
-
-            // create select params
-            $sp = $this
-                ->createSelectManager('ProductAttributeValue')
-                ->getSelectParams(['where' => [$where]], true, true);
+            $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$this->convertAttributeWhere($row)]], true, true);
             $sp['select'] = ['productId', 'scope', 'channelId'];
-
-            // create sql
-            $sql = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery('ProductAttributeValue', $sp);
-
-            // for case sensitive
-            $sql = str_replace('product_attribute_value.value IN', 'CAST(product_attribute_value.value AS BINARY) IN', $sql);
-
-            // for umlauts
-            $sql = str_replace('Ä', '\\\\\\\\u00c4', $sql);
-            $sql = str_replace('ä', '\\\\\\\\u00e4', $sql);
-            $sql = str_replace('Ë', '\\\\\\\\u00cb', $sql);
-            $sql = str_replace('ë', '\\\\\\\\u00eb', $sql);
-            $sql = str_replace('Ï', '\\\\\\\\u00cf', $sql);
-            $sql = str_replace('ï', '\\\\\\\\u00ef', $sql);
-            $sql = str_replace('N̈', 'N\\\\\\\\u0308', $sql);
-            $sql = str_replace('n̈', 'n\\\\\\\\u0308', $sql);
-            $sql = str_replace('Ö', '\\\\\\\\u00d6', $sql);
-            $sql = str_replace('ö', '\\\\\\\\u00f6', $sql);
-            $sql = str_replace('T̈', 'T\\\\\\\\u0308', $sql);
-            $sql = str_replace('ẗ', '\\\\\\\\u1e97', $sql);
-            $sql = str_replace('Ü', '\\\\\\\\u00dc', $sql);
-            $sql = str_replace('ü', '\\\\\\\\u00fc', $sql);
-            $sql = str_replace('Ÿ', '\\\\\\\\u0178', $sql);
-            $sql = str_replace('ÿ', '\\\\\\\\u00ff', $sql);
 
             // get product attribute values
             $pavData = $this
                 ->getEntityManager()
-                ->nativeQuery($sql)
+                ->getPDO()
+                ->query($this->getEntityManager()->getQuery()->createSelectQuery('ProductAttributeValue', $sp))
                 ->fetchAll(\PDO::FETCH_ASSOC);
 
             // find product channels
@@ -689,313 +801,16 @@ class Product extends AbstractSelectManager
                 $productsIds[] = $v['productId'];
             }
 
+            if ($row['type'] === 'arrayNoneOf') {
+                $selectParams['customWhere'] .= " AND product.id NOT IN ('" . implode("','", $productsIds) . "')";
+                return;
+            }
+
             // prepare custom where
             $selectParams['customWhere'] .= " AND product.id IN ('" . implode("','", $productsIds) . "')";
         }
     }
 
-    /**
-     * @param string $attributeId
-     *
-     * @return array
-     */
-    protected function getValues(string $attributeId): array
-    {
-        // prepare result
-        $result = ['value'];
-
-        if ($this->getConfig()->get('isMultilangActive', false) && !empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
-            // is attribute multi-languages ?
-            $isMultiLang = $this
-                ->getEntityManager()
-                ->getRepository('Attribute')
-                ->select(['isMultilang'])
-                ->where(['id' => $attributeId])
-                ->findOne();
-
-            if ($isMultiLang && $isMultiLang->get('isMultilang')) {
-                foreach ($locales as $locale) {
-                    $result[] = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeIsTrue(array $row): array
-    {
-        $where = ['type' => 'or', 'value' => []];
-        foreach ($this->getValues($row['attribute']) as $v) {
-            $where['value'][] = [
-                'type'  => 'and',
-                'value' => [
-                    [
-                        'type'      => 'equals',
-                        'attribute' => 'attributeId',
-                        'value'     => $row['attribute']
-                    ],
-                    [
-                        'type'      => 'equals',
-                        'attribute' => $v,
-                        'value'     => '1'
-                    ]
-                ]
-            ];
-        }
-
-        return $where;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeIsFalse(array $row): array
-    {
-        $where = [
-            'type'  => 'and',
-            'value' => [
-                [
-                    'type'      => 'equals',
-                    'attribute' => 'attributeId',
-                    'value'     => $row['attribute']
-                ],
-                [
-                    'type'  => 'or',
-                    'value' => []
-                ],
-            ]
-        ];
-
-        foreach ($this->getValues($row['attribute']) as $v) {
-            $where['value'][1]['value'][] = [
-                'type'      => 'isNull',
-                'attribute' => $v
-            ];
-            $where['value'][1]['value'][] = [
-                'type'      => 'notEquals',
-                'attribute' => $v,
-                'value'     => '1'
-            ];
-        }
-
-        return $where;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeArrayAnyOf(array $row): array
-    {
-        $where = [
-            'type'  => 'and',
-            'value' => [
-                [
-                    'type'      => 'equals',
-                    'attribute' => 'attributeId',
-                    'value'     => $row['attribute']
-                ],
-                [
-                    'type'  => 'or',
-                    'value' => []
-                ],
-            ]
-        ];
-
-        // prepare values
-        $values = (empty($row['value'])) ? [md5('no-such-value-' . time())] : $row['value'];
-
-        foreach ($values as $value) {
-            $where['value'][1]['value'][] = [
-                'type'      => 'like',
-                'attribute' => 'value',
-                'value'     => "%\"$value\"%"
-            ];
-        }
-
-        return $where;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeArrayNoneOf(array $row): array
-    {
-        $where = [
-            'type'  => 'and',
-            'value' => [
-                [
-                    'type'      => 'equals',
-                    'attribute' => 'attributeId',
-                    'value'     => $row['attribute']
-                ],
-                [
-                    'type'  => 'or',
-                    'value' => []
-                ],
-            ]
-        ];
-
-        // prepare values
-        $values = (empty($row['value'])) ? [md5('no-such-value-' . time())] : $row['value'];
-
-        foreach ($values as $value) {
-            $where['value'][1]['value'][] = [
-                'type'      => 'notLike',
-                'attribute' => 'value',
-                'value'     => "%\"$value\"%"
-            ];
-        }
-
-        return $where;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeArrayIsEmpty(array $row): array
-    {
-        $where = [
-            'type'  => 'and',
-            'value' => [
-                [
-                    'type'      => 'equals',
-                    'attribute' => 'attributeId',
-                    'value'     => $row['attribute']
-                ],
-                [
-                    'type'  => 'or',
-                    'value' => [
-                        [
-                            'type'      => 'isNull',
-                            'attribute' => 'value'
-                        ],
-                        [
-                            'type'      => 'equals',
-                            'attribute' => 'value',
-                            'value'     => ''
-                        ],
-                        [
-                            'type'      => 'equals',
-                            'attribute' => 'value',
-                            'value'     => '[]'
-                        ]
-                    ]
-                ],
-            ]
-        ];
-
-        return $where;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeArrayIsNotEmpty(array $row): array
-    {
-        $where = [
-            'type'  => 'and',
-            'value' => [
-                [
-                    'type'      => 'equals',
-                    'attribute' => 'attributeId',
-                    'value'     => $row['attribute']
-                ],
-                [
-                    'type'      => 'isNotNull',
-                    'attribute' => 'value'
-                ],
-                [
-                    'type'      => 'notEquals',
-                    'attribute' => 'value',
-                    'value'     => ''
-                ],
-                [
-                    'type'      => 'notEquals',
-                    'attribute' => 'value',
-                    'value'     => '[]'
-                ]
-            ]
-        ];
-
-        return $where;
-    }
-
-//    protected function prepareTypeAnd(array $row): array
-//    {
-//        echo '<pre>';
-//        print_r($row);
-//        die();
-//        $where = ['type' => 'or', 'value' => []];
-//        foreach ($this->getValues($row['attribute']) as $v) {
-//            $where['value'][] = [
-//                'type'  => 'and',
-//                'value' => [
-//                    [
-//                        'type'      => 'equals',
-//                        'attribute' => 'attributeId',
-//                        'value'     => $row['attribute']
-//                    ],
-//                    [
-//                        'type'      => $row['type'],
-//                        'attribute' => $v,
-//                        'value'     => $row['value']
-//                    ]
-//                ]
-//            ];
-//        }
-//
-//        return $where;
-//    }
-
-
-    /**
-     * @param array $row
-     *
-     * @return array
-     */
-    protected function prepareTypeDefault(array $row): array
-    {
-        $where = ['type' => 'or', 'value' => []];
-        foreach ($this->getValues($row['attribute']) as $v) {
-            $where['value'][] = [
-                'type'  => 'and',
-                'value' => [
-                    [
-                        'type'      => 'equals',
-                        'attribute' => 'attributeId',
-                        'value'     => $row['attribute']
-                    ],
-                    [
-                        'type'      => $row['type'],
-                        'attribute' => $v,
-                        'value'     => $row['value']
-                    ]
-                ]
-            ];
-        }
-
-        return $where;
-    }
-
-    /**
-     * @param array $params
-     */
     protected function filteringByCategories(array &$params): void
     {
         foreach ($params['where'] as $k => $row) {
