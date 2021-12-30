@@ -113,12 +113,7 @@ class Product extends AbstractSelectManager
             ->select(['productId', 'scope', 'channelId'])
             ->where([
                 'attributeType' => ['varchar', 'text', 'wysiwyg', 'enum'],
-                [
-                    'OR' => [
-                        ['varcharValue*' => $textFilter],
-                        ['textValue*' => $textFilter],
-                    ],
-                ]
+                ['OR' => [['varcharValue*' => $textFilter], ['textValue*' => $textFilter]]],
             ])
             ->find()
             ->toArray();
