@@ -176,44 +176,30 @@ class V1Dot4Dot0 extends Base
                         }
                     }
 
-                    $updateData = array_merge($record, $dataValues);
-                    $updateData['language'] = $locale;
-
-                    if (isset($updateData["is_inherit_assigned_user_$language"])) {
-                        $updateData['is_inherit_assigned_user'] = $updateData["is_inherit_assigned_user_$language"];
-                    }
-                    if (isset($updateData["is_inherit_owner_user_$language"])) {
-                        $updateData['is_inherit_owner_user'] = $updateData["is_inherit_owner_user_$language"];
-                    }
-                    if (isset($updateData["is_inherit_teams_$language"])) {
-                        $updateData['is_inherit_teams'] = $updateData["is_inherit_teams_$language"];
-                    }
-                    if (isset($updateData["owner_user_{$language}_id"])) {
-                        $updateData['owner_user_id'] = $updateData["owner_user_{$language}_id"];
-                    }
-                    if (isset($updateData["assigned_user_{$language}_id"])) {
-                        $updateData['assigned_user_id'] = $updateData["assigned_user_{$language}_id"];
-                    }
-
+                    $id = $record['id'];
                     if ($locale !== 'main') {
-                        $this->getPDO()->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('{$updateData['id']}~$locale', '$locale', '{$updateData['id']}')");
-                        $updateData['id'] .= "~$locale";
+                        $this->getPDO()->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('$id~$locale', '$locale', '$id')");
+                        $id = "$id~$locale";
+                        $dataValues = array_merge($record, $dataValues);
+                        $dataValues['is_inherit_assigned_user'] = $dataValues["is_inherit_assigned_user_$language"];
+                        $dataValues['is_inherit_owner_user'] = $dataValues["is_inherit_owner_user_$language"];
+                        $dataValues['is_inherit_teams'] = $dataValues["is_inherit_teams_$language"];
+                        $dataValues['owner_user_id'] = $dataValues["owner_user_{$language}_id"];
+                        $dataValues['assigned_user_id'] = $dataValues["assigned_user_{$language}_id"];
                     }
 
                     $updateQueryParts = [];
-                    foreach ($updateData as $field => $val) {
-                        if (in_array($field, ['id', 'deleted']) || $val === null) {
+                    foreach ($dataValues as $field => $val) {
+                        if (in_array($field, ['id', 'deleted', 'language']) || $val === null) {
                             continue;
                         }
-
                         if (is_string($val)) {
                             $val = $this->getPDO()->quote($val);
                         }
-
                         $updateQueryParts[] = "$field=$val";
                     }
 
-                    $this->getPDO()->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='{$updateData['id']}'");
+                    $this->getPDO()->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='$id'");
                 }
             }
         }
