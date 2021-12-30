@@ -103,6 +103,26 @@ class ProductAttributeValue extends AbstractRepository
         return $entity;
     }
 
+    public function find(array $params = [])
+    {
+        $collection = parent::find($params);
+        foreach ($collection as $entity) {
+            $this->convertValue($entity);
+        }
+
+        return $collection;
+    }
+
+    public function findOne(array $params = [])
+    {
+        $entity = parent::findOne($params);
+        if (!empty($entity)) {
+            $this->convertValue($entity);
+        }
+
+        return $entity;
+    }
+
     public function save(Entity $entity, array $options = [])
     {
         if (!$this->getPDO()->inTransaction()) {
