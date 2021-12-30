@@ -121,7 +121,7 @@ class V1Dot4Dot0 extends Base
 
                     $dataValues = [];
 
-                    $attributeValue = $record['value_' . $language];
+                    $attributeValue = $locale !== 'main' ? $record["value_{$language}"] : $record['value'];
 
                     if ($attributeValue !== null) {
                         switch ($attributeType) {
@@ -182,8 +182,9 @@ class V1Dot4Dot0 extends Base
 
                     $id = $record['id'];
                     if ($locale !== 'main') {
-                        $this->getPDO()->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('$id~$locale', '$locale', '$id')");
-                        $id = "$id~$locale";
+                        $langId = $id . '~' . $locale;
+                        $this->getPDO()->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('$langId', '$locale', '$id')");
+                        $id = $langId;
                         $dataValues = array_merge($record, $dataValues);
                         $dataValues['is_inherit_assigned_user'] = $dataValues["is_inherit_assigned_user_$language"];
                         $dataValues['is_inherit_owner_user'] = $dataValues["is_inherit_owner_user_$language"];
@@ -197,18 +198,19 @@ class V1Dot4Dot0 extends Base
                         unset($dataValues['deleted']);
                     }
 
-                    $updateQueryParts = [];
-                    foreach ($dataValues as $field => $val) {
-                        if ($val === null) {
-                            continue;
+                    if (!empty($dataValues)) {
+                        $updateQueryParts = [];
+                        foreach ($dataValues as $field => $val) {
+                            if ($val === null) {
+                                continue;
+                            }
+                            if (is_string($val)) {
+                                $val = $this->getPDO()->quote($val);
+                            }
+                            $updateQueryParts[] = "$field=$val";
                         }
-                        if (is_string($val)) {
-                            $val = $this->getPDO()->quote($val);
-                        }
-                        $updateQueryParts[] = "$field=$val";
+                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='$id'");
                     }
-
-                    $this->getPDO()->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='$id'");
                 }
             }
         }
