@@ -102,14 +102,14 @@ class V1Dot4Dot0 extends Base
 
             foreach ($records as $record) {
                 if (!isset($attributes[$record['attribute_id']])) {
-                    $this->exec("DELETE FROM `product_attribute_value` WHERE id='{$record['id']}'");
+                    $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE id='{$record['id']}'");
                     continue 1;
                 }
 
                 $attributeType = $attributes[$record['attribute_id']]['type'];
 
                 $record['attribute_type'] = $attributeType;
-                $this->exec("UPDATE `product_attribute_value` SET attribute_type='$attributeType' WHERE id='{$record['id']}'");
+                $this->getPDO()->exec("UPDATE `product_attribute_value` SET attribute_type='$attributeType' WHERE id='{$record['id']}'");
 
                 foreach (array_merge(['main' => ''], $languages) as $locale => $language) {
                     if ($locale !== 'main' && empty($attributes[$record['attribute_id']]['is_multilang'])) {
@@ -196,9 +196,8 @@ class V1Dot4Dot0 extends Base
                     }
 
                     if ($locale !== 'main') {
-                        $langPavId = Util::generateId();
-                        $this->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('$langPavId', '$locale', '{$updateData['id']}')");
-                        $updateData['id'] = $langPavId;
+                        $this->getPDO()->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('{$updateData['id']}~$locale', '$locale', '{$updateData['id']}')");
+                        $updateData['id'] .= "~$locale";
                     }
 
                     $updateQueryParts = [];
@@ -214,7 +213,7 @@ class V1Dot4Dot0 extends Base
                         $updateQueryParts[] = "$field=$val";
                     }
 
-                    $this->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='{$updateData['id']}'");
+                    $this->getPDO()->exec("UPDATE `product_attribute_value` SET " . implode(",", $updateQueryParts) . " WHERE id='{$updateData['id']}'");
                 }
             }
         }
