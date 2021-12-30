@@ -82,12 +82,13 @@ class V1Dot4Dot0 extends Base
         $this->exec("ALTER TABLE `product_attribute_value` ADD main_language_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("CREATE INDEX IDX_MAIN_LANGUAGE_ID ON `product_attribute_value` (main_language_id)");
 
-        $records = $this
-            ->getPDO()
-            ->query("SELECT * FROM `product_attribute_value` WHERE deleted=0")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        $offset = 0;
+        $limit = 1000;
+        $query = "SELECT * FROM `product_attribute_value` WHERE deleted=0 AND language='main' ORDER BY id LIMIT %s, %s";
 
-        if (!empty($records)) {
+        while (!empty($records = $this->getPDO()->query(sprintf($query, $offset, $limit))->fetchAll(\PDO::FETCH_ASSOC))) {
+            $offset = $offset + $limit;
+
             $attrs = $this
                 ->getPDO()
                 ->query("SELECT id, type, is_multilang FROM `attribute` WHERE deleted=0 AND id IN ('" . implode("','", array_column($records, 'attribute_id')) . "')")
@@ -176,6 +177,7 @@ class V1Dot4Dot0 extends Base
                     }
 
                     $updateData = array_merge($record, $dataValues);
+                    $updateData['language'] = $locale;
 
                     if (isset($updateData["is_inherit_assigned_user_$language"])) {
                         $updateData['is_inherit_assigned_user'] = $updateData["is_inherit_assigned_user_$language"];
