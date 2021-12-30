@@ -339,6 +339,17 @@ class ProductAttributeValue extends AbstractRepository
 
             $mainLanguage->id = Util::generateId();
             $mainLanguage->set('language', 'main');
+
+            // clear value
+            $mainLanguage->clear('value');
+            $mainLanguage->clear('boolValue');
+            $mainLanguage->clear('dateValue');
+            $mainLanguage->clear('datetimeValue');
+            $mainLanguage->clear('intValue');
+            $mainLanguage->clear('floatValue');
+            $mainLanguage->clear('varcharValue');
+            $mainLanguage->clear('textValue');
+
             $this->getEntityManager()->saveEntity($mainLanguage);
         }
 
