@@ -118,7 +118,7 @@ class V1Dot4Dot0 extends Base
 
                     $dataValues = [];
 
-                    $attributeValue = $record['value' . $language];
+                    $attributeValue = $record['value_' . $language];
 
                     if ($attributeValue !== null) {
                         switch ($attributeType) {
@@ -195,9 +195,10 @@ class V1Dot4Dot0 extends Base
                         $updateData['assigned_user_id'] = $updateData["assigned_user_{$language}_id"];
                     }
 
-                    if (!empty($language)) {
-                        $this->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('{$updateData['id']}', '$locale', '{$updateData['id']}')");
-                        $updateData['id'] = Util::generateId();
+                    if ($locale !== 'main') {
+                        $langPavId = Util::generateId();
+                        $this->exec("INSERT INTO `product_attribute_value` (id, language, main_language_id) VALUES ('$langPavId', '$locale', '{$updateData['id']}')");
+                        $updateData['id'] = $langPavId;
                     }
 
                     $updateQueryParts = [];
