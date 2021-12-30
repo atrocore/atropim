@@ -149,12 +149,12 @@ class Product extends AbstractService
      */
     public function updateEntity($id, $data)
     {
-        $withTransaction = false;
-
         $conflicts = [];
         if ($this->isProductAttributeUpdating($data)) {
-            $withTransaction = true;
-            $this->getEntityManager()->getPDO()->beginTransaction();
+            if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+                $this->getEntityManager()->getPDO()->beginTransaction();
+                $inTransaction = true;
+            }
             $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
             foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
                 if (!empty($data->_ignoreConflict)) {
@@ -178,13 +178,13 @@ class Product extends AbstractService
         }
 
         if (!empty($conflicts)) {
-            if ($withTransaction) {
+            if (!empty($inTransaction)) {
                 $this->getEntityManager()->getPDO()->rollBack();
             }
             throw new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts)));
         }
 
-        if ($withTransaction) {
+        if (!empty($inTransaction)) {
             $this->getEntityManager()->getPDO()->commit();
         }
 
@@ -325,9 +325,7 @@ class Product extends AbstractService
         $parts = explode('_', $assetId);
         $assetId = array_shift($parts);
 
-        /** @var Asset $asset */
-        $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
-        if (empty($asset) || empty($attachment = $asset->get('file'))) {
+        if (empty($asset = $this->getEntityManager()->getEntity('Asset', $assetId)) || empty($attachment = $asset->get('file'))) {
             throw new NotFound();
         }
 
@@ -544,6 +542,8 @@ class Product extends AbstractService
             throw new Forbidden();
         }
 
+        $this->getRepository()->updateInconsistentAttributes($entity);
+
         $link = 'productAttributeValues';
 
         if (!empty($params['maxSize'])) {
@@ -564,12 +564,6 @@ class Product extends AbstractService
         if ($selectAttributeList) {
             $selectAttributeList[] = 'ownerUserId';
             $selectAttributeList[] = 'assignedUserId';
-            if ($this->getConfig()->get('isMultilangActive')) {
-                foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                    $selectAttributeList[] = Util::toCamelCase('owner_user_' . strtolower($locale) . '_id');
-                    $selectAttributeList[] = Util::toCamelCase('assigned_user_' . strtolower($locale) . '_id');
-                }
-            }
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
@@ -591,123 +585,49 @@ class Product extends AbstractService
             'collection' => $collection
         ];
 
-        /**
-         * For attribute locales
-         */
-        if (!empty($result['total']) && $this->getConfig()->get('isMultilangActive')) {
-            $allLocales = $this->getConfig()->get('inputLanguageList', []);
-            $headerLanguage = $this->getHeaderLanguage();
-
-            $localeAssets = [];
-
-            $newCollection = new EntityCollection();
+        // prepare result
+        if (!empty($result['total'])) {
+            $records = [];
             foreach ($result['collection'] as $pav) {
-                $pav->set('isLocale', false);
-                $pav->set('locale', null);
-
-                if ($pav->get('scope') === 'Global' || $pav->get('scope') === 'Channel' && in_array('mainLocale', $this->getPavLocales($pav))) {
-                    if (!($pav->get('attributeIsMultilang') && !empty($headerLanguage))) {
-                        $newCollection->append($pav);
-                    }
+                if ($pav->get('scope') === 'Global') {
+                    $records[$pav->get('id')] = $pav;
+                } elseif ($pav->get('scope') === 'Channel' && !empty($channel = $pav->get('channel')) && in_array($pav->get('language'), $channel->get('locales'))) {
+                    $records[$pav->get('id')] = $pav;
                 }
+            }
 
-                if (!empty($pav->get('attributeIsMultilang'))) {
-                    $locales = $allLocales;
-                    if ($pav->get('scope') === 'Channel') {
-                        $locales = $this->getPavLocales($pav, true);
-                    }
+            $headerLanguage = self::getHeader('language');
 
-                    foreach ($locales as $locale) {
-                        if (!empty($headerLanguage) && $locale !== $headerLanguage) {
-                            continue 1;
-                        }
-
-                        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-
-                        $localePav = clone $pav;
-                        $localePav->id = $localePav->id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale;
-                        $localePav->set('isLocale', true);
-                        $localePav->set('locale', $locale);
-                        $localePav->set('attributeName', $localePav->get('attributeName') . ' › ' . $locale);
-                        $localePav->set('attributeCode', $localePav->get('attributeCode') . ' › ' . $locale);
-                        $localePav->set('typeValue', $localePav->get("typeValue{$camelCaseLocale}"));
-                        $pav->clear("typeValue{$camelCaseLocale}");
-                        $localePav->clear("typeValue{$camelCaseLocale}");
-                        $localePav->set('value', $localePav->get("value{$camelCaseLocale}"));
-                        $pav->clear("value{$camelCaseLocale}");
-                        $localePav->clear("value{$camelCaseLocale}");
-                        $localePav->set('ownerUserId', $localePav->get("ownerUser{$camelCaseLocale}Id"));
-                        $localePav->set('assignedUserId', $localePav->get("assignedUser{$camelCaseLocale}Id"));
-
-                        if (is_null($data = $localePav->get('data'))) {
-                            $data = new \stdClass();
-                        } else {
-                            $data = (object)$data;
-                        }
-
-                        $data->title = $localePav->get('attribute')->get("name{$camelCaseLocale}");
-                        $localePav->set('data', $data);
-
-                        if ($localePav->get('attributeType') == 'asset' && !empty($localePav->get('value'))) {
-                            $localeAssets[$localePav->id] = $localePav->get('value');
-                        }
-
-                        $newCollection->append($localePav);
-                    }
-                } else {
-                    $data = is_null($data = $pav->get('data')) ? new \stdClass() : (object)$data;
-
-                    foreach ($allLocales as $locale) {
-                        $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-                        $data->{'title' . $camelCaseLocale} = $pav->get('attribute')->get("name{$camelCaseLocale}");
-                        $pav->set('data', $data);
-                        $pav->clear("typeValue{$camelCaseLocale}");
-                        $pav->clear("value{$camelCaseLocale}");
+            // filtering via header language
+            if (!empty($headerLanguage)) {
+                foreach ($records as $pav) {
+                    if (!empty($pav->get('mainLanguageId')) && isset($records[$pav->get('mainLanguageId')])) {
+                        unset($records[$pav->get('mainLanguageId')]);
                     }
                 }
             }
 
-            if (!empty($localeAssets)) {
-                $attachments = $this
-                    ->getEntityManager()
-                    ->getRepository('Attachment')
-                    ->where(['id' => array_values($localeAssets)])
-                    ->find();
-
-                if (count($attachments) > 0) {
-                    foreach ($newCollection as $pav) {
-                        if (isset($localeAssets[$pav->id])) {
-                            foreach ($attachments as $attachment) {
-                                if ($attachment->id == $localeAssets[$pav->id]) {
-                                    $pav->set('valueId', $attachment->get('id'));
-                                    $pav->set('valueName', $attachment->get('name'));
-                                    $pav->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-
-                                    continue 2;
+            // sorting via languages
+            if (empty($headerLanguage)) {
+                $newRecords = [];
+                foreach ($records as $pav) {
+                    if (empty($pav->get('mainLanguageId'))) {
+                        $newRecords[] = $pav;
+                        foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                            foreach ($records as $pav1) {
+                                if ($pav1->get('mainLanguageId') === $pav->get('id') && $language === $pav1->get('language')) {
+                                    $newRecords[] = $pav1;
                                 }
                             }
                         }
                     }
                 }
+                $records = $newRecords;
             }
 
-            $result['collection'] = $newCollection;
+            $result['total'] = count($records);
+            $result['collection'] = new EntityCollection(array_values($records));
         }
-
-        /**
-         * Check every pav by ACL
-         */
-        if (!empty($result['collection']->count())) {
-            $newCollection = new EntityCollection();
-            foreach ($result['collection'] as $pav) {
-                if ($this->getAcl()->check($pav, 'read')) {
-                    $newCollection->append($pav);
-                }
-            }
-            $result['collection'] = $newCollection;
-        }
-
-        $result['total'] = $result['collection']->count();
 
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
@@ -893,28 +813,5 @@ class Product extends AbstractService
         parent::init();
 
         $this->addDependency('serviceFactory');
-    }
-
-    /**
-     * @param Entity $pav
-     * @param bool   $ignoreMainLocale
-     *
-     * @return array
-     */
-    private function getPavLocales(Entity $pav, bool $ignoreMainLocale = false): array
-    {
-        if ($pav->get('scope') !== 'Channel' || empty($channel = $pav->get('channel'))) {
-            return [];
-        }
-
-        $locales = [];
-        foreach ($pav->get('channel')->get('locales') as $locale) {
-            if ($locale === 'mainLocale' && $ignoreMainLocale) {
-                continue 1;
-            }
-            $locales[] = $locale;
-        }
-
-        return $locales;
     }
 }

@@ -125,55 +125,57 @@ class ProductFamilyAttribute extends Base
 
     public function save(Entity $entity, array $options = [])
     {
-        if ($this->getEntityManager()->getPDO()->inTransaction()) {
-            return $this->runSave($entity, $options);
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            $result = $this->runSave($entity, $options);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($entity->isNew()) {
+                $this->createProductAttributeValues($entity);
+            } else {
+                $this->updateProductAttributeValues($entity);
+            }
+            $result = parent::save($entity, $options);
+
+            // actualize inconsistent attributes
+            $this->getEntityManager()->getRepository('Product')->pushJobForUpdateInconsistentAttributes();
+
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
         return $result;
-    }
-
-    protected function runSave(Entity $entity, array $options = [])
-    {
-        if ($entity->isNew()) {
-            $this->createProductAttributeValues($entity);
-        } else {
-            $this->updateProductAttributeValues($entity);
-        }
-
-        return parent::save($entity, $options);
     }
 
     public function remove(Entity $entity, array $options = [])
     {
-        if ($this->getEntityManager()->getPDO()->inTransaction()) {
-            return $this->runRemove($entity, $options);
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            $result = $this->runRemove($entity, $options);
-            $this->getEntityManager()->getPDO()->commit();
+            $this->deleteProductAttributeValues($entity);
+            $result = parent::remove($entity, $options);
+
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
         return $result;
-    }
-
-    protected function runRemove(Entity $entity, array $options = [])
-    {
-        $this->deleteProductAttributeValues($entity);
-        return parent::remove($entity, $options);
     }
 
     public function beforeSave(Entity $entity, array $options = [])

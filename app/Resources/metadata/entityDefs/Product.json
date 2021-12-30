@@ -286,13 +286,41 @@
     "taskStatus": {
       "type": "multiEnum",
       "optionColors": {},
-      "options": ["mar", "tech", "ass", "img", "cat", "ch", "pr"],
-      "optionsIds": ["mar", "tech", "ass", "img", "cat", "ch", "pr"],
+      "options": [
+        "mar",
+        "tech",
+        "ass",
+        "img",
+        "cat",
+        "ch",
+        "pr"
+      ],
+      "optionsIds": [
+        "mar",
+        "tech",
+        "ass",
+        "img",
+        "cat",
+        "ch",
+        "pr"
+      ],
       "default": []
     },
     "isActiveForChannel": {
       "type": "bool",
       "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "hasInconsistentAttributes": {
+      "type": "bool",
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,

@@ -29,45 +29,29 @@
 
 declare(strict_types=1);
 
-namespace Pim\Listeners;
+namespace Pim\Jobs;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
-use Treo\Listeners\AbstractListener;
-use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
+use Espo\Core\Jobs\Base;
 
-/**
- * Class ProductAttributeValueController
- */
-class ProductAttributeValueController extends AbstractListener
+class CheckProductAttributes extends Base
 {
-    /**
-     * @param Event $event
-     */
-    public function beforeActionCreate(Event $event)
+    public function run(): bool
     {
-        // get data
-        $data = $event->getArguments();
+        $exist = $this
+            ->getEntityManager()
+            ->getRepository('QueueItem')
+            ->select(['id'])
+            ->where([
+                'data*'  => '%"updateProductsWithInconsistentAttributes"%',
+                'status' => ["Pending", "Running"]
+            ])
+            ->findOne();
 
-        if (is_array($data['data']->value)) {
-            $data['data']->value = Json::encode($data['data']->value);
+        if (empty($exist)) {
+            $name = $this->getContainer()->get('language')->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
+            $this->getContainer()->get('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
         }
 
-        // for multiLang fields
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                $multiLangField = Util::toCamelCase('value_' . strtolower($locale));
-                if (isset($data['data']->$multiLangField) && is_array($data['data']->$multiLangField)) {
-                    $data['data']->$multiLangField = Json::encode($data['data']->$multiLangField);
-                }
-            }
-        }
-
-        // set data
-        if (isset($data['result'])) {
-            $event->setArgument('result', $data['result']);
-        }
+        return true;
     }
 }

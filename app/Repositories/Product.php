@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
+use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
@@ -68,6 +69,121 @@ class Product extends AbstractRepository
      * @var string
      */
     protected $teamsOwnership = 'teamsAttributeOwnership';
+
+    public function pushJobForUpdateInconsistentAttributes(): void
+    {
+        $name = $this->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
+        $this->getInjection('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
+    }
+
+    public function updateProductsAttributes(string $subQuery, bool $createJob = false): void
+    {
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery) AND deleted=0");
+
+        if ($createJob) {
+            $this->pushJobForUpdateInconsistentAttributes();
+        }
+    }
+
+    public function updateProductsAttributesViaProductIds(array $productIds, bool $createJob = false): void
+    {
+        $ids = [];
+        foreach ($productIds as $id) {
+            $ids[] = $this->getPDO()->quote($id);
+        }
+
+        if (!empty($ids)) {
+            $this->updateProductsAttributes(implode(',', $ids), $createJob);
+        }
+    }
+
+    public function updateInconsistentAttributes(Entity $product): void
+    {
+        if (empty($product->get('hasInconsistentAttributes'))) {
+            return;
+        }
+
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $product->get('id')])
+            ->find();
+
+        if (count($pavs) === 0) {
+            return;
+        }
+
+        $languages = [];
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            $languages = $this->getConfig()->get('inputLanguageList', []);
+        }
+
+        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => array_column($pavs->toArray(), 'attributeId')])->find() as $attribute) {
+            $attributes[$attribute->get('id')] = $attribute;
+        }
+
+        if (empty($attributes)) {
+            return;
+        }
+
+        $mainLanguagePavs = new EntityCollection();
+
+        // remove language records
+        foreach ($pavs as $pav) {
+            if ($pav->get('language') !== 'main') {
+                if (!in_array($pav->get('language'), $languages) || empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
+                    $this->getEntityManager()->removeEntity($pav, ['ignoreLanguages' => true]);
+                }
+            } else {
+                if (!empty($attributes[$pav->get('attributeId')]->get('isMultilang'))) {
+                    $mainLanguagePavs->append($pav);
+                }
+            }
+        }
+
+        if (count($mainLanguagePavs) === 0) {
+            return;
+        }
+
+        /** @var \Pim\Repositories\ProductAttributeValue $pavRepository */
+        $pavRepository = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
+        // create language records
+        foreach ($mainLanguagePavs as $mainLanguagePav) {
+            foreach ($languages as $language) {
+                // skip if exist
+                foreach ($pavs as $pav) {
+                    if ($pav->get('mainLanguageId') === $mainLanguagePav->get('id') && $language === $pav->get('language')) {
+                        continue 2;
+                    }
+                }
+
+                $languagePav = $pavRepository->get();
+                $languagePav->set($mainLanguagePav->toArray());
+                $languagePav->id = Util::generateId();
+                $languagePav->set('mainLanguageId', $mainLanguagePav->get('id'));
+                $languagePav->set('language', $language);
+
+                // clear value
+                $languagePav->clear('value');
+                $languagePav->clear('boolValue');
+                $languagePav->clear('dateValue');
+                $languagePav->clear('datetimeValue');
+                $languagePav->clear('intValue');
+                $languagePav->clear('floatValue');
+                $languagePav->clear('varcharValue');
+                $languagePav->clear('textValue');
+
+                try {
+                    $this->getEntityManager()->saveEntity($languagePav);
+                } catch (ProductAttributeAlreadyExists $e) {
+                    // ignore
+                }
+            }
+        }
+
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
+    }
 
     public function getProductsIdsViaAccountId(string $accountId): array
     {
@@ -586,31 +702,31 @@ class Product extends AbstractRepository
 
     public function save(Entity $entity, array $options = [])
     {
-        if ($this->getEntityManager()->getPDO()->inTransaction()) {
-            return $this->runSave($entity, $options);
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            $result = $this->runSave($entity, $options);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
+                $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
+                foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
+                    $pfaRepository->createProductAttributeValues($pfa);
+                }
+            }
+            $result = parent::save($entity, $options);
+
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
         return $result;
-    }
-
-    protected function runSave(Entity $entity, array $options)
-    {
-        if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
-            $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
-            foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
-                $pfaRepository->createProductAttributeValues($pfa);
-            }
-        }
-        return parent::save($entity, $options);
     }
 
     /**
@@ -622,6 +738,7 @@ class Product extends AbstractRepository
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
+        $this->addDependency('queueManager');
     }
 
     /**

@@ -33,20 +33,29 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
-use Treo\Core\EventManager\Event;
 
-/**
- * Class ProductAttributeValue
- */
 class ProductAttributeValue extends AbstractService
 {
-    public const LOCALE_IN_ID_SEPARATOR = '~';
-
-    protected $mandatorySelectAttributeList = ['attributeId','attributeName'];
+    protected $mandatorySelectAttributeList
+        = [
+            'language',
+            'mainLanguageId',
+            'attributeId',
+            'attributeName',
+            'attributeType',
+            'intValue',
+            'boolValue',
+            'dateValue',
+            'datetimeValue',
+            'floatValue',
+            'varcharValue',
+            'textValue'
+        ];
 
     /**
      * @inheritdoc
@@ -56,73 +65,6 @@ class ProductAttributeValue extends AbstractService
         parent::prepareEntityForOutput($entity);
 
         $this->prepareEntity($entity);
-
-        $this->convertValue($entity);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getEntity($id = null)
-    {
-        $id = $this
-            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
-            ->getArgument('id');
-
-        /**
-         * For attribute locale
-         */
-        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
-        if (count($parts) === 2) {
-            $entity = $this->getRepository()->get($parts[0]);
-            if (!empty($entity)) {
-                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($parts[1])));
-
-                $entity->id = $id;
-                $entity->set('isLocale', true);
-                $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $parts[1]);
-                $entity->set('value', $entity->get("value{$camelCaseLocale}"));
-                $entity->set('typeValue', $entity->get('attribute')->get("typeValue{$camelCaseLocale}"));
-
-                // prepare owner user
-                $ownerUser = $this->getEntityManager()->getEntity('User', $entity->get("ownerUser{$camelCaseLocale}Id"));
-                if (!empty($ownerUser)) {
-                    $entity->set('ownerUserId', $ownerUser->get('id'));
-                    $entity->set('ownerUserName', $ownerUser->get('name'));
-                } else {
-                    $entity->set('ownerUserId', null);
-                    $entity->set('ownerUserName', null);
-                }
-
-                // prepare assigned user
-                $assignedUser = $this->getEntityManager()->getEntity('User', $entity->get("assignedUser{$camelCaseLocale}Id"));
-                if (!empty($assignedUser)) {
-                    $entity->set('assignedUserId', $assignedUser->get('id'));
-                    $entity->set('assignedUserName', $assignedUser->get('name'));
-                } else {
-                    $entity->set('assignedUserId', null);
-                    $entity->set('assignedUserName', null);
-                }
-            }
-        } else {
-            $entity = $this->getRepository()->get($id);
-            $entity->set('typeValue', $entity->get('attribute')->get("typeValue"));
-        }
-
-        if (!empty($entity) && !empty($id)) {
-            $this->loadAdditionalFields($entity);
-
-            if (!$this->getAcl()->check($entity, 'read')) {
-                throw new Forbidden();
-            }
-        }
-        if (!empty($entity)) {
-            $this->prepareEntityForOutput($entity);
-        }
-
-        return $this
-            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
-            ->getArgument('entity');
     }
 
     /**
@@ -136,20 +78,11 @@ class ProductAttributeValue extends AbstractService
         return parent::createEntity($attachment);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function deleteEntity($id)
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
-        /**
-         * Prepare ID for locale PAV
-         */
-        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
-        if (count($parts) === 2) {
-            $id = $parts[0];
-        }
+        parent::beforeCreateEntity($entity, $data);
 
-        return parent::deleteEntity($id);
+        $this->setInputValue($entity, $data);
     }
 
     /**
@@ -160,110 +93,6 @@ class ProductAttributeValue extends AbstractService
         // for asset attribute type
         $this->prepareValueForAssetType($data);
 
-        /**
-         * For attribute locale
-         */
-        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, $id);
-        if (count($parts) === 2) {
-            // prepare camel case locale
-            $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($parts[1])));
-
-            /**
-             * Set locale value
-             */
-            if (property_exists($data, 'value')) {
-                $data->{"value{$camelCaseLocale}"} = $data->value;
-                unset($data->value);
-
-                if (property_exists($data, '_prev') && property_exists($data->_prev, 'value')) {
-                    $data->_prev->{"value{$camelCaseLocale}"} = $data->_prev->value;
-                    unset($data->_prev->value);
-                }
-            }
-
-            /**
-             * Set locale for asset type
-             */
-            if (property_exists($data, 'valueId')) {
-                $data->{"value{$camelCaseLocale}Id"} = $data->valueId;
-                unset($data->valueId);
-
-                if (property_exists($data, 'valueName')) {
-                    $data->{"value{$camelCaseLocale}Name"} = $data->valueName;
-                    unset($data->valueName);
-                }
-
-                if (property_exists($data, '_prev') && property_exists($data->_prev, 'valueId')) {
-                    $data->_prev->{"value{$camelCaseLocale}Id"} = $data->_prev->valueId;
-                    unset($data->_prev->valueId);
-
-                    if (property_exists($data->_prev, 'valueName')) {
-                        $data->_prev->{"value{$camelCaseLocale}Name"} = $data->_prev->valueName;
-                        unset($data->_prev->valueName);
-                    }
-                }
-            }
-
-            /**
-             * Set locale ownerUser
-             */
-            if (isset($data->ownerUserId)) {
-                $data->{"ownerUser{$camelCaseLocale}Id"} = $data->ownerUserId;
-                unset($data->ownerUserId);
-
-                if (isset($data->_prev) && property_exists($data->_prev, 'ownerUserId')) {
-                    $data->_prev->{"ownerUser{$camelCaseLocale}Id"} = $data->_prev->ownerUserId;
-                    unset($data->_prev->ownerUserId);
-                }
-            }
-
-            /**
-             * Set locale assignedUser
-             */
-            if (isset($data->assignedUserId)) {
-                $data->{"assignedUser{$camelCaseLocale}Id"} = $data->assignedUserId;
-                unset($data->assignedUserId);
-
-                if (isset($data->_prev) && property_exists($data->_prev, 'assignedUserId')) {
-                    $data->_prev->{"assignedUser{$camelCaseLocale}Id"} = $data->_prev->assignedUserId;
-                    unset($data->_prev->assignedUserId);
-                }
-            }
-
-            /**
-             * Set locale teams
-             */
-            if (isset($data->teamsIds)) {
-//                $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $data->teamsIds);
-                $data->{"teams{$camelCaseLocale}Ids"} = $data->teamsIds;
-                unset($data->teamsIds);
-
-                if (isset($data->_prev) && property_exists($data->_prev, 'teamsIds')) {
-                    $data->_prev->{"teams{$camelCaseLocale}Ids"} = $data->_prev->teamsIds;
-                    unset($data->_prev->teamsIds);
-                }
-            }
-
-            if (isset($data->{'isInheritTeams' . $camelCaseLocale}) && $data->{'isInheritTeams' . $camelCaseLocale}) {
-                $attributeId = $this->getRepository()->getMultilangAttributeId($parts[0], $parts[1]);
-
-                if (!empty($attributeId)) {
-                    $teamsIds = $this->getEntityManager()->getRepository('Attribute')->getAttributeTeams($attributeId['id']);
-
-                    if (!empty($teamsIds)) {
-                        $teamsIds = array_column($teamsIds, 'id');
-                        $this->getRepository()->changeMultilangTeams($id, 'ProductAttributeValue', $teamsIds);
-                    }
-                }
-            }
-
-            $data->isLocale = true;
-            $data->locale = $parts[1];
-
-            // update id
-            $id = $parts[0];
-        }
-
         // prepare data
         foreach ($data as $k => $v) {
             if (is_array($v)) {
@@ -272,6 +101,61 @@ class ProductAttributeValue extends AbstractService
         }
 
         return parent::updateEntity($id, $data);
+    }
+
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        parent::beforeUpdateEntity($entity, $data);
+
+        $this->setInputValue($entity, $data);
+    }
+
+    protected function setInputValue(Entity $entity, \stdClass $data): void
+    {
+        if (property_exists($data, 'value')) {
+            switch ($entity->get('attributeType')) {
+                case 'array':
+                case 'multiEnum':
+                case 'text':
+                case 'wysiwyg':
+                    $entity->set('textValue', $data->value);
+                    break;
+                case 'bool':
+                    $entity->set('boolValue', $data->value);
+                    break;
+                case 'currency':
+                    $entity->set('floatValue', $data->value);
+                    if (property_exists($data, 'valueCurrency')) {
+                        $entity->set('varcharValue', $data->valueCurrency);
+                    }
+                    break;
+                case 'unit':
+                    $entity->set('floatValue', $data->value);
+                    if (property_exists($data, 'valueUnit')) {
+                        $entity->set('varcharValue', $data->valueUnit);
+                    }
+                    break;
+                case 'int':
+                    $entity->set('intValue', $data->value);
+                    break;
+                case 'float':
+                    $entity->set('floatValue', $data->value);
+                    break;
+                case 'date':
+                    $entity->set('dateValue', $data->value);
+                    break;
+                case 'datetime':
+                    $entity->set('datetimeValue', $data->value);
+                    break;
+                case 'asset':
+                    $entity->set('varcharValue', $data->value);
+                    break;
+                default:
+                    $entity->set('varcharValue', $data->value);
+                    break;
+            }
+            $this->getRepository()->convertValue($entity);
+        }
     }
 
     public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool
@@ -341,72 +225,6 @@ class ProductAttributeValue extends AbstractService
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        /**
-         * For attribute locale
-         */
-        if (!empty($data->isLocale)) {
-            $entity->skipValidation('requiredField');
-            $entity->locale = $data->locale ?? null;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function processActionHistoryRecord($action, Entity $entity)
-    {
-        /**
-         * Skip if is attribute locale
-         */
-        $parts = explode(self::LOCALE_IN_ID_SEPARATOR, (string)$entity->id);
-        if (count($parts) === 2) {
-            return;
-        }
-
-        parent::processActionHistoryRecord($action, $entity);
-    }
-
-    /**
-     * @param Entity $entity
-     */
-    protected function convertValue(Entity $entity)
-    {
-        $type = $entity->get('attributeType');
-
-        if (!empty($type)) {
-            switch ($type) {
-                case 'array':
-                    $entity->set('value', ((string)$entity->get('value') === '') ? null : Json::decode($entity->get('value'), true));
-                    break;
-                case 'bool':
-                    $entity->set('value', ((string)$entity->get('value') === '1' || (string)$entity->get('value') === 'true'));
-                    foreach ($this->getInputLanguageList() as $multiLangField) {
-                        $entity->set($multiLangField, ((string)$entity->get($multiLangField) === '1' || (string)$entity->get($multiLangField) === 'true'));
-                    }
-                    break;
-                case 'int':
-                    $entity->set('value', ((string)$entity->get('value') === '') ? null : (int)$entity->get('value'));
-                    break;
-                case 'unit':
-                case 'currency':
-                case 'float':
-                    $entity->set('value', ((string)$entity->get('value') === '') ? null : (float)$entity->get('value'));
-                    break;
-                case 'multiEnum':
-                    $entity->set('value', ((string)$entity->get('value') === '') ? null : Json::decode($entity->get('value'), true));
-                    foreach ($this->getInputLanguageList() as $multiLangField) {
-                        $entity->set($multiLangField, ((string)$entity->get($multiLangField) === '') ? null : Json::decode($entity->get($multiLangField), true));
-                    }
-                    break;
-            }
-        }
-    }
-
-    /**
      * @return array
      */
     protected function getInputLanguageList(): array
@@ -459,75 +277,54 @@ class ProductAttributeValue extends AbstractService
 
         $fields = parent::getFieldsThatConflict($entity, $data);
 
-        if (!empty($fields)) {
-            if (!empty($data->isLocale) && !empty($data->locale)) {
-                $locale = ucfirst(Util::toCamelCase(strtolower($data->locale)));
-                foreach ($fields as $field => $translated) {
-                    $fields[$field] = $this->getInjection('language')->translate($this->removeSuffix($field, $locale), 'fields', 'ProductAttributeValue');
-                }
-            }
-
-            if (!empty($data->isProductUpdate)) {
-                $fields = [$entity->get('id') => $entity->get('attributeName')];
-                if (!empty($data->isLocale) && !empty($data->locale)) {
-                    $fields = [$entity->get('id') . '_' . $data->locale => $entity->get('attributeName') . ' &rsaquo; ' . $data->locale];
-                }
-            }
+        if (!empty($fields) && property_exists($data, 'isProductUpdate') && !empty($data->isProductUpdate)) {
+            $fields = [$entity->get('id') => $entity->get('attributeName')];
         }
 
         return $fields;
     }
 
-    /**
-     * @param Entity $entity
-     */
     protected function prepareEntity(Entity $entity): void
     {
         // exit if already prepared
-        if (!empty($entity->get('attributeType'))) {
+        if (!empty($entity->get('attributeCode'))) {
             return;
         }
 
-        $attribute = $entity->get('attribute');
+        if (empty($attribute = $entity->get('attribute'))) {
+            throw new NotFound();
+        }
 
-        $entity->set('attributeType', !empty($attribute) ? $attribute->get('type') : null);
-        $entity->set('attributeAssetType', !empty($attribute) ? $attribute->get('assetType') : null);
-        $entity->set('attributeIsMultilang', !empty($attribute) ? $attribute->get('isMultilang') : false);
-        $entity->set('attributeCode', !empty($attribute) ? $attribute->get('code') : null);
+        $lang = '';
+        if ($entity->get('language') !== 'main') {
+            $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $entity->get('language'));
+            $lang = ucfirst(Util::toCamelCase(strtolower($entity->get('language'))));
+        }
+
+        $entity->set('typeValue', $attribute->get("typeValue$lang"));
+        $entity->set('attributeAssetType', $attribute->get('assetType'));
+        $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
+        $entity->set('attributeCode', $attribute->get('code'));
         $entity->set('prohibitedEmptyValue', false);
         $entity->set('isInherited', $this->isInheritedFromPf($entity->get('id')));
-
-        if (!empty($attribute)) {
-            $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
-            $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
-            $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-            $entity->set('sortOrder', $attribute->get('sortOrder'));
+        $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
+        $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
+        $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+        $entity->set('sortOrder', $attribute->get('sortOrder'));
+        $entity->set('channelCode', null);
+        if (!empty($channel = $entity->get('channel'))) {
+            $entity->set('channelCode', $channel->get('code'));
         }
 
-        $channel = $entity->get('channel');
-        $entity->set('channelCode', !empty($channel) ? $channel->get('code') : null);
+        $this->getRepository()->convertValue($entity);
 
-        // set currency value
-        if ($entity->get('attributeType') == 'currency') {
-            $entity->set('valueCurrency', $entity->getDataParameter('currency'));
-        }
-
-        // set unit value
-        if ($entity->get('attributeType') == 'unit') {
-            $dataUnit = $entity->getDataParameter('unit');
-            $entity->set('valueUnit', $dataUnit);
-            $this->prepareUnitFieldValue($entity, 'value', $entity->get('attribute')->get('measure'));
-            $entity->get('data')->unit = $entity->get('valueUnit');
-        }
-
-        // set asset value
-        if ($entity->get('attributeType') === 'asset') {
-            if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('value')))) {
-                $entity->set('valueId', $attachment->get('id'));
-                $entity->set('valueName', $attachment->get('name'));
-                $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-            }
-        }
+        $entity->clear('boolValue');
+        $entity->clear('dateValue');
+        $entity->clear('datetimeValue');
+        $entity->clear('intValue');
+        $entity->clear('floatValue');
+        $entity->clear('varcharValue');
+        $entity->clear('textValue');
     }
 
     private function prepareValueForAssetType(\stdClass $data): void
@@ -577,7 +374,6 @@ class ProductAttributeValue extends AbstractService
         $entity = $this->getRepository()->get($entity->get('id'));
 
         $this->prepareEntity($entity);
-        $this->convertValue($entity);
 
         return parent::isEntityUpdated($entity, $data);
     }
@@ -600,5 +396,18 @@ class ProductAttributeValue extends AbstractService
         }
 
         return Entity::areValuesEqual($type, $value1, $value2);
+    }
+
+    protected function getValueDataFields(): array
+    {
+        $fields = ['valueDataId'];
+
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $fields[] = 'valueData' . ucfirst(Util::toCamelCase(strtolower($language))) . 'Id';
+            }
+        }
+
+        return $fields;
     }
 }

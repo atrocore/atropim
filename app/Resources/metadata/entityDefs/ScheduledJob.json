@@ -3,6 +3,10 @@
     "PimCleanup": {
       "isSystem": true,
       "scheduling": "0 0 * * SUN"
+    },
+    "CheckProductAttributes": {
+      "isSystem": true,
+      "scheduling": "0 * * * *"
     }
   }
 }

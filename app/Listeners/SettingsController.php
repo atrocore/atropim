@@ -76,7 +76,7 @@ class SettingsController extends AbstractListener
 
         if (!empty($data->inputLanguageList)) {
             foreach ($channelsLocales as $locale) {
-                if ($locale !== 'mainLocale' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
+                if ($locale !== 'main' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
                     throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
                 }
             }
@@ -89,6 +89,13 @@ class SettingsController extends AbstractListener
     public function afterActionUpdate(Event $event): void
     {
         $data = Json::decode(Json::encode($event->getArgument('data')), true);
+
+        if (isset($data['inputLanguageList']) || isset($data['isMultilangActive'])) {
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE deleted=0 AND attribute_id IN (SELECT id FROM `attribute` WHERE is_multilang=1 AND deleted=0)", true);
+        }
 
         $qm = false;
         foreach (array_keys($this->removeFields) as $key) {

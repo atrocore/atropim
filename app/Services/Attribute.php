@@ -96,43 +96,6 @@ class Attribute extends AbstractService
     }
 
     /**
-     * @param \stdClass $data
-     *
-     * @return \stdClass
-     */
-    public function updateAttributeReadData(\stdClass $data): \stdClass
-    {
-        if (isset($data->id)) {
-            $separator = ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
-
-            if ($this->getConfig()->get('isMultilangActive', false) && $data->isMultilang) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
-                    $id = $data->id . $separator . $locale;
-
-                    $teamsIds = $this->getRepository()->getAttributeTeams($id);
-
-                    if (!empty($teamsIds)) {
-                        $ids = $names = [];
-
-                        foreach ($teamsIds as $teamId) {
-                            $ids[] = $teamId['id'];
-                            $names[$teamId['id']] = $teamId['name'];
-                        }
-                        $data->{"teams{$camelCaseLocale}Ids"} = $ids;
-                        $data->{"teams{$camelCaseLocale}Names"} = $names;
-                    } else {
-                        $data->{"teams{$camelCaseLocale}Ids"} = null;
-                        $data->{"teams{$camelCaseLocale}Names"} = null;
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * @inheritDoc
      */
     public function updateEntity($id, $data)

@@ -9,5 +9,6 @@
   "QueueManagerDuplicateProduct": "\\Pim\\Services\\QueueManagerDuplicateProduct",
   "RevisionField": "\\Pim\\Services\\RevisionField",
   "QueueManagerOwnership": "\\Pim\\Services\\QueueManagerOwnership",
+  "QueueManagerProduct": "\\Pim\\Services\\QueueManagerProduct",
   "QueueManagerChannel": "\\Pim\\Services\\QueueManagerChannel"
 }

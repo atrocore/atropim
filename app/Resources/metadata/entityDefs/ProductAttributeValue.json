@@ -13,6 +13,18 @@
       "type": "bool",
       "default": false
     },
+    "mainLanguage": {
+      "type": "link",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "isInherited": {
       "type": "bool",
       "notStorable": true,
@@ -78,11 +90,95 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "boolValue": {
+      "type": "bool",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "dateValue": {
+      "type": "date",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "datetimeValue": {
+      "type": "datetime",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "intValue": {
+      "type": "int",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "floatValue": {
+      "type": "float",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "varcharValue": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "textValue": {
+      "type": "text",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "value": {
       "type": "text",
+      "notStorable": true,
       "rows": 4,
       "lengthOfCut": 400,
-      "isMultilang": true,
       "view": "pim:views/product-attribute-value/fields/value-container",
       "hasCompleteValidation": true
     },
@@ -195,8 +291,14 @@
     },
     "attributeType": {
       "type": "varchar",
-      "notStorable": true,
-      "exportDisabled": true
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "attributeAssetType": {
       "type": "varchar",
@@ -236,29 +338,18 @@
       "filterDisabled": true,
       "exportDisabled": true
     },
-    "isLocale": {
-      "type": "bool",
-      "notStorable": true,
-      "default": false,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true
-    },
-    "locale": {
+    "language": {
       "type": "varchar",
-      "notStorable": true,
-      "default": null,
+      "default": "main",
+      "required": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "createdAt": {
       "type": "datetime",
@@ -281,14 +372,12 @@
     "ownerUser": {
       "type": "link",
       "required": true,
-      "isMultilang": true,
       "requiredForMultilang": false,
       "view": "views/fields/owner-user"
     },
     "assignedUser": {
       "type": "link",
       "required": true,
-      "isMultilang": true,
       "requiredForMultilang": false,
       "view": "views/fields/assigned-user"
     },
@@ -298,7 +387,6 @@
     },
     "typeValue": {
       "type": "array",
-      "isMultilang": true,
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -329,7 +417,6 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
-      "isMultilang": true,
       "requiredForMultilang": false
     },
     "isInheritOwnerUser": {
@@ -342,7 +429,6 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
-      "isMultilang": true,
       "requiredForMultilang": false
     },
     "isInheritTeams": {
@@ -355,7 +441,6 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
-      "isMultilang": true,
       "requiredForMultilang": false
     }
   },
@@ -367,6 +452,10 @@
     "attribute": {
       "type": "belongsTo",
       "entity": "Attribute"
+    },
+    "mainLanguage": {
+      "type": "belongsTo",
+      "entity": "ProductAttributeValue"
     },
     "channel": {
       "type": "belongsTo",
@@ -402,6 +491,7 @@
       "attribute_id",
       "scope",
       "channel_id",
+      "language",
       "deleted"
     ]
   },
@@ -415,6 +505,48 @@
     "assignedUser": {
       "columns": [
         "assignedUserId",
+        "deleted"
+      ]
+    },
+    "boolValue": {
+      "columns": [
+        "boolValue",
+        "deleted"
+      ]
+    },
+    "dateValue": {
+      "columns": [
+        "dateValue",
+        "deleted"
+      ]
+    },
+    "datetimeValue": {
+      "columns": [
+        "datetimeValue",
+        "deleted"
+      ]
+    },
+    "intValue": {
+      "columns": [
+        "intValue",
+        "deleted"
+      ]
+    },
+    "floatValue": {
+      "columns": [
+        "floatValue",
+        "deleted"
+      ]
+    },
+    "varcharValue": {
+      "columns": [
+        "varcharValue",
+        "deleted"
+      ]
+    },
+    "textValue": {
+      "columns": [
+        "textValue",
         "deleted"
       ]
     }

@@ -38,6 +38,21 @@ class ProductAttributeValue extends Base
 {
     protected $entityType = "ProductAttributeValue";
 
+    public function isAttributeChanged($name)
+    {
+        if ($name === 'value') {
+            return parent::isAttributeChanged('boolValue')
+                || parent::isAttributeChanged('dateValue')
+                || parent::isAttributeChanged('datetimeValue')
+                || parent::isAttributeChanged('intValue')
+                || parent::isAttributeChanged('floatValue')
+                || parent::isAttributeChanged('varcharValue')
+                || parent::isAttributeChanged('textValue');
+        }
+
+        return parent::isAttributeChanged($name);
+    }
+
     public function setData(array $data): void
     {
         $this->set('data', $data);

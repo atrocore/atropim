@@ -31,12 +31,10 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Espo\Core\Utils\Util;
 
-/**
- * ProductAttributeValue select manager
- */
 class ProductAttributeValue extends AbstractSelectManager
 {
     /**
@@ -44,22 +42,12 @@ class ProductAttributeValue extends AbstractSelectManager
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $arrayWhereTypes = ['arrayAnyOf', 'arrayNoneOf', 'arrayIsEmpty', 'arrayIsNotEmpty'];
-
         if (isset($params['where']) && is_array($params['where'])) {
             foreach ($params['where'] as $k => $v) {
-                if (is_array($v['value']) && !empty($v['value'])) {
-                    foreach ($v['value'] as $key => $value) {
-                        if (isset($value['type']) && in_array($value['type'], $arrayWhereTypes)) {
-                            $params['where'][$k]['value'][$key] = $this->prepareWhere($value);
-                        }
-                    }
-                }
-
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
                     $onlyTabAttributes = true;
                     $tabId = $v['data']['onlyTabAttributes'];
-                    if (empty($tabId) || $tabId === 'null'){
+                    if (empty($tabId) || $tabId === 'null') {
                         $tabId = null;
                     }
                     unset($params['where'][$k]);
@@ -67,21 +55,20 @@ class ProductAttributeValue extends AbstractSelectManager
             }
             $params['where'] = array_values($params['where']);
         }
-        // get select params
+
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
-        // prepare product types
-        $types = implode("','", array_keys($this->getMetadata()->get('pim.productType', [])));
-        $attributesTypes = implode("','", $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []));
-
-        // prepare custom where
         if (!isset($selectParams['customWhere'])) {
             $selectParams['customWhere'] = '';
         }
 
-        // add filtering by product types
-        $selectParams['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM product WHERE type IN ('$types') AND deleted=0)";
-        $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE type IN ('{$attributesTypes}') AND deleted=0)";
+        $language = \Pim\Services\ProductAttributeValue::getHeader('language');
+        if (!empty($language)) {
+            if (!$this->getConfig()->get('isMultilangActive') || !in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+                throw new BadRequest('No such language is available.');
+            }
+            $selectParams['customWhere'] .= " AND product_attribute_value.language IN ('main','$language')";
+        }
 
         if (!empty($onlyTabAttributes)) {
             if (empty($tabId)) {
@@ -101,23 +88,21 @@ class ProductAttributeValue extends AbstractSelectManager
     public function applyAdditional(array &$result, array $params)
     {
         if ($this->isSubQuery) {
-            return false;
+            return;
         }
 
-        // prepare additional select columns
         $additionalSelectColumns = [
             'typeValue'          => 'attribute.type_value',
             'attributeGroupId'   => 'ag1.id',
             'attributeGroupName' => 'ag1.name'
         ];
 
-        // prepare for multiLang fields
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                $field = Util::toCamelCase('typeValue_' . strtolower($locale));
-                $dbField = 'attribute.type_value_' . strtolower($locale);
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $lcLanguage = strtolower($language);
+                $camelCaseLanguage = ucfirst(Util::toCamelCase($lcLanguage));
 
-                $additionalSelectColumns[$field] = $dbField;
+                $additionalSelectColumns["typeValue$camelCaseLanguage"] = "attribute.type_value_$lcLanguage";
             }
         }
 
@@ -136,80 +121,10 @@ class ProductAttributeValue extends AbstractSelectManager
         $d['createdById'] = $this->getUser()->id;
         $d['ownerUserId'] = $this->getUser()->id;
         $d['assignedUserId'] = $this->getUser()->id;
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $d[Util::toCamelCase('owner_user_' . strtolower($locale) . '_id')] = $this->getUser()->id;
-                $d[Util::toCamelCase('assigned_user_' . strtolower($locale) . '_id')] = $this->getUser()->id;
-            }
-        }
 
         $result['whereClause'][] = array(
             'OR' => $d
         );
-    }
-
-    /**
-     * Prepare where for array attributes
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function prepareWhere(array $data): array
-    {
-        $where = [];
-
-        switch ($data['type']) {
-            case 'arrayAnyOf':
-            case 'arrayNoneOf':
-                $where = [
-                    'type'  => $data['type'] == 'arrayAnyOf' ? 'or' : 'and',
-                    'value' => []
-                ];
-
-                foreach ($data['value'] as $value) {
-                    $where['value'][] = [
-                        'type'      => $data['type'] == 'arrayAnyOf' ? 'contains' : 'notContains',
-                        'attribute' => 'value',
-                        'value'     => "\"$value\""
-                    ];
-                }
-                break;
-            case 'arrayIsEmpty':
-                $where = [
-                    'type'  => 'or',
-                    'value' => [
-                        [
-                            'type'      => 'isNull',
-                            'attribute' => 'value'
-                        ],
-                        [
-                            'type'      => 'equals',
-                            'attribute' => 'value',
-                            'value'     => '[]'
-                        ]
-                    ]
-                ];
-                break;
-            case 'arrayIsNotEmpty':
-                $where = [
-                    'type'  => 'and',
-                    'value' => [
-                        [
-                            'type'      => 'isNotNull',
-                            'attribute' => 'value'
-                        ],
-                        [
-                            'type'      => 'notEquals',
-                            'attribute' => 'value',
-                            'value'     => '[]'
-                        ]
-                    ]
-                ];
-                break;
-        }
-
-        return $where;
     }
 
     /**
@@ -228,7 +143,7 @@ class ProductAttributeValue extends AbstractSelectManager
                 ->join('attribute')
                 ->where(
                     [
-                        'productId' => $data['productId'],
+                        'productId'                  => $data['productId'],
                         'attribute.attributeGroupId' => ($data['attributeGroupId'] != '') ? $data['attributeGroupId'] : null
                     ]
                 )

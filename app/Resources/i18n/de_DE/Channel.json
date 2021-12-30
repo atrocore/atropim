@@ -28,7 +28,7 @@
     "linkCategoryWithChannel": "Kategorie '%s' mit Kanal '%s' verknüpfen",
     "changeCategoryForChannel": "Kategorieänderung auf '%s' für Kanal '%s'",
     "Create Channel": "Kanal erstellen",
-    "mainLocale": "Hauptsprache"
+    "main": "Hauptsprache"
   },
   "messages": {
     "categoryChangeConfirm": "Sind Sie sicher, dass Sie den Kategoriebaum für diesen Kanal aufheben (oder ändern) möchten? Alle mit dem ursprünglichen Kategoriebaum verknüpften Produkte werden von diesem Kanal getrennt (und die Produkte des neuen Kategoriebaums werden damit verknüpft)."

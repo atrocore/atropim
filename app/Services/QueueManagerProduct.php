@@ -29,39 +29,53 @@
 
 declare(strict_types=1);
 
-namespace Pim\Controllers;
+namespace Pim\Services;
 
-use Espo\Core\Exceptions;
-use Slim\Http\Request;
+use Espo\Services\QueueManagerBase;
 
-class Attribute extends AbstractController
+class QueueManagerProduct extends QueueManagerBase
 {
-    public function actionFiltersData($params, $data, Request $request): array
+    /**
+     * @inheritdoc
+     */
+    public function run(array $data = []): bool
     {
-        if ($this->isReadAction($request, $params)) {
-            return $this->getRecordService()->getFiltersData();
+        if (empty($data['action'])) {
+            return false;
         }
 
-        throw new Exceptions\Error();
+        return $this->{$data['action']}($data);
     }
 
-    /**
-     * @param $params
-     * @param $data
-     * @param Request $request
-     *
-     * @return array
-     *
-     * @throws Exceptions\BadRequest
-     * @throws Exceptions\Error
-     * @throws Exceptions\Forbidden
-     */
-    public function actionGetAttributesIdsFilter($params, $data, Request $request): array
+    protected function updateProductsWithInconsistentAttributes(array $data): bool
     {
-        if ($this->isReadAction($request, $params)) {
-            return $this->getRecordService()->getAttributesIdsFilter();
+        /** @var \Pim\Repositories\Product $productRepository */
+        $productRepository = $this->getEntityManager()->getRepository('Product');
+
+        while (!empty($products = $this->getProductsWithInconsistentAttributes())) {
+            foreach ($products as $product) {
+                $productRepository->updateInconsistentAttributes($product);
+            }
         }
 
-        throw new Exceptions\Error();
+        return true;
+    }
+
+    protected function getProductsWithInconsistentAttributes(): array
+    {
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['hasInconsistentAttributes' => true])
+            ->limit(0, 1000)
+            ->order('id', true)
+            ->find();
+
+        $result = [];
+        foreach ($products as $product) {
+            $result[] = $product;
+        }
+
+        return $result;
     }
 }
