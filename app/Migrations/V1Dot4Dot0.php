@@ -44,7 +44,9 @@ class V1Dot4Dot0 extends Base
         }
 
         $this->exec("DELETE FROM scheduled_job WHERE id='check_product_attributes'");
-        $this->exec("INSERT INTO scheduled_job (id, name, job, status, scheduling, is_internal) VALUES ('check_product_attributes', 'CheckProductAttributes', 'CheckProductAttributes', 'Active', '0 * * * *', 1)");
+        $this->exec(
+            "INSERT INTO scheduled_job (id, name, job, status, scheduling, is_internal) VALUES ('check_product_attributes', 'CheckProductAttributes', 'CheckProductAttributes', 'Active', '0 * * * *', 1)"
+        );
 
         $languages = [];
         if ($this->getConfig()->get('isMultilangActive', false)) {
@@ -77,7 +79,9 @@ class V1Dot4Dot0 extends Base
         $this->exec("ALTER TABLE `product` ADD has_inconsistent_attributes TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
 
         $this->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAEB3B4E33 ON `product_attribute_value`");
-        $this->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, language, deleted)");
+        $this->exec(
+            "CREATE UNIQUE INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON `product_attribute_value` (product_id, attribute_id, scope, channel_id, language, deleted)"
+        );
 
         $this->exec("ALTER TABLE `product_attribute_value` ADD main_language_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("CREATE INDEX IDX_MAIN_LANGUAGE_ID ON `product_attribute_value` (main_language_id)");
@@ -186,11 +190,16 @@ class V1Dot4Dot0 extends Base
                         $dataValues['is_inherit_teams'] = $dataValues["is_inherit_teams_$language"];
                         $dataValues['owner_user_id'] = $dataValues["owner_user_{$language}_id"];
                         $dataValues['assigned_user_id'] = $dataValues["assigned_user_{$language}_id"];
+
+                        unset($dataValues['id']);
+                        unset($dataValues['language']);
+                        unset($dataValues['main_language_id']);
+                        unset($dataValues['deleted']);
                     }
 
                     $updateQueryParts = [];
                     foreach ($dataValues as $field => $val) {
-                        if (in_array($field, ['id', 'deleted', 'language']) || $val === null) {
+                        if ($val === null) {
                             continue;
                         }
                         if (is_string($val)) {
