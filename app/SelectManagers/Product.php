@@ -102,9 +102,13 @@ class Product extends AbstractSelectManager
             return;
         }
 
-        // get prepared text filter
-        $copy = $last['OR'];
-        $textFilter = array_pop($copy);
+        $textFilter = $textFilter . '%';
+        if (mb_strpos($textFilter, 'ft:') === 0) {
+            $textFilter = mb_substr($textFilter, 3);
+        }
+        if (mb_strpos($textFilter, '*') !== false) {
+            $textFilter = str_replace('*', '%', $textFilter);
+        }
 
         // find product attribute values
         $pavData = $this
