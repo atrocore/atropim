@@ -90,63 +90,48 @@ class Product extends AbstractSelectManager
      */
     protected function textFilter($textFilter, &$result)
     {
-        // call parent
         parent::textFilter($textFilter, $result);
-
-        if (!$this->getMetadata()->get(['scopes', 'Product', 'searchInProductAttributeValues'], false)) {
-            return;
-        }
 
         if (empty($result['whereClause'])) {
             return;
         }
 
-        // get last
         $last = array_pop($result['whereClause']);
 
         if (!isset($last['OR'])) {
             return;
         }
 
-        // prepare text filter
-        $textFilter = \addslashes($textFilter);
-
-        // get attributes ids
-        $attributesIds = $this
-            ->getEntityManager()
-            ->getRepository('Attribute')
-            ->select(['id'])
-            ->where(['type' => ['varchar', 'text', 'wysiwyg']])
-            ->find()
-            ->toArray();
-
-        // prepare attributes values
-        $attributesValues = ["value LIKE '%$textFilter%'"];
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $attributesValues[] = "value_" . strtolower($locale) . " LIKE '%$textFilter%'";
-            }
-        }
-
-        // prepare sql params
-        $attrsIdsParam = implode("','", array_column($attributesIds, 'id'));
-        $attrsValuesParam = implode(" OR ", $attributesValues);
+        // get prepared text filter
+        $copy = $last['OR'];
+        $textFilter = array_pop($copy);
 
         // find product attribute values
         $pavData = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT product_id, scope, channel_id FROM product_attribute_value WHERE deleted=0 AND attribute_id IN ('$attrsIdsParam') AND ($attrsValuesParam)")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+            ->getRepository('ProductAttributeValue')
+            ->select(['productId', 'scope', 'channelId'])
+            ->where([
+                'attributeType' => ['varchar', 'text', 'wysiwyg', 'enum'],
+                [
+                    'OR' => [
+                        ['varcharValue*' => $textFilter],
+                        ['textValue*' => $textFilter],
+                    ],
+                ]
+            ])
+            ->find()
+            ->toArray();
 
         // find product channels
-        $productChannels = $this->getProductsChannels(array_column($pavData, 'product_id'));
+        $productChannels = $this->getProductsChannels(array_column($pavData, 'productId'));
 
         // filtering products
         foreach ($pavData as $row) {
-            if ($row['scope'] == 'Channel' && (!isset($productChannels[$row['product_id']]) || !in_array($row['channel_id'], $productChannels[$row['product_id']]))) {
+            if ($row['scope'] == 'Channel' && (!isset($productChannels[$row['productId']]) || !in_array($row['channelId'], $productChannels[$row['productId']]))) {
                 continue 1;
             }
-            $productsIds[] = $row['product_id'];
+            $productsIds[] = $row['productId'];
         }
 
         if (!empty($productsIds)) {
@@ -856,10 +841,10 @@ class Product extends AbstractSelectManager
      */
     protected function getProductsChannels(array $productsIds): array
     {
-        // find product channels
         $productsChannels = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT product_id, channel_id FROM product_channel WHERE deleted=0 AND product_id IN ('" . implode("','", $productsIds) . "')")
+            ->getPDO()
+            ->query("SELECT product_id, channel_id FROM product_channel WHERE deleted=0 AND product_id IN ('" . implode("','", $productsIds) . "')")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         $products = [];

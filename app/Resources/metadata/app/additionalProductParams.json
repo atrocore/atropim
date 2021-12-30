@@ -1,7 +1,0 @@
-{
-  "searchInProductAttributeValues": {
-    "type": "bool",
-    "default": false,
-    "tooltip": true
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "fields": {
-    "searchInProductAttributeValues": "Search in product attribute values"
-  },
-  "tooltips": {
-    "searchInProductAttributeValues": "Search is done over text, varchar and  wysiwyg attributes types."
-  }
-}

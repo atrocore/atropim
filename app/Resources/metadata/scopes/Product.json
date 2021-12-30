@@ -23,7 +23,6 @@
   "hasTeam": true,
   "advancedFilters": true,
   "addRelationEnabled": true,
-  "searchInProductAttributeValues": false,
   "importTypeSimple": {
     "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },
