@@ -612,16 +612,23 @@ class Product extends AbstractService
                 $newRecords = [];
                 foreach ($records as $pav) {
                     if (empty($pav->get('mainLanguageId'))) {
-                        $newRecords[] = $pav;
+                        $newRecords[$pav->get('id')] = $pav;
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
                             foreach ($records as $pav1) {
                                 if ($pav1->get('mainLanguageId') === $pav->get('id') && $language === $pav1->get('language')) {
-                                    $newRecords[] = $pav1;
+                                    $newRecords[$pav1->get('id')] = $pav1;
                                 }
                             }
                         }
                     }
                 }
+
+                foreach ($records as $pav) {
+                    if (!isset($newRecords[$pav->get('id')])) {
+                        $newRecords[$pav->get('id')] = $pav;
+                    }
+                }
+
                 $records = $newRecords;
             }
 
