@@ -587,12 +587,26 @@ class Product extends AbstractService
 
         // prepare result
         if (!empty($result['total'])) {
-            $records = [];
+            $pavsData = $this
+                ->getEntityManager()
+                ->getRepository('ProductAttributeValue')
+                ->select(['id', 'scope', 'channelId', 'channelName'])
+                ->where(['id' => array_column($result['collection']->toArray(), 'id')])
+                ->find();
 
+            $scopeData = [];
+            foreach ($pavsData as $v) {
+                $scopeData[$v->get('id')] = $v;
+            }
+
+            $records = [];
             foreach ($result['collection'] as $pav) {
-                if ($pav->get('scope') === 'Global') {
+                if (!isset($scopeData[$pav->get('id')])) {
+                    continue 1;
+                }
+                if ($scopeData[$pav->get('id')]->get('scope') === 'Global') {
                     $records[$pav->get('id')] = $pav;
-                } elseif ($pav->get('scope') === 'Channel' && !empty($channel = $pav->get('channel'))) {
+                } elseif ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && !empty($channel = $scopeData[$pav->get('id')]->get('channel'))) {
                     if (empty($pav->get('attributeIsMultilang'))) {
                         $records[$pav->get('id')] = $pav;
                     } else {

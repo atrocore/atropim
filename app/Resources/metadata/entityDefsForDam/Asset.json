@@ -57,6 +57,7 @@
     "channel": {
       "type": "varchar",
       "notStorable": true,
+      "aclFieldDisabled": false,
       "view": "pim:views/asset/fields/channel",
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,

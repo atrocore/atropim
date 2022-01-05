@@ -48,6 +48,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             'isInheritTeams'
         ],
 
+        scope: 'ProductAttributeValue',
+
         groupKey: 'attributeGroupId',
 
         groupLabel: 'attributeGroupName',
