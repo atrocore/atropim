@@ -39,6 +39,7 @@
     "scope": {
       "type": "enum",
       "notStorable": true,
+      "aclFieldDisabled": false,
       "prohibitedEmptyValue": true,
       "options": [
         "Global",

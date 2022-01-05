@@ -185,6 +185,7 @@
     "value": {
       "type": "text",
       "notStorable": true,
+      "aclFieldDisabled": false,
       "rows": 4,
       "lengthOfCut": 400,
       "view": "pim:views/product-attribute-value/fields/value-container",
