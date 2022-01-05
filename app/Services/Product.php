@@ -588,11 +588,18 @@ class Product extends AbstractService
         // prepare result
         if (!empty($result['total'])) {
             $records = [];
+
             foreach ($result['collection'] as $pav) {
                 if ($pav->get('scope') === 'Global') {
                     $records[$pav->get('id')] = $pav;
-                } elseif ($pav->get('scope') === 'Channel' && !empty($channel = $pav->get('channel')) && in_array($pav->get('language'), $channel->get('locales'))) {
-                    $records[$pav->get('id')] = $pav;
+                } elseif ($pav->get('scope') === 'Channel' && !empty($channel = $pav->get('channel'))) {
+                    if (empty($pav->get('attributeIsMultilang'))) {
+                        $records[$pav->get('id')] = $pav;
+                    } else {
+                        if (in_array($pav->get('language'), $channel->get('locales'))) {
+                            $records[$pav->get('id')] = $pav;
+                        }
+                    }
                 }
             }
 
