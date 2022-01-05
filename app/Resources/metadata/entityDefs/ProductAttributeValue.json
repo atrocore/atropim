@@ -15,6 +15,7 @@
     },
     "mainLanguage": {
       "type": "link",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -92,6 +93,7 @@
     },
     "boolValue": {
       "type": "bool",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -104,6 +106,7 @@
     },
     "dateValue": {
       "type": "date",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -116,6 +119,7 @@
     },
     "datetimeValue": {
       "type": "datetime",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -128,6 +132,7 @@
     },
     "intValue": {
       "type": "int",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -140,6 +145,7 @@
     },
     "floatValue": {
       "type": "float",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -152,6 +158,7 @@
     },
     "varcharValue": {
       "type": "varchar",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -164,6 +171,7 @@
     },
     "textValue": {
       "type": "text",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -268,6 +276,7 @@
     },
     "data": {
       "type": "jsonObject",
+      "aclFieldDisabled": true,
       "exportDisabled": true
     },
     "scope": {
@@ -291,6 +300,7 @@
     },
     "attributeType": {
       "type": "varchar",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -349,6 +359,7 @@
       "type": "varchar",
       "default": "main",
       "required": true,
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -416,6 +427,7 @@
     },
     "isInheritAssignedUser": {
       "type": "bool",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -428,6 +440,7 @@
     },
     "isInheritOwnerUser": {
       "type": "bool",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -440,6 +453,7 @@
     },
     "isInheritTeams": {
       "type": "bool",
+      "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
