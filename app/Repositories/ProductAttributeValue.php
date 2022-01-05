@@ -421,17 +421,44 @@ class ProductAttributeValue extends AbstractRepository
         if (!$entity->isNew() && $attribute->get('unique') && $entity->isAttributeChanged('value')) {
             $where = [
                 'id!='            => $entity->id,
-                'boolValue'       => $entity->get('boolValue'),
-                'dateValue'       => $entity->get('dateValue'),
-                'datetimeValue'   => $entity->get('datetimeValue'),
-                'intValue'        => $entity->get('intValue'),
-                'floatValue'      => $entity->get('floatValue'),
-                'varcharValue'    => $entity->get('varcharValue'),
-                'textValue'       => $entity->get('textValue'),
                 'language'        => $entity->get('language'),
                 'attributeId'     => $entity->get('attributeId'),
                 'product.deleted' => false
             ];
+
+            switch ($entity->get('attributeType')) {
+                case 'array':
+                case 'multiEnum':
+                    $where['textValue'] = @json_encode($entity->get('textValue'));
+                    break;
+                case 'text':
+                case 'wysiwyg':
+                    $where['textValue'] = $entity->get('textValue');
+                    break;
+                case 'bool':
+                    $where['boolValue'] = $entity->get('boolValue');
+                    break;
+                case 'currency':
+                case 'unit':
+                    $where['floatValue'] = $entity->get('floatValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
+                    break;
+                case 'int':
+                    $where['intValue'] = $entity->get('intValue');
+                    break;
+                case 'float':
+                    $where['floatValue'] = $entity->get('floatValue');
+                    break;
+                case 'date':
+                    $where['dateValue'] = $entity->get('dateValue');
+                    break;
+                case 'datetime':
+                    $where['datetimeValue'] = $entity->get('datetimeValue');
+                    break;
+                default:
+                    $where['varcharValue'] = $entity->get('varcharValue');
+                    break;
+            }
 
             if (!empty($this->select(['id'])->join(['product'])->where($where)->findOne())) {
                 throw new BadRequest(sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name')));
