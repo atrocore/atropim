@@ -85,32 +85,28 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                 });
             }
 
-            const originId = eventModel.get('id');
+            let viewName = eventModel.get('mainLanguageId') || eventModel.get('id');
 
-            const id = originId.split('~').shift();
-
-            const locales = this.getConfig().get('inputLanguageList') || [];
-            locales.push('');
-
-            locales.forEach(locale => {
-                let viewName = locale ? `${id}~${locale}` : id;
-                if (this.nestedViews[viewName] && this.nestedViews[viewName].getView('valueField') && this.nestedViews[viewName].getView('valueField').model) {
-                    let model = this.nestedViews[viewName].getView('valueField').model;
-                    if (model.get('id') !== originId) {
+            if (this.nestedViews[viewName] && this.nestedViews[viewName].getView('valueField') && this.nestedViews[viewName].getView('valueField').model) {
+                let ids = Espo.Utils.clone(this.nestedViews[viewName].getView('valueField').model.get('languagesIds')) || [];
+                ids.push(viewName);
+                ids.forEach(id => {
+                    if (eventModel.get('id') !== id) {
+                        let relatedModel = this.nestedViews[id].getView('valueField').model;
                         if (eventModel.get('attributeType') === 'multiEnum') {
                             let value = [];
                             $.each(position, (k, v) => {
-                                value.push(model.get('typeValue')[v]);
+                                value.push(relatedModel.get('typeValue')[v]);
                             });
-                            model.set('value', value);
+                            relatedModel.set('value', value);
                         } else {
-                            if (model.get('typeValue') && model.get('typeValue')[position]) {
-                                model.set('value', model.get('typeValue')[position]);
+                            if (relatedModel.get('typeValue') && relatedModel.get('typeValue')[position]) {
+                                relatedModel.set('value', relatedModel.get('typeValue')[position]);
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         },
 
         prepareInternalLayout(internalLayout, model) {
