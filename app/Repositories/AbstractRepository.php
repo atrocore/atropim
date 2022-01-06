@@ -223,7 +223,7 @@ abstract class AbstractRepository extends Base
             // get related entities ids that must inherit teams
             $table = Util::toUnderScore($this->ownershipRelation);
             $relatedTable = Util::toUnderScore($entity->getEntityType());
-            $inheritedField = !empty($locale) ? 'is_inherit_teams_' . $locale : 'is_inherit_teams';
+            $inheritedField = 'is_inherit_teams';
 
             $ids = $this
                 ->getEntityManager()
@@ -235,9 +235,6 @@ abstract class AbstractRepository extends Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
 
             if (!empty($ids)) {
-                $ids = array_map(function ($id) use ($locale) {
-                    return !empty($locale) ? $id . '~' . $locale : $id;
-                }, $ids);
                 $preparedIds = implode("','", $ids);
 
                 // delete old entity teams
@@ -300,13 +297,15 @@ abstract class AbstractRepository extends Base
 
             if ($inheritedEntity) {
                 if ($target == 'teams') {
-                    if (isset($entity->locale)) {
-                        $separator = \Pim\Services\ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
-                        $entityId = $entity->id . $separator . $entity->locale;
-                        $inheritedId = $inheritedEntity->getEntityType() == 'Attribute' ? $inheritedEntity->id . $separator . $entity->locale : $inheritedEntity->id;
-                    } else {
-                        $entityId = $entity->id;
-                        $inheritedId = $inheritedEntity->id;
+                    $entityId = $entity->id;
+                    $inheritedId = $inheritedEntity->id;
+
+                    if ($entity->getEntityType() == 'ProductAttributeValue') {
+                        $locale = $entity->get('language');
+
+                        if ($inheritedEntity->getEntityType() == 'Attribute' && $locale != 'main') {
+                            $inheritedId .= '~' . strtolower($locale);
+                        }
                     }
                     $this->getEntityManager()->nativeQuery("DELETE FROM entity_team WHERE entity_id = '{$entityId}'");
 
@@ -326,11 +325,14 @@ abstract class AbstractRepository extends Base
                         $this->getEntityManager()->nativeQuery($sql);
                     }
                 } else {
-                    if (isset($entity->locale)) {
-                        $inheritedField = $inheritedEntity->getEntityType() == 'Attribute' ? $target . Util::toCamelCase(strtolower($entity->locale), '_', true) : $target;
-                        $target .= Util::toCamelCase(strtolower($entity->locale), '_', true);
-                    } else {
-                        $inheritedField = $target;
+                    $inheritedField = $target;
+
+                    if ($entity->getEntityType() == 'ProductAttributeValue') {
+                        $locale = $entity->get('language');
+
+                        if ($inheritedEntity->getEntityType() == 'Attribute' && $locale != 'main') {
+                            $inheritedField .= Util::toCamelCase(strtolower($locale), '_', true);
+                        }
                     }
                     $entity->set($target . 'Id', $inheritedEntity->get($inheritedField . 'Id'));
                     $entity->set($target . 'Name', $inheritedEntity->get($inheritedField . 'Name'));
