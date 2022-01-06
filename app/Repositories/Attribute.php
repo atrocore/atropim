@@ -139,17 +139,18 @@ class Attribute extends AbstractRepository
             }
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('pattern') && !empty($pattern = $entity->get('pattern')) && preg_match('/\^(.*)\$/', $pattern, $matches)) {
-            $query = "SELECT id 
+        if (!$entity->isNew() && $entity->isAttributeChanged('pattern') && !empty($pattern = $entity->get('pattern'))) {
+            $query = "SELECT DISTINCT varchar_value
                       FROM product_attribute_value 
                       WHERE deleted=0 
-                        AND attribute_type='varchar' 
+                        AND attribute_id='{$entity->get('id')}'
                         AND varchar_value IS NOT NULL 
-                        AND varchar_value!='' 
-                        AND varchar_value NOT REGEXP '$matches[0]'";
+                        AND varchar_value!=''";
 
-            if (!empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
-                throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
+            foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN) as $value) {
+                if (!preg_match($pattern, $value)) {
+                    throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
+                }
             }
         }
 
