@@ -41,20 +41,6 @@ Espo.define('pim:views/product-attribute-value/record/detail-side', 'pim:views/r
                 'config': 'teamsAttributeOwnership',
                 'field': 'isInheritTeams'
             }
-        },
-
-        getInheritedFieldName(field) {
-            if (this.getConfig().get(this.ownershipOptions[field].config) && this.model.get('id')) {
-                const parts = this.model.get('id').split('~');
-
-                if (parts.length === 2) {
-                    let lang = parts.pop();
-
-                    return lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), this.ownershipOptions[field].field);
-                }
-            }
-
-            return Dep.prototype.getInheritedFieldName.call(this, field);
         }
     })
 );

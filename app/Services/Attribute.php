@@ -109,7 +109,7 @@ class Attribute extends AbstractService
 
                     $teamsField = "teams{$camelCaseLocale}Ids";
                     if (isset($data->$teamsField)) {
-                        $multiLangId = $id . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . strtolower($locale);
+                        $multiLangId = $id . '~' . strtolower($locale);
                         $this->getRepository()->changeMultilangTeams($multiLangId, 'Attribute', $data->$teamsField);
 
                         $this

@@ -109,7 +109,7 @@ class SettingsController extends AbstractListener
             $this
                 ->getContainer()
                 ->get('queueManager')
-                ->push($this->getLanguage()->translate('updatingOwnershipInformation', 'queueManager', 'Settings'), 'QueueManagerOwnership', $data, 1);
+                ->push($this->getLanguage()->translate('updatingOwnershipInformation', 'queueManager', 'Settings'), 'QueueManagerOwnership', $data);
         }
 
         $this->removeConfigFields();
