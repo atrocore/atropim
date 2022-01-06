@@ -58,10 +58,14 @@ class Attribute extends AbstractController
      */
     public function actionGetAttributesIdsFilter($params, $data, Request $request): array
     {
-        if ($this->isReadAction($request, $params)) {
-            return $this->getRecordService()->getAttributesIdsFilter();
+        if (!$request->isGet()) {
+            throw new Exceptions\BadRequest();
         }
 
-        throw new Exceptions\Error();
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            return [];
+        }
+
+        return $this->getRecordService()->getAttributesIdsFilter();
     }
 }
