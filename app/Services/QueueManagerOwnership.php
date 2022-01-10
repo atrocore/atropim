@@ -89,23 +89,20 @@ class QueueManagerOwnership extends QueueManagerBase
      * @param string $field
      * @param string $config
      * @param bool $override
-     * @param string|null $locale
      */
-    protected function updateUserOwnership(string $entity, string $field, string $config, bool $override, string $locale = null)
+    protected function updateUserOwnership(string $entity, string $field, string $config, bool $override)
     {
         if (!empty($inherited = $this->getInheritedEntity($config))) {
-            $localeField = !empty($locale) ? $field . '_' . strtolower($locale) : $field;
-
             if ($override) {
-                $this->getEntityManager()->nativeQuery("UPDATE {$entity} SET is_inherit_{$localeField} = 1 WHERE deleted = 0 AND is_inherit_{$localeField} = 0;");
+                $this->getEntityManager()->nativeQuery("UPDATE {$entity} SET is_inherit_{$field} = 1 WHERE deleted = 0 AND is_inherit_{$field} = 0;");
             }
 
-            $sql = "SELECT id, {$inherited}_id AS inherited, {$localeField}_id AS user FROM {$entity} WHERE is_inherit_{$localeField} = 1 AND deleted = 0;";
+            $sql = "SELECT id, {$inherited}_id AS inherited, {$field}_id AS user FROM {$entity} WHERE is_inherit_{$field} = 1 AND deleted = 0;";
 
             $entities = $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_ASSOC);
 
             if (count($entities) > 0) {
-                $foreignField = $inherited == 'attribute' ? $localeField : $field;
+                $foreignField = $field;
                 $sql = "SELECT id, {$foreignField}_id FROM {$inherited} WHERE deleted = 0;";
                 $inherited = $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_UNIQUE|\PDO::FETCH_GROUP|\PDO::FETCH_COLUMN);
 
@@ -113,10 +110,10 @@ class QueueManagerOwnership extends QueueManagerBase
                 $sql = '';
                 foreach ($entities as $item) {
                     if ($override) {
-                        $sql .= "UPDATE {$entity} SET {$localeField}_id = '{$inherited[$item['inherited']]}' WHERE id = '{$item['id']}';";
+                        $sql .= "UPDATE {$entity} SET {$field}_id = '{$inherited[$item['inherited']]}' WHERE id = '{$item['id']}';";
                         $queries++;
                     } elseif ($item['user'] != $inherited[$item['inherited']]) {
-                        $sql .= "UPDATE {$entity} SET is_inherit_{$localeField} = 0 WHERE id = '{$item['id']}';";
+                        $sql .= "UPDATE {$entity} SET is_inherit_{$field} = 0 WHERE id = '{$item['id']}';";
                         $queries++;
                     }
 
@@ -132,17 +129,6 @@ class QueueManagerOwnership extends QueueManagerBase
                     $this->getEntityManager()->nativeQuery($sql);
                 }
             }
-
-            // for multilang owner and assigned users
-            if (empty($locale) && $this->getConfig()->get('isMultilangActive', false)) {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', Util::toCamelCase($entity, '_', true), 'fields', Util::toCamelCase($localeField)]);
-
-                if ($fieldDefs['isMultilang'] ?? false) {
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                        $this->updateUserOwnership($entity, $field, $config, $override, $locale);
-                    }
-                }
-            }
         }
     }
 
@@ -150,19 +136,18 @@ class QueueManagerOwnership extends QueueManagerBase
      * @param string $entity
      * @param string $config
      * @param bool $override
-     * @param string|null $locale
      */
-    protected function updateTeamsOwnership(string $entity, string $config, bool $override, string $locale = null)
+    protected function updateTeamsOwnership(string $entity, string $config, bool $override)
     {
         if (!empty($inherited = $this->getInheritedEntity($config))) {
             $sql = '';
-            $inheritedField = !empty($locale) ? 'is_inherit_teams_' . strtolower($locale) : 'is_inherit_teams';
+            $inheritedField = 'is_inherit_teams';
 
             if ($override) {
                 $sql .= "UPDATE {$entity} SET {$inheritedField} = 1 WHERE deleted = 0 AND {$inheritedField} = 0;";
                 $sql .= "DELETE entity_team FROM entity_team
                         WHERE entity_team.entity_id IN (
-                            SELECT {$this->prepareIdForQuery($entity, $locale)} FROM {$entity} WHERE {$entity}.{$inheritedField} = 1 AND {$entity}.deleted = 0
+                            SELECT id FROM {$entity} WHERE {$entity}.{$inheritedField} = 1 AND {$entity}.deleted = 0
                         );
                 ";
 
@@ -174,11 +159,10 @@ class QueueManagerOwnership extends QueueManagerBase
                     ->fetchAll(\PDO::FETCH_ASSOC);
 
                 if (count($entities) > 0) {
-                    $foreignField = $inherited == 'attribute' ? $this->prepareIdForQuery('inherited', $locale) : $this->prepareIdForQuery('inherited');
                     $sql = "SELECT inherited.id, et.team_id 
                         FROM {$inherited} AS inherited
                         INNER JOIN entity_team AS et
-                            ON et.entity_id = {$foreignField} AND et.deleted = 0
+                            ON et.entity_id = inherited.id AND et.deleted = 0
                         WHERE inherited.deleted = 0;";
 
                     $inherited = $this
@@ -192,7 +176,7 @@ class QueueManagerOwnership extends QueueManagerBase
                     foreach ($entities as $item) {
                         if (isset($inherited[$item['inherited']])) {
                             foreach ($inherited[$item['inherited']] as $teamId) {
-                                $id = !empty($locale) ? $item['id'] . ProductAttributeValue::LOCALE_IN_ID_SEPARATOR . $locale : $item['id'];
+                                $id = $item['id'];
                                 $sql .= "INSERT INTO entity_team SET entity_id = '{$id}', entity_type = '{$entityType}', team_id = '{$teamId}';";
                                 $queries++;
 
@@ -213,7 +197,7 @@ class QueueManagerOwnership extends QueueManagerBase
                 // get entities where inherit teams switch on
                 $entitiesIds = $this
                     ->getEntityManager()
-                    ->nativeQuery("SELECT {$this->prepareIdForQuery($entity, $locale)}, {$inherited}_id FROM {$entity} WHERE {$inheritedField} = 1 AND deleted = 0")
+                    ->nativeQuery("SELECT id, {$inherited}_id FROM {$entity} WHERE {$inheritedField} = 1 AND deleted = 0")
                     ->fetchAll(\PDO::FETCH_GROUP|\PDO::FETCH_COLUMN|\PDO::FETCH_UNIQUE);
 
                 if (!empty($entitiesIds)) {
@@ -226,10 +210,9 @@ class QueueManagerOwnership extends QueueManagerBase
                         ->nativeQuery($sql)
                         ->fetchAll(\PDO::FETCH_GROUP | \PDO::FETCH_COLUMN);
 
-                    // get inherited entities teams
-                    $condition = $inherited == 'attribute' ? $this->prepareIdForQuery($inherited, $locale) : $this->prepareIdForQuery($inherited);
+                    // get inherited entities teams\
                     $sql = "SELECT entity_id, team_id FROM entity_team
-                        INNER JOIN {$inherited} ON entity_team.entity_id = {$condition} 
+                        INNER JOIN {$inherited} ON entity_team.entity_id = {$inherited}.id 
                         WHERE entity_team.deleted = 0 AND {$inherited}.deleted = 0";
                     $inheritedTeams = $this
                         ->getEntityManager()
@@ -238,16 +221,11 @@ class QueueManagerOwnership extends QueueManagerBase
 
                     $ids = [];
                     foreach ($entitiesIds as $entityId => $inheritedId) {
-                        if (!empty($locale) && $inherited == 'attribute') {
-                            $separator = ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
-                            $inheritedId .= $separator . strtolower($locale);
-                        }
-
                         $inheritTeams = $inheritedTeams[$inheritedId] ?? [];
                         $teamsIds = $entitiesTeams[$entityId] ?? [];
 
                         if (!empty(array_diff($teamsIds, $inheritTeams)) || !empty(array_diff($inheritTeams, $teamsIds))) {
-                            $ids[] = !empty($locale) ? explode(ProductAttributeValue::LOCALE_IN_ID_SEPARATOR, $entityId)[0] : $entityId;
+                            $ids[] = $entityId;
                         }
                     }
 
@@ -257,18 +235,6 @@ class QueueManagerOwnership extends QueueManagerBase
                         $this
                             ->getEntityManager()
                             ->nativeQuery("UPDATE {$entity} SET {$inheritedField} = 0 WHERE id IN ('{$ids}')");
-                    }
-                }
-            }
-
-            // for multilang owner and assigned users
-            if (empty($locale) && $this->getConfig()->get('isMultilangActive', false)) {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', Util::toCamelCase($entity, '_', true), 'fields', 'isInheritTeams']);
-
-                if ($fieldDefs['isMultilang'] ?? false) {
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-
-                        $this->updateTeamsOwnership($entity, $config, $override, $locale);
                     }
                 }
             }
@@ -283,7 +249,7 @@ class QueueManagerOwnership extends QueueManagerBase
      */
     protected function prepareIdForQuery(string $alias, string $locale = null): string
     {
-        $separator = ProductAttributeValue::LOCALE_IN_ID_SEPARATOR;
+        $separator = '~';
 
         return !empty($locale) ? "CONCAT({$alias}.id, '{$separator}', '{$locale}')" : $alias . '.id';
     }
