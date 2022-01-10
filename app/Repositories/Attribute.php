@@ -140,6 +140,10 @@ class Attribute extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('pattern') && !empty($pattern = $entity->get('pattern'))) {
+            if (!preg_match("/^\/(.*)\/$/", $pattern)) {
+                throw new BadRequest($this->getInjection('language')->translate('regexNotValid', 'exceptions', 'FieldManager'));
+            }
+
             $query = "SELECT DISTINCT varchar_value
                       FROM product_attribute_value 
                       WHERE deleted=0 
