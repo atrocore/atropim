@@ -191,7 +191,8 @@
       "type": "varchar",
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "tooltip": true
     },
     "unique": {
       "type": "bool",

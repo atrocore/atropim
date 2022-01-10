@@ -59,6 +59,7 @@
     "All": "All"
   },
   "tooltips": {
+    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "isSorted": "Options will be sorted after saving."
   },
   "exceptions": {

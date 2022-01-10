@@ -61,6 +61,7 @@
     "All": "Alle"
   },
   "tooltips": {
+    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "isSorted": "Optionen werden nach dem Speichern der Seite sortiert."
   },
   "exceptions": {
