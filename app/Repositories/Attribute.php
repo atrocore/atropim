@@ -103,39 +103,33 @@ class Attribute extends AbstractRepository
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
-            $languages = ['main'];
-            if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    $languages[] = $language;
-                }
+            $query = "SELECT COUNT(*) 
+                      FROM product_attribute_value 
+                      WHERE attribute_id='{$entity->id}' 
+                        AND deleted=0 %s 
+                      GROUP BY %s, `language`, scope, channel_id HAVING COUNT(*) > 1";
+            switch ($entity->get('type')) {
+                case 'unit':
+                case 'currency':
+                    $query = sprintf($query, 'AND float_value IS NOT NULL AND varchar_value IS NOT NULL', 'float_value, varchar_value');
+                    break;
+                case 'float':
+                    $query = sprintf($query, 'AND float_value IS NOT NULL', 'float_value');
+                    break;
+                case 'int':
+                    $query = sprintf($query, 'AND int_value IS NOT NULL', 'int_value');
+                case 'date':
+                    $query = sprintf($query, 'AND date_value IS NOT NULL', 'date_value');
+                case 'datetime':
+                    $query = sprintf($query, 'AND datetime_value IS NOT NULL', 'datetime_value');
+                    break;
+                default:
+                    $query = sprintf($query, 'AND varchar_value IS NOT NULL', 'varchar_value');
+                    break;
             }
 
-            foreach ($languages as $language) {
-                $query
-                    = "SELECT COUNT(*) FROM product_attribute_value WHERE attribute_id='{$entity->id}' AND language='$language' AND deleted=0 %s GROUP BY %s HAVING COUNT(*) > 1";
-                switch ($entity->get('type')) {
-                    case 'unit':
-                    case 'currency':
-                        $query = sprintf($query, 'AND float_value IS NOT NULL AND varchar_value IS NOT NULL', 'float_value, varchar_value');
-                        break;
-                    case 'float':
-                        $query = sprintf($query, 'AND float_value IS NOT NULL', 'float_value');
-                        break;
-                    case 'int':
-                        $query = sprintf($query, 'AND int_value IS NOT NULL', 'int_value');
-                    case 'date':
-                        $query = sprintf($query, 'AND date_value IS NOT NULL', 'date_value');
-                    case 'datetime':
-                        $query = sprintf($query, 'AND datetime_value IS NOT NULL', 'datetime_value');
-                        break;
-                    default:
-                        $query = sprintf($query, 'AND varchar_value IS NOT NULL', 'varchar_value');
-                        break;
-                }
-
-                if (!empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
-                    throw new Error($this->exception('attributeNotHaveUniqueValue'));
-                }
+            if (!empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
+                throw new Error($this->exception('attributeNotHaveUniqueValue'));
             }
         }
 
