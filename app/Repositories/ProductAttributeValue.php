@@ -423,8 +423,13 @@ class ProductAttributeValue extends AbstractRepository
                 'id!='            => $entity->id,
                 'language'        => $entity->get('language'),
                 'attributeId'     => $entity->get('attributeId'),
+                'scope'           => $entity->get('scope'),
                 'product.deleted' => false
             ];
+
+            if ($entity->get('scope') === 'Channel') {
+                $where['channelId'] = $entity->get('channelId');
+            }
 
             switch ($entity->get('attributeType')) {
                 case 'array':
