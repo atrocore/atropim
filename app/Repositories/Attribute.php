@@ -241,7 +241,8 @@ class Attribute extends AbstractRepository
              * First, prepare main value
              */
             if (!empty($becameValues[$pav['varcharValue']])) {
-                $queries[] = "UPDATE product_attribute_value SET varchar_value='{$becameValues[$pav['varcharValue']]}' WHERE id='{$pav['id']}'";
+                $value = $this->getPDO()->quote($becameValues[$pav['varcharValue']]);
+                $queries[] = "UPDATE product_attribute_value SET varchar_value=$value WHERE id='{$pav['id']}'";
             } else {
                 $queries[] = "UPDATE product_attribute_value SET varchar_value=NULL WHERE id='{$pav['id']}'";
             }
@@ -255,7 +256,8 @@ class Attribute extends AbstractRepository
                         $options = $attribute->get("typeValue" . ucfirst(Util::toCamelCase(strtolower($language))));
                         $key = array_search($pav['varcharValue'], $attribute->getFetched('typeValue'));
                         $value = isset($options[$key]) ? $options[$key] : $becameValues[$pav['varcharValue']];
-                        $queries[] = "UPDATE product_attribute_value SET varchar_value='$value' WHERE main_language_id='{$pav['id']}' AND language='$language'";
+                        $value = $this->getPDO()->quote($value);
+                        $queries[] = "UPDATE product_attribute_value SET varchar_value=$value WHERE main_language_id='{$pav['id']}' AND language='$language'";
                     } else {
                         $queries[] = "UPDATE product_attribute_value SET varchar_value=NULL WHERE main_language_id='{$pav['id']}' AND language='$language'";
                     }
