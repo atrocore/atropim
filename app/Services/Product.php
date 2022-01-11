@@ -600,6 +600,8 @@ class Product extends AbstractService
             }
 
             $records = [];
+
+            // filtering pavs by scope and channel languages
             foreach ($result['collection'] as $pav) {
                 if (!isset($scopeData[$pav->get('id')])) {
                     continue 1;
@@ -614,6 +616,13 @@ class Product extends AbstractService
                             $records[$pav->get('id')] = $pav;
                         }
                     }
+                }
+            }
+
+            // clear hided records
+            foreach ($result['collection'] as $pav) {
+                if (!isset($records[$pav->get('id')])) {
+                    $this->getEntityManager()->getRepository('ProductAttributeValue')->clearRecord($pav->get('id'));
                 }
             }
 

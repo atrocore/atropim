@@ -95,6 +95,13 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
+    public function clearRecord(string $id): void
+    {
+        $this->getPDO()->exec(
+            "UPDATE `product_attribute_value` SET varchar_value=NULL, text_value=NULL, bool_value=0, float_value=NULL, int_value=NULL, date_value=NULL, datetime_value=NULL, owner_user_id=NULL, assigned_user_id=NULL WHERE id='$id'"
+        );
+    }
+
     public function get($id = null)
     {
         $entity = parent::get($id);
