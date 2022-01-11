@@ -22,6 +22,7 @@
     "Create ProductAttributeValue": "Создать значение атрибута"
   },
   "exceptions": {
+    "noSuchChannelInProduct": "Атрибут '%s' для канала '%s' для продукта '%s' недоступен.",
     "attributeUnitValueIsRequired": "Единица измерения для атрибута '%s' необходима.",
     "noSuchAttributeUnit": "Единица измерения для атрибута '%s' не допустима.",
     "noSuchAttributeOptions": "Значение для атрибута '%s' не допустимо.",

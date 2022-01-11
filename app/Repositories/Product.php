@@ -637,6 +637,39 @@ class Product extends AbstractRepository
     }
 
     /**
+     * @param Entity|string $product
+     * @param Entity|string $channel
+     *
+     * @return void
+     */
+    public function relatePfas($product, $channel): void
+    {
+        if (is_bool($product) || is_bool($channel)) {
+            throw new BadRequest('Mass relate is unavailable.');
+        }
+
+        if (!$product instanceof Entity) {
+            $product = $this->get($product);
+        }
+
+        $channelId = $channel instanceof Entity ? $channel->get('id') : $channel;
+
+        $pfas = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->where([
+                'productFamilyId' => $product->get('productFamilyId'),
+                'channelId'       => $channelId
+            ])
+            ->find();
+
+        echo '<pre>';
+        print_r($channelId);
+        die();
+
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $category
      *
@@ -864,8 +897,11 @@ class Product extends AbstractRepository
             $this->isProductCanLinkToNonLeafCategory($foreign);
         }
 
-        if ($relationName == 'channels' && !$entity->isSkippedValidation('isChannelAlreadyRelated')) {
-            $this->isChannelAlreadyRelated($entity, $foreign);
+        if ($relationName == 'channels') {
+            $this->relatePfas($entity, $foreign);
+            if (!$entity->isSkippedValidation('isChannelAlreadyRelated')) {
+                $this->isChannelAlreadyRelated($entity, $foreign);
+            }
         }
 
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);

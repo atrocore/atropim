@@ -34,6 +34,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\NoSuchChannelInProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
 
@@ -58,6 +59,8 @@ class ProductFamilyAttribute extends Base
             try {
                 $this->getEntityManager()->saveEntity($pav);
             } catch (ProductAttributeAlreadyExists $e) {
+                // ignore
+            } catch (NoSuchChannelInProduct $e) {
                 // ignore
             }
         }
@@ -91,6 +94,8 @@ class ProductFamilyAttribute extends Base
                 try {
                     $this->getEntityManager()->saveEntity($pav);
                 } catch (ProductAttributeAlreadyExists $e) {
+                    // ignore
+                } catch (NoSuchChannelInProduct $e) {
                     // ignore
                 }
             }

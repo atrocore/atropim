@@ -34,6 +34,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\NoSuchChannelInProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Espo\Core\Utils\Util;
 
@@ -392,6 +393,16 @@ class ProductAttributeValue extends AbstractRepository
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($entity->isNew()) {
+            if (!empty($entity->get('channelId'))) {
+                $product = $entity->get('product');
+                $channelsIds = array_column($product->get('channels')->toArray(), 'id');
+                if (!in_array($entity->get('channelId'), $channelsIds)) {
+                    throw new NoSuchChannelInProduct(
+                        sprintf($this->exception('noSuchChannelInProduct'), $entity->get('attributeName'), $entity->get('channelName'), $product->get('name'))
+                    );
+                }
+            }
+
             if ($entity->get('language') !== 'main' && empty($entity->get('mainLanguageId'))) {
                 $entity->set('mainLanguageId', $this->findMainLanguage($entity)->get('id'));
             }
