@@ -567,7 +567,7 @@ class Product extends AbstractService
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
-        $collection = $this->filterPavsViaChannel($this->getRepository()->findRelated($entity, $link, $selectParams));
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -580,19 +580,25 @@ class Product extends AbstractService
             $recordService->prepareEntityForOutput($e);
         }
 
-        $result['collection'] = $this->preparePavsForOutput($collection, $entity);
-        $result['total'] = count($result['collection']);
+        $collection = $this->preparePavsForOutput($collection);;
+
+        $result = [
+            'collection' => $collection,
+            'total'      => count($collection),
+        ];
 
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
             ->getArgument('result');
     }
 
-    public function preparePavsForOutput(EntityCollection $collection, Entity $product): EntityCollection
+    public function preparePavsForOutput(EntityCollection $collection): EntityCollection
     {
         if (count($collection) === 0) {
             return $collection;
         }
+
+        $collection = $this->filterPavsViaChannel($collection);
 
         $scopeData = [];
         if (empty($collection[0]->has('scope'))) {
