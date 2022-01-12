@@ -307,7 +307,7 @@ class ProductAttributeValue extends AbstractRepository
                 }
             }
 
-            $value = Json::encode($values);
+            $value = Json::encode($values, JSON_UNESCAPED_UNICODE);
 
             if ($v === 'main') {
                 $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value='$value' WHERE id='$id'");

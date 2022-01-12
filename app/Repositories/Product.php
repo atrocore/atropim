@@ -309,7 +309,6 @@ class Product extends AbstractRepository
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
-            $this->filterByChannel($entity, $params);
             $params['limit'] = 9999;
         }
 
@@ -333,30 +332,11 @@ class Product extends AbstractRepository
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
-            $this->filterByChannel($entity, $params);
             $params['limit'] = 9999;
         }
 
         return parent::countRelated($entity, $relationName, $params);
     }
-
-    /**
-     * @param Entity $entity
-     * @param array  $params
-     */
-    protected function filterByChannel(Entity $entity, array &$params)
-    {
-        // prepare channels ids
-        $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
-        $channelsIds = $this
-            ->dispatch('ProductRepository', 'getChannelsForFilter', new Event(['entity' => $entity, 'params' => $params, 'channelsIds' => $channelsIds]))
-            ->getArgument('channelsIds');
-        $channelsIds[] = 'no-such-id';
-        $channelsIds = implode("','", $channelsIds);
-
-        $params['customWhere'] .= " AND (product_attribute_value.scope='Global' OR (product_attribute_value.scope='Channel' AND product_attribute_value.channel_id IN ('$channelsIds')))";
-    }
-
 
     /**
      * Is product can linked with non-lead category
