@@ -587,6 +587,8 @@ class Product extends AbstractService
 
         // prepare result
         if (!empty($result['total'])) {
+            $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
+
             $pavsData = $this
                 ->getEntityManager()
                 ->getRepository('ProductAttributeValue')
@@ -608,7 +610,11 @@ class Product extends AbstractService
                 }
                 if ($scopeData[$pav->get('id')]->get('scope') === 'Global') {
                     $records[$pav->get('id')] = $pav;
-                } elseif ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && !empty($channel = $scopeData[$pav->get('id')]->get('channel'))) {
+                } elseif (
+                    $scopeData[$pav->get('id')]->get('scope') === 'Channel'
+                    && !empty($channel = $scopeData[$pav->get('id')]->get('channel'))
+                    && in_array($channel->get('id'), $channelsIds)
+                ) {
                     if (empty($pav->get('attributeIsMultilang'))) {
                         $records[$pav->get('id')] = $pav;
                     } else {
