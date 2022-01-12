@@ -109,6 +109,15 @@ class Channel extends Base
         parent::beforeSave($entity, $options);
     }
 
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'products') {
+            $this->getEntityManager()->getRepository('Product')->relatePfas($foreign, $entity);
+        }
+
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
     /**
      * @inheritDoc
      */
@@ -118,6 +127,7 @@ class Channel extends Base
 
         if ($relationName == 'products') {
             $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
+            $this->getEntityManager()->getRepository('Product')->unrelatePfas($foreign, $entity);
         }
     }
 
