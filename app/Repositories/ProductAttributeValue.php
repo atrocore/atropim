@@ -42,6 +42,8 @@ class ProductAttributeValue extends AbstractRepository
 {
     protected static $beforeSaveData = [];
 
+    protected array $channelLanguages = [];
+
     public function convertValue(Entity $entity): void
     {
         if (empty($entity->get('attributeType'))) {
@@ -94,6 +96,22 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('value', $entity->get('varcharValue'));
                 break;
         }
+    }
+
+    public function getChannelLanguages(string $channelId): array
+    {
+        if (empty($channelId)) {
+            return [];
+        }
+
+        if (!isset($this->channelLanguages[$channelId])) {
+            $this->channelLanguages[$channelId] = [];
+            if (!empty($channel = $this->getEntityManager()->getRepository('Channel')->get($channelId))) {
+                $this->channelLanguages[$channelId] = $channel->get('locales');
+            }
+        }
+
+        return $this->channelLanguages[$channelId];
     }
 
     public function clearRecord(string $id): void

@@ -79,4 +79,9 @@ class ProductAttributeValue extends Base
 
         return empty($data) ? [] : Json::decode(Json::encode($data), true);
     }
+
+    public function getChannelLanguages(): array
+    {
+        return $this->entityManager->getRepository('ProductAttributeValue')->getChannelLanguages((string)$this->get('channelId'));
+    }
 }
