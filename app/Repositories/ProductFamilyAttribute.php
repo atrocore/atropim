@@ -34,6 +34,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
+use Pim\Core\Exceptions\NoSuchChannelInProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
 
@@ -48,18 +49,25 @@ class ProductFamilyAttribute extends Base
             ->find();
 
         foreach ($products as $product) {
-            $pav = $this->getPavRepository()->get();
-            $pav->set('productId', $product->get('id'));
-            $pav->set('attributeId', $pfa->get('attributeId'));
-            $pav->set('isRequired', $pfa->get('isRequired'));
-            $pav->set('scope', $pfa->get('scope'));
-            $pav->set('channelId', $pfa->get('channelId'));
+            $this->createProductAttributeValue($pfa, $product);
+        }
+    }
 
-            try {
-                $this->getEntityManager()->saveEntity($pav);
-            } catch (ProductAttributeAlreadyExists $e) {
-                // ignore
-            }
+    public function createProductAttributeValue(Entity $pfa, Entity $product): void
+    {
+        $pav = $this->getPavRepository()->get();
+        $pav->set('productId', $product->get('id'));
+        $pav->set('attributeId', $pfa->get('attributeId'));
+        $pav->set('isRequired', $pfa->get('isRequired'));
+        $pav->set('scope', $pfa->get('scope'));
+        $pav->set('channelId', $pfa->get('channelId'));
+
+        try {
+            $this->getEntityManager()->saveEntity($pav);
+        } catch (ProductAttributeAlreadyExists $e) {
+            // ignore
+        } catch (NoSuchChannelInProduct $e) {
+            // ignore
         }
     }
 
@@ -91,6 +99,8 @@ class ProductFamilyAttribute extends Base
                 try {
                     $this->getEntityManager()->saveEntity($pav);
                 } catch (ProductAttributeAlreadyExists $e) {
+                    // ignore
+                } catch (NoSuchChannelInProduct $e) {
                     // ignore
                 }
             }

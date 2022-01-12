@@ -567,7 +567,7 @@ class Product extends AbstractService
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
-        $collection = $this->filterPavsViaChannel($this->getRepository()->findRelated($entity, $link, $selectParams));
+        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -580,104 +580,111 @@ class Product extends AbstractService
             $recordService->prepareEntityForOutput($e);
         }
 
+        $collection = $this->preparePavsForOutput($collection);;
+
         $result = [
-            'total'      => $this->getRepository()->countRelated($entity, $link, $selectParams),
-            'collection' => $collection
+            'collection' => $collection,
+            'total'      => count($collection),
         ];
-
-        // prepare result
-        if (!empty($result['total'])) {
-            $channelsIds = array_column($entity->get('channels')->toArray(), 'id');
-
-            $pavsData = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->select(['id', 'scope', 'channelId', 'channelName'])
-                ->where(['id' => array_column($result['collection']->toArray(), 'id')])
-                ->find();
-
-            $scopeData = [];
-            foreach ($pavsData as $v) {
-                $scopeData[$v->get('id')] = $v;
-            }
-
-            $records = [];
-
-            // filtering pavs by scope and channel languages
-            foreach ($result['collection'] as $pav) {
-                if (!isset($scopeData[$pav->get('id')])) {
-                    continue 1;
-                }
-                if ($scopeData[$pav->get('id')]->get('scope') === 'Global') {
-                    $records[$pav->get('id')] = $pav;
-                } elseif (
-                    $scopeData[$pav->get('id')]->get('scope') === 'Channel'
-                    && !empty($channel = $scopeData[$pav->get('id')]->get('channel'))
-                    && in_array($channel->get('id'), $channelsIds)
-                ) {
-                    if (empty($pav->get('attributeIsMultilang'))) {
-                        $records[$pav->get('id')] = $pav;
-                    } else {
-                        if (in_array($pav->get('language'), $channel->get('locales'))) {
-                            $records[$pav->get('id')] = $pav;
-                        }
-                    }
-                }
-            }
-
-            // clear hided records
-            foreach ($result['collection'] as $pav) {
-                if (!isset($records[$pav->get('id')])) {
-                    $this->getEntityManager()->getRepository('ProductAttributeValue')->clearRecord($pav->get('id'));
-                }
-            }
-
-            $headerLanguage = self::getHeader('language');
-
-            // filtering via header language
-            if (!empty($headerLanguage)) {
-                foreach ($records as $pav) {
-                    if (!empty($pav->get('mainLanguageId')) && isset($records[$pav->get('mainLanguageId')])) {
-                        unset($records[$pav->get('mainLanguageId')]);
-                    }
-                }
-            }
-
-            // sorting via languages
-            if (empty($headerLanguage)) {
-                $newRecords = [];
-                foreach ($records as $pav) {
-                    if (empty($pav->get('mainLanguageId'))) {
-                        $newRecords[$pav->get('id')] = $pav;
-                        $languagesIds = [];
-                        foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                            foreach ($records as $pav1) {
-                                if ($pav1->get('mainLanguageId') === $pav->get('id') && $language === $pav1->get('language')) {
-                                    $newRecords[$pav1->get('id')] = $pav1;
-                                    $languagesIds[] = $pav1->get('id');
-                                }
-                            }
-                        }
-                        $newRecords[$pav->get('id')]->set('languagesIds', $languagesIds);
-                    }
-                }
-
-                foreach ($records as $pav) {
-                    if (!isset($newRecords[$pav->get('id')])) {
-                        $newRecords[$pav->get('id')] = $pav;
-                    }
-                }
-
-                $records = $newRecords;
-            }
-
-            $result['total'] = count($records);
-            $result['collection'] = new EntityCollection(array_values($records));
-        }
 
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
             ->getArgument('result');
+    }
+
+    public function preparePavsForOutput(EntityCollection $collection): EntityCollection
+    {
+        if (count($collection) === 0) {
+            return $collection;
+        }
+
+        $collection = $this->filterPavsViaChannel($collection);
+
+        $scopeData = [];
+        if (empty($collection[0]->has('scope'))) {
+            $pavsData = $this
+                ->getEntityManager()
+                ->getRepository('ProductAttributeValue')
+                ->select(['id', 'scope', 'channelId', 'channelName'])
+                ->where(['id' => array_column($collection->toArray(), 'id')])
+                ->find();
+            foreach ($pavsData as $v) {
+                $scopeData[$v->get('id')] = $v;
+            }
+        } else {
+            foreach ($collection as $pav) {
+                $scopeData[$pav->get('id')] = $pav;
+            }
+        }
+
+        $records = [];
+
+        // filtering pavs by scope and channel languages
+        foreach ($collection as $pav) {
+            if (!isset($scopeData[$pav->get('id')])) {
+                continue 1;
+            }
+
+            if ($scopeData[$pav->get('id')]->get('scope') === 'Global') {
+                $records[$pav->get('id')] = $pav;
+            } elseif ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && !empty($scopeData[$pav->get('id')]->get('channelId'))) {
+                if (empty($pav->get('attributeIsMultilang'))) {
+                    $records[$pav->get('id')] = $pav;
+                } else {
+                    if (in_array($pav->get('language'), $pav->getChannelLanguages())) {
+                        $records[$pav->get('id')] = $pav;
+                    }
+                }
+            }
+        }
+
+        // clear hided records
+        foreach ($collection as $pav) {
+            if (!isset($records[$pav->get('id')])) {
+                $this->getEntityManager()->getRepository('ProductAttributeValue')->clearRecord($pav->get('id'));
+            }
+        }
+
+        $headerLanguage = self::getHeader('language');
+
+        // filtering via header language
+        if (!empty($headerLanguage)) {
+            foreach ($records as $pav) {
+                if (!empty($pav->get('mainLanguageId')) && isset($records[$pav->get('mainLanguageId')])) {
+                    unset($records[$pav->get('mainLanguageId')]);
+                }
+            }
+        }
+
+        // sorting via languages
+        if (empty($headerLanguage)) {
+            $newRecords = [];
+            foreach ($records as $pav) {
+                if (empty($pav->get('mainLanguageId'))) {
+                    $newRecords[$pav->get('id')] = $pav;
+                    $languagesIds = [];
+                    foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                        foreach ($records as $pav1) {
+                            if ($pav1->get('mainLanguageId') === $pav->get('id') && $language === $pav1->get('language')) {
+                                $newRecords[$pav1->get('id')] = $pav1;
+                                $languagesIds[] = $pav1->get('id');
+                            }
+                        }
+                    }
+                    $newRecords[$pav->get('id')]->set('languagesIds', $languagesIds);
+                }
+            }
+
+            foreach ($records as $pav) {
+                if (!isset($newRecords[$pav->get('id')])) {
+                    $newRecords[$pav->get('id')] = $pav;
+                }
+            }
+
+            $records = $newRecords;
+        }
+
+        return new EntityCollection(array_values($records));
     }
 
     protected function filterPavsViaChannel(EntityCollection $collection): EntityCollection

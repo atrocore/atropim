@@ -37,6 +37,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
+use Pim\Core\Exceptions\NoSuchChannelInProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 
@@ -617,6 +618,63 @@ class Product extends AbstractRepository
     }
 
     /**
+     * @param Entity|string $product
+     * @param Entity|string $channel
+     *
+     * @return void
+     */
+    public function relatePfas($product, $channel): void
+    {
+        if (is_bool($product) || is_bool($channel)) {
+            throw new BadRequest('Mass relate is unavailable.');
+        }
+
+        if (!$product instanceof Entity) {
+            $product = $this->get($product);
+        }
+
+        $channelId = $channel instanceof Entity ? $channel->get('id') : $channel;
+
+        $pfas = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->where(['productFamilyId' => $product->get('productFamilyId'), 'channelId' => $channelId])
+            ->find();
+
+        foreach ($pfas as $pfa) {
+            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->createProductAttributeValue($pfa, $product);
+        }
+
+        $this->updateProductsAttributesViaProductIds([$product->get('id')]);
+    }
+
+    /**
+     * @param Entity|string $product
+     * @param Entity|string $channel
+     *
+     * @return void
+     */
+    public function unrelatePfas($product, $channel): void
+    {
+        if (is_bool($product) || is_bool($channel)) {
+            throw new BadRequest('Mass unrelate is unavailable.');
+        }
+
+        $productId = $product instanceof Entity ? $product->get('id') : $product;
+        $channelId = $channel instanceof Entity ? $channel->get('id') : $channel;
+
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['productId' => $productId, 'channelId' => $channelId])
+            ->find();
+
+        foreach ($pavs as $pav) {
+            $this->getEntityManager()->removeEntity($pav);
+        }
+    }
+
+    /**
      * @param Entity $product
      * @param Entity $category
      *
@@ -844,8 +902,10 @@ class Product extends AbstractRepository
             $this->isProductCanLinkToNonLeafCategory($foreign);
         }
 
-        if ($relationName == 'channels' && !$entity->isSkippedValidation('isChannelAlreadyRelated')) {
-            $this->isChannelAlreadyRelated($entity, $foreign);
+        if ($relationName == 'channels') {
+            if (!$entity->isSkippedValidation('isChannelAlreadyRelated')) {
+                $this->isChannelAlreadyRelated($entity, $foreign);
+            }
         }
 
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
@@ -863,6 +923,7 @@ class Product extends AbstractRepository
             if (!empty($entity->fromCategoryTree)) {
                 $this->updateChannelRelationData($entity, $foreign, null, true);
             }
+            $this->relatePfas($entity, $foreign);
         }
 
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
@@ -895,6 +956,7 @@ class Product extends AbstractRepository
 
         if ($relationName == 'channels') {
             $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
+            $this->unrelatePfas($entity, $foreign);
         }
 
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
