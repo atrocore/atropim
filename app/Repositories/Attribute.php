@@ -325,7 +325,7 @@ class Attribute extends AbstractRepository
                         $newValues[] = $becameValues[$value];
                     }
                 }
-                $pav['textValue'] = Json::encode($newValues, JSON_UNESCAPED_UNICODE);
+                $pav['textValue'] = str_replace("'", "\'", Json::encode($newValues, JSON_UNESCAPED_UNICODE));
                 $values = $newValues;
             }
 
@@ -342,7 +342,7 @@ class Attribute extends AbstractRepository
                         $key = array_search($value, $attribute->get('typeValue'));
                         $localeValues[] = isset($options[$key]) ? $options[$key] : $value;
                     }
-                    $localeValues = Json::encode($localeValues, JSON_UNESCAPED_UNICODE);
+                    $localeValues = str_replace("'", "\'", Json::encode($localeValues, JSON_UNESCAPED_UNICODE));
 
                     $queries[] = "UPDATE product_attribute_value SET text_value='$localeValues' WHERE main_language_id='{$pav['id']}' AND language='$language'";
                 }
