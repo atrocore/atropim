@@ -277,10 +277,11 @@ class ProductAttributeValue extends AbstractRepository
         foreach (array_merge(['main'], $this->getConfig()->get('inputLanguageList', [])) as $v) {
             $options = $this->getAttributeOptions($attribute, $v);
             $value = !empty($options[$key]) ? $options[$key] : '';
+            $value = $this->getPDO()->quote($value);
             if ($v === 'main') {
-                $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='$value' WHERE id='$id'");
+                $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value=$value WHERE id='$id'");
             } else {
-                $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='$value' WHERE main_language_id='$id' AND language='$v'");
+                $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value=$value WHERE main_language_id='$id' AND language='$v'");
             }
         }
     }
