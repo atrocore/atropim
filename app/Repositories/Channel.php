@@ -78,35 +78,45 @@ class Channel extends Base
         }
 
         if ($entity->isAttributeChanged('categoryId')) {
-            $categoryId = $entity->get('categoryId');
-            if (!empty($categoryId)) {
-                $category = $this->getEntityManager()->getEntity('Category', $categoryId);
-            }
-
-            $fetchedCategoryId = $entity->getFetched('categoryId');
-            if (!empty($fetchedCategoryId)) {
-                $fetchedCategory = $this->getEntityManager()->getEntity('Category', $fetchedCategoryId);
-            }
-
-            if (empty($category)) {
-                $name = sprintf($this->getInjection('language')->translate('unLinkCategoryFromChannel', 'labels', 'Channel'), $fetchedCategory->get('name'), $entity->get('name'));
-            } elseif (empty($fetchedCategory)) {
-                $name = sprintf($this->getInjection('language')->translate('linkCategoryWithChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
-            } else {
-                $name = sprintf($this->getInjection('language')->translate('changeCategoryForChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
-            }
-
-            $qmData = [
-                'action'            => 'updateCategory',
-                'fetchedCategoryId' => $fetchedCategoryId,
-                'categoryId'        => $categoryId,
-                'channelId'         => $entity->get('id')
-            ];
-
-            $this->getInjection('queueManager')->push($name, 'QueueManagerChannel', $qmData);
+            $this->updateChannelCategories($entity);
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function updateChannelCategories(Entity $entity): void
+    {
+        $categoryId = $entity->get('categoryId');
+
+        if (empty($categoryId) && $entity->isNew()) {
+            return;
+        }
+
+        if (!empty($categoryId)) {
+            $category = $this->getEntityManager()->getEntity('Category', $categoryId);
+        }
+
+        $fetchedCategoryId = $entity->getFetched('categoryId');
+        if (!empty($fetchedCategoryId)) {
+            $fetchedCategory = $this->getEntityManager()->getEntity('Category', $fetchedCategoryId);
+        }
+
+        if (empty($category)) {
+            $name = sprintf($this->getInjection('language')->translate('unLinkCategoryFromChannel', 'labels', 'Channel'), $fetchedCategory->get('name'), $entity->get('name'));
+        } elseif (empty($fetchedCategory)) {
+            $name = sprintf($this->getInjection('language')->translate('linkCategoryWithChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
+        } else {
+            $name = sprintf($this->getInjection('language')->translate('changeCategoryForChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
+        }
+
+        $qmData = [
+            'action'            => 'updateCategory',
+            'fetchedCategoryId' => $fetchedCategoryId,
+            'categoryId'        => $categoryId,
+            'channelId'         => $entity->get('id')
+        ];
+
+        $this->getInjection('queueManager')->push($name, 'QueueManagerChannel', $qmData);
     }
 
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
