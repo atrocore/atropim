@@ -163,7 +163,7 @@ class Attribute extends AbstractRepository
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isAttributeChanged('isMultilang')) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('isMultilang')) {
             $this
                 ->getEntityManager()
                 ->getRepository('Product')
