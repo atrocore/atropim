@@ -307,7 +307,7 @@ class Product extends AbstractRepository
             }
 
             if (!empty($prismChannelId)) {
-                $result[$k]['isGlobalMainImage'] = in_array($prismChannelId, $result[$k]['channels']);
+                $result[$k]['isMainImage'] = $result[$k]['isGlobalMainImage'] = in_array($prismChannelId, $result[$k]['channels']);
             }
 
             $result[$k]['channel'] = empty($v['channelName']) ? '-' : $v['channelId'];
