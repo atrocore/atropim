@@ -279,6 +279,13 @@ class Product extends Base
         return empty($data) ? [] : $data;
     }
 
+    public function setMainImages(array $mainImages): void
+    {
+        $data = $this->getData();
+        $data['mainImages'] = $mainImages;
+        $this->setData($data);
+    }
+
     /**
      * @param string $field
      *

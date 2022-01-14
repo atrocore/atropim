@@ -327,7 +327,7 @@ class Product extends AbstractService
     /**
      * @inheritDoc
      */
-    public function setAsMainImage(string $assetId, string $entityId, ?string $scope): array
+    public function setAsMainImage(string $assetId, string $entityId): array
     {
         $parts = explode('_', $assetId);
         $assetId = array_shift($parts);
@@ -342,61 +342,26 @@ class Product extends AbstractService
             throw new NotFound();
         }
 
-        if (empty($scope)) {
-            throw new BadRequest();
-        }
-
-        if (!is_array($data = $entity->getDataField('mainImages'))) {
-            $data = [];
-        }
-
-        if ($scope == 'Global') {
-            $entity->set('imageId', $asset->get('fileId'));
-            if (isset($data[$asset->id])) {
-                unset($data[$asset->id]);
-
-                $entity->setDataField('mainImages', $data);
-            }
-
-            $this->getEntityManager()->saveEntity($entity);
-
-            return [
-                'imageId'        => $asset->get('fileId'),
-                'imageName'      => $asset->get('name'),
-                'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
-            ];
-        } elseif ($scope == 'Channel') {
-            $channels = [array_shift($parts)];
-
-            $data = $this->getPreparedProductAssetData($data, $channels);
-            $data[$asset->id] = $channels;
-
-            $entity->setDataField('mainImages', $data);
-            $this->getEntityManager()->saveEntity($entity);
-        }
-
-        return [];
-    }
-
-    /**
-     * @param array $data
-     * @param array $channelsIds
-     *
-     * @return array
-     */
-    public function getPreparedProductAssetData(array $data, array $channelsIds): array
-    {
-        foreach ($data as $assetId => $assetData) {
-            $diff = array_values(array_diff($assetData, $channelsIds));
-
-            if (empty($diff)) {
-                unset($data[$assetId]);
-            } else {
-                $data[$assetId] = $diff;
+        $data = $entity->getMainImages();
+        foreach ($data as $k => $v) {
+            if ($v['attachmentId'] === $asset->get('fileId') || $v['scope'] === 'Global') {
+                unset($data[$k]);
             }
         }
+        $data[] = [
+            'attachmentId' => $asset->get('fileId'),
+            'scope'        => 'Global',
+            'channelId'    => null,
+        ];
+        $entity->setMainImages($data);
 
-        return $data;
+        $this->getEntityManager()->saveEntity($entity);
+
+        return [
+            'imageId'        => $asset->get('fileId'),
+            'imageName'      => $asset->get('name'),
+            'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
+        ];
     }
 
     public function getPrismChannelId(): ?string

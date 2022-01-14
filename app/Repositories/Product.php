@@ -287,19 +287,27 @@ class Product extends AbstractRepository
             $result[$k]['entityName'] = $entity->getEntityType();
             $result[$k]['entityId'] = $entity->get('id');
             $result[$k]['scope'] = !empty($v['channelId']) ? 'Channel' : 'Global';
+            $result[$k]['channels'] = [];
 
             if ($this->isImage($result[$k]['fileName'])) {
                 $result[$k]['isImage'] = true;
                 foreach ($entity->getMainImages() as $row) {
                     if ($row['attachmentId'] === $result[$k]['fileId']) {
                         $result[$k]['isMainImage'] = true;
-                        $result[$k]['isGlobalMainImage'] = $result[$k]['scope'] === 'Global';
+                        $result[$k]['isGlobalMainImage'] = $row['scope'] === 'Global';
+                        if (!empty($row['channelId'])) {
+                            $result[$k]['channels'][] = $row['channelId'];
+                        }
                         if (!empty($prismChannelId)) {
                             $result[$k]['isMainImage'] = $result[$k]['channelId'] === $prismChannelId;
                             $result[$k]['isGlobalMainImage'] = $result[$k]['channelId'] === $prismChannelId;
                         }
                     }
                 }
+            }
+
+            if (!empty($result[$k]['channels'])) {
+                $result[$k]['isMainImage'] = false;
             }
 
             $result[$k]['channel'] = empty($v['channelName']) ? '-' : $v['channelId'];

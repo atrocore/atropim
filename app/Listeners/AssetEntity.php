@@ -59,7 +59,8 @@ class AssetEntity extends AbstractListener
         $asset = $event->getArgument('entity');
 
         if (!$asset->isNew() && !empty($entityName = $asset->get('entityName'))
-            && !empty($entityId = $asset->get('entityId')) && in_array($entityName, $this->hasMainImage)) {
+            && !empty($entityId = $asset->get('entityId'))
+            && in_array($entityName, $this->hasMainImage)) {
             if ($this->isAttributeChannelChanged($asset)) {
                 $table = Util::toCamelCase($entityName);
 
@@ -89,57 +90,63 @@ class AssetEntity extends AbstractListener
         /** @var Asset $asset */
         $asset = $event->getArgument('entity');
 
-        if (!empty($entityId = $asset->get('entityId')) && !empty($entityName = $asset->get('entityName')) && $entityName == 'Product') {
-            /** @var \Pim\Repositories\AbstractRepository $entityRepository */
-            $entityRepository = $this->getEntityManager()->getRepository($entityName);
+        if (empty($entityId = $asset->get('entityId')) || empty($entityName = $asset->get('entityName')) || $entityName !== 'Product') {
+            return;
+        }
 
-            if ($entityRepository->isImage($asset->get('file')->get('name'))) {
-                /** @var \Pim\Entities\Product $entity */
-                $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
+        if (!$this->getEntityManager()->getRepository('Product')->isImage((string)$asset->get('fileName'))) {
+            return;
+        }
 
-                if ($entity) {
-                    if (!is_array($data = $entity->getDataField('mainImages'))) {
-                        $data = [];
+        if (empty($product = $this->getEntityManager()->getEntity('Product', $entityId))) {
+            return;
+        }
+
+        $data = $product->getMainImages();
+
+        if ($asset->isAttributeChanged('isMainImage')) {
+            // unset prev
+            foreach ($data as $k => $v) {
+                if ($v['attachmentId'] === $asset->get('fileId') && $v['scope'] === 'Global') {
+                    unset($data[$k]);
+                }
+            }
+
+            if (!empty($asset->get('isMainImage'))) {
+                foreach ($data as $k => $v) {
+                    if ($v['attachmentId'] === $asset->get('fileId') || $v['scope'] === 'Global') {
+                        unset($data[$k]);
                     }
+                }
+                $data[] = [
+                    'attachmentId' => $asset->get('fileId'),
+                    'scope'        => 'Global',
+                    'channelId'    => null,
+                ];
+            }
+        }
 
-                    if ($asset->isAttributeChanged('isMainImage')) {
-                        if ($asset->get('isMainImage')) {
-                            $channels = $asset->get('scope') == 'Channel' ? [$asset->get('channelId')] : $asset->get('channels');
+        if (empty($asset->get('isMainImage')) && $asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
+            // unset prev
+            foreach ($data as $k => $v) {
+                if ($v['attachmentId'] === $asset->get('fileId') && $v['scope'] === 'Channel') {
+                    unset($data[$k]);
+                }
+            }
 
-                            if ($asset->get('scope') == 'Global') {
-                                $entity->set('imageId', $asset->get('fileId'));
-                                if (isset($data[$asset->id])) {
-                                    unset($data[$asset->id]);
-                                    $entity->setDataField('mainImages', $data);
-                                }
-
-                                $this->getEntityManager()->saveEntity($entity);
-                                return;
-                            }
-
-                            $data = $this->getService('Product')->getPreparedProductAssetData($data, $channels);
-                            $data[$asset->id] = $channels;
-                        } else {
-                            if (isset($data[$asset->id])) {
-                                unset($data[$asset->id]);
-                            }
-
-                            if ($asset->get('fileId') == $entity->get('imageId')) {
-                                $entity->set('imageId', null);
-                            }
-                        }
-                    }
-
-                    if ($asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
-                        $data = $this->getService('Product')->getPreparedProductAssetData($data, $asset->get('channels'));
-                        $data[$asset->id] = $asset->get('channels');
-                    }
-
-                    $entity->setDataField('mainImages', $data);
-                    $this->getEntityManager()->saveEntity($entity);
+            if (!empty($asset->get('channels'))) {
+                foreach ($asset->get('channels') as $channelId) {
+                    $data[] = [
+                        'attachmentId' => $asset->get('fileId'),
+                        'scope'        => 'Channel',
+                        'channelId'    => $channelId,
+                    ];
                 }
             }
         }
+
+        $product->setMainImages(array_values($data));
+        $this->getEntityManager()->saveEntity($product);
     }
 
     /**
