@@ -2,6 +2,7 @@
   "fields": {
     "image": {
       "type": "image",
+      "notStorable": true,
       "previewSize": "medium",
       "readOnly": true,
       "view": "pim:views/product/fields/image"

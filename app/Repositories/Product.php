@@ -248,34 +248,66 @@ class Product extends AbstractRepository
 
     public function findRelatedAssetsByType(Entity $entity, string $type): array
     {
-        $id = $entity->get('id');
-
-        $sql = "SELECT a.*, r.channel, at.id as fileId, at.name as fileName, r.id as relationId
+        $sql = "SELECT a.*, r.channel as channelId, c.name as channelName, c.code as channelCode, at.id as fileId, at.name as fileName, r.id as relationId
                 FROM product_asset r 
                 LEFT JOIN asset a ON a.id=r.asset_id
-                LEFT JOIN attachment at ON at.id=a.file_id 
+                LEFT JOIN attachment at ON at.id=a.file_id
+                LEFT JOIN `channel` c ON c.id=r.channel AND c.deleted=0 AND c.id IN (SELECT channel_id FROM product_channel WHERE product_id='{$entity->get('id')}' AND deleted=0)   
                 WHERE 
                       r.deleted=0 
                   AND a.deleted=0 
                   AND a.type='$type' 
-                  AND r.product_id='$id' 
+                  AND r.product_id='{$entity->get('id')}' 
                 ORDER BY r.sorting ASC";
 
         $result = $this->getEntityManager()->getRepository('Asset')->findByQuery($sql)->toArray();
 
-        if (!empty($result)) {
-            $channelId = $this->getInjection('serviceFactory')->create('Product')->getPrismChannelId();
-            if (!empty($channelId)) {
-                foreach ($result as $k => $v) {
-                    if (!empty($v['channel']) && $v['channel'] !== $channelId) {
-                        unset($result[$k]);
-                    }
-                }
-                $result = array_values($result);
+        $prismChannelId = $this
+            ->getInjection('serviceFactory')
+            ->create('Product')
+            ->getPrismChannelId();
+
+        foreach ($result as $k => $v) {
+            // filter via product channels
+            if (!empty($v['channelId']) && empty($v['channelName'])) {
+                unset($result[$k]);
+            }
+
+            // filter via channel prism
+            if (!empty($prismChannelId) && !empty($v['channelId']) && $v['channelId'] !== $prismChannelId) {
+                unset($result[$k]);
             }
         }
 
-        return $this->prepareAssets($entity, $result);
+        if (empty($result)) {
+            return [];
+        }
+
+        foreach ($result as $k => $v) {
+            $result[$k]['entityName'] = $entity->getEntityType();
+            $result[$k]['entityId'] = $entity->get('id');
+            $result[$k]['scope'] = !empty($v['channelId']) ? 'Channel' : 'Global';
+
+            if ($this->isImage($result[$k]['fileName'])) {
+                $result[$k]['isImage'] = true;
+                foreach ($entity->getMainImages() as $row) {
+                    if ($row['attachmentId'] === $result[$k]['fileId']) {
+                        $result[$k]['isMainImage'] = true;
+                        if ($result[$k]['scope'] === 'Global') {
+                            $result[$k]['isGlobalMainImage'] = true;
+                        }
+                    }
+                }
+            }
+
+            $result[$k]['channel'] = empty($v['channelName']) ? '-' : $v['channelId'];
+
+            if (!empty($result[$k]['channelId'])) {
+                $result[$k]['id'] = $result[$k]['id'] . '_' . (string)$result[$k]['channelId'];
+            }
+        }
+
+        return array_values($result);
     }
 
     public function updateSortOrder(string $entityId, array $ids): bool

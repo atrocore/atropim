@@ -54,6 +54,13 @@ class Product extends AbstractService
      */
     protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $this->setMainImage($entity);
+    }
+
     /**
      * @inheritDoc
      */
@@ -498,7 +505,7 @@ class Product extends AbstractService
 
         $result = ['list' => []];
 
-        $productAssets = $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $id);
+        $productAssets = $this->getAssets($id);
         if (!empty($productAssets['count'])) {
             $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
             foreach ($productAssets['list'] as $assetType) {
@@ -856,6 +863,40 @@ class Product extends AbstractService
         }
 
         return parent::isEntityUpdated($entity, $data);
+    }
+
+    protected function getAssets(string $productId): array
+    {
+        return $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $productId);
+    }
+
+    protected function setMainImage(Entity $entity): void
+    {
+        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type']))) {
+            return;
+        }
+
+        $entity->set('imageId', null);
+        $entity->set('imageName', null);
+        $entity->set('imagePathsData', null);
+
+        $assetsData = $this->getAssets((string)$entity->get('id'));
+        if (empty($assetsData['list'])) {
+            return;
+        }
+
+        foreach ($assetsData['list'] as $assetType) {
+            if (!empty($assetType['assets'])) {
+                foreach ($assetType['assets'] as $asset) {
+                    if (!empty($asset['isMainImage']) && $asset['scope'] === 'Global') {
+                        $entity->set('imageId', $asset['fileId']);
+                        $entity->set('imageName', $asset['fileName']);
+                        $entity->set('imagePathsData', $asset['filePathsData']);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     /**

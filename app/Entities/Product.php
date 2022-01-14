@@ -272,6 +272,13 @@ class Product extends Base
         return $this;
     }
 
+    public function getMainImages(): array
+    {
+        $data = $this->getDataField('mainImages');
+
+        return empty($data) ? [] : $data;
+    }
+
     /**
      * @param string $field
      *
@@ -286,7 +293,7 @@ class Product extends Base
 
     /**
      * @param string $field
-     * @param $value
+     * @param        $value
      *
      * @return $this
      */
