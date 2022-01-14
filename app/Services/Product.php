@@ -888,7 +888,7 @@ class Product extends AbstractService
         foreach ($assetsData['list'] as $assetType) {
             if (!empty($assetType['assets'])) {
                 foreach ($assetType['assets'] as $asset) {
-                    if (!empty($asset['isMainImage']) && $asset['scope'] === 'Global') {
+                    if (!empty($asset['isGlobalMainImage'])) {
                         $entity->set('imageId', $asset['fileId']);
                         $entity->set('imageName', $asset['fileName']);
                         $entity->set('imagePathsData', $asset['filePathsData']);

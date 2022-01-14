@@ -293,8 +293,10 @@ class Product extends AbstractRepository
                 foreach ($entity->getMainImages() as $row) {
                     if ($row['attachmentId'] === $result[$k]['fileId']) {
                         $result[$k]['isMainImage'] = true;
-                        if ($result[$k]['scope'] === 'Global') {
-                            $result[$k]['isGlobalMainImage'] = true;
+                        $result[$k]['isGlobalMainImage'] = $result[$k]['scope'] === 'Global';
+                        if (!empty($prismChannelId)) {
+                            $result[$k]['isMainImage'] = $result[$k]['channelId'] === $prismChannelId;
+                            $result[$k]['isGlobalMainImage'] = $result[$k]['channelId'] === $prismChannelId;
                         }
                     }
                 }
