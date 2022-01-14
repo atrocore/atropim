@@ -303,7 +303,7 @@ class Product extends AbstractRepository
             $result[$k]['channel'] = empty($v['channelName']) ? '-' : $v['channelId'];
 
             if (!empty($result[$k]['channelId'])) {
-                $result[$k]['id'] = $result[$k]['id'] . '_' . (string)$result[$k]['channelId'];
+                $result[$k]['id'] = $result[$k]['id'] . '_' . $result[$k]['channelId'];
             }
         }
 

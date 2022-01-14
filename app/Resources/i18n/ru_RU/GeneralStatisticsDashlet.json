@@ -8,7 +8,7 @@
             "productWithoutAssociatedProduct": "Продукты без связанных продуктов",
             "productWithoutCategory": "Продукты без категории",
             "productWithoutAttribute": "Продукты без атрибутов продукта",
-            "productWithoutImage": "Продукты без ассетов"
+            "productWithoutAssets": "Продукты без ассетов"
         }
     },
     "fields": {
