@@ -298,15 +298,16 @@ class Product extends AbstractRepository
                         if (!empty($row['channelId'])) {
                             $result[$k]['channels'][] = $row['channelId'];
                         }
-                        if (!empty($prismChannelId)) {
-                            $result[$k]['isGlobalMainImage'] = in_array($prismChannelId, $result[$k]['channels']);
-                        }
                     }
                 }
             }
 
             if (!empty($result[$k]['channels'])) {
                 $result[$k]['isMainImage'] = false;
+            }
+
+            if (!empty($prismChannelId)) {
+                $result[$k]['isGlobalMainImage'] = in_array($prismChannelId, $result[$k]['channels']);
             }
 
             $result[$k]['channel'] = empty($v['channelName']) ? '-' : $v['channelId'];
