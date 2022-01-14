@@ -34,9 +34,8 @@ namespace Pim\Listeners;
 use Dam\Entities\Asset;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 
 /**
