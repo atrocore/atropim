@@ -34,7 +34,7 @@ namespace Pim\Migrations;
 use Espo\Core\Exceptions\Error;
 use Treo\Core\Migration\Base;
 
-class V1Dot4Dot2 extends Base
+class V1Dot4Dot5 extends Base
 {
     public function up(): void
     {
