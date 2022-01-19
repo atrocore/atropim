@@ -44,8 +44,6 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
      */
     public function getDashlet(): array
     {
-        $result = ['total' => 0, 'list' => []];
-
         $result['list'] = [
             [
                 'id'     => 'product',
@@ -84,27 +82,20 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
             ]
         ];
 
-        $this->addProductWithoutImage( $result['list']);
+        $this->addProductWithoutAssets( $result['list']);
 
         $result['total'] = count($result['list']);
 
         return $result;
     }
 
-    /**
-     * Get query for Product without Image
-     *
-     * @param bool $count
-     *
-     * @return string
-     */
-    public function getQueryProductWithoutImage($count = false): string
+    public function getQueryProductWithoutAssets($count = false): string
     {
         $select = $count ? 'COUNT(p.id)' : 'p.id AS id';
         $sql
             = "SELECT " . $select . " 
                 FROM product as p 
-                WHERE p.image_id IS NULL 
+                WHERE p.id NOT IN (SELECT product_id FROM product_asset WHERE deleted=0) 
                   AND p.deleted = 0 
                   AND p.type IN " . $this->getProductTypesCondition();
 
@@ -172,14 +163,9 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
                 WHERE p.deleted = 0 AND pav.id IS NULL";
     }
 
-    /**
-     * Get Amount Product without image
-     *
-     * @return int
-     */
-    protected function getAmountProductWithoutImage(): int
+    protected function getAmountProductWithoutAssets(): int
     {
-        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutImage(true));
+        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutAssets(true));
         $sth->execute();
 
         return (int)$sth->fetchColumn();
@@ -225,13 +211,13 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
     /**
      * @param $list
      */
-    protected function addProductWithoutImage(&$list)
+    protected function addProductWithoutAssets(&$list)
     {
         if (!empty( $this->getInjection('metadata')->get('entityDefs.Product.fields.image'))) {
             $list[] =  [
-                'id'     => 'productWithoutImage',
-                'name'   => 'productWithoutImage',
-                'amount' => $this->getAmountProductWithoutImage()
+                'id'     => 'productWithoutAssets',
+                'name'   => 'productWithoutAssets',
+                'amount' => $this->getAmountProductWithoutAssets()
             ];
         }
     }

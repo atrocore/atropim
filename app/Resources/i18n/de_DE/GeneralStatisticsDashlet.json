@@ -8,7 +8,7 @@
             "productWithoutAssociatedProduct": "Produkt ohne zugehöriges Produkt",
             "productWithoutCategory": "Produkt ohne Kategorie",
             "productWithoutAttribute": "Produkt ohne Attribut",
-            "productWithoutImage": "Produkt ohne Bild"
+            "productWithoutAssets": "Produkt ohne Bild"
         }
     },
     "fields": {

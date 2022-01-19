@@ -54,6 +54,13 @@ class Product extends AbstractService
      */
     protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $this->setMainImage($entity);
+    }
+
     /**
      * @inheritDoc
      */
@@ -320,7 +327,7 @@ class Product extends AbstractService
     /**
      * @inheritDoc
      */
-    public function setAsMainImage(string $assetId, string $entityId, ?string $scope): array
+    public function setAsMainImage(string $assetId, string $entityId): array
     {
         $parts = explode('_', $assetId);
         $assetId = array_shift($parts);
@@ -335,61 +342,29 @@ class Product extends AbstractService
             throw new NotFound();
         }
 
-        if (empty($scope)) {
-            throw new BadRequest();
-        }
+        $result = [
+            'imageId'        => $asset->get('fileId'),
+            'imageName'      => $asset->get('name'),
+            'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
+        ];
 
-        if (!is_array($data = $entity->getDataField('mainImages'))) {
-            $data = [];
-        }
 
-        if ($scope == 'Global') {
-            $entity->set('imageId', $asset->get('fileId'));
-            if (isset($data[$asset->id])) {
-                unset($data[$asset->id]);
+        $channelId = $this->getPrismChannelId();
 
-                $entity->setDataField('mainImages', $data);
-            }
-
-            $this->getEntityManager()->saveEntity($entity);
-
-            return [
-                'imageId'        => $asset->get('fileId'),
-                'imageName'      => $asset->get('name'),
-                'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
-            ];
-        } elseif ($scope == 'Channel') {
-            $channels = [array_shift($parts)];
-
-            $data = $this->getPreparedProductAssetData($data, $channels);
-            $data[$asset->id] = $channels;
-
-            $entity->setDataField('mainImages', $data);
-            $this->getEntityManager()->saveEntity($entity);
-        }
-
-        return [];
-    }
-
-    /**
-     * @param array $data
-     * @param array $channelsIds
-     *
-     * @return array
-     */
-    public function getPreparedProductAssetData(array $data, array $channelsIds): array
-    {
-        foreach ($data as $assetId => $assetData) {
-            $diff = array_values(array_diff($assetData, $channelsIds));
-
-            if (empty($diff)) {
-                unset($data[$assetId]);
-            } else {
-                $data[$assetId] = $diff;
+        if (!empty($channelId)) {
+            foreach ($entity->getMainImages() as $image) {
+                if ($image['attachmentId'] === $asset->get('fileId') && $image['scope'] === 'Global') {
+                    $entity->removeMainImageForChannel($channelId);
+                    $this->getEntityManager()->saveEntity($entity);
+                    return $result;
+                }
             }
         }
 
-        return $data;
+        $entity->addMainImage($asset->get('fileId'), $channelId);
+        $this->getEntityManager()->saveEntity($entity);
+
+        return $result;
     }
 
     public function getPrismChannelId(): ?string
@@ -498,7 +473,7 @@ class Product extends AbstractService
 
         $result = ['list' => []];
 
-        $productAssets = $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $id);
+        $productAssets = $this->getAssets($id);
         if (!empty($productAssets['count'])) {
             $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
             foreach ($productAssets['list'] as $assetType) {
@@ -856,6 +831,40 @@ class Product extends AbstractService
         }
 
         return parent::isEntityUpdated($entity, $data);
+    }
+
+    protected function getAssets(string $productId): array
+    {
+        return $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $productId);
+    }
+
+    protected function setMainImage(Entity $entity): void
+    {
+        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type']))) {
+            return;
+        }
+
+        $entity->set('imageId', null);
+        $entity->set('imageName', null);
+        $entity->set('imagePathsData', null);
+
+        $assetsData = $this->getAssets((string)$entity->get('id'));
+        if (empty($assetsData['list'])) {
+            return;
+        }
+
+        foreach ($assetsData['list'] as $assetType) {
+            if (!empty($assetType['assets'])) {
+                foreach ($assetType['assets'] as $asset) {
+                    if (!empty($asset['isGlobalMainImage'])) {
+                        $entity->set('imageId', $asset['fileId']);
+                        $entity->set('imageName', $asset['fileName']);
+                        $entity->set('imagePathsData', $asset['filePathsData']);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     /**

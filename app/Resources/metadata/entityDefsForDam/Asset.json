@@ -81,6 +81,18 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "channelName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
     "channelCode": {
       "type": "varchar",
       "notStorable": true,

@@ -272,6 +272,63 @@ class Product extends Base
         return $this;
     }
 
+    public function getMainImages(): array
+    {
+        $data = $this->getDataField('mainImages');
+
+        return empty($data) ? [] : $data;
+    }
+
+    public function addMainImage(string $attachmentId, ?string $channelId): void
+    {
+        $data = $this->getData();
+
+        if (empty($data['mainImages'])) {
+            $data['mainImages'] = [];
+        }
+
+        if (empty($channelId)) {
+            foreach ($data['mainImages'] as $k => $v) {
+                if ($v['attachmentId'] === $attachmentId || $v['scope'] === 'Global') {
+                    unset($data['mainImages'][$k]);
+                }
+            }
+            $data['mainImages'] = array_values($data['mainImages']);
+        } else {
+            foreach ($data['mainImages'] as $k => $v) {
+                if ($v['channelId'] === $channelId || ($v['attachmentId'] === $attachmentId && $v['scope'] === 'Global')) {
+                    unset($data['mainImages'][$k]);
+                }
+            }
+            $data['mainImages'] = array_values($data['mainImages']);
+        }
+
+        $data['mainImages'][] = [
+            'attachmentId' => $attachmentId,
+            'scope'        => empty($channelId) ? 'Global' : 'Channel',
+            'channelId'    => empty($channelId) ? null : $channelId,
+        ];
+
+        $this->setData($data);
+    }
+
+    public function removeMainImageForChannel(string $channelId): void
+    {
+        $data = $this->getData();
+
+        if (empty($data['mainImages'])) {
+            $data['mainImages'] = [];
+        }
+
+        foreach ($data['mainImages'] as $k => $v) {
+            if ($v['channelId'] === $channelId) {
+                unset($data['mainImages'][$k]);
+            }
+        }
+
+        $this->setData($data);
+    }
+
     /**
      * @param string $field
      *
@@ -286,7 +343,7 @@ class Product extends Base
 
     /**
      * @param string $field
-     * @param $value
+     * @param        $value
      *
      * @return $this
      */

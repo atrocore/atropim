@@ -253,7 +253,7 @@ class Product extends AbstractSelectManager
      */
     protected function getProductWithoutImageAssets(): array
     {
-        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutImage());
+        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutAssets());
     }
 
     /**

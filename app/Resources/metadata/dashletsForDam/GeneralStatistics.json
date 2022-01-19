@@ -2,7 +2,7 @@
   "options": {
     "defaults": {
       "urlMap": {
-        "productWithoutImage": {
+        "productWithoutAssets": {
           "url": "#Product",
           "options": {
             "boolFilterList": [

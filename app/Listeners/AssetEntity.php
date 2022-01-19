@@ -34,9 +34,8 @@ namespace Pim\Listeners;
 use Dam\Entities\Asset;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 
 /**
@@ -59,7 +58,8 @@ class AssetEntity extends AbstractListener
         $asset = $event->getArgument('entity');
 
         if (!$asset->isNew() && !empty($entityName = $asset->get('entityName'))
-            && !empty($entityId = $asset->get('entityId')) && in_array($entityName, $this->hasMainImage)) {
+            && !empty($entityId = $asset->get('entityId'))
+            && in_array($entityName, $this->hasMainImage)) {
             if ($this->isAttributeChannelChanged($asset)) {
                 $table = Util::toCamelCase($entityName);
 
@@ -79,65 +79,34 @@ class AssetEntity extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     *
-     * @throws Error
-     */
     public function afterSave(Event $event): void
     {
         /** @var Asset $asset */
         $asset = $event->getArgument('entity');
 
-        if (!empty($entityId = $asset->get('entityId')) && !empty($entityName = $asset->get('entityName')) && $entityName == 'Product') {
-            /** @var \Pim\Repositories\AbstractRepository $entityRepository */
-            $entityRepository = $this->getEntityManager()->getRepository($entityName);
+        if (empty($entityId = $asset->get('entityId')) || empty($entityName = $asset->get('entityName')) || $entityName !== 'Product') {
+            return;
+        }
 
-            if ($entityRepository->isImage($asset->get('file')->get('name'))) {
-                /** @var \Pim\Entities\Product $entity */
-                $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
+        if (!$this->getEntityManager()->getRepository('Product')->isImage((string)$asset->get('fileName'))) {
+            return;
+        }
 
-                if ($entity) {
-                    if (!is_array($data = $entity->getDataField('mainImages'))) {
-                        $data = [];
-                    }
+        if (empty($product = $this->getEntityManager()->getEntity('Product', $entityId))) {
+            return;
+        }
 
-                    if ($asset->isAttributeChanged('isMainImage')) {
-                        if ($asset->get('isMainImage')) {
-                            $channels = $asset->get('scope') == 'Channel' ? [$asset->get('channelId')] : $asset->get('channels');
+        if ($asset->isAttributeChanged('isMainImage') && !empty($asset->get('isMainImage'))) {
+            $product->addMainImage($asset->get('fileId'), null);
+            $this->getEntityManager()->saveEntity($product);
+        }
 
-                            if ($asset->get('scope') == 'Global') {
-                                $entity->set('imageId', $asset->get('fileId'));
-                                if (isset($data[$asset->id])) {
-                                    unset($data[$asset->id]);
-                                    $entity->setDataField('mainImages', $data);
-                                }
-
-                                $this->getEntityManager()->saveEntity($entity);
-                                return;
-                            }
-
-                            $data = $this->getService('Product')->getPreparedProductAssetData($data, $channels);
-                            $data[$asset->id] = $channels;
-                        } else {
-                            if (isset($data[$asset->id])) {
-                                unset($data[$asset->id]);
-                            }
-
-                            if ($asset->get('fileId') == $entity->get('imageId')) {
-                                $entity->set('imageId', null);
-                            }
-                        }
-                    }
-
-                    if ($asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
-                        $data = $this->getService('Product')->getPreparedProductAssetData($data, $asset->get('channels'));
-                        $data[$asset->id] = $asset->get('channels');
-                    }
-
-                    $entity->setDataField('mainImages', $data);
-                    $this->getEntityManager()->saveEntity($entity);
+        if (empty($asset->get('isMainImage')) && $asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
+            if (!empty($asset->get('channels'))) {
+                foreach ($asset->get('channels') as $channelId) {
+                    $product->addMainImage($asset->get('fileId'), $channelId);
                 }
+                $this->getEntityManager()->saveEntity($product);
             }
         }
     }
