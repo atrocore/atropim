@@ -49,10 +49,37 @@ use Treo\Services\MassActions;
  */
 class Product extends AbstractService
 {
-    /**
-     * @var string
-     */
     protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
+
+    protected $mandatorySelectAttributeList = ['data'];
+
+    public function loadPreviewForCollection(EntityCollection $collection): void
+    {
+        parent::loadPreviewForCollection($collection);
+
+        $ids = [];
+        foreach ($collection as $entity) {
+            if (!empty($attachmentId = $this->getMainImageId($entity))) {
+                $ids[] = $attachmentId;
+            }
+        }
+
+        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
+        foreach ($attachmentRepository->where(['id' => $ids])->find() as $attachment) {
+            $attachments[$attachment->get('id')] = [
+                'name'      => $attachment->get('name'),
+                'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),
+            ];
+        }
+
+        foreach ($collection as $entity) {
+            if (!empty($attachmentId = $this->getMainImageId($entity)) && isset($attachments[$attachmentId])) {
+                $entity->set("imageId", $attachmentId);
+                $entity->set("imageName", $attachments[$attachmentId]['name']);
+                $entity->set("imagePathsData", $attachments[$attachmentId]['pathsData']);
+            }
+        }
+    }
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -840,7 +867,7 @@ class Product extends AbstractService
 
     protected function setMainImage(Entity $entity): void
     {
-        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type']))) {
+        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type'])) || !empty($entity->get('imageId'))) {
             return;
         }
 
@@ -848,23 +875,33 @@ class Product extends AbstractService
         $entity->set('imageName', null);
         $entity->set('imagePathsData', null);
 
-        $assetsData = $this->getAssets((string)$entity->get('id'));
-        if (empty($assetsData['list'])) {
-            return;
+        if (!empty($attachmentId = $this->getMainImageId($entity))) {
+            $entity->set('imageId', $attachmentId);
+            $entity->set('imageName', $attachmentId);
+            $entity->set('imagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachmentId));
+        }
+    }
+
+    protected function getMainImageId(Entity $entity): ?string
+    {
+        $attachmentId = null;
+        foreach ($entity->getMainImages() as $image) {
+            if ($image['scope'] === 'Global') {
+                $attachmentId = $image['attachmentId'];
+                break;
+            }
         }
 
-        foreach ($assetsData['list'] as $assetType) {
-            if (!empty($assetType['assets'])) {
-                foreach ($assetType['assets'] as $asset) {
-                    if (!empty($asset['isGlobalMainImage'])) {
-                        $entity->set('imageId', $asset['fileId']);
-                        $entity->set('imageName', $asset['fileName']);
-                        $entity->set('imagePathsData', $asset['filePathsData']);
-                        return;
-                    }
+        if (!empty($channelId = $this->getPrismChannelId())) {
+            foreach ($entity->getMainImages() as $image) {
+                if ($image['channelId'] === $channelId) {
+                    $attachmentId = $image['attachmentId'];
+                    break;
                 }
             }
         }
+
+        return $attachmentId;
     }
 
     /**
