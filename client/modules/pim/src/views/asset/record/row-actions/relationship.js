@@ -33,7 +33,7 @@ Espo.define('pim:views/asset/record/row-actions/relationship', 'views/record/row
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
 
-            if (this.isImage()) {
+            if (this.isImage() && this.options.acl.edit) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage', 'labels', 'Asset'),

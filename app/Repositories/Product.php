@@ -267,6 +267,8 @@ class Product extends AbstractRepository
             ->create('Product')
             ->getPrismChannelId();
 
+        $hasChannelMainImage = !empty($prismChannelId) && isset(array_column($entity->getMainImages(), 'attachmentId', 'channelId')[$prismChannelId]);
+
         foreach ($result as $k => $v) {
             // filter via product channels
             if (!empty($v['channelId']) && empty($v['channelName'])) {
@@ -306,7 +308,7 @@ class Product extends AbstractRepository
                 $result[$k]['isMainImage'] = false;
             }
 
-            if (!empty($prismChannelId)) {
+            if (!empty($prismChannelId) && $hasChannelMainImage) {
                 $result[$k]['isMainImage'] = $result[$k]['isGlobalMainImage'] = in_array($prismChannelId, $result[$k]['channels']);
             }
 

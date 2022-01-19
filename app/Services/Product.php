@@ -342,26 +342,29 @@ class Product extends AbstractService
             throw new NotFound();
         }
 
-        $data = $entity->getMainImages();
-        foreach ($data as $k => $v) {
-            if ($v['attachmentId'] === $asset->get('fileId') || $v['scope'] === 'Global') {
-                unset($data[$k]);
-            }
-        }
-        $data[] = [
-            'attachmentId' => $asset->get('fileId'),
-            'scope'        => 'Global',
-            'channelId'    => null,
-        ];
-        $entity->setMainImages($data);
-
-        $this->getEntityManager()->saveEntity($entity);
-
-        return [
+        $result = [
             'imageId'        => $asset->get('fileId'),
             'imageName'      => $asset->get('name'),
             'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
         ];
+
+
+        $channelId = $this->getPrismChannelId();
+
+        if (!empty($channelId)) {
+            foreach ($entity->getMainImages() as $image) {
+                if ($image['attachmentId'] === $asset->get('fileId') && $image['scope'] === 'Global') {
+                    $entity->removeMainImageForChannel($channelId);
+                    $this->getEntityManager()->saveEntity($entity);
+                    return $result;
+                }
+            }
+        }
+
+        $entity->addMainImage($asset->get('fileId'), $channelId);
+        $this->getEntityManager()->saveEntity($entity);
+
+        return $result;
     }
 
     public function getPrismChannelId(): ?string

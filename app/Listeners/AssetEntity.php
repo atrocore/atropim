@@ -79,11 +79,6 @@ class AssetEntity extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     *
-     * @throws Error
-     */
     public function afterSave(Event $event): void
     {
         /** @var Asset $asset */
@@ -101,51 +96,19 @@ class AssetEntity extends AbstractListener
             return;
         }
 
-        $data = $product->getMainImages();
-
-        if ($asset->isAttributeChanged('isMainImage')) {
-            // unset prev
-            foreach ($data as $k => $v) {
-                if ($v['attachmentId'] === $asset->get('fileId') && $v['scope'] === 'Global') {
-                    unset($data[$k]);
-                }
-            }
-
-            if (!empty($asset->get('isMainImage'))) {
-                foreach ($data as $k => $v) {
-                    if ($v['attachmentId'] === $asset->get('fileId') || $v['scope'] === 'Global') {
-                        unset($data[$k]);
-                    }
-                }
-                $data[] = [
-                    'attachmentId' => $asset->get('fileId'),
-                    'scope'        => 'Global',
-                    'channelId'    => null,
-                ];
-            }
+        if ($asset->isAttributeChanged('isMainImage') && !empty($asset->get('isMainImage'))) {
+            $product->addMainImage($asset->get('fileId'), null);
+            $this->getEntityManager()->saveEntity($product);
         }
 
         if (empty($asset->get('isMainImage')) && $asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
-            // unset prev
-            foreach ($data as $k => $v) {
-                if ($v['attachmentId'] === $asset->get('fileId') && $v['scope'] === 'Channel') {
-                    unset($data[$k]);
-                }
-            }
-
             if (!empty($asset->get('channels'))) {
                 foreach ($asset->get('channels') as $channelId) {
-                    $data[] = [
-                        'attachmentId' => $asset->get('fileId'),
-                        'scope'        => 'Channel',
-                        'channelId'    => $channelId,
-                    ];
+                    $product->addMainImage($asset->get('fileId'), $channelId);
                 }
+                $this->getEntityManager()->saveEntity($product);
             }
         }
-
-        $product->setMainImages(array_values($data));
-        $this->getEntityManager()->saveEntity($product);
     }
 
     /**
