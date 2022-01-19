@@ -145,7 +145,6 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
       "noLoad": true
     },
     "categories": {
