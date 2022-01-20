@@ -790,12 +790,6 @@ class Product extends AbstractRepository
         }
 
         try {
-            if ($entity->isAttributeChanged('productFamilyId') && !empty($entity->get('productFamilyId'))) {
-                $pfaRepository = $this->getEntityManager()->getRepository('ProductFamilyAttribute');
-                foreach ($pfaRepository->where(['productFamilyId' => $entity->get('productFamilyId')])->find() as $pfa) {
-                    $pfaRepository->createProductAttributeValues($pfa);
-                }
-            }
             $result = parent::save($entity, $options);
 
             if (!empty($inTransaction)) {
@@ -1056,14 +1050,6 @@ class Product extends AbstractRepository
                         if ($pav->get('value') !== null && $pav->get('value') !== '') {
                             continue 1;
                         }
-                        if ($this->getConfig()->get('isMultilangActive', false)) {
-                            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                                $valueLocale = 'value' . ucfirst(Util::toCamelCase(strtolower($locale)));
-                                if ($pav->get($valueLocale) !== null && $pav->get($valueLocale) !== '') {
-                                    continue 2;
-                                }
-                            }
-                        }
                     }
 
                     $this->getEntityManager()->removeEntity($pav);
@@ -1119,49 +1105,48 @@ class Product extends AbstractRepository
         return $result;
     }
 
-    /**
-     * @param Entity $product
-     *
-     * @return bool
-     */
     protected function updateProductAttributesByProductFamily(Entity $product): bool
     {
-        if (empty($productFamily = $product->get('productFamily'))) {
+        if (empty($product->get('productFamilyId'))) {
             return true;
         }
 
-        if (!empty($productFamilyAttributes = $productFamily->get('productFamilyAttributes')) && count($productFamilyAttributes) > 0) {
-            foreach ($productFamilyAttributes as $productFamilyAttribute) {
-                $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
+        $pfas = $this
+            ->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->where(['productFamilyId' => $product->get('productFamilyId')])
+            ->find();
+
+        foreach ($pfas as $pfa) {
+            $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
+            $productAttributeValue->set(
+                [
+                    'productId'   => $product->get('id'),
+                    'attributeId' => $pfa->get('attributeId'),
+                    'isRequired'  => $pfa->get('isRequired'),
+                    'scope'       => $pfa->get('scope'),
+                    'channelId'   => $pfa->get('channelId')
+                ]
+            );
+
+            if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
                 $productAttributeValue->set(
                     [
-                        'productId'   => $product->get('id'),
-                        'attributeId' => $productFamilyAttribute->get('attributeId'),
-                        'isRequired'  => $productFamilyAttribute->get('isRequired'),
-                        'scope'       => $productFamilyAttribute->get('scope'),
-                        'channelId'   => $productFamilyAttribute->get('channelId')
+                        'assignedUserId' => $product->get('assignedUserId'),
+                        'ownerUserId'    => $product->get('ownerUserId'),
+                        'teamsIds'       => $product->get('teamsIds')
                     ]
                 );
+            }
 
-                if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
-                    $productAttributeValue->set(
-                        [
-                            'assignedUserId' => $product->get('assignedUserId'),
-                            'ownerUserId'    => $product->get('ownerUserId'),
-                            'teamsIds'       => $product->get('teamsIds')
-                        ]
-                    );
-                }
+            $productAttributeValue->skipVariantValidation = true;
+            $productAttributeValue->skipProductChannelValidation = true;
+            $productAttributeValue->clearCompletenessFields = true;
 
-                $productAttributeValue->skipVariantValidation = true;
-                $productAttributeValue->skipProductChannelValidation = true;
-                $productAttributeValue->clearCompletenessFields = true;
-
-                try {
-                    $this->getEntityManager()->saveEntity($productAttributeValue);
-                } catch (BadRequest $e) {
-                    // ignore
-                }
+            try {
+                $this->getEntityManager()->saveEntity($productAttributeValue);
+            } catch (BadRequest $e) {
+                // ignore
             }
         }
 
