@@ -43,38 +43,35 @@ use Treo\Listeners\AbstractListener;
  */
 class AssetEntity extends AbstractListener
 {
-    /** @var array */
-    protected $hasMainImage = ['Product', 'Category'];
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     * @throws Error
-     */
     public function beforeSave(Event $event): void
     {
         /** @var Asset $asset */
         $asset = $event->getArgument('entity');
 
-        if (!$asset->isNew() && !empty($entityName = $asset->get('entityName'))
-            && !empty($entityId = $asset->get('entityId'))
-            && in_array($entityName, $this->hasMainImage)) {
-            if ($this->isAttributeChannelChanged($asset)) {
-                $table = Util::toCamelCase($entityName);
-
-                $id = $this
-                    ->getEntityManager()
-                    ->nativeQuery("SELECT id FROM {$table} WHERE image_id = '{$asset->get('fileId')}' AND id = '{$entityId}'")
-                    ->fetch(\PDO::FETCH_ASSOC);
-
-                if (!empty($id)) {
-                    throw new BadRequest(
-                        $this
-                            ->getLanguage()
-                            ->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset')
-                    );
+        if (
+            !$asset->isNew()
+            && !empty($asset->get('entityName'))
+            && !empty($asset->get('entityId'))
+            && in_array($asset->get('entityName'), ['Category', 'Product'])
+            && $this->isAttributeChannelChanged($asset)
+        ) {
+            if ($asset->get('entityName') === 'Category') {
+                if ($this->getEntityManager()->getEntity('Category', $asset->get('entityId'))->get('imageId') === $asset->get('fileId')) {
+                    $id = $asset->get('entityId');
                 }
+            }
+
+            if ($asset->get('entityName') === 'Product') {
+                foreach ($this->getEntityManager()->getEntity('Product', $asset->get('entityId'))->getMainImages() as $image) {
+                    if ($image['attachmentId'] === $asset->get('fileId')) {
+                        $id = $asset->get('entityId');
+                        break;
+                    }
+                }
+            }
+
+            if (!empty($id)) {
+                throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
             }
         }
     }
@@ -117,10 +114,7 @@ class AssetEntity extends AbstractListener
     public function afterRemove(Event $event): void
     {
         $fileId = $event->getArgument('entity')->get('fileId');
-        foreach ($this->hasMainImage as $entity) {
-            $table = Util::toCamelCase($entity);
-            $this->getEntityManager()->nativeQuery("UPDATE $table SET image_id=null WHERE image_id='$fileId'");
-        }
+        $this->getEntityManager()->nativeQuery("UPDATE category SET image_id=null WHERE image_id='$fileId'");
     }
 
     /**
