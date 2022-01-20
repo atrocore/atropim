@@ -867,7 +867,15 @@ class Product extends AbstractService
 
     protected function setMainImage(Entity $entity): void
     {
-        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type'])) || !empty($entity->get('imageId'))) {
+        if (!$entity instanceof \Pim\Entities\Product) {
+            return;
+        }
+
+        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type']))) {
+            return;
+        }
+
+        if (!empty($entity->get('imageId'))) {
             return;
         }
 
