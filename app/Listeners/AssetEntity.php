@@ -55,23 +55,22 @@ class AssetEntity extends AbstractListener
             && in_array($asset->get('entityName'), ['Category', 'Product'])
             && $this->isAttributeChannelChanged($asset)
         ) {
+            $entity = $this
+                ->getEntityManager()
+                ->getEntity($asset->get('entityName'), $asset->get('entityId'));
+
             if ($asset->get('entityName') === 'Category') {
-                if ($this->getEntityManager()->getEntity('Category', $asset->get('entityId'))->get('imageId') === $asset->get('fileId')) {
-                    $id = $asset->get('entityId');
+                if ($entity->get('imageId') === $asset->get('fileId')) {
+                    throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
                 }
             }
 
             if ($asset->get('entityName') === 'Product') {
-                foreach ($this->getEntityManager()->getEntity('Product', $asset->get('entityId'))->getMainImages() as $image) {
+                foreach ($entity->getMainImages() as $image) {
                     if ($image['attachmentId'] === $asset->get('fileId')) {
-                        $id = $asset->get('entityId');
-                        break;
+                        throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
                     }
                 }
-            }
-
-            if (!empty($id)) {
-                throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
             }
         }
     }
