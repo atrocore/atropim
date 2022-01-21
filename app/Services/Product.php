@@ -863,11 +863,27 @@ class Product extends AbstractService
      */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        if ($this->isProductAttributeUpdating($data)) {
+        $post = clone $data;
+
+        // push main image to assets ids
+        if (property_exists($post, 'assetsIds') && property_exists($post, 'imageId')) {
+            $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $post->imageId])->findOne();
+            if (!empty($asset)) {
+                $post->assetsIds[] = $asset->get('id');
+                sort($post->assetsIds);
+            }
+        }
+
+        // unset main image if the same
+        if (property_exists($post, 'imageId') && $this->getMainImageId($entity) === $post->imageId) {
+            unset($post->imageId);
+        }
+
+        if ($this->isProductAttributeUpdating($post)) {
             return true;
         }
 
-        return parent::isEntityUpdated($entity, $data);
+        return parent::isEntityUpdated($entity, $post);
     }
 
     protected function getAssets(string $productId): array
