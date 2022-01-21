@@ -363,8 +363,13 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($attribute->get('type') === 'unit') {
-            $entity->set('floatValue', $attribute->get('unitDefault'));
-            $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
+            if (empty($entity->get('floatValue'))) {
+                $entity->set('floatValue', $attribute->get('unitDefault'));
+            }
+
+            if (empty($entity->get('varcharValue'))) {
+                $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
+            }
         }
     }
 
