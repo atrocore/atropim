@@ -388,6 +388,12 @@ class Product extends AbstractService
             }
         }
 
+        $assetData = $this->getAssetData($entityId, $asset->get('fileId'));
+
+        if (!empty($assetData['channelId'])) {
+            $channelId = $assetData['channelId'];
+        }
+
         $entity->addMainImage($asset->get('fileId'), $channelId);
         $this->getEntityManager()->saveEntity($entity);
 
@@ -863,6 +869,27 @@ class Product extends AbstractService
     protected function getAssets(string $productId): array
     {
         return $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $productId);
+    }
+
+    protected function getAssetData(string $productId, string $attachmentId): ?array
+    {
+        $productAssets = $this->getAssets($productId);
+        if (empty($productAssets) || empty($productAssets['list'])) {
+            return null;
+        }
+
+        foreach ($productAssets['list'] as $type) {
+            if (empty($type['assets'])) {
+                continue 1;
+            }
+            foreach ($type['assets'] as $row) {
+                if ($attachmentId === $row['fileId']) {
+                    return $row;
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function setMainImage(Entity $entity): void
