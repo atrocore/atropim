@@ -279,7 +279,7 @@ class Product extends Base
         return empty($data) ? [] : $data;
     }
 
-    public function addMainImage(string $attachmentId, ?string $channelId): void
+    public function addMainImage(string $attachmentId, ?string $channelId = null): void
     {
         $data = $this->getData();
 
@@ -312,7 +312,34 @@ class Product extends Base
         $this->setData($data);
     }
 
-    public function removeMainImageForChannel(string $channelId): void
+    public function removeMainImage(?string $channelId = null): void
+    {
+        $data = $this->getData();
+
+        if (empty($data['mainImages'])) {
+            $data['mainImages'] = [];
+        }
+
+        if (empty($channelId)) {
+            foreach ($data['mainImages'] as $k => $v) {
+                if ($v['scope'] === 'Global') {
+                    unset($data['mainImages'][$k]);
+                }
+            }
+        }
+
+        if (!empty($channelId)) {
+            foreach ($data['mainImages'] as $k => $v) {
+                if ($v['channelId'] === $channelId) {
+                    unset($data['mainImages'][$k]);
+                }
+            }
+        }
+
+        $this->setData($data);
+    }
+
+    public function removeMainImageByAttachmentId(string $attachmentId): void
     {
         $data = $this->getData();
 
@@ -321,7 +348,7 @@ class Product extends Base
         }
 
         foreach ($data['mainImages'] as $k => $v) {
-            if ($v['channelId'] === $channelId) {
+            if ($v['attachmentId'] === $attachmentId) {
                 unset($data['mainImages'][$k]);
             }
         }

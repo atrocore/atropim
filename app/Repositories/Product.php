@@ -850,11 +850,34 @@ class Product extends AbstractRepository
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
 
-        if ($entity->isAttributeChanged('imageId') && !empty($image = $entity->get('image')) && !empty($asset = $image->getAsset())) {
-            $this->relate($entity, 'assets', $asset->get('id'));
+        // set or unset main image for product
+        if ($entity->isAttributeChanged('imageId')) {
+            $this->setProductMainImage($entity);
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function setProductMainImage(Entity $entity): void
+    {
+        if (empty($entity->get('imageId'))) {
+            $entity->removeMainImage();
+            return;
+        }
+
+        $mainImageAsset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
+        if (empty($mainImageAsset)) {
+            return;
+        }
+
+        $entity->addMainImage($entity->get('imageId'));
+        if ($entity->has('assetsIds')) {
+            $assetsIds = $entity->get('assetsIds');
+            $assetsIds[] = $mainImageAsset->get('id');
+            $entity->set('assetsIds', $assetsIds);
+        } else {
+            $this->relate($entity, 'assets', $mainImageAsset->get('id'));
+        }
     }
 
     /**

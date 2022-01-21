@@ -148,15 +148,19 @@ class Product extends AbstractService
             throw new Forbidden();
         }
 
-        $sql = "DELETE FROM product_asset WHERE asset_id='$foreignId' AND product_id='$id'";
-
+        $query = "DELETE FROM product_asset WHERE asset_id='$foreignId' AND product_id='$id'";
         if (empty($channel)) {
-            $sql .= " AND (channel IS NULL OR channel='')";
+            $query .= " AND (channel IS NULL OR channel='')";
         } else {
-            $sql .= " AND channel='$channel'";
+            $query .= " AND channel='$channel'";
         }
 
-        $this->getEntityManager()->nativeQuery($sql);
+        $entity->removeMainImageByAttachmentId($foreignEntity->get('fileId'));
+        $data = str_replace(["'", '\"'], ["\'", '\\\"'], Json::encode($entity->get('data'), JSON_UNESCAPED_UNICODE));
+
+        $query .= ";UPDATE product SET data='$data' WHERE id='{$entity->get('id')}'";
+
+        $this->getEntityManager()->nativeQuery($query);
 
         return $this
             ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
@@ -381,7 +385,7 @@ class Product extends AbstractService
         if (!empty($channelId)) {
             foreach ($entity->getMainImages() as $image) {
                 if ($image['attachmentId'] === $asset->get('fileId') && $image['scope'] === 'Global') {
-                    $entity->removeMainImageForChannel($channelId);
+                    $entity->removeMainImage($channelId);
                     $this->getEntityManager()->saveEntity($entity);
                     return $result;
                 }
