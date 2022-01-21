@@ -72,8 +72,7 @@ class ProductAttributeValue extends AbstractService
      */
     public function createEntity($attachment)
     {
-        // for asset attribute type
-        $this->prepareValueForAssetType($attachment);
+        $this->prepareInputValue($attachment);
 
         return parent::createEntity($attachment);
     }
@@ -90,15 +89,7 @@ class ProductAttributeValue extends AbstractService
      */
     public function updateEntity($id, $data)
     {
-        // for asset attribute type
-        $this->prepareValueForAssetType($data);
-
-        // prepare data
-        foreach ($data as $k => $v) {
-            if (is_array($v)) {
-                $data->$k = Json::encode($v);
-            }
-        }
+        $this->prepareInputValue($data);
 
         return parent::updateEntity($id, $data);
     }
@@ -339,10 +330,16 @@ class ProductAttributeValue extends AbstractService
         $entity->clear('textValue');
     }
 
-    private function prepareValueForAssetType(\stdClass $data): void
+    private function prepareInputValue(\stdClass $data): void
     {
+        // for asset type
         if (empty($data->value) && !empty($data->valueId)) {
             $data->value = $data->valueId;
+        }
+
+        // array to json
+        if (property_exists($data, 'value') && is_array($data->value)) {
+            $data->value = Json::encode($data->value);
         }
     }
 
