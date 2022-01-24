@@ -92,22 +92,19 @@ class AssetEntity extends AbstractListener
             return;
         }
 
-        if ($asset->isAttributeChanged('isMainImage') && empty($asset->get('channels'))) {
+        if ($asset->isAttributeChanged('isMainImage') || $asset->isAttributeChanged('channels')) {
+            $product->removeMainImageByAttachmentId($asset->get('fileId'));
+
             if (!empty($asset->get('isMainImage'))) {
-                $product->addMainImage($asset->get('fileId'), empty($asset->get('channelId')) ? null : $asset->get('channelId'));
-            } else {
-                $product->removeMainImageByAttachmentId($asset->get('fileId'));
+                if (empty($asset->get('channels'))) {
+                    $product->addMainImage($asset->get('fileId'), empty($asset->get('channelId')) ? null : $asset->get('channelId'));
+                } else {
+                    foreach ($asset->get('channels') as $channelId) {
+                        $product->addMainImage($asset->get('fileId'), $channelId);
+                    }
+                }
             }
             $this->getEntityManager()->saveEntity($product);
-        }
-
-        if (!empty($asset->get('isMainImage')) && $asset->isAttributeChanged('channels') && $asset->get('scope') == 'Global') {
-            if (!empty($asset->get('channels'))) {
-                foreach ($asset->get('channels') as $channelId) {
-                    $product->addMainImage($asset->get('fileId'), $channelId);
-                }
-                $this->getEntityManager()->saveEntity($product);
-            }
         }
     }
 
