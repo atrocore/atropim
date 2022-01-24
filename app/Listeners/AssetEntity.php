@@ -92,8 +92,12 @@ class AssetEntity extends AbstractListener
             return;
         }
 
-        if ($asset->isAttributeChanged('isMainImage') && !empty($asset->get('isMainImage'))) {
-            $product->addMainImage($asset->get('fileId'), null);
+        if ($asset->isAttributeChanged('isMainImage')) {
+            if (!empty($asset->get('isMainImage'))) {
+                $product->addMainImage($asset->get('fileId'), null);
+            } else {
+                $product->removeMainImage(null);
+            }
             $this->getEntityManager()->saveEntity($product);
         }
 
