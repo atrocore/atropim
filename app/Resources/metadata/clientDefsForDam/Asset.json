@@ -70,7 +70,7 @@
                   "value": "Global"
                 },
                 {
-                  "type": "isFalse",
+                  "type": "isTrue",
                   "attribute": "isMainImage"
                 }
               ]
