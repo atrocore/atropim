@@ -56,9 +56,6 @@ class ProductAsset extends Base
                             lcfirst($foreignEntityName) . 'Id',
                             'channel'
                         ],
-                        'conditions'   => [
-                            'channel' => ''
-                        ]
                     ]
                 ]
             ]

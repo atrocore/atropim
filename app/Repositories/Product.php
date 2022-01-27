@@ -856,6 +856,21 @@ class Product extends AbstractRepository
             $this->setProductMainImage($entity);
         }
 
+        // unset main images from product
+        if ($entity->isAttributeChanged('assetsIds')) {
+            $attachmentsIds = [];
+            if (!empty($entity->get('assetsIds'))) {
+                foreach ($this->getEntityManager()->getRepository('Asset')->where(['id' => $entity->get('assetsIds')])->find() as $asset) {
+                    $attachmentsIds[] = $asset->get('fileId');
+                }
+            }
+            foreach ($entity->getMainImages() as $mainImage) {
+                if (!in_array($mainImage['attachmentId'], $attachmentsIds)) {
+                    $entity->removeMainImageByAttachmentId($mainImage['attachmentId']);
+                }
+            }
+        }
+
         parent::beforeSave($entity, $options);
     }
 
