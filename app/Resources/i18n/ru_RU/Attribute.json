@@ -32,22 +32,7 @@
   "labels": {
     "Create Attribute": "Создать атрибут",
     "productFamily": "Продуктовая семья",
-    "addNewValue": "Добавить новое значение",
-    "array": "Массив данных",
-    "bool": "Лог. значение",
-    "currency": "Валюта",
-    "date": "Дата",
-    "datetime": "Дата время",
-    "enum": "Список",
-    "float": "Десятичная дробь",
-    "int": "Целое число",
-    "multiEnum": "Мульти-список",
-    "text": "Текст",
-    "unit": "Единица",
-    "url": "Url",
-    "varchar": "Текст переменного размера varchar",
-    "wysiwyg": "Wysiwyg",
-    "asset": "Ассет"
+    "addNewValue": "Добавить новое значение"
   },
   "messages": {
     "sameNumberOptions": "Вы должны установить такое же количество опций",
