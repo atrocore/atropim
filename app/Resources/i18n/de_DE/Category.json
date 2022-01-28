@@ -8,7 +8,7 @@
     "markupType": "Typ",
     "markupValue": "Wert",
     "assets": "Assets",
-    "categoryRoute": "Kategorieroute",
+    "categoryRoute": "Kategoriebaum (ID)",
     "childrenCount": "Anzahl Kinderelemente",
     "hasChildren": "hat untergeordnete Elemente",
     "sortOrder": "Sortierreihenfolge",

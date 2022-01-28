@@ -9,6 +9,7 @@
     "categories": "Categories",
     "channels": "Channels",
     "image": "Main Image",
+    "categoryRoute": "Сategory Tree (ID)",
     "categoryRouteName": "Сategory Tree",
     "scope": "Scope",
     "productCategories": "Category Products",
