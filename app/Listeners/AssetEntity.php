@@ -33,7 +33,7 @@ namespace Pim\Listeners;
 
 use Dam\Entities\Asset;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Json;
 use Treo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
@@ -108,13 +108,24 @@ class AssetEntity extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     */
     public function afterRemove(Event $event): void
     {
         $fileId = $event->getArgument('entity')->get('fileId');
+
+        // remove category main image
         $this->getEntityManager()->nativeQuery("UPDATE category SET image_id=null WHERE image_id='$fileId'");
+
+        // remove product main image
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['data*' => '%"attachmentId":"' . $fileId . '"%'])
+            ->find();
+        foreach ($products as $product) {
+            $product->removeMainImageByAttachmentId($fileId);
+            $jsonData = Json::encode($product->getData());
+            $this->getEntityManager()->nativeQuery("UPDATE product SET data='$jsonData' WHERE id='{$product->get('id')}'");
+        }
     }
 
     /**
