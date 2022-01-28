@@ -853,7 +853,11 @@ class Product extends AbstractRepository
 
         // set or unset main image for product
         if ($entity->isAttributeChanged('imageId')) {
-            $this->setProductMainImage($entity);
+            if (!empty($entity->get('imageId'))) {
+                $entity->addMainImage($entity->get('imageId'));
+            } else {
+                $entity->removeMainImage();
+            }
         }
 
         // unset main images from product
@@ -872,28 +876,6 @@ class Product extends AbstractRepository
         }
 
         parent::beforeSave($entity, $options);
-    }
-
-    protected function setProductMainImage(Entity $entity): void
-    {
-        if (empty($entity->get('imageId'))) {
-            $entity->removeMainImage();
-            return;
-        }
-
-        $mainImageAsset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
-        if (empty($mainImageAsset)) {
-            return;
-        }
-
-        $entity->addMainImage($entity->get('imageId'));
-        if ($entity->has('assetsIds')) {
-            $assetsIds = $entity->get('assetsIds');
-            $assetsIds[] = $mainImageAsset->get('id');
-            $entity->set('assetsIds', $assetsIds);
-        } else {
-            $this->relate($entity, 'assets', $mainImageAsset->get('id'));
-        }
     }
 
     /**
