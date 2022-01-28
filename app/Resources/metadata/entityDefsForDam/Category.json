@@ -5,13 +5,13 @@
       "previewSize": "medium",
       "readOnly": true,
       "view": "pim:views/product/fields/image",
-      "importDisabled": true
+      "importDisabled": false
     },
     "assets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
+      "importDisabled": false,
       "noLoad": true
     }
   },

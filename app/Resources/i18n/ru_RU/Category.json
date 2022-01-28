@@ -11,6 +11,7 @@
     "image": "Основное изображение",
     "categoryRouteName": "Дерево категорий",
     "scope": "Область применения",
+    "products": "Продукты",
     "productCategories": "Категории продукта",
     "catalogs": "Каталоги"
   },
@@ -19,6 +20,7 @@
     "categories": "Дочерние Категории",
     "assets": "Ассеты",
     "channels": "Каналы",
+    "products": "Продукты",
     "catalogs": "Каталоги",
     "productCategories": "Категории продукта"
   },

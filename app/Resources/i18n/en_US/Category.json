@@ -12,6 +12,7 @@
     "categoryRouteName": "Сategory Tree",
     "scope": "Scope",
     "productCategories": "Category Products",
+    "products": "Products",
     "catalogs": "Catalogs"
   },
   "links": {
@@ -19,6 +20,7 @@
     "categories": "Child Categories",
     "assets": "Assets",
     "channels": "Channels",
+    "products": "Products",
     "catalogs": "Catalogs",
     "productCategories": "Category Products"
   },

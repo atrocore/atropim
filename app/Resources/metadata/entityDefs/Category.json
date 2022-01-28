@@ -65,7 +65,9 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "_position": {
       "type": "varchar",
@@ -75,7 +77,9 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "_target": {
       "type": "varchar",
@@ -85,7 +89,9 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "childrenCount": {
       "type": "int",
@@ -95,7 +101,9 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "categoryParent": {
       "type": "link",
@@ -133,7 +141,9 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "catalogs": {
       "type": "linkMultiple",
@@ -146,7 +156,6 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
       "noLoad": true,
       "columns": {
         "pcSorting": "sorting"
@@ -160,14 +169,15 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "channels": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "noLoad": true,
-      "importDisabled": true
+      "noLoad": true
     }
   },
   "links": {
