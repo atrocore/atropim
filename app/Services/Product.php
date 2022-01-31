@@ -592,7 +592,7 @@ class Product extends AbstractService
             $recordService->prepareEntityForOutput($e);
         }
 
-        $collection = $this->preparePavsForOutput($collection);;
+        $collection = $this->preparePavsForOutput($collection);
 
         $result = [
             'collection' => $collection,
@@ -606,14 +606,12 @@ class Product extends AbstractService
 
     public function preparePavsForOutput(EntityCollection $collection): EntityCollection
     {
-        $collection = $this->filterPavsViaChannel($collection);
-
         if (count($collection) === 0) {
             return $collection;
         }
 
         $scopeData = [];
-        if (empty($collection[0]->has('scope'))) {
+        if (!empty($collection[0]) && empty($collection[0]->has('scope'))) {
             $pavsData = $this
                 ->getEntityManager()
                 ->getRepository('ProductAttributeValue')
@@ -627,6 +625,12 @@ class Product extends AbstractService
             foreach ($collection as $pav) {
                 $scopeData[$pav->get('id')] = $pav;
             }
+        }
+
+        $collection = $this->filterPavsViaChannel($collection, $scopeData);
+
+        if (count($collection) === 0) {
+            return $collection;
         }
 
         $records = [];
@@ -699,21 +703,21 @@ class Product extends AbstractService
         return new EntityCollection(array_values($records));
     }
 
-    protected function filterPavsViaChannel(EntityCollection $collection): EntityCollection
+    protected function filterPavsViaChannel(EntityCollection $collection, array $scopeData): EntityCollection
     {
         if (count($collection) > 0 && !empty($channelId = $this->getPrismChannelId())) {
             $newCollection = new EntityCollection();
 
             $channelSpecificAttributeIds = [];
             foreach ($collection as $pav) {
-                if ($pav->get('channelId') === $channelId) {
+                if ($scopeData[$pav->get('id')]->get('channelId') === $channelId) {
                     $channelSpecificAttributeIds[] = $pav->get('attributeId');
                     $newCollection->append($pav);
                 }
             }
 
             foreach ($collection as $pav) {
-                if ($pav->get('scope') === 'Global' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
+                if ($scopeData[$pav->get('id')]->get('scope') === 'Global' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
                     $newCollection->append($pav);
                 }
             }
