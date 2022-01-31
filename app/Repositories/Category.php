@@ -292,6 +292,14 @@ class Category extends AbstractRepository
         $this->deactivateChildren($entity);
 
         parent::afterSave($entity, $options);
+
+        // relate main image for product
+        if ($entity->isAttributeChanged('imageId') && !empty($entity->get('imageId'))) {
+            $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
+            if (!empty($asset)) {
+                $this->relate($entity, 'assets', $asset);
+            }
+        }
     }
 
     /**
@@ -395,6 +403,13 @@ class Category extends AbstractRepository
         }
 
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
+
+        if ($relationName == 'assets') {
+            $asset = is_string($foreign) ? $this->getEntityManager()->getEntity('Asset', $foreign) : $foreign;
+            if (!empty($asset) && $asset->get('fileId') === $entity->get('imageId')) {
+                $this->getEntityManager()->nativeQuery("UPDATE category SET image_id=NULL WHERE id='{$entity->get('id')}'");
+            }
+        }
     }
 
     /**

@@ -33,6 +33,7 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
@@ -851,26 +852,13 @@ class Product extends AbstractRepository
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
 
-        // set or unset main image for product
+        // set main image
         if ($entity->isAttributeChanged('imageId')) {
+            $entity->removeMainImage();
             if (!empty($entity->get('imageId'))) {
-                $entity->addMainImage($entity->get('imageId'));
-            } else {
-                $entity->removeMainImage();
-            }
-        }
-
-        // unset main images from product
-        if ($entity->isAttributeChanged('assetsIds')) {
-            $attachmentsIds = [];
-            if (!empty($entity->get('assetsIds'))) {
-                foreach ($this->getEntityManager()->getRepository('Asset')->where(['id' => $entity->get('assetsIds')])->find() as $asset) {
-                    $attachmentsIds[] = $asset->get('fileId');
-                }
-            }
-            foreach ($entity->getMainImages() as $mainImage) {
-                if (!in_array($mainImage['attachmentId'], $attachmentsIds)) {
-                    $entity->removeMainImageByAttachmentId($mainImage['attachmentId']);
+                $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
+                if (!empty($asset)) {
+                    $entity->addMainImage($entity->get('imageId'));
                 }
             }
         }
@@ -909,6 +897,16 @@ class Product extends AbstractRepository
 
         // parent action
         parent::afterSave($entity, $options);
+
+        // relate main image for product
+        if ($entity->isAttributeChanged('imageId') && !empty($entity->get('imageId'))) {
+            foreach ($entity->getMainImages() as $row) {
+                $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $row['attachmentId']])->findOne();
+                if (!empty($asset)) {
+                    $this->relate($entity, 'assets', $asset);
+                }
+            }
+        }
 
         $this->setInheritedOwnership($entity);
     }
@@ -1016,6 +1014,15 @@ class Product extends AbstractRepository
         if ($relationName == 'channels') {
             $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
             $this->unrelatePfas($entity, $foreign);
+        }
+
+        if ($relationName == 'assets') {
+            $asset = is_string($foreign) ? $this->getEntityManager()->getEntity('Asset', $foreign) : $foreign;
+            if (!empty($asset)) {
+                $entity->removeMainImageByAttachmentId($asset->get('fileId'));
+                $jsonData = Json::encode($entity->getData());
+                $this->getEntityManager()->nativeQuery("UPDATE product SET `data`='$jsonData' WHERE id='{$entity->get('id')}'");
+            }
         }
 
         parent::afterUnrelate($entity, $relationName, $foreign, $options);

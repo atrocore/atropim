@@ -875,12 +875,14 @@ class Product extends AbstractService
             if (!empty($asset)) {
                 $post->assetsIds[] = $asset->get('id');
                 $post->assetsIds = array_unique($post->assetsIds);
-                sort($post->assetsIds);
             }
         }
 
-        // unset main image if the same
-        if (property_exists($post, 'imageId') && $this->getMainImageId($entity) === $post->imageId) {
+        // for main image
+        if (property_exists($post, 'imageId')) {
+            if ($this->getMainImageId($entity) !== $post->imageId) {
+                return true;
+            }
             unset($post->imageId);
         }
 
