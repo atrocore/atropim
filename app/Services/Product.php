@@ -606,11 +606,11 @@ class Product extends AbstractService
 
     public function preparePavsForOutput(EntityCollection $collection): EntityCollection
     {
+        $collection = $this->filterPavsViaChannel($collection);
+
         if (count($collection) === 0) {
             return $collection;
         }
-
-        $collection = $this->filterPavsViaChannel($collection);
 
         $scopeData = [];
         if (empty($collection[0]->has('scope'))) {
