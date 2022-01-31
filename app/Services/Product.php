@@ -870,6 +870,7 @@ class Product extends AbstractService
             $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $post->imageId])->findOne();
             if (!empty($asset)) {
                 $post->assetsIds[] = $asset->get('id');
+                $post->assetsIds = array_unique($post->assetsIds);
                 sort($post->assetsIds);
             }
         }
