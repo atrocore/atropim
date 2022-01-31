@@ -177,8 +177,8 @@ class Product extends AbstractRepository
 
                 try {
                     $this->getEntityManager()->saveEntity($languagePav);
-                } catch (ProductAttributeAlreadyExists $e) {
-                    // ignore
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->info('Update inconsistent attributes: ' . $e->getMessage());
                 }
             }
         }
