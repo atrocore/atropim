@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 /**
@@ -108,10 +107,6 @@ class Catalog extends AbstractRepository
             $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, $entity);
         }
 
-        if ($relationName == 'categories') {
-
-        }
-
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
     }
 
@@ -125,30 +120,6 @@ class Catalog extends AbstractRepository
             $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, null);
         }
 
-        if ($relationName === 'categories') {
-            $this->getEntityManager()->getRepository('Category')->tryToUnRelateCatalog($foreign, $entity);
-        }
-
         parent::beforeUnrelate($entity, $relationName, $foreign, $options);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string
-     */
-    protected function exception(string $key): string
-    {
-        return $this->getInjection('language')->translate($key, 'exceptions', 'Catalog');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

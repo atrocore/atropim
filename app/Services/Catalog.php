@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
@@ -44,30 +43,17 @@ class Catalog extends Base
         $entity->set('productsCount', $this->getRepository()->getProductsCount($entity));
     }
 
-    protected function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
         if ($link === 'categories') {
-            $category = $this->getEntityManager()->getRepository('Category')->get($foreignId);
-            if (!empty($category->get('categoryParent'))) {
-                throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeLinked', 'exceptions', 'Category'));
-            }
-            foreach ($category->getChildren() as $child) {
-                $this->getPseudoTransactionManager()->pushLinkEntityJob('Category', $child->get('id'), 'catalogs', $id);
-            }
+            $this->getServiceFactory()->create('Category')->onLinkEntityViaTransaction($foreignId, 'catalogs', $id);
         }
     }
 
-    protected function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
         if ($link === 'categories') {
-            $category = $this->getEntityManager()->getRepository('Category')->get($foreignId);
-            if (!empty($category->get('categoryParent'))) {
-                throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeUnLinked', 'exceptions', 'Category'));
-            }
-
-            foreach ($category->getChildren() as $child) {
-                $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $id);
-            }
+            $this->getServiceFactory()->create('Category')->onUnLinkEntityViaTransaction($foreignId, 'catalogs', $id);
         }
     }
 

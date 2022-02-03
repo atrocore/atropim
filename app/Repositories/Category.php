@@ -103,48 +103,6 @@ class Category extends AbstractRepository
         }
     }
 
-    /**
-     * @param Entity|string $category
-     * @param Entity|string $catalog
-     */
-    public function tryToUnRelateCatalog($category, $catalog): void
-    {
-        if (is_bool($category) || is_bool($catalog)) {
-            return;
-        }
-
-        if (!$category instanceof Entity) {
-            $category = $this->getEntityManager()->getEntity('Category', $category);
-        }
-
-        if (!$catalog instanceof Entity) {
-            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalog);
-        }
-
-        if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
-            $this->canUnRelateCatalog($category, $catalog);
-        } else {
-            $this->cascadeUnRelateCatalog($category, $catalog);
-        }
-    }
-
-    public function cascadeUnRelateCatalog(Entity $category, Entity $catalog): void
-    {
-        $products = $catalog->get('products');
-        if (count($products) > 0) {
-            $root = $category->getRoot();
-            $children = $root->getChildren();
-            foreach ($products as $product) {
-                $this->getProductRepository()->unrelate($product, 'categories', $root);
-                if (count($children) > 0) {
-                    foreach ($children as $cat) {
-                        $this->getProductRepository()->unrelate($product, 'categories', $cat);
-                    }
-                }
-            }
-        }
-    }
-
     public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         if ($relationName === 'channels') {
@@ -367,18 +325,6 @@ class Category extends AbstractRepository
             $this->getProductRepository()->updateProductCategorySortOrder($foreign, $entity);
             $this->getProductRepository()->linkCategoryChannels($foreign, $entity);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName === 'catalogs') {
-            $this->tryToUnRelateCatalog($entity, $foreign);
-        }
-
-        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**

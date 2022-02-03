@@ -102,7 +102,7 @@ class Category extends AbstractService
         return $categoriesIds;
     }
 
-    protected function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
         if ($link === 'catalogs') {
             $category = $this->getRepository()->get($id);
@@ -115,12 +115,25 @@ class Category extends AbstractService
         }
     }
 
-    protected function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
         if ($link === 'catalogs') {
             $category = $this->getRepository()->get($id);
             if (!empty($category->get('categoryParent'))) {
                 throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeUnLinked', 'exceptions', 'Category'));
+            }
+
+            $catalog = $this->getEntityManager()->getRepository('Catalog')->get($foreignId);
+
+            if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
+                $this->getRepository()->canUnRelateCatalog($category, $catalog);
+            } else {
+                $products = $catalog->get('products');
+                if (!empty($products) && count($products) > 0) {
+                    foreach ($products as $product) {
+                        $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Product', $product->get('id'), 'categories', $category->get('id'));
+                    }
+                }
             }
 
             foreach ($category->getChildren() as $child) {
