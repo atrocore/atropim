@@ -92,7 +92,6 @@ class Catalog extends Base
     {
         parent::init();
 
-        $this->addDependency('serviceFactory');
         $this->addDependency('queueManager');
         $this->addDependency('language');
     }

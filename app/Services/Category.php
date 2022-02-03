@@ -123,16 +123,11 @@ class Category extends AbstractService
                 throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeUnLinked', 'exceptions', 'Category'));
             }
 
-            $catalog = $this->getEntityManager()->getRepository('Catalog')->get($foreignId);
-
             if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
-                $this->getRepository()->canUnRelateCatalog($category, $catalog);
+                $this->getRepository()->canUnRelateCatalog($category, $foreignId);
             } else {
-                $products = $catalog->get('products');
-                if (!empty($products) && count($products) > 0) {
-                    foreach ($products as $product) {
-                        $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Product', $product->get('id'), 'categories', $category->get('id'));
-                    }
+                foreach ($this->getEntityManager()->getRepository('Catalog')->getProductsIds($foreignId) as $productId) {
+                    $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Product', $productId, 'categories', $category->get('id'));
                 }
             }
 

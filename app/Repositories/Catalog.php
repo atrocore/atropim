@@ -73,6 +73,28 @@ class Catalog extends AbstractRepository
             ->count();
     }
 
+    public function hasProducts(string $catalogId): bool
+    {
+        $catalogId = $this->getPDO()->quote($catalogId);
+
+        $records = $this
+            ->getPDO()
+            ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0 LIMIT 0,1")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        return !empty($records);
+    }
+
+    public function getProductsIds(string $catalogId): array
+    {
+        $catalogId = $this->getPDO()->quote($catalogId);
+
+        return $this
+            ->getPDO()
+            ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     /**
      * @inheritDoc
      */

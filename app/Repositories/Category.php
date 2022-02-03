@@ -80,26 +80,33 @@ class Category extends AbstractRepository
             ->fetchAll(\PDO::FETCH_COLUMN);
     }
 
-    public function canUnRelateCatalog(Entity $category, Entity $catalog): void
+    public function canUnRelateCatalog(Entity $category, string $catalogId): void
     {
-        /** @var array $productsIds */
-        $productsIds = array_column($catalog->get('products')->toArray(), 'id');
+        if (!$this->getEntityManager()->getRepository('Catalog')->hasProducts($catalogId)) {
+            return;
+        }
 
-        if (!empty($productsIds)) {
-            $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
-            $categoriesIds[] = $category->get('id');
+        $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
+        $categoriesIds[] = $category->get('id');
 
-            $categoriesIds = implode("','", $categoriesIds);
-            $productsIds = implode("','", $productsIds);
 
-            $total = $this
-                ->getEntityManager()
-                ->nativeQuery("SELECT COUNT('id') as total FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0")
-                ->fetch(\PDO::FETCH_COLUMN);
+        $categoriesIds = implode("','", $categoriesIds);
+        $catalogId = $this->getPDO()->quote($catalogId);
 
-            if (!empty($total)) {
-                throw new BadRequest($this->exception('categoryCannotBeUnRelatedFromCatalog'));
-            }
+        $records = $this
+            ->getPDO()
+            ->query(
+                "SELECT id 
+                 FROM product_category 
+                 WHERE product_id IN (SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0) 
+                   AND category_id IN ('$categoriesIds') 
+                   AND deleted=0 
+                 LIMIT 0,1"
+            )
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        if (!empty($records)) {
+            throw new BadRequest($this->exception('categoryCannotBeUnRelatedFromCatalog'));
         }
     }
 
