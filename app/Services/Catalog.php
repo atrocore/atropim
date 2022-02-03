@@ -37,6 +37,13 @@ use Espo\ORM\Entity;
 
 class Catalog extends Base
 {
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $entity->set('productsCount', $this->getRepository()->getProductsCount($entity));
+    }
+
     protected function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
         if ($link === 'categories') {
@@ -62,22 +69,6 @@ class Catalog extends Base
                 $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $id);
             }
         }
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        // get products count
-        $productsCount = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->select(['id'])
-            ->where(['catalogId' => $entity->get('id')])
-            ->count();
-
-        // set products count to entity
-        $entity->set('productsCount', (int)$productsCount);
     }
 
     protected function duplicateProducts(Entity $entity, Entity $duplicatingEntity)

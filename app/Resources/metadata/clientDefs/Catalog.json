@@ -16,6 +16,7 @@
   "relationshipPanels": {
     "categories": {
       "view": "pim:views/catalog/record/panels/categories",
+      "rowActionsView": "pim:views/catalog/record/row-actions/categories",
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": ["notEntity", "onlyRootCategory"]
     }

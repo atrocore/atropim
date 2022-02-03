@@ -64,6 +64,16 @@ class Catalog extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
+    public function getProductsCount(Entity $catalog): int
+    {
+        return $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->select(['id'])
+            ->where(['catalogId' => $catalog->get('id')])
+            ->count();
+    }
+
     /**
      * @inheritDoc
      */
