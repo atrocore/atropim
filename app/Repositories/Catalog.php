@@ -99,14 +99,7 @@ class Catalog extends AbstractRepository
         }
 
         if ($relationName == 'categories') {
-            if (!is_string($foreign)) {
-                $foreign = $foreign->get('id');
-            }
-            $foreign = $this->getEntityManager()->getEntity('Category', $foreign);
 
-            if (!empty($foreign->get('categoryParent'))) {
-                throw new BadRequest($this->exception('Only root category can be linked with catalog'));
-            }
         }
 
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);

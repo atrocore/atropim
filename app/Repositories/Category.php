@@ -348,12 +348,6 @@ class Category extends AbstractRepository
      */
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
-        if ($relationName == 'catalogs' && empty($options['skipCategoryParentValidation'])) {
-            if (!empty($entity->get('categoryParent'))) {
-                throw new BadRequest($this->exception('Only root category can be linked with catalog'));
-            }
-        }
-
         if ($relationName == 'products') {
             $this->getProductRepository()->isCategoryFromCatalogTrees($foreign, $entity);
             $this->getProductRepository()->isProductCanLinkToNonLeafCategory($entity);

@@ -31,17 +31,39 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-/**
- * Catalog service
- */
 class Catalog extends Base
 {
-    /**
-     * @inheritdoc
-     */
+    protected function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    {
+        if ($link === 'categories') {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreignId);
+            if (!empty($category->get('categoryParent'))) {
+                throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeLinked', 'exceptions', 'Category'));
+            }
+            foreach ($category->getChildren() as $child) {
+                $this->getPseudoTransactionManager()->pushLinkEntityJob('Category', $child->get('id'), 'catalogs', $id);
+            }
+        }
+    }
+
+    protected function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    {
+        if ($link === 'categories') {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreignId);
+            if (!empty($category->get('categoryParent'))) {
+                throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeUnLinked', 'exceptions', 'Category'));
+            }
+
+            foreach ($category->getChildren() as $child) {
+                $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $id);
+            }
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -58,10 +80,6 @@ class Catalog extends Base
         $entity->set('productsCount', (int)$productsCount);
     }
 
-    /**
-     * @param Entity $entity
-     * @param Entity $duplicatingEntity
-     */
     protected function duplicateProducts(Entity $entity, Entity $duplicatingEntity)
     {
         if (!empty($products = $duplicatingEntity->get('products'))) {
@@ -93,9 +111,6 @@ class Catalog extends Base
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
         parent::init();

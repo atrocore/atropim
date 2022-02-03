@@ -47,8 +47,7 @@
       "selectBoolFilterList": [
         "notEntity"
       ],
-      "view": "pim:views/category/record/panels/channels",
-      "rowActionsView": "pim:views/category/record/row-actions/channels"
+      "view": "pim:views/category/record/panels/channels"
     },
     "products": {
       "create": false,
