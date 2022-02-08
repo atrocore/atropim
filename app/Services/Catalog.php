@@ -43,20 +43,6 @@ class Catalog extends Base
         $entity->set('productsCount', $this->getRepository()->getProductsCount($entity));
     }
 
-    public function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
-    {
-        if ($link === 'categories') {
-            $this->getServiceFactory()->create('Category')->onLinkEntityViaTransaction($foreignId, 'catalogs', $id);
-        }
-    }
-
-    public function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
-    {
-        if ($link === 'categories') {
-            $this->getServiceFactory()->create('Category')->onUnLinkEntityViaTransaction($foreignId, 'catalogs', $id);
-        }
-    }
-
     protected function duplicateProducts(Entity $entity, Entity $duplicatingEntity)
     {
         if (!empty($products = $duplicatingEntity->get('products'))) {

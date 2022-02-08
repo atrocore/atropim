@@ -29,14 +29,8 @@
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 
-/**
- * Service of Category
- */
 class Category extends AbstractService
 {
     protected $mandatorySelectAttributeList = ['categoryRoute'];
@@ -100,40 +94,5 @@ class Category extends AbstractService
         $categoriesIds[] = $category->id;
 
         return $categoriesIds;
-    }
-
-    public function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
-    {
-        if ($link === 'catalogs') {
-            $category = $this->getRepository()->get($id);
-            if (!empty($category->get('categoryParent'))) {
-                throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeLinked', 'exceptions', 'Category'));
-            }
-            foreach ($category->getChildren() as $child) {
-                $this->getPseudoTransactionManager()->pushLinkEntityJob('Category', $child->get('id'), 'catalogs', $foreignId);
-            }
-        }
-    }
-
-    public function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
-    {
-        if ($link === 'catalogs') {
-            $category = $this->getRepository()->get($id);
-            if (!empty($category->get('categoryParent'))) {
-                throw new BadRequest($this->getInjection('language')->translate('onlyRootCategoryCanBeUnLinked', 'exceptions', 'Category'));
-            }
-
-            if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
-                $this->getRepository()->canUnRelateCatalog($category, $foreignId);
-            } else {
-                foreach ($this->getEntityManager()->getRepository('Catalog')->getProductsIds($foreignId) as $productId) {
-                    $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Product', $productId, 'categories', $category->get('id'));
-                }
-            }
-
-            foreach ($category->getChildren() as $child) {
-                $this->getPseudoTransactionManager()->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $foreignId);
-            }
-        }
     }
 }

@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 /**
@@ -93,6 +94,34 @@ class Catalog extends AbstractRepository
             ->getPDO()
             ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0")
             ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    public function relateCategories(Entity $entity, $foreign, $data, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest('Mass relate is blocked.');
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->relateCatalogs($category, $entity, null, $options);
+    }
+
+    public function unrelateCategories(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest('Mass unrelate is blocked.');
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->unrelateCatalogs($category, $entity, $options);
     }
 
     /**

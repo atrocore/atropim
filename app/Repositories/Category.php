@@ -124,6 +124,40 @@ class Category extends AbstractRepository
         return parent::relate($entity, $relationName, $foreign, $data, $options);
     }
 
+    public function relateCatalogs(Entity $entity, $foreign, $data, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest('Mass relate is blocked.');
+        }
+
+        $catalogId = $foreign;
+        if ($foreign instanceof Entity) {
+            $catalogId = $foreign->get('id');
+        }
+
+        if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
+            return $this->getMapper()->addRelation($entity, 'catalogs', $catalogId);
+        }
+
+        if (!empty($entity->get('categoryParent'))) {
+            throw new BadRequest($this->exception('onlyRootCategoryCanBeLinked'));
+        }
+
+        $this->getPDO()->beginTransaction();
+        try {
+            $result = $this->getMapper()->addRelation($entity, 'catalogs', $catalogId);
+            foreach ($entity->getChildren() as $child) {
+                $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
+            }
+            $this->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
     public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
         if ($relationName === 'channels') {
@@ -136,6 +170,51 @@ class Category extends AbstractRepository
         }
 
         return parent::unrelate($entity, $relationName, $foreign, $options);
+    }
+
+    public function unrelateCatalogs(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest('Mass unrelate is blocked.');
+        }
+
+        $catalogId = $foreign;
+        if ($foreign instanceof Entity) {
+            $catalogId = $foreign->get('id');
+        }
+
+        if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
+            return $this->getMapper()->removeRelation($entity, 'catalogs', $catalogId);
+        }
+
+        if (!empty($entity->get('categoryParent'))) {
+            throw new BadRequest($this->exception('onlyRootCategoryCanBeUnLinked'));
+        }
+
+        if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
+            $this->canUnRelateCatalog($entity, $catalogId);
+        }
+
+        $this->getPDO()->beginTransaction();
+
+        try {
+            $result = $this->getMapper()->removeRelation($entity, 'catalogs', $catalogId);
+
+            foreach ($entity->getChildren() as $child) {
+                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
+            }
+
+            foreach ($this->getEntityManager()->getRepository('Catalog')->getProductsIds($catalogId) as $productId) {
+                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Product', $productId, 'categories', $entity->get('id'));
+            }
+
+            $this->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
     }
 
     protected function getForeignChannel($foreign): ?Entity
