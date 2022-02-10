@@ -200,12 +200,12 @@ class Category extends AbstractRepository
         try {
             $result = $this->getMapper()->removeRelation($entity, 'catalogs', $catalogId);
 
+            $productsIds = $this->getEntityManager()->getRepository('Catalog')->getProductsIds($catalogId);
             foreach ($entity->getChildren() as $child) {
+                foreach ($productsIds as $productId) {
+                    $options['pseudoTransactionManager']->pushUnLinkEntityJob('Product', $productId, 'categories', $child->get('id'));
+                }
                 $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
-            }
-
-            foreach ($this->getEntityManager()->getRepository('Catalog')->getProductsIds($catalogId) as $productId) {
-                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Product', $productId, 'categories', $entity->get('id'));
             }
 
             $this->getPDO()->commit();
