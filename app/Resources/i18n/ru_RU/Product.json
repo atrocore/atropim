@@ -135,7 +135,6 @@
     "youCantChangeFieldOfTypeInProduct": "Вы не можете изменить поле тип продукта",
     "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Эта категория недоступна для каталога выбранного продукта и, следовательно, не может быть связана.",
-    "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Канал, указанный в дереве категорий, нельзя отключить от продукта.",
     "mpnShouldHaveUniqueValue": "MPN '%s' должно иметь уникальное значение.",
     "eanShouldHaveUniqueValue": "GTIN '%s' должно иметь уникальное значение.",
     "productCatalogChangeException": "Вы не можете удалить/изменить каталог продукта, продукт использует категории которые разрешены для оригинального(предыдущего) каталога. Пожалуйста, сначала удалите связь с этими категориями."

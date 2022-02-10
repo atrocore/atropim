@@ -151,7 +151,6 @@
     "productWithSuchSkuAlreadyExist": "Produkt mit einer solchen SKU '%s' existiert bereits",
     "youCantChangeProductFamilyInProduct": "Sie können die Produktfamilie in Product nicht ändern.",
     "youCantChangeFieldOfTypeInProduct": "Sie können das Feld Typ in Produkt nicht ändern",
-    "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "mpnShouldHaveUniqueValue": "MPN '%s' sollte einen eindeutigen Wert haben.",

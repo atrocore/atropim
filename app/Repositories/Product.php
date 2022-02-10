@@ -461,7 +461,6 @@ class Product extends AbstractRepository
 
     public function unrelateChannel(Entity $product, Entity $channel): bool
     {
-        $product->skipIsFromCategoryTreeValidation = true;
         return $this->unrelateForce($product, 'channels', $channel);
     }
 
@@ -481,7 +480,7 @@ class Product extends AbstractRepository
         $data = $this
             ->getEntityManager()
             ->nativeQuery(
-                "SELECT channel_id as channelId, is_active AS isActive, from_category_tree as isFromCategoryTree FROM product_channel WHERE product_id='{$productId}' AND deleted=0"
+                "SELECT channel_id as channelId, is_active AS isActive FROM product_channel WHERE product_id='{$productId}' AND deleted=0"
             )
             ->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -493,13 +492,7 @@ class Product extends AbstractRepository
         return $result;
     }
 
-    /**
-     * @param string|Entity $productId
-     * @param string|Entity $channelId
-     * @param bool|null     $isActive
-     * @param bool|null     $fromCategoryTree
-     */
-    public function updateChannelRelationData($productId, $channelId, bool $isActive = null, bool $fromCategoryTree = null)
+    public function updateChannelRelationData($productId, $channelId, bool $isActive = null): void
     {
         if ($productId instanceof Entity) {
             $productId = $productId->get('id');
@@ -512,9 +505,6 @@ class Product extends AbstractRepository
         $data = [];
         if (!is_null($isActive)) {
             $data[] = 'is_active=' . (int)$isActive;
-        }
-        if (!is_null($fromCategoryTree)) {
-            $data[] = 'from_category_tree=' . (int)$fromCategoryTree;
         }
 
         if (!empty($data)) {
@@ -905,30 +895,10 @@ class Product extends AbstractRepository
         }
 
         if ($relationName == 'channels') {
-            // set from_category_tree param
-            if (!empty($entity->fromCategoryTree)) {
-                $this->updateChannelRelationData($entity, $foreign, null, true);
-            }
             $this->relatePfas($entity, $foreign);
         }
 
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
-    }
-
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName == 'channels' && empty($entity->skipIsFromCategoryTreeValidation)) {
-            $productId = (string)$entity->get('id');
-            $channelId = is_string($foreign) ? $foreign : (string)$foreign->get('id');
-
-            $channelRelationData = $this->getChannelRelationData($productId);
-
-            if (!empty($channelRelationData[$channelId]['isFromCategoryTree'])) {
-                throw new BadRequest($this->translate("channelProvidedByCategoryTreeCantBeUnlinkedFromProduct", 'exceptions', 'Product'));
-            }
-        }
-
-        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
     }
 
     /**
