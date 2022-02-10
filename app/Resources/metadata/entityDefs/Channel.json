@@ -128,9 +128,11 @@
       "exportDisabled": true,
       "importDisabled": true
     },
-    "category": {
-      "type": "link",
-      "view": "pim:views/category/fields/category-root"
+    "categories": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -172,11 +174,11 @@
       "foreign": "channel",
       "entity": "ProductFamilyAttribute"
     },
-    "category": {
-      "type": "belongsTo",
+    "categories": {
+      "type": "hasMany",
+      "relationName": "categoryChannel",
       "foreign": "channels",
-      "entity": "Category",
-      "audited": false
+      "entity": "Category"
     }
   },
   "collection": {

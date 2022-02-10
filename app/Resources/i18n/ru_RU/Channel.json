@@ -3,13 +3,13 @@
     "description": "Описание",
     "isActive": "Активный",
     "isActiveForChannel": "Активен для канала",
-    "category": "Категория",
+    "categories": "Категории",
     "locales": "Языки",
     "code": "Код",
     "products": "Продукты"
   },
   "links": {
-    "category": "Категория",
+    "categories": "Категории",
     "products": "Продукты"
   },
   "labels": {

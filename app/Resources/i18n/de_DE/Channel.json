@@ -9,12 +9,12 @@
     "productAttributeValues": "Produktattrubitwerte",
     "productCategories": "Produktkategorien",
     "productFamilyAttributes": "Produktfamilieattribute",
-    "category": "Kategorie",
+    "categories": "Kategorien",
     "code": "Code",
     "products": "Produkte"
   },
   "links": {
-    "category": "Kategorie",
+    "categories": "Kategorien",
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
     "channelProducts": "Kanalprodukte",
     "assetRelations": "Asset Relationen",

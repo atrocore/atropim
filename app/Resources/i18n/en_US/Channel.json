@@ -3,13 +3,13 @@
     "description": "Description",
     "isActive": "Active",
     "isActiveForChannel": "Active for Channel",
-    "category": "Category",
+    "categories": "Categories",
     "locales": "Languages",
     "code": "Code",
     "products": "Products"
   },
   "links": {
-    "category": "Category",
+    "categories": "Categories",
     "products": "Products"
   },
   "labels": {
