@@ -459,18 +459,6 @@ class Product extends AbstractRepository
         return true;
     }
 
-    public function relateChannel(Entity $product, Entity $channel, bool $fromCategoryTree = false): bool
-    {
-        $product->fromCategoryTree = $fromCategoryTree;
-        try {
-            $this->relate($product, 'channels', $channel);
-        } catch (ChannelAlreadyRelatedToProduct $e) {
-            $this->updateChannelRelationData($product, $channel, null, true);
-        }
-
-        return true;
-    }
-
     public function unrelateChannel(Entity $product, Entity $channel): bool
     {
         $product->skipIsFromCategoryTreeValidation = true;
@@ -609,58 +597,6 @@ class Product extends AbstractRepository
                 $this->getEntityManager()->nativeQuery($sql);
             }
         }
-    }
-
-    /**
-     * Is category already related
-     *
-     * @param Entity $product
-     * @param Entity $category
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    public function isCategoryAlreadyRelated(Entity $product, Entity $category): bool
-    {
-        /** @var array $productCategoriesIds */
-        $productCategoriesIds = array_column($product->get('categories')->toArray(), 'id');
-
-        if (in_array($category->get('id'), $productCategoriesIds)) {
-            throw new BadRequest($this->translate("isCategoryAlreadyRelated", 'exceptions', 'Product'));
-        }
-
-        return true;
-    }
-
-    /**
-     * Is channel already related
-     *
-     * @param Entity|string $product
-     * @param Entity|string $channel
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    public function isChannelAlreadyRelated($product, $channel): bool
-    {
-        if (!$product instanceof Entity) {
-            /** @var Entity $product */
-            $product = $this->get($product);
-        }
-
-        if (!$channel instanceof Entity) {
-            /** @var Entity $channel */
-            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
-        }
-
-        /** @var array $productChannelsIds */
-        $productChannelsIds = array_column($product->get('channels')->toArray(), 'id');
-
-        if (in_array($channel->get('id'), $productChannelsIds)) {
-            throw new ChannelAlreadyRelatedToProduct($this->translate('isChannelAlreadyRelated', 'exceptions', 'Product'));
-        }
-
-        return true;
     }
 
     /**
@@ -954,15 +890,8 @@ class Product extends AbstractRepository
                 $foreign = $this->getEntityManager()->getEntity('Category', $foreign);
             }
 
-            $this->isCategoryAlreadyRelated($entity, $foreign);
             $this->isCategoryFromCatalogTrees($entity, $foreign);
             $this->isProductCanLinkToNonLeafCategory($foreign);
-        }
-
-        if ($relationName == 'channels') {
-            if (!$entity->isSkippedValidation('isChannelAlreadyRelated')) {
-                $this->isChannelAlreadyRelated($entity, $foreign);
-            }
         }
 
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);

@@ -81,22 +81,4 @@ class ChannelEntity extends AbstractEntityListener
             throw new BadRequest($this->translate('channelHasProducts', 'exceptions', 'Channel'));
         }
     }
-
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeRelate(Event $event)
-    {
-        /** @var Entity $entity */
-        $entity = $event->getArgument('entity');
-
-        /** @var Entity|string $foreign */
-        $foreign = $event->getArgument('foreign');
-
-        if ($event->getArgument('relationName') == 'products') {
-            $this->getEntityManager()->getRepository('Product')->isChannelAlreadyRelated($foreign, $entity);
-        }
-    }
 }

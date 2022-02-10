@@ -126,7 +126,6 @@
     "productCatalogChangeConfirm": "Вы уверены, что хотите установить/удалить/изменить каталог для продукта? Все категории разрешенные для оригинального(предыдущего) каталога потеряют связь с продуктом."
   },
   "exceptions": {
-    "isChannelAlreadyRelated": "Такой канал уже связан с продуктом.",
     "wrongInputData": "Проверка не удалась. Неправильные вводные данные.",
     "noSuchAssociation": "Проверка не удалась. Такой ассоциации не существует.",
     "itselfAssociation": "Продукт не может быть ассоциирован с самим собой.",
@@ -134,7 +133,6 @@
     "productWithSuchSkuAlreadyExist": "Продукт с таким артикулом '%s' уже существует",
     "youCantChangeProductFamilyInProduct": "Вы не можете изменить продуктовую семью в продукте",
     "youCantChangeFieldOfTypeInProduct": "Вы не можете изменить поле тип продукта",
-    "isCategoryAlreadyRelated": "Категория уже связана с продуктом.",
     "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Эта категория недоступна для каталога выбранного продукта и, следовательно, не может быть связана.",
     "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Канал, указанный в дереве категорий, нельзя отключить от продукта.",

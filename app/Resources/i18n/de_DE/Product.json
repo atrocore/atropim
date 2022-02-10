@@ -144,7 +144,6 @@
     "productCatalogChangeConfirm": "Möchten Sie die Verknüpfung zwischen dem Produkt und dem bisherigen Katalog wirklich aufheben/ändern? Alle für den ursprünglichen Katalog zulässigen Kategorien werden vom Produkt entkoppelt."
   },
   "exceptions": {
-    "isChannelAlreadyRelated": "Dieser Kanal ist mit dem Produkt bereits verknüpft.",
     "wrongInputData": "Überprüfung ist fehlgeschlagen. Falsche Eingabedaten.",
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
@@ -154,7 +153,6 @@
     "youCantChangeFieldOfTypeInProduct": "Sie können das Feld Typ in Produkt nicht ändern",
     "channelProvidedByCategoryTreeCantBeUnlinkedFromProduct": "Der vom Kategoriebaum bereitgestellte Kanal kann nicht vom Produkt getrennt werden",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
-    "isCategoryAlreadyRelated": "Die Kategorie ist bereits mit dem Produkt verknüpft.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "mpnShouldHaveUniqueValue": "MPN '%s' sollte einen eindeutigen Wert haben.",
     "eanShouldHaveUniqueValue": "GTIN '%s' sollte einen eindeutigen Wert haben.",
