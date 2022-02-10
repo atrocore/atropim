@@ -113,7 +113,7 @@ class Category extends AbstractRepository
     public function relateCatalogs(Entity $entity, $foreign, $data, $options)
     {
         if (is_bool($foreign)) {
-            throw new BadRequest('Mass relate is blocked.');
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
         }
 
         $catalogId = $foreign;
@@ -147,7 +147,7 @@ class Category extends AbstractRepository
     public function relateChannels(Entity $entity, $foreign, $data, $options)
     {
         if (is_bool($foreign)) {
-            throw new BadRequest('Mass relate is blocked.');
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
         }
 
         $channelId = $foreign;
@@ -177,7 +177,7 @@ class Category extends AbstractRepository
     public function unrelateCatalogs(Entity $entity, $foreign, $options)
     {
         if (is_bool($foreign)) {
-            throw new BadRequest('Mass unrelate is blocked.');
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
         }
 
         $catalogId = $foreign;
@@ -222,7 +222,7 @@ class Category extends AbstractRepository
     public function unrelateChannels(Entity $entity, $foreign, $options)
     {
         if (is_bool($foreign)) {
-            throw new BadRequest('Mass unrelate is blocked.');
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
         }
 
         $channelId = $foreign;

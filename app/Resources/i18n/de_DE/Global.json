@@ -116,6 +116,8 @@
     "ProductsByTaskStatus": "Products by Task Status"
   },
   "exceptions": {
+    "massRelateBlocked": "Massenverknüpfungen dieser Art ist gesperrt.",
+    "massUnRelateBlocked": "Massenaufhebung der Verknüpfungen dieser Art ist gesperrt.",
     "onlyForceDeletingAvailable": "Nur erzwingtes Löschen verfügbar",
     "codeIsInvalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
     "notValid": "Daten sind nicht gültig"

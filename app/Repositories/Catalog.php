@@ -99,7 +99,7 @@ class Catalog extends AbstractRepository
     public function relateCategories(Entity $entity, $foreign, $data, $options)
     {
         if (is_bool($foreign)) {
-            throw new BadRequest('Mass relate is blocked.');
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
         }
 
         $category = $foreign;
@@ -113,7 +113,7 @@ class Catalog extends AbstractRepository
     public function unrelateCategories(Entity $entity, $foreign, $options)
     {
         if (is_bool($foreign)) {
-            throw new BadRequest('Mass unrelate is blocked.');
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
         }
 
         $category = $foreign;
