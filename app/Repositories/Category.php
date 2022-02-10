@@ -196,6 +196,12 @@ class Category extends AbstractRepository
             $channelId = $foreign->get('id');
         }
 
+        if (!empty($products = $category->get('products')) && count($products) > 0) {
+            foreach ($products as $product) {
+                $this->getProductRepository()->relate($product, 'channels', $channelId);
+            }
+        }
+
         if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
             return $this->getMapper()->addRelation($category, 'channels', $channelId);
         }
@@ -224,6 +230,12 @@ class Category extends AbstractRepository
         $channelId = $foreign;
         if ($foreign instanceof Entity) {
             $channelId = $foreign->get('id');
+        }
+
+        if (!empty($products = $category->get('products')) && count($products) > 0) {
+            foreach ($products as $product) {
+                $this->getProductRepository()->unrelate($product, 'channels', $channelId);
+            }
         }
 
         if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {

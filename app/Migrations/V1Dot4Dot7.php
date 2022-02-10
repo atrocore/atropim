@@ -38,6 +38,18 @@ class V1Dot4Dot7 extends Base
 {
     public function up(): void
     {
+        $this->exec("DELETE FROM `catalog_category` WHERE deleted=0");
+        foreach ($this->getPDO()->query("SELECT * FROM `catalog_category` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+            $categoriesIds = $this
+                ->getPDO()
+                ->query("SELECT id FROM `category` WHERE deleted=0 AND category_route LIKE '%|{$record['category_id']}|%'")
+                ->fetchAll(\PDO::FETCH_COLUMN);
+
+            foreach ($categoriesIds as $categoryId) {
+                $this->exec("INSERT INTO `catalog_category` (`category_id`,`catalog_id`) VALUES ('{$categoryId}', '{$record['catalog_id']}')");
+            }
+        }
+
         $this->exec(
             "CREATE TABLE `category_channel` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `category_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `channel_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_6521CE3912469DE2` (category_id), INDEX `IDX_6521CE3972F5A1AA` (channel_id), UNIQUE INDEX `UNIQ_6521CE3912469DE272F5A1AA` (category_id, channel_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
         );
