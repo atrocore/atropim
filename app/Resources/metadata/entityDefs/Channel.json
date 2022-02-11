@@ -4,7 +4,8 @@
       "type": "varchar",
       "required": true,
       "trim": true,
-      "isMultilang": true
+      "isMultilang": true,
+      "view": "pim:views/channel/fields/name"
     },
     "description": {
       "type": "text",
@@ -120,6 +121,19 @@
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
       "noLoad": true
+    },
+    "isInheritedFromParentCategory": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {

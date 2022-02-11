@@ -70,6 +70,23 @@ class Category extends AbstractService
         $entity->set('channelsNames', array_column($channels, 'name', 'id'));
     }
 
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        /**
+         * Mark channels as inherited from parent category
+         */
+        if ($link === 'channels' && $result['total'] > 0 && !empty($parent = $this->getRepository()->get($id)->get('categoryParent'))) {
+            $parentChannelsIds = array_column($parent->get('channels')->toArray(), 'id');
+            foreach ($result['collection'] as $channel) {
+                $channel->set('isInheritedFromParentCategory', in_array($channel->get('id'), $parentChannelsIds));
+            }
+        }
+
+        return $result;
+    }
+
     public function isChildCategory(string $categoryId, string $selectedCategoryId): bool
     {
         if (empty($category = $this->getEntityManager()->getEntity('Category', $selectedCategoryId))) {
