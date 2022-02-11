@@ -69,6 +69,21 @@ class Category extends AbstractRepository
         return $result;
     }
 
+    public function getParentChannelsIds(string $categoryId): array
+    {
+        $categoryId = $this->getPDO()->quote($categoryId);
+
+        $query = "SELECT channel_id 
+                  FROM `category_channel` 
+                  WHERE deleted=0 
+                    AND category_id IN (SELECT category_parent_id FROM `category` WHERE deleted=0 AND id=$categoryId)";
+
+        return $this
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     public function getNotRelatedWithCatalogsTreeIds(): array
     {
         return $this

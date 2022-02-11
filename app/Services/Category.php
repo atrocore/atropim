@@ -77,10 +77,9 @@ class Category extends AbstractService
         /**
          * Mark channels as inherited from parent category
          */
-        if ($link === 'channels' && $result['total'] > 0 && !empty($parent = $this->getRepository()->get($id)->get('categoryParent'))) {
-            $parentChannelsIds = array_column($parent->get('channels')->toArray(), 'id');
+        if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getRepository()->getParentChannelsIds($id))) {
             foreach ($result['collection'] as $channel) {
-                $channel->set('isInheritedFromParentCategory', in_array($channel->get('id'), $parentChannelsIds));
+                $channel->set('isInheritedFromParentCategory', in_array($channel->get('id'), $channelsIds));
             }
         }
 

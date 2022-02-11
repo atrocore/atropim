@@ -203,6 +203,21 @@ class Product extends AbstractRepository
             ->fetchAll(\PDO::FETCH_COLUMN);
     }
 
+    public function getCategoriesChannelsIds(string $productId): array
+    {
+        $productId = $this->getPDO()->quote($productId);
+
+        $query = "SELECT channel_id 
+                  FROM `category_channel` 
+                  WHERE deleted=0 
+                    AND category_id IN (SELECT category_id FROM `product_category` WHERE deleted=0 AND product_id=$productId)";
+
+        return $this
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     /**
      * @return array
      */
