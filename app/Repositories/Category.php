@@ -368,7 +368,7 @@ class Category extends AbstractRepository
             }
         }
 
-        if ($entity->isAttributeChanged('categoryParentId') && !empty($parent = $entity->get('categoryParent'))) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && !empty($parent = $entity->get('categoryParent'))) {
             $categoryCatalogs = array_column($entity->get('catalogs')->toArray(), 'id');
             sort($categoryCatalogs);
 
