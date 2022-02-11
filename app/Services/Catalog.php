@@ -34,34 +34,15 @@ namespace Pim\Services;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-/**
- * Catalog service
- */
 class Catalog extends Base
 {
-    /**
-     * @inheritdoc
-     */
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        // get products count
-        $productsCount = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->select(['id'])
-            ->where(['catalogId' => $entity->get('id')])
-            ->count();
-
-        // set products count to entity
-        $entity->set('productsCount', (int)$productsCount);
+        $entity->set('productsCount', $this->getRepository()->getProductsCount($entity));
     }
 
-    /**
-     * @param Entity $entity
-     * @param Entity $duplicatingEntity
-     */
     protected function duplicateProducts(Entity $entity, Entity $duplicatingEntity)
     {
         if (!empty($products = $duplicatingEntity->get('products'))) {
@@ -93,14 +74,10 @@ class Catalog extends Base
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
         parent::init();
 
-        $this->addDependency('serviceFactory');
         $this->addDependency('queueManager');
         $this->addDependency('language');
     }

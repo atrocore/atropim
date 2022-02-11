@@ -203,6 +203,21 @@ class Product extends AbstractRepository
             ->fetchAll(\PDO::FETCH_COLUMN);
     }
 
+    public function getCategoriesChannelsIds(string $productId): array
+    {
+        $productId = $this->getPDO()->quote($productId);
+
+        $query = "SELECT channel_id 
+                  FROM `category_channel` 
+                  WHERE deleted=0 
+                    AND category_id IN (SELECT category_id FROM `product_category` WHERE deleted=0 AND product_id=$productId)";
+
+        return $this
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     /**
      * @return array
      */
@@ -399,8 +414,11 @@ class Product extends AbstractRepository
             return true;
         }
 
+        if (is_bool($category)) {
+            throw new BadRequest($this->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
         if (is_string($category)) {
-            /** @var \Pim\Entities\Category $category */
             $category = $this->getEntityManager()->getEntity('Category', $category);
         }
 
@@ -411,89 +429,12 @@ class Product extends AbstractRepository
         return true;
     }
 
-    /**
-     * Link category(tree) channels to product
-     *
-     * @param Entity|string $product
-     * @param Entity|string $category
-     * @param bool
-     *
-     * @return bool
-     * @throws Error
-     */
-    public function linkCategoryChannels($product, $category, bool $unRelate = false): bool
-    {
-        if (is_string($product)) {
-            $product = $this->getEntityManager()->getEntity('Product', $product);
-        }
-        if (is_string($category)) {
-            $category = $this->getEntityManager()->getEntity('Category', $category);
-        }
-
-        // get root
-        $root = $category->getRoot();
-
-        if ($unRelate) {
-            $productCategories = $product->get('categories');
-            if ($productCategories->count() > 0) {
-                foreach ($productCategories as $productCategory) {
-                    if ($productCategory->getRoot() == $root) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        // get channels
-        $channels = $root->get('channels');
-        if ($channels->count() > 0) {
-            foreach ($channels as $channel) {
-                if (!$unRelate) {
-                    $this->relateChannel($product, $channel, true);
-                } else {
-                    $this->unrelateChannel($product, $channel);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function relateChannel(Entity $product, Entity $channel, bool $fromCategoryTree = false): bool
-    {
-        $product->fromCategoryTree = $fromCategoryTree;
-        try {
-            $this->relate($product, 'channels', $channel);
-        } catch (ChannelAlreadyRelatedToProduct $e) {
-            $this->updateChannelRelationData($product, $channel, null, true);
-        }
-
-        return true;
-    }
-
-    public function unrelateChannel(Entity $product, Entity $channel): bool
-    {
-        $product->skipIsFromCategoryTreeValidation = true;
-        return $this->unrelateForce($product, 'channels', $channel);
-    }
-
-    public function unrelateCategoryTreeChannels(Entity $product): bool
-    {
-        $this->getPDO()->exec("DELETE FROM product_channel WHERE deleted=0 AND product_id='{$product->get('id')}' AND from_category_tree=1");
-        return true;
-    }
-
-    /**
-     * @param string $productId
-     *
-     * @return array
-     */
     public function getChannelRelationData(string $productId): array
     {
         $data = $this
             ->getEntityManager()
             ->nativeQuery(
-                "SELECT channel_id as channelId, is_active AS isActive, from_category_tree as isFromCategoryTree FROM product_channel WHERE product_id='{$productId}' AND deleted=0"
+                "SELECT channel_id as channelId, is_active AS isActive FROM product_channel WHERE product_id='{$productId}' AND deleted=0"
             )
             ->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -505,13 +446,7 @@ class Product extends AbstractRepository
         return $result;
     }
 
-    /**
-     * @param string|Entity $productId
-     * @param string|Entity $channelId
-     * @param bool|null     $isActive
-     * @param bool|null     $fromCategoryTree
-     */
-    public function updateChannelRelationData($productId, $channelId, bool $isActive = null, bool $fromCategoryTree = null)
+    public function updateChannelRelationData($productId, $channelId, bool $isActive = null): void
     {
         if ($productId instanceof Entity) {
             $productId = $productId->get('id');
@@ -524,9 +459,6 @@ class Product extends AbstractRepository
         $data = [];
         if (!is_null($isActive)) {
             $data[] = 'is_active=' . (int)$isActive;
-        }
-        if (!is_null($fromCategoryTree)) {
-            $data[] = 'from_category_tree=' . (int)$fromCategoryTree;
         }
 
         if (!empty($data)) {
@@ -612,58 +544,6 @@ class Product extends AbstractRepository
     }
 
     /**
-     * Is category already related
-     *
-     * @param Entity $product
-     * @param Entity $category
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    public function isCategoryAlreadyRelated(Entity $product, Entity $category): bool
-    {
-        /** @var array $productCategoriesIds */
-        $productCategoriesIds = array_column($product->get('categories')->toArray(), 'id');
-
-        if (in_array($category->get('id'), $productCategoriesIds)) {
-            throw new BadRequest($this->translate("isCategoryAlreadyRelated", 'exceptions', 'Product'));
-        }
-
-        return true;
-    }
-
-    /**
-     * Is channel already related
-     *
-     * @param Entity|string $product
-     * @param Entity|string $channel
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    public function isChannelAlreadyRelated($product, $channel): bool
-    {
-        if (!$product instanceof Entity) {
-            /** @var Entity $product */
-            $product = $this->get($product);
-        }
-
-        if (!$channel instanceof Entity) {
-            /** @var Entity $channel */
-            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
-        }
-
-        /** @var array $productChannelsIds */
-        $productChannelsIds = array_column($product->get('channels')->toArray(), 'id');
-
-        if (in_array($channel->get('id'), $productChannelsIds)) {
-            throw new ChannelAlreadyRelatedToProduct($this->translate('isChannelAlreadyRelated', 'exceptions', 'Product'));
-        }
-
-        return true;
-    }
-
-    /**
      * @param Entity|string $product
      * @param Entity|string $channel
      *
@@ -720,13 +600,6 @@ class Product extends AbstractRepository
         }
     }
 
-    /**
-     * @param Entity $product
-     * @param Entity $category
-     *
-     * @return bool
-     * @throws BadRequest
-     */
     public function isCategoryFromCatalogTrees(Entity $product, Entity $category): bool
     {
         if (!empty($catalog = $product->get('catalog'))) {
@@ -782,29 +655,6 @@ class Product extends AbstractRepository
                 }
             }
         }
-    }
-
-    public function save(Entity $entity, array $options = [])
-    {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        try {
-            $result = parent::save($entity, $options);
-
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
     }
 
     /**
@@ -943,89 +793,97 @@ class Product extends AbstractRepository
         parent::afterRemove($entity, $options);
     }
 
-    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    public function relateCategories(Entity $product, $category, $data, $options)
     {
-        if ($relationName == 'categories') {
-            if (is_bool($foreign)) {
-                throw new BadRequest('Action blocked. Please, specify Category that we should be related with Product.');
-            }
-
-            if (is_string($foreign)) {
-                $foreign = $this->getEntityManager()->getEntity('Category', $foreign);
-            }
-
-            $this->isCategoryAlreadyRelated($entity, $foreign);
-            $this->isCategoryFromCatalogTrees($entity, $foreign);
-            $this->isProductCanLinkToNonLeafCategory($foreign);
+        if (is_bool($category)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
         }
 
-        if ($relationName == 'channels') {
-            if (!$entity->isSkippedValidation('isChannelAlreadyRelated')) {
-                $this->isChannelAlreadyRelated($entity, $foreign);
+        if (is_string($category)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($category);
+        }
+
+        $this->isCategoryFromCatalogTrees($product, $category);
+        $this->isProductCanLinkToNonLeafCategory($category);
+
+        $result = $this->getMapper()->addRelation($product, 'categories', $category->get('id'));
+        $this->updateProductCategorySortOrder($product, $category);
+        if (!empty($channels = $category->get('channels')) && count($channels) > 0) {
+            foreach ($channels as $channel) {
+                $this->relate($product, 'channels', $channel);
             }
         }
 
-        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+        return $result;
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    public function unrelateCategories(Entity $product, $category, $options)
     {
-        if ($relationName == 'categories') {
-            $this->updateProductCategorySortOrder($entity, $foreign);
-            $this->linkCategoryChannels($entity, $foreign);
+        if (is_bool($category)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
         }
 
-        if ($relationName == 'channels') {
-            // set from_category_tree param
-            if (!empty($entity->fromCategoryTree)) {
-                $this->updateChannelRelationData($entity, $foreign, null, true);
+        if (is_string($category)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($category);
+        }
+
+        $result = $this->getMapper()->removeRelation($product, 'categories', $category->get('id'));
+        if (!empty($channels = $category->get('channels')) && count($channels) > 0) {
+            foreach ($channels as $channel) {
+                $this->unrelate($product, 'channels', $channel);
             }
-            $this->relatePfas($entity, $foreign);
         }
 
-        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+        return $result;
     }
 
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    public function relateChannels(Entity $product, $channel, $data, $options)
     {
-        if ($relationName == 'channels' && empty($entity->skipIsFromCategoryTreeValidation)) {
-            $productId = (string)$entity->get('id');
-            $channelId = is_string($foreign) ? $foreign : (string)$foreign->get('id');
-
-            $channelRelationData = $this->getChannelRelationData($productId);
-
-            if (!empty($channelRelationData[$channelId]['isFromCategoryTree'])) {
-                throw new BadRequest($this->translate("channelProvidedByCategoryTreeCantBeUnlinkedFromProduct", 'exceptions', 'Product'));
-            }
+        if (is_bool($channel)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
         }
 
-        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+        if (is_string($channel)) {
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
+        }
+
+        $result = $this->getMapper()->addRelation($product, 'channels', $channel->get('id'));
+        $this->relatePfas($product, $channel);
+
+        return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    public function unrelateChannels(Entity $product, $channel, $options)
     {
-        if ($relationName == 'categories') {
-            $this->linkCategoryChannels($entity, $foreign, true);
+        if (is_bool($channel)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
         }
 
-        if ($relationName == 'channels') {
-            $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
-            $this->unrelatePfas($entity, $foreign);
+        if (is_string($channel)) {
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
         }
 
-        if ($relationName == 'assets') {
-            $asset = is_string($foreign) ? $this->getEntityManager()->getEntity('Asset', $foreign) : $foreign;
-            if (!empty($asset)) {
-                $entity->removeMainImageByAttachmentId($asset->get('fileId'));
-                $jsonData = Json::encode($entity->getData());
-                $this->getEntityManager()->nativeQuery("UPDATE product SET `data`='$jsonData' WHERE id='{$entity->get('id')}'");
-            }
+        $this->getPDO()->exec("DELETE FROM product_channel WHERE product_id='{$product->get('id')}' AND channel_id='{$channel->get('id')}'");
+        $this->unrelatePfas($product, $channel);
+
+        return true;
+    }
+
+    public function unrelateAssets(Entity $product, $asset, $options)
+    {
+        if (is_bool($asset)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
         }
 
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
+        if (is_string($asset)) {
+            $asset = $this->getEntityManager()->getRepository('Asset')->get($asset);
+        }
+
+        $result = $this->getMapper()->removeRelation($product, 'assets', $asset->get('id'));
+        $product->removeMainImageByAttachmentId($asset->get('fileId'));
+        $this->getPDO()->exec("UPDATE product SET `data`='" . Json::encode($product->getData()) . "' WHERE id='{$product->get('id')}'");
+
+        return $result;
     }
 
     protected function onProductFamilyChange(Entity $product): void

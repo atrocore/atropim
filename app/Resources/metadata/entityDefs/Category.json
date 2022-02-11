@@ -234,9 +234,9 @@
     },
     "channels": {
       "type": "hasMany",
-      "foreign": "category",
-      "entity": "Channel",
-      "audited": false
+      "relationName": "categoryChannel",
+      "foreign": "categories",
+      "entity": "Channel"
     }
   },
   "collection": {

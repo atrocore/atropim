@@ -4,7 +4,8 @@
       "type": "varchar",
       "required": true,
       "trim": true,
-      "isMultilang": true
+      "isMultilang": true,
+      "view": "pim:views/channel/fields/name"
     },
     "description": {
       "type": "text",
@@ -115,7 +116,13 @@
       "filterDisabled": true,
       "emHidden": true
     },
-    "isFromCategoryTree": {
+    "categories": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
+    },
+    "isInheritedFromParentCategory": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,
@@ -124,13 +131,9 @@
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
-      "emHidden": true,
       "exportDisabled": true,
-      "importDisabled": true
-    },
-    "category": {
-      "type": "link",
-      "view": "pim:views/category/fields/category-root"
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -172,11 +175,11 @@
       "foreign": "channel",
       "entity": "ProductFamilyAttribute"
     },
-    "category": {
-      "type": "belongsTo",
+    "categories": {
+      "type": "hasMany",
+      "relationName": "categoryChannel",
       "foreign": "channels",
-      "entity": "Category",
-      "audited": false
+      "entity": "Category"
     }
   },
   "collection": {

@@ -29,24 +29,11 @@
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 
-/**
- * Service of Category
- */
 class Category extends AbstractService
 {
-    /**
-     * @var array
-     */
     protected $mandatorySelectAttributeList = ['categoryRoute'];
-
-    /**
-     * @var array
-     */
-    private $roots = [];
 
     public function getCategoryTree(string $parentId): array
     {
@@ -70,84 +57,37 @@ class Category extends AbstractService
         return $result;
     }
 
-    /**
-     * Get category entity
-     *
-     * @param string $id
-     *
-     * @return array
-     * @throws Forbidden
-     */
-    public function getEntity($id = null)
+    public function prepareEntityForOutput(Entity $entity)
     {
-        // call parent
-        $entity = parent::getEntity($id);
+        parent::prepareEntityForOutput($entity);
 
-        if (!empty($entity)) {
-            /** @var array $channels */
-            $channels = $this->getRootChannels($entity)->toArray();
+        $entity->set('hasChildren', $entity->hasChildren());
 
-            // set hasChildren param
-            $entity->set('hasChildren', $entity->hasChildren());
-            $entity->set('channelsIds', array_column($channels, 'id'));
-            $entity->set('channelsNames', array_column($channels, 'name', 'id'));
-        }
+        $channels = $entity->get('channels');
+        $channels = !empty($channels) && count($channels) > 0 ? $channels->toArray() : [];
 
-        return $entity;
+        $entity->set('channelsIds', array_column($channels, 'id'));
+        $entity->set('channelsNames', array_column($channels, 'name', 'id'));
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function findEntities($params)
+    public function findLinkedEntities($id, $link, $params)
     {
-        $result = parent::findEntities($params);
+        $result = parent::findLinkedEntities($id, $link, $params);
 
         /**
-         * Set channels to children categories
+         * Mark channels as inherited from parent category
          */
-        if (!empty($result['total'])) {
-            $roots = [];
-            foreach ($result['collection'] as $category) {
-                if (empty($category->get('channelsIds'))) {
-                    /** @var array $channels */
-                    $channels = $this->getRootChannels($category)->toArray();
-
-                    $category->set('channelsIds', array_column($channels, 'id'));
-                    $category->set('channelsNames', array_column($channels, 'name', 'id'));
-                }
+        if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getRepository()->getParentChannelsIds($id))) {
+            foreach ($result['collection'] as $channel) {
+                $channel->set('isInheritedFromParentCategory', in_array($channel->get('id'), $channelsIds));
             }
         }
 
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function findLinkedEntities($id, $link, $params)
-    {
-        if ($link == 'catalogs' || $link == 'channels') {
-            $category = $this->getEntityManager()->getEntity('Category', $id);
-            if (!empty($category)) {
-                $id = $category->getRoot()->get('id');
-            }
-        }
-
-        return parent::findLinkedEntities($id, $link, $params);
-    }
-
-    /**
-     * Is child category
-     *
-     * @param string $categoryId
-     * @param string $selectedCategoryId
-     *
-     * @return bool
-     */
     public function isChildCategory(string $categoryId, string $selectedCategoryId): bool
     {
-        // get category
         if (empty($category = $this->getEntityManager()->getEntity('Category', $selectedCategoryId))) {
             return false;
         }
@@ -155,17 +95,8 @@ class Category extends AbstractService
         return in_array($categoryId, explode("|", (string)$category->get('categoryRoute')));
     }
 
-    /**
-     * Get id parent category and ids children category
-     *
-     * @param string $id
-     *
-     * @return array
-     * @throws \Espo\Core\Exceptions\Error
-     */
     public function getIdsTree(string $id): array
     {
-        /** @var \Pim\Entities\Category $category */
         $category = $this->getEntityManager()->getEntity('Category', $id);
 
         $categoriesIds = [];
@@ -179,21 +110,5 @@ class Category extends AbstractService
         $categoriesIds[] = $category->id;
 
         return $categoriesIds;
-    }
-
-    /**
-     * @param Entity $category
-     *
-     * @return EntityCollection
-     */
-    protected function getRootChannels(Entity $category): EntityCollection
-    {
-        $categoryRoute = explode('|', $category->get('categoryRoute'));
-        $categoryRootId = (isset($categoryRoute[1])) ? $categoryRoute[1] : $category->get('id');
-        if (!isset($this->roots[$categoryRootId])) {
-            $this->roots[$categoryRootId] = $this->getEntityManager()->getEntity('Category', $categoryRootId);
-        }
-
-        return $this->roots[$categoryRootId]->get('channels');
     }
 }

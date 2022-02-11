@@ -500,6 +500,22 @@ class Product extends AbstractService
         }
     }
 
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        /**
+         * Mark channels as inherited from categories
+         */
+        if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getRepository()->getCategoriesChannelsIds($id))) {
+            foreach ($result['collection'] as $channel) {
+                $channel->set('isInheritedFromParentCategory', in_array($channel->get('id'), $channelsIds));
+            }
+        }
+
+        return $result;
+    }
+
     protected function findLinkedEntitiesAssets(string $id, array $params): array
     {
         $event = $this->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'link' => 'assets', 'params' => $params]));

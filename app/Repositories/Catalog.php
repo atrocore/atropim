@@ -64,6 +64,66 @@ class Catalog extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
+    public function getProductsCount(Entity $catalog): int
+    {
+        return $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->select(['id'])
+            ->where(['catalogId' => $catalog->get('id')])
+            ->count();
+    }
+
+    public function hasProducts(string $catalogId): bool
+    {
+        $catalogId = $this->getPDO()->quote($catalogId);
+
+        $records = $this
+            ->getPDO()
+            ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0 LIMIT 0,1")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        return !empty($records);
+    }
+
+    public function getProductsIds(string $catalogId): array
+    {
+        $catalogId = $this->getPDO()->quote($catalogId);
+
+        return $this
+            ->getPDO()
+            ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    public function relateCategories(Entity $entity, $foreign, $data, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->relateCatalogs($category, $entity, null, $options);
+    }
+
+    public function unrelateCategories(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->unrelateCatalogs($category, $entity, $options);
+    }
+
     /**
      * @inheritDoc
      */
@@ -98,17 +158,6 @@ class Catalog extends AbstractRepository
             $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, $entity);
         }
 
-        if ($relationName == 'categories') {
-            if (!is_string($foreign)) {
-                $foreign = $foreign->get('id');
-            }
-            $foreign = $this->getEntityManager()->getEntity('Category', $foreign);
-
-            if (!empty($foreign->get('categoryParent'))) {
-                throw new BadRequest($this->exception('Only root category can be linked with catalog'));
-            }
-        }
-
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
     }
 
@@ -122,30 +171,6 @@ class Catalog extends AbstractRepository
             $this->getEntityManager()->getRepository('Product')->{"onCatalog{$mode}Change"}($foreign, null);
         }
 
-        if ($relationName === 'categories') {
-            $this->getEntityManager()->getRepository('Category')->tryToUnRelateCatalog($foreign, $entity);
-        }
-
         parent::beforeUnrelate($entity, $relationName, $foreign, $options);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string
-     */
-    protected function exception(string $key): string
-    {
-        return $this->getInjection('language')->translate($key, 'exceptions', 'Catalog');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

@@ -88,7 +88,6 @@
       "selectBoolFilterList": [
         "notLinkedWithProduct"
       ],
-      "rowActionsView": "pim:views/product/record/row-actions/product-channels",
       "createAction": "createRelatedConfigured",
       "selectAction": "selectRelatedEntity",
       "layout": "listForChannelsInProduct"

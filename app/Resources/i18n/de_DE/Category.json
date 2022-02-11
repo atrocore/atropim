@@ -36,12 +36,15 @@
     "Create Category": "Kategorie erstellen"
   },
   "messages": {
-    "channelUnlinkConfirm": "Möchten Sie die Verknüpfung des Kanals mit dem Kategoriebaum wirklich aufheben? Alle indirekt mit diesem Kanal verknüpften Produkte werden entkoppelt.",
+    "channelUnlinkConfirm": "Möchten Sie die Verknüpfung des Kanals mit der Kategorie wirklich aufheben? Alle indirekt mit diesem Kanal verknüpften Produkte werden entkoppelt.",
     "categoryRemoveConfirm": "Möchten Sie die Kategorie wirklich entfernen? Alle Unterkategorien dieser Kategorie werden ebenfalls entfernt und die Verknüpfungen der Produkte mit dieser Kategorie oder ihrer Unterkategorien werden aufgehoben.",
     "categoryCatalogUnlinkConfirm": "Möchten Sie die Verknüpfung des Kategoriebaums mit dem Katalog wirklich aufheben? Alle Verknüpfungen der Produkte mit den Kategorien dieses Baums werden entfernt.",
     "categoryParentChangeConfirm": "Möchten Sie diese Kategorie wirklich mit einer neuen übergeordneten Kategorie verknüpfen? Bitte beachten Sie, dass der aktualisierte Kategoriebaum zusätzlich denselben Katalogen wie der ursprüngliche Kategoriebaum zugeordnet wird. Die Verknüpfung der Produkte mit allen Kanälen, die vom ursprünglichen Kategoriebaum vererbt wurden, wird aufgehoben und die Verknüpfung mit den Kanälen, die vom aktualisierten Kategoriebaum vererbt wurden, wird erstellt."
   },
   "exceptions": {
+    "catalogsShouldBeSame": "Kategorien können nur innerhalb aktueller Kataloge verschoben werden.",
+    "onlyRootCategoryCanBeLinked": "Nur die Stammkategorie kann mit dem Katalog verknüpft werden.",
+    "onlyRootCategoryCanBeUnLinked": "Nur die Root-Kategorie kann vom Katalog getrennt werden.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",
     "categoryHasChildren": "Kategorie hat untergeordnete Elemente.",
     "categoryHasChildCategoryAndCantBeDeleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden.",

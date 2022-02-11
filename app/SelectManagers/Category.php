@@ -86,29 +86,25 @@ class Category extends AbstractSelectManager
     protected function boolFilterOnlyCatalogCategories(array &$result)
     {
         $catalogId = $this->getSelectCondition('onlyCatalogCategories');
-        if ($catalogId === false){
+
+        if (empty($catalogId)) {
+            $result['whereClause'][] = [
+                'id!=' => $this
+                    ->getEntityManager()
+                    ->getPDO()
+                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0")
+                    ->fetchAll(\PDO::FETCH_COLUMN)
+            ];
             return;
         }
 
-        if (!empty($catalogId)) {
-            $catalog = $this->getEntityManager()->getEntity('Catalog', $catalogId);
-            if (empty($catalog)) {
-                throw new BadRequest('No such catalog');
-            }
-            $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
-        } else {
-            $treesIds = $this->getEntityManager()->getRepository('Category')->getNotRelatedWithCatalogsTreeIds();
-        }
-
-        if (!empty($treesIds)) {
-            $where[] = ['id' => $treesIds];
-            foreach ($treesIds as $catalogTree) {
-                $where[] = ['categoryRoute*' => "%|" . $catalogTree . "|%"];
-            }
-            $result['whereClause'][] = ['OR' => $where];
-        } else {
-            $result['whereClause'][] = ['id' => -1];
-        }
+        $result['whereClause'][] = [
+            'id' => $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0 AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId))
+                ->fetchAll(\PDO::FETCH_COLUMN)
+        ];
     }
 
     /**

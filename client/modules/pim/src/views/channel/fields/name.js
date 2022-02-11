@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/category/fields/category-root', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/channel/fields/name', 'views/fields/varchar',
     Dep => Dep.extend({
 
-        selectBoolFilterList:  ['onlyRootCategory'],
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-        boolFilterData: {
-            onlyRootCategory() {
-                return true;
+            if (this.mode === 'listLink' && this.model.get('isInheritedFromParentCategory')) {
+                this.$el.find('a').attr('style', 'font-style: italic');
             }
         },
 

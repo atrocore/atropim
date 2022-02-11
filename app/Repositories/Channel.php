@@ -29,6 +29,7 @@
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -42,7 +43,7 @@ class Channel extends Base
         $data = $this
             ->getEntityManager()
             ->nativeQuery(
-                "SELECT product_id as productId, is_active AS isActive, from_category_tree as isFromCategoryTree FROM product_channel WHERE channel_id='$id' AND deleted=0"
+                "SELECT product_id as productId, is_active AS isActive FROM product_channel WHERE channel_id='$id' AND deleted=0"
             )
             ->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -67,56 +68,41 @@ class Channel extends Base
         return array_values(array_unique($locales));
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     */
+    public function relateCategories(Entity $entity, $foreign, $data, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->relateChannels($category, $entity, null, $options);
+    }
+
+    public function unrelateCategories(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->unrelateChannels($category, $entity, $options);
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (empty($entity->get('locales'))) {
             $entity->set('locales', ['main']);
         }
 
-        if ($entity->isAttributeChanged('categoryId')) {
-            $this->updateChannelCategories($entity);
-        }
-
         parent::beforeSave($entity, $options);
-    }
-
-    protected function updateChannelCategories(Entity $entity): void
-    {
-        $categoryId = $entity->get('categoryId');
-
-        if (empty($categoryId) && $entity->isNew()) {
-            return;
-        }
-
-        if (!empty($categoryId)) {
-            $category = $this->getEntityManager()->getEntity('Category', $categoryId);
-        }
-
-        $fetchedCategoryId = $entity->getFetched('categoryId');
-        if (!empty($fetchedCategoryId)) {
-            $fetchedCategory = $this->getEntityManager()->getEntity('Category', $fetchedCategoryId);
-        }
-
-        if (empty($category)) {
-            $name = sprintf($this->getInjection('language')->translate('unLinkCategoryFromChannel', 'labels', 'Channel'), $fetchedCategory->get('name'), $entity->get('name'));
-        } elseif (empty($fetchedCategory)) {
-            $name = sprintf($this->getInjection('language')->translate('linkCategoryWithChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
-        } else {
-            $name = sprintf($this->getInjection('language')->translate('changeCategoryForChannel', 'labels', 'Channel'), $category->get('name'), $entity->get('name'));
-        }
-
-        $qmData = [
-            'action'            => 'updateCategory',
-            'fetchedCategoryId' => $fetchedCategoryId,
-            'categoryId'        => $categoryId,
-            'channelId'         => $entity->get('id')
-        ];
-
-        $this->getInjection('queueManager')->push($name, 'QueueManagerChannel', $qmData);
     }
 
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])

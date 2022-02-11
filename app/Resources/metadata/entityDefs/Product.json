@@ -405,14 +405,6 @@
           "audited": false,
           "readOnly": false,
           "tooltip": false
-        },
-        "fromCategoryTree": {
-          "type": "bool",
-          "default": false,
-          "notNull": true,
-          "audited": false,
-          "readOnly": false,
-          "tooltip": false
         }
       }
     },
