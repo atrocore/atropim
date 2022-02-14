@@ -108,7 +108,7 @@
       "rowActionsView": "pim:views/associated-product/record/row-actions/edit-and-remove-in-product",
       "select": false,
       "aclScopesList": [
-        "Association"
+        "AssociatedProduct"
       ]
     }
   },

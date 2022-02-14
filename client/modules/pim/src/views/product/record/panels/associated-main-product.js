@@ -30,7 +30,7 @@ Espo.define('pim:views/product/record/panels/associated-main-product', 'views/re
     Dep => Dep.extend({
 
         setup() {
-            this.defs.create = this.getAcl().check('Product', 'edit') && !this.defs.readOnly;
+            this.defs.create = this.getAcl().check('AssociatedProduct', 'create') && !this.defs.readOnly;
             Dep.prototype.setup.call(this);
         }
 
