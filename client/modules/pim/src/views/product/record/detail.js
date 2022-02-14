@@ -167,7 +167,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.openCategoryNodes($tree, route, opened, () => {
                     this.selectCategoryNode(categories, view, opened);
                     let node = $tree.tree('getNodeById', category.id);
-                    $(node.element).addClass('jqtree-selected');
+                    if (node && node.element){
+                        $(node.element).addClass('jqtree-selected');
+                    }
                 });
             }
         },

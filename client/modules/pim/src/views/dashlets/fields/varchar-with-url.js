@@ -36,10 +36,20 @@ Espo.define('pim:views/dashlets/fields/varchar-with-url', 'views/fields/varchar'
                 event.stopPropagation();
                 event.preventDefault();
                 let hash = event.currentTarget.hash;
+                let scope = hash.substr(1);
                 let name = this.model.get(this.name);
                 let options = ((this.model.getFieldParam(this.name, 'urlMap') || {})[name] || {}).options;
+
+                if (options && options.boolFilterList) {
+                    let searchData = this.getStorage().get('listSearch', scope);
+                    options.boolFilterList.forEach(v => {
+                        searchData['bool'][v] = true;
+                    });
+                    this.getStorage().set('listSearch', scope, searchData);
+                }
+
                 this.getRouter().navigate(hash, {trigger: false});
-                this.getRouter().dispatch(hash.substr(1), 'list', options);
+                this.getRouter().dispatch(scope, 'list', options);
             }
         },
 
