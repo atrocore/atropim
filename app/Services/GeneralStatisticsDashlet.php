@@ -31,39 +31,30 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-/**
- * Class GeneralStatisticsDashlet
- */
 class GeneralStatisticsDashlet extends AbstractProductDashletService
 {
-
-    /**
-     * Get general statistic
-     *
-     * @return array
-     */
     public function getDashlet(): array
     {
         $result['list'] = [
             [
                 'id'     => 'product',
                 'name'   => 'product',
-                'amount' => (int)$this->getRepository('Product')->select(['id'])->where(['type' => $this->getProductTypes()])->count()
+                'amount' => $this->getAmountForScope('Product')
             ],
             [
                 'id'     => 'category',
                 'name'   => 'category',
-                'amount' => (int)$this->getRepository('Category')->select(['id'])->count()
+                'amount' => $this->getAmountForScope('Category')
             ],
             [
                 'id'     => 'productFamily',
                 'name'   => 'productFamily',
-                'amount' => (int)$this->getRepository('ProductFamily')->select(['id'])->count()
+                'amount' => $this->getAmountForScope('ProductFamily')
             ],
             [
                 'id'     => 'attribute',
                 'name'   => 'attribute',
-                'amount' => (int)$this->getRepository('Attribute')->select(['id'])->count()
+                'amount' => $this->getAmountForScope('Attribute')
             ],
             [
                 'id'     => 'productWithoutAssociatedProduct',
@@ -82,7 +73,13 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
             ]
         ];
 
-        $this->addProductWithoutAssets( $result['list']);
+        if (!empty($this->getInjection('metadata')->get('entityDefs.Product.fields.image'))) {
+            $result['list'][] = [
+                'id'     => 'productWithoutAssets',
+                'name'   => 'productWithoutAssets',
+                'amount' => $this->getAmountProductWithoutAssets()
+            ];
+        }
 
         $result['total'] = count($result['list']);
 
@@ -165,10 +162,21 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
 
     protected function getAmountProductWithoutAssets(): int
     {
-        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutAssets(true));
-        $sth->execute();
+        if (!$this->getInjection('acl')->check('Product', 'read')) {
+            return 0;
+        }
 
-        return (int)$sth->fetchColumn();
+        $ids = $this
+            ->getPDO()
+            ->query($this->getQueryProductWithoutAssets(false))
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $result = $this
+            ->getInjection('serviceFactory')
+            ->create('Product')
+            ->findEntities(['maxSize' => 1, 'where' => [['type' => 'in', 'attribute' => 'id', 'value' => $ids]]]);
+
+        return !empty($result['total']) ? (int)$result['total'] : 0;
     }
 
     /**
@@ -178,10 +186,21 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
      */
     protected function getAmountProductWithoutAssociatedProduct(): int
     {
-        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutAssociatedProduct(true));
-        $sth->execute();
+        if (!$this->getInjection('acl')->check('Product', 'read')) {
+            return 0;
+        }
 
-        return (int)$sth->fetchColumn();
+        $ids = $this
+            ->getPDO()
+            ->query($this->getQueryProductWithoutAssociatedProduct(false))
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $result = $this
+            ->getInjection('serviceFactory')
+            ->create('Product')
+            ->findEntities(['maxSize' => 1, 'where' => [['type' => 'in', 'attribute' => 'id', 'value' => $ids]]]);
+
+        return !empty($result['total']) ? (int)$result['total'] : 0;
     }
 
     /**
@@ -191,10 +210,21 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
      */
     protected function getAmountProductWithoutCategory(): int
     {
-        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutCategory(true));
-        $sth->execute();
+        if (!$this->getInjection('acl')->check('Product', 'read')) {
+            return 0;
+        }
 
-        return (int)$sth->fetchColumn();
+        $ids = $this
+            ->getPDO()
+            ->query($this->getQueryProductWithoutCategory(false))
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $result = $this
+            ->getInjection('serviceFactory')
+            ->create('Product')
+            ->findEntities(['maxSize' => 1, 'where' => [['type' => 'in', 'attribute' => 'id', 'value' => $ids]]]);
+
+        return !empty($result['total']) ? (int)$result['total'] : 0;
     }
 
     /**
@@ -202,24 +232,39 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
      */
     protected function getAmountProductWithoutAttribute(): int
     {
-        $sth = $this->getPDO()->prepare($this->getQueryProductWithoutAttribute());
-        $sth->execute();
-
-        return (int)$sth->fetchColumn();
-    }
-
-    /**
-     * @param $list
-     */
-    protected function addProductWithoutAssets(&$list)
-    {
-        if (!empty( $this->getInjection('metadata')->get('entityDefs.Product.fields.image'))) {
-            $list[] =  [
-                'id'     => 'productWithoutAssets',
-                'name'   => 'productWithoutAssets',
-                'amount' => $this->getAmountProductWithoutAssets()
-            ];
+        if (!$this->getInjection('acl')->check('Product', 'read')) {
+            return 0;
         }
+
+        $ids = $this
+            ->getPDO()
+            ->query($this->getQueryProductWithoutAttribute(false))
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $result = $this
+            ->getInjection('serviceFactory')
+            ->create('Product')
+            ->findEntities(['maxSize' => 1, 'where' => [['type' => 'in', 'attribute' => 'id', 'value' => $ids]]]);
+
+        return !empty($result['total']) ? (int)$result['total'] : 0;
     }
 
+    protected function getAmountForScope(string $entityName): int
+    {
+        if (!$this->getInjection('acl')->check($entityName, 'read')) {
+            return 0;
+        }
+
+        $result = $this->getInjection('serviceFactory')->create($entityName)->findEntities(['maxSize' => 1]);
+
+        return !empty($result['total']) ? (int)$result['total'] : 0;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
+        $this->addDependency('acl');
+    }
 }
