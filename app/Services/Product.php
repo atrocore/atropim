@@ -509,7 +509,7 @@ class Product extends AbstractService
          */
         if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getRepository()->getCategoriesChannelsIds($id))) {
             foreach ($result['collection'] as $channel) {
-                $channel->set('isInheritedFromParentCategory', in_array($channel->get('id'), $channelsIds));
+                $channel->set('isInherited', in_array($channel->get('id'), $channelsIds));
             }
         }
 

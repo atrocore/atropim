@@ -122,7 +122,7 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true
     },
-    "isInheritedFromParentCategory": {
+    "isInherited": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,

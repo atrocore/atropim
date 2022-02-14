@@ -32,7 +32,7 @@ Espo.define('pim:views/channel/fields/name', 'views/fields/varchar',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'listLink' && this.model.get('isInheritedFromParentCategory')) {
+            if (this.mode === 'listLink' && this.model.get('isInherited')) {
                 this.$el.find('a').attr('style', 'font-style: italic');
             }
         },
