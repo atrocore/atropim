@@ -44,16 +44,6 @@
           ]
         }
       },
-      "isMainImage": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isImage"
-            }
-          ]
-        }
-      },
       "channels": {
         "visible": {
           "conditionGroup": [

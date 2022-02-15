@@ -72,7 +72,7 @@ class LayoutController extends AbstractListener
     {
         $result = Json::decode($event->getArgument('result'), true);
         $result[0]['rows'][] = [['name' => 'scope'], ['name' => 'channel']];
-        $result[0]['rows'][] = [['name' => 'isMainImage'], ['name' => 'channels']];
+        $result[0]['rows'][] = [['name' => 'channels'], false];
         $event->setArgument('result', Json::encode($result));
     }
 

@@ -116,18 +116,6 @@
       "importDisabled": true,
       "exportDisabled": true
     },
-    "isMainImage": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "channels": {
       "type": "multiEnum",
       "notStorable": true,
