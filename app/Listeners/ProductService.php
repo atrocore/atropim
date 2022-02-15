@@ -50,8 +50,8 @@ class ProductService extends AbstractEntityListener
         if (property_exists($data, '_mainEntityId')) {
             $categoryId = (string)$data->_mainEntityId;
         }
-        if (property_exists($data, '_relatingEntityId')) {
-            $categoryId = (string)$data->_relatingEntityId;
+        if (property_exists($data, '_relationEntityId')) {
+            $categoryId = (string)$data->_relationEntityId;
         }
 
         if (!empty($categoryId)) {
