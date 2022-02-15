@@ -399,6 +399,15 @@ class Category extends AbstractRepository
         // build tree
         $this->updateCategoryTree($entity);
 
+        // relate parent channels
+        if ($entity->isNew() && !empty($parent = $entity->get('categoryParent'))) {
+            if (!empty($parentChannels = $parent->get('channels')) && count($parentChannels) > 0) {
+                foreach ($parentChannels as $parentChannel) {
+                    $this->relate($entity, 'channels', $parentChannel);
+                }
+            }
+        }
+
         // activate parents
         $this->activateParents($entity);
 
