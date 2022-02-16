@@ -355,55 +355,6 @@ class Product extends AbstractService
         return ['message' => $this->getMassActionsService()->createRelationMessage($success, $error, 'Product', 'Product', false)];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setAsMainImage(string $assetId, string $entityId): array
-    {
-        $parts = explode('_', $assetId);
-        $assetId = array_shift($parts);
-
-        if (empty($asset = $this->getEntityManager()->getEntity('Asset', $assetId)) || empty($attachment = $asset->get('file'))) {
-            throw new NotFound();
-        }
-
-        /** @var \Pim\Entities\Product $entity */
-        $entity = $this->getRepository()->get($entityId);
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        $result = [
-            'imageId'        => $asset->get('fileId'),
-            'imageName'      => $asset->get('name'),
-            'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
-        ];
-
-
-        $channelId = $this->getPrismChannelId();
-
-        if (!empty($channelId)) {
-            foreach ($entity->getMainImages() as $image) {
-                if ($image['attachmentId'] === $asset->get('fileId') && $image['scope'] === 'Global') {
-                    $entity->removeMainImage($channelId);
-                    $this->getEntityManager()->saveEntity($entity);
-                    return $result;
-                }
-            }
-        }
-
-        $assetData = $this->getAssetData($entityId, $asset->get('fileId'));
-
-        if (!empty($assetData['channelId'])) {
-            $channelId = $assetData['channelId'];
-        }
-
-        $entity->addMainImage($asset->get('fileId'), $channelId);
-        $this->getEntityManager()->saveEntity($entity);
-
-        return $result;
-    }
-
     public function getPrismChannelId(): ?string
     {
         $channel = null;

@@ -37,7 +37,7 @@ use Espo\Core\Exceptions\Forbidden;
 /**
  * Controller Category
  */
-class Category extends AbstractWithMainImageController
+class Category extends AbstractController
 {
     /**
      * @param mixed $params
