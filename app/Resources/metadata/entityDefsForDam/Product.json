@@ -1,12 +1,5 @@
 {
   "fields": {
-    "image": {
-      "type": "image",
-      "notStorable": true,
-      "previewSize": "medium",
-      "readOnly": true,
-      "view": "pim:views/product/fields/image"
-    },
     "assets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -21,11 +14,6 @@
       "foreign": "products",
       "entity": "Asset",
       "audited": false
-    },
-    "image": {
-      "type": "belongsTo",
-      "entity": "Attachment",
-      "skipOrmDefs": true
     }
   }
 }

@@ -7,29 +7,6 @@
       "layoutName": "listSmallForProduct"
     }
   },
-  "sidePanels": {
-    "edit": [
-      {
-        "name": "image",
-        "label": "productPreview",
-        "view": "pim:views/product/fields/image"
-      }
-    ],
-    "detail": [
-      {
-        "name": "image",
-        "label": "productPreview",
-        "view": "pim:views/product/fields/image"
-      }
-    ],
-    "detailSmall": [
-      {
-        "name": "image",
-        "label": "productPreview",
-        "view": "pim:views/product/fields/image"
-      }
-    ]
-  },
   "menu": {
     "list": {
       "buttons": [
