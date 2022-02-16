@@ -4,8 +4,7 @@
   ],
   "relationshipPanels": {
     "assets": {
-      "layoutName": "listSmallForProduct",
-      "innerPanelView": "pim:views/asset/record/panels/asset-type-block"
+      "layoutName": "listSmallForProduct"
     }
   },
   "sidePanels": {

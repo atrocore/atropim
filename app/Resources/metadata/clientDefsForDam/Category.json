@@ -1,9 +1,4 @@
 {
-  "relationshipPanels": {
-    "assets": {
-      "innerPanelView": "pim:views/asset/record/panels/asset-type-block"
-    }
-  },
   "sidePanels": {
     "edit": [
       {
