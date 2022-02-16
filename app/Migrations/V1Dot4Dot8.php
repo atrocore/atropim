@@ -41,8 +41,8 @@ class V1Dot4Dot8 extends Base
      */
     public function up(): void
     {
-        if ($sql = $this->prepareSql("ADD name_%s VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci")) {
-            $this->exec($sql);
+        foreach ($this->getLocales() as $locale) {
+            $this->exec("ALTER TABLE `attribute_tab` ADD name_" . strtolower($locale) . " VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         }
     }
 
@@ -51,34 +51,9 @@ class V1Dot4Dot8 extends Base
      */
     public function down(): void
     {
-        if ($sql = $this->prepareSql("DROP name_%s")) {
-            $this->exec($sql);
+        foreach ($this->getLocales() as $locale) {
+            $this->exec("ALTER TABLE `attribute_tab` DROP name_" . strtolower($locale));
         }
-    }
-
-    /**
-     * @param string $cond
-     *
-     * @return string
-     */
-    protected function prepareSql(string $cond): string
-    {
-        $locales = $this->getLocales();
-        if (empty($locales)) {
-            return '';
-        }
-
-        $sql = "ALTER TABLE `attribute_tab` ";
-        $localesPart = [];
-
-        foreach ($locales as $locale) {
-            $localesPart[] = sprintf($cond,strtolower($locale));
-        }
-
-        $localesPart = implode(", ", $localesPart);
-        $sql .= $localesPart;
-
-        return $sql;
     }
 
     /**
