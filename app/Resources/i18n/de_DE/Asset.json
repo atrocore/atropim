@@ -12,9 +12,6 @@
     "categories": "Kategorien",
     "products": "Produkte"
   },
-  "labels": {
-    "setAsMainImage": "Als Hauptbild setzen"
-  },
   "exceptions": {
     "scopeForTheImageMarkedAsMainCannotBeChanged": "Scope für das als Hauptbild markierte Bild kann nicht geändert werden."
   }

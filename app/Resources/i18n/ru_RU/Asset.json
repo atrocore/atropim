@@ -12,9 +12,6 @@
     "categories": "Категории",
     "products": "Продукты"
   },
-  "labels": {
-    "setAsMainImage": "Назначить основным изображением"
-  },
   "exceptions": {
     "scopeForTheImageMarkedAsMainCannotBeChanged": "Область действия изображения, помеченного как основное, изменить нельзя."
   }

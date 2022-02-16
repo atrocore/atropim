@@ -12,9 +12,6 @@
     "categories": "Categories",
     "products": "Products"
   },
-  "labels": {
-    "setAsMainImage": "Set as Main Image"
-  },
   "exceptions": {
     "scopeForTheImageMarkedAsMainCannotBeChanged": "Scope for the image marked as Main cannot be changed."
   }
