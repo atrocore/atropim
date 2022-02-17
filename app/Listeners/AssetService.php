@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -26,29 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        setupOptions: function () {
-            if (this.model.get('channel') === null) {
-                this.model.set('channel', '');
-            }
+namespace Pim\Listeners;
 
-            this.params.options = [""];
-            this.translatedOptions = {"": "Global"};
+use Dam\Entities\Asset;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Json;
+use Treo\Core\EventManager\Event;
+use Espo\Core\Utils\Util;
+use Treo\Listeners\AbstractListener;
 
-            if (this.mode === 'edit') {
-                let productId = window.location.hash.split('/').pop();
-                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
-                    if (response.total > 0) {
-                        response.list.forEach(channel => {
-                            this.params.options.push(channel.id);
-                            this.translatedOptions[channel.id] = channel.name;
-                        });
-                    }
-                });
-            }
-        },
+class AssetService extends AbstractListener
+{
+    public function beforeUpdateEntity(Event $event): void
+    {
+        $data = $event->getArgument('data');
+        if (!property_exists($data, '_relationEntity') || !property_exists($data, '_relationEntityId') || $data->_relationEntity !== 'Product') {
+            return;
+        }
 
-    })
-);
+        $assetData = $this->getEntityManager()->getRepository('Product')->getAssetData($data->_relationEntityId, $event->getArgument('id'));
+        if (empty($assetData)) {
+            return;
+        }
+
+        if ($assetData['channel'] != $data->channel && !empty($assetData['is_main_image'])) {
+            throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
+        }
+    }
+}

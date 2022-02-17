@@ -32,7 +32,7 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:isMainImage', () => {
+            this.listenTo(this.model, 'change:isMainImage change:channel', () => {
                 this.reRender()
             });
         },
@@ -58,7 +58,7 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                if (!this.model.get('isMainImage')) {
+                if (!this.model.get('isMainImage') || !!this.model.get('channel')) {
                     this.hide();
                 } else {
                     this.show();

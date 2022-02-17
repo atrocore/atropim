@@ -56,115 +56,11 @@ class Product extends AbstractService
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
         parent::loadPreviewForCollection($collection);
-
-        $ids = [];
-        foreach ($collection as $entity) {
-            if (!empty($attachmentId = $this->getMainImageId($entity))) {
-                $ids[] = $attachmentId;
-            }
-        }
-
-        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-        foreach ($attachmentRepository->where(['id' => $ids])->find() as $attachment) {
-            $attachments[$attachment->get('id')] = [
-                'name'      => $attachment->get('name'),
-                'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),
-            ];
-        }
-
-        foreach ($collection as $entity) {
-            if (!empty($attachmentId = $this->getMainImageId($entity)) && isset($attachments[$attachmentId])) {
-                $entity->set("imageId", $attachmentId);
-                $entity->set("imageName", $attachments[$attachmentId]['name']);
-                $entity->set("imagePathsData", $attachments[$attachmentId]['pathsData']);
-            }
-        }
     }
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
-
-        $this->setMainImage($entity);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function unlinkEntity($id, $link, $foreignId)
-    {
-        if ($link == 'assets') {
-            return $this->unlinkAssets($id, $foreignId);
-        }
-
-        return parent::unlinkEntity($id, $link, $foreignId);
-    }
-
-    public function unlinkAssets(string $id, string $foreignId): bool
-    {
-        $link = 'assets';
-
-        $parts = explode('_', $foreignId);
-        $foreignId = array_shift($parts);
-        $channel = implode('_', $parts);
-
-        $event = $this->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
-
-        $id = $event->getArgument('id');
-        $link = $event->getArgument('link');
-        $foreignId = $event->getArgument('foreignId');
-
-        if (empty($id) || empty($link) || empty($foreignId)) {
-            throw new BadRequest;
-        }
-
-        if (in_array($link, $this->readOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        $entity = $this->getRepository()->get($id);
-        if (!$entity) {
-            throw new NotFound();
-        }
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
-        if (!$foreignEntityType) {
-            throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
-        }
-
-        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $foreignId);
-        if (!$foreignEntity) {
-            throw new NotFound();
-        }
-
-        $accessActionRequired = 'edit';
-        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
-            $accessActionRequired = 'read';
-        }
-        if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
-            throw new Forbidden();
-        }
-
-        $query = "DELETE FROM product_asset WHERE asset_id='$foreignId' AND product_id='$id'";
-        if (empty($channel)) {
-            $query .= " AND (channel IS NULL OR channel='')";
-        } else {
-            $query .= " AND channel='$channel'";
-        }
-
-        $entity->removeMainImageByAttachmentId($foreignEntity->get('fileId'));
-        $data = str_replace(["'", '\"'], ["\'", '\\\"'], Json::encode($entity->get('data'), JSON_UNESCAPED_UNICODE));
-
-        $query .= ";UPDATE product SET data='$data' WHERE id='{$entity->get('id')}'";
-
-        $this->getEntityManager()->nativeQuery($query);
-
-        return $this
-            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
-            ->getArgument('result');
     }
 
     public function updateActiveForChannel(string $channelId, string $productId, bool $isActive): bool
@@ -817,11 +713,11 @@ class Product extends AbstractService
         }
 
         // for main image
-        if (property_exists($post, 'imageId')) {
-            if ($this->getMainImageId($entity) !== $post->imageId) {
+        if (property_exists($post, 'mainImageId')) {
+            if ($this->getMainImageId($entity) !== $post->mainImageId) {
                 return true;
             }
-            unset($post->imageId);
+            unset($post->mainImageId);
         }
 
         if ($this->isProductAttributeUpdating($post)) {
@@ -855,53 +751,6 @@ class Product extends AbstractService
         }
 
         return null;
-    }
-
-    protected function setMainImage(Entity $entity): void
-    {
-        if (!$entity instanceof \Pim\Entities\Product) {
-            return;
-        }
-
-        if (empty($this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'image', 'type']))) {
-            return;
-        }
-
-        if (!empty($entity->get('imageId'))) {
-            return;
-        }
-
-        $entity->set('imageId', null);
-        $entity->set('imageName', null);
-        $entity->set('imagePathsData', null);
-
-        if (!empty($attachmentId = $this->getMainImageId($entity))) {
-            $entity->set('imageId', $attachmentId);
-            $entity->set('imageName', $attachmentId);
-            $entity->set('imagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachmentId));
-        }
-    }
-
-    protected function getMainImageId(Entity $entity): ?string
-    {
-        $attachmentId = null;
-        foreach ($entity->getMainImages() as $image) {
-            if ($image['scope'] === 'Global') {
-                $attachmentId = $image['attachmentId'];
-                break;
-            }
-        }
-
-        if (!empty($channelId = $this->getPrismChannelId())) {
-            foreach ($entity->getMainImages() as $image) {
-                if ($image['channelId'] === $channelId) {
-                    $attachmentId = $image['attachmentId'];
-                    break;
-                }
-            }
-        }
-
-        return $attachmentId;
     }
 
     /**

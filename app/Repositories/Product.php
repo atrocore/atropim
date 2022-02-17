@@ -187,6 +187,19 @@ class Product extends AbstractRepository
         $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
     }
 
+    public function getAssetData(string $productId, string $assetId): array
+    {
+        $assetId = $this->getEntityManager()->getPDO()->quote($assetId);
+        $productId = $this->getEntityManager()->getPDO()->quote($productId);
+
+        $result = $this
+            ->getPDO()
+            ->query("SELECT * FROM `product_asset` WHERE asset_id=$assetId AND product_id=$productId AND deleted=0")
+            ->fetch(\PDO::FETCH_ASSOC);
+
+        return empty($result) ? [] : $result;
+    }
+
     public function getProductsIdsViaAccountId(string $accountId): array
     {
         $accountId = $this->getPDO()->quote($accountId);
@@ -607,17 +620,6 @@ class Product extends AbstractRepository
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
 
-        // set main image
-        if ($entity->isAttributeChanged('imageId')) {
-            $entity->removeMainImage();
-            if (!empty($entity->get('imageId'))) {
-                $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
-                if (!empty($asset)) {
-                    $entity->addMainImage($entity->get('imageId'));
-                }
-            }
-        }
-
         parent::beforeSave($entity, $options);
     }
 
@@ -652,16 +654,6 @@ class Product extends AbstractRepository
 
         // parent action
         parent::afterSave($entity, $options);
-
-        // relate main image for product
-        if ($entity->isAttributeChanged('imageId') && !empty($entity->get('imageId'))) {
-            foreach ($entity->getMainImages() as $row) {
-                $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $row['attachmentId']])->findOne();
-                if (!empty($asset)) {
-                    $this->relate($entity, 'assets', $asset);
-                }
-            }
-        }
 
         $this->setInheritedOwnership($entity);
     }
@@ -772,23 +764,6 @@ class Product extends AbstractRepository
         $this->unrelatePfas($product, $channel);
 
         return true;
-    }
-
-    public function unrelateAssets(Entity $product, $asset, $options)
-    {
-        if (is_bool($asset)) {
-            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
-        }
-
-        if (is_string($asset)) {
-            $asset = $this->getEntityManager()->getRepository('Asset')->get($asset);
-        }
-
-        $result = $this->getMapper()->removeRelation($product, 'assets', $asset->get('id'));
-        $product->removeMainImageByAttachmentId($asset->get('fileId'));
-        $this->getPDO()->exec("UPDATE product SET `data`='" . Json::encode($product->getData()) . "' WHERE id='{$product->get('id')}'");
-
-        return $result;
     }
 
     protected function onProductFamilyChange(Entity $product): void
