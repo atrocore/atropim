@@ -287,27 +287,6 @@ class Product extends AbstractRepository
         }
     }
 
-    public function updateSortOrder(string $entityId, array $ids): bool
-    {
-        foreach ($ids as $k => $id) {
-            $parts = explode('_', $id);
-            $id = array_shift($parts);
-            $channel = implode('_', $parts);
-
-            $sorting = $k * 10;
-
-            $sql = "UPDATE product_asset SET sorting=$sorting WHERE asset_id='$id' AND product_id='$entityId' AND deleted=0";
-            if (empty($channel)) {
-                $sql .= " AND (channel IS NULL OR channel='')";
-            } else {
-                $sql .= " AND channel='$channel'";
-            }
-            $this->getEntityManager()->nativeQuery($sql);
-        }
-
-        return true;
-    }
-
     /**
      * @inheritDoc
      */
