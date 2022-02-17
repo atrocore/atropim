@@ -13,7 +13,15 @@
       "relationName": "productAsset",
       "foreign": "products",
       "entity": "Asset",
-      "audited": false
+      "audited": false,
+      "additionalColumns": {
+        "channel": {
+          "type": "varchar"
+        },
+        "mainImageForChannel": {
+          "type": "array"
+        }
+      }
     }
   }
 }

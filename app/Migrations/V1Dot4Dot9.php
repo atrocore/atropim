@@ -59,6 +59,12 @@ class V1Dot4Dot9 extends Base
         $this->exec("ALTER TABLE `category` DROP image_id");
 
         $this->exec("ALTER TABLE `product_asset` ADD is_main_image TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci");
+
+        $this->exec("DROP INDEX UNIQ_A3F321005DA19414584665AA2F98E47A2F98E47 ON `product_asset`");
+        $this->exec("DROP INDEX IDX_A3F32100A2F98E47 ON `product_asset`");
+        $this->exec("ALTER TABLE `product_asset` CHANGE `channel` channel VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("ALTER TABLE `product_asset` ADD main_image_for_channel MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '(DC2Type:array)'");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_A3F321005DA19414584665A ON `product_asset` (asset_id, product_id)");
     }
 
     public function down(): void
