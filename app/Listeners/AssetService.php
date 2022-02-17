@@ -31,11 +31,8 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Dam\Entities\Asset;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Treo\Core\EventManager\Event;
-use Espo\Core\Utils\Util;
 use Treo\Listeners\AbstractListener;
 
 class AssetService extends AbstractListener
@@ -54,6 +51,15 @@ class AssetService extends AbstractListener
 
         if ($assetData['channel'] != $data->channel && !empty($assetData['is_main_image'])) {
             throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
+        }
+    }
+
+    public function prepareEntityForOutput(Event $event): void
+    {
+        $entity = $event->getArgument('entity');
+
+        if (!empty($entity->get('isMainImage')) && empty($entity->get('channel')) && empty($entity->get('mainImageForChannel'))) {
+            $entity->set('isGlobalMainImage', true);
         }
     }
 }

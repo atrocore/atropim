@@ -1,5 +1,17 @@
 {
   "fields": {
+    "isGlobalMainImage": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
     "channel": {
       "type": "varchar",
       "notStorable": true,

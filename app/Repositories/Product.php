@@ -72,6 +72,36 @@ class Product extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsAttributeOwnership';
 
+    public function updateMainImageRelationData(string $relationName, array &$setData, string $re1, string $re1Id, string $re2, string $re2Id): void
+    {
+        $tableName = Util::toUnderScore($relationName);
+        $productId = $this->getPDO()->quote($re1Id);
+        $assetId = $this->getPDO()->quote($re2Id);
+
+        if (!empty($setData['isMainImage'])) {
+            $isGlobal = empty($setData['channel']) && (empty($setData['mainImageForChannel']) || $setData['mainImageForChannel'] === '[]');
+            if ($isGlobal) {
+                $assetData = $this->getAssetData($re1Id, $re2Id);
+                $isGlobal = empty($assetData['channel']) && (empty($assetData['main_image_for_channel']) || $assetData['main_image_for_channel'] === '[]');
+            }
+
+            if ($isGlobal) {
+                $records = $this
+                    ->getPDO()
+                    ->query("SELECT * FROM `{$tableName}` WHERE deleted=0 AND product_id=$productId AND asset_id!=$assetId AND is_main_image=1")
+                    ->fetchAll(\PDO::FETCH_ASSOC);
+
+                foreach ($records as $record) {
+                    if (empty($record['channel']) && (empty($record['main_image_for_channel']) || $record['main_image_for_channel'] === '[]')) {
+                        $this->getPDO()->exec("UPDATE `{$tableName}` SET is_main_image=0 WHERE id='{$record['id']}'");
+                    }
+                }
+            }
+        } else {
+            $setData['main_image_for_channel'] = '[]';
+        }
+    }
+
     public function pushJobForUpdateInconsistentAttributes(): void
     {
         $name = $this->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
