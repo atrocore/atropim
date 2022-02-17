@@ -467,35 +467,6 @@ class Product extends AbstractService
         return $result;
     }
 
-    protected function findLinkedEntitiesAssets(string $id, array $params): array
-    {
-        $event = $this->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'link' => 'assets', 'params' => $params]));
-
-        $id = $event->getArgument('id');
-        $link = $event->getArgument('link');
-        $params = $event->getArgument('params');
-
-        $result = ['list' => []];
-
-        $productAssets = $this->getAssets($id);
-        if (!empty($productAssets['count'])) {
-            $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
-            foreach ($productAssets['list'] as $assetType) {
-                if (!empty($assetType['assets'])) {
-                    foreach ($assetType['assets'] as $asset) {
-                        if (!empty($channelId) && $asset['scope'] === 'Channel' && $asset['channelId'] !== $channelId) {
-                            continue 1;
-                        }
-                        $result['list'][] = $asset;
-                    }
-                }
-            }
-        }
-        $result['total'] = count($result['list']);
-
-        return $this->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))->getArgument('result');
-    }
-
     /**
      * @param string $id
      * @param array  $params

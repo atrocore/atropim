@@ -26,51 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/fields/channel', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
     Dep => Dep.extend({
 
-        idName: 'id',
+        setupOptions: function () {
+            this.params.options = [""];
+            this.translatedOptions = {"": "Global"};
 
-        foreignScope: 'Channel',
-
-        selectBoolFilterList: ['productChannels'],
-
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:channelId', () => {
-                if (!this.model.get('entityId')) {
-                    this.model.set('entityId', this.getEntityId(), {silent: true});
-                }
-
-                if (!this.model.get('entityName')) {
-                    this.model.set('entityName', 'Product', {silent: true});
-                }
-
-                this.model.set('channel', this.model.get('channelId'), {silent: true});
-            });
-
-            if (this.model.get('channelId') === null) {
-                if (this.mode === 'edit') {
-                    this.model.set('channelName', null);
-                } else {
-                    this.model.set('channelName', 'Global');
-                }
+            if (this.mode === 'edit') {
+                let productId = window.location.hash.split('/').pop();
+                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+                    if (response.total > 0) {
+                        response.list.forEach(channel => {
+                            this.params.options.push(channel.id);
+                            this.translatedOptions[channel.id] = channel.name;
+                        });
+                    }
+                });
             }
         },
 
-        getEntityId: function () {
-            if (this.model.get('entityId')) {
-                return this.model.get('entityId');
-            }
-
-            return this.model.get('productsIds')[0];
-        },
-
-        boolFilterData: {
-            productChannels() {
-                return this.getEntityId();
-            }
-        },
     })
 );

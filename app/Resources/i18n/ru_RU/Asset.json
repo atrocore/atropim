@@ -2,11 +2,8 @@
   "fields": {
     "categories": "Категории",
     "products": "Продукты",
-    "scope": "Область действия",
     "channel": "Канал",
-    "channelCode": "Код канала",
-    "isMainImage": "Основное изображение",
-    "channels": "Основное изображение для канала"
+    "mainImageForChannel": "Основное изображение для канала"
   },
   "links": {
     "categories": "Категории",

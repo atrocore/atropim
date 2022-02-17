@@ -71,8 +71,7 @@ class LayoutController extends AbstractListener
     protected function modifyAssetDetailSmall(Event $event)
     {
         $result = Json::decode($event->getArgument('result'), true);
-        $result[0]['rows'][] = [['name' => 'scope'], ['name' => 'channel']];
-        $result[0]['rows'][] = [['name' => 'channels'], false];
+        $result[0]['rows'][] = [['name' => 'channel'], ['name' => 'mainImageForChannel']];
         $event->setArgument('result', Json::encode($result));
     }
 

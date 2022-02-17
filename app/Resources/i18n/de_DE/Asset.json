@@ -2,11 +2,8 @@
   "fields": {
     "categories": "Kategorien",
     "products": "Produkte",
-    "scope": "Scope",
     "channel": "Kanal",
-    "channelCode": "Kanal Code",
-    "isMainImage": "Hauptbild",
-    "channels": "Hauptbild für Kanal"
+    "mainImageForChannel": "Hauptbild für Kanal"
   },
   "links": {
     "categories": "Kategorien",

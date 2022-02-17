@@ -1,63 +1,11 @@
 {
   "fields": {
-    "entityName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "entityId": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "relationId": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "scope": {
-      "type": "enum",
-      "notStorable": true,
-      "aclFieldDisabled": false,
-      "prohibitedEmptyValue": true,
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "default": null,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "channel": {
       "type": "varchar",
       "notStorable": true,
+      "relatingEntityField": [
+        "Product"
+      ],
       "aclFieldDisabled": false,
       "view": "pim:views/asset/fields/channel",
       "layoutDetailDisabled": true,
@@ -69,56 +17,12 @@
       "importDisabled": true,
       "exportDisabled": true
     },
-    "channelId": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "channelName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "channelCode": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true
-    },
-    "isImage": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "channels": {
+    "mainImageForChannel": {
       "type": "multiEnum",
       "notStorable": true,
+      "relatingEntityField": [
+        "Product"
+      ],
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
@@ -127,7 +31,7 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
-      "view": "pim:views/asset/fields/channels"
+      "view": "pim:views/asset/fields/main-image-for-channel"
     },
     "products": {
       "type": "linkMultiple",

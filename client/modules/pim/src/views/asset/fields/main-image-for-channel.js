@@ -26,30 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/fields/channels', 'treo-core:views/fields/multi-enum',
+Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi-enum',
     Dep => Dep.extend({
+
         setup() {
-            if (this.model.get('entityName') === 'Product') {
-                this.ajaxGetRequest(`Product/${this.model.get('entityId')}/channels`, {
-                    select: 'name'
-                }).then(function (response) {
-                    if (response.list) {
-                        this.params.options = [];
-                        this.params.translatedOptions = [];
-                        this.translatedOptions = [];
+            Dep.prototype.setup.call(this);
 
-                        response.list.forEach(function(item) {
-                            this.params.options.push(item.id);
-                            this.params.translatedOptions[item.id] = item.name;
-                            this.translatedOptions = this.params.translatedOptions;
+            this.listenTo(this.model, 'change:isMainImage', () => {
+                this.reRender()
+            });
+        },
 
-                            this.reRender();
-                        }.bind(this));
+        setupOptions: function () {
+            this.params.options = [];
+            this.translatedOptions = {};
+
+            if (this.mode === 'edit') {
+                let productId = window.location.hash.split('/').pop();
+                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+                    if (response.total > 0) {
+                        response.list.forEach(channel => {
+                            this.params.options.push(channel.id);
+                            this.translatedOptions[channel.id] = channel.name;
+                        });
                     }
                 });
             }
+        },
 
-            Dep.prototype.setup.call(this);
-        }
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'edit') {
+                if (!this.model.get('isMainImage')) {
+                    this.hide();
+                } else {
+                    this.show();
+                }
+            }
+        },
+
     })
 );
