@@ -34,20 +34,30 @@ Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
                 this.model.set('channel', '');
             }
 
+            let currentTime = Math.floor(new Date().getTime() / 1000);
+            let storedTime = this.getStorage().get('product-channels-time', 'Product');
+
+            if (!storedTime || storedTime < currentTime) {
+                this.getStorage().clear('product-channels', 'Product');
+            }
+
+            let channels = this.getStorage().get('product-channels', 'Product');
+            if (channels === null) {
+                let productId = window.location.hash.split('/').pop();
+                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+                    this.getStorage().set('product-channels-time', 'Product', currentTime + 5);
+                    this.getStorage().set('product-channels', 'Product', response.list);
+                    channels = response.list;
+                });
+            }
+
             this.params.options = [""];
             this.translatedOptions = {"": "Global"};
 
-            if (this.mode === 'edit') {
-                let productId = window.location.hash.split('/').pop();
-                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
-                    if (response.total > 0) {
-                        response.list.forEach(channel => {
-                            this.params.options.push(channel.id);
-                            this.translatedOptions[channel.id] = channel.name;
-                        });
-                    }
-                });
-            }
+            channels.forEach(channel => {
+                this.params.options.push(channel.id);
+                this.translatedOptions[channel.id] = channel.name;
+            });
         },
 
     })
