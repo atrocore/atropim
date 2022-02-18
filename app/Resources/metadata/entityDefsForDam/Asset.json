@@ -57,6 +57,13 @@
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
       "noLoad": true
+    },
+    "brands": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -72,6 +79,13 @@
       "relationName": "categoryAsset",
       "foreign": "assets",
       "entity": "Category",
+      "audited": false
+    },
+    "brands": {
+      "type": "hasMany",
+      "relationName": "brandAsset",
+      "foreign": "assets",
+      "entity": "Brand",
       "audited": false
     }
   }
