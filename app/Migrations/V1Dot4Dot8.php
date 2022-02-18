@@ -27,55 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+namespace Pim\Migrations;
 
-namespace Pim\Services;
+use Treo\Core\Migration\Base;
 
-use Espo\Services\QueueManagerBase;
-
-class QueueManagerProduct extends QueueManagerBase
+/**
+ * Migration class for version 1.4.8
+ */
+class V1Dot4Dot8 extends Base
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function run(array $data = []): bool
+    public function up(): void
     {
-        if (empty($data['action'])) {
-            return false;
+        foreach ($this->getLocales() as $locale) {
+            $this->exec("ALTER TABLE `attribute_tab` ADD name_" . strtolower($locale) . " VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         }
-
-        return $this->{$data['action']}($data);
     }
 
-    protected function updateProductsWithInconsistentAttributes(array $data): bool
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
     {
-        /** @var \Pim\Repositories\Product $productRepository */
-        $productRepository = $this->getEntityManager()->getRepository('Product');
-
-        while (!empty($products = $this->getProductsWithInconsistentAttributes())) {
-            foreach ($products as $product) {
-                $productRepository->updateInconsistentAttributes($product);
-            }
+        foreach ($this->getLocales() as $locale) {
+            $this->exec("ALTER TABLE `attribute_tab` DROP name_" . strtolower($locale));
         }
-
-        return true;
     }
 
-    protected function getProductsWithInconsistentAttributes(): array
+    /**
+     * @return array
+     */
+    protected function getLocales(): array
     {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['hasInconsistentAttributes' => true])
-            ->limit(0, 1000)
-            ->order('id', true)
-            ->find();
-
-        $result = [];
-        foreach ($products as $product) {
-            $result[] = $product;
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            return $this->getConfig()->get('inputLanguageList', []);
         }
 
-        return $result;
+        return [];
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return void
+     */
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+            // ignore all
+        }
     }
 }

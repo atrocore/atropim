@@ -62,7 +62,6 @@
     "contents": "Contents"
   },
   "labels": {
-    "updateProductsWithInconsistentAttributes": "Update of Products with inconsistent Attributes",
     "Create Product": "Create Product",
     "Product Attributes": "Attributes",
     "thereIsNoValidAttributesForChannel": "There is no valid attributes for channel",

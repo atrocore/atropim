@@ -37,21 +37,32 @@ class CheckProductAttributes extends Base
 {
     public function run(): bool
     {
-        $exist = $this
-            ->getEntityManager()
-            ->getRepository('QueueItem')
-            ->select(['id'])
-            ->where([
-                'data*'  => '%"updateProductsWithInconsistentAttributes"%',
-                'status' => ["Pending", "Running"]
-            ])
-            ->findOne();
+        $productRepository = $this->getEntityManager()->getRepository('Product');
 
-        if (empty($exist)) {
-            $name = $this->getContainer()->get('language')->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
-            $this->getContainer()->get('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
+        while (!empty($products = $this->getProductsWithInconsistentAttributes())) {
+            foreach ($products as $product) {
+                $productRepository->updateInconsistentAttributes($product);
+            }
         }
 
         return true;
+    }
+
+    protected function getProductsWithInconsistentAttributes(): array
+    {
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->where(['hasInconsistentAttributes' => true])
+            ->limit(0, 200)
+            ->order('id', true)
+            ->find();
+
+        $result = [];
+        foreach ($products as $product) {
+            $result[] = $product;
+        }
+
+        return $result;
     }
 }

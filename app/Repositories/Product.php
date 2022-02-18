@@ -102,19 +102,9 @@ class Product extends AbstractRepository
         }
     }
 
-    public function pushJobForUpdateInconsistentAttributes(): void
-    {
-        $name = $this->translate('updateProductsWithInconsistentAttributes', 'labels', 'Product');
-        $this->getInjection('queueManager')->push($name, 'QueueManagerProduct', ['action' => 'updateProductsWithInconsistentAttributes']);
-    }
-
     public function updateProductsAttributes(string $subQuery, bool $createJob = false): void
     {
         $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery) AND deleted=0");
-
-        if ($createJob) {
-            $this->pushJobForUpdateInconsistentAttributes();
-        }
     }
 
     public function updateProductsAttributesViaProductIds(array $productIds, bool $createJob = false): void
