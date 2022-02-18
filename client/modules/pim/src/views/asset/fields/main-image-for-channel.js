@@ -29,8 +29,12 @@
 Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi-enum',
     Dep => Dep.extend({
 
+        hashScope: null,
+
         setup() {
             Dep.prototype.setup.call(this);
+
+            this.hashScope = window.location.hash.split('/').shift().replace('#', '');
 
             this.listenTo(this.model, 'change:isMainImage change:channel', () => {
                 this.reRender()
@@ -38,6 +42,10 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
         },
 
         setupOptions: function () {
+            if (this.hashScope !== 'Product') {
+                return;
+            }
+
             this.params.options = [];
             this.translatedOptions = {};
 
@@ -58,7 +66,7 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                if (!this.model.get('isMainImage') || !!this.model.get('channel')) {
+                if (this.hashScope !== 'Product' || !this.model.get('isMainImage') || !!this.model.get('channel')) {
                     this.hide();
                 } else {
                     this.show();

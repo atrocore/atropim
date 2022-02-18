@@ -30,6 +30,11 @@ Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
     Dep => Dep.extend({
 
         setupOptions: function () {
+            let scope = window.location.hash.split('/').shift().replace('#', '');
+            if (scope !== 'Product') {
+                return;
+            }
+
             if (this.model.get('channel') === null) {
                 this.model.set('channel', '');
             }
