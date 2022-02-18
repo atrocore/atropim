@@ -84,17 +84,15 @@ class V1Dot4Dot9 extends Base
 
                     if (!empty($productAsset = $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
                         $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=1 WHERE id={$productAsset['id']}");
-                        if ($mainImage['scope'] !== 'Global') {
-                            if (empty($productAsset['channel'])) {
-                                $mainImageForChannel = @json_decode((string)$productAsset['main_image_for_channel'], true);
-                                if (empty($mainImageForChannel)) {
-                                    $mainImageForChannel = [];
-                                }
-                                $mainImageForChannel[] = $mainImage['channelId'];
-                                $this->getPDO()->exec(
-                                    "UPDATE `product_asset` SET main_image_for_channel='" . json_encode(array_unique($mainImageForChannel)) . "' WHERE id={$productAsset['id']}"
-                                );
+                        if ($mainImage['scope'] !== 'Global' && empty($productAsset['channel'])) {
+                            $mainImageForChannel = @json_decode((string)$productAsset['main_image_for_channel'], true);
+                            if (empty($mainImageForChannel)) {
+                                $mainImageForChannel = [];
                             }
+                            $mainImageForChannel[] = $mainImage['channelId'];
+                            $this->getPDO()->exec(
+                                "UPDATE `product_asset` SET main_image_for_channel='" . json_encode(array_unique($mainImageForChannel)) . "' WHERE id={$productAsset['id']}"
+                            );
                         }
                     }
                 }
