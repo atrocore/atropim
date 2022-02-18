@@ -55,11 +55,43 @@ class Product extends AbstractService
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
+        // set global main images
+        if (count($collection) > 0 && !empty($records = $this->getRepository()->getProductsGlobalMainImages(array_column($collection->toArray(), 'id')))) {
+            foreach ($collection as $entity) {
+                if (!empty($entity->get('mainImageId'))) {
+                    continue 1;
+                }
+
+                $entity->set('mainImageId', null);
+                $entity->set('mainImageName', null);
+
+                foreach ($records as $record) {
+                    if ($entity->get('id') === $record['productId']) {
+                        $entity->set('mainImageId', $record['attachmentId']);
+                        $entity->set('mainImageName', $record['attachmentId']);
+                        break 1;
+                    }
+                }
+            }
+        }
+
         parent::loadPreviewForCollection($collection);
     }
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        // set global main image
+        if (!$entity->has('mainImageId')) {
+            $entity->set('mainImageId', null);
+            $entity->set('mainImageName', null);
+            $entity->set('mainImagePathsData', null);
+            if (!empty($attachmentId = $this->getRepository()->getProductGlobalMainImage($entity->get('id')))) {
+                $entity->set('mainImageId', $attachmentId);
+                $entity->set('mainImageName', $attachmentId);
+                $entity->set('mainImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachmentId));
+            }
+        }
+
         parent::prepareEntityForOutput($entity);
     }
 

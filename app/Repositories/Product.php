@@ -217,6 +217,48 @@ class Product extends AbstractRepository
         $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
     }
 
+    public function getProductGlobalMainImage(string $productId): ?string
+    {
+        $productId = $this->getPDO()->quote($productId);
+
+        $query = "SELECT a.file_id 
+                      FROM `product_asset` r 
+                      LEFT JOIN `asset` a ON a.id=r.asset_id
+                      WHERE r.is_main_image=1 
+                        AND r.product_id=$productId
+                        AND (r.channel IS NULL OR r.channel='')
+                        AND (r.main_image_for_channel IS NULL OR r.main_image_for_channel='[]')
+                        AND r.deleted=0";
+
+        $attachmentId = $this
+            ->getEntityManager()
+            ->getPDO()
+            ->query($query)
+            ->fetch(\PDO::FETCH_COLUMN);
+
+        return empty($attachmentId) ? null : $attachmentId;
+    }
+
+    public function getProductsGlobalMainImages(array $productIds): array
+    {
+        $query = "SELECT a.file_id as attachmentId, r.product_id as productId
+                      FROM `product_asset` r 
+                      LEFT JOIN `asset` a ON a.id=r.asset_id
+                      WHERE r.is_main_image=1 
+                        AND r.product_id IN ('" . implode("','", $productIds) . "')
+                        AND (r.channel IS NULL OR r.channel='')
+                        AND (r.main_image_for_channel IS NULL OR r.main_image_for_channel='[]')
+                        AND r.deleted=0";
+
+        $records = $this
+            ->getEntityManager()
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        return empty($records) ? [] : $records;
+    }
+
     public function getAssetData(string $productId, string $assetId): array
     {
         $assetId = $this->getEntityManager()->getPDO()->quote($assetId);
