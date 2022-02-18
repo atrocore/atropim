@@ -78,7 +78,7 @@ class LayoutController extends AbstractListener
     protected function modifyAssetListSmallForProduct(Event $event): void
     {
         $data = Json::decode($this->getContainer()->get('layout')->get('Asset', 'listSmall'), true);
-        $data[] = ['name' => 'channel'];
+        $data[] = ['name' => 'channel', 'notSortable' => true];
 
         $event->setArgument('result', Json::encode($data));
     }
