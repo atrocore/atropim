@@ -40,10 +40,10 @@ class V1Dot4Dot9 extends Base
     {
         $this->exec("ALTER TABLE `category_asset` ADD is_main_image TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci");
 
-        $query = "SELECT c.id, a.id as assetId 
+        $query = "SELECT c.id, a.id as assetId
                   FROM `category` c
                   LEFT JOIN `asset` a ON a.file_id=c.image_id
-                  WHERE c.deleted=0 
+                  WHERE c.deleted=0
                     AND c.image_id IS NOT NULL";
 
         try {
@@ -65,6 +65,41 @@ class V1Dot4Dot9 extends Base
         $this->exec("ALTER TABLE `product_asset` CHANGE `channel` channel VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `product_asset` ADD main_image_for_channel MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '(DC2Type:array)'");
         $this->exec("CREATE UNIQUE INDEX UNIQ_A3F321005DA19414584665A ON `product_asset` (asset_id, product_id)");
+
+        $query = "SELECT id, data 
+                  FROM `product` 
+                  WHERE deleted=0 
+                    AND data IS NOT NULL 
+                    AND data!='{\"mainImages\":[]}'";
+        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $product) {
+            $productData = @json_decode((string)$product['data'], true);
+            if (!empty($productData['mainImages'])) {
+                foreach ($productData['mainImages'] as $mainImage) {
+                    $query = "SELECT pa.* 
+                              FROM `product_asset` pa 
+                              LEFT JOIN asset a on a.id = pa.asset_id 
+                              WHERE pa.product_id='{$product['id']}' 
+                                AND pa.deleted=0 
+                                AND a.file_id='{$mainImage['attachmentId']}'";
+
+                    if (!empty($productAsset = $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
+                        $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=1 WHERE id={$productAsset['id']}");
+                        if ($mainImage['scope'] !== 'Global') {
+                            if (empty($productAsset['channel'])) {
+                                $mainImageForChannel = @json_decode((string)$productAsset['main_image_for_channel'], true);
+                                if (empty($mainImageForChannel)) {
+                                    $mainImageForChannel = [];
+                                }
+                                $mainImageForChannel[] = $mainImage['channelId'];
+                                $this->getPDO()->exec(
+                                    "UPDATE `product_asset` SET main_image_for_channel='" . json_encode(array_unique($mainImageForChannel)) . "' WHERE id={$productAsset['id']}"
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function down(): void
