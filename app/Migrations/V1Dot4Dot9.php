@@ -38,6 +38,13 @@ class V1Dot4Dot9 extends Base
 {
     public function up(): void
     {
+        $this->exec("DELETE FROM `product_asset` WHERE deleted=1");
+
+        // delete duplicates
+        foreach ($this->getPDO()->query("SELECT * FROM `product_asset`")->fetchAll(\PDO::FETCH_ASSOC) as $v) {
+            $this->exec("DELETE FROM `product_asset` WHERE asset_id='{$v['asset_id']}' AND product_id='{$v['product_id']}' AND id!='{$v['id']}'");
+        }
+
         $this->exec("CREATE TABLE `brand_asset` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `asset_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `brand_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `sorting` INT DEFAULT '100000' COLLATE utf8mb4_unicode_ci, `is_main_image` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_5956934B5DA1941` (asset_id), INDEX `IDX_5956934B44F5D008` (brand_id), UNIQUE INDEX `UNIQ_5956934B5DA194144F5D008` (asset_id, brand_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
         $this->exec("DROP INDEX id ON `brand_asset`");
 
