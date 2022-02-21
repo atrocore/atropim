@@ -31,46 +31,26 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\Exceptions\BadRequest;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
 
-/**
- * Class AssetService
- */
 class AssetService extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function beforeGetEntity(Event $event): void
-    {
-        $parts = explode('_', $event->getArgument('id'));
-        $event->setArgument('id', array_shift($parts));
-    }
-
-    /**
-     * @param Event $event
-     */
     public function beforeUpdateEntity(Event $event): void
     {
-        $this->beforeGetEntity($event);
-    }
+        $data = $event->getArgument('data');
+        if (!property_exists($data, '_relationEntity') || !property_exists($data, '_relationEntityId') || $data->_relationEntity !== 'Product') {
+            return;
+        }
 
-    /**
-     * @param Event $event
-     */
-    public function afterUpdateEntity(Event $event): void
-    {
-        $asset = $event->getArgument('entity');
-        if (!empty($entityName = $asset->get('entityName')) && $entityName == 'Product') {
-            $channelId = empty($asset->get('channelId')) || $asset->get('scope') == 'Global' ? "''" : "'" . $asset->get('channelId') . "'";
-            try {
-                $this
-                    ->getEntityManager()
-                    ->nativeQuery("UPDATE product_asset SET channel=$channelId WHERE id='{$event->getArgument('data')->relationId}'");
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error('Updating of Product Asset relation failed. Message: ' . $e->getMessage());
-            }
+        $assetData = $this->getEntityManager()->getRepository('Product')->getAssetData($data->_relationEntityId, $event->getArgument('id'));
+        if (empty($assetData)) {
+            return;
+        }
+
+        if ($assetData['channel'] != $data->channel && !empty($assetData['is_main_image'])) {
+            throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
         }
     }
 }

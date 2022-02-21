@@ -4,33 +4,8 @@
   ],
   "relationshipPanels": {
     "assets": {
-      "layoutName": "listSmallForProduct",
-      "view": "pim:views/asset/record/panels/bottom-panel",
-      "innerPanelView": "pim:views/asset/record/panels/asset-type-block"
+      "layoutName": "listSmallForProduct"
     }
-  },
-  "sidePanels": {
-    "edit": [
-      {
-        "name": "image",
-        "label": "productPreview",
-        "view": "pim:views/product/fields/image"
-      }
-    ],
-    "detail": [
-      {
-        "name": "image",
-        "label": "productPreview",
-        "view": "pim:views/product/fields/image"
-      }
-    ],
-    "detailSmall": [
-      {
-        "name": "image",
-        "label": "productPreview",
-        "view": "pim:views/product/fields/image"
-      }
-    ]
   },
   "menu": {
     "list": {

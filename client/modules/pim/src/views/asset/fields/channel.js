@@ -26,51 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/fields/channel', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
     Dep => Dep.extend({
 
-        idName: 'id',
+        setupOptions: function () {
+            let scope = window.location.hash.split('/').shift().replace('#', '');
+            if (scope !== 'Product') {
+                return;
+            }
 
-        foreignScope: 'Channel',
+            if (this.model.get('channel') === null) {
+                this.model.set('channel', '');
+            }
 
-        selectBoolFilterList: ['productChannels'],
+            let productId = window.location.hash.split('/').pop();
 
-        setup() {
-            Dep.prototype.setup.call(this);
+            let key = 'product-channels-' + productId;
 
-            this.listenTo(this.model, 'change:channelId', () => {
-                if (!this.model.get('entityId')) {
-                    this.model.set('entityId', this.getEntityId(), {silent: true});
-                }
+            let currentTime = Math.floor(new Date().getTime() / 1000);
+            let storedTime = this.getStorage().get(key + '-time', 'Product');
 
-                if (!this.model.get('entityName')) {
-                    this.model.set('entityName', 'Product', {silent: true});
-                }
+            if (!storedTime || storedTime < currentTime) {
+                this.getStorage().clear(key, 'Product');
+            }
 
-                this.model.set('channel', this.model.get('channelId'), {silent: true});
+            let channels = this.getStorage().get(key, 'Product');
+            if (channels === null) {
+                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+                    this.getStorage().set(key + '-time', 'Product', currentTime + 5);
+                    this.getStorage().set(key, 'Product', response.list);
+                    channels = response.list;
+                });
+            }
+
+            this.params.options = [""];
+            this.translatedOptions = {"": "Global"};
+
+            channels.forEach(channel => {
+                this.params.options.push(channel.id);
+                this.translatedOptions[channel.id] = channel.name;
             });
-
-            if (this.model.get('channelId') === null) {
-                if (this.mode === 'edit') {
-                    this.model.set('channelName', null);
-                } else {
-                    this.model.set('channelName', 'Global');
-                }
-            }
         },
 
-        getEntityId: function () {
-            if (this.model.get('entityId')) {
-                return this.model.get('entityId');
-            }
-
-            return this.model.get('productsIds')[0];
-        },
-
-        boolFilterData: {
-            productChannels() {
-                return this.getEntityId();
-            }
-        },
     })
 );

@@ -2,18 +2,12 @@
   "fields": {
     "categories": "Categories",
     "products": "Products",
-    "scope": "Scope",
     "channel": "Channel",
-    "channelCode": "Channel Code",
-    "isMainImage": "Main Image",
-    "channels": "Main Image for Channel"
+    "mainImageForChannel": "Main Image for Channel"
   },
   "links": {
     "categories": "Categories",
     "products": "Products"
-  },
-  "labels": {
-    "setAsMainImage": "Set as Main Image"
   },
   "exceptions": {
     "scopeForTheImageMarkedAsMainCannotBeChanged": "Scope for the image marked as Main cannot be changed."

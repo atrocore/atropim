@@ -96,6 +96,37 @@ class Channel extends Base
         return $this->getEntityManager()->getRepository('Category')->unrelateChannels($category, $entity, $options);
     }
 
+    public function unrelateProducts(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
+        $product = $foreign;
+        if (is_string($foreign)) {
+            $product = $this->getEntityManager()->getRepository('Product')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Product')->unrelateChannels($product, $entity, $options);
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        if (!empty($products = $entity->get('products')) && count($products) > 0) {
+            foreach ($products as $product) {
+                $this->unrelateProducts($entity, $product, []);
+            }
+        }
+
+        if (!empty($categories = $entity->get('categories')) && count($categories) > 0) {
+            foreach ($categories as $category) {
+                $this->unrelateCategories($entity, $category, []);
+            }
+        }
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (empty($entity->get('locales'))) {
@@ -112,19 +143,6 @@ class Channel extends Base
         }
 
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
-
-        if ($relationName == 'products') {
-            $this->getEntityManager()->nativeQuery("DELETE FROM product_channel WHERE deleted=1");
-            $this->getEntityManager()->getRepository('Product')->unrelatePfas($foreign, $entity);
-        }
     }
 
     protected function init()

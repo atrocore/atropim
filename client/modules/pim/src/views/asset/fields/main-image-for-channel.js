@@ -26,29 +26,52 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/fields/image', 'views/fields/image',
+Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi-enum',
     Dep => Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'after:unrelate', () => {
-                this.model.fetch();
-                this.reRender();
+            this.listenTo(this.model, 'change:isMainImage change:channel', () => {
+                this.reRender()
             });
+        },
+
+        setupOptions: function () {
+            if (this.getHashScope() !== 'Product') {
+                return;
+            }
+
+            this.params.options = [];
+            this.translatedOptions = {};
+
+            if (this.mode === 'edit') {
+                let productId = window.location.hash.split('/').pop();
+                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+                    if (response.total > 0) {
+                        response.list.forEach(channel => {
+                            this.params.options.push(channel.id);
+                            this.translatedOptions[channel.id] = channel.name;
+                        });
+                    }
+                });
+            }
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'list') {
-                this.$el.find('img').css({'max-height': '120px', 'max-width': '100%'});
+            if (this.mode === 'edit') {
+                if (this.getHashScope() !== 'Product' || !this.model.get('isMainImage') || !!this.model.get('channel')) {
+                    this.hide();
+                } else {
+                    this.show();
+                }
             }
+        },
 
-            if (this.mode === 'detail') {
-                this.$el.find('.attachment-preview').css({'display': 'block'});
-                this.$el.find('img').css({'display': 'block', 'margin': '0 auto'});
-            }
+        getHashScope() {
+            return window.location.hash.split('/').shift().replace('#', '');
         },
 
     })

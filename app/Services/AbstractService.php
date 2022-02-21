@@ -47,40 +47,6 @@ abstract class AbstractService extends Base
     protected $linkWhereNeedToUpdateChannel = '';
 
     /**
-     * @param string $assetId
-     * @param string $entityId
-     *
-     * @return array
-     * @throws NotFound
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function setAsMainImage(string $assetId, string $entityId): array
-    {
-        $parts = explode('_', $assetId);
-        $assetId = array_shift($parts);
-
-        /** @var Asset $asset */
-        $asset = $this->getEntityManager()->getEntity('Asset', $assetId);
-        if (empty($asset) || empty($attachment = $asset->get('file'))) {
-            throw new NotFound();
-        }
-
-        $entity = $this->getRepository()->get($entityId);
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        $entity->set('imageId', $asset->get('fileId'));
-        $this->getEntityManager()->saveEntity($entity);
-
-        return [
-            'imageId'        => $asset->get('fileId'),
-            'imageName'      => $asset->get('name'),
-            'imagePathsData' => $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment)
-        ];
-    }
-
-    /**
      * @inheritDoc
      */
     public function findLinkedEntities($id, $link, $params)

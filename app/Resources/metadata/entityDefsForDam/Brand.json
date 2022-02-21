@@ -10,18 +10,10 @@
   "links": {
     "assets": {
       "type": "hasMany",
-      "relationName": "productAsset",
-      "foreign": "products",
+      "relationName": "brandAsset",
+      "foreign": "brands",
       "entity": "Asset",
-      "audited": false,
-      "additionalColumns": {
-        "channel": {
-          "type": "varchar"
-        },
-        "mainImageForChannel": {
-          "type": "array"
-        }
-      }
+      "audited": false
     }
   }
 }

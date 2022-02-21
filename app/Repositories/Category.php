@@ -331,24 +331,6 @@ class Category extends AbstractRepository
         return $result;
     }
 
-    public function unrelateAssets(Entity $category, $asset, $options)
-    {
-        if (is_bool($asset)) {
-            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
-        }
-
-        if (is_string($asset)) {
-            $asset = $this->getEntityManager()->getRepository('Asset')->get($asset);
-        }
-
-        $result = $this->getMapper()->removeRelation($category, 'assets', $asset->get('id'));
-        if ($result && $asset->get('fileId') === $category->get('imageId')) {
-            $this->getPDO()->exec("UPDATE category SET image_id=NULL WHERE id='{$category->get('id')}'");
-        }
-
-        return $result;
-    }
-
     /**
      * @param Entity $entity
      * @param array  $options
@@ -415,14 +397,6 @@ class Category extends AbstractRepository
         $this->deactivateChildren($entity);
 
         parent::afterSave($entity, $options);
-
-        // relate main image for product
-        if ($entity->isAttributeChanged('imageId') && !empty($entity->get('imageId'))) {
-            $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
-            if (!empty($asset)) {
-                $this->relate($entity, 'assets', $asset);
-            }
-        }
     }
 
     public function remove(Entity $entity, array $options = [])

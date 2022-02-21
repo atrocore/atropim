@@ -102,29 +102,6 @@ abstract class AbstractRepository extends Base
     }
 
     /**
-     * @param Entity        $entity
-     * @param Entity|string $foreign
-     * @param array         $options
-     *
-     * @throws Error
-     */
-    protected function afterUnrelateAssets($entity, $foreign, $options): void
-    {
-        if (!in_array($entity->getEntityType(), ['Product', 'Category'])) {
-            return;
-        }
-
-        if (is_string($foreign)) {
-            $foreign = $this->getEntityManager()->getEntity('Asset', $foreign);
-        }
-
-        if ($entity->get('imageId') === $foreign->get('fileId')) {
-            $entity->set('imageId', null);
-            $this->getEntityManager()->saveEntity($entity);
-        }
-    }
-
-    /**
      * @param Entity $entity
      * @param string $field
      * @param string $config

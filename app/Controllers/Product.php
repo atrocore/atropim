@@ -37,7 +37,7 @@ use Slim\Http\Request;
 /**
  * Product controller
  */
-class Product extends AbstractWithMainImageController
+class Product extends AbstractController
 {
     public function actionUpdateActiveForChannel(array $params, \stdClass $data, Request $request): bool
     {

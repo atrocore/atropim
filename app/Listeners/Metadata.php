@@ -72,8 +72,6 @@ class Metadata extends AbstractListener
 
         $data = $this->addTabPanels($data);
 
-        $data['entityDefs']['Asset']['fields']['preview']['view'] = 'pim:views/asset/fields/preview';
-
         // set data
         $event->setArgument('data', $data);
     }
