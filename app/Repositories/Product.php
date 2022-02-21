@@ -131,9 +131,9 @@ class Product extends AbstractRepository
         }
     }
 
-    public function parseMainImageForChannel(string $mainImageForChannel): array
+    public function parseMainImageForChannel($mainImageForChannel): array
     {
-        $mainImageForChannel = @json_decode($mainImageForChannel, true);
+        $mainImageForChannel = @json_decode((string)$mainImageForChannel, true);
         if (empty($mainImageForChannel)) {
             $mainImageForChannel = [];
         }
@@ -857,8 +857,32 @@ class Product extends AbstractRepository
 
         $this->getPDO()->exec("DELETE FROM product_channel WHERE product_id='{$product->get('id')}' AND channel_id='{$channel->get('id')}'");
         $this->unrelatePfas($product, $channel);
+        $this->removeChannelAssets($product->get('id'), $channel->get('id'));
 
         return true;
+    }
+
+    public function removeChannelAssets(string $productId, string $channelId): void
+    {
+        foreach ($this->getAssetsData($productId) as $row) {
+            if ($row['channel'] === $channelId) {
+                $this->getPDO()->exec("DELETE FROM `product_asset` WHERE id='{$row['id']}'");
+                continue 1;
+            }
+
+            $mainImageForChannel = @json_decode($row['main_image_for_channel'], true);
+            if (empty($mainImageForChannel)) {
+                $mainImageForChannel = [];
+            }
+
+            if (($key = array_search($channelId, $mainImageForChannel)) !== false) {
+                unset($mainImageForChannel[$key]);
+                $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='" . json_encode(array_values($mainImageForChannel)) . "' WHERE id='{$row['id']}'");
+                if (empty($mainImageForChannel)) {
+                    $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE id='{$row['id']}'");
+                }
+            }
+        }
     }
 
     protected function onProductFamilyChange(Entity $product): void
