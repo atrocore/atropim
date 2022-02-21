@@ -207,38 +207,13 @@ class Product extends AbstractRepository
         $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
     }
 
-    public function getProductGlobalMainImage(string $productId): ?string
+    public function getProductsAssets(array $productIds): array
     {
-        $productId = $this->getPDO()->quote($productId);
-
-        $query = "SELECT a.file_id 
+        $query = "SELECT r.*
                       FROM `product_asset` r 
                       LEFT JOIN `asset` a ON a.id=r.asset_id
-                      WHERE r.is_main_image=1 
-                        AND r.product_id=$productId
-                        AND (r.channel IS NULL OR r.channel='')
-                        AND (r.main_image_for_channel IS NULL OR r.main_image_for_channel='[]')
-                        AND r.deleted=0";
-
-        $attachmentId = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query($query)
-            ->fetch(\PDO::FETCH_COLUMN);
-
-        return empty($attachmentId) ? null : $attachmentId;
-    }
-
-    public function getProductsGlobalMainImages(array $productIds): array
-    {
-        $query = "SELECT a.file_id as attachmentId, r.product_id as productId
-                      FROM `product_asset` r 
-                      LEFT JOIN `asset` a ON a.id=r.asset_id
-                      WHERE r.is_main_image=1 
-                        AND r.product_id IN ('" . implode("','", $productIds) . "')
-                        AND (r.channel IS NULL OR r.channel='')
-                        AND (r.main_image_for_channel IS NULL OR r.main_image_for_channel='[]')
-                        AND r.deleted=0";
+                      WHERE r.deleted=0
+                        AND r.product_id IN ('" . implode("','", $productIds) . "')";
 
         $records = $this
             ->getEntityManager()
@@ -246,7 +221,35 @@ class Product extends AbstractRepository
             ->query($query)
             ->fetchAll(\PDO::FETCH_ASSOC);
 
-        return empty($records) ? [] : $records;
+        if (empty($records)) {
+            return [];
+        }
+
+        $assets = $this
+            ->getEntityManager()
+            ->getRepository('Asset')
+            ->where(['id' => array_column($records, 'asset_id')])
+            ->find();
+
+        $result = [];
+        foreach ($records as $record) {
+            if (!isset($result[$record['product_id']])){
+                $result[$record['product_id']] = new EntityCollection();
+            }
+
+            foreach ($assets as $asset) {
+                if ($asset->get('id') === $record['asset_id']) {
+                    $asset->set('sorting', $record['sorting']);
+                    $asset->set('isMainImage', !empty($record['is_main_image']));
+                    $asset->set('channel', $record['channel']);
+                    $mainImageForChannel = @json_decode((string)$record['main_image_for_channel'], true);
+                    $asset->set('mainImageForChannel', empty($mainImageForChannel) ? [] : $mainImageForChannel);
+                    $result[$record['product_id']]->append($asset);
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function getAssetData(string $productId, string $assetId): array

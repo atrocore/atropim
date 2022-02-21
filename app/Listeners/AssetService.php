@@ -53,13 +53,4 @@ class AssetService extends AbstractListener
             throw new BadRequest($this->getLanguage()->translate("scopeForTheImageMarkedAsMainCannotBeChanged", 'exceptions', 'Asset'));
         }
     }
-
-    public function prepareEntityForOutput(Event $event): void
-    {
-        $entity = $event->getArgument('entity');
-
-        if (!empty($entity->get('isMainImage')) && empty($entity->get('channel')) && empty($entity->get('mainImageForChannel'))) {
-            $entity->set('isGlobalMainImage', true);
-        }
-    }
 }

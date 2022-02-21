@@ -56,20 +56,24 @@ class Product extends AbstractService
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
         // set global main images
-        if (count($collection) > 0 && !empty($records = $this->getRepository()->getProductsGlobalMainImages(array_column($collection->toArray(), 'id')))) {
+        if (count($collection) > 0 && !empty($records = $this->getRepository()->getProductsAssets(array_column($collection->toArray(), 'id')))) {
             foreach ($collection as $entity) {
-                if (!empty($entity->get('mainImageId'))) {
+                if (!isset($records[$entity->get('id')])) {
+                    continue 1;
+                }
+
+                $assetsCollection = $records[$entity->get('id')];
+
+                if (count($assetsCollection) === 0) {
                     continue 1;
                 }
 
                 $entity->set('mainImageId', null);
                 $entity->set('mainImageName', null);
-
-                foreach ($records as $record) {
-                    if ($entity->get('id') === $record['productId']) {
-                        $entity->set('mainImageId', $record['attachmentId']);
-                        $entity->set('mainImageName', $record['attachmentId']);
-                        break 1;
+                foreach ($this->getPreparedProductAssets($entity->get('id'), $assetsCollection, $this->getPrismChannelId()) as $asset) {
+                    if (!empty($asset->get('isGlobalMainImage'))) {
+                        $entity->set('mainImageId', $asset->get('fileId'));
+                        $entity->set('mainImageName', $asset->get('fileName'));
                     }
                 }
             }
@@ -85,10 +89,18 @@ class Product extends AbstractService
             $entity->set('mainImageId', null);
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
-            if (!empty($attachmentId = $this->getRepository()->getProductGlobalMainImage($entity->get('id')))) {
-                $entity->set('mainImageId', $attachmentId);
-                $entity->set('mainImageName', $attachmentId);
-                $entity->set('mainImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachmentId));
+
+            if (!empty($records = $this->getRepository()->getProductsAssets([$entity->get('id')])) && isset($records[$entity->get('id')])) {
+                $assetsCollection = $records[$entity->get('id')];
+                if (count($assetsCollection) > 0) {
+                    foreach ($this->getPreparedProductAssets($entity->get('id'), $assetsCollection, $this->getPrismChannelId()) as $asset) {
+                        if (!empty($asset->get('isGlobalMainImage'))) {
+                            $entity->set('mainImageId', $asset->get('fileId'));
+                            $entity->set('mainImageName', $asset->get('fileName'));
+                            $entity->set('mainImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($asset->get('fileId')));
+                        }
+                    }
+                }
             }
         }
 
@@ -384,12 +396,24 @@ class Product extends AbstractService
         $result = parent::findLinkedEntities($id, $link, $params);
 
         /**
+         * Set global main image
+         */
+        if ($link === 'assets' && $result['total'] > 0) {
+            $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
+            $result['collection'] = $this->getPreparedProductAssets($id, $result['collection'], $channelId);
+            $result['total'] = $result['collection']->count();
+
+            return $result;
+        }
+
+        /**
          * Mark channels as inherited from categories
          */
         if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getRepository()->getCategoriesChannelsIds($id))) {
             foreach ($result['collection'] as $channel) {
                 $channel->set('isInherited', in_array($channel->get('id'), $channelsIds));
             }
+            return $result;
         }
 
         return $result;
@@ -764,27 +788,6 @@ class Product extends AbstractService
         return $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $productId);
     }
 
-    protected function getAssetData(string $productId, string $attachmentId): ?array
-    {
-        $productAssets = $this->getAssets($productId);
-        if (empty($productAssets) || empty($productAssets['list'])) {
-            return null;
-        }
-
-        foreach ($productAssets['list'] as $type) {
-            if (empty($type['assets'])) {
-                continue 1;
-            }
-            foreach ($type['assets'] as $row) {
-                if ($attachmentId === $row['fileId']) {
-                    return $row;
-                }
-            }
-        }
-
-        return null;
-    }
-
     /**
      * @inheritDoc
      */
@@ -793,5 +796,52 @@ class Product extends AbstractService
         parent::init();
 
         $this->addDependency('serviceFactory');
+    }
+
+    protected function getPreparedProductAssets(string $productId, EntityCollection $assets, ?string $channelId): EntityCollection
+    {
+        if (empty($channelId)) {
+            foreach ($assets as $asset) {
+                if (!empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel'))) {
+                    $asset->set('isGlobalMainImage', true);
+                }
+            }
+            return $assets;
+        }
+
+        $newCollection = new EntityCollection();
+
+        $hasMainImage = false;
+        foreach ($assets as $asset) {
+            if (!$asset->has('channel')) {
+                $assetData = $this->getRepository()->getAssetData($productId, $asset->get('id'));
+                $asset->set('channel', $assetData['channel']);
+                $mainImageForChannel = @json_decode((string)$assetData['main_image_for_channel'], true);
+                $asset->set('mainImageForChannel', empty($mainImageForChannel) ? [] : $mainImageForChannel);
+            }
+
+            if (!empty($asset->get('channel')) && $asset->get('channel') !== $channelId) {
+                continue 1;
+            }
+
+            if (!empty($asset->get('isMainImage'))) {
+                if (in_array($channelId, $asset->get('mainImageForChannel')) || $asset->get('channel') === $channelId) {
+                    $asset->set('isGlobalMainImage', true);
+                    $hasMainImage = true;
+                }
+            }
+
+            $newCollection->append($asset);
+        }
+
+        if (!$hasMainImage) {
+            foreach ($assets as $asset) {
+                if (!empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel'))) {
+                    $asset->set('isGlobalMainImage', true);
+                }
+            }
+        }
+
+        return $newCollection;
     }
 }
