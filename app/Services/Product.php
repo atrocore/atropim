@@ -85,6 +85,13 @@ class Product extends AbstractService
     public function prepareEntityForOutput(Entity $entity)
     {
         // set global main image
+        $this->setProductMainImage($entity);
+
+        parent::prepareEntityForOutput($entity);
+    }
+
+    public function setProductMainImage(Entity $entity): void
+    {
         if (!$entity->has('mainImageId')) {
             $entity->set('mainImageId', null);
             $entity->set('mainImageName', null);
@@ -103,8 +110,6 @@ class Product extends AbstractService
                 }
             }
         }
-
-        parent::prepareEntityForOutput($entity);
     }
 
     public function updateActiveForChannel(string $channelId, string $productId, bool $isActive): bool
@@ -762,6 +767,8 @@ class Product extends AbstractService
         if ($this->isProductAttributeUpdating($post)) {
             return true;
         }
+
+        $this->setProductMainImage($entity);
 
         return parent::isEntityUpdated($entity, $post);
     }
