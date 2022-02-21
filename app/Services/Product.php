@@ -759,23 +759,6 @@ class Product extends AbstractService
     {
         $post = clone $data;
 
-        // push main image to assets ids
-        if (property_exists($post, 'assetsIds') && property_exists($post, 'imageId')) {
-            $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $post->imageId])->findOne();
-            if (!empty($asset)) {
-                $post->assetsIds[] = $asset->get('id');
-                $post->assetsIds = array_unique($post->assetsIds);
-            }
-        }
-
-        // for main image
-        if (property_exists($post, 'mainImageId')) {
-            if ($this->getMainImageId($entity) !== $post->mainImageId) {
-                return true;
-            }
-            unset($post->mainImageId);
-        }
-
         if ($this->isProductAttributeUpdating($post)) {
             return true;
         }

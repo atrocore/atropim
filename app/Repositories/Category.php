@@ -397,14 +397,6 @@ class Category extends AbstractRepository
         $this->deactivateChildren($entity);
 
         parent::afterSave($entity, $options);
-
-        // relate main image for product
-        if ($entity->isAttributeChanged('imageId') && !empty($entity->get('imageId'))) {
-            $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $entity->get('imageId')])->findOne();
-            if (!empty($asset)) {
-                $this->relate($entity, 'assets', $asset);
-            }
-        }
     }
 
     public function remove(Entity $entity, array $options = [])
