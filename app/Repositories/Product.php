@@ -74,32 +74,71 @@ class Product extends AbstractRepository
 
     public function updateMainImageRelationData(string $relationName, array &$setData, string $re1, string $re1Id, string $re2, string $re2Id): void
     {
-        $tableName = Util::toUnderScore($relationName);
-        $productId = $this->getPDO()->quote($re1Id);
-        $assetId = $this->getPDO()->quote($re2Id);
-
         if (!empty($setData['isMainImage'])) {
-            $isGlobal = empty($setData['channel']) && (empty($setData['mainImageForChannel']) || $setData['mainImageForChannel'] === '[]');
-            if ($isGlobal) {
-                $assetData = $this->getAssetData($re1Id, $re2Id);
-                $isGlobal = empty($assetData['channel']) && (empty($assetData['main_image_for_channel']) || $assetData['main_image_for_channel'] === '[]');
+            $productId = $this->getPDO()->quote($re1Id);
+            $assetData = $this->getAssetData($re1Id, $re2Id);
+            $otherAssets = [];
+            foreach ($this->getAssetsData($re1Id) as $v) {
+                if (!empty($v['is_main_image']) && $v['asset_id'] !== $re2Id) {
+                    $otherAssets[] = $v;
+                }
             }
 
-            if ($isGlobal) {
-                $records = $this
-                    ->getPDO()
-                    ->query("SELECT * FROM `{$tableName}` WHERE deleted=0 AND product_id=$productId AND asset_id!=$assetId AND is_main_image=1")
-                    ->fetchAll(\PDO::FETCH_ASSOC);
+            $channel = !isset($setData['channel']) ? $assetData['channel'] : $setData['channel'];
+            $mainImageForChannel = $this->parseMainImageForChannel($assetData['main_image_for_channel']);
+            if (isset($setData['mainImageForChannel'])) {
+                $mainImageForChannel = $setData['mainImageForChannel'];
+            }
 
-                foreach ($records as $record) {
+            /**
+             * Remove channel from main_image_for_channel
+             */
+            if (!empty($channel)) {
+                $setData['main_image_for_channel'] = '[]';
+                foreach ($otherAssets as $v) {
+                    $mifc = [];
+                    foreach ($this->parseMainImageForChannel($v['main_image_for_channel']) as $miChannel) {
+                        if ($channel !== $miChannel) {
+                            $mifc[] = $miChannel;
+                        }
+                    }
+                    $jsonMifc = json_encode($mifc);
+                    $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='$jsonMifc' WHERE id='{$v['id']}'");
+                }
+            }
+
+            /**
+             * Disable is_main_image parameter for channel specific assets
+             */
+            if (!empty($setData['mainImageForChannel'])) {
+                foreach ($setData['mainImageForChannel'] as $miChannel) {
+                    $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE channel='$miChannel' AND is_main_image=1 AND product_id=$productId");
+                }
+            }
+
+            /**
+             * Disable is_main_image parameter for global assets
+             */
+            if (empty($channel) && empty($mainImageForChannel)) {
+                foreach ($otherAssets as $record) {
                     if (empty($record['channel']) && (empty($record['main_image_for_channel']) || $record['main_image_for_channel'] === '[]')) {
-                        $this->getPDO()->exec("UPDATE `{$tableName}` SET is_main_image=0 WHERE id='{$record['id']}'");
+                        $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE id='{$record['id']}'");
                     }
                 }
             }
         } else {
             $setData['main_image_for_channel'] = '[]';
         }
+    }
+
+    public function parseMainImageForChannel(string $mainImageForChannel): array
+    {
+        $mainImageForChannel = @json_decode($mainImageForChannel, true);
+        if (empty($mainImageForChannel)) {
+            $mainImageForChannel = [];
+        }
+
+        return $mainImageForChannel;
     }
 
     public function updateProductsAttributes(string $subQuery, bool $createJob = false): void
@@ -233,7 +272,7 @@ class Product extends AbstractRepository
 
         $result = [];
         foreach ($records as $record) {
-            if (!isset($result[$record['product_id']])){
+            if (!isset($result[$record['product_id']])) {
                 $result[$record['product_id']] = new EntityCollection();
             }
 
@@ -261,6 +300,18 @@ class Product extends AbstractRepository
             ->getPDO()
             ->query("SELECT * FROM `product_asset` WHERE asset_id=$assetId AND product_id=$productId AND deleted=0")
             ->fetch(\PDO::FETCH_ASSOC);
+
+        return empty($result) ? [] : $result;
+    }
+
+    public function getAssetsData(string $productId): array
+    {
+        $productId = $this->getEntityManager()->getPDO()->quote($productId);
+
+        $result = $this
+            ->getPDO()
+            ->query("SELECT * FROM `product_asset` WHERE deleted=0 AND product_id=$productId")
+            ->fetchAll(\PDO::FETCH_ASSOC);
 
         return empty($result) ? [] : $result;
     }
