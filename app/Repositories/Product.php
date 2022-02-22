@@ -275,7 +275,10 @@ class Product extends AbstractRepository
         $query = "SELECT r.*
                       FROM `product_asset` r 
                       LEFT JOIN `asset` a ON a.id=r.asset_id
+                      LEFT JOIN `product` p ON p.id=r.product_id
                       WHERE r.deleted=0
+                        AND a.deleted=0
+                        AND p.deleted=0
                         AND r.product_id IN ('" . implode("','", $productIds) . "')";
 
         $records = $this
@@ -288,28 +291,27 @@ class Product extends AbstractRepository
             return [];
         }
 
-        $assets = $this
-            ->getEntityManager()
-            ->getRepository('Asset')
-            ->where(['id' => array_column($records, 'asset_id')])
-            ->find();
+        $assets = [];
+        foreach ($this->getEntityManager()->getRepository('Asset')->where(['id' => array_column($records, 'asset_id')])->find() as $asset) {
+            $assets[$asset->get('id')] = $asset->toArray();
+        }
 
         $result = [];
+
         foreach ($records as $record) {
             if (!isset($result[$record['product_id']])) {
                 $result[$record['product_id']] = new EntityCollection();
             }
 
-            foreach ($assets as $asset) {
-                if ($asset->get('id') === $record['asset_id']) {
-                    $asset->set('sorting', $record['sorting']);
-                    $asset->set('isMainImage', !empty($record['is_main_image']));
-                    $asset->set('channel', $record['channel']);
-                    $mainImageForChannel = @json_decode((string)$record['main_image_for_channel'], true);
-                    $asset->set('mainImageForChannel', empty($mainImageForChannel) ? [] : $mainImageForChannel);
-                    $result[$record['product_id']]->append($asset);
-                }
-            }
+            $asset = $this->getEntityManager()->getRepository('Asset')->get();
+            $asset->set($assets[$record['asset_id']]);
+            $asset->set('sorting', $record['sorting']);
+            $asset->set('isMainImage', !empty($record['is_main_image']));
+            $asset->set('channel', $record['channel']);
+            $mainImageForChannel = @json_decode((string)$record['main_image_for_channel'], true);
+            $asset->set('mainImageForChannel', empty($mainImageForChannel) ? [] : $mainImageForChannel);
+
+            $result[$record['product_id']]->append($asset);
         }
 
         return $result;

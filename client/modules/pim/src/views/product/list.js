@@ -74,7 +74,10 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             localStorage.removeItem('selectedNodeId');
             localStorage.removeItem('selectedNodeRoute');
 
-            this.getView('treePanel').buildTree();
+            let treeView = this.getView('treePanel');
+            if (treeView) {
+                treeView.buildTree();
+            }
         },
 
         selectNode(data) {

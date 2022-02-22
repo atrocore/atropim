@@ -45,7 +45,7 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
             this.params.options = [];
             this.translatedOptions = {};
 
-            if (this.mode === 'edit') {
+            if (this.mode === 'edit' && this.getAcl().check('Channel', 'read')) {
                 let productId = window.location.hash.split('/').pop();
                 this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
                     if (response.total > 0) {

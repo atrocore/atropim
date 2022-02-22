@@ -51,8 +51,8 @@ Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
             }
 
             let channels = this.getStorage().get(key, 'Product');
-            if (channels === null) {
-                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+            if (channels === null && this.getAcl().check('Channel', 'read')) {
+                this.ajaxGetRequest(`Product/${productId}/channels?silent=true`, null, {async: false}).done(response => {
                     this.getStorage().set(key + '-time', 'Product', currentTime + 5);
                     this.getStorage().set(key, 'Product', response.list);
                     channels = response.list;
@@ -62,10 +62,12 @@ Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
             this.params.options = [""];
             this.translatedOptions = {"": "Global"};
 
-            channels.forEach(channel => {
-                this.params.options.push(channel.id);
-                this.translatedOptions[channel.id] = channel.name;
-            });
+            if (channels) {
+                channels.forEach(channel => {
+                    this.params.options.push(channel.id);
+                    this.translatedOptions[channel.id] = channel.name;
+                });
+            }
         },
 
     })
