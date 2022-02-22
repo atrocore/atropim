@@ -97,15 +97,17 @@ class Product extends AbstractRepository
             if (!empty($channel)) {
                 $setData['main_image_for_channel'] = '[]';
                 foreach ($otherAssets as $v) {
-                    $mifc = [];
-                    foreach ($this->parseMainImageForChannel($v['main_image_for_channel']) as $miChannel) {
-                        if ($channel !== $miChannel) {
-                            $mifc[] = $miChannel;
+                    if (!empty($miChannels = $this->parseMainImageForChannel($v['main_image_for_channel']))) {
+                        $mifc = [];
+                        foreach ($miChannels as $miChannel) {
+                            if ($channel !== $miChannel) {
+                                $mifc[] = $miChannel;
+                            }
                         }
-                    }
-                    $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='" . json_encode($mifc) . "' WHERE id='{$v['id']}'");
-                    if (empty($mifc)) {
-                        $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE id='{$v['id']}' AND (channel IS NULL OR channel='')");
+                        $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='" . json_encode($mifc) . "' WHERE id='{$v['id']}'");
+                        if (empty($mifc)) {
+                            $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE id='{$v['id']}'");
+                        }
                     }
                 }
                 $this
