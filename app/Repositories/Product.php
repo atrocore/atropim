@@ -102,8 +102,7 @@ class Product extends AbstractRepository
                             $mifc[] = $miChannel;
                         }
                     }
-                    $jsonMifc = json_encode($mifc);
-                    $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='$jsonMifc' WHERE id='{$v['id']}'");
+                    $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='" . json_encode($mifc) . "' WHERE id='{$v['id']}'");
                 }
             }
 
@@ -113,6 +112,24 @@ class Product extends AbstractRepository
             if (!empty($setData['mainImageForChannel'])) {
                 foreach ($setData['mainImageForChannel'] as $miChannel) {
                     $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE channel='$miChannel' AND is_main_image=1 AND product_id=$productId");
+                }
+                foreach ($otherAssets as $v) {
+                    if (empty($v['is_main_image']) || empty($this->parseMainImageForChannel($v['main_image_for_channel']))) {
+                        continue 1;
+                    }
+
+                    $mifc = [];
+                    foreach ($this->parseMainImageForChannel($v['main_image_for_channel']) as $c1) {
+                        if (!in_array($c1, $setData['mainImageForChannel'])) {
+                            $mifc[] = $c1;
+                        }
+                    }
+
+                    $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='" . json_encode($mifc) . "' WHERE id='{$v['id']}'");
+
+                    if (empty($mifc)) {
+                        $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE id='{$v['id']}'");
+                    }
                 }
             }
 
@@ -870,7 +887,7 @@ class Product extends AbstractRepository
                 continue 1;
             }
 
-            $mainImageForChannel = @json_decode($row['main_image_for_channel'], true);
+            $mainImageForChannel = @json_decode((string)$row['main_image_for_channel'], true);
             if (empty($mainImageForChannel)) {
                 $mainImageForChannel = [];
             }
