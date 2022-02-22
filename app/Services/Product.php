@@ -97,7 +97,7 @@ class Product extends AbstractService
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
 
-            if (!empty($records = $this->getRepository()->getProductsAssets([$entity->get('id')])) && isset($records[$entity->get('id')])) {
+            if (!empty($records = $this->getEntityManager()->getRepository('Product')->getProductsAssets([$entity->get('id')])) && isset($records[$entity->get('id')])) {
                 $assetsCollection = $records[$entity->get('id')];
                 if (count($assetsCollection) > 0) {
                     foreach ($this->getPreparedProductAssets($entity->get('id'), $assetsCollection, $this->getPrismChannelId()) as $asset) {
@@ -122,7 +122,7 @@ class Product extends AbstractService
             return false;
         }
 
-        $this->getRepository()->updateChannelRelationData($productId, $channelId, $isActive);
+        $this->getEntityManager()->getRepository('Product')->updateChannelRelationData($productId, $channelId, $isActive);
 
         return true;
     }
@@ -414,7 +414,7 @@ class Product extends AbstractService
         /**
          * Mark channels as inherited from categories
          */
-        if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getRepository()->getCategoriesChannelsIds($id))) {
+        if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getEntityManager()->getRepository('Product')->getCategoriesChannelsIds($id))) {
             foreach ($result['collection'] as $channel) {
                 $channel->set('isInherited', in_array($channel->get('id'), $channelsIds));
             }
@@ -434,7 +434,7 @@ class Product extends AbstractService
      */
     protected function findLinkedEntitiesProductAttributeValues(string $id, array $params): array
     {
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getEntityManager()->getRepository('Product')->get($id);
         if (!$entity) {
             throw new NotFound();
         }
@@ -449,7 +449,7 @@ class Product extends AbstractService
             throw new Forbidden();
         }
 
-        $this->getRepository()->updateInconsistentAttributes($entity);
+        $this->getEntityManager()->getRepository('Product')->updateInconsistentAttributes($entity);
 
         $link = 'productAttributeValues';
 
@@ -474,7 +474,7 @@ class Product extends AbstractService
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
-        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+        $collection = $this->getEntityManager()->getRepository('Product')->findRelated($entity, $link, $selectParams);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -804,7 +804,7 @@ class Product extends AbstractService
         $hasMainImage = false;
         foreach ($assets as $asset) {
             if (!$asset->has('channel')) {
-                $assetData = $this->getRepository()->getAssetData($productId, $asset->get('id'));
+                $assetData = $this->getEntityManager()->getRepository('Product')->getAssetData($productId, $asset->get('id'));
                 $asset->set('channel', $assetData['channel']);
                 $mainImageForChannel = @json_decode((string)$assetData['main_image_for_channel'], true);
                 $asset->set('mainImageForChannel', empty($mainImageForChannel) ? [] : $mainImageForChannel);
