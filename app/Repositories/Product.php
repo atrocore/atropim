@@ -74,9 +74,10 @@ class Product extends AbstractRepository
 
     public function updateMainImageRelationData(string $relationName, array &$setData, string $re1, string $re1Id, string $re2, string $re2Id): void
     {
-        if (!empty($setData['isMainImage'])) {
+        $assetData = $this->getAssetData($re1Id, $re2Id);
+        $isMainImage = isset($setData['isMainImage']) ? $setData['isMainImage'] : !empty($assetData['is_main_image']);
+        if ($isMainImage) {
             $productId = $this->getPDO()->quote($re1Id);
-            $assetData = $this->getAssetData($re1Id, $re2Id);
             $otherAssets = [];
             foreach ($this->getAssetsData($re1Id) as $v) {
                 if (!empty($v['is_main_image']) && $v['asset_id'] !== $re2Id) {
@@ -103,7 +104,13 @@ class Product extends AbstractRepository
                         }
                     }
                     $this->getPDO()->exec("UPDATE `product_asset` SET main_image_for_channel='" . json_encode($mifc) . "' WHERE id='{$v['id']}'");
+                    if (empty($mifc)) {
+                        $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE id='{$v['id']}' AND (channel IS NULL OR channel='')");
+                    }
                 }
+                $this
+                    ->getPDO()
+                    ->exec("UPDATE `product_asset` SET is_main_image=0 WHERE channel='$channel' AND product_id='{$assetData['product_id']}' AND id!='{$assetData['id']}'");
             }
 
             /**

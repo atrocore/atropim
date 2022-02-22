@@ -8,8 +8,5 @@
   "links": {
     "categories": "Kategorien",
     "products": "Produkte"
-  },
-  "exceptions": {
-    "scopeForTheImageMarkedAsMainCannotBeChanged": "Scope für das als Hauptbild markierte Bild kann nicht geändert werden."
   }
 }

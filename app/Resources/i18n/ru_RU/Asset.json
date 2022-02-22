@@ -8,8 +8,5 @@
   "links": {
     "categories": "Категории",
     "products": "Продукты"
-  },
-  "exceptions": {
-    "scopeForTheImageMarkedAsMainCannotBeChanged": "Область действия изображения, помеченного как основное, изменить нельзя."
   }
 }
