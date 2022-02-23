@@ -402,7 +402,11 @@ class Product extends AbstractService
             return;
         }
 
-        $this->getServiceFactory()->create('ProductPrice')->duplicateProductPrices($product, $duplicatingProduct);
+        try {
+            $this->getServiceFactory()->create('ProductPrice')->duplicateProductPrices($product, $duplicatingProduct);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('ProductPrices duplicating failed: ' . $e->getMessage());
+        }
     }
 
     public function findLinkedEntities($id, $link, $params)
