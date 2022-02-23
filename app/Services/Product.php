@@ -396,6 +396,15 @@ class Product extends AbstractService
         }
     }
 
+    public function duplicateProductPrices(Entity $product, Entity $duplicatingProduct): void
+    {
+        if (!$this->getServiceFactory()->checkExists('ProductPrice')) {
+            return;
+        }
+
+        $this->getServiceFactory()->create('ProductPrice')->duplicateProductPrices($product, $duplicatingProduct);
+    }
+
     public function findLinkedEntities($id, $link, $params)
     {
         $result = parent::findLinkedEntities($id, $link, $params);
