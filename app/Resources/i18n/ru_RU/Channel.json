@@ -21,7 +21,6 @@
   },
   "exceptions": {
     "channelWithSuchCodeAlreadyExist": "Канал с таким КОДОМ уже существует.",
-    "channelHasProducts": "Канал со связанными продуктами удалить нельзя.",
     "channelHasCategory": "Канал со связанным деревом категорий удалить нельзя."
   }
 }
