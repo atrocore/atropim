@@ -13,7 +13,8 @@
     "scope": "Scope",
     "productCategories": "Category Products",
     "products": "Products",
-    "catalogs": "Catalogs"
+    "catalogs": "Catalogs",
+    "sortOrder": "Sort Order"
   },
   "links": {
     "categoryParent": "Parent Category",
