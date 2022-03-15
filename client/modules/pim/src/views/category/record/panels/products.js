@@ -24,6 +24,8 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
+ *
+ * This software is not allowed to be used in Russia and Belarus.
  */
 
 Espo.define('pim:views/category/record/panels/products', 'views/record/panels/relationship',
