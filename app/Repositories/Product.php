@@ -99,7 +99,8 @@ class Product extends AbstractRepository
     {
         $sql
             = "SELECT 
-                    pa.asset_id   as assetId, 
+                    pa.asset_id   as assetId,
+                    pa.sorting    as sorting,
                     c.id          as channelId, 
                     c.code        as channelCode 
                FROM product_asset pa 

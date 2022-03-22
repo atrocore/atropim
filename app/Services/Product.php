@@ -493,9 +493,34 @@ class Product extends AbstractService
                 foreach ($assetsData as $assetData) {
                     if ($assetData['assetId'] === $asset->get('id')) {
                         $asset->set('channelCode', $assetData['channelCode']);
+                        $asset->sorting = $assetData['sorting'];
                     }
                 }
             }
+
+            // sorting
+            $assetTypes = $this->getMetadata()->get('fields.asset.types', []);
+            sort($assetTypes);
+            $sortedCollection = new EntityCollection();
+            foreach ($assetTypes as $assetType) {
+                $typeAssets = [];
+                foreach ($collection as $asset) {
+                    if ($asset->get('type') === $assetType) {
+                        $typeAssets[] = $asset;
+                    }
+                }
+                usort($typeAssets, function ($a, $b) {
+                    if ($a->sorting == $b->sorting) {
+                        return 0;
+                    }
+                    return ($a->sorting < $b->sorting) ? -1 : 1;
+                });
+
+                foreach ($typeAssets as $typeAsset) {
+                    $sortedCollection->append($typeAsset);
+                }
+            }
+            $collection = $sortedCollection;
         }
 
         return $this
