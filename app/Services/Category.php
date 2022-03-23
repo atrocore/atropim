@@ -37,6 +37,23 @@ class Category extends AbstractService
 {
     protected $mandatorySelectAttributeList = ['categoryRoute'];
 
+    public function getRoute(string $id): array
+    {
+        if (empty($category = $this->getRepository()->get($id))) {
+            return [];
+        }
+
+        if (empty($categoryRoute = $category->get('categoryRoute'))) {
+            return [];
+        }
+
+        $route = explode('|', $categoryRoute);
+        array_shift($route);
+        array_pop($route);
+
+        return $route;
+    }
+
     public function getCategoryTree(string $parentId): array
     {
         if (empty($parentId)) {
