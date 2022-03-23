@@ -103,7 +103,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 return;
             }
 
-            this.createView('catalogTreePanel', 'pim:views/category/record/tree-panel', {
+            this.createView('catalogTreePanel', 'views/record/panels/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
                 model: this.model
@@ -136,11 +136,22 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             window.location.href = `/#Product`;
         },
 
+        parseRoute(routeStr) {
+            let route = [];
+            (routeStr || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
+
+            return route;
+        },
+
         treeInit(view) {
             if (view.treeScope === 'ProductFamily') {
                 if (view.model.get('productFamilyId')) {
                     $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
-                        view.selectTreeNode(view.parseRoute(pf.categoryRoute), view.model.get('productFamilyId'));
+                        view.selectTreeNode(this.parseRoute(pf.categoryRoute), view.model.get('productFamilyId'));
                     });
                 }
             }
@@ -159,7 +170,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (categories.length > 0) {
                 let category = categories.shift();
                 let route = [];
-                view.parseRoute(category.categoryRoute).forEach(id => {
+                this.parseRoute(category.categoryRoute).forEach(id => {
                     if (!opened[id]) {
                         route.push(id);
                     }
@@ -180,7 +191,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (route.length > 0) {
                 let id = route.shift();
                 let node = $tree.tree('getNodeById', id);
-                $tree.tree('openNode', node, () => {
+                $tree.tree('openNode', node, false, () => {
                     opened[id] = true;
                     this.openCategoryNodes($tree, route, opened, callback);
                 });

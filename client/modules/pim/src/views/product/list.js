@@ -28,7 +28,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manager'],
+Espo.define('pim:views/product/list', ['views/list-tree', 'search-manager'],
     (Dep, SearchManager) => Dep.extend({
 
         createButton: false,
@@ -82,12 +82,23 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
             }
         },
 
+        parseRoute(routeStr) {
+            let route = [];
+            (routeStr || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
+
+            return route;
+        },
+
         selectNode(data) {
             localStorage.setItem('selectedNodeId', data.id);
             localStorage.setItem('selectedNodeRoute', data.route);
 
             const $treeView = this.getView('treePanel');
-            $treeView.selectTreeNode($treeView.parseRoute(data.route), data.id);
+            $treeView.selectTreeNode(this.parseRoute(data.route), data.id);
             this.notify('Please wait...');
             this.updateCollectionWithTree(data.id);
             this.collection.fetch().then(() => this.notify(false));
@@ -95,7 +106,7 @@ Espo.define('pim:views/product/list', ['pim:views/category/list', 'search-manage
 
         treeInit(view) {
             if (localStorage.getItem('selectedNodeId')) {
-                view.selectTreeNode(view.parseRoute(localStorage.getItem('selectedNodeRoute')), localStorage.getItem('selectedNodeId'));
+                view.selectTreeNode(this.parseRoute(localStorage.getItem('selectedNodeRoute')), localStorage.getItem('selectedNodeId'));
 
                 this.notify('Please wait...');
                 this.updateCollectionWithTree(localStorage.getItem('selectedNodeId'));
