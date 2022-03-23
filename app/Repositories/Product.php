@@ -97,21 +97,28 @@ class Product extends AbstractRepository
 
     public function getAssetsData(string $productId): array
     {
-        $sql
+        $productId = $this->getPDO()->quote($productId);
+
+        $query
             = "SELECT 
-                    pa.asset_id   as assetId,
-                    pa.sorting    as sorting,
+                    pa.*,
                     c.id          as channelId, 
                     c.code        as channelCode 
                FROM product_asset pa 
                    LEFT JOIN channel c ON c.id=pa.channel 
                WHERE pa.deleted=0 
-                 AND pa.product_id='$productId'";
+                 AND pa.product_id=$productId";
 
-        return $this
-            ->getEntityManager()
-            ->nativeQuery($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $k => $row) {
+            foreach ($row as $field => $value) {
+                if (!in_array($field, ['deleted', 'id', 'product_id'])) {
+                    $result[$k][Util::toCamelCase($field)] = $value;
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function findRelatedAssetsByType(Entity $entity, string $type): array

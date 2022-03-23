@@ -494,6 +494,9 @@ class Product extends AbstractService
                     if ($assetData['assetId'] === $asset->get('id')) {
                         $asset->set('channelCode', $assetData['channelCode']);
                         $asset->sorting = $assetData['sorting'];
+                        foreach ($assetData as $field => $value) {
+                            $asset->set($field, $value);
+                        }
                     }
                 }
             }
