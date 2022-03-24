@@ -130,10 +130,13 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         selectNode(data) {
-            localStorage.setItem('selectedNodeId', data.id);
-            localStorage.setItem('selectedNodeRoute', data.route);
-
-            window.location.href = `/#Product`;
+            if (localStorage.getItem('treeScope') === 'Product') {
+                window.location.href = `/#Product/view/${data.id}`;
+            } else {
+                localStorage.setItem('selectedNodeId', data.id);
+                localStorage.setItem('selectedNodeRoute', data.route);
+                window.location.href = `/#Product`;
+            }
         },
 
         parseRoute(routeStr) {
@@ -163,6 +166,14 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         this.selectCategoryNode(response.list, view, opened);
                     }
                 });
+            }
+
+            if (view.treeScope === 'Product') {
+                if (view.model && view.model.get('id')) {
+                    this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
+                        view.selectTreeNode(route, view.model.get('id'));
+                    });
+                }
             }
         },
 

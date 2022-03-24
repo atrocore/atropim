@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Templates\Services\Hierarchy;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
@@ -45,12 +46,30 @@ use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
 use Treo\Services\MassActions;
 
-/**
- * Service of Product
- */
-class Product extends \Espo\Core\Templates\Services\Hierarchy
+class Product extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['data'];
+
+    public function getChildren(string $parentId): array
+    {
+        $result = [];
+
+        foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
+            $hasChildren = !empty($record['childrenCount']);
+
+            if (empty($parentId) && $hasChildren) {
+                continue 1;
+            }
+
+            $result[] = [
+                'id'             => $record['id'],
+                'name'           => $record['name'],
+                'load_on_demand' => $hasChildren
+            ];
+        }
+
+        return $result;
+    }
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {

@@ -94,14 +94,18 @@ Espo.define('pim:views/product/list', ['views/list-tree', 'search-manager'],
         },
 
         selectNode(data) {
-            localStorage.setItem('selectedNodeId', data.id);
-            localStorage.setItem('selectedNodeRoute', data.route);
+            if (localStorage.getItem('treeScope') === 'Product') {
+                Dep.prototype.selectNode.call(this, data);
+            } else {
+                localStorage.setItem('selectedNodeId', data.id);
+                localStorage.setItem('selectedNodeRoute', data.route);
 
-            const $treeView = this.getView('treePanel');
-            $treeView.selectTreeNode(this.parseRoute(data.route), data.id);
-            this.notify('Please wait...');
-            this.updateCollectionWithTree(data.id);
-            this.collection.fetch().then(() => this.notify(false));
+                const $treeView = this.getView('treePanel');
+                $treeView.selectTreeNode(this.parseRoute(data.route), data.id);
+                this.notify('Please wait...');
+                this.updateCollectionWithTree(data.id);
+                this.collection.fetch().then(() => this.notify(false));
+            }
         },
 
         treeInit(view) {
