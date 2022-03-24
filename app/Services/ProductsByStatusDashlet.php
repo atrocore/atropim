@@ -36,7 +36,7 @@ namespace Pim\Services;
 /**
  * Class ProductsByStatusDashlet
  */
-class ProductsByStatusDashlet extends AbstractProductDashletService
+class ProductsByStatusDashlet extends AbstractDashletService
 {
     /**
      * Get Product by status
@@ -51,7 +51,7 @@ class ProductsByStatusDashlet extends AbstractProductDashletService
                     product_status AS status,
                     COUNT(id)      AS amount
                 FROM product
-                WHERE deleted = 0 AND type IN " . $this->getProductTypesCondition() . "
+                WHERE deleted=0
                 GROUP BY product_status;";
 
         $sth = $this->getPDO()->prepare($sql);

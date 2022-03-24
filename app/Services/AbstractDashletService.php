@@ -37,11 +37,15 @@ use Espo\Core\Templates\Repositories\Base as BaseRepository;
 use Espo\Core\Services\Base;
 use Treo\Services\DashletInterface;
 
-/**
- * Class AbstractDashletService
- */
 abstract class AbstractDashletService extends Base implements DashletInterface
 {
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('metadata');
+    }
+
     /**
      * Get PDO
      *

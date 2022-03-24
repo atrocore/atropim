@@ -109,11 +109,6 @@
       "your tag1": "your tag1",
       "your tag2": "your tag2"
     },
-    "type": {
-      "simpleProduct": "Einfaches Produkt",
-      "bundleProduct": "Bündelprodukt",
-      "packageProduct": "Produktpakett"
-    },
     "taskStatus": {
       "mar": "Mar",
       "tech": "Tech",
@@ -130,7 +125,6 @@
     "withoutImageAssets": "ohne Bildassets",
     "withoutProductAttributes": "ohne Produktattribute",
     "notAssociatedProducts": "Ohne assoziierte Produkte",
-    "onlySimple": "Nur einfache Produkte",
     "notLinkedWithChannel": "Ohne Kanäle",
     "notLinkedWithBrand": "Ohne Marke",
     "notLinkedWithProductFamily": "Ohne Produktfamilie",

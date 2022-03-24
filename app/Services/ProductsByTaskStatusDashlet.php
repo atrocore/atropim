@@ -36,7 +36,7 @@ namespace Pim\Services;
 /**
  * Class ProductsByTaskStatusDashlet
  */
-class ProductsByTaskStatusDashlet extends AbstractProductDashletService
+class ProductsByTaskStatusDashlet extends AbstractDashletService
 {
     /**
      * Int Class

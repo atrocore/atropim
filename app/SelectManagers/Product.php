@@ -54,13 +54,6 @@ class Product extends AbstractSelectManager
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        // filtering by product types
-        $params['where'][] = [
-            'type'      => 'in',
-            'attribute' => 'type',
-            'value'     => array_keys($this->getMetadata()->get('pim.productType', []))
-        ];
-
         // filtering by categories
         $this->filteringByCategories($params);
 
@@ -276,18 +269,6 @@ class Product extends AbstractSelectManager
                 ];
             }
         }
-    }
-
-    /**
-     * OnlySimple filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterOnlySimple(&$result)
-    {
-        $result['whereClause'][] = [
-            'type' => 'simpleProduct'
-        ];
     }
 
     protected function boolFilterOnlyCategoryCatalogsProducts(array &$result): void

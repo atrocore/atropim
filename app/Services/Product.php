@@ -748,14 +748,6 @@ class Product extends \Espo\Core\Templates\Services\Hierarchy
     }
 
     /**
-     * @return string
-     */
-    protected function getStringProductTypes(): string
-    {
-        return join("','", array_keys($this->getMetadata()->get('pim.productType')));
-    }
-
-    /**
      * @return MassActions
      */
     protected function getMassActionsService(): MassActions

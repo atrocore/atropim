@@ -50,19 +50,6 @@
       "type": "bool",
       "default": false
     },
-    "type": {
-      "type": "enum",
-      "required": true,
-      "default": "simpleProduct",
-      "view": "pim:views/product/fields/type",
-      "layoutMassUpdateDisabled": true,
-      "options": [
-        "simpleProduct"
-      ],
-      "emHidden": true,
-      "importDisabled": true,
-      "prohibitedEmptyValue": true
-    },
     "amount": {
       "type": "float",
       "min": 0,
