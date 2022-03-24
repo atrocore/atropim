@@ -57,7 +57,7 @@ class Product extends Hierarchy
         foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
             $hasChildren = !empty($record['childrenCount']);
 
-            if (empty($parentId) && $hasChildren) {
+            if (empty($parentId) && !$hasChildren) {
                 continue 1;
             }
 
