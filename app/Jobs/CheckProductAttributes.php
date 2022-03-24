@@ -25,8 +25,6 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
- *
- * This software is not allowed to be used in Russia and Belarus.
  */
 
 declare(strict_types=1);
@@ -40,8 +38,7 @@ class CheckProductAttributes extends Base
     public function run(): bool
     {
         $productRepository = $this->getEntityManager()->getRepository('Product');
-
-        while (!empty($products = $this->getProductsWithInconsistentAttributes())) {
+        if (!empty($products = $this->getProductsWithInconsistentAttributes())) {
             foreach ($products as $product) {
                 $productRepository->updateInconsistentAttributes($product);
             }
@@ -56,7 +53,7 @@ class CheckProductAttributes extends Base
             ->getEntityManager()
             ->getRepository('Product')
             ->where(['hasInconsistentAttributes' => true])
-            ->limit(0, 200)
+            ->limit(0, 1000)
             ->order('id', true)
             ->find();
 

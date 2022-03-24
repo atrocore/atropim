@@ -186,9 +186,16 @@ class Product extends AbstractRepository
         }
     }
 
+    public function disableHasInconsistentAttributes(string $id): void
+    {
+        $id = $this->getPDO()->quote($id);
+        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id=$id");
+    }
+
     public function updateInconsistentAttributes(Entity $product): void
     {
         if (empty($product->get('hasInconsistentAttributes'))) {
+            $this->disableHasInconsistentAttributes($product->get('id'));
             return;
         }
 
@@ -199,6 +206,7 @@ class Product extends AbstractRepository
             ->find();
 
         if (count($pavs) === 0) {
+            $this->disableHasInconsistentAttributes($product->get('id'));
             return;
         }
 
@@ -212,6 +220,7 @@ class Product extends AbstractRepository
         }
 
         if (empty($attributes)) {
+            $this->disableHasInconsistentAttributes($product->get('id'));
             return;
         }
 
@@ -231,6 +240,7 @@ class Product extends AbstractRepository
         }
 
         if (count($mainLanguagePavs) === 0) {
+            $this->disableHasInconsistentAttributes($product->get('id'));
             return;
         }
 
@@ -270,8 +280,7 @@ class Product extends AbstractRepository
                 }
             }
         }
-
-        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id='{$product->get('id')}'");
+        $this->disableHasInconsistentAttributes($product->get('id'));
     }
 
     public function getProductsAssets(array $productIds): array
