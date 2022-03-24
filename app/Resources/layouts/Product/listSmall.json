@@ -1,15 +1,12 @@
 [
-    {
-        "name": "name",
-        "link": true
-    },
-    {
-        "name": "sku"
-    },
-    {
-        "name": "type"
-    },
-    {
-        "name": "isActive"
-    }
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "sku"
+  },
+  {
+    "name": "isActive"
+  }
 ]

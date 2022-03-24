@@ -1,9 +1,6 @@
 [
-    {
-        "name": "type"
-    },
-    {
-        "name": "name",
-        "link": true
-    }
+  {
+    "name": "name",
+    "link": true
+  }
 ]
