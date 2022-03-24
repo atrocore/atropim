@@ -35,16 +35,8 @@ namespace Pim\Services;
 
 use Espo\ORM\Entity;
 
-/**
- * Class ProductFamily
- */
-class ProductFamily extends AbstractService
+class ProductFamily extends \Espo\Core\Templates\Services\Base
 {
-    /**
-     * @var string
-     */
-    protected $linkWhereNeedToUpdateChannel = 'productFamilyAttributes';
-
     /**
      * @inheritdoc
      */
@@ -53,6 +45,27 @@ class ProductFamily extends AbstractService
         parent::init();
 
         $this->addDependency('serviceFactory');
+    }
+
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        if ($link === 'productFamilyAttributes') {
+            if (isset($result['collection'])) {
+                $result['list'] = $result['collection']->toArray();
+                unset($result['collection']);
+            }
+
+            foreach ($result['list'] as $k => $record) {
+                if ($record['scope'] === 'Global') {
+                    $result['list'][$k]['channelId'] = null;
+                    $result['list'][$k]['channelName'] = 'Global';
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**

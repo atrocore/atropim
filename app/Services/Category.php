@@ -31,9 +31,10 @@
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-class Category extends AbstractService
+class Category extends Base
 {
     protected $mandatorySelectAttributeList = ['categoryRoute'];
 

@@ -28,7 +28,9 @@
     "onlyCatalogProducts",
     "linkedWithCategory",
     "linkedWithProductFamily",
-    "activeForChannel"
+    "activeForChannel",
+    "notParents",
+    "notChildren"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
@@ -43,7 +45,9 @@
     "onlyCatalogProducts",
     "linkedWithCategory",
     "linkedWithProductFamily",
-    "activeForChannel"
+    "activeForChannel",
+    "notParents",
+    "notChildren"
   ],
   "disabledMassActions": [
     "merge"
@@ -65,6 +69,22 @@
   },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
   "relationshipPanels": {
+    "parents": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notChildren"
+      ]
+    },
+    "children": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notParents"
+      ],
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      }
+    },
     "productAttributeValues": {
       "createAction": "createRelatedConfigured",
       "selectAction": "selectRelatedEntity",
@@ -114,6 +134,16 @@
   },
   "dynamicLogic": {
     "fields": {
+      "sortOrder": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isRoot"
+            }
+          ]
+        }
+      },
       "type": {
         "readOnly": {
           "conditionGroup": [

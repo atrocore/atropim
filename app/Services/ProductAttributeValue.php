@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -41,7 +42,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 
-class ProductAttributeValue extends AbstractService
+class ProductAttributeValue extends Base
 {
     protected $mandatorySelectAttributeList
         = [

@@ -35,7 +35,6 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
@@ -49,10 +48,8 @@ use Treo\Services\MassActions;
 /**
  * Service of Product
  */
-class Product extends AbstractService
+class Product extends \Espo\Core\Templates\Services\Hierarchy
 {
-    protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
-
     protected $mandatorySelectAttributeList = ['data'];
 
     public function loadPreviewForCollection(EntityCollection $collection): void
@@ -415,10 +412,24 @@ class Product extends AbstractService
     {
         $result = parent::findLinkedEntities($id, $link, $params);
 
+        if ($link == 'productAttributeValues') {
+            if (isset($result['collection'])) {
+                $result['list'] = $result['collection']->toArray();
+                unset($result['collection']);
+            }
+
+            foreach ($result['list'] as $k => $record) {
+                if ($record['scope'] == 'Global') {
+                    $result['list'][$k]['channelId'] = null;
+                    $result['list'][$k]['channelName'] = 'Global';
+                }
+            }
+        }
+
         /**
          * Set global main image
          */
-        if ($link === 'assets' && $result['total'] > 0) {
+        if ($link === 'assets' && $result['total'] > 0 && isset($result['collection'])) {
             $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
             $result['collection'] = $this->getPreparedProductAssets($id, $result['collection'], $channelId);
             $result['total'] = $result['collection']->count();
@@ -759,7 +770,7 @@ class Product extends AbstractService
      */
     protected function exception(string $key): string
     {
-        return $this->getTranslate($key, 'exceptions', 'Product');
+        return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
     }
 
     /**

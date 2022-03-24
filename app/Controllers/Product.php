@@ -36,10 +36,7 @@ namespace Pim\Controllers;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
 
-/**
- * Product controller
- */
-class Product extends AbstractController
+class Product extends \Espo\Core\Templates\Controllers\Hierarchy
 {
     public function actionUpdateActiveForChannel(array $params, \stdClass $data, Request $request): bool
     {

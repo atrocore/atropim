@@ -31,57 +31,31 @@
 
 declare(strict_types=1);
 
-namespace Pim\Services;
+namespace Pim\Migrations;
 
-use Espo\Core\Templates\Services\Base;
-use Espo\ORM\Entity;
+use Treo\Core\Migration\Base;
 
-/**
- * Brand service
- */
-class Brand extends Base
+class V1Dot4Dot12 extends Base
 {
-    /**
-     * @param Entity $entity
-     */
-    protected function afterDeleteEntity(Entity $entity)
+    public function up(): void
     {
-        // call parent action
-        parent::afterDeleteEntity($entity);
-
-        // unlink
-        $this->unlinkBrand([$entity->get('id')]);
+        $this->exec(
+            "CREATE TABLE `product_hierarchy` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `entity_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `parent_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `hierarchy_sort_order` INT DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_94DA9E2381257D5D` (entity_id), INDEX `IDX_94DA9E23727ACA70` (parent_id), UNIQUE INDEX `UNIQ_94DA9E2381257D5D727ACA70` (entity_id, parent_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
+        );
+        $this->exec("DROP INDEX id ON `product_hierarchy`");
+        $this->exec("ALTER TABLE `product` ADD sort_order INT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
     }
 
-    /**
-     * Unlink brand from products
-     *
-     * @param array $ids
-     *
-     * @return bool
-     */
-    protected function unlinkBrand(array $ids): bool
+    public function down(): void
     {
-        // prepare data
-        $result = false;
+    }
 
-        if (!empty($ids)) {
-            // prepare ids
-            $ids = implode("','", $ids);
-
-            // prepare sql
-            $sql = sprintf("UPDATE product SET brand_id = null WHERE brand_id IN ('%s');", $ids);
-
-            $sth = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->prepare($sql);
-            $sth->execute();
-
-            // prepare result
-            $result = true;
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+            // ignore all
         }
-
-        return $result;
     }
 }

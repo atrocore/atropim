@@ -15,7 +15,7 @@
   "notifications": true,
   "stream": true,
   "disabled": false,
-  "type": "Base",
+  "type": "Hierarchy",
   "module": "Pim",
   "object": true,
   "hasOwner": true,
@@ -23,6 +23,9 @@
   "hasTeam": true,
   "advancedFilters": true,
   "addRelationEnabled": true,
+  "multiParents": false,
+  "fieldValueInheritance": false,
+  "relationInheritance": false,
   "importTypeSimple": {
     "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },

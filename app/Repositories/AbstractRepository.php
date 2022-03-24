@@ -33,17 +33,14 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Json;
+use Espo\Core\Templates\Repositories\Hierarchy;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 
 /**
  * Class AbstractRepository
  */
-abstract class AbstractRepository extends Base
+abstract class AbstractRepository extends Hierarchy
 {
     public const CODE_PATTERN = '/^[\p{Ll}0-9_]*$/u';
 
