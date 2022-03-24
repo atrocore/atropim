@@ -35,7 +35,7 @@ namespace Pim\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot4Dot12 extends Base
+class V1Dot5Dot0 extends Base
 {
     public function up(): void
     {
