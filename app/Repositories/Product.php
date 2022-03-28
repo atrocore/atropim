@@ -790,32 +790,8 @@ class Product extends AbstractRepository
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->where(['productId' => $entity->get('id')])
-            ->find();
-
-        foreach ($pavs as $pav) {
-            $this->getEntityManager()->removeEntity($pav);
-        }
-
-        $associations = $this
-            ->getEntityManager()
-            ->getRepository('AssociatedProduct')
-            ->where([
-                'OR' => [
-                    ['mainProductId' => $entity->id],
-                    ['relatedProductId' => $entity->id]
-                ]
-            ])
-            ->find();
-
-        if (count($associations) > 0) {
-            foreach ($associations as $association) {
-                $this->getEntityManager()->removeEntity($association);
-            }
-        }
+        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByProductId($entity->get('id'));
+        $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
 
         parent::afterRemove($entity, $options);
     }

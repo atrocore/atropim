@@ -186,6 +186,13 @@ class ProductAttributeValue extends AbstractRepository
         return $result;
     }
 
+    public function removeByProductId(string $productId): void
+    {
+        $productId = $this->getPDO()->quote($productId);
+
+        $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE product_id=$productId");
+    }
+
     public function remove(Entity $entity, array $options = [])
     {
         if (!$this->getPDO()->inTransaction()) {
