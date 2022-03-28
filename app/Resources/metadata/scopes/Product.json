@@ -30,6 +30,7 @@
     "mpn"
   ],
   "relationInheritance": true,
+  "unInheritedRelations": [],
   "importTypeSimple": {
     "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },
