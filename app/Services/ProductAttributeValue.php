@@ -77,6 +77,22 @@ class ProductAttributeValue extends Base
     {
         $this->prepareInputValue($attachment);
 
+        if (!$this->isPseudoTransaction()) {
+            if (property_exists($attachment, 'channelId') && property_exists($attachment, 'productId') && property_exists($attachment, 'attributeId')) {
+                $product = $this->getEntityManager()->getRepository('Product')->get($attachment->productId);
+                if (!empty($product)) {
+                    $channelsIds = array_column($product->get('channels')->toArray(), 'id');
+                    if (!in_array($attachment->channelId, $channelsIds)) {
+                        $attributeName = property_exists($attachment, 'attributeName') ? $attachment->attributeName : $attachment->attributeId;
+                        $channelName = property_exists($attachment, 'channelName') ? $attachment->channelName : $attachment->channelId;
+                        throw new BadRequest(
+                            sprintf($this->getInjection('language')->translate('noSuchChannelInProduct'), $attributeName, $channelName, $product->get('name'))
+                        );
+                    }
+                }
+            }
+        }
+
         return parent::createEntity($attachment);
     }
 
@@ -102,6 +118,13 @@ class ProductAttributeValue extends Base
         parent::beforeUpdateEntity($entity, $data);
 
         $this->setInputValue($entity, $data);
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 
     protected function setInputValue(Entity $entity, \stdClass $data): void

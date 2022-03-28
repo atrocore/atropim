@@ -35,13 +35,9 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
-use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
-use Pim\Core\Exceptions\NoSuchChannelInProduct;
-use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -801,7 +797,7 @@ class Product extends AbstractRepository
             ->find();
 
         foreach ($pavs as $pav) {
-            $this->getEntityManager()->removeEntity($pav, ['skipProductAttributeValueHook' => true]);
+            $this->getEntityManager()->removeEntity($pav);
         }
 
         $associations = $this

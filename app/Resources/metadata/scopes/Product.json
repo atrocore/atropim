@@ -24,8 +24,12 @@
   "advancedFilters": true,
   "addRelationEnabled": true,
   "multiParents": false,
-  "fieldValueInheritance": false,
-  "relationInheritance": false,
+  "fieldValueInheritance": true,
+  "unInheritedFields": [
+    "sku",
+    "mpn"
+  ],
+  "relationInheritance": true,
   "importTypeSimple": {
     "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
   },

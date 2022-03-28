@@ -407,12 +407,6 @@
         "entityId"
       ]
     },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductAttributeValue",
-      "disableMassRelation": true
-    },
     "productFamily": {
       "type": "belongsTo",
       "foreign": "products",
@@ -516,6 +510,12 @@
       "entity": "Content",
       "relationName": "productContents",
       "foreign": "products"
+    },
+    "productAttributeValues": {
+      "type": "hasMany",
+      "foreign": "product",
+      "entity": "ProductAttributeValue",
+      "disableMassRelation": true
     }
   },
   "collection": {

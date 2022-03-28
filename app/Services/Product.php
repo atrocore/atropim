@@ -42,6 +42,7 @@ use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
 use Treo\Services\MassActions;
@@ -331,33 +332,22 @@ class Product extends Hierarchy
         return empty($channel) ? null : $channel->get('id');
     }
 
-    /**
-     * @param Entity $product
-     * @param Entity $duplicatingProduct
-     */
-    protected function duplicateProductAttributeValues(Entity $product, Entity $duplicatingProduct)
+    protected function duplicateProductAttributeValues(Entity $product, Entity $duplicatingProduct): void
     {
-        if ($duplicatingProduct->get('productFamilyId') == $product->get('productFamilyId')) {
-            // get data for duplicating
-            $rows = $duplicatingProduct->get('productAttributeValues');
+        $pavs = $duplicatingProduct->get('productAttributeValues');
+        if (empty($pavs) || count($pavs) === 0) {
+            return;
+        }
 
-            if (count($rows) > 0) {
-                foreach ($rows as $item) {
-                    $entity = $this->getEntityManager()->getEntity('ProductAttributeValue');
-                    $entity->set($item->toArray());
-                    $entity->id = Util::generateId();
-                    $entity->set('productId', $product->get('id'));
+        foreach ($pavs as $pav) {
+            $entity = $this->getEntityManager()->getEntity('ProductAttributeValue');
+            $entity->set($pav->toArray());
+            $entity->id = Util::generateId();
+            $entity->set('productId', $product->get('id'));
 
-                    $this->getEntityManager()->saveEntity($entity, ['skipProductAttributeValueHook' => true]);
-
-                    // relate channels
-                    if (!empty($channel = $item->get('channel'))) {
-                        $this
-                            ->getEntityManager()
-                            ->getRepository('ProductAttributeValue')
-                            ->relate($entity, 'channel', $channel);
-                    }
-                }
+            try {
+                $this->getEntityManager()->saveEntity($entity);
+            } catch (ProductAttributeAlreadyExists $e) {
             }
         }
     }
