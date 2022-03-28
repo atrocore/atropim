@@ -36,7 +36,6 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
-use Pim\Core\Exceptions\NoSuchChannelInProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Espo\Core\Utils\Util;
 

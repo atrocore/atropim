@@ -339,14 +339,20 @@ class Product extends Hierarchy
             return;
         }
 
+        /** @var \Pim\Repositories\ProductAttributeValue $repository */
+        $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
         foreach ($pavs as $pav) {
-            $entity = $this->getEntityManager()->getEntity('ProductAttributeValue');
+            $entity = $repository->get();
             $entity->set($pav->toArray());
             $entity->id = Util::generateId();
             $entity->set('productId', $product->get('id'));
 
             try {
-                $this->getEntityManager()->saveEntity($entity);
+                if (!empty($duplicate = $repository->findCopy($entity))) {
+                    $repository->remove($duplicate);
+                }
+                $repository->save($entity);
             } catch (ProductAttributeAlreadyExists $e) {
             }
         }
