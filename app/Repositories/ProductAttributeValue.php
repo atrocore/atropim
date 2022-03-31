@@ -56,7 +56,11 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         foreach ($pavs as $pav) {
-            if ($pav->get('attributeId') === $entity->get('attributeId') && $pav->get('scope') === $entity->get('scope') && $pav->get('language') === $entity->get('language')) {
+            if (
+                $pav->get('attributeId') === $entity->get('attributeId')
+                && $pav->get('scope') === $entity->get('scope')
+                && $pav->get('language') === $entity->get('language')
+            ) {
                 if ($pav->get('scope') === 'Global') {
                     return true;
                 }
@@ -70,9 +74,75 @@ class ProductAttributeValue extends AbstractRepository
         return false;
     }
 
-    public function isPavValueInherited(Entity $entity): bool
+    public function isPavValueInherited(Entity $entity): ?bool
     {
+        $pavs = $this->getParentsPavs($entity);
+        if ($pavs === null) {
+            return null;
+        }
+
+        foreach ($pavs as $pav) {
+            if (
+                $pav->get('attributeId') === $entity->get('attributeId')
+                && $pav->get('scope') === $entity->get('scope')
+                && $pav->get('language') === $entity->get('language')
+            ) {
+                if ($pav->get('scope') === 'Global') {
+                    if ($this->arePavsValuesEqual($pav, $entity)) {
+                        return true;
+                    }
+                }
+
+                if ($pav->get('channelId') === $entity->get('channelId')) {
+                    if ($this->arePavsValuesEqual($pav, $entity)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
+    }
+
+    public function arePavsValuesEqual(Entity $pav1, Entity $pav2): bool
+    {
+        switch ($pav1->get('attributeType')) {
+            case 'array':
+            case 'multiEnum':
+                $result = Entity::areValuesEqual(Entity::JSON_ARRAY, $pav1->get('textValue'), $pav2->get('textValue'));
+                break;
+            case 'text':
+            case 'wysiwyg':
+                $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
+                break;
+            case 'bool':
+                $result = Entity::areValuesEqual(Entity::BOOL, $pav1->get('boolValue'), $pav2->get('boolValue'));
+                break;
+            case 'currency':
+            case 'unit':
+                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
+                break;
+            case 'int':
+                $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
+                break;
+            case 'float':
+                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                break;
+            case 'date':
+                $result = Entity::areValuesEqual(Entity::DATE, $pav1->get('dateValue'), $pav2->get('dateValue'));
+                break;
+            case 'datetime':
+                $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
+                break;
+            default:
+                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                break;
+        }
+
+        return $result;
     }
 
     public function getParentsPavs(Entity $entity): ?EntityCollection
@@ -100,7 +170,7 @@ class ProductAttributeValue extends AbstractRepository
             ->query("SELECT product_family_id FROM `product` WHERE id='{$pav->get('productId')}'")
             ->fetch(\PDO::FETCH_COLUMN);
 
-        if (empty($productFamilyId)){
+        if (empty($productFamilyId)) {
             return false;
         }
 
