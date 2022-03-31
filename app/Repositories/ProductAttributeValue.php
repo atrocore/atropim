@@ -48,33 +48,7 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $productPavs = [];
 
-    public function isPavRelationInherited(Entity $entity): bool
-    {
-        $pavs = $this->getParentsPavs($entity);
-        if ($pavs === null) {
-            return false;
-        }
-
-        foreach ($pavs as $pav) {
-            if (
-                $pav->get('attributeId') === $entity->get('attributeId')
-                && $pav->get('scope') === $entity->get('scope')
-                && $pav->get('language') === $entity->get('language')
-            ) {
-                if ($pav->get('scope') === 'Global') {
-                    return true;
-                }
-
-                if ($pav->get('channelId') === $entity->get('channelId')) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public function isPavValueInherited(Entity $entity): ?bool
+    public function getParentPav(Entity $entity): ?Entity
     {
         $pavs = $this->getParentsPavs($entity);
         if ($pavs === null) {
@@ -88,20 +62,31 @@ class ProductAttributeValue extends AbstractRepository
                 && $pav->get('language') === $entity->get('language')
             ) {
                 if ($pav->get('scope') === 'Global') {
-                    if ($this->arePavsValuesEqual($pav, $entity)) {
-                        return true;
-                    }
+                    return $pav;
                 }
 
                 if ($pav->get('channelId') === $entity->get('channelId')) {
-                    if ($this->arePavsValuesEqual($pav, $entity)) {
-                        return true;
-                    }
+                    return $pav;
                 }
             }
         }
 
-        return false;
+        return null;
+    }
+
+    public function isPavRelationInherited(Entity $entity): bool
+    {
+        return !empty($this->getParentPav($entity));
+    }
+
+    public function isPavValueInherited(Entity $entity): ?bool
+    {
+        $pav = $this->getParentPav($entity);
+        if (empty($pav)) {
+            return null;
+        }
+
+        return $this->arePavsValuesEqual($pav, $entity);
     }
 
     public function arePavsValuesEqual(Entity $pav1, Entity $pav2): bool

@@ -62,6 +62,34 @@ class ProductAttributeValue extends Base
             'textValue'
         ];
 
+    public function inheritPav(string $id): bool
+    {
+        $pav = $this->getEntity($id);
+        $parentPav = $this->getRepository()->getParentPav($pav);
+        if (empty($parentPav)) {
+            return false;
+        }
+        $this->getRepository()->convertValue($parentPav);
+
+        $input = new \stdClass();
+        $input->value = $parentPav->get('value');
+
+        switch ($parentPav->get('attributeType')) {
+            case 'currency':
+                $input->valueCurrency = $parentPav->get('valueCurrency');
+            case 'unit':
+                $input->valueUnit = $parentPav->get('valueUnit');
+                break;
+            case 'asset':
+                $input->valueId = $parentPav->get('valueId');
+                break;
+        }
+
+        $this->updateEntity($id, $input);
+
+        return true;
+    }
+
     /**
      * @inheritdoc
      */
