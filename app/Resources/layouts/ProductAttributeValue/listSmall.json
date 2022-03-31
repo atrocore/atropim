@@ -11,8 +11,14 @@
     "width": "55"
   },
   {
+    "name": "isPavValueInherited",
+    "notSortable": true,
+    "customLabel": "",
+    "width": "5"
+  },
+  {
     "name": "channel",
     "notSortable": true,
-    "width": "15"
+    "width": "10"
   }
 ]

@@ -45,6 +45,16 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $channelLanguages = [];
 
+    public function isPavRelationInherited(Entity $entity): bool
+    {
+        return true;
+    }
+
+    public function isPavValueInherited(Entity $entity): bool
+    {
+        return false;
+    }
+
     public function convertValue(Entity $entity): void
     {
         if (empty($entity->get('attributeType'))) {

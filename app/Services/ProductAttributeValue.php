@@ -335,7 +335,7 @@ class ProductAttributeValue extends Base
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
         $entity->set('prohibitedEmptyValue', false);
-        $entity->set('isInherited', $this->isInheritedFromPf($entity->get('id')));
+        $entity->set('isPavRelationInherited', $this->isInheritedFromPf($entity->get('id')));
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
@@ -343,6 +343,14 @@ class ProductAttributeValue extends Base
         $entity->set('channelCode', null);
         if (!empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
+        }
+
+        if (!$entity->get('isPavRelationInherited')) {
+            $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
+        }
+
+        if ($entity->get('isPavRelationInherited')) {
+            $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
         }
 
         $this->getRepository()->convertValue($entity);

@@ -427,20 +427,6 @@ class Product extends Hierarchy
     {
         $result = parent::findLinkedEntities($id, $link, $params);
 
-        if ($link == 'productAttributeValues') {
-            if (isset($result['collection'])) {
-                $result['list'] = $result['collection']->toArray();
-                unset($result['collection']);
-            }
-
-            foreach ($result['list'] as $k => $record) {
-                if ($record['scope'] == 'Global') {
-                    $result['list'][$k]['channelId'] = null;
-                    $result['list'][$k]['channelName'] = 'Global';
-                }
-            }
-        }
-
         /**
          * Set global main image
          */
@@ -634,6 +620,13 @@ class Product extends Hierarchy
             }
 
             $records = $newRecords;
+        }
+
+        foreach ($records as $pav) {
+            if ($pav->get('scope') === 'Global') {
+                $pav->set('channelId', null);
+                $pav->set('channelName', 'Global');
+            }
         }
 
         return new EntityCollection(array_values($records));

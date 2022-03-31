@@ -28,20 +28,21 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product-attribute-value/fields/attribute-with-required-sign', 'pim:views/product-attribute-value/fields/attribute',
+Espo.define('pim:views/product-attribute-value/fields/is-pav-value-inherited', 'views/fields/bool',
     Dep => Dep.extend({
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            const $a = this.$el.find('a');
-
-            if (this.model.get('isPavRelationInherited')) {
-                $a.addClass('inherited-relation');
-            }
-
-            if (this.model.get('isRequired')) {
-                $a.html($a.html() + ' *');
+            if (this.mode === 'list') {
+                let isPavValueInherited = this.model.get('isPavValueInherited');
+                if (isPavValueInherited === true) {
+                    this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`);
+                } else if (isPavValueInherited === false) {
+                    this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" data-action="setPavAsInherited" class="action lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
+                } else {
+                    this.$el.html('');
+                }
             }
         },
 
