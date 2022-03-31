@@ -107,28 +107,70 @@ class ProductAttributeValue extends Base
     {
         $this->prepareInputValue($attachment);
 
-        if (!$this->isPseudoTransaction()) {
-            if (property_exists($attachment, 'channelId') && property_exists($attachment, 'productId') && property_exists($attachment, 'attributeId')) {
-                $product = $this->getEntityManager()->getRepository('Product')->get($attachment->productId);
-                if (!empty($product)) {
-                    $channelsIds = array_column($product->get('channels')->toArray(), 'id');
-                    if (!in_array($attachment->channelId, $channelsIds)) {
-                        $attributeName = property_exists($attachment, 'attributeName') ? $attachment->attributeName : $attachment->attributeId;
-                        $channelName = property_exists($attachment, 'channelName') ? $attachment->channelName : $attachment->channelId;
-                        throw new BadRequest(
-                            sprintf($this->getInjection('language')->translate('noSuchChannelInProduct'), $attributeName, $channelName, $product->get('name'))
-                        );
-                    }
-                }
-            }
+        if ($this->isPseudoTransaction()) {
+            return parent::createEntity($attachment);
         }
 
-        return parent::createEntity($attachment);
+        if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
+            return parent::createEntity($attachment);
+        }
+
+        if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
+            return parent::createEntity($attachment);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = parent::createEntity($attachment);
+            $this->createPseudoTransactionCreateJobs(clone $attachment);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
+    {
+        if (!property_exists($data, 'productId')) {
+            return;
+        }
+
+        $children = $this->getEntityManager()->getRepository('Product')->getChildrenArray($data->productId);
+        foreach ($children as $child) {
+            $inputData = clone $data;
+            $inputData->productId = $child['id'];
+            $inputData->productName = $child['name'];
+            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
+            }
+        }
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
+
+        /**
+         * Validate channel
+         */
+        if (
+            !$this->isPseudoTransaction()
+            && property_exists($data, 'channelId')
+            && property_exists($data, 'productId')
+            && property_exists($data, 'attributeId')
+            && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
+            && !in_array($data->channelId, $product->getLinkMultipleIdList('channels'))
+        ) {
+            $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
+            $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
+            throw new BadRequest(
+                sprintf($this->getInjection('language')->translate('noSuchChannelInProduct'), $attributeName, $channelName, $product->get('name'))
+            );
+        }
 
         $this->setInputValue($entity, $data);
     }
