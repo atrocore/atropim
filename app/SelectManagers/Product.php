@@ -780,6 +780,10 @@ class Product extends AbstractSelectManager
 
     protected function filteringByCategories(array &$params): void
     {
+        if (empty($params['where'])){
+            return;
+        }
+
         foreach ($params['where'] as $k => $row) {
             if ($row['attribute'] == 'categories') {
                 if (!empty($row['value'])) {

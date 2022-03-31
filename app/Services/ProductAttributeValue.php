@@ -48,6 +48,8 @@ class ProductAttributeValue extends Base
         = [
             'language',
             'mainLanguageId',
+            'productId',
+            'productName',
             'attributeId',
             'attributeName',
             'attributeType',
@@ -334,8 +336,6 @@ class ProductAttributeValue extends Base
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
-        $entity->set('prohibitedEmptyValue', false);
-        $entity->set('isPavRelationInherited', $this->isInheritedFromPf($entity->get('id')));
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
@@ -345,8 +345,9 @@ class ProductAttributeValue extends Base
             $entity->set('channelCode', $channel->get('code'));
         }
 
+        $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
         if (!$entity->get('isPavRelationInherited')) {
-            $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
+            $entity->set('isPavRelationInherited', $this->getRepository()->isInheritedFromPf($entity));
         }
 
         if ($entity->get('isPavRelationInherited')) {
@@ -375,41 +376,6 @@ class ProductAttributeValue extends Base
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = Json::encode($data->value);
         }
-    }
-
-    private function isInheritedFromPf(string $id): bool
-    {
-        if (empty($pav = $this->getRepository()->get($id))) {
-            return false;
-        }
-
-        if (empty($product = $pav->get('product'))) {
-            return false;
-        }
-
-        if (empty($product->get('productFamilyId'))) {
-            return false;
-        }
-
-        $where = [
-            'productFamilyId' => $product->get('productFamilyId'),
-            'attributeId'     => $pav->get('attributeId'),
-            'scope'           => $pav->get('scope'),
-            'isRequired'      => !empty($pav->get('isRequired')),
-        ];
-
-        if ($where['scope'] === 'Channel') {
-            $where['channelId'] = $pav->get('channelId');
-        }
-
-        $pfa = $this
-            ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
-            ->select(['id'])
-            ->where($where)
-            ->findOne();
-
-        return !empty($pfa);
     }
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool

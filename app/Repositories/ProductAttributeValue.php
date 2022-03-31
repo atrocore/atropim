@@ -36,6 +36,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Espo\Core\Utils\Util;
 
@@ -45,14 +46,81 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $channelLanguages = [];
 
+    protected array $productPavs = [];
+
     public function isPavRelationInherited(Entity $entity): bool
     {
-        return true;
+        $pavs = $this->getParentsPavs($entity);
+        if ($pavs === null) {
+            return false;
+        }
+
+        foreach ($pavs as $pav) {
+            if ($pav->get('attributeId') === $entity->get('attributeId') && $pav->get('scope') === $entity->get('scope') && $pav->get('language') === $entity->get('language')) {
+                if ($pav->get('scope') === 'Global') {
+                    return true;
+                }
+
+                if ($pav->get('channelId') === $entity->get('channelId')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function isPavValueInherited(Entity $entity): bool
     {
         return false;
+    }
+
+    public function getParentsPavs(Entity $entity): ?EntityCollection
+    {
+        if (isset($this->productPavs[$entity->get('productId')])) {
+            return $this->productPavs[$entity->get('productId')];
+        }
+
+        $query = "SELECT id
+                  FROM `product_attribute_value`
+                  WHERE product_id IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0 AND entity_id='{$entity->get('productId')}')
+                    AND deleted=0";
+
+        $ids = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+
+        $this->productPavs[$entity->get('productId')] = empty($ids) ? null : $this->where(['id' => $ids])->find();
+
+        return $this->productPavs[$entity->get('productId')];
+    }
+
+    public function isInheritedFromPf(Entity $pav): bool
+    {
+        $productFamilyId = $this
+            ->getPDO()
+            ->query("SELECT product_family_id FROM `product` WHERE id='{$pav->get('productId')}'")
+            ->fetch(\PDO::FETCH_COLUMN);
+
+        if (empty($productFamilyId)){
+            return false;
+        }
+
+        $isRequired = !empty($pav->get('isRequired')) ? 1 : 0;
+
+        $query = "SELECT pfa.id
+                  FROM `product_family_attribute` pfa
+                  LEFT JOIN `product_family` pf ON pf.id=pfa.product_family_id
+                  WHERE pfa.deleted=0
+                    AND pf.deleted=0
+                    AND pf.id='$productFamilyId'
+                    AND pfa.is_required=$isRequired
+                    AND pfa.attribute_id='{$pav->get('attributeId')}'
+                    AND pfa.scope='{$pav->get('scope')}'";
+
+        if ($pav->get('scope') === 'Channel') {
+            $query .= " AND pfa.channel_id='{$pav->get('channelId')}'";
+        }
+
+        return !empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN));
     }
 
     public function convertValue(Entity $entity): void
