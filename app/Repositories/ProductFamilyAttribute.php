@@ -36,148 +36,33 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
-use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
 
 class ProductFamilyAttribute extends Base
 {
-    public function createProductAttributeValues(Entity $pfa): void
+    public function getInheritedPavsIds(string $id): array
     {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['productFamilyId' => $pfa->get('productFamilyId')])
-            ->find();
-
-        foreach ($products as $product) {
-            $this->createProductAttributeValue($pfa, $product);
-        }
-    }
-
-    public function createProductAttributeValue(Entity $pfa, Entity $product): void
-    {
-        $pav = $this->getPavRepository()->get();
-        $pav->set('productId', $product->get('id'));
-        $pav->set('attributeId', $pfa->get('attributeId'));
-        $pav->set('isRequired', $pfa->get('isRequired'));
-        $pav->set('scope', $pfa->get('scope'));
-        $pav->set('channelId', $pfa->get('channelId'));
-
-        try {
-            $this->getEntityManager()->saveEntity($pav);
-        } catch (ProductAttributeAlreadyExists $e) {
-        }
-    }
-
-    public function updateProductAttributeValues(Entity $pfa): void
-    {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['productFamilyId' => $pfa->get('productFamilyId')])
-            ->find();
-
-        foreach ($products as $product) {
-            $where = [
-                'productId'   => $product->get('id'),
-                'attributeId' => $pfa->get('attributeId'),
-                'scope'       => $pfa->getFetched('scope'),
-                'isRequired'  => !empty($pfa->getFetched('isRequired'))
-            ];
-
-            if ($pfa->getFetched('scope') === 'Channel') {
-                $where['channelId'] = $pfa->getFetched('channelId');
-            }
-
-            if (!empty($pav = $this->getPavRepository()->where($where)->findOne())) {
-                $pav->set('scope', $pfa->get('scope'));
-                $pav->set('channelId', $pfa->get('scope') === 'Channel' ? $pfa->get('channelId') : null);
-                $pav->set('isRequired', !empty($pfa->get('isRequired')));
-
-                try {
-                    $this->getEntityManager()->saveEntity($pav);
-                } catch (ProductAttributeAlreadyExists $e) {
-                }
-            }
-        }
-    }
-
-    public function deleteProductAttributeValues(Entity $pfa): void
-    {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['productFamilyId' => $pfa->get('productFamilyId')])
-            ->find();
-
-        foreach ($products as $product) {
-            $where = [
-                'productId'   => $product->get('id'),
-                'attributeId' => $pfa->get('attributeId'),
-                'scope'       => $pfa->get('scope'),
-                'isRequired'  => !empty($pfa->get('isRequired'))
-            ];
-
-            if ($pfa->get('scope') === 'Channel') {
-                $where['channelId'] = $pfa->get('channelId');
-            }
-
-            if (!empty($pav = $this->getPavRepository()->where($where)->findOne())) {
-                $this->getEntityManager()->removeEntity($pav);
-            }
-        }
-    }
-
-    public function save(Entity $entity, array $options = [])
-    {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
+        $pfa = $this->get($id);
+        if (empty($pfa) || empty($pf = $pfa->get('productFamily'))) {
+            return [];
         }
 
-        try {
-            if ($entity->isNew()) {
-                $this->createProductAttributeValues($entity);
-            } else {
-                $this->updateProductAttributeValues($entity);
-            }
-            $result = parent::save($entity, $options);
-
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
+        $productsIds = $pf->getLinkMultipleIdList('products');
+        if (empty($productsIds)) {
+            return [];
         }
 
-        return $result;
-    }
-
-    public function remove(Entity $entity, array $options = [])
-    {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
+        $query = "SELECT id 
+                  FROM `product_attribute_value` 
+                  WHERE deleted=0
+                    AND product_id IN ('" . implode("','", $productsIds) . "')
+                    AND attribute_id='{$pfa->get('attributeId')}'
+                    AND scope='{$pfa->get('scope')}'";
+        if ($pfa->get('scope') === 'Channel') {
+            $query .= " AND channel_id='{$pfa->get('channelId')}'";
         }
 
-        try {
-            $this->deleteProductAttributeValues($entity);
-            $result = parent::remove($entity, $options);
-
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
+        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     public function beforeSave(Entity $entity, array $options = [])
@@ -289,10 +174,5 @@ class ProductFamilyAttribute extends Base
     protected function exception(string $key): string
     {
         return $this->translate($key, 'exceptions');
-    }
-
-    protected function getPavRepository(): ProductAttributeValue
-    {
-        return $this->getEntityManager()->getRepository('ProductAttributeValue');
     }
 }

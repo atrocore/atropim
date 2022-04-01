@@ -38,6 +38,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -616,7 +617,17 @@ class Product extends AbstractRepository
             ->find();
 
         foreach ($pfas as $pfa) {
-            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->createProductAttributeValue($pfa, $product);
+            $pav = $this->getEntityManager()->getEntity('ProductAttributeValue');
+            $pav->set('productId', $product->get('id'));
+            $pav->set('attributeId', $pfa->get('attributeId'));
+            $pav->set('isRequired', $pfa->get('isRequired'));
+            $pav->set('scope', $pfa->get('scope'));
+            $pav->set('channelId', $pfa->get('channelId'));
+
+            try {
+                $this->getEntityManager()->saveEntity($pav);
+            } catch (ProductAttributeAlreadyExists $e) {
+            }
         }
 
         $this->updateProductsAttributesViaProductIds([$product->get('id')]);

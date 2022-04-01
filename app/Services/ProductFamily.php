@@ -68,6 +68,15 @@ class ProductFamily extends \Espo\Core\Templates\Services\Base
         return $result;
     }
 
+    protected function getOneToManyRelationData(string $link): ?array
+    {
+        if ($link === 'productFamilyAttributes') {
+            return null;
+        }
+
+        return parent::getOneToManyRelationData($link);
+    }
+
     /**
      * @param Entity $entity
      * @param Entity $duplicatingEntity
