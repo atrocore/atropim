@@ -35,6 +35,11 @@ Espo.define('pim:views/product-attribute-value/fields/is-pav-value-inherited', '
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'list') {
+                if (['enum', 'multiEnum'].includes(this.model.get('attributeType')) && this.model.get('language') !== 'main') {
+                    this.$el.html('');
+                    return;
+                }
+
                 let isPavValueInherited = this.model.get('isPavValueInherited');
                 if (isPavValueInherited === true) {
                     this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`);
