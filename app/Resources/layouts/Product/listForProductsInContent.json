@@ -7,9 +7,6 @@
     "name": "sku"
   },
   {
-    "name": "type"
-  },
-  {
     "name": "isActive"
   }
 ]

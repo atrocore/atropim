@@ -35,12 +35,9 @@ namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
-use Pim\Core\Exceptions\ChannelAlreadyRelatedToProduct;
-use Pim\Core\Exceptions\NoSuchChannelInProduct;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 
@@ -620,7 +617,17 @@ class Product extends AbstractRepository
             ->find();
 
         foreach ($pfas as $pfa) {
-            $this->getEntityManager()->getRepository('ProductFamilyAttribute')->createProductAttributeValue($pfa, $product);
+            $pav = $this->getEntityManager()->getEntity('ProductAttributeValue');
+            $pav->set('productId', $product->get('id'));
+            $pav->set('attributeId', $pfa->get('attributeId'));
+            $pav->set('isRequired', $pfa->get('isRequired'));
+            $pav->set('scope', $pfa->get('scope'));
+            $pav->set('channelId', $pfa->get('channelId'));
+
+            try {
+                $this->getEntityManager()->saveEntity($pav);
+            } catch (ProductAttributeAlreadyExists $e) {
+            }
         }
 
         $this->updateProductsAttributesViaProductIds([$product->get('id')]);
@@ -794,32 +801,8 @@ class Product extends AbstractRepository
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->where(['productId' => $entity->get('id')])
-            ->find();
-
-        foreach ($pavs as $pav) {
-            $this->getEntityManager()->removeEntity($pav, ['skipProductAttributeValueHook' => true]);
-        }
-
-        $associations = $this
-            ->getEntityManager()
-            ->getRepository('AssociatedProduct')
-            ->where([
-                'OR' => [
-                    ['mainProductId' => $entity->id],
-                    ['relatedProductId' => $entity->id]
-                ]
-            ])
-            ->find();
-
-        if (count($associations) > 0) {
-            foreach ($associations as $association) {
-                $this->getEntityManager()->removeEntity($association);
-            }
-        }
+        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByProductId($entity->get('id'));
+        $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
 
         parent::afterRemove($entity, $options);
     }

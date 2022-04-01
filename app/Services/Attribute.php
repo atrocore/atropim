@@ -38,7 +38,7 @@ use Espo\ORM\Entity;
 use Treo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 
-class Attribute extends AbstractService
+class Attribute extends \Espo\Core\Templates\Services\Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'data'];
 
@@ -144,7 +144,7 @@ class Attribute extends AbstractService
             // prepare no family data
             $noFamilyData = [
                 'id'   => 'all',
-                'name' => $this->getTranslate('All', 'filterLabels', 'Attribute'),
+                'name' => $this->getInjection('language')->translate('All', 'filterLabels', 'Attribute'),
                 'rows' => []
             ];
 
@@ -215,6 +215,14 @@ class Attribute extends AbstractService
         }
 
         return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        // add dependencies
+        $this->addDependency('language');
     }
 
     /**

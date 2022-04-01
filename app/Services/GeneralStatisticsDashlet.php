@@ -33,7 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-class GeneralStatisticsDashlet extends AbstractProductDashletService
+class GeneralStatisticsDashlet extends AbstractDashletService
 {
     public function getDashlet(): array
     {
@@ -95,8 +95,7 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
             = "SELECT " . $select . " 
                 FROM product as p 
                 WHERE p.id NOT IN (SELECT product_id FROM product_asset WHERE deleted=0) 
-                  AND p.deleted = 0 
-                  AND p.type IN " . $this->getProductTypesCondition();
+                  AND p.deleted=0";
 
         return $sql;
     }
@@ -123,7 +122,7 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
                       JOIN association 
                         ON association.id = ap.association_id AND association.deleted = 0
                     WHERE ap.deleted = 0 AND  ap.main_product_id = p.id) = 0 
-                AND p.deleted = 0 AND p.type IN " . $this->getProductTypesCondition();
+                AND p.deleted = 0";
 
         return $sql;
     }
@@ -137,9 +136,6 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
      */
     public function getQueryProductWithoutCategory($count = false): string
     {
-        // prepare types
-        $types = $this->getProductTypesCondition();
-
         // prepare select
         $select = $count ? 'COUNT(p.id)' : 'p.id as id';
 
@@ -147,7 +143,6 @@ class GeneralStatisticsDashlet extends AbstractProductDashletService
                 FROM product p 
                 LEFT JOIN product_category pc ON pc.product_id=p.id AND pc.deleted=0
                 WHERE p.deleted=0 
-                  AND p.type IN $types
                   AND pc.id IS NULL";
     }
 

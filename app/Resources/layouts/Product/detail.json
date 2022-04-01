@@ -5,17 +5,11 @@
     "rows": [
       [
         {
-          "name": "isActive"
-        },
-        {
-          "name": "type"
-        }
-      ],
-      [
-        {
           "name": "name"
         },
-        false
+        {
+          "name": "isActive"
+        }
       ],
       [
         {

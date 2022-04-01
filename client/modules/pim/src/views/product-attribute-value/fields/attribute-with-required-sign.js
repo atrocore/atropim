@@ -36,8 +36,8 @@ Espo.define('pim:views/product-attribute-value/fields/attribute-with-required-si
 
             const $a = this.$el.find('a');
 
-            if (this.model.get('isInherited')) {
-                $a.attr('style', 'font-style: italic');
+            if (this.model.get('isPavRelationInherited')) {
+                $a.addClass('inherited-relation');
             }
 
             if (this.model.get('isRequired')) {

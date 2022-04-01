@@ -310,7 +310,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 createButton: false,
                 massRelateEnabled: false,
                 boolFilterList: ['withNotLinkedAttributesToProduct', 'fromAttributesTab'],
-                boolFilterData: {withNotLinkedAttributesToProduct: this.model.id, fromAttributesTab: {tabId: this.defs.tabId}},
+                boolFilterData: {
+                    withNotLinkedAttributesToProduct: this.model.id,
+                    fromAttributesTab: {tabId: this.defs.tabId}
+                },
                 whereAdditional: [
                     {
                         type: 'isLinked',
@@ -893,6 +896,35 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         hasCompleteness() {
             return this.getMetadata().get(['scopes', 'Product', 'hasCompleteness'])
                 && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
-        }
+        },
+
+        actionRemoveRelatedHierarchically: function (data) {
+            let id = data.id;
+            this.confirm({
+                message: this.translate('removeRecordConfirmationHierarchically', 'messages'),
+                confirmText: this.translate('Remove')
+            }, () => {
+                let model = this.collection.get(id);
+                this.notify('Removing...');
+                $.ajax({
+                    url: `ProductAttributeValue/${id}`,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        id: id,
+                        hierarchically: true
+                    }),
+                    contentType: 'application/json',
+                    success: () => {
+                        this.notify('Removed', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate', this.link, this.defs);
+                    },
+                    error: () => {
+                        this.collection.push(model);
+                    },
+                });
+            });
+        },
+
     })
 );

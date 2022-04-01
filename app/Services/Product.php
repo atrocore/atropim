@@ -35,25 +35,42 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Templates\Services\Hierarchy;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
 use Treo\Services\MassActions;
 
-/**
- * Service of Product
- */
-class Product extends AbstractService
+class Product extends Hierarchy
 {
-    protected $linkWhereNeedToUpdateChannel = 'productAttributeValues';
-
     protected $mandatorySelectAttributeList = ['data'];
+
+    public function getChildren(string $parentId): array
+    {
+        $result = [];
+
+        foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
+            $hasChildren = !empty($record['childrenCount']);
+
+            if (empty($parentId) && !$hasChildren) {
+                continue 1;
+            }
+
+            $result[] = [
+                'id'             => $record['id'],
+                'name'           => $record['name'],
+                'load_on_demand' => $hasChildren
+            ];
+        }
+
+        return $result;
+    }
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
@@ -315,33 +332,28 @@ class Product extends AbstractService
         return empty($channel) ? null : $channel->get('id');
     }
 
-    /**
-     * @param Entity $product
-     * @param Entity $duplicatingProduct
-     */
-    protected function duplicateProductAttributeValues(Entity $product, Entity $duplicatingProduct)
+    protected function duplicateProductAttributeValues(Entity $product, Entity $duplicatingProduct): void
     {
-        if ($duplicatingProduct->get('productFamilyId') == $product->get('productFamilyId')) {
-            // get data for duplicating
-            $rows = $duplicatingProduct->get('productAttributeValues');
+        $pavs = $duplicatingProduct->get('productAttributeValues');
+        if (empty($pavs) || count($pavs) === 0) {
+            return;
+        }
 
-            if (count($rows) > 0) {
-                foreach ($rows as $item) {
-                    $entity = $this->getEntityManager()->getEntity('ProductAttributeValue');
-                    $entity->set($item->toArray());
-                    $entity->id = Util::generateId();
-                    $entity->set('productId', $product->get('id'));
+        /** @var \Pim\Repositories\ProductAttributeValue $repository */
+        $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
 
-                    $this->getEntityManager()->saveEntity($entity, ['skipProductAttributeValueHook' => true]);
+        foreach ($pavs as $pav) {
+            $entity = $repository->get();
+            $entity->set($pav->toArray());
+            $entity->id = Util::generateId();
+            $entity->set('productId', $product->get('id'));
 
-                    // relate channels
-                    if (!empty($channel = $item->get('channel'))) {
-                        $this
-                            ->getEntityManager()
-                            ->getRepository('ProductAttributeValue')
-                            ->relate($entity, 'channel', $channel);
-                    }
+            try {
+                if (!empty($duplicate = $repository->findCopy($entity))) {
+                    $repository->remove($duplicate);
                 }
+                $repository->save($entity);
+            } catch (ProductAttributeAlreadyExists $e) {
             }
         }
     }
@@ -418,7 +430,7 @@ class Product extends AbstractService
         /**
          * Set global main image
          */
-        if ($link === 'assets' && $result['total'] > 0) {
+        if ($link === 'assets' && $result['total'] > 0 && isset($result['collection'])) {
             $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
             $result['collection'] = $this->getPreparedProductAssets($id, $result['collection'], $channelId);
             $result['total'] = $result['collection']->count();
@@ -610,6 +622,13 @@ class Product extends AbstractService
             $records = $newRecords;
         }
 
+        foreach ($records as $pav) {
+            if ($pav->get('scope') === 'Global') {
+                $pav->set('channelId', null);
+                $pav->set('channelName', 'Global');
+            }
+        }
+
         return new EntityCollection(array_values($records));
     }
 
@@ -737,14 +756,6 @@ class Product extends AbstractService
     }
 
     /**
-     * @return string
-     */
-    protected function getStringProductTypes(): string
-    {
-        return join("','", array_keys($this->getMetadata()->get('pim.productType')));
-    }
-
-    /**
      * @return MassActions
      */
     protected function getMassActionsService(): MassActions
@@ -759,7 +770,7 @@ class Product extends AbstractService
      */
     protected function exception(string $key): string
     {
-        return $this->getTranslate($key, 'exceptions', 'Product');
+        return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
     }
 
     /**

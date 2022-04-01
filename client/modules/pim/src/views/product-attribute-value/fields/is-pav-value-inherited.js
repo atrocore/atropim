@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -29,56 +28,24 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/product-attribute-value/fields/is-pav-value-inherited', 'views/fields/bool',
+    Dep => Dep.extend({
 
-namespace Pim\Services;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-/**
- * Class AbstractProductDashletService
- */
-abstract class AbstractProductDashletService extends AbstractDashletService
-{
-    /**
-     * Product types
-     *
-     * @var array
-     */
-    protected $productTypes = [];
+            if (this.mode === 'list') {
+                let isPavValueInherited = this.model.get('isPavValueInherited');
+                if (isPavValueInherited === true) {
+                    this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`);
+                } else if (isPavValueInherited === false) {
+                    this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" data-action="setPavAsInherited" class="action lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
+                } else {
+                    this.$el.html('');
+                }
+            }
+        },
 
-    /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
+    })
+);
 
-        $this->addDependency('metadata');
-    }
-
-    /**
-     * Get product types for query
-     *
-     * @return string
-     */
-    protected function getProductTypesCondition(): string
-    {
-        $result = "('" . implode("','", $this->getProductTypes()) . "')";
-
-        return $result;
-    }
-
-
-    /**
-     * Get product types
-     *
-     * @return array
-     */
-    protected function getProductTypes(): array
-    {
-        if (empty($this->productTypes)) {
-            $this->productTypes = array_keys($this->getInjection('metadata')->get('pim.productType'));
-        }
-
-        return $this->productTypes;
-    }
-}

@@ -31,11 +31,29 @@
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-class Category extends AbstractService
+class Category extends Base
 {
     protected $mandatorySelectAttributeList = ['categoryRoute'];
+
+    public function getRoute(string $id): array
+    {
+        if (empty($category = $this->getRepository()->get($id))) {
+            return [];
+        }
+
+        if (empty($categoryRoute = $category->get('categoryRoute'))) {
+            return [];
+        }
+
+        $route = explode('|', $categoryRoute);
+        array_shift($route);
+        array_pop($route);
+
+        return $route;
+    }
 
     public function getCategoryTree(string $parentId): array
     {

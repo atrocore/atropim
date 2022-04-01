@@ -36,7 +36,7 @@ namespace Pim\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
-use Pim\Core\Exceptions\NoSuchChannelInProduct;
+use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Espo\Core\Utils\Util;
 
@@ -45,6 +45,177 @@ class ProductAttributeValue extends AbstractRepository
     protected static $beforeSaveData = [];
 
     protected array $channelLanguages = [];
+
+    protected array $productPavs = [];
+
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
+    {
+        $pav = $this->get($parentId);
+        if (empty($pav)) {
+            return [];
+        }
+
+        $products = $this->getEntityManager()->getRepository('Product')->getChildrenArray($pav->get('productId'));
+
+        if (empty($products)) {
+            return [];
+        }
+
+        $query = "SELECT *
+                  FROM `product_attribute_value`
+                  WHERE deleted=0
+                    AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
+                    AND attribute_id='{$pav->get('attributeId')}'
+                    AND `language`='{$pav->get('language')}'
+                    AND scope='{$pav->get('scope')}'";
+
+        if ($pav->get('scope') === 'Channel') {
+            $query .= " AND channel_id='{$pav->get('channelId')}'";
+        }
+
+        $result = [];
+        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+            foreach ($products as $product) {
+                if ($product['id'] === $record['product_id']) {
+                    $record['childrenCount'] = $product['childrenCount'];
+                    break 1;
+                }
+            }
+            $result[] = $record;
+        }
+
+        return $result;
+    }
+
+    public function getParentPav(Entity $entity): ?Entity
+    {
+        $pavs = $this->getParentsPavs($entity);
+        if ($pavs === null) {
+            return null;
+        }
+
+        foreach ($pavs as $pav) {
+            if (
+                $pav->get('attributeId') === $entity->get('attributeId')
+                && $pav->get('scope') === $entity->get('scope')
+                && $pav->get('language') === $entity->get('language')
+            ) {
+                if ($pav->get('scope') === 'Global') {
+                    return $pav;
+                }
+
+                if ($pav->get('channelId') === $entity->get('channelId')) {
+                    return $pav;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function isPavRelationInherited(Entity $entity): bool
+    {
+        return !empty($this->getParentPav($entity));
+    }
+
+    public function isPavValueInherited(Entity $entity): ?bool
+    {
+        $pav = $this->getParentPav($entity);
+        if (empty($pav)) {
+            return null;
+        }
+
+        return $this->arePavsValuesEqual($pav, $entity);
+    }
+
+    public function arePavsValuesEqual(Entity $pav1, Entity $pav2): bool
+    {
+        switch ($pav1->get('attributeType')) {
+            case 'array':
+            case 'multiEnum':
+                $result = Entity::areValuesEqual(Entity::JSON_ARRAY, $pav1->get('textValue'), $pav2->get('textValue'));
+                break;
+            case 'text':
+            case 'wysiwyg':
+                $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
+                break;
+            case 'bool':
+                $result = Entity::areValuesEqual(Entity::BOOL, $pav1->get('boolValue'), $pav2->get('boolValue'));
+                break;
+            case 'currency':
+            case 'unit':
+                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
+                break;
+            case 'int':
+                $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
+                break;
+            case 'float':
+                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                break;
+            case 'date':
+                $result = Entity::areValuesEqual(Entity::DATE, $pav1->get('dateValue'), $pav2->get('dateValue'));
+                break;
+            case 'datetime':
+                $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
+                break;
+            default:
+                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                break;
+        }
+
+        return $result;
+    }
+
+    public function getParentsPavs(Entity $entity): ?EntityCollection
+    {
+        if (isset($this->productPavs[$entity->get('productId')])) {
+            return $this->productPavs[$entity->get('productId')];
+        }
+
+        $query = "SELECT id
+                  FROM `product_attribute_value`
+                  WHERE product_id IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0 AND entity_id='{$entity->get('productId')}')
+                    AND deleted=0";
+
+        $ids = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+
+        $this->productPavs[$entity->get('productId')] = empty($ids) ? null : $this->where(['id' => $ids])->find();
+
+        return $this->productPavs[$entity->get('productId')];
+    }
+
+    public function isInheritedFromPf(Entity $pav): bool
+    {
+        $productFamilyId = $this
+            ->getPDO()
+            ->query("SELECT product_family_id FROM `product` WHERE id='{$pav->get('productId')}'")
+            ->fetch(\PDO::FETCH_COLUMN);
+
+        if (empty($productFamilyId)) {
+            return false;
+        }
+
+        $isRequired = !empty($pav->get('isRequired')) ? 1 : 0;
+
+        $query = "SELECT pfa.id
+                  FROM `product_family_attribute` pfa
+                  LEFT JOIN `product_family` pf ON pf.id=pfa.product_family_id
+                  WHERE pfa.deleted=0
+                    AND pf.deleted=0
+                    AND pf.id='$productFamilyId'
+                    AND pfa.is_required=$isRequired
+                    AND pfa.attribute_id='{$pav->get('attributeId')}'
+                    AND pfa.scope='{$pav->get('scope')}'";
+
+        if ($pav->get('scope') === 'Channel') {
+            $query .= " AND pfa.channel_id='{$pav->get('channelId')}'";
+        }
+
+        return !empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN));
+    }
 
     public function convertValue(Entity $entity): void
     {
@@ -185,6 +356,13 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return $result;
+    }
+
+    public function removeByProductId(string $productId): void
+    {
+        $productId = $this->getPDO()->quote($productId);
+
+        $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE product_id=$productId");
     }
 
     public function remove(Entity $entity, array $options = [])
@@ -419,16 +597,6 @@ class ProductAttributeValue extends AbstractRepository
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
         if ($entity->isNew()) {
-            if (!empty($entity->get('channelId'))) {
-                $product = $entity->get('product');
-                $channelsIds = array_column($product->get('channels')->toArray(), 'id');
-                if (!in_array($entity->get('channelId'), $channelsIds)) {
-                    throw new NoSuchChannelInProduct(
-                        sprintf($this->exception('noSuchChannelInProduct'), $entity->get('attributeName'), $entity->get('channelName'), $product->get('name'))
-                    );
-                }
-            }
-
             if ($entity->get('language') !== 'main' && empty($entity->get('mainLanguageId'))) {
                 $entity->set('mainLanguageId', $this->findMainLanguage($entity)->get('id'));
             }

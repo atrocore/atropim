@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -41,12 +42,14 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 
-class ProductAttributeValue extends AbstractService
+class ProductAttributeValue extends Base
 {
     protected $mandatorySelectAttributeList
         = [
             'language',
             'mainLanguageId',
+            'productId',
+            'productName',
             'attributeId',
             'attributeName',
             'attributeType',
@@ -58,6 +61,34 @@ class ProductAttributeValue extends AbstractService
             'varcharValue',
             'textValue'
         ];
+
+    public function inheritPav(string $id): bool
+    {
+        $pav = $this->getEntity($id);
+        $parentPav = $this->getRepository()->getParentPav($pav);
+        if (empty($parentPav)) {
+            return false;
+        }
+        $this->getRepository()->convertValue($parentPav);
+
+        $input = new \stdClass();
+        $input->value = $parentPav->get('value');
+
+        switch ($parentPav->get('attributeType')) {
+            case 'currency':
+                $input->valueCurrency = $parentPav->get('valueCurrency');
+            case 'unit':
+                $input->valueUnit = $parentPav->get('valueUnit');
+                break;
+            case 'asset':
+                $input->valueId = $parentPav->get('valueId');
+                break;
+        }
+
+        $this->updateEntity($id, $input);
+
+        return true;
+    }
 
     /**
      * @inheritdoc
@@ -76,12 +107,70 @@ class ProductAttributeValue extends AbstractService
     {
         $this->prepareInputValue($attachment);
 
-        return parent::createEntity($attachment);
+        if ($this->isPseudoTransaction()) {
+            return parent::createEntity($attachment);
+        }
+
+        if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
+            return parent::createEntity($attachment);
+        }
+
+        if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
+            return parent::createEntity($attachment);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = parent::createEntity($attachment);
+            $this->createPseudoTransactionCreateJobs(clone $attachment);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
+    {
+        if (!property_exists($data, 'productId')) {
+            return;
+        }
+
+        $children = $this->getEntityManager()->getRepository('Product')->getChildrenArray($data->productId);
+        foreach ($children as $child) {
+            $inputData = clone $data;
+            $inputData->productId = $child['id'];
+            $inputData->productName = $child['name'];
+            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
+            }
+        }
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
+
+        /**
+         * Validate channel
+         */
+        if (
+            !$this->isPseudoTransaction()
+            && property_exists($data, 'channelId')
+            && property_exists($data, 'productId')
+            && property_exists($data, 'attributeId')
+            && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
+            && !in_array($data->channelId, $product->getLinkMultipleIdList('channels'))
+        ) {
+            $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
+            $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
+            throw new BadRequest(
+                sprintf($this->getInjection('language')->translate('noSuchChannelInProduct'), $attributeName, $channelName, $product->get('name'))
+            );
+        }
 
         $this->setInputValue($entity, $data);
     }
@@ -93,7 +182,59 @@ class ProductAttributeValue extends AbstractService
     {
         $this->prepareInputValue($data);
 
-        return parent::updateEntity($id, $data);
+        if ($this->isPseudoTransaction()) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
+            return parent::updateEntity($id, $data);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->createPseudoTransactionUpdateJobs($id, clone $data);
+            $result = parent::updateEntity($id, $data);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($id);
+
+        $pav1 = $this->getRepository()->get($id);
+        foreach ($children as $child) {
+            $pav2 = $this->getRepository()->get($child['id']);
+            $areIsRequiredEqual = Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired'));
+            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2) || $areIsRequiredEqual) {
+                $inputData = new \stdClass();
+                foreach (['value', 'valueUnit', 'valueCurrency', 'valueId'] as $key) {
+                    if (property_exists($data, $key)) {
+                        $inputData->$key = $data->$key;
+                    }
+                }
+
+                if ($areIsRequiredEqual && property_exists($data, 'isRequired')) {
+                    $inputData->isRequired = $data->isRequired;
+                }
+
+                if (!empty((array)$inputData)) {
+                    $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                    if ($child['childrenCount'] > 0) {
+                        $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
+                    }
+                }
+            }
+        }
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
@@ -101,6 +242,55 @@ class ProductAttributeValue extends AbstractService
         parent::beforeUpdateEntity($entity, $data);
 
         $this->setInputValue($entity, $data);
+    }
+
+    public function deleteEntity($id)
+    {
+        if (!empty($this->simpleRemove)) {
+            return parent::deleteEntity($id);
+        }
+
+        if ($this->isPseudoTransaction()) {
+            return parent::deleteEntity($id);
+        }
+
+        if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
+            return parent::deleteEntity($id);
+        }
+
+        if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
+            return parent::deleteEntity($id);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->createPseudoTransactionDeleteJobs($id);
+            $result = parent::deleteEntity($id);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($id);
+        foreach ($children as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
+            }
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
@@ -310,8 +500,6 @@ class ProductAttributeValue extends AbstractService
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
-        $entity->set('prohibitedEmptyValue', false);
-        $entity->set('isInherited', $this->isInheritedFromPf($entity->get('id')));
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
@@ -319,6 +507,15 @@ class ProductAttributeValue extends AbstractService
         $entity->set('channelCode', null);
         if (!empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
+        }
+
+        $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
+        if (!$entity->get('isPavRelationInherited')) {
+            $entity->set('isPavRelationInherited', $this->getRepository()->isInheritedFromPf($entity));
+        }
+
+        if ($entity->get('isPavRelationInherited')) {
+            $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
         }
 
         $this->getRepository()->convertValue($entity);
@@ -343,41 +540,6 @@ class ProductAttributeValue extends AbstractService
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = Json::encode($data->value);
         }
-    }
-
-    private function isInheritedFromPf(string $id): bool
-    {
-        if (empty($pav = $this->getRepository()->get($id))) {
-            return false;
-        }
-
-        if (empty($product = $pav->get('product'))) {
-            return false;
-        }
-
-        if (empty($product->get('productFamilyId'))) {
-            return false;
-        }
-
-        $where = [
-            'productFamilyId' => $product->get('productFamilyId'),
-            'attributeId'     => $pav->get('attributeId'),
-            'scope'           => $pav->get('scope'),
-            'isRequired'      => !empty($pav->get('isRequired')),
-        ];
-
-        if ($where['scope'] === 'Channel') {
-            $where['channelId'] = $pav->get('channelId');
-        }
-
-        $pfa = $this
-            ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
-            ->select(['id'])
-            ->where($where)
-            ->findOne();
-
-        return !empty($pfa);
     }
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool

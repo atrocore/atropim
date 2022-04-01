@@ -34,11 +34,33 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Controllers\Base;
 
-/**
- * Class ProductAttributeValue
- */
 class ProductAttributeValue extends Base
 {
+    public function actionInheritPav($params, $data, $request)
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->inheritPav((string)$data->id);
+    }
+
+    public function actionDelete($params, $data, $request)
+    {
+        if (!$request->isDelete() || empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        $service = $this->getRecordService();
+        $service->simpleRemove = !property_exists($data, 'hierarchically');
+
+        return $service->deleteEntity($params['id']);
+    }
 }

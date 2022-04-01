@@ -36,13 +36,10 @@ namespace Pim\Entities;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Entities\Hierarchy;
 use Espo\ORM\EntityCollection;
 
-/**
- * Product entity
- */
-class Product extends Base
+class Product extends Hierarchy
 {
     /**
      * @var array

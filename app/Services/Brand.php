@@ -33,12 +33,13 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
 /**
  * Brand service
  */
-class Brand extends AbstractService
+class Brand extends Base
 {
     /**
      * @param Entity $entity
@@ -50,18 +51,6 @@ class Brand extends AbstractService
 
         // unlink
         $this->unlinkBrand([$entity->get('id')]);
-    }
-
-    /**
-     * @param array $idList
-     */
-    protected function afterMassRemove(array $idList)
-    {
-        // call parent action
-        parent::afterMassRemove($idList);
-
-        // unlink
-        $this->unlinkBrand($idList);
     }
 
     /**

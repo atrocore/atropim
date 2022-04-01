@@ -36,18 +36,8 @@ namespace Pim\Services;
 /**
  * Class ProductsByTagDashlet
  */
-class ProductsByTagDashlet extends AbstractProductDashletService
+class ProductsByTagDashlet extends AbstractDashletService
 {
-    /**
-     * Int Class
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->addDependency('metadata');
-    }
-
     /**
      * Get Product types
      *
@@ -63,17 +53,11 @@ class ProductsByTagDashlet extends AbstractProductDashletService
         $tags = is_array($tags) ? $tags : [];
 
         $result['total'] = count($tags);
-        // prepare data
         foreach ($tags as $tag) {
-            $where = [
-                'tag*' => "%\"$tag\"%",
-                'type' => $this->getProductTypes()
-            ];
-
             $result['list'][] = [
                 'id'     => $tag,
                 'name'   => $tag,
-                'amount' => $this->getRepository('Product')->where($where)->count()
+                'amount' => $this->getRepository('Product')->where(['tag*' => "%\"$tag\"%"])->count()
             ];
         }
 

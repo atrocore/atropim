@@ -52,4 +52,10 @@ class AssociatedProduct extends Base
             $entity->set('name', $entity->get('associationName'));
         }
     }
+
+    public function removeByProductId(string $productId): void
+    {
+        $productId = $this->getPDO()->quote($productId);
+        $this->getPDO()->exec("DELETE FROM `associated_product` WHERE main_product_id=$productId OR related_product_id=$productId");
+    }
 }

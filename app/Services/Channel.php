@@ -33,12 +33,13 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
 /**
  * Service of Channel
  */
-class Channel extends AbstractService
+class Channel extends Base
 {
     /**
      * @inheritDoc
@@ -161,6 +162,31 @@ class Channel extends AbstractService
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
 
         return (!empty($data['category_id'])) ? $data['category_id'] : null;
+    }
+
+    public function getAclWhereSql(string $entityName, string $entityAlias): string
+    {
+        // prepare sql
+        $sql = '';
+
+        if (!$this->getUser()->isAdmin()) {
+            // prepare data
+            $userId = $this->getUser()->get('id');
+
+            if ($this->getAcl()->checkReadOnlyOwn($entityName)) {
+                $sql .= " AND $entityAlias.assigned_user_id = '$userId'";
+            }
+            if ($this->getAcl()->checkReadOnlyTeam($entityName)) {
+                $sql .= " AND $entityAlias.id IN ("
+                    . "SELECT et.entity_id "
+                    . "FROM entity_team AS et "
+                    . "JOIN team_user AS tu ON tu.team_id=et.team_id "
+                    . "WHERE et.deleted=0 AND tu.deleted=0 "
+                    . "AND tu.user_id = '$userId' AND et.entity_type='$entityName')";
+            }
+        }
+
+        return $sql;
     }
 
     /**

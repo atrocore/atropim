@@ -66,4 +66,95 @@ class ProductFamilyAttribute extends Base
             }
         }
     }
+
+    public function createEntity($attachment)
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = parent::createEntity($attachment);
+            $this->createPseudoTransactionCreateJobs(clone $attachment);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionCreateJobs(\stdClass $data): void
+    {
+        if (!property_exists($data, 'productFamilyId')) {
+            return;
+        }
+
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->select(['id', 'name'])
+            ->where(['productFamilyId' => $data->productFamilyId])
+            ->find();
+
+        foreach ($products as $product) {
+            $inputData = clone $data;
+            $inputData->productId = $product->get('id');
+            $inputData->productName = $product->get('name');
+            unset($inputData->productFamilyId);
+
+            $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
+        }
+    }
+
+    public function updateEntity($id, $data)
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->createPseudoTransactionUpdateJobs($id, clone $data);
+            $result = parent::updateEntity($id, $data);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data): void
+    {
+        foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
+            $inputData = new \stdClass();
+            foreach (['scope', 'channelId', 'isRequired'] as $key) {
+                if (property_exists($data, $key)) {
+                    $inputData->$key = $data->$key;
+                }
+            }
+
+            if (!empty((array)$inputData)) {
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pavId, $inputData);
+            }
+        }
+    }
+
+    public function deleteEntity($id)
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->createPseudoTransactionDeleteJobs($id);
+            $result = parent::deleteEntity($id);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionDeleteJobs(string $id): void
+    {
+        foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
+            $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pavId);
+        }
+    }
 }

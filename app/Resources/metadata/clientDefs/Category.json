@@ -25,12 +25,12 @@
     "merge"
   ],
   "views": {
-    "list": "pim:views/category/list",
-    "detail": "pim:views/category/detail"
+    "list": "views/list-tree",
+    "detail": "views/detail-tree"
   },
   "recordViews": {
     "list": "pim:views/category/record/list",
-    "detail": "pim:views/category/record/detail"
+    "detail": "views/record/detail-tree"
   },
   "relationshipPanels": {
     "catalogs": {

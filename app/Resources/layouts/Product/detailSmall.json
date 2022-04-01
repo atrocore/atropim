@@ -7,14 +7,16 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "isActive"
+        }
       ],
       [
         {
           "name": "sku"
         },
         {
-          "name": "type"
+          "name": "mpn"
         }
       ],
       [

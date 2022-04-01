@@ -83,9 +83,6 @@
     "ready": "Готово"
   },
   "options": {
-    "type": {
-      "simpleProduct": "Простой продукт"
-    },
     "tag": {
       "blue": "голубой",
       "yellow": "желтый",
@@ -111,7 +108,6 @@
     "withoutAnyCategory": "Без категории",
     "withoutProductAttributes": "Без атрибутов продукта",
     "notAssociatedProducts": "Не ассоциированные продукты",
-    "onlySimple": "Только простой",
     "notLinkedWithChannel": "Не связан с каналом",
     "notLinkedWithBrand": "Не связан с брендом",
     "notLinkedWithProductFamily": "Не связан с продуктовой семьей",
