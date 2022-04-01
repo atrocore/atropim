@@ -125,56 +125,6 @@ class ProductFamily extends AbstractRepository
         return array_column($data, 'attributeId');
     }
 
-    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
-    {
-        if ($relationName === 'products') {
-            if (is_bool($foreign)) {
-                throw new BadRequest('Action blocked. Please, specify Product that we should be related with Product Family.');
-            }
-            if (is_string($foreign)) {
-                $foreign = $this->getEntityManager()->getEntity('Product', $foreign);
-            }
-            $foreign->set('productFamilyId', $entity->get('id'));
-            $this->getEntityManager()->saveEntity($foreign);
-
-            return true;
-        }
-
-        if ($relationName === 'children') {
-            self::onlyForAdvancedClassification();
-
-            if (is_bool($foreign)) {
-                throw new BadRequest('Action blocked. Please, specify Product Family.');
-            }
-
-            if (is_string($foreign)) {
-                $foreign = $this->getEntityManager()->getEntity('ProductFamily', $foreign);
-            }
-
-            $foreign->set('parentId', $entity->get('id'));
-            $this->getEntityManager()->saveEntity($foreign);
-
-            return true;
-        }
-
-        return parent::relate($entity, $relationName, $foreign, $data, $options);
-    }
-
-    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName === 'products') {
-            if (is_bool($foreign)) {
-                throw new BadRequest('Action blocked. Please, specify Product that we should be unrelated with Product Family.');
-            }
-            $foreign->set('productFamilyId', null);
-            $this->getEntityManager()->saveEntity($foreign);
-
-            return true;
-        }
-
-        return parent::unrelate($entity, $relationName, $foreign, $options);
-    }
-
     /**
      * @param array       $productFamiliesIds
      * @param string|null $attributeGroupId
@@ -217,24 +167,12 @@ class ProductFamily extends AbstractRepository
         $this->setInheritedOwnership($entity);
     }
 
-    protected function beforeRemove(Entity $entity, array $options = [])
-    {
-        // unlink from products
-        foreach ($entity->get('products') as $product) {
-            $product->set('productFamilyId', null);
-            $this->getEntityManager()->saveEntity($product);
-        }
-
-        parent::beforeRemove($entity, $options);
-    }
-
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        foreach ($entity->get('productFamilyAttributes') as $pfa) {
-            $this->getEntityManager()->removeEntity($pfa);
-        }
+        $this->getPDO()->exec("UPDATE `product` SET product_family_id=NULL WHERE product_family_id='{$entity->get('id')}'");
+        $this->getPDO()->exec("DELETE FROM `product_family_attribute` WHERE product_family_id='{$entity->get('id')}'");
     }
 
     protected function init()
