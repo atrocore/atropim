@@ -278,19 +278,6 @@ class Attribute extends \Espo\Core\Templates\Services\Base
     }
 
     /**
-     * @param array $idList
-     */
-    protected function afterMassRemove(array $idList)
-    {
-        // call parent action
-        parent::afterMassRemove($idList);
-
-        // unlink
-        $this->unlinkAttribute($idList);
-    }
-
-
-    /**
      * Unlink attribute from ProductFamily and Product
      *
      * @param array $ids
@@ -326,15 +313,5 @@ class Attribute extends \Espo\Core\Templates\Services\Base
         }
 
         return $result;
-    }
-
-    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
-    {
-        return true;
-    }
-
-    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
-    {
-        return [];
     }
 }
