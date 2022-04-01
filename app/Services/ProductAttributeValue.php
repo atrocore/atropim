@@ -192,6 +192,48 @@ class ProductAttributeValue extends Base
         $this->setInputValue($entity, $data);
     }
 
+    public function deleteEntity($id)
+    {
+        if (!empty($this->simpleRemove)) {
+            return parent::deleteEntity($id);
+        }
+
+        if ($this->isPseudoTransaction()) {
+            return parent::deleteEntity($id);
+        }
+
+        if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
+            return parent::deleteEntity($id);
+        }
+
+        if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
+            return parent::deleteEntity($id);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->createPseudoTransactionDeleteJobs($id);
+            $result = parent::deleteEntity($id);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($id);
+        foreach ($children as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
+            }
+        }
+    }
+
     protected function init()
     {
         parent::init();

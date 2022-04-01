@@ -51,4 +51,16 @@ class ProductAttributeValue extends Base
 
         return $this->getRecordService()->inheritPav((string)$data->id);
     }
+
+    public function actionDelete($params, $data, $request)
+    {
+        if (!$request->isDelete() || empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        $service = $this->getRecordService();
+        $service->simpleRemove = !property_exists($data, 'hierarchically');
+
+        return $service->deleteEntity($params['id']);
+    }
 }

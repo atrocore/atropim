@@ -48,6 +48,45 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $productPavs = [];
 
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
+    {
+        $pav = $this->get($parentId);
+        if (empty($pav)) {
+            return [];
+        }
+
+        $products = $this->getEntityManager()->getRepository('Product')->getChildrenArray($pav->get('productId'));
+
+        if (empty($products)) {
+            return [];
+        }
+
+        $query = "SELECT *
+                  FROM `product_attribute_value`
+                  WHERE deleted=0
+                    AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
+                    AND attribute_id='{$pav->get('attributeId')}'
+                    AND `language`='{$pav->get('language')}'
+                    AND scope='{$pav->get('scope')}'";
+
+        if ($pav->get('scope') === 'Channel') {
+            $query .= " AND channel_id='{$pav->get('channelId')}'";
+        }
+
+        $result = [];
+        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+            foreach ($products as $product) {
+                if ($product['id'] === $record['product_id']) {
+                    $record['childrenCount'] = $product['childrenCount'];
+                    break 1;
+                }
+            }
+            $result[] = $record;
+        }
+
+        return $result;
+    }
+
     public function getParentPav(Entity $entity): ?Entity
     {
         $pavs = $this->getParentsPavs($entity);
