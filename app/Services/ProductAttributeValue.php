@@ -182,7 +182,53 @@ class ProductAttributeValue extends Base
     {
         $this->prepareInputValue($data);
 
-        return parent::updateEntity($id, $data);
+        if ($this->isPseudoTransaction()) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
+            return parent::updateEntity($id, $data);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->createPseudoTransactionUpdateJobs($id, clone $data);
+            $result = parent::updateEntity($id, $data);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($id);
+
+        $pav1 = $this->getRepository()->get($id);
+        foreach ($children as $child) {
+            $pav2 = $this->getRepository()->get($child['id']);
+            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2) || Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired'))) {
+                $inputData = new \stdClass();
+                foreach (['value', 'valueUnit', 'valueCurrency', 'valueId', 'isRequired'] as $key) {
+                    if (property_exists($data, $key)) {
+                        $inputData->$key = $data->$key;
+                    }
+                }
+                if (!empty((array)$inputData)) {
+                    $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                    if ($child['childrenCount'] > 0) {
+                        $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
+                    }
+                }
+            }
+        }
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
