@@ -214,13 +214,19 @@ class ProductAttributeValue extends Base
         $pav1 = $this->getRepository()->get($id);
         foreach ($children as $child) {
             $pav2 = $this->getRepository()->get($child['id']);
-            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2) || Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired'))) {
+            $areIsRequiredEqual = Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired'));
+            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2) || $areIsRequiredEqual) {
                 $inputData = new \stdClass();
-                foreach (['value', 'valueUnit', 'valueCurrency', 'valueId', 'isRequired'] as $key) {
+                foreach (['value', 'valueUnit', 'valueCurrency', 'valueId'] as $key) {
                     if (property_exists($data, $key)) {
                         $inputData->$key = $data->$key;
                     }
                 }
+
+                if ($areIsRequiredEqual && property_exists($data, 'isRequired')) {
+                    $inputData->isRequired = $data->isRequired;
+                }
+
                 if (!empty((array)$inputData)) {
                     $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
                     if ($child['childrenCount'] > 0) {
