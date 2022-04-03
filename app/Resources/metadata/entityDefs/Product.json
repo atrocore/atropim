@@ -17,8 +17,7 @@
       "exportDisabled": true,
       "importDisabled": true,
       "exportType": "text",
-      "noLoad": true,
-      "nonInheritedRelation": false
+      "noLoad": true
     },
     "productFamily": {
       "type": "link",

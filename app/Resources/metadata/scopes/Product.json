@@ -25,11 +25,19 @@
   "addRelationEnabled": true,
   "multiParents": false,
   "fieldValueInheritance": true,
+  "mandatoryUnInheritedFields": [
+    "productAttributeValues",
+    "isInheritAssignedUser",
+    "isInheritOwnerUser",
+    "isInheritTeams",
+    "hasInconsistentAttributes"
+  ],
   "unInheritedFields": [
     "sku",
     "mpn"
   ],
   "relationInheritance": true,
+  "inheritedRelations": ["productAttributeValues"],
   "unInheritedRelations": [],
   "importTypeSimple": {
     "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
