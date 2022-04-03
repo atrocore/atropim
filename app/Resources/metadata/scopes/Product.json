@@ -30,7 +30,8 @@
     "isInheritAssignedUser",
     "isInheritOwnerUser",
     "isInheritTeams",
-    "hasInconsistentAttributes"
+    "hasInconsistentAttributes",
+    "data"
   ],
   "unInheritedFields": [
     "sku",
