@@ -34,7 +34,6 @@
     "sku": "SKU",
     "type": "Typ",
     "amount": "Menge",
-    "currency": "Währung",
     "tax": "MwSt.",
     "packaging": "Verpackung",
     "ean": "GTIN/EAN",

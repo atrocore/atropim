@@ -104,13 +104,6 @@
       ],
       "default": "draft"
     },
-    "currency": {
-      "type": "available-currency",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true
-    },
     "tax": {
       "type": "link",
       "view": "pim:views/product/fields/tax"
