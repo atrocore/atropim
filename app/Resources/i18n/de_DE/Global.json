@@ -86,6 +86,11 @@
     }
   },
   "labels": {
+    "nonHierarchicalProducts": "Unhierarchische Produkte",
+    "productHierarchies": "Produkthierarchien",
+    "lowestLevelProducts": "Produkte der niedrigsten Ebene",
+    "bundleProducts": "Bündelprodukte",
+    "bundledProducts": "Gebündelte Produkte",
     "productSettings": "Produkteinstellungen",
     "Reset selection": "Auswahl zurücksetzen",
     "typeToSearch": "Tippe um zu suchen...",

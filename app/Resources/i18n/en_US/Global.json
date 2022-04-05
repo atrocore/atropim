@@ -73,6 +73,11 @@
     "role": "Role"
   },
   "labels": {
+    "nonHierarchicalProducts": "Non-hierarchical products",
+    "productHierarchies": "Product hierarchies",
+    "lowestLevelProducts": "Lowest level products",
+    "bundleProducts": "Bundle products",
+    "bundledProducts": "Bundled products",
     "productSettings": "Product settings",
     "Reset selection": "Reset selection",
     "typeToSearch": "Type to search...",

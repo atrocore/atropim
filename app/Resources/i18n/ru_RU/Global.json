@@ -73,6 +73,11 @@
     "role": "Роль"
   },
   "labels": {
+    "nonHierarchicalProducts": "Неиерархические продукты",
+    "productHierarchies": "Продуктовые иерархии",
+    "lowestLevelProducts": "Продукты наинизшего уровня",
+    "bundleProducts": "Товарные комбинации",
+    "bundledProducts": "Комбинируемые товары",
     "productSettings": "Настройки продукта",
     "Reset selection": "Сбросить выбор",
     "typeToSearch": "Введите для поиска...",

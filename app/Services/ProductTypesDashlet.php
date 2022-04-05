@@ -33,9 +33,6 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-/**
- * Class ProductTypesDashlet
- */
 class ProductTypesDashlet extends AbstractDashletService
 {
     /**
@@ -45,48 +42,86 @@ class ProductTypesDashlet extends AbstractDashletService
      */
     public function getDashlet(): array
     {
-        $result = ['total' => 0, 'list' => []];
-        $productData = [];
+        $types = [
+            'nonHierarchicalProducts',
+            'productHierarchies',
+            'lowestLevelProducts'
+        ];
 
-        // get product data form DB
-        $sql = "SELECT
-                    type      AS type,
-                    is_active AS isActive,
-                    COUNT(id) AS amount
-                FROM product
-                WHERE deleted=0
-                GROUP BY is_active, type;";
+        if (in_array('productBundles', $this->getInjection('metadata')->get('scopes.Product.mandatoryUnInheritedRelations', []))) {
+            $types[] = 'bundleProducts';
+            $types[] = 'bundledProducts';
+        }
 
-        $sth = $this->getPDO()->prepare($sql);
-        $sth->execute();
-        $products = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        // prepare product data
-        foreach ($products as $product) {
-            if ($product['isActive']) {
-                $productData[$product['type']]['active'] = $product['amount'];
-            } else {
-                $productData[$product['type']]['notActive'] = $product['amount'];
+        foreach ($types as $type) {
+            $method = 'get' . ucfirst($type) . 'Query';
+            if (method_exists($this, $method)) {
+                $data = array_column($this->getPDO()->query($this->$method())->fetchAll(\PDO::FETCH_ASSOC), 'total', 'is_active');
+                $list[] = [
+                    'id'        => $type,
+                    'name'      => $this->getInjection('language')->translate($type),
+                    'total'     => array_sum($data),
+                    'active'    => $data[1] ? (int)$data[1] : 0,
+                    'notActive' => $data[0] ? (int)$data[0] : 0,
+                ];
             }
         }
 
-        // prepare result
-        foreach ($productData as $type => $value) {
-            $value['active'] = $value['active'] ?? 0;
-            $value['notActive'] = $value['notActive'] ?? 0;
+        return ['total' => count($list), 'list' => $list];
+    }
 
-            $result['list'][] = [
-                'id'        => $type,
-                'name'      => $type,
-                'total'     => $value['active'] + $value['notActive'],
-                'active'    => (int)$value['active'],
-                'notActive' => (int)$value['notActive']
-            ];
-        }
+    protected function init()
+    {
+        parent::init();
 
+        $this->addDependency('metadata');
+    }
 
-        $result['total'] = count($result['list']);
+    protected function getNonHierarchicalProductsQuery(): string
+    {
+        return "SELECT is_active, COUNT(id) AS total
+                 FROM `product`
+                 WHERE deleted=0
+                   AND id NOT IN (SELECT entity_id FROM `product_hierarchy` WHERE deleted=0)
+                   AND id NOT IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0)
+                 GROUP BY is_active";
+    }
 
-        return $result;
+    protected function getProductHierarchiesQuery(): string
+    {
+        return "SELECT is_active, COUNT(id) AS total
+                 FROM `product`
+                 WHERE deleted=0
+                     AND id NOT IN (SELECT entity_id FROM `product_hierarchy` WHERE deleted=0)
+                     AND id IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0)
+                 GROUP BY is_active";
+    }
+
+    protected function getLowestLevelProductsQuery(): string
+    {
+        return "SELECT is_active, COUNT(id) AS total
+                 FROM `product`
+                 WHERE deleted=0
+                     AND id IN (SELECT entity_id FROM `product_hierarchy` WHERE deleted=0)
+                     AND id NOT IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0)
+                 GROUP BY is_active";
+    }
+
+    protected function getBundleProductsQuery(): string
+    {
+        return "SELECT is_active, COUNT(id) AS total
+                 FROM `product`
+                 WHERE deleted=0
+                     AND id IN (SELECT product_bundle_id FROM `product_bundle` WHERE deleted=0)
+                 GROUP BY is_active";
+    }
+
+    protected function getBundledProductsQuery(): string
+    {
+        return "SELECT is_active, COUNT(id) AS total
+                 FROM `product`
+                 WHERE deleted=0
+                     AND id IN (SELECT product_bundle_item_id FROM `product_bundle` WHERE deleted=0)
+                 GROUP BY is_active";
     }
 }
