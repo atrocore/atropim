@@ -83,7 +83,7 @@ Espo.define('pim:views/product/record/plate-item', 'view',
                     mode: 'list',
                     name: field
                 }, () => {
-                    if (field === 'image') {
+                    if (field === 'mainImage') {
                         this.model.trigger('updateProductImage');
                     }
                 });

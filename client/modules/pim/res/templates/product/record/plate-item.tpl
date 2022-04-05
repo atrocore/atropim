@@ -7,7 +7,7 @@
 		<div class="actions">{{{rowActions}}}</div>
 	</div>
 	<div class="field-preview" data-name="image">
-		{{{imageField}}}
+		{{{mainImageField}}}
 	</div>
 	<div class="field-name">
 		<span class="record-checkbox-container">
@@ -69,6 +69,7 @@
 		line-height: 125px;
 		text-align: center;
 		vertical-align: middle;
+		overflow: hidden;
 	}
 	.plate-item .field-preview img {
 		max-height: 100%;
