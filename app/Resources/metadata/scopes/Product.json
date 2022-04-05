@@ -39,6 +39,9 @@
   ],
   "relationInheritance": true,
   "inheritedRelations": ["productAttributeValues"],
+  "mandatoryUnInheritedRelations": [
+    "assets"
+  ],
   "unInheritedRelations": [],
   "importTypeSimple": {
     "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
