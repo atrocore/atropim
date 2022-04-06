@@ -64,15 +64,10 @@ class ProductsByTaskStatusDashlet extends AbstractDashletService
         $result['total'] = count($taskStatuses);
 
         foreach ($taskStatuses as $status) {
-            $where = [
-                'taskStatus*' => "%\"$status\"%",
-                'type' => $this->getProductTypes()
-            ];
-
             $result['list'][] = [
                 'id'     => $status,
                 'name'   => $status,
-                'amount' => $this->getRepository('Product')->where($where)->count()
+                'amount' => $this->getRepository('Product')->where(['taskStatus*' => "%\"$status\"%"])->count()
             ];
         }
 
