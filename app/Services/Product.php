@@ -818,9 +818,7 @@ class Product extends Hierarchy
     {
         if (empty($channelId)) {
             foreach ($assets as $asset) {
-                if (!empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel'))) {
-                    $asset->set('isGlobalMainImage', true);
-                }
+                $asset->set('isGlobalMainImage', !empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel')));
             }
             return $assets;
         }
@@ -829,6 +827,7 @@ class Product extends Hierarchy
 
         $hasMainImage = false;
         foreach ($assets as $asset) {
+            $asset->set('isGlobalMainImage', false);
             if (!$asset->has('channel')) {
                 $assetData = $this->getEntityManager()->getRepository('Product')->getAssetData($productId, $asset->get('id'));
                 $asset->set('channel', $assetData['channel']);
@@ -852,9 +851,7 @@ class Product extends Hierarchy
 
         if (!$hasMainImage) {
             foreach ($assets as $asset) {
-                if (!empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel'))) {
-                    $asset->set('isGlobalMainImage', true);
-                }
+                $asset->set('isGlobalMainImage', !empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel')));
             }
         }
 
