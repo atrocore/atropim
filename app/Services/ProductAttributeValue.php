@@ -560,12 +560,13 @@ class ProductAttributeValue extends Base
             $type = isset($entity->getFields()[$field]['type']) ? $entity->getFields()[$field]['type'] : 'varchar';
         }
 
-        if ($type === Entity::JSON_ARRAY && is_string($value1)) {
-            $value1 = Json::decode($value1, true);
-        }
-
-        if ($type === Entity::JSON_OBJECT && is_string($value1)) {
-            $value1 = Json::decode($value1);
+        if (in_array($type, [Entity::JSON_ARRAY, Entity::JSON_OBJECT])) {
+            if (is_string($value1)) {
+                $value1 = Json::decode($value1, true);
+            }
+            if (is_string($value2)) {
+                $value2 = Json::decode($value2, true);
+            }
         }
 
         return Entity::areValuesEqual($type, $value1, $value2);
