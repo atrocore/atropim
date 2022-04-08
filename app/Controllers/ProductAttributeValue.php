@@ -60,7 +60,8 @@ class ProductAttributeValue extends Base
 
         $service = $this->getRecordService();
         $service->simpleRemove = !property_exists($data, 'hierarchically');
+        $service->deleteEntity($params['id']);
 
-        return $service->deleteEntity($params['id']);
+        return true;
     }
 }
