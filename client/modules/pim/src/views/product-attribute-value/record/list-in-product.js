@@ -98,7 +98,9 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                         if (eventModel.get('attributeType') === 'multiEnum') {
                             let value = [];
                             $.each(position, (k, v) => {
-                                value.push(relatedModel.get('typeValue')[v]);
+                                if (relatedModel.get('typeValue') && relatedModel.get('typeValue')[v]) {
+                                    value.push(relatedModel.get('typeValue')[v]);
+                                }
                             });
                             relatedModel.set('value', value);
                         } else {
