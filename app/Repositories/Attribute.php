@@ -79,6 +79,20 @@ class Attribute extends AbstractRepository
         $this->addDependency('language');
     }
 
+    public function prepareTypeValueIds(Entity $entity): void
+    {
+        if (!in_array($entity->get('type'), ['enum', 'multiEnum'])) {
+            return;
+        }
+
+        if (!(empty($entity->get('typeValueIds')) && !empty($entity->get('typeValue')))) {
+            return;
+        }
+
+        $entity->set('typeValueIds', array_keys($entity->get('typeValue')));
+        $this->getPDO()->exec("UPDATE `attribute` SET type_value_ids='" . Json::encode($entity->get('typeValueIds')) . "' WHERE id='{$entity->get('id')}'");
+    }
+
     /**
      * @inheritDoc
      *

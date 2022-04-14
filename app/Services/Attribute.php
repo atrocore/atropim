@@ -89,6 +89,7 @@ class Attribute extends AbstractService
             }
         }
         if (!empty($entity)) {
+            $this->getRepository()->prepareTypeValueIds($entity);
             $this->prepareEntityForOutput($entity);
         }
 
