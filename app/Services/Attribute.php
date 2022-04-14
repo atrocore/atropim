@@ -89,6 +89,7 @@ class Attribute extends \Espo\Core\Templates\Services\Base
             }
         }
         if (!empty($entity)) {
+            $this->getRepository()->prepareTypeValueIds($entity);
             $this->prepareEntityForOutput($entity);
         }
 
