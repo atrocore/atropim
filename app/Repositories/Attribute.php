@@ -89,8 +89,10 @@ class Attribute extends AbstractRepository
             return;
         }
 
-        $entity->set('typeValueIds', array_keys($entity->get('typeValue')));
-        $this->getPDO()->exec("UPDATE `attribute` SET type_value_ids='" . Json::encode($entity->get('typeValueIds')) . "' WHERE id='{$entity->get('id')}'");
+        $typeValueIds = array_map('strval', array_keys($entity->get('typeValue')));
+        $entity->set('typeValueIds', $typeValueIds);
+
+        $this->getPDO()->exec("UPDATE `attribute` SET type_value_ids='" . Json::encode($typeValueIds) . "' WHERE id='{$entity->get('id')}'");
     }
 
     /**
