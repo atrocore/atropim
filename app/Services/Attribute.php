@@ -226,6 +226,26 @@ class Attribute extends \Espo\Core\Templates\Services\Base
         $this->addDependency('language');
     }
 
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        $result = parent::getFieldsThatConflict($entity, $data);
+
+        $fields = ['typeValue'];
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $fields[] = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($language)));
+            }
+        }
+
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $result)) {
+                unset($result[$field]);
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * @return array
      */
