@@ -504,7 +504,20 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 packageView.save();
             }
 
-            attrs['panelsData'] = this.handlePanelsSave();
+            let panelsData = this.handlePanelsSave();
+            if (panelsData) {
+                $.each(panelsData, (panel, panelData) => {
+                    if (panelData !== false) {
+                        if (!attrs) {
+                            attrs = {};
+                        }
+                        if (!attrs['panelsData']) {
+                            attrs['panelsData'] = {};
+                        }
+                        attrs['panelsData'][panel] = panelData;
+                    }
+                });
+            }
 
             if (!attrs) {
                 this.afterNotModified(gridPackages || panelsChanges);
