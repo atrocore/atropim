@@ -429,7 +429,7 @@ class ProductAttributeValue extends AbstractRepository
         return $result;
     }
 
-    protected function syncEnumValues(Entity $entity, Entity $attribute): void
+    public function syncEnumValues(Entity $entity, Entity $attribute): void
     {
         if ($entity->isNew()) {
             return;
@@ -466,7 +466,7 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
-    protected function syncMultiEnumValues(Entity $entity, Entity $attribute): void
+    public function syncMultiEnumValues(Entity $entity, Entity $attribute): void
     {
         if ($entity->isNew()) {
             return;
@@ -528,7 +528,7 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('language', 'main');
         }
 
-        if ($attribute->get('type') === 'enum' && !empty($attribute->get('enumDefault'))) {
+        if ($attribute->get('type') === 'enum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
             $enumDefault = $attribute->get('enumDefault');
             if ($entity->get('language') !== 'main') {
                 $key = array_search($enumDefault, $this->getAttributeOptions($attribute, 'main'));
@@ -543,11 +543,11 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($attribute->get('type') === 'unit') {
-            if (empty($entity->get('floatValue'))) {
+            if (!$entity->has('floatValue')) {
                 $entity->set('floatValue', $attribute->get('unitDefault'));
             }
 
-            if (empty($entity->get('varcharValue'))) {
+            if (!$entity->has('varcharValue')) {
                 $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
             }
         }

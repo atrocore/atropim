@@ -272,6 +272,15 @@ class Product extends AbstractRepository
 
                 try {
                     $this->getEntityManager()->saveEntity($languagePav);
+                    
+                    switch ($mainLanguagePav->get('attributeType')) {
+                        case 'enum':
+                            $pavRepository->syncEnumValues($mainLanguagePav, $mainLanguagePav->get('attribute'));
+                            break;
+                        case 'multiEnum':
+                            $pavRepository->syncMultiEnumValues($mainLanguagePav, $mainLanguagePav->get('attribute'));
+                            break;
+                    }
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->info('Update inconsistent attributes: ' . $e->getMessage());
                 }
