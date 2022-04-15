@@ -10,6 +10,9 @@
     "atrocore/dam-common": "~1.3.0",
     "atrocore/completeness-common": "~1.4.0"
   },
+  "conflict": {
+    "atrocore/product-variants": "*"
+  },
   "autoload": {
     "psr-4": {
       "Pim\\": "app/"
