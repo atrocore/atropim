@@ -133,8 +133,6 @@ class ProductAttributeValue extends AbstractRepository
         switch ($pav1->get('attributeType')) {
             case 'array':
             case 'multiEnum':
-                $result = Entity::areValuesEqual(Entity::JSON_ARRAY, $pav1->get('textValue'), $pav2->get('textValue'));
-                break;
             case 'text':
             case 'wysiwyg':
                 $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));

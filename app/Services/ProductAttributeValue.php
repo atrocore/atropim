@@ -244,6 +244,9 @@ class ProductAttributeValue extends Base
                 }
 
                 if (!empty((array)$inputData)) {
+                    if (in_array($pav1->get('attributeType'), ['multiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
+                        $inputData->value = @json_decode($inputData->value, true);
+                    }
                     $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
                     if ($child['childrenCount'] > 0) {
                         $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
