@@ -558,14 +558,21 @@ class ProductAttributeValue extends Base
 
     private function prepareInputValue(\stdClass $data): void
     {
-        // for asset type
-        if (empty($data->value) && !empty($data->valueId)) {
+        if (property_exists($data, 'valueId') && !empty($data->valueId)) {
             $data->value = $data->valueId;
         }
 
-        // array to json
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = Json::encode($data->value);
+        }
+
+        if (property_exists($data, 'data')) {
+            if (property_exists($data->data, 'currency') && !property_exists($data, 'valueCurrency')) {
+                $data->valueCurrency = $data->data->currency;
+            }
+            if (property_exists($data->data, 'unit') && !property_exists($data, 'valueCurrency')) {
+                $data->valueUnit = $data->data->unit;
+            }
         }
     }
 
