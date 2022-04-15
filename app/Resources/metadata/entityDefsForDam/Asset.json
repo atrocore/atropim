@@ -22,8 +22,6 @@
       "view": "pim:views/asset/fields/channel",
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
