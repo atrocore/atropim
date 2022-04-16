@@ -38,20 +38,16 @@ use Espo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 use Treo\Listeners\AbstractListener;
 
-/**
- * Class Metadata
- */
 class Metadata extends AbstractListener
 {
     protected const ATTRIBUTE_TABS_FILE = 'data/cache/attribute_tabs.json';
 
-    /**
-     * @param Event $event
-     */
-    public function modify(Event $event)
+    public function modify(Event $event): void
     {
-        // get data
         $data = $event->getArgument('data');
+
+        // set type Hierarchy to Product entity
+        $data['scopes']['Product']['type'] = 'Hierarchy';
 
         $data = $this->enableExportDisabledParamForPav($data);
 
@@ -74,7 +70,6 @@ class Metadata extends AbstractListener
 
         $data = $this->addTabPanels($data);
 
-        // set data
         $event->setArgument('data', $data);
     }
 
@@ -146,7 +141,7 @@ class Metadata extends AbstractListener
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
                 "layoutMassUpdateDisabled"  => true,
-                "filterDisabled"     => true,
+                "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "emHidden"                  => true
             ];
