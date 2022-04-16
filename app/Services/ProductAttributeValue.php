@@ -230,27 +230,26 @@ class ProductAttributeValue extends Base
         $pav1 = $this->getRepository()->get($id);
         foreach ($children as $child) {
             $pav2 = $this->getRepository()->get($child['id']);
-            $areIsRequiredEqual = Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired'));
-            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2) || $areIsRequiredEqual) {
-                $inputData = new \stdClass();
+
+            $inputData = new \stdClass();
+            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
                 foreach (['value', 'valueUnit', 'valueCurrency', 'valueId'] as $key) {
                     if (property_exists($data, $key)) {
                         $inputData->$key = $data->$key;
                     }
                 }
+            }
+            if (Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired')) && property_exists($data, 'isRequired')) {
+                $inputData->isRequired = $data->isRequired;
+            }
 
-                if ($areIsRequiredEqual && property_exists($data, 'isRequired')) {
-                    $inputData->isRequired = $data->isRequired;
+            if (!empty((array)$inputData)) {
+                if (in_array($pav1->get('attributeType'), ['multiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
+                    $inputData->value = @json_decode($inputData->value, true);
                 }
-
-                if (!empty((array)$inputData)) {
-                    if (in_array($pav1->get('attributeType'), ['multiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
-                        $inputData->value = @json_decode($inputData->value, true);
-                    }
-                    $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
-                    if ($child['childrenCount'] > 0) {
-                        $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
-                    }
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                if ($child['childrenCount'] > 0) {
+                    $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
                 }
             }
         }
@@ -402,7 +401,7 @@ class ProductAttributeValue extends Base
             ->getRepository('ProductAttributeValue')
             ->where(
                 [
-                    'productId' => $productId,
+                    'productId'   => $productId,
                     'attributeId' => array_column($attributes->toArray(), 'id')
                 ]
             )
