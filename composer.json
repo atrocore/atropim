@@ -18,6 +18,9 @@
       "Pim\\": "app/"
     }
   },
+  "bin": [
+    "bin/variants-to-inherited-products.php"
+  ],
   "extra": {
     "treoId": "Pim",
     "name": {
