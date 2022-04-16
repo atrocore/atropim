@@ -31,20 +31,11 @@
 Espo.define('pim:views/product/list', ['views/list-tree', 'search-manager'],
     (Dep, SearchManager) => Dep.extend({
 
-        createButton: false,
-
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.menu.buttons.push({
-                link: '#' + this.scope + '/create',
-                action: 'quickCreate',
-                label: 'Create ' + this.scope,
-                style: 'primary',
-                acl: 'create',
-                cssStyle: "margin-left: 15px",
-                aclScope: this.entityType || this.scope
-            });
+            // move create button to the end
+            this.menu.buttons.push(this.menu.buttons.shift());
         },
 
         isTreeAllowed() {
