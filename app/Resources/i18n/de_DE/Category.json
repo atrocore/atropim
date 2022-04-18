@@ -35,7 +35,7 @@
     "Create Category": "Kategorie erstellen"
   },
   "boolFilters": {
-    "linkedWithProduct": "Mit Produkt verknüpft"
+    "linkedWithProduct": "Hat Produkte"
   },
   "messages": {
     "channelUnlinkConfirm": "Möchten Sie die Verknüpfung des Kanals mit der Kategorie wirklich aufheben? Alle indirekt mit diesem Kanal verknüpften Produkte werden entkoppelt.",
