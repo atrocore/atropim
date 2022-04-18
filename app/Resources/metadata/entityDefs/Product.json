@@ -111,7 +111,6 @@
     "ean": {
       "type": "varchar",
       "trim": true,
-      "view": "pim:views/product/fields/gtin",
       "pattern": "/^(\\d{8}|\\d{12,14})$/"
     },
     "mpn": {
