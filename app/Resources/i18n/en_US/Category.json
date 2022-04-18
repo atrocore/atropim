@@ -29,6 +29,9 @@
     "withoutCatalog": "Without Catalog",
     "Create Category": "Create Category"
   },
+  "boolFilters": {
+    "linkedWithProduct": "Linked with Product"
+  },
   "messages": {
     "channelUnlinkConfirm": "Are you sure you want to unlink the channel from the category, all the products linked indirectly via category with the channel will be unlinked too?",
     "categoryRemoveConfirm": "Are you sure you want to remove the category? All subcategories of this category will be also removed and all products linked to this category or its subcategories will be unlinked.",

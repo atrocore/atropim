@@ -192,4 +192,37 @@ class Category extends AbstractSelectManager
             }
         }
     }
+
+    /**
+     * @param $result
+     *
+     * @return void
+     */
+    protected function boolFilterLinkedWithProduct(&$result)
+    {
+        if ($this->hasBoolFilter('linkedWithProduct')) {
+            $list = $this
+                ->getEntityManager()
+                ->getRepository('Category')
+                ->select(['id', 'categoryRoute'])
+                ->join('products')
+                ->find()
+                ->toArray();
+
+            if ($list) {
+                $ids = [];
+
+                foreach ($list as $category) {
+                    $ids[] = $category['id'];
+
+                    $parentCategoriesIds =  explode("|", trim($category['categoryRoute'], "|"));
+                    $ids = array_merge($ids, $parentCategoriesIds);
+                }
+
+                $result['whereClause']['id'] = array_unique($ids);
+            } else {
+                $result['whereClause']['id'] = null;
+            }
+        }
+    }
 }
