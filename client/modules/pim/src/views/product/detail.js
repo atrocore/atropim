@@ -52,6 +52,7 @@ Espo.define('pim:views/product/detail', 'pim:views/detail',
                     id: id
                 }).then(response => {
                     this.notify('Saved', 'success');
+                    this.model.trigger('after:attributesSave');
                     $('.action[data-action=refresh][data-panel=productAttributeValues]').click();
                 });
             },
