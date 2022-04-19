@@ -34,6 +34,9 @@
     "withoutCatalog": "Ohne Katalogg",
     "Create Category": "Kategorie erstellen"
   },
+  "boolFilters": {
+    "linkedWithProduct": "Hat Produkte"
+  },
   "messages": {
     "channelUnlinkConfirm": "Möchten Sie die Verknüpfung des Kanals mit der Kategorie wirklich aufheben? Alle indirekt mit diesem Kanal verknüpften Produkte werden entkoppelt.",
     "categoryRemoveConfirm": "Möchten Sie die Kategorie wirklich entfernen? Alle Unterkategorien dieser Kategorie werden ebenfalls entfernt und die Verknüpfungen der Produkte mit dieser Kategorie oder ihrer Unterkategorien werden aufgehoben.",
