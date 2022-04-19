@@ -69,18 +69,19 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
         },
 
         updateEnumLocaleValue(eventModel) {
+            let typeValue = eventModel.get('typeValue') || [];
             let position = null;
             if (eventModel.get('attributeType') === 'multiEnum') {
                 position = [];
                 $.each(eventModel.get('value'), (k, v) => {
-                    $.each(eventModel.get('typeValue'), (key, item) => {
+                    $.each(typeValue, (key, item) => {
                         if (v === item) {
                             position.push(key);
                         }
                     });
                 });
             } else {
-                $.each(eventModel.get('typeValue'), (key, item) => {
+                $.each(typeValue, (key, item) => {
                     if (eventModel.get('value') === item) {
                         position = key;
                     }
