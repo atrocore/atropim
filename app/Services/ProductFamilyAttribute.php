@@ -69,13 +69,21 @@ class ProductFamilyAttribute extends Base
 
     public function createEntity($attachment)
     {
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $result = parent::createEntity($attachment);
             $this->createPseudoTransactionCreateJobs(clone $attachment);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -107,13 +115,21 @@ class ProductFamilyAttribute extends Base
 
     public function updateEntity($id, $data)
     {
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $this->createPseudoTransactionUpdateJobs($id, clone $data);
             $result = parent::updateEntity($id, $data);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -138,13 +154,21 @@ class ProductFamilyAttribute extends Base
 
     public function deleteEntity($id)
     {
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $this->createPseudoTransactionDeleteJobs($id);
             $result = parent::deleteEntity($id);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
