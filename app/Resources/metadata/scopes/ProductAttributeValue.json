@@ -15,6 +15,7 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
+  "hideLastViewed": true,
   "completeness": {
     "replacement" : "Product",
     "service": "Completeness\\Services\\ProductCompleteness"
