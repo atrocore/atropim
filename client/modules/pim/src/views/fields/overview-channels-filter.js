@@ -28,7 +28,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/fields/overview-channels-filter', 'treo-core:views/fields/dropdown-enum',
+Espo.define('pim:views/fields/overview-channels-filter', 'views/fields/dropdown-enum',
     Dep => Dep.extend({
 
         channels: [],
