@@ -28,7 +28,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product/modals/edit', 'treo-core:views/modals/edit',
+Espo.define('pim:views/product/modals/edit', 'views/modals/edit',
     Dep => Dep.extend({
         setup() {
             Dep.prototype.setup.call(this);

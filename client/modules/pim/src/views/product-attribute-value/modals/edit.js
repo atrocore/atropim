@@ -28,7 +28,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product-attribute-value/modals/edit', 'treo-core:views/modals/edit',
+Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit',
     Dep => Dep.extend({
 
         fullFormDisabled: true,
