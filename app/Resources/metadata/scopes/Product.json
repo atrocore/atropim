@@ -21,7 +21,7 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
-  "advancedFilters": true,
+  "overviewFilters": true,
   "addRelationEnabled": true,
   "multiParents": false,
   "fieldValueInheritance": true,
