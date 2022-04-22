@@ -12,6 +12,7 @@
   "type": "Base",
   "module": "Pim",
   "object": true,
+  "overviewFilters": false,
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
