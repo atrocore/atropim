@@ -67,8 +67,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         initialAttributes: null,
 
-        showEmptyRequiredFields: true,
-
         boolFilterData: {
             notLinkedProductAttributeValues() {
                 return {
@@ -239,11 +237,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     }
                 });
 
-                if (this.getMetadata().get(['scopes', this.model.name, 'advancedFilters'])) {
-                    this.listenTo(this.model, 'overview-filters-changed', () => {
-                        this.applyOverviewFilters();
-                    });
-                }
+                this.listenTo(this.model, 'overview-filters-changed', () => {
+                    this.applyOverviewFilters();
+                });
 
                 this.getMetadata().fetch();
                 this.fetchCollectionGroups(() => this.wait(false));
@@ -500,9 +496,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                         this.initialAttributes = this.getInitialAttributes();
                         this.model.trigger('attributes-updated');
                         collection.models.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
-                        if (this.getMetadata().get(['scopes', this.model.name, 'advancedFilters'])) {
-                            this.applyOverviewFilters();
-                        }
+                        this.applyOverviewFilters();
                     });
 
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
@@ -519,9 +513,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     };
 
                     this.createView(group.key, viewName, this.modifyListOptions(options), view => {
-                        if (this.getMetadata().get(['scopes', this.model.name, 'advancedFilters'])) {
-                            view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
-                        }
+                        view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
                         view.render(() => {
                             count++;
                             if (count === this.groups.length) {
@@ -555,77 +547,38 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         applyOverviewFilters() {
-            let currentFieldFilter = (this.model.advancedEntityView || {}).fieldsFilter;
-            let attributesWithChannelScope = [];
-            let fields = this.getValueFields();
-            Object.keys(fields).forEach(name => {
-                let fieldView = fields[name];
+            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
+            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
 
-                if (!this.isEmptyRequiredField(fieldView.model.get(fieldView.name), fieldView.model.get('isRequired')) || this.hasCompleteness()) {
-                    let hide = !this.checkFieldValue(currentFieldFilter, fieldView.model.get(fieldView.name), fieldView.model.get('isRequired'));
-                    if (!hide) {
-                        hide = this.updateCheckByChannelFilter(fieldView, attributesWithChannelScope);
-                    }
-                    if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                        if (!hide) {
-                            hide = this.updateCheckByLocaleFilter(fieldView, currentFieldFilter);
-                        }
-                        if (!hide) {
-                            hide = this.updateCheckByGenericFieldsFilter(fieldView);
-                        }
-                    }
-                    this.controlRowVisibility(fieldView, name, hide);
+            $.each(this.getValueFields(), (name, fieldView) => {
+                let value = fieldView.model.get('value')
+
+                let hide = false;
+
+                // hide filled
+                if (!hide && !fieldFilter.includes('filled')) {
+                    hide = !this.isEmptyValue(value);
                 }
+
+                // hide empty
+                if (!hide && !fieldFilter.includes('empty')) {
+                    hide = this.isEmptyValue(value);
+                }
+
+                // for languages
+                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                    let attributeLanguage = fieldView.model.get('language') || 'main';
+                    if (!languageFilter.includes(attributeLanguage)) {
+                        hide = true;
+                    }
+                }
+
+                this.controlRowVisibility(fieldView, name, hide);
             });
-            this.hideChannelAttributesWithGlobalScope(fields, attributesWithChannelScope);
         },
 
-        isEmptyRequiredField: function (value, required) {
-            return this.showEmptyRequiredFields && required
-                && (value === null || value === '' || (Array.isArray(value) && !value.length));
-        },
-
-        updateCheckByChannelFilter(fieldView, attributesWithChannelScope) {
-            let hide = false;
-            let currentChannelFilter = (this.model.advancedEntityView || {}).channelsFilter;
-            if (currentChannelFilter) {
-                if (currentChannelFilter === 'onlyGlobalScope') {
-                    hide = fieldView.model.get('scope') !== 'Global';
-                } else {
-                    hide = (fieldView.model.get('scope') !== 'Channel' || !(fieldView.model.get('channelId') || []).includes(currentChannelFilter));
-                    if ((fieldView.model.get('channelId') || []).includes(currentChannelFilter)) {
-                        attributesWithChannelScope.push(fieldView.model.get('attributeId'));
-                    }
-                }
-            }
-
-            return hide;
-        },
-
-        updateCheckByLocaleFilter(fieldView, currentFieldFilter) {
-            let hide = false;
-            // get filter
-            let filter = (this.model.advancedEntityView || {}).localesFilter;
-
-            if (filter !== null && filter !== '') {
-                if ((fieldView.model.get('language') && fieldView.model.get('id').indexOf(filter) === -1)
-                    || !fieldView.model.get('attributeIsMultilang')) {
-                    hide = true;
-                }
-            }
-
-            return hide;
-        },
-
-        updateCheckByGenericFieldsFilter(fieldView) {
-            let hide = false;
-            let filter = (this.model.advancedEntityView || {}).showGenericFields;
-
-            if (!fieldView.model.get('language') && !filter) {
-                hide = true;
-            }
-
-            return hide;
+        isEmptyValue(value) {
+            return value === null || value === '' || (Array.isArray(value) && !value.length);
         },
 
         getValueFields() {
@@ -649,18 +602,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             return fields;
         },
 
-        checkFieldValue(currentFieldFilter, value, required) {
-            let check = !currentFieldFilter;
-            if (currentFieldFilter === 'empty') {
-                check = value === null || value === '' || (Array.isArray(value) && !value.length);
-            }
-            if (currentFieldFilter === 'emptyAndRequired') {
-                check = (value === null || value === '' || (Array.isArray(value) && !value.length)) && required;
-            }
-
-            return check;
-        },
-
         controlRowVisibility(fieldView, rowId, hide) {
             let groupView = this.getView(fieldView.groupKey);
             let rowView = groupView.getView(rowId);
@@ -678,15 +619,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             } else {
                 groupView.$el.parent().removeClass('hidden');
             }
-        },
-
-        hideChannelAttributesWithGlobalScope(fields, attributesWithChannelScope) {
-            Object.keys(fields).forEach(name => {
-                let fieldView = fields[name];
-                if (attributesWithChannelScope.includes(fieldView.model.get('attributeId')) && fieldView.model.get('scope') === 'Global') {
-                    this.controlRowVisibility(fieldView, name, true);
-                }
-            });
         },
 
         getSelectBoolFilterData(boolFilterList) {
