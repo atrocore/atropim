@@ -593,6 +593,9 @@ class Product extends AbstractSelectManager
     protected function getAttribute(string $id): Attribute
     {
         if (!isset($this->attributes[$id])) {
+            if (substr($id, -2) === 'Id') {
+                $id = substr($id, 0, -2);
+            }
             $attribute = $this->getEntityManager()->getEntity('Attribute', $id);
             if (empty($attribute)) {
                 throw new NotFound();
