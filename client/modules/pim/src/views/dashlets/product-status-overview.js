@@ -224,7 +224,7 @@ Espo.define('pim:views/dashlets/product-status-overview', ['views/dashlets/abstr
         },
 
         formatNumber(value) {
-            if (value !== null) {
+            if (value) {
                 let parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
                 return parts.join(this.decimalMark);
