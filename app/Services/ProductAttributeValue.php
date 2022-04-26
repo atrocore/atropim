@@ -62,6 +62,8 @@ class ProductAttributeValue extends Base
             'textValue'
         ];
 
+    protected ?string $userLanguage = null;
+
     public function inheritPav(string $id): bool
     {
         $pav = $this->getEntity($id);
@@ -505,6 +507,18 @@ class ProductAttributeValue extends Base
         return $fields;
     }
 
+    protected function getUserLanguage(): ?string
+    {
+        if ($this->userLanguage === null && !empty($localeId = $this->getLocaleId())) {
+            $locale = $this->getEntityManager()->getRepository('Locale')->get($localeId);
+            if (!empty($locale)) {
+                $this->userLanguage = $locale->get('language');
+            }
+        }
+
+        return $this->userLanguage;
+    }
+
     protected function prepareEntity(Entity $entity): void
     {
         // exit if already prepared
@@ -514,6 +528,13 @@ class ProductAttributeValue extends Base
 
         if (empty($attribute = $entity->get('attribute'))) {
             throw new NotFound();
+        }
+
+        if (!empty($userLanguage = $this->getUserLanguage())) {
+            $nameField = Util::toCamelCase('name_' . strtolower($userLanguage));
+            if ($attribute->has($nameField)) {
+                $entity->set('attributeName', $attribute->get($nameField));
+            }
         }
 
         $lang = '';
