@@ -177,7 +177,7 @@ class V1Dot4Dot0 extends Base
                                 }
                                 break;
                             default:
-                                $dataValues['varchar_value'] = (string)$attributeValue;
+                                $dataValues['varchar_value'] = mb_substr((string)$attributeValue, 0, 255);
                                 break;
                         }
                     }
