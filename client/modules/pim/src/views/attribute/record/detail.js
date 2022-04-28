@@ -75,6 +75,8 @@ Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
                             }
                         }
 
+                        this.clearFilters();
+
                         this.notify('Removed', 'success');
                         this.trigger('after:delete');
                         this.exit('delete');
@@ -96,7 +98,45 @@ Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
                 '</div>' +
                 '</div>' +
                 '</div>';
-        }
+        },
 
+        clearFilters() {
+            debugger;
+            var presetFilters = this.getPreferences().get('presetFilters') || {};
+            if (!('Product' in presetFilters)) {
+                presetFilters['Product'] = [];
+            }
+
+            presetFilters['Product'].forEach(function (item, index, obj) {
+                for (let filterField in item.data) {
+                    let name = filterField.split('-')[0];
+
+                    if (name === this.model.id) {
+                        delete obj[index].data[filterField]
+                    }
+                }
+            }, this);
+            presetFilters['Product'] = presetFilters['Product'].filter(item => Object.keys(item.data).length > 0);
+
+            this.getPreferences().set('presetFilters', presetFilters);
+            this.getPreferences().save({patch: true});
+            this.getPreferences().trigger('update');
+            let filters = this.getStorage().get('listSearch', 'Product');
+            if (filters && filters.advanced) {
+                for (let filter in filters.advanced) {
+                    let name = filter.split('-')[0];
+
+                    if (name === this.id) {
+                        delete filters.advanced[filter]
+                    }
+                }
+
+                if (filters.presetName && !presetFilters['Product'].includes(filters.presetName)) {
+                    filters.presetName = null
+                }
+
+                this.getStorage().set('listSearch', 'Product', filters);
+            }
+        }
     })
 );
