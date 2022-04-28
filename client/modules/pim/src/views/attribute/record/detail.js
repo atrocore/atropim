@@ -101,7 +101,6 @@ Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
         },
 
         clearFilters() {
-            debugger;
             var presetFilters = this.getPreferences().get('presetFilters') || {};
             if (!('Product' in presetFilters)) {
                 presetFilters['Product'] = [];
