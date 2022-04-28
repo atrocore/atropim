@@ -172,7 +172,11 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
         isFieldExist(name, filterField) {
             let field = name.split('-').shift();
 
-            return !!(this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || filterField.fieldParams.isAttribute);
+            if (this.getMetadata().get(['entityDefs', this.scope, 'fields', field])) {
+                return true;
+            }
+
+            return filterField && filterField.fieldParams && filterField.fieldParams.isAttribute;
         },
 
         data() {
