@@ -274,8 +274,13 @@ class ProductAttributeValue extends AbstractRepository
                 if ($entity->get('language') !== 'main') {
                     $value = $entity->get('mainLanguage')->get('varcharValue');
                     $key = array_search($value, $entity->get('attribute')->get('typeValue'));
-                    if ($key !== false && isset($entity->get('typeValue')[$key]) && $entity->get('varcharValue') !== $entity->get('typeValue')[$key]) {
+                    if ($key === false) {
+                        $entity->set('varcharValue', $value);
+                    } else {
                         $entity->set('varcharValue', $entity->get('typeValue')[$key]);
+                    }
+
+                    if ($entity->isAttributeChanged('varcharValue')) {
                         $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='{$entity->get('varcharValue')}' WHERE id='{$entity->get('id')}'");
                     }
                 }
@@ -287,11 +292,16 @@ class ProductAttributeValue extends AbstractRepository
                     $languageValue = [];
                     if (!empty($mainValue)) {
                         foreach ($mainValue as $v) {
-                            $languageValue[] = $entity->get('typeValue')[array_search($v, $entity->get('attribute')->get('typeValue'))];
+                            $key = array_search($v, $entity->get('attribute')->get('typeValue'));
+                            if ($key !== false) {
+                                $languageValue[] = $entity->get('typeValue')[$key];
+                            }
                         }
                     }
-                    if ($languageValue !== @json_decode((string)$entity->get('textValue'), true)) {
-                        $entity->set('textValue', Json::encode($languageValue, JSON_UNESCAPED_UNICODE));
+
+                    $entity->set('textValue', Json::encode($languageValue, JSON_UNESCAPED_UNICODE));
+
+                    if ($entity->isAttributeChanged('textValue')) {
                         $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value='{$entity->get('textValue')}' WHERE id='{$entity->get('id')}'");
                     }
                 }
