@@ -523,13 +523,10 @@ class ProductAttributeValue extends Base
             }
         }
 
-        $lang = '';
         if ($entity->get('language') !== 'main') {
             $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $entity->get('language'));
-            $lang = ucfirst(Util::toCamelCase(strtolower($entity->get('language'))));
         }
 
-        $entity->set('typeValue', $attribute->get("typeValue$lang"));
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));

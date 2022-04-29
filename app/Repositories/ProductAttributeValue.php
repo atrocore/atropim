@@ -221,9 +221,16 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            $typeValue = $entity->get('attribute')->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($entity->get('language')))));
+            if (empty($typeValue)) {
+                $typeValue = $entity->get('attribute')->get('typeValue');
+            }
+            $entity->set('typeValue', $typeValue);
+        }
+
         switch ($entity->get('attributeType')) {
             case 'array':
-            case 'multiEnum':
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 break;
             case 'text':
@@ -262,6 +269,33 @@ class ProductAttributeValue extends AbstractRepository
                         $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
                     }
                 }
+                break;
+            case 'enum':
+                if ($entity->get('language') !== 'main') {
+                    $value = $entity->get('mainLanguage')->get('varcharValue');
+                    $key = array_search($value, $entity->get('attribute')->get('typeValue'));
+                    if ($key !== false && isset($entity->get('typeValue')[$key]) && $entity->get('varcharValue') !== $entity->get('typeValue')[$key]) {
+                        $entity->set('varcharValue', $entity->get('typeValue')[$key]);
+                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='{$entity->get('varcharValue')}' WHERE id='{$entity->get('id')}'");
+                    }
+                }
+                $entity->set('value', $entity->get('varcharValue'));
+                break;
+            case 'multiEnum':
+                if ($entity->get('language') !== 'main') {
+                    $mainValue = @json_decode((string)$entity->get('mainLanguage')->get('textValue'), true);
+                    $languageValue = [];
+                    if (!empty($mainValue)) {
+                        foreach ($mainValue as $v) {
+                            $languageValue[] = $entity->get('typeValue')[array_search($v, $entity->get('attribute')->get('typeValue'))];
+                        }
+                    }
+                    if ($languageValue !== @json_decode((string)$entity->get('textValue'), true)) {
+                        $entity->set('textValue', Json::encode($languageValue, JSON_UNESCAPED_UNICODE));
+                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value='{$entity->get('textValue')}' WHERE id='{$entity->get('id')}'");
+                    }
+                }
+                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 break;
             default:
                 $entity->set('value', $entity->get('varcharValue'));
