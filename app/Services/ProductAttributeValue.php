@@ -382,7 +382,6 @@ class ProductAttributeValue extends Base
                     $entity->set('varcharValue', $data->value);
                     break;
             }
-            $this->getRepository()->convertValue($entity);
         }
     }
 
