@@ -255,6 +255,7 @@ class Attribute extends AbstractRepository
         foreach ($pavs as $pav) {
             $value = !empty($becameValues[$pav['varcharValue']]) ? $this->getPDO()->quote($becameValues[$pav['varcharValue']]) : 'NULL';
             $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=$value WHERE id='{$pav['id']}'");
+            $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=NULL WHERE main_language_id='{$pav['id']}'");
         }
     }
 
@@ -311,6 +312,7 @@ class Attribute extends AbstractRepository
             }
 
             $this->getPDO()->exec("UPDATE product_attribute_value SET text_value='{$pav['textValue']}' WHERE id='{$pav['id']}'");
+            $this->getPDO()->exec("UPDATE product_attribute_value SET text_value=NULL WHERE main_language_id='{$pav['id']}'");
         }
     }
 
