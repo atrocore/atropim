@@ -90,6 +90,13 @@ class ProductAttributeValue extends Base
         return true;
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection): void
+    {
+        $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));
+
+        parent::prepareCollectionForOutput($collection);
+    }
+
     /**
      * @inheritdoc
      */
@@ -375,7 +382,6 @@ class ProductAttributeValue extends Base
                     $entity->set('varcharValue', $data->value);
                     break;
             }
-            $this->getRepository()->convertValue($entity);
         }
     }
 
@@ -507,12 +513,9 @@ class ProductAttributeValue extends Base
 
     protected function prepareEntity(Entity $entity): void
     {
-        // exit if already prepared
-        if (!empty($entity->get('attributeCode'))) {
-            return;
-        }
+        $attribute = $this->getRepository()->getPavAttribute($entity);
 
-        if (empty($attribute = $entity->get('attribute'))) {
+        if (empty($attribute)) {
             throw new NotFound();
         }
 
@@ -523,13 +526,10 @@ class ProductAttributeValue extends Base
             }
         }
 
-        $lang = '';
         if ($entity->get('language') !== 'main') {
             $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $entity->get('language'));
-            $lang = ucfirst(Util::toCamelCase(strtolower($entity->get('language'))));
         }
 
-        $entity->set('typeValue', $attribute->get("typeValue$lang"));
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
