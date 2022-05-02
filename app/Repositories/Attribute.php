@@ -253,39 +253,8 @@ class Attribute extends AbstractRepository
             ->toArray();
 
         foreach ($pavs as $pav) {
-            $queries = [];
-
-            /**
-             * First, prepare main value
-             */
-            if (!empty($becameValues[$pav['varcharValue']])) {
-                $value = $this->getPDO()->quote($becameValues[$pav['varcharValue']]);
-                $queries[] = "UPDATE product_attribute_value SET varchar_value=$value WHERE id='{$pav['id']}'";
-            } else {
-                $queries[] = "UPDATE product_attribute_value SET varchar_value=NULL WHERE id='{$pav['id']}'";
-            }
-
-            /**
-             * Second, update locales
-             */
-            if ($this->getConfig()->get('isMultilangActive', false)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    if (!empty($becameValues[$pav['varcharValue']])) {
-                        $options = $attribute->get("typeValue" . ucfirst(Util::toCamelCase(strtolower($language))));
-                        $key = array_search($pav['varcharValue'], $attribute->getFetched('typeValue'));
-                        $value = isset($options[$key]) ? $options[$key] : $becameValues[$pav['varcharValue']];
-                        $value = $this->getPDO()->quote($value);
-                        $queries[] = "UPDATE product_attribute_value SET varchar_value=$value WHERE main_language_id='{$pav['id']}' AND language='$language'";
-                    } else {
-                        $queries[] = "UPDATE product_attribute_value SET varchar_value=NULL WHERE main_language_id='{$pav['id']}' AND language='$language'";
-                    }
-                }
-            }
-
-            /**
-             * Third, set to DB
-             */
-            $this->getPDO()->exec(implode(';', $queries));
+            $value = !empty($becameValues[$pav['varcharValue']]) ? $this->getPDO()->quote($becameValues[$pav['varcharValue']]) : 'NULL';
+            $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=$value WHERE id='{$pav['id']}'");
         }
     }
 
@@ -323,11 +292,6 @@ class Attribute extends AbstractRepository
             ->toArray();
 
         foreach ($pavs as $pav) {
-            $queries = [];
-
-            /**
-             * First, prepare main value
-             */
             $values = [];
             if (!empty($pav['textValue'])) {
                 $jsonData = @json_decode($pav['textValue'], true);
@@ -344,32 +308,9 @@ class Attribute extends AbstractRepository
                     }
                 }
                 $pav['textValue'] = str_replace(["'", '\"'], ["\'", '\\\"'], Json::encode($newValues, JSON_UNESCAPED_UNICODE));
-                $values = $newValues;
             }
 
-            $queries[] = "UPDATE product_attribute_value SET text_value='{$pav['textValue']}' WHERE id='{$pav['id']}'";
-
-            /**
-             * Second, update locales
-             */
-            if ($this->getConfig()->get('isMultilangActive', false)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    $options = $attribute->get("typeValue" . ucfirst(Util::toCamelCase(strtolower($language))));
-                    $localeValues = [];
-                    foreach ($values as $value) {
-                        $key = array_search($value, $attribute->get('typeValue'));
-                        $localeValues[] = isset($options[$key]) ? $options[$key] : $value;
-                    }
-                    $localeValues = str_replace(["'", '\"'], ["\'", '\\\"'], Json::encode($localeValues, JSON_UNESCAPED_UNICODE));
-
-                    $queries[] = "UPDATE product_attribute_value SET text_value='$localeValues' WHERE main_language_id='{$pav['id']}' AND language='$language'";
-                }
-            }
-
-            /**
-             * Third, set to DB
-             */
-            $this->getPDO()->exec(implode(';', $queries));
+            $this->getPDO()->exec("UPDATE product_attribute_value SET text_value='{$pav['textValue']}' WHERE id='{$pav['id']}'");
         }
     }
 
