@@ -239,11 +239,7 @@ class ProductAttributeValue extends AbstractRepository
             $attribute = $this->getPavAttribute($entity);
 
             // prepare typeValue
-            $typeValue = $attribute->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($entity->get('language')))));
-            if (empty($typeValue)) {
-                $typeValue = $attribute->get('typeValue');
-            }
-            $entity->set('typeValue', $typeValue);
+            $entity->set('typeValue', $this->getAttributeOptions($attribute, $entity->get('language')));
 
             if ($entity->get('language') !== 'main') {
                 // get main language entity
@@ -298,7 +294,7 @@ class ProductAttributeValue extends AbstractRepository
             case 'enum':
                 if (!empty($mainLanguage)) {
                     $value = $mainLanguage->get('varcharValue');
-                    $key = array_search($value, $attribute->get('typeValue'));
+                    $key = array_search($value, $this->getAttributeOptions($attribute, 'main'));
                     if ($key === false) {
                         $entity->set('varcharValue', $value);
                     } else {
@@ -317,7 +313,7 @@ class ProductAttributeValue extends AbstractRepository
                     $languageValue = [];
                     if (!empty($mainValue)) {
                         foreach ($mainValue as $v) {
-                            $key = array_search($v, $attribute->get('typeValue'));
+                            $key = array_search($v, $this->getAttributeOptions($attribute, 'main'));
                             if ($key !== false) {
                                 $languageValue[] = $entity->get('typeValue')[$key];
                             }
@@ -497,7 +493,7 @@ class ProductAttributeValue extends AbstractRepository
 
         $result = $attribute->get("typeValue$language");
         if (empty($result)) {
-            $result = [];
+            $result = $attribute->get('typeValue');
         }
         if (!$attribute->get('prohibitedEmptyValue')) {
             array_unshift($result, '');
@@ -925,12 +921,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isAttributeChanged('value') && !empty($entity->get('value'))) {
-            $optionsField = 'typeValue';
-            if ($entity->get('language') !== 'main') {
-                $optionsField .= ucfirst(Util::toCamelCase(strtolower($entity->get('language'))));
-            }
-
-            $fieldOptions = empty($attribute->get($optionsField)) ? [] : $attribute->get($optionsField);
+            $fieldOptions = $this->getAttributeOptions($attribute, $entity->get('language'));
 
             if (empty($fieldOptions) && $type === 'multiEnum') {
                 $entity->set('value', null);
