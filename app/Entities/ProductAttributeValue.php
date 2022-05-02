@@ -86,9 +86,4 @@ class ProductAttributeValue extends Base
     {
         return $this->entityManager->getRepository('ProductAttributeValue')->getChannelLanguages((string)$this->get('channelId'));
     }
-
-    public function getPavAttribute(): ?\Pim\Entities\Attribute
-    {
-        return $this->entityManager->getRepository('ProductAttributeValue')->getPavAttribute($this);
-    }
 }
