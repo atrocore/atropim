@@ -90,6 +90,13 @@ class ProductAttributeValue extends Base
         return true;
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection): void
+    {
+        $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));
+
+        parent::prepareCollectionForOutput($collection);
+    }
+
     /**
      * @inheritdoc
      */

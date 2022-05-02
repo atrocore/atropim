@@ -48,6 +48,17 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $productPavs = [];
 
+    private array $pavsAttributes = [];
+
+    public function getPavAttribute(Entity $entity): ?\Pim\Entities\Attribute
+    {
+        if (!isset($this->pavsAttributes[$entity->get('attributeId')])) {
+            $this->pavsAttributes[$entity->get('attributeId')] = $entity->get('attribute');
+        }
+
+        return $this->pavsAttributes[$entity->get('attributeId')];
+    }
+
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
     {
         $pav = $this->get($parentId);
@@ -221,10 +232,12 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
+        $attribute = $this->getPavAttribute($entity);
+
         if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
-            $typeValue = $entity->get('attribute')->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($entity->get('language')))));
+            $typeValue = $attribute->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($entity->get('language')))));
             if (empty($typeValue)) {
-                $typeValue = $entity->get('attribute')->get('typeValue');
+                $typeValue = $attribute->get('typeValue');
             }
             $entity->set('typeValue', $typeValue);
         }
@@ -273,7 +286,7 @@ class ProductAttributeValue extends AbstractRepository
             case 'enum':
                 if ($entity->get('language') !== 'main') {
                     $value = $entity->get('mainLanguage')->get('varcharValue');
-                    $key = array_search($value, $entity->get('attribute')->get('typeValue'));
+                    $key = array_search($value, $attribute->get('typeValue'));
                     if ($key === false) {
                         $entity->set('varcharValue', $value);
                     } else {
@@ -292,7 +305,7 @@ class ProductAttributeValue extends AbstractRepository
                     $languageValue = [];
                     if (!empty($mainValue)) {
                         foreach ($mainValue as $v) {
-                            $key = array_search($v, $entity->get('attribute')->get('typeValue'));
+                            $key = array_search($v, $attribute->get('typeValue'));
                             if ($key !== false) {
                                 $languageValue[] = $entity->get('typeValue')[$key];
                             }
@@ -344,9 +357,19 @@ class ProductAttributeValue extends AbstractRepository
         return $entity;
     }
 
+    public function loadAttributes(array $ids): void
+    {
+        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => $ids])->find() as $attribute) {
+            $this->attributes[$attribute->get('id')] = $attribute;
+        }
+    }
+
     public function find(array $params = [])
     {
         $collection = parent::find($params);
+
+        $this->loadAttributes(array_column($collection->toArray(), 'attributeId'));
+
         foreach ($collection as $entity) {
             $this->convertValue($entity);
         }

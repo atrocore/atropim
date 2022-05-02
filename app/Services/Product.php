@@ -502,7 +502,7 @@ class Product extends Hierarchy
         }
 
         $collection = $this->getEntityManager()->getRepository('Product')->findRelated($entity, $link, $selectParams);
-
+        $recordService->prepareCollectionForOutput($collection);
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
             if (!empty($params['loadAdditionalFields'])) {
