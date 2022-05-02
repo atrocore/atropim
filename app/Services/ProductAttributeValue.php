@@ -513,12 +513,9 @@ class ProductAttributeValue extends Base
 
     protected function prepareEntity(Entity $entity): void
     {
-        // exit if already prepared
-        if (!empty($entity->get('attributeCode'))) {
-            return;
-        }
+        $attribute = $this->getRepository()->getPavAttribute($entity);
 
-        if (empty($attribute = $entity->get('attribute'))) {
+        if (empty($attribute)) {
             throw new NotFound();
         }
 
