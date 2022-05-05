@@ -43,6 +43,9 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
                 };
             },
             fromAttributesTab() {
+                if (!this.model.get('productId')) {
+                    return;
+                }
                 return {
                     tabId: this.model.tabId ? this.model.tabId : null
                 };

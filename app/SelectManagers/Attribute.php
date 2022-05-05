@@ -65,11 +65,16 @@ class Attribute extends AbstractSelectManager
         // prepare data
         $productId = (string)$this->getSelectCondition('notLinkedWithProduct');
 
-        foreach ($this->createService('Product')->getAttributes($productId) as $row) {
-            $result['whereClause'][] = [
-                'id!=' => $row['attributeId']
-            ];
-        }
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->select(['attributeId'])
+            ->where(['productId' => $productId])
+            ->find();
+
+        $result['whereClause'][] = [
+            'id!=' => array_column($pavs->toArray(), 'attributeId')
+        ];
     }
 
     /**
