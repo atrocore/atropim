@@ -67,6 +67,14 @@
     "edit": "pim:views/product/modals/edit"
   },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
+  "additionalPdfGeneratorDropdownItem": {
+    "actionViewPath": "pim:views/product/actions/show-pdf-generator",
+    "action": "showPdfGenerator"
+  },
+  "additionalPdfGeneratorRowActionItem": {
+    "actionViewPath": "pim:views/product/actions/show-pdf-generator",
+    "action": "showPdfGenerator"
+  },
   "relationshipPanels": {
     "parents": {
       "selectAction": "selectRelatedEntity",
