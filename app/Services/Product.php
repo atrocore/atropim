@@ -107,36 +107,34 @@ class Product extends Hierarchy
             return;
         }
 
-        $attributesCodes = [];
+        $attributeFields = [];
         if (array_key_exists('select', $selectParams)) {
             foreach ($selectParams['select'] as $field) {
-                if ($this->getMetadata()->get(['entityDefs', 'Product', 'fields', $field, 'isAttributeField']) === true && preg_match("/^(.*)Attribute$/", $field, $matches)) {
-                    $attributesCodes[] = $matches[1];
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Product', 'fields', $field]);
+                if (!empty($fieldDefs['attributeId']) && !empty($fieldDefs['attributeCode'])) {
+                    $attributeFields[] = array_merge($fieldDefs, ['fieldName' => $field]);
+                    foreach ($collection as $product) {
+                        $product->set($field, null);
+                    }
                 }
             }
         }
 
-        if (empty($attributesCodes)) {
+        if (empty($attributeFields)) {
             return;
-        }
-
-        $attributesIds = array_column($this->getEntityManager()->getRepository('Attribute')->select(['id'])->where(['code' => $attributesCodes])->find()->toArray(), 'id');
-        if (empty($attributesIds)) {
-            return;
-        }
-
-        foreach ($collection as $product) {
-            foreach ($attributesCodes as $code) {
-                $product->set($code . 'Attribute', null);
-            }
         }
 
         $params = [
             'where' => [
                 [
                     'type'      => 'in',
+                    'attribute' => 'scope',
+                    'value'     => 'Global'
+                ],
+                [
+                    'type'      => 'in',
                     'attribute' => 'attributeId',
-                    'value'     => $attributesIds
+                    'value'     => array_column($attributeFields, 'attributeId')
                 ],
                 [
                     'type'      => 'in',
@@ -153,9 +151,13 @@ class Product extends Hierarchy
         }
 
         foreach ($collection as $product) {
-            foreach ($pavs['collection'] as $pav) {
-                if ($pav->get('productId') === $product->get('id')) {
-                    $product->set($pav->get('attributeCode') . 'Attribute', $pav->get('value'));
+            foreach ($attributeFields as $attributeField) {
+                $fieldName = $attributeField['fieldName'];
+                $language = empty($attributeField['multilangLocale']) ? 'main' : $attributeField['multilangLocale'];
+                foreach ($pavs['collection'] as $pav) {
+                    if ($attributeField['attributeId'] === $pav->get('attributeId') && $pav->get('productId') === $product->get('id') && $pav->get('language') === $language) {
+                        $product->set($fieldName, $pav->get('value'));
+                    }
                 }
             }
         }

@@ -101,6 +101,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($attributes as $attribute) {
+            $fieldName = "{$attribute['code']}Attribute";
             $defs = [
                 'type'                      => $attribute['type'],
                 'notStorable'               => true,
@@ -116,6 +117,21 @@ class Metadata extends AbstractListener
                 'attributeId'               => $attribute['id'],
                 'attributeCode'             => $attribute['code'],
                 'attributeName'             => $attribute['name'],
+            ];
+
+            $additionalFieldDefs = [
+                'type'                      => 'varchar',
+                'notStorable'               => true,
+                'readOnly'                  => true,
+                'layoutListDisabled'        => true,
+                'layoutListSmallDisabled'   => true,
+                'layoutDetailDisabled'      => true,
+                'layoutDetailSmallDisabled' => true,
+                'layoutMassUpdateDisabled'  => true,
+                'filterDisabled'            => true,
+                'importDisabled'            => true,
+                'exportDisabled'            => true,
+                'emHidden'                  => true,
             ];
 
             foreach ($languages as $language) {
@@ -166,7 +182,20 @@ class Metadata extends AbstractListener
                     break;
             }
 
-            $metadata['entityDefs']['Product']['fields']["{$attribute['code']}Attribute"] = $defs;
+            $metadata['entityDefs']['Product']['fields'][$fieldName] = $defs;
+
+            switch ($attribute['type']) {
+                case 'currency':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Currency"] = $additionalFieldDefs;
+                    break;
+                case 'unit':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Unit"] = $additionalFieldDefs;
+                    break;
+                case 'asset':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = $additionalFieldDefs;
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
+                    break;
+            }
 
             if (!empty($attribute['is_multilang'])) {
                 $languageDefs = $defs;
