@@ -101,92 +101,62 @@ class Product extends Hierarchy
         parent::loadPreviewForCollection($collection);
     }
 
-    protected function setAttributesFields(EntityCollection $collection, array $selectParams = []): void
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
         if (count($collection) === 0) {
             return;
         }
 
+        /**
+         * Collect attributes fields
+         */
         $attributeFields = [];
         if (array_key_exists('select', $selectParams)) {
             foreach ($selectParams['select'] as $field) {
                 $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Product', 'fields', $field]);
                 if (!empty($fieldDefs['attributeId']) && !empty($fieldDefs['attributeCode'])) {
                     $attributeFields[] = array_merge($fieldDefs, ['fieldName' => $field]);
-                    foreach ($collection as $product) {
-                        $product->set($field, null);
-                    }
                 }
             }
         }
 
-        if (empty($attributeFields)) {
-            return;
-        }
-
-        $params = [
-            'where' => [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'scope',
-                    'value'     => 'Global'
-                ],
-                [
-                    'type'      => 'in',
-                    'attribute' => 'attributeId',
-                    'value'     => array_column($attributeFields, 'attributeId')
-                ],
-                [
-                    'type'      => 'in',
-                    'attribute' => 'productId',
-                    'value'     => array_column($collection->toArray(), 'id')
-                ],
-            ]
-        ];
-
-        $pavs = $this->getServiceFactory()->create('ProductAttributeValue')->findEntities($params);
-
-        if (empty($pavs['total'])) {
-            return;
-        }
-
-        foreach ($collection as $product) {
-            foreach ($attributeFields as $attributeField) {
-                $fieldName = $attributeField['fieldName'];
-                $language = empty($attributeField['multilangLocale']) ? 'main' : $attributeField['multilangLocale'];
-                foreach ($pavs['collection'] as $pav) {
-                    if ($attributeField['attributeId'] === $pav->get('attributeId') && $pav->get('productId') === $product->get('id') && $pav->get('language') === $language) {
-                        $product->set($fieldName, $pav->get('value'));
-                        switch ($pav->get('attributeType')) {
-                            case 'unit':
-                                $product->set($fieldName . 'Unit', $pav->get('valueUnit'));
-                                break;
-                            case 'currency':
-                                $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
-                                break;
-                            case 'asset':
-                                $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
-                                $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
-                                $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
-                                break;
-                        }
-                    }
-                }
+        /**
+         * Set attributes fields
+         */
+        $pavs = $this->findProductAttributeValuesForProductsViaAttributes(array_column($attributeFields, 'attributeId'), array_column($collection->toArray(), 'id'));
+        if ($pavs !== null) {
+            foreach ($collection as $product) {
+                $this->setAttributesFieldsForProduct($product, $attributeFields, $pavs);
             }
         }
-    }
-
-    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
-    {
-        parent::prepareCollectionForOutput($collection, $selectParams);
-
-        $this->setAttributesFields($collection, $selectParams);
     }
 
     public function prepareEntityForOutput(Entity $entity)
     {
         // set global main image
         $this->setProductMainImage($entity);
+
+        if (empty($entity->attributesFieldsIsSet)) {
+            /**
+             * Collect attributes fields
+             */
+            $attributeFields = [];
+            foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields']) as $field => $fieldDefs) {
+                if (!empty($fieldDefs['attributeId']) && !empty($fieldDefs['attributeCode'])) {
+                    $attributeFields[] = array_merge($fieldDefs, ['fieldName' => $field]);
+                }
+            }
+
+            /**
+             * Set attributes fields
+             */
+            $pavs = $this->findProductAttributeValuesForProductsViaAttributes(array_column($attributeFields, 'attributeId'), [$entity->get('id')]);
+            if ($pavs !== null) {
+                $this->setAttributesFieldsForProduct($entity, $attributeFields, $pavs);
+            }
+        }
 
         parent::prepareEntityForOutput($entity);
     }
@@ -967,5 +937,63 @@ class Product extends Hierarchy
         }
 
         return $newCollection;
+    }
+
+    protected function findProductAttributeValuesForProductsViaAttributes(array $attributesIds, array $productIds): ?EntityCollection
+    {
+        if (empty($attributesIds) || empty($productIds)) {
+            return null;
+        }
+
+        $params = [
+            'where' => [
+                [
+                    'type'      => 'in',
+                    'attribute' => 'scope',
+                    'value'     => 'Global'
+                ],
+                [
+                    'type'      => 'in',
+                    'attribute' => 'attributeId',
+                    'value'     => $attributesIds
+                ],
+                [
+                    'type'      => 'in',
+                    'attribute' => 'productId',
+                    'value'     => $productIds
+                ],
+            ]
+        ];
+
+        $pavs = $this->getServiceFactory()->create('ProductAttributeValue')->findEntities($params);
+
+        return empty($pavs['total']) ? null : $pavs['collection'];
+    }
+
+    protected function setAttributesFieldsForProduct(Entity $product, array $attributeFields, EntityCollection $pavs): void
+    {
+        foreach ($attributeFields as $attributeField) {
+            $fieldName = $attributeField['fieldName'];
+            $language = empty($attributeField['multilangLocale']) ? 'main' : $attributeField['multilangLocale'];
+            foreach ($pavs as $pav) {
+                if ($attributeField['attributeId'] === $pav->get('attributeId') && $pav->get('productId') === $product->get('id') && $pav->get('language') === $language) {
+                    $product->set($fieldName, $pav->get('value'));
+                    switch ($pav->get('attributeType')) {
+                        case 'unit':
+                            $product->set($fieldName . 'Unit', $pav->get('valueUnit'));
+                            break;
+                        case 'currency':
+                            $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
+                            break;
+                        case 'asset':
+                            $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
+                            $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
+                            $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                            break;
+                    }
+                }
+            }
+        }
+        $product->attributesFieldsIsSet = true;
     }
 }
