@@ -165,9 +165,9 @@ class Product extends Hierarchy
                                 $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
                                 break;
                             case 'asset':
-                                $product->set($attributeField['attributeCode'] . 'AttributeId', $pav->get('valueId'));
-                                $product->set($attributeField['attributeCode'] . 'AttributeName', $pav->get('valueName'));
-                                $product->set($attributeField['attributeCode'] . 'AttributePathsData', $pav->get('valuePathsData'));
+                                $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
+                                $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
+                                $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
                                 break;
                         }
                     }

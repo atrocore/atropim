@@ -125,7 +125,7 @@ class Metadata extends AbstractListener
                 'isMultilang'             => !empty($attribute['is_multilang']),
                 'attributeId'             => $attribute['id'],
                 'attributeCode'           => $attribute['code'],
-                'attributeType'           => $attribute['type'],
+                'attributeName'           => $attribute['name'],
             ]);
 
             foreach ($languages as $language) {
@@ -186,8 +186,9 @@ class Metadata extends AbstractListener
                     break;
                 case 'asset':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
-                        'attributeId'   => $attribute['id'],
-                        'attributeCode' => $attribute['code'],
+                        'attributeId'    => $attribute['id'],
+                        'attributeCode'  => $attribute['code'],
+                        'assetFieldName' => $fieldName,
                     ]);
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
@@ -197,15 +198,31 @@ class Metadata extends AbstractListener
             if (!empty($attribute['is_multilang'])) {
                 $languageDefs = $defs;
                 $languageDefs['isMultilang'] = false;
-                $languageDefs['multilangField'] = "{$attribute['code']}Attribute";
+                $languageDefs['multilangField'] = $fieldName;
 
                 foreach ($languages as $language) {
+                    $languageFieldName = Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute';
                     $languageDefs['multilangLocale'] = $language;
-                    if (in_array($defs['type'], ['enum', 'multiEnum'])) {
-                        $languageDefs['optionsOriginal'] = $defs['options'];
-                        $languageDefs['options'] = $languageDefs[Util::toCamelCase('options_' . strtolower($language))];
+                    switch ($defs['type']) {
+                        case 'enum':
+                        case 'multiEnum':
+                            $languageDefs['optionsOriginal'] = $defs['options'];
+                            $languageDefs['options'] = $languageDefs[Util::toCamelCase('options_' . strtolower($language))];
+                            break;
+                        case 'asset':
+                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Id"] = array_merge($defs, [
+                                'type'            => 'varchar',
+                                'attributeId'     => $attribute['id'],
+                                'attributeCode'   => $attribute['code'],
+                                'assetFieldName'  => $languageFieldName,
+                                'multilangLocale' => $language,
+                            ]);
+                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Name"] = $additionalFieldDefs;
+                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
+                            break;
                     }
-                    $metadata['entityDefs']['Product']['fields'][Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute'] = $languageDefs;
+
+                    $metadata['entityDefs']['Product']['fields'][$languageFieldName] = $languageDefs;
                 }
             }
         }
