@@ -101,6 +101,73 @@ class Product extends Hierarchy
         parent::loadPreviewForCollection($collection);
     }
 
+    protected function setAttributesFields(EntityCollection $collection, array $selectParams = []): void
+    {
+        if (count($collection) === 0) {
+            return;
+        }
+
+        $attributesCodes = [];
+        if (array_key_exists('select', $selectParams)) {
+            foreach ($selectParams['select'] as $field) {
+                if ($this->getMetadata()->get(['entityDefs', 'Product', 'fields', $field, 'isAttributeField']) === true && preg_match("/^(.*)Attribute$/", $field, $matches)) {
+                    $attributesCodes[] = $matches[1];
+                }
+            }
+        }
+
+        if (empty($attributesCodes)) {
+            return;
+        }
+
+        $attributesIds = array_column($this->getEntityManager()->getRepository('Attribute')->select(['id'])->where(['code' => $attributesCodes])->find()->toArray(), 'id');
+        if (empty($attributesIds)) {
+            return;
+        }
+
+        foreach ($collection as $product) {
+            foreach ($attributesCodes as $code) {
+                $product->set($code . 'Attribute', null);
+            }
+        }
+
+        $params = [
+            'where' => [
+                [
+                    'type'      => 'in',
+                    'attribute' => 'attributeId',
+                    'value'     => $attributesIds
+                ],
+                [
+                    'type'      => 'in',
+                    'attribute' => 'productId',
+                    'value'     => array_column($collection->toArray(), 'id')
+                ],
+            ]
+        ];
+
+        $pavs = $this->getServiceFactory()->create('ProductAttributeValue')->findEntities($params);
+
+        if (empty($pavs['total'])) {
+            return;
+        }
+
+        foreach ($collection as $product) {
+            foreach ($pavs['collection'] as $pav) {
+                if ($pav->get('productId') === $product->get('id')) {
+                    $product->set($pav->get('attributeCode') . 'Attribute', $pav->get('value'));
+                }
+            }
+        }
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        $this->setAttributesFields($collection, $selectParams);
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         // set global main image

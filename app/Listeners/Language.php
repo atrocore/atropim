@@ -52,6 +52,9 @@ class Language extends AbstractListener
 
         $data = $this->prepareProductFamilyAttributeMetadata($data);
 
+//        $data['en_US']['Product']['fields']['amountAttribute'] = 'Attribute: Amount';
+//        $data['en_US']['Product']['fields']['newAttribute'] = 'Attribute: New';
+
         // set data
         $event->setArgument('data', $data);
     }

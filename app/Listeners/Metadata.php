@@ -70,7 +70,46 @@ class Metadata extends AbstractListener
 
         $data = $this->addTabPanels($data);
 
+        $data = $this->addVirtualProductFields($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function addVirtualProductFields(array $data): array
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return $data;
+        }
+
+
+//        "amountAttribute": {
+//        "type": "float",
+//      "isAttributeField": true,
+//      "notStorable": true,
+//      "readOnly": true,
+//      "layoutDetailDisabled": true,
+//      "layoutDetailSmallDisabled": true,
+//      "layoutMassUpdateDisabled": true,
+//      "filterDisabled": true,
+//      "importDisabled": true,
+//      "exportDisabled": true,
+//      "emHidden": true
+//    },
+//    "newAttribute": {
+//        "type": "bool",
+//      "isAttributeField": true,
+//      "notStorable": true,
+//      "readOnly": true,
+//      "layoutDetailDisabled": true,
+//      "layoutDetailSmallDisabled": true,
+//      "layoutMassUpdateDisabled": true,
+//      "filterDisabled": true,
+//      "importDisabled": true,
+//      "exportDisabled": true,
+//      "emHidden": true
+//    },
+
+        return $data;
     }
 
     protected function addTabPanels(array $data): array

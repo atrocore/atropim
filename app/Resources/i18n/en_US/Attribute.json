@@ -20,7 +20,8 @@
     "prohibitedEmptyValue": "Disable empty value",
     "enumDefault": "Default",
     "measure": "Measure",
-    "unitDefault": "Default"
+    "unitDefault": "Default",
+    "virtualProductField": "Virtual product field"
   },
   "links": {
     "attributeTab": "Attribute Tab",
@@ -60,7 +61,8 @@
   },
   "tooltips": {
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
-    "isSorted": "Options will be sorted after saving."
+    "isSorted": "Options will be sorted after saving.",
+    "virtualProductField": "Values for this attribute will be added as a virtual field via product list layout."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Attribute value should be unique.",

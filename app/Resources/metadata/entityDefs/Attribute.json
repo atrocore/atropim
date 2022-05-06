@@ -206,6 +206,11 @@
       "type": "enum",
       "view": "pim:views/fields/enum-default"
     },
+    "virtualProductField": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true
+    },
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,
