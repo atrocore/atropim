@@ -102,22 +102,6 @@ class Metadata extends AbstractListener
 
         foreach ($attributes as $attribute) {
             $fieldName = "{$attribute['code']}Attribute";
-            $defs = [
-                'type'                      => $attribute['type'],
-                'notStorable'               => true,
-                'readOnly'                  => true,
-                'layoutDetailDisabled'      => true,
-                'layoutDetailSmallDisabled' => true,
-                'layoutMassUpdateDisabled'  => true,
-                'filterDisabled'            => true,
-                'importDisabled'            => true,
-                'exportDisabled'            => true,
-                'emHidden'                  => true,
-                'isMultilang'               => !empty($attribute['is_multilang']),
-                'attributeId'               => $attribute['id'],
-                'attributeCode'             => $attribute['code'],
-                'attributeName'             => $attribute['name'],
-            ];
 
             $additionalFieldDefs = [
                 'type'                      => 'varchar',
@@ -133,6 +117,16 @@ class Metadata extends AbstractListener
                 'exportDisabled'            => true,
                 'emHidden'                  => true,
             ];
+
+            $defs = array_merge($additionalFieldDefs, [
+                'type'                    => $attribute['type'],
+                'layoutListDisabled'      => false,
+                'layoutListSmallDisabled' => false,
+                'isMultilang'             => !empty($attribute['is_multilang']),
+                'attributeId'             => $attribute['id'],
+                'attributeCode'           => $attribute['code'],
+                'attributeType'           => $attribute['type'],
+            ]);
 
             foreach ($languages as $language) {
                 $languageName = $attribute['name'];
@@ -183,7 +177,6 @@ class Metadata extends AbstractListener
             }
 
             $metadata['entityDefs']['Product']['fields'][$fieldName] = $defs;
-
             switch ($attribute['type']) {
                 case 'currency':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Currency"] = $additionalFieldDefs;
@@ -192,8 +185,12 @@ class Metadata extends AbstractListener
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Unit"] = $additionalFieldDefs;
                     break;
                 case 'asset':
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = $additionalFieldDefs;
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
+                        'attributeId'   => $attribute['id'],
+                        'attributeCode' => $attribute['code'],
+                    ]);
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
                     break;
             }
 

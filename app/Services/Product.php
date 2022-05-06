@@ -157,6 +157,19 @@ class Product extends Hierarchy
                 foreach ($pavs['collection'] as $pav) {
                     if ($attributeField['attributeId'] === $pav->get('attributeId') && $pav->get('productId') === $product->get('id') && $pav->get('language') === $language) {
                         $product->set($fieldName, $pav->get('value'));
+                        switch ($pav->get('attributeType')) {
+                            case 'unit':
+                                $product->set($fieldName . 'Unit', $pav->get('valueUnit'));
+                                break;
+                            case 'currency':
+                                $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
+                                break;
+                            case 'asset':
+                                $product->set($attributeField['attributeCode'] . 'AttributeId', $pav->get('valueId'));
+                                $product->set($attributeField['attributeCode'] . 'AttributeName', $pav->get('valueName'));
+                                $product->set($attributeField['attributeCode'] . 'AttributePathsData', $pav->get('valuePathsData'));
+                                break;
+                        }
                     }
                 }
             }
