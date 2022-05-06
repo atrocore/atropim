@@ -40,8 +40,6 @@ use Treo\Listeners\AbstractListener;
 
 class Metadata extends AbstractListener
 {
-    protected const ATTRIBUTE_TABS_FILE = 'data/cache/attribute_tabs.json';
-
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -70,7 +68,166 @@ class Metadata extends AbstractListener
 
         $data = $this->addTabPanels($data);
 
+        $data = $this->addVirtualProductFields($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function addVirtualProductFields(array $metadata): array
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return $metadata;
+        }
+
+        $cacheFile = 'data/cache/attribute_product_fields.json';
+        if (!file_exists($cacheFile) || empty(file_get_contents($cacheFile))) {
+            try {
+                $attributes = $this->getContainer()->get('pdo')->query("SELECT * FROM attribute WHERE deleted=0 AND virtual_product_field=1")->fetchAll(\PDO::FETCH_ASSOC);
+            } catch (\Throwable $e) {
+                $attributes = [];
+            }
+
+            if (!empty($attributes)) {
+                Util::createDir('data/cache');
+                file_put_contents($cacheFile, Json::encode($attributes));
+            }
+        } else {
+            $attributes = Json::decode(file_get_contents($cacheFile), true);
+        }
+
+        $languages = [];
+        if ($this->getConfig()->get('isMultilangActive')) {
+            $languages = $this->getConfig()->get('inputLanguageList', []);
+        }
+
+        foreach ($attributes as $attribute) {
+            $fieldName = "{$attribute['code']}Attribute";
+
+            $additionalFieldDefs = [
+                'type'                      => 'varchar',
+                'notStorable'               => true,
+                'readOnly'                  => true,
+                'layoutListDisabled'        => true,
+                'layoutListSmallDisabled'   => true,
+                'layoutDetailDisabled'      => true,
+                'layoutDetailSmallDisabled' => true,
+                'layoutMassUpdateDisabled'  => true,
+                'filterDisabled'            => true,
+                'importDisabled'            => true,
+                'exportDisabled'            => true,
+                'emHidden'                  => true,
+            ];
+
+            $defs = array_merge($additionalFieldDefs, [
+                'type'                    => $attribute['type'],
+                'layoutListDisabled'      => false,
+                'layoutListSmallDisabled' => false,
+                'isMultilang'             => !empty($attribute['is_multilang']),
+                'attributeId'             => $attribute['id'],
+                'attributeCode'           => $attribute['code'],
+                'attributeName'           => $attribute['name'],
+            ]);
+
+            foreach ($languages as $language) {
+                $languageName = $attribute['name'];
+                if (isset($attribute['name_' . strtolower($language)])) {
+                    $languageName = $attribute['name_' . strtolower($language)];;
+                }
+                $defs[Util::toCamelCase('attribute_name_' . strtolower($language))] = $languageName;
+            }
+
+            switch ($attribute['type']) {
+                case 'unit':
+                    if (!empty($attribute['data'])) {
+                        $data = @json_decode($attribute['data'], true);
+                    }
+                    if (!empty($data['field']['measure'])) {
+                        $defs['measure'] = $data['field']['measure'];
+                    }
+
+                    if (empty($defs['measure']) && !empty($attribute['type_value'])) {
+                        $typeValue = @json_decode($attribute['type_value'], true);
+                        if (!empty($typeValue[0])) {
+                            $defs['measure'] = $typeValue[0];
+                        }
+                    }
+                    break;
+                case 'asset':
+                    $defs['assetType'] = $attribute['asset_type'];
+                    break;
+                case 'enum':
+                case 'multiEnum':
+                    $defs['options'] = [];
+                    if (!empty($attribute['type_value'])) {
+                        $typeValue = @json_decode($attribute['type_value'], true);
+                        if (!empty($typeValue)) {
+                            $defs['options'] = $typeValue;
+                        }
+                        foreach ($languages as $language) {
+                            $defs[Util::toCamelCase('options_' . strtolower($language))] = $defs['options'];
+                            if (!empty($attribute['type_value_' . strtolower($language)])) {
+                                $languageTypeValue = @json_decode($attribute['type_value_' . strtolower($language)], true);
+                                if (!empty($typeValue)) {
+                                    $defs[Util::toCamelCase('options_' . strtolower($language))] = $languageTypeValue;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            $metadata['entityDefs']['Product']['fields'][$fieldName] = $defs;
+            switch ($attribute['type']) {
+                case 'currency':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Currency"] = $additionalFieldDefs;
+                    break;
+                case 'unit':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Unit"] = $additionalFieldDefs;
+                    break;
+                case 'asset':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
+                        'attributeId'    => $attribute['id'],
+                        'attributeCode'  => $attribute['code'],
+                        'assetFieldName' => $fieldName,
+                    ]);
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
+                    break;
+            }
+
+            if (!empty($attribute['is_multilang'])) {
+                $languageDefs = $defs;
+                $languageDefs['isMultilang'] = false;
+                $languageDefs['multilangField'] = $fieldName;
+
+                foreach ($languages as $language) {
+                    $languageFieldName = Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute';
+                    $languageDefs['multilangLocale'] = $language;
+                    switch ($defs['type']) {
+                        case 'enum':
+                        case 'multiEnum':
+                            $languageDefs['optionsOriginal'] = $defs['options'];
+                            $languageDefs['options'] = $languageDefs[Util::toCamelCase('options_' . strtolower($language))];
+                            break;
+                        case 'asset':
+                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Id"] = array_merge($defs, [
+                                'type'            => 'varchar',
+                                'attributeId'     => $attribute['id'],
+                                'attributeCode'   => $attribute['code'],
+                                'assetFieldName'  => $languageFieldName,
+                                'multilangLocale' => $language,
+                            ]);
+                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Name"] = $additionalFieldDefs;
+                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
+                            break;
+                    }
+
+                    $metadata['entityDefs']['Product']['fields'][$languageFieldName] = $languageDefs;
+                }
+            }
+        }
+
+        return $metadata;
     }
 
     protected function addTabPanels(array $data): array
@@ -79,18 +236,19 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        if (!file_exists(self::ATTRIBUTE_TABS_FILE) || empty(file_get_contents(self::ATTRIBUTE_TABS_FILE))) {
+        $cacheFile = 'data/cache/attribute_tabs.json';
+        if (!file_exists($cacheFile) || empty(file_get_contents($cacheFile))) {
             try {
-                $tabs = $this->getContainer()->get('pdo')->query("SELECT id, name FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+                $tabs = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
                 $tabs = [];
             }
             if (!empty($tabs)) {
                 Util::createDir('data/cache');
-                file_put_contents(self::ATTRIBUTE_TABS_FILE, Json::encode($tabs));
+                file_put_contents($cacheFile, Json::encode($tabs));
             }
         } else {
-            $tabs = Json::decode(file_get_contents(self::ATTRIBUTE_TABS_FILE), true);
+            $tabs = Json::decode(file_get_contents($cacheFile), true);
         }
 
         foreach ($tabs as $tab) {

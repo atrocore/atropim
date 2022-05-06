@@ -35,6 +35,12 @@
       ],
       [
         {
+          "name": "virtualProductField"
+        },
+        false
+      ],
+      [
+        {
           "name": "pattern"
         },
         false

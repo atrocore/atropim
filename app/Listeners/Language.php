@@ -47,34 +47,32 @@ class Language extends AbstractListener
      */
     public function modify(Event $event)
     {
-        // get data
         $data = $event->getArgument('data');
 
-        $data = $this->prepareProductFamilyAttributeMetadata($data);
-
-        // set data
-        $event->setArgument('data', $data);
-    }
-
-    protected function prepareProductFamilyAttributeMetadata(array $data): array
-    {
-        // is multi-lang activated
-        if (empty($this->getConfig()->get('isMultilangActive'))) {
-            return $data;
-        }
-
-        // get locales
-        if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
-            return $data;
+        $languages = [];
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            $languages = $this->getConfig()->get('inputLanguageList', []);
         }
 
         foreach ($data as $l => $rows) {
-            foreach ($locales as $locale) {
-                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-                $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' › ' . $locale;
+            foreach ($languages as $language) {
+                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($language)));
+                $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' › ' . $language;
+            }
+            foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields'], []) as $fields => $fieldDefs) {
+                if (!empty($fieldDefs['attributeId'])) {
+                    $attributeName = $fieldDefs['attributeName'];
+                    if (isset($fieldDefs[Util::toCamelCase('attribute_name_' . strtolower($l))])) {
+                        $attributeName = $fieldDefs[Util::toCamelCase('attribute_name_' . strtolower($l))];
+                    }
+                    if (!empty($fieldDefs['multilangLocale'])) {
+                        $attributeName .= ' › ' . $fieldDefs['multilangLocale'];
+                    }
+                    $data[$l]['Product']['fields'][$fields] = $data[$l]['Global']['scopeNames']['Attribute'] . ': ' . $attributeName;
+                }
             }
         }
 
-        return $data;
+        $event->setArgument('data', $data);
     }
 }
