@@ -40,8 +40,6 @@ use Treo\Listeners\AbstractListener;
 
 class Metadata extends AbstractListener
 {
-    protected const ATTRIBUTE_TABS_FILE = 'data/cache/attribute_tabs.json';
-
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -75,41 +73,93 @@ class Metadata extends AbstractListener
         $event->setArgument('data', $data);
     }
 
-    protected function addVirtualProductFields(array $data): array
+    protected function addVirtualProductFields(array $metadata): array
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
-            return $data;
+            return $metadata;
         }
 
+        $cacheFile = 'data/cache/attribute_product_fields.json';
+        if (!file_exists($cacheFile) || empty(file_get_contents($cacheFile))) {
+            try {
+                $attributes = $this->getContainer()->get('pdo')->query("SELECT * FROM attribute WHERE deleted=0 AND virtual_product_field=1")->fetchAll(\PDO::FETCH_ASSOC);
+            } catch (\Throwable $e) {
+                $attributes = [];
+            }
 
-//        "amountAttribute": {
-//        "type": "float",
-//      "isAttributeField": true,
-//      "notStorable": true,
-//      "readOnly": true,
-//      "layoutDetailDisabled": true,
-//      "layoutDetailSmallDisabled": true,
-//      "layoutMassUpdateDisabled": true,
-//      "filterDisabled": true,
-//      "importDisabled": true,
-//      "exportDisabled": true,
-//      "emHidden": true
-//    },
-//    "newAttribute": {
-//        "type": "bool",
-//      "isAttributeField": true,
-//      "notStorable": true,
-//      "readOnly": true,
-//      "layoutDetailDisabled": true,
-//      "layoutDetailSmallDisabled": true,
-//      "layoutMassUpdateDisabled": true,
-//      "filterDisabled": true,
-//      "importDisabled": true,
-//      "exportDisabled": true,
-//      "emHidden": true
-//    },
+            if (!empty($attributes)) {
+                Util::createDir('data/cache');
+                file_put_contents($cacheFile, Json::encode($attributes));
+            }
+        } else {
+            $attributes = Json::decode(file_get_contents($cacheFile), true);
+        }
 
-        return $data;
+        $languages = [];
+        if ($this->getConfig()->get('isMultilangActive')) {
+            $languages = $this->getConfig()->get('inputLanguageList', []);
+        }
+
+        foreach ($attributes as $attribute) {
+            $defs = [
+                'type'                      => $attribute['type'],
+                'notStorable'               => true,
+                'readOnly'                  => true,
+                'layoutDetailDisabled'      => true,
+                'layoutDetailSmallDisabled' => true,
+                'layoutMassUpdateDisabled'  => true,
+                'filterDisabled'            => true,
+                'importDisabled'            => true,
+                'exportDisabled'            => true,
+                'emHidden'                  => true,
+                'attributeId'               => $attribute['id'],
+                'attributeCode'             => $attribute['code'],
+                'attributeName'             => $attribute['name'],
+            ];
+
+            foreach ($languages as $language) {
+                $languageName = $attribute['name'];
+                if (isset($attribute['name_' . strtolower($language)])) {
+                    $languageName = $attribute['name_' . strtolower($language)];;
+                }
+                $defs[Util::toCamelCase('attribute_name_' . strtolower($language))] = $languageName;
+            }
+
+            switch ($attribute['type']) {
+                case 'unit':
+                    if (!empty($attribute['data'])) {
+                        $data = @json_decode($attribute['data'], true);
+                    }
+                    if (!empty($data['field']['measure'])) {
+                        $defs['measure'] = $data['field']['measure'];
+                    }
+
+                    if (empty($defs['measure']) && !empty($attribute['type_value'])) {
+                        $typeValue = @json_decode($attribute['type_value'], true);
+                        if (!empty($typeValue[0])) {
+                            $defs['measure'] = $typeValue[0];
+                        }
+                    }
+                    break;
+                case 'asset':
+                    $defs['assetType'] = $attribute['asset_type'];
+                    break;
+                case 'enum':
+                case 'multiEnum':
+                    $defs['options'] = [];
+                    if (!empty($attribute['type_value'])) {
+                        $typeValue = @json_decode($attribute['type_value'], true);
+                        if (!empty($typeValue)) {
+                            $defs['options'] = $typeValue;
+                        }
+                    }
+                    break;
+            }
+
+            $metadata['entityDefs']['Product']['fields']["{$attribute['code']}Attribute"] = $defs;
+        }
+
+        return $metadata;
     }
 
     protected function addTabPanels(array $data): array
@@ -118,18 +168,19 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        if (!file_exists(self::ATTRIBUTE_TABS_FILE) || empty(file_get_contents(self::ATTRIBUTE_TABS_FILE))) {
+        $cacheFile = 'data/cache/attribute_tabs.json';
+        if (!file_exists($cacheFile) || empty(file_get_contents($cacheFile))) {
             try {
-                $tabs = $this->getContainer()->get('pdo')->query("SELECT id, name FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+                $tabs = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
                 $tabs = [];
             }
             if (!empty($tabs)) {
                 Util::createDir('data/cache');
-                file_put_contents(self::ATTRIBUTE_TABS_FILE, Json::encode($tabs));
+                file_put_contents($cacheFile, Json::encode($tabs));
             }
         } else {
-            $tabs = Json::decode(file_get_contents(self::ATTRIBUTE_TABS_FILE), true);
+            $tabs = Json::decode(file_get_contents($cacheFile), true);
         }
 
         foreach ($tabs as $tab) {
