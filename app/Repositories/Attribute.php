@@ -182,7 +182,7 @@ class Attribute extends AbstractRepository
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
-        if ($entity->isAttributeChanged('virtualProductField')) {
+        if ($entity->isAttributeChanged('virtualProductField') || (!empty($entity->get('virtualProductField') && $entity->isAttributeChanged('code')))) {
             $this->clearCache();
         }
 
