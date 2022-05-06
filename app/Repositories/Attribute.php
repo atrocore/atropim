@@ -69,14 +69,17 @@ class Attribute extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsAttributeOwnership';
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('dataManager');
+    }
+
+    public function clearCache(): void
+    {
+        $this->getInjection('dataManager')->clearCache();
     }
 
     public function prepareTypeValueIds(Entity $entity): void
@@ -179,6 +182,10 @@ class Attribute extends AbstractRepository
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
+        if ($entity->isAttributeChanged('virtualProductField')) {
+            $this->clearCache();
+        }
+
         parent::afterSave($entity, $options);
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isMultilang')) {
@@ -189,6 +196,15 @@ class Attribute extends AbstractRepository
         }
 
         $this->setInheritedOwnership($entity);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        if (!empty($entity->get('virtualProductField'))) {
+            $this->clearCache();
+        }
+
+        parent::afterRemove($entity, $options);
     }
 
     /**
