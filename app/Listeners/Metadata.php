@@ -112,6 +112,7 @@ class Metadata extends AbstractListener
                 'importDisabled'            => true,
                 'exportDisabled'            => true,
                 'emHidden'                  => true,
+                'isMultilang'               => !empty($attribute['is_multilang']),
                 'attributeId'               => $attribute['id'],
                 'attributeCode'             => $attribute['code'],
                 'attributeName'             => $attribute['name'],
@@ -152,11 +153,35 @@ class Metadata extends AbstractListener
                         if (!empty($typeValue)) {
                             $defs['options'] = $typeValue;
                         }
+                        foreach ($languages as $language) {
+                            $defs[Util::toCamelCase('options_' . strtolower($language))] = $defs['options'];
+                            if (!empty($attribute['type_value_' . strtolower($language)])) {
+                                $languageTypeValue = @json_decode($attribute['type_value_' . strtolower($language)], true);
+                                if (!empty($typeValue)) {
+                                    $defs[Util::toCamelCase('options_' . strtolower($language))] = $languageTypeValue;
+                                }
+                            }
+                        }
                     }
                     break;
             }
 
             $metadata['entityDefs']['Product']['fields']["{$attribute['code']}Attribute"] = $defs;
+
+            if (!empty($attribute['is_multilang'])) {
+                $languageDefs = $defs;
+                $languageDefs['isMultilang'] = false;
+                $languageDefs['multilangField'] = "{$attribute['code']}Attribute";
+
+                foreach ($languages as $language) {
+                    $languageDefs['multilangLocale'] = $language;
+                    if (in_array($defs['type'], ['enum', 'multiEnum'])) {
+                        $languageDefs['optionsOriginal'] = $defs['options'];
+                        $languageDefs['options'] = $languageDefs[Util::toCamelCase('options_' . strtolower($language))];
+                    }
+                    $metadata['entityDefs']['Product']['fields'][Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute'] = $languageDefs;
+                }
+            }
         }
 
         return $metadata;
