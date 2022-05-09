@@ -238,8 +238,10 @@ class ProductAttributeValue extends AbstractRepository
             // get pav attribute
             $attribute = $this->getPavAttribute($entity);
 
-            // prepare typeValue
-            $entity->set('typeValue', $this->getAttributeOptions($attribute, $entity->get('language')));
+            if (!empty($attribute)) {
+                // prepare typeValue
+                $entity->set('typeValue', $this->getAttributeOptions($attribute, $entity->get('language')));
+            }
 
             if ($entity->get('language') !== 'main') {
                 // get main language entity
