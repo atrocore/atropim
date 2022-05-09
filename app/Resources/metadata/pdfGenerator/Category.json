@@ -1,0 +1,9 @@
+{
+  "templates": {
+    "default": {
+      "handler": "CategoryPdfTemplate",
+      "file": "Pim:templates/Product/default.tpl",
+      "useQueueManager": true
+    }
+  }
+}

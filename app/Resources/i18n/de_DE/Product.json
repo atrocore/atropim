@@ -97,7 +97,8 @@
     "prepared": "Vorbereitet",
     "reviewed": "Überprüft",
     "notReady": "Nicht bereit",
-    "ready": "Bereit"
+    "ready": "Bereit",
+    "channel": "Kanal"
   },
   "options": {
     "tag": {

@@ -79,7 +79,8 @@
     "prepared": "Prepared",
     "reviewed": "Reviewed",
     "notReady": "Not Ready",
-    "ready": "Ready"
+    "ready": "Ready",
+    "channel": "Channel"
   },
   "options": {
     "tag": {

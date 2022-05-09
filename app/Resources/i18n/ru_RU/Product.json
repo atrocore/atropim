@@ -79,7 +79,8 @@
     "prepared": "Подготовлено",
     "reviewed": "Отредактировано",
     "notReady": "Не готово",
-    "ready": "Готово"
+    "ready": "Готово",
+    "channel": "Канал"
   },
   "options": {
     "tag": {
