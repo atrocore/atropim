@@ -41,18 +41,12 @@ use Espo\ORM\Entity;
 class CategoryPdfTemplate extends ProductPdfTemplate
 {
     public function getData(Entity $entity, array $data = []): array
-    {
+    {        
+        if (empty($products = $entity->get('products')) || count($products) === 0) {
+            return [];
+        }
+
         $result = [];
-
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->join('categories')
-            ->where([
-                'categories.id' => $entity->id
-            ])
-            ->find();
-
         foreach ($products as $product) {
             $result = array_merge_recursive($result, parent::getData($product, $data));
         }
