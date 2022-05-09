@@ -352,6 +352,7 @@
       "foreign": "parents",
       "entity": "Product",
       "audited": false,
+      "disableMassRelation": true,
       "midKeys": [
         "entityId",
         "parentId"
@@ -368,6 +369,7 @@
       "foreign": "children",
       "entity": "Product",
       "audited": false,
+      "disableMassRelation": true,
       "midKeys": [
         "parentId",
         "entityId"
