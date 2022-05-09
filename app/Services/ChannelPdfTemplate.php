@@ -42,16 +42,9 @@ class ChannelPdfTemplate extends ProductPdfTemplate
 {
     public function getData(Entity $entity, array $data = []): array
     {
-        $result = [];
-
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->join('channels')
-            ->where([
-                'channels.id' => $entity->id
-            ])
-            ->find();
+        if (empty($products = $entity->get('products')) || count($products) === 0) {
+            return [];
+        }
 
         foreach ($products as $product) {
             $result = array_merge_recursive($result, parent::getData($product, $data));
