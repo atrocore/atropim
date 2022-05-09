@@ -9,6 +9,7 @@
     "productFamilyAttribute": "Produktfamilienattribut",
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
+    "language": "Sprache",
     "value": "Wert",
     "scope": "Scope"
   },

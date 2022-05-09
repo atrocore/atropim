@@ -155,7 +155,6 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
@@ -273,8 +272,7 @@
     "productAttributeValues": {
       "type": "hasMany",
       "foreign": "attribute",
-      "entity": "ProductAttributeValue",
-      "layoutRelationshipsDisabled": true
+      "entity": "ProductAttributeValue"
     },
     "productFamilyAttributes": {
       "type": "hasMany",

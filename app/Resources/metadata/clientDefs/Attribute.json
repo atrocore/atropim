@@ -35,6 +35,14 @@
   "modalViews": {
     "select": "pim:views/attribute/modals/select-records"
   },
+  "relationshipPanels": {
+    "productAttributeValues": {
+      "select": false,
+      "view": "pim:views/attribute/record/panels/product-attribute-values",
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "layout": "listInAttribute"
+    }
+  },
   "dynamicLogic": {
     "fields": {
       "type": {

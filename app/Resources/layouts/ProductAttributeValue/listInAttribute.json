@@ -1,0 +1,17 @@
+[
+  {
+    "name": "product"
+  },
+  {
+    "name": "language"
+  },
+  {
+    "name": "value",
+    "notSortable": true
+  },
+  {
+    "name": "channel",
+    "notSortable": true,
+    "width": "10"
+  }
+]
