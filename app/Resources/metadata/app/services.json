@@ -11,5 +11,6 @@
   "QueueManagerOwnership": "\\Pim\\Services\\QueueManagerOwnership",
   "ProductPdfTemplate": "\\Pim\\Services\\ProductPdfTemplate",
   "ChannelPdfTemplate": "\\Pim\\Services\\ChannelPdfTemplate",
-  "CategoryPdfTemplate": "\\Pim\\Services\\CategoryPdfTemplate"
+  "CategoryPdfTemplate": "\\Pim\\Services\\CategoryPdfTemplate",
+  "CatalogPdfTemplate": "\\Pim\\Services\\CatalogPdfTemplate"
 }

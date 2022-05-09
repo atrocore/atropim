@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
@@ -58,6 +59,10 @@ class ProductPdfTemplate extends DefaultPdfGenerator
      */
     protected $locale;
 
+    /**
+     * @var Language
+     */
+    protected $language;
 
     /**
      * @inheritDoc
@@ -84,7 +89,7 @@ class ProductPdfTemplate extends DefaultPdfGenerator
     {
         $this->pdfOptions['footerTemplate'] = '
             <div style="width: 100%; height: .7cm; transform: translateY(0.4cm); -webkit-print-color-adjust:exact; padding: 0 0.5cm; font-size: 8px; background-color: #efefef; display: flex; justify-content: space-between; align-items: center">
-                <div>@  ' . date('Y') . ' AtroCore. This is just an example of automatically generated PDF document</div>
+                <div>@  ' . date('Y') . ' AtroCore. This is just an example of an automatically generated PDF document.</div>
                 <div class="pageNumber"></div>
             </div>';
     }
@@ -99,6 +104,7 @@ class ProductPdfTemplate extends DefaultPdfGenerator
         $this->locale = !empty($data['locale']) ? $data['locale'] : null;
         $this->channel = !empty($data['channelId']) ? $data['channelId'] : null;
         $this->product = $entity;
+        $this->language = $this->setLanguage();
 
         $fields = $this->getFields();
 
@@ -378,5 +384,25 @@ class ProductPdfTemplate extends DefaultPdfGenerator
      */
     protected function camelCaseLocale(): string {
         return $this->locale ? Util::toCamelCase(strtolower($this->locale), '_', true) : '';
+    }
+
+    /**
+     * @return Language
+     */
+    protected function setLanguage(): Language
+    {
+        if (empty($this->locale)) {
+            return parent::getLanguage();
+        } else {
+            return new Language($this->getContainer(), $this->locale);
+        }
+    }
+
+    /**
+     * @return Language
+     */
+    protected function getLanguage(): Language
+    {
+        return $this->language;
     }
 }
