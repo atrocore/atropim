@@ -117,6 +117,34 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
                 });
+                view.listenTo(view, 'tree-width-changed', function (width) {
+                    const content = $('#content');
+                    const main = content.find('#main');
+
+                    const header = content.find('.page-header');
+                    const btnContainer = content.find('.detail-button-container');
+                    const overview = content.find('.overview');
+                    const side = content.find('.side');
+
+                    const footer = $('footer');
+
+                    header.css('width', (main.width() - width) + 'px');
+                    header.css('marginLeft', width + 'px');
+
+                    btnContainer.css('width', (main.outerWidth() - width) + 'px');
+                    btnContainer.css('marginLeft', width + 'px');
+
+                    overview.css('width', (content.outerWidth() - side.outerWidth() - width) + 'px');
+                    overview.css('marginLeft', width + 'px');
+
+                    footer.css('width', (content.outerWidth() - width) + 'px');
+                });
+                view.listenTo(view, 'tree-width-unset', function () {
+                    $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
+                    $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
+                    $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
+                    $('footer').css({'width': 'unset', 'marginLeft': 'unset'});
+                })
             });
         },
 
