@@ -7,7 +7,7 @@ set_include_path($dir);
 
 require_once 'vendor/autoload.php';
 
-$container = (new \Treo\Core\Application())->getContainer();
+$container = (new \Espo\Core\Application())->getContainer();
 
 /** @var \PDO $pdo */
 $pdo = $container->get('entityManager')->getPDO();
