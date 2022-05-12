@@ -39,13 +39,13 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Hierarchy;
 use Espo\Core\Utils\Json;
-use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\Services\MassActions;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
-use Treo\Services\MassActions;
 
 class Product extends Hierarchy
 {

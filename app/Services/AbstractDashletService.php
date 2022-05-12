@@ -35,7 +35,7 @@ namespace Pim\Services;
 
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Services\Base;
-use Treo\Services\DashletInterface;
+use Espo\Services\DashletInterface;
 
 abstract class AbstractDashletService extends Base implements DashletInterface
 {
