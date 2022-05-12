@@ -33,10 +33,10 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
-use Treo\Listeners\AbstractListener;
+use Espo\Listeners\AbstractListener;
 
 class Metadata extends AbstractListener
 {

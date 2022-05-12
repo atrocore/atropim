@@ -33,10 +33,10 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
-use Treo\Listeners\AbstractListener;
-use Treo\Core\EventManager\Event;
+use Espo\Listeners\AbstractListener;
 
 /**
  * Class SettingsController

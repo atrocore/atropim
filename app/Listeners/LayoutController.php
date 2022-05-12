@@ -31,10 +31,10 @@
 
 namespace Pim\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
-use Treo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
-use Treo\Listeners\AbstractListener;
+use Espo\Listeners\AbstractListener;
 
 /**
  * Class LayoutController

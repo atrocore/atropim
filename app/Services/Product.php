@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
@@ -44,7 +45,6 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\MassActions;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
-use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
 
 class Product extends Hierarchy

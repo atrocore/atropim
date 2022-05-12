@@ -33,11 +33,10 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions;
-use Espo\ORM\Entity;
+use Espo\Core\Exceptions\BadRequest;
 use Pim\Entities\Channel;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class ChannelEntity

@@ -33,7 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Treo\Core\EventManager\Event;
+use Espo\Core\EventManager\Event;
 
 /**
  * Class CategoryService

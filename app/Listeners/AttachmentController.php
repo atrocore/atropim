@@ -33,8 +33,8 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Treo\Listeners\AbstractListener;
-use Treo\Core\EventManager\Event;
+use Espo\Core\EventManager\Event;
+use Espo\Listeners\AbstractListener;
 
 /**
  * Class CatalogController

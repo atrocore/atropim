@@ -33,9 +33,8 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
-use Pim\Controllers\Attribute;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class AttributeEntity

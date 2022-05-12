@@ -33,13 +33,13 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class Product

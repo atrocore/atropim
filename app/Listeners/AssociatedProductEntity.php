@@ -33,11 +33,10 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Listeners\AbstractListener;
 use Espo\ORM\Entity;
-use Pim\Entities\Association;
-use Treo\Listeners\AbstractListener;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class AssociatedProductEntity
