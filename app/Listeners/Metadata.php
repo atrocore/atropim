@@ -79,8 +79,10 @@ class Metadata extends AbstractListener
             return $metadata;
         }
 
-        $cacheFile = 'data/cache/attribute_product_fields.json';
-        if (!file_exists($cacheFile) || empty(file_get_contents($cacheFile))) {
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $attributes = $dataManager->getCacheData('attribute_product_fields');
+        if (empty($attributes)) {
             try {
                 $attributes = $this->getContainer()->get('pdo')->query("SELECT * FROM attribute WHERE deleted=0 AND virtual_product_field=1")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
@@ -88,11 +90,8 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($attributes)) {
-                Util::createDir('data/cache');
-                file_put_contents($cacheFile, Json::encode($attributes));
+                $dataManager->setCacheData('attribute_product_fields', $attributes);
             }
-        } else {
-            $attributes = Json::decode(file_get_contents($cacheFile), true);
         }
 
         $languages = [];
@@ -236,19 +235,18 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        $cacheFile = 'data/cache/attribute_tabs.json';
-        if (!file_exists($cacheFile) || empty(file_get_contents($cacheFile))) {
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $tabs = $dataManager->getCacheData('attribute_tabs');
+        if (empty($tabs)) {
             try {
                 $tabs = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
                 $tabs = [];
             }
             if (!empty($tabs)) {
-                Util::createDir('data/cache');
-                file_put_contents($cacheFile, Json::encode($tabs));
+                $dataManager->setCacheData('attribute_tabs', $tabs);
             }
-        } else {
-            $tabs = Json::decode(file_get_contents($cacheFile), true);
         }
 
         foreach ($tabs as $tab) {
