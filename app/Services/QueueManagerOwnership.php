@@ -34,8 +34,8 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Pim\Repositories\AbstractRepository;
-use Treo\Core\Utils\Metadata;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 use Espo\Services\QueueManagerBase;
 
 /**
