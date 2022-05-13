@@ -33,13 +33,12 @@ declare(strict_types=1);
 
 namespace Pim\Core\ORM;
 
-use Pim\ORM\DB\MysqlMapper;
 use Pim\ORM\DB\Query\Mysql;
 
 /**
  * Class of EntityManager
  */
-class EntityManager extends \Treo\Core\ORM\EntityManager
+class EntityManager extends \Espo\Core\ORM\EntityManager
 {
 
     /**
