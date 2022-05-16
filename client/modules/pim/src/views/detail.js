@@ -31,14 +31,6 @@
 Espo.define('pim:views/detail', 'views/detail',
     Dep => Dep.extend({
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if ($('.catalog-tree-panel').length) {
-                $('#footer').addClass('is-collapsed');
-            }
-        },
-
         updateRelationshipPanel(name) {
             let bottom = this.getView('record').getView('bottom');
             if (bottom) {
