@@ -37,14 +37,6 @@ Espo.define('pim:views/list', 'views/list',
             Dep.prototype.setup.call(this);
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if ($('.catalog-tree-panel').length) {
-                $('#footer').addClass('is-collapsed');
-            }
-        },
-
         navigateToEdit(id) {
             let router = this.getRouter();
             let url = `#${this.scope}/view/${id}`;

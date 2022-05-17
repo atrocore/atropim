@@ -126,24 +126,19 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                     const overview = content.find('.overview');
                     const side = content.find('.side');
 
-                    const footer = $('footer');
-
-                    header.css('width', (main.width() - width) + 'px');
+                    header.outerWidth(main.width() - width);
                     header.css('marginLeft', width + 'px');
 
-                    btnContainer.css('width', (main.outerWidth() - width) + 'px');
+                    btnContainer.outerWidth(main.width() - width);
                     btnContainer.css('marginLeft', width + 'px');
 
-                    overview.css('width', (content.outerWidth() - side.outerWidth() - width) + 'px');
-                    overview.css('marginLeft', width + 'px');
-
-                    footer.css('width', (content.outerWidth() - width) + 'px');
+                    overview.outerWidth(content.outerWidth() - side.outerWidth() - width);
+                    overview.css('marginLeft', (width - 1) + 'px');
                 });
                 view.listenTo(view, 'tree-width-unset', function () {
                     $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
                     $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
                     $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
-                    $('footer').css({'width': 'unset', 'marginLeft': 'unset'});
                 })
             });
         },

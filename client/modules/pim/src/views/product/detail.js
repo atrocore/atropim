@@ -71,18 +71,6 @@ Espo.define('pim:views/product/detail', 'pim:views/detail',
                     this.getRouter().dispatch(this.scope, null, options);
                 }
             }, this);
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.getAcl().check('Catalog', 'read') && this.getAcl().check('Category', 'read')) {
-                let footer = $('#footer');
-
-                if (footer.length) {
-                    footer.addClass('is-collapsed');
-                }
-            }
         }
 
     })
