@@ -571,6 +571,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         onTreeResize(width) {
+            width = parseInt(width);
+
             const content = $('#content');
             const main = content.find('#main');
 
@@ -582,9 +584,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             header.outerWidth(main.width() - width);
             header.css('marginLeft', width + 'px');
 
-            btnContainer.outerWidth(content.innerWidth() - width);
+            btnContainer.outerWidth(content.innerWidth() - width - 1);
             btnContainer.addClass('detail-tree-button-container');
-            btnContainer.css('marginLeft', width + 'px');
+            btnContainer.css('marginLeft', width + 1 + 'px');
 
             overview.outerWidth(content.outerWidth() - side.outerWidth() - width);
             overview.css('marginLeft', (width - 1) + 'px');
