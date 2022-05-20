@@ -83,6 +83,22 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             });
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.isCatalogTreePanel) {
+                let observer = new ResizeObserver(() => {
+                    let view = this.getView('catalogTreePanel'),
+                        width = view.$el.innerWidth();
+
+                    this.onTreeResize(width);
+
+                    observer.unobserve($('#content').get(0));
+                });
+                observer.observe($('#content').get(0));
+            }
+        },
+
         isTreeAllowed() {
             let result = false;
 
@@ -117,23 +133,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
                 });
-                view.listenTo(view, 'tree-width-changed', function (width) {
-                    const content = $('#content');
-                    const main = content.find('#main');
-
-                    const header = content.find('.page-header');
-                    const btnContainer = content.find('.detail-button-container');
-                    const overview = content.find('.overview');
-                    const side = content.find('.side');
-
-                    header.outerWidth(main.width() - width);
-                    header.css('marginLeft', width + 'px');
-
-                    btnContainer.outerWidth(main.width() - width);
-                    btnContainer.css('marginLeft', width + 'px');
-
-                    overview.outerWidth(content.outerWidth() - side.outerWidth() - width);
-                    overview.css('marginLeft', (width - 1) + 'px');
+                view.listenTo(view, 'tree-width-changed', width => {
+                    this.onTreeResize(width);
                 });
                 view.listenTo(view, 'tree-width-unset', function () {
                     $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
@@ -567,6 +568,28 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         hasCompleteness() {
             return this.getMetadata().get(['scopes', this.scope, 'hasCompleteness'])
                 && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
+        },
+
+        onTreeResize(width) {
+            width = parseInt(width);
+
+            const content = $('#content');
+            const main = content.find('#main');
+
+            const header = content.find('.page-header');
+            const btnContainer = content.find('.detail-button-container');
+            const overview = content.find('.overview');
+            const side = content.find('.side');
+
+            header.outerWidth(main.width() - width);
+            header.css('marginLeft', width + 'px');
+
+            btnContainer.outerWidth(content.innerWidth() - width - 1);
+            btnContainer.addClass('detail-tree-button-container');
+            btnContainer.css('marginLeft', width + 1 + 'px');
+
+            overview.outerWidth(content.outerWidth() - side.outerWidth() - width);
+            overview.css('marginLeft', (width - 1) + 'px');
         }
     })
 );
