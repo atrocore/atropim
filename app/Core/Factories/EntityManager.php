@@ -31,16 +31,10 @@
 
 declare(strict_types=1);
 
-namespace Pim\Core\Loaders;
+namespace Pim\Core\Factories;
 
-/**
- * Class EntityManager
- */
-class EntityManager extends \Treo\Core\Loaders\EntityManager
+class EntityManager extends \Espo\Core\Factories\EntityManager
 {
-    /**
-     * @inheritdoc
-     */
     protected function getEntityManagerClassName(): string
     {
         return \Pim\Core\ORM\EntityManager::class;

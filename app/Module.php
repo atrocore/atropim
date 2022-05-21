@@ -65,6 +65,13 @@ class Module extends AbstractModule
         return 5120;
     }
 
+    public function onLoad()
+    {
+        parent::onLoad();
+
+        $this->container->setClassAlias('entityManager', \Pim\Core\Factories\EntityManager::class);
+    }
+
     /**
      * @inheritDoc
      */

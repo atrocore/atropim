@@ -33,10 +33,10 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Espo\Core\ServiceFactory;
 use Espo\Listeners\AbstractListener;
 use Espo\ORM\Entity;
 use Pim\Repositories\AbstractRepository;
-use Treo\Core\ServiceFactory;
 
 /**
  * Class AbstractListener
