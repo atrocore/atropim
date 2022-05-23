@@ -328,6 +328,14 @@ class ProductAttributeValue extends Base
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
+        if (property_exists($data, 'valueCurrency')) {
+            $entity->set('varcharValue', $data->valueCurrency);
+        }
+
+        if (property_exists($data, 'valueUnit')) {
+            $entity->set('varcharValue', $data->valueUnit);
+        }
+
         if (property_exists($data, 'value')) {
             // set attribute type if it needs
             if (empty($entity->get('attributeType')) && !empty($entity->get('attributeId'))) {
@@ -351,21 +359,11 @@ class ProductAttributeValue extends Base
                 case 'bool':
                     $entity->set('boolValue', $data->value);
                     break;
-                case 'currency':
-                    $entity->set('floatValue', $data->value);
-                    if (property_exists($data, 'valueCurrency')) {
-                        $entity->set('varcharValue', $data->valueCurrency);
-                    }
-                    break;
-                case 'unit':
-                    $entity->set('floatValue', $data->value);
-                    if (property_exists($data, 'valueUnit')) {
-                        $entity->set('varcharValue', $data->valueUnit);
-                    }
-                    break;
                 case 'int':
                     $entity->set('intValue', $data->value);
                     break;
+                case 'currency':
+                case 'unit':
                 case 'float':
                     $entity->set('floatValue', $data->value);
                     break;
@@ -374,9 +372,6 @@ class ProductAttributeValue extends Base
                     break;
                 case 'datetime':
                     $entity->set('datetimeValue', $data->value);
-                    break;
-                case 'asset':
-                    $entity->set('varcharValue', $data->value);
                     break;
                 default:
                     $entity->set('varcharValue', $data->value);
@@ -570,15 +565,6 @@ class ProductAttributeValue extends Base
 
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = Json::encode($data->value);
-        }
-
-        if (property_exists($data, 'data')) {
-            if (property_exists($data->data, 'currency') && !property_exists($data, 'valueCurrency')) {
-                $data->valueCurrency = $data->data->currency;
-            }
-            if (property_exists($data->data, 'unit') && !property_exists($data, 'valueCurrency')) {
-                $data->valueUnit = $data->data->unit;
-            }
         }
     }
 
