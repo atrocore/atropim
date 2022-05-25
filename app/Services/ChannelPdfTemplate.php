@@ -46,6 +46,7 @@ class ChannelPdfTemplate extends ProductPdfTemplate
             return [];
         }
 
+        $result = [];
         foreach ($products as $product) {
             $result = array_merge_recursive($result, parent::getData($product, $data));
         }
