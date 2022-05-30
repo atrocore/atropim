@@ -39,20 +39,15 @@ use PdfGenerator\Services\DefaultPdfGenerator;
 /**
  * CatalogPdfTemplate class
  */
-class CatalogPdfTemplate extends DefaultPdfGenerator
+class CatalogPdfTemplate extends ProductPdfTemplate
 {
     public function getData(Entity $entity, array $data = []): array
     {
+        if (empty($products = $entity->get('products')) || count($products) === 0) {
+            return [];
+        }
+
         $result = [];
-
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where([
-                'catalogId' => $entity->id
-            ])
-            ->find();
-
         foreach ($products as $product) {
             $result = array_merge_recursive($result, parent::getData($product, $data));
         }
