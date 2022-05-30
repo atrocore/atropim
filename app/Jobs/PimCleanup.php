@@ -75,9 +75,6 @@ class PimCleanup extends Base
         // channel
         $this->execute("DELETE FROM channel WHERE deleted=1");
 
-        // measuring_unit
-        $this->execute("DELETE FROM measuring_unit WHERE deleted=1");
-
         // packaging
         $this->execute("DELETE FROM packaging WHERE deleted=1");
 
