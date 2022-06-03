@@ -53,13 +53,7 @@ class SettingsController extends AbstractListener
             'teamsProductOwnership'          => 'overrideProductTeams'
         ];
 
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function beforeActionUpdate(Event $event): void
+    public function beforeActionPatch(Event $event): void
     {
         $data = $event->getArgument('data');
 
@@ -85,10 +79,7 @@ class SettingsController extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterActionUpdate(Event $event): void
+    public function afterActionPatch(Event $event): void
     {
         $data = Json::decode(Json::encode($event->getArgument('data')), true);
 
