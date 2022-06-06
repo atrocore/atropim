@@ -28,27 +28,40 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product-attribute-value/fields/is-pav-value-inherited', 'views/fields/bool',
+Espo.define('pim:views/product-attribute-value/fields/icons', 'views/fields/varchar',
     Dep => Dep.extend({
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'list') {
-                if (['enum', 'multiEnum'].includes(this.model.get('attributeType')) && this.model.get('language') !== 'main') {
-                    this.$el.html('');
-                    return;
-                }
-
-                let isPavValueInherited = this.model.get('isPavValueInherited');
-                if (isPavValueInherited === true) {
-                    this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`);
-                } else if (isPavValueInherited === false) {
-                    this.$el.html(`<a href="javascript:" data-pavid="${this.model.get('id')}" data-action="setPavAsInherited" class="action lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
-                } else {
-                    this.$el.html('');
-                }
+                this.$el.html(this.getIcons());
             }
+        },
+
+        getIcons() {
+            let html = '';
+
+            html += this.inheritedIcon();
+
+            return html;
+        },
+
+        inheritedIcon() {
+            let html = '';
+
+            if (['enum', 'multiEnum'].includes(this.model.get('attributeType')) && this.model.get('language') !== 'main') {
+                return html;
+            }
+
+            let isPavValueInherited = this.model.get('isPavValueInherited');
+            if (isPavValueInherited === true) {
+                html = `<a href="javascript:" data-pavid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`;
+            } else if (isPavValueInherited === false) {
+                html = `<a href="javascript:" data-pavid="${this.model.get('id')}" data-action="setPavAsInherited" class="action lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`;
+            }
+
+            return html;
         },
 
     })
