@@ -6,8 +6,7 @@
   "require": {
     "atrocore/core": "~1.4.50",
     "atrocore/import-feeds-common": "~1.4.0",
-    "atrocore/export-feeds-common": "~1.3.0",
-    "atrocore/dam-common": "~1.3.0"
+    "atrocore/export-feeds-common": "~1.3.0"
   },
   "conflict": {
     "atrocore/product-variants": "*"
