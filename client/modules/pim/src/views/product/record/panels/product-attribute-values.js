@@ -638,8 +638,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         actionRefresh() {
-            Object.keys(this.nestedViews).forEach(view => this.clearView(view));
-            this.getMetadata().fetch();
             this.fetchCollectionGroups(() => {
                 this.reRender();
             });
