@@ -35,12 +35,16 @@ Espo.define('pim:views/product-attribute-value/fields/icons', 'views/fields/varc
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'list') {
-                let html = '';
-
-                html += this.inheritedIcon();
-
-                this.$el.html(html);
+                this.$el.html(this.getIcons());
             }
+        },
+
+        getIcons() {
+            let html = '';
+
+            html += this.inheritedIcon();
+
+            return html;
         },
 
         inheritedIcon() {
