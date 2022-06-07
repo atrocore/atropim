@@ -737,6 +737,15 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 if (additionalData) {
                     modelData.data = additionalData;
                 }
+
+                if (model.has('valueTranslateAutomatically')) {
+                    modelData['valueTranslateAutomatically'] = model.get('valueTranslateAutomatically');
+                }
+
+                if (model.has('valueTranslated')) {
+                    modelData['valueTranslated'] = model.get('valueTranslated');
+                }
+
                 data[model.id] = Espo.Utils.cloneDeep(modelData);
             });
             return data;
@@ -779,6 +788,18 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             if (typeof fetchedData.valueUnit !== 'undefined') {
                 fetchedData.data = {unit: fetchedData.valueUnit};
                 return _.isEqual(fetchedData.valueUnit, initialData.valueUnit) && _.isEqual(fetchedData.value, initialData.value);
+            }
+
+            if (typeof fetchedData.valueTranslateAutomatically !== 'undefined') {
+                if (_.isEqual(fetchedData.valueTranslateAutomatically, initialData.valueTranslateAutomatically) === false) {
+                    return false
+                }
+            }
+
+            if (typeof fetchedData.valueTranslated !== 'undefined') {
+                if (_.isEqual(fetchedData.valueTranslated, initialData.valueTranslated) === false) {
+                    return false
+                }
             }
 
             return _.isEqual(fetchedData.value, initialData.value);

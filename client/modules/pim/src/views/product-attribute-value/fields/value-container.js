@@ -159,6 +159,22 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     [this.name]: data[`${this.name}Id`]
                 });
             }
+
+            if (this.model.has('valueTranslateAutomatically')) {
+                data['valueTranslateAutomatically'] = this.model.get('valueTranslateAutomatically');
+                let $auto = this.$element.parent().find(`[data-parameter='auto']`);
+                if ($auto.length > 0) {
+                    data['valueTranslateAutomatically'] = $auto.is(":checked");
+                }
+            }
+
+            if (this.model.has('valueTranslated')) {
+                data['valueTranslated'] = this.model.get('valueTranslated');
+                let $translated = this.$element.parent().find(`[data-parameter='translated']`);
+                if ($translated.length > 0) {
+                    data['valueTranslated'] = $translated.is(":checked");
+                }
+            }
         },
 
         validate() {
