@@ -50,10 +50,10 @@ class Category extends AbstractRepository
 
         while (!empty($parent = $entity->get('categoryParent'))) {
             // push id
-            if (!$isName) {
+            if (!$isName || empty($parent->get('name'))) {
                 $data[] = $parent->get('id');
             } else {
-                $data[] = trim($parent->get('name'));
+                $data[] = trim((string)$parent->get('name'));
             }
 
             // to next category
