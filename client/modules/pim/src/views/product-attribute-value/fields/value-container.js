@@ -39,6 +39,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         setup() {
             this.name = this.options.name || this.defs.name;
+            let collection = this.model.collection || null;
 
             this.getModelFactory().create(this.model.name, model => {
                 this.updateDataForValueField();
@@ -46,7 +47,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 model = this.getConfiguratedValueModel(model);
                 this.model = model;
-                this.createValueFieldView();
+                this.createValueFieldView(collection);
             });
 
             this.listenTo(this.model, 'change:value', () => {
@@ -71,15 +72,16 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             return model;
         },
 
-        createValueFieldView() {
+        createValueFieldView(collection) {
             this.clearView('valueField');
 
             let type = this.model.get('attributeType') || 'base';
 
             this.createView('valueField', this.getValueFieldView(type), {
                 el: `${this.options.el} > .field[data-name="valueField"]`,
-                model: this.model,
                 name: this.name,
+                model: this.model,
+                collection: collection,
                 mode: this.mode,
                 prohibitedEmptyValue: !!this.model.get('prohibitedEmptyValue'),
                 inlineEditDisabled: true
