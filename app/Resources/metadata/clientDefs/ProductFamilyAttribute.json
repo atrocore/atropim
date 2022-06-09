@@ -1,11 +1,11 @@
 {
   "controller": "controllers/record",
+  "iconClass": "fas fa-list-alt",
   "boolFilterList": [
     "onlyMy"
   ],
   "kanbanViewMode": false,
   "color": null,
-  "iconClass": null,
   "modalViews": {
     "edit": "pim:views/product-family-attribute/modals/edit"
   },

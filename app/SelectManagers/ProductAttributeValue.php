@@ -94,7 +94,7 @@ class ProductAttributeValue extends AbstractSelectManager
         }
 
         $additionalSelectColumns = [
-            'typeValue'          => 'attribute.type_value',
+            'typeValue'          => 'a1.type_value',
             'attributeGroupId'   => 'ag1.id',
             'attributeGroupName' => 'ag1.name'
         ];
@@ -104,11 +104,12 @@ class ProductAttributeValue extends AbstractSelectManager
                 $lcLanguage = strtolower($language);
                 $camelCaseLanguage = ucfirst(Util::toCamelCase($lcLanguage));
 
-                $additionalSelectColumns["typeValue$camelCaseLanguage"] = "attribute.type_value_$lcLanguage";
+                $additionalSelectColumns["typeValue$camelCaseLanguage"] = "a1.type_value_$lcLanguage";
             }
         }
 
-        $result['customJoin'] .= " LEFT JOIN attribute_group AS ag1 ON ag1.id=attribute.attribute_group_id AND ag1.deleted=0";
+        $result['customJoin'] .= " LEFT JOIN attribute AS a1 ON a1.id=product_attribute_value.attribute_id AND a1.deleted=0";
+        $result['customJoin'] .= " LEFT JOIN attribute_group AS ag1 ON ag1.id=a1.attribute_group_id AND ag1.deleted=0";
 
         foreach ($additionalSelectColumns as $alias => $sql) {
             $result['additionalSelectColumns'][$sql] = $alias;
