@@ -48,6 +48,17 @@
 
 
     <div class="row">
+        {{#if overviewFilters.length}}
+        <div class="col-lg-12 overview-filters-container">
+            {{#each overviewFilters}}
+            <div class="cell filter-cell" data-name="{{this}}">
+                <div class="field" data-name="{{this}}">
+                    {{{var this ../this}}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
         {{#if isCatalogTreePanel}}<div class="catalog-tree-panel col-lg-3">{{{catalogTreePanel}}}</div>{{/if}}
         <div class="overview{{#if isWide}} col-md-12{{else}}{{#if isSmall}} col-md-7{{else}}{{#if isCatalogTreePanel}} col-md-8 col-lg-6{{else}} col-md-9{{/if}}{{/if}}{{/if}}">
             <div class="middle">{{{middle}}}</div>

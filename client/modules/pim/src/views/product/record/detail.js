@@ -139,6 +139,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 view.listenTo(view, 'tree-width-unset', function () {
                     if ($('.catalog-tree-panel').length) {
                         $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
+                        $('.overview-filters-container').css({'width': 'unset', 'marginLeft': 'unset'})
                         $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
                         $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
                     }
@@ -581,11 +582,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
                 const header = content.find('.page-header');
                 const btnContainer = content.find('.detail-button-container');
+                const filters = content.find('.overview-filters-container');
                 const overview = content.find('.overview');
                 const side = content.find('.side');
 
                 header.outerWidth(main.width() - width);
                 header.css('marginLeft', width + 'px');
+
+                filters.outerWidth(content.innerWidth() - width);
+                filters.css('marginLeft', width + 'px');
 
                 btnContainer.outerWidth(content.innerWidth() - width - 1);
                 btnContainer.addClass('detail-tree-button-container');
