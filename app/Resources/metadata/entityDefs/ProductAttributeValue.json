@@ -444,13 +444,13 @@
     },
     "ownerUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "requiredForMultilang": false,
       "view": "views/fields/owner-user"
     },
     "assignedUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "requiredForMultilang": false,
       "view": "views/fields/assigned-user"
     },
