@@ -26,14 +26,14 @@
     },
     "ownerUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "view": "views/fields/owner-user",
       "isMultilang": true,
       "requiredForMultilang": false
     },
     "assignedUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "view": "views/fields/assigned-user",
       "isMultilang": true,
       "requiredForMultilang": false
