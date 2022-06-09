@@ -96,9 +96,14 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
+    "ownerUser": {
+      "type": "link",
+      "required": false,
+      "view": "views/fields/owner-user"
+    },
     "assignedUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "view": "views/fields/assigned-user"
     },
     "teams": {
@@ -127,6 +132,10 @@
       "entity": "User"
     },
     "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "ownerUser": {
       "type": "belongsTo",
       "entity": "User"
     },
