@@ -633,6 +633,10 @@
   },
   "collection": {
     "sortBy": "attribute.sortOrder",
-    "asc": true
+    "asc": true,
+    "textFilterFields": [
+      "product.name",
+      "attribute.name"
+    ]
   }
 }

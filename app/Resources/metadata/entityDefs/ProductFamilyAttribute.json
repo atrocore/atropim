@@ -154,9 +154,9 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "name"
-    ],
-    "fullTextSearch": false
+      "productFamily.name",
+      "attribute.name"
+    ]
   },
   "indexes": {
     "name": {
