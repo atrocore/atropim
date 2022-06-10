@@ -11,7 +11,14 @@
     "productFamilyAttribute": "Атрибут продуктовой семьи",
     "value": "Значение",
     "scope": "Область действия",
-    "channel": "Канал"
+    "channel": "Канал",
+    "varcharValue" :  "Value: Varchar",
+    "textValue":  "Value: Text",
+    "intValue": "Value: Integer",
+    "floatValue": "Value: Float",
+    "dateValue": "Value: Date",
+    "datetimeValue": "Value: DateTime",
+    "boolValue": "Value: Boolean"
   },
   "links": {
     "productAttribute": "Атрибут продукта",

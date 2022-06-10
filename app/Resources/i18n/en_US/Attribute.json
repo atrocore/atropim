@@ -48,8 +48,8 @@
     "text": "Text",
     "unit": "Unit",
     "url": "Url",
-    "varchar": "Varchar",
-    "wysiwyg": "Wysiwyg",
+    "varchar": "String",
+    "wysiwyg": "HTML",
     "asset": "Asset"
   },
   "messages": {

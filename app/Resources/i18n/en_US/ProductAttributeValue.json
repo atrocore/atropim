@@ -11,7 +11,14 @@
     "productFamilyAttribute": "Product Family Attribute",
     "value": "Value",
     "scope": "Scope",
-    "channel": "Channel"
+    "channel": "Channel",
+    "varcharValue": "Value: String",
+    "textValue": "Value: Text",
+    "intValue": "Value: Integer",
+    "floatValue": "Value: Float",
+    "dateValue": "Value: Date",
+    "datetimeValue": "Value: DateTime",
+    "boolValue": "Value: Boolean"
   },
   "links": {
     "productAttribute": "Product attribute",
