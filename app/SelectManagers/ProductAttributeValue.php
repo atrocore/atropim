@@ -45,6 +45,7 @@ class ProductAttributeValue extends AbstractSelectManager
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         if (isset($params['where']) && is_array($params['where'])) {
+            $pushBoolAttributeType = false;
             foreach ($params['where'] as $k => $v) {
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
                     $onlyTabAttributes = true;
@@ -54,8 +55,19 @@ class ProductAttributeValue extends AbstractSelectManager
                     }
                     unset($params['where'][$k]);
                 }
+                if ($v['attribute'] === 'boolValue') {
+                    $pushBoolAttributeType = true;
+                }
             }
             $params['where'] = array_values($params['where']);
+
+            if ($pushBoolAttributeType) {
+                $params['where'][] = [
+                    "type"      => "equals",
+                    "attribute" => "attributeType",
+                    "value"     => "bool"
+                ];
+            }
         }
 
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
