@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-sort-amount-down",
+  "iconClass": "fas fa-list-alt",
   "boolFilterList": [
     "onlyMy",
     "notLinkedWithProduct",

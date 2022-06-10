@@ -522,7 +522,7 @@ class ProductAttributeValue extends Base
         }
 
         if ($entity->get('language') !== 'main') {
-            $entity->set('attributeName', $entity->get('attributeName') . ' › ' . $entity->get('language'));
+            $entity->set('attributeName', $entity->get('attributeName') . ' / ' . $entity->get('language'));
         }
 
         $entity->set('attributeAssetType', $attribute->get('assetType'));
