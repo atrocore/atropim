@@ -637,7 +637,16 @@
     "asc": true,
     "textFilterFields": [
       "product.name",
-      "attribute.name"
+      "attribute.name",
+      "scope",
+      "channel.name",
+      "varcharValue",
+      "textValue",
+      "intValue",
+      "floatValue",
+      "dateValue",
+      "datetimeValue",
+      "boolValue"
     ]
   }
 }

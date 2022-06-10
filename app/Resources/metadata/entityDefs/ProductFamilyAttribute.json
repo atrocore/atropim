@@ -155,7 +155,9 @@
     "asc": false,
     "textFilterFields": [
       "productFamily.name",
-      "attribute.name"
+      "attribute.name",
+      "scope",
+      "channel.name"
     ]
   },
   "indexes": {
