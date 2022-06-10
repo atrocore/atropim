@@ -40,7 +40,7 @@
     "bool": "Boolean",
     "currency": "Currency",
     "date": "Date",
-    "datetime": "DateTime",
+    "datetime": "Date-time",
     "enum": "List",
     "float": "Float",
     "int": "Integer",

@@ -17,7 +17,7 @@
     "intValue": "Value: Integer",
     "floatValue": "Value: Float",
     "dateValue": "Value: Date",
-    "datetimeValue": "Value: DateTime",
+    "datetimeValue": "Value: Date-time",
     "boolValue": "Value: Boolean"
   },
   "links": {
