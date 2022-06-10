@@ -3,7 +3,7 @@
     "assets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "importDisabled": false,
       "noLoad": true
     }

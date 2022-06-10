@@ -39,7 +39,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
     }

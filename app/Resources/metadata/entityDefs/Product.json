@@ -12,7 +12,7 @@
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
@@ -33,7 +33,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true,
       "importDisabled": true,
@@ -43,7 +43,7 @@
     "sku": {
       "type": "varchar",
       "trim": true,
-      "layoutMassUpdateDisabled": true
+      "massUpdateDisabled": true
     },
     "isActive": {
       "notNull": true,
@@ -59,7 +59,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true,
       "exportDisabled": true,
@@ -73,7 +73,7 @@
     "priceConverted": {
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true
     },
@@ -142,7 +142,7 @@
       "default": "Global",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "emHidden": true,
       "exportDisabled": true
@@ -158,19 +158,19 @@
     "children": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true
     },
     "parents": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true
     },
     "sortOrder": {
       "type": "int",
       "default": null,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true
     },
     "hierarchySortOrder": {
@@ -183,7 +183,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
@@ -193,7 +193,7 @@
       "type": "jsonObject",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "importDisabled": true
     },
     "catalog": {
@@ -204,7 +204,7 @@
     "channels": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "exportType": "text",
       "noLoad": true
     },
@@ -243,7 +243,7 @@
     "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "columns": {
         "pcSorting": "sorting"
@@ -256,7 +256,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true
     },
@@ -269,7 +269,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -280,7 +280,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -291,7 +291,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -326,7 +326,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
@@ -338,7 +338,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,

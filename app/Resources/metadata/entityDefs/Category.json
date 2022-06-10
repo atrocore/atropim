@@ -14,7 +14,7 @@
     },
     "code": {
       "type": "varchar",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "required": true,
       "trim": true,
       "emHidden": true,
@@ -64,7 +64,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true
     },
@@ -75,7 +75,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -87,7 +87,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -99,7 +99,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -107,20 +107,20 @@
     "categoryParent": {
       "type": "link",
       "view": "pim:views/category/fields/category-parent",
-      "layoutMassUpdateDisabled": true
+      "massUpdateDisabled": true
     },
     "categoryRoute": {
       "type": "text",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true
     },
     "categoryRouteName": {
       "type": "text",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true
     },
@@ -128,7 +128,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true,
       "importDisabled": true
@@ -139,7 +139,7 @@
       "default": false,
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -147,14 +147,14 @@
     "catalogs": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "importDisabled": true,
       "noLoad": true
     },
     "products": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "columns": {
         "pcSorting": "sorting"
@@ -167,7 +167,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -175,7 +175,7 @@
     "channels": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true
     }
   },

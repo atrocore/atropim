@@ -8,7 +8,7 @@
     },
     "code": {
       "type": "varchar",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "required": true,
       "trim": true,
       "emHidden": true,
@@ -62,7 +62,7 @@
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true
+      "massUpdateDisabled": true
     },
     "categories": {
       "type": "linkMultiple",
