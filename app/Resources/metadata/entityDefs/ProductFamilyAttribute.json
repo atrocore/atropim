@@ -26,7 +26,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
@@ -39,7 +39,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
@@ -52,7 +52,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
@@ -96,9 +96,14 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
+    "ownerUser": {
+      "type": "link",
+      "required": false,
+      "view": "views/fields/owner-user"
+    },
     "assignedUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "view": "views/fields/assigned-user"
     },
     "teams": {
@@ -130,6 +135,10 @@
       "type": "belongsTo",
       "entity": "User"
     },
+    "ownerUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
     "assignedUser": {
       "type": "belongsTo",
       "entity": "User"
@@ -145,9 +154,11 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "name"
-    ],
-    "fullTextSearch": false
+      "productFamily.name",
+      "attribute.name",
+      "scope",
+      "channel.name"
+    ]
   },
   "indexes": {
     "name": {

@@ -52,7 +52,7 @@
         },
         "products": {
             "type": "linkMultiple",
-            "layoutMassUpdateDisabled": true,
+            "massUpdateDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "exportDisabled": true

@@ -80,7 +80,8 @@
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notChildren"
-      ]
+      ],
+      "rowActionsView": "views/record/row-actions/relationship-no-remove"
     },
     "children": {
       "selectAction": "selectRelatedEntity",

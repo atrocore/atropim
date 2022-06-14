@@ -26,14 +26,14 @@
     },
     "ownerUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "view": "views/fields/owner-user",
       "isMultilang": true,
       "requiredForMultilang": false
     },
     "assignedUser": {
       "type": "link",
-      "required": true,
+      "required": false,
       "view": "views/fields/assigned-user",
       "isMultilang": true,
       "requiredForMultilang": false
@@ -55,7 +55,7 @@
     },
     "code": {
       "type": "varchar",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "required": true,
       "trim": true,
       "emHidden": true,
@@ -100,7 +100,7 @@
         "asset"
       ],
       "default": "text",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "isSorted": false,
       "audited": false,
       "readOnly": false,
@@ -114,7 +114,7 @@
       "default": null,
       "options": [],
       "view": "pim:views/attribute/fields/assetType",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "prohibitedEmptyValue": true
     },
     "isMultilang": {
@@ -124,7 +124,7 @@
     },
     "typeValue": {
       "type": "array",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "required": false,
       "noEmptyString": false,
       "audited": false,
@@ -140,7 +140,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
@@ -155,7 +155,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "noLoad": true
@@ -165,7 +165,7 @@
       "default": null,
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true
     },
     "isRequired": {
@@ -173,7 +173,7 @@
       "type": "bool",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true
     },
     "productFamilyAttributes": {
@@ -182,7 +182,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
     },
@@ -216,7 +216,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,

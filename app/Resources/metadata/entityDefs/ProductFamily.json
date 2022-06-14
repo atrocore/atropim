@@ -18,7 +18,7 @@
     },
     "code": {
       "type": "varchar",
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "required": true,
       "trim": true,
       "emHidden": true,
@@ -69,7 +69,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true,
       "exportDisabled": true
@@ -80,7 +80,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
     }

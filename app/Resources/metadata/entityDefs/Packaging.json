@@ -53,7 +53,7 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "filterDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "massUpdateDisabled": true,
             "exportDisabled": true
         }
     },

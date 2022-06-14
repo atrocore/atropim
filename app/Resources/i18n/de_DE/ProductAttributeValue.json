@@ -11,7 +11,14 @@
     "attribute": "Attribut",
     "language": "Sprache",
     "value": "Wert",
-    "scope": "Scope"
+    "scope": "Scope",
+    "varcharValue" :  "Wert: Einzeiliger Text",
+    "textValue":  "Wert: Text",
+    "intValue": "Wert: Ganzzahl",
+    "floatValue": "Wert: Float",
+    "dateValue": "Wert: Datum",
+    "datetimeValue": "Wert: Datum-Uhrzeit",
+    "boolValue": "Wert: Boolesch"
   },
   "links": {
     "product": "Produkt",

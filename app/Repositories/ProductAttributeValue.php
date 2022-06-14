@@ -69,7 +69,7 @@ class ProductAttributeValue extends AbstractRepository
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
     {
         $pav = $this->get($parentId);
-        if (empty($pav)) {
+        if (empty($pav) || empty($pav->get('productId'))) {
             return [];
         }
 

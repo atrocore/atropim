@@ -40,7 +40,7 @@
     "bool": "Boolean",
     "currency": "Currency",
     "date": "Date",
-    "datetime": "DateTime",
+    "datetime": "Date-time",
     "enum": "List",
     "float": "Float",
     "int": "Integer",
@@ -48,8 +48,8 @@
     "text": "Text",
     "unit": "Unit",
     "url": "Url",
-    "varchar": "Varchar",
-    "wysiwyg": "Wysiwyg",
+    "varchar": "String",
+    "wysiwyg": "HTML",
     "asset": "Asset"
   },
   "messages": {

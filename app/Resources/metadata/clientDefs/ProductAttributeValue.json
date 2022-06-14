@@ -1,5 +1,7 @@
 {
   "controller": "controllers/record",
+  "iconClass": "fas fa-list",
+  "createDisabled": true,
   "boolFilterList": [
     "onlyMy"
   ],
@@ -14,8 +16,7 @@
     "detail": "pim:views/product-attribute-value/record/detail",
     "edit": "pim:views/product-attribute-value/record/edit",
     "detailSmall": "pim:views/product-attribute-value/record/detail-small",
-    "editSmall": "pim:views/product-attribute-value/record/edit-small",
-    "list": "pim:views/product-attribute-value/record/list"
+    "editSmall": "pim:views/product-attribute-value/record/edit-small"
   },
   "dynamicLogic": {
     "fields": {
