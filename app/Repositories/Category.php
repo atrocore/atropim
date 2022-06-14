@@ -64,7 +64,7 @@ class Category extends AbstractRepository
             if (!$isName) {
                 $result = '|' . implode('|', array_reverse($data)) . '|';
             } else {
-                $result = implode(' > ', array_reverse($data));
+                $result = implode(' / ', array_reverse($data));
             }
         }
 
