@@ -51,14 +51,14 @@ class Product extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['data'];
 
-    public function getChildren(string $parentId): array
+    public function getChildren(string $parentId, bool $isTreePanel = false): array
     {
         $result = [];
 
         foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
             $hasChildren = !empty($record['childrenCount']);
 
-            if (empty($parentId) && !$hasChildren) {
+            if ($isTreePanel && empty($parentId) && !$hasChildren) {
                 continue 1;
             }
 
