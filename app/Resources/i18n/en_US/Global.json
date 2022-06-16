@@ -73,6 +73,7 @@
     "role": "Role"
   },
   "labels": {
+    "allChannels": "All Channels",
     "nonHierarchicalProducts": "Non-hierarchical products",
     "productHierarchies": "Product hierarchies",
     "lowestLevelProducts": "Lowest level products",

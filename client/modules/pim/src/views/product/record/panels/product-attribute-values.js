@@ -549,27 +549,40 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         applyOverviewFilters() {
             const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
             const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
+            const scopeFilter = this.getStorage().get('scopeFilter', 'OverviewFilter');
 
             $.each(this.getValueFields(), (name, fieldView) => {
-                let value = fieldView.model.get('value')
+                let value = fieldView.model.get('value');
+                let channelId = fieldView.model.get('channelId') || 'Global';
 
                 let hide = false;
 
-                // hide filled
-                if (!hide && !fieldFilter.includes('filled')) {
-                    hide = !this.isEmptyValue(value);
+                if (!fieldFilter.includes('allValues')) {
+                    // hide filled
+                    if (!hide && !fieldFilter.includes('filled')) {
+                        hide = !this.isEmptyValue(value);
+                    }
+
+                    // hide empty
+                    if (!hide && !fieldFilter.includes('empty')) {
+                        hide = this.isEmptyValue(value);
+                    }
                 }
 
-                // hide empty
-                if (!hide && !fieldFilter.includes('empty')) {
-                    hide = this.isEmptyValue(value);
+                if (!fieldFilter.includes('allChannels')) {
+                    // hide channel
+                    if (!hide && !scopeFilter.includes(channelId)) {
+                        hide = true;
+                    }
                 }
 
                 // for languages
-                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                    let attributeLanguage = fieldView.model.get('language') || 'main';
-                    if (!languageFilter.includes(attributeLanguage)) {
-                        hide = true;
+                if (!fieldFilter.includes('allLanguages')) {
+                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                        let attributeLanguage = fieldView.model.get('language') || 'main';
+                        if (!languageFilter.includes(attributeLanguage)) {
+                            hide = true;
+                        }
                     }
                 }
 

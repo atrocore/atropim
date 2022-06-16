@@ -86,6 +86,7 @@
     }
   },
   "labels": {
+    "allChannels": "Alle Kanäle",
     "nonHierarchicalProducts": "Unhierarchische Produkte",
     "productHierarchies": "Produkthierarchien",
     "lowestLevelProducts": "Produkte der niedrigsten Ebene",

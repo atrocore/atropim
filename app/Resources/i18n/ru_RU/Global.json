@@ -73,6 +73,7 @@
     "role": "Роль"
   },
   "labels": {
+    "allChannels": "Все каналы",
     "nonHierarchicalProducts": "Неиерархические продукты",
     "productHierarchies": "Продуктовые иерархии",
     "lowestLevelProducts": "Продукты наинизшего уровня",

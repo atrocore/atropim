@@ -99,6 +99,31 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
         },
 
+        getOverviewFiltersList() {
+            let result = Dep.prototype.getOverviewFiltersList.call(this);
+
+            this.ajaxGetRequest('Channel', {maxSize: 500}, {async: false}).then(data => {
+                let options = ["allChannels", "Global"];
+                let translatedOptions = {
+                    "allChannels": this.translate("allChannels"),
+                    "Global": this.translate("Global")
+                };
+                if (data.total > 0) {
+                    data.list.forEach(item => {
+                        options.push(item.id);
+                        translatedOptions[item.id] = item.name;
+                    });
+                }
+                result.push({
+                    name: "scopeFilter",
+                    options: options,
+                    translatedOptions: translatedOptions,
+                });
+            });
+
+            return result;
+        },
+
         isTreeAllowed() {
             let result = false;
 
@@ -218,7 +243,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.openCategoryNodes($tree, route, opened, () => {
                     this.selectCategoryNode(categories, view, opened);
                     let node = $tree.tree('getNodeById', category.id);
-                    if (node && node.element){
+                    if (node && node.element) {
                         $(node.element).addClass('jqtree-selected');
                     }
                 });
