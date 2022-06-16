@@ -16,7 +16,7 @@
           "label": "",
           "link": "#Product/list",
           "title": "List",
-          "iconHtml": "<span class=\"fa fa-list\"></span>"
+          "iconHtml": "<span class=\"fa fa-th-list\"></span>"
         },
         {
           "acl": "read",
@@ -36,7 +36,7 @@
           "label": "",
           "link": "#Product/list",
           "title": "List",
-          "iconHtml": "<span class=\"fa fa-list\"></span>"
+          "iconHtml": "<span class=\"fa fa-th-list\"></span>"
         },
         {
           "acl": "read",
