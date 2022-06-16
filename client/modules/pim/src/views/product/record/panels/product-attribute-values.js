@@ -569,7 +569,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     }
                 }
 
-                if (!fieldFilter.includes('allChannels')) {
+                if (!scopeFilter.includes('allChannels')) {
                     // hide channel
                     if (!hide && !scopeFilter.includes(channelId)) {
                         hide = true;
@@ -577,7 +577,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
 
                 // for languages
-                if (!fieldFilter.includes('allLanguages')) {
+                if (!languageFilter.includes('allLanguages')) {
                     if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
                         let attributeLanguage = fieldView.model.get('language') || 'main';
                         if (!languageFilter.includes(attributeLanguage)) {
