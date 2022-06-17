@@ -4,7 +4,7 @@
   ],
   "relationshipPanels": {
     "assets": {
-      "layoutName": "listSmallForProduct"
+      "recordListView": "pim:views/asset/record/list-in-product"
     }
   },
   "menu": {
