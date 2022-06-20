@@ -1,9 +1,7 @@
 {
   "fields": {
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
-    "productAttributes": "Produktattribute",
-    "productAttributeValues": "Werte des Produktattributes",
-    "productFamilyAttributes": "Attribute der Produktfamilie",
+    "productAttributeValues": "Attributwerte",
     "products": "Produkte",
     "typeValue": "Werttyp",
     "type": "Typ",
@@ -27,10 +25,7 @@
   "links": {
     "attributeTab": "Attributtab",
     "products": "Produkte",
-    "productAttributes": "Produktattribute",
-    "productAttributeValues": "Werte der Produktattribute",
-    "productFamilyAttributes": "Attribute der Produktfamilie",
-    "channelProductAttributeValues": "Produktattributwerte für Kanal",
+    "productAttributeValues": "Attributwerte",
     "attributeGroup": "Attributgruppe",
     "productFamilies": "Produktfamilien"
   },

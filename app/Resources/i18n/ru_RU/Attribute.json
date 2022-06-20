@@ -1,15 +1,13 @@
 {
   "fields": {
     "attributeGroup": "Группа атрибутов",
-    "productAttributes": "Атрибуты продукта",
     "typeValue": "Значения",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Название атрибута",
     "products": "Продукты",
-    "productAttributeValues": "Значения атрибута продукта",
+    "productAttributeValues": "Значения атрибутов",
     "isRequired": "Обязательно",
-    "productFamilyAttributes": "Атрибуты продуктовой семьи",
     "isMultilang": "Многоязычность",
     "sortOrder": "Порядок сортировки",
     "assetType": "Тип ассета",
@@ -24,11 +22,9 @@
   },
   "links": {
     "attributeGroup": "Группа атрибутов",
-    "productAttributes": "Атрибуты продукта",
     "products": "Продукты",
-    "productAttributeValues": "Значения атрибута продукта",
-    "productFamilies": "Продуктовые семьи",
-    "productFamilyAttributes": "Атрибуты продуктовой семьи"
+    "productAttributeValues": "Значения атрибутов",
+    "productFamilies": "Продуктовые семьи"
   },
   "labels": {
     "Create Attribute": "Создать атрибут",
