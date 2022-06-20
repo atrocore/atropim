@@ -557,8 +557,12 @@ class ProductAttributeValue extends Base
         $entity->clear('textValue');
     }
 
-    private function prepareInputValue(\stdClass $data): void
+    private function prepareInputValue($data): void
     {
+        if (!is_object($data)) {
+            return;
+        }
+
         if (property_exists($data, 'valueId') && !empty($data->valueId)) {
             $data->value = $data->valueId;
         }
