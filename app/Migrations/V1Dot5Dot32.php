@@ -41,6 +41,25 @@ class V1Dot5Dot32 extends Base
     {
         $this->exec("ALTER TABLE `associated_product` DROP both_directions");
         $this->exec("ALTER TABLE `associated_product` DROP `name`");
+
+        $this->exec("DELETE FROM `associated_product` WHERE deleted=1");
+
+        $unique = [];
+        foreach ($this->getPDO()->query("SELECT * FROM `associated_product` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+            if (empty($record['association_id']) || empty($record['main_product_id']) || empty($record['related_product_id'])) {
+                $this->exec("DELETE FROM `associated_product` WHERE id='{$record['id']}'");
+                continue 1;
+            }
+
+            $key = "{$record['association_id']}_{$record['main_product_id']}_{$record['related_product_id']}";
+            if (in_array($key, $unique)) {
+                $this->exec("DELETE FROM `associated_product` WHERE id='{$record['id']}'");
+                continue 1;
+            }
+
+            $unique[] = $key;
+        }
+
         $this->exec("CREATE UNIQUE INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product` (association_id, main_product_id, related_product_id, deleted)");
     }
 
