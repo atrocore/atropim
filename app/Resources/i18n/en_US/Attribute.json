@@ -2,15 +2,13 @@
   "fields": {
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
-    "productAttributes": "Product attributes",
     "typeValue": "Values",
     "type": "Attribute Type",
     "code": "Code",
     "name": "Attribute Name",
     "products": "Products",
-    "productAttributeValues": "Product Attribute Values",
+    "productAttributeValues": "Attribute Values",
     "isRequired": "Required",
-    "productFamilyAttributes": "Product Family Attributes",
     "isMultilang": "Multilingual",
     "sortOrder": "Sort Order",
     "assetType": "Asset Type",
@@ -26,11 +24,9 @@
   "links": {
     "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",
-    "productAttributes": "Product attributes",
     "products": "Products",
-    "productAttributeValues": "Product Attribute Values",
-    "productFamilies": "Product families",
-    "productFamilyAttributes": "Product Family Attributes"
+    "productAttributeValues": "Attribute Values",
+    "productFamilies": "Product families"
   },
   "labels": {
     "Create Attribute": "Create Attribute",
