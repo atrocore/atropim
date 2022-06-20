@@ -36,26 +36,22 @@ namespace Pim\Repositories;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-/**
- * Class AssociatedProduct
- */
 class AssociatedProduct extends Base
 {
-    /**
-     * @inheritDoc
-     */
-    public function beforeSave(Entity $entity, array $options = [])
-    {
-        parent::beforeSave($entity, $options);
-
-        if (empty($entity->get('name'))) {
-            $entity->set('name', $entity->get('associationName'));
-        }
-    }
-
     public function removeByProductId(string $productId): void
     {
         $productId = $this->getPDO()->quote($productId);
         $this->getPDO()->exec("DELETE FROM `associated_product` WHERE main_product_id=$productId OR related_product_id=$productId");
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->beforeRemove($entity, $options);
+        $result = $this->deleteFromDb($entity->get('id'));
+        if ($result) {
+            $this->afterRemove($entity, $options);
+        }
+
+        return $result;
     }
 }

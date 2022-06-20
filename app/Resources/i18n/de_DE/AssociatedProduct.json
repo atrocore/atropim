@@ -17,8 +17,5 @@
   },
   "labels": {
     "Create AssociatedProduct": "Assoziiertes Produkt erstellen"
-  },
-  "exceptions": {
-    "isExistsAssociation": "Die Assoziation existiert bereits"
   }
 }

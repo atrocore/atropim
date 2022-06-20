@@ -41,12 +41,14 @@ class V1Dot5Dot32 extends Base
     {
         $this->exec("ALTER TABLE `associated_product` DROP both_directions");
         $this->exec("ALTER TABLE `associated_product` DROP `name`");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product` (association_id, main_product_id, related_product_id, deleted)");
     }
 
     public function down(): void
     {
         $this->exec("ALTER TABLE `associated_product` ADD `name` VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `associated_product` ADD both_directions TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("DROP INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product`");
     }
 
     protected function exec(string $query): void

@@ -101,5 +101,13 @@
       "entity": "Association",
       "audited": false
     }
+  },
+  "uniqueIndexes": {
+    "unique_association": [
+      "association_id",
+      "main_product_id",
+      "related_product_id",
+      "deleted"
+    ]
   }
 }

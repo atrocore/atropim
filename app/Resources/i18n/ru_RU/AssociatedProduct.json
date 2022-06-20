@@ -16,8 +16,5 @@
   },
   "labels": {
     "Create AssociatedProduct": "Создать связанный продукт"
-  },
-  "exceptions": {
-    "isExistsAssociation": "Эта связь уже существует"
   }
 }
