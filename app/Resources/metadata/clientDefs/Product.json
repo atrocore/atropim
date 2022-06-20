@@ -137,7 +137,8 @@
       "select": false,
       "aclScopesList": [
         "AssociatedProduct"
-      ]
+      ],
+      "layout": "listForAssociatedProductsInProduct"
     }
   },
   "dynamicLogic": {

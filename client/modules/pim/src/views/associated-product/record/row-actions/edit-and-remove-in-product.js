@@ -41,8 +41,8 @@ Espo.define('pim:views/associated-product/record/row-actions/edit-and-remove-in-
                         id: this.model.id
                     }
                 }, {
-                    action: 'quickRemove',
-                    label: 'Remove',
+                    action: 'removeRelated',
+                    label: 'unlinkAndDelete',
                     data: {
                         id: this.model.id
                     }
