@@ -35,38 +35,23 @@ namespace Pim\Migrations;
 
 use Treo\Core\Migration\Base;
 
-/**
- * Migration class for version 1.2.11
- */
-class V1Dot2Dot11 extends Base
+class V1Dot5Dot32 extends Base
 {
-    /**
-     * @inheritDoc
-     */
     public function up(): void
     {
-        $this->execute("ALTER TABLE `attribute` ADD prohibited_empty_value TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("ALTER TABLE `attribute` ADD enum_default VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("ALTER TABLE `associated_product` DROP both_directions");
+        $this->exec("ALTER TABLE `associated_product` DROP `name`");
     }
 
-    /**
-     * @inheritDoc
-     */
     public function down(): void
     {
-        $this->execute("ALTER TABLE `attribute` DROP prohibited_empty_value");
-        $this->execute("ALTER TABLE `attribute` DROP enum_default");
     }
 
-    /**
-     * @param string $sql
-     */
-    protected function execute(string $sql)
+    protected function exec(string $query): void
     {
         try {
-            $this->getPDO()->exec($sql);
+            $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
-            // ignore all
         }
     }
 }
