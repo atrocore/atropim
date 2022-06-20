@@ -60,7 +60,9 @@ class V1Dot5Dot32 extends Base
             $unique[] = $key;
         }
 
-        $this->exec("CREATE UNIQUE INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product` (association_id, main_product_id, related_product_id, deleted)");
+        $this->getPDO()->exec(
+            "CREATE UNIQUE INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product` (association_id, main_product_id, related_product_id, deleted)"
+        );
     }
 
     public function down(): void
