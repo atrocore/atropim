@@ -34,6 +34,14 @@ Espo.define('pim:views/product/record/panels/associated-main-product', 'views/re
         setup() {
             this.defs.create = this.getAcl().check('AssociatedProduct', 'create') && !this.defs.readOnly;
             Dep.prototype.setup.call(this);
+
+            if (Array.isArray(this.actionList)) {
+                let index = this.actionList.findIndex(e => e.action === 'unlinkAllRelated');
+
+                if (index !== -1) {
+                    this.actionList.splice(index, 1);
+                }
+            }
         }
 
     })

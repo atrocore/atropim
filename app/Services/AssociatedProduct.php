@@ -34,6 +34,7 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Templates\Services\Base;
+use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
 /**
@@ -45,16 +46,36 @@ class AssociatedProduct extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $mainProduct->get('image'))) {
+        if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
             $entity->set('mainProductImageId', $image->get('id'));
             $entity->set('mainProductImageName', $image->get('name'));
             $entity->set('mainProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
         }
 
-        if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $relatedProduct->get('image'))) {
+        if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $this->getMainImage($relatedProduct))) {
             $entity->set('relatedProductImageId', $image->get('id'));
             $entity->set('relatedProductImageName', $image->get('name'));
             $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
         }
+    }
+
+    /**
+     * @param \Pim\Entities\Product $product
+     *
+     * @return Entity|null
+     */
+    protected function getMainImage(\Pim\Entities\Product $product): ?Attachment
+    {
+        if ($product->hasRelation('assets')) {
+            $assets = $product->get('assets');
+
+            foreach ($assets as $asset) {
+                if ($asset->get('isMainImage')) {
+                    return $asset->get('file');
+                }
+            }
+        }
+
+        return null;
     }
 }
