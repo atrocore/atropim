@@ -45,6 +45,8 @@ class V1Dot5Dot32 extends Base
 
     public function down(): void
     {
+        $this->exec("ALTER TABLE `associated_product` ADD `name` VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("ALTER TABLE `associated_product` ADD both_directions TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
     }
 
     protected function exec(string $query): void
