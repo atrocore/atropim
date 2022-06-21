@@ -411,6 +411,7 @@ class Product extends Hierarchy
                 $item = $row->toArray();
                 $item['id'] = Util::generateId();
                 $item['mainProductId'] = $product->get('id');
+                $item['backwardAssociatedProductId'] = null;
 
                 // prepare entity
                 $entity = $this->getEntityManager()->getEntity('AssociatedProduct');
@@ -437,6 +438,7 @@ class Product extends Hierarchy
                 $item = $row->toArray();
                 $item['id'] = Util::generateId();
                 $item['relatedProductId'] = $product->get('id');
+                $item['backwardAssociatedProductId'] = null;
 
                 // prepare entity
                 $entity = $this->getEntityManager()->getEntity('AssociatedProduct');
