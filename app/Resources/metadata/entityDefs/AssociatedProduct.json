@@ -79,20 +79,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "ownerUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
     }
   },
   "links": {
@@ -126,20 +112,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "ownerUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "assignedUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "teams": {
-      "type": "hasMany",
-      "entity": "Team",
-      "relationName": "EntityTeam",
-      "layoutRelationshipsDisabled": true
     }
   },
   "uniqueIndexes": {

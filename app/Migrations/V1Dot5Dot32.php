@@ -68,6 +68,9 @@ class V1Dot5Dot32 extends Base
         $this->exec("ALTER TABLE `associated_product` DROP backward_association_id");
         $this->exec("ALTER TABLE `associated_product` ADD backward_associated_product_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("CREATE INDEX IDX_BACKWARD_ASSOCIATED_PRODUC ON `associated_product` (backward_associated_product_id)");
+        $this->exec("DROP INDEX IDX_ASSIGNED_USER_ID ON `associated_product`");
+        $this->exec("DROP INDEX IDX_OWNER_USER_ID ON `associated_product`");
+        $this->exec("ALTER TABLE `associated_product` DROP owner_user_id, DROP assigned_user_id");
     }
 
     public function down(): void
@@ -79,6 +82,9 @@ class V1Dot5Dot32 extends Base
         $this->exec("ALTER TABLE `associated_product` DROP backward_associated_product_id");
         $this->exec("ALTER TABLE `associated_product` ADD backward_association_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("CREATE INDEX IDX_BACKWARD_ASSOCIATION_ID ON `associated_product` (backward_association_id)");
+        $this->exec("ALTER TABLE `associated_product` ADD owner_user_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD assigned_user_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("CREATE INDEX IDX_OWNER_USER_ID ON `associated_product` (owner_user_id)");
+        $this->exec("CREATE INDEX IDX_ASSIGNED_USER_ID ON `associated_product` (assigned_user_id)");
     }
 
     protected function exec(string $query): void
