@@ -59,10 +59,6 @@ class AssociationEntity extends AbstractEntityListener
         if (empty($entity->get('isActive')) && $this->hasProduct($entity, true)) {
             throw new BadRequest($this->translate('youCanNotDeactivateAssociationWithActiveProducts', 'exceptions', 'Association'));
         }
-
-        if ($entity->isAttributeChanged('backwardAssociationId')) {
-            $this->updateBackwardAssociation($entity);
-        }
     }
 
     /**
@@ -77,32 +73,6 @@ class AssociationEntity extends AbstractEntityListener
 
         if ($this->hasProduct($entity)) {
             throw new BadRequest($this->translate('associationIsLinkedWithProducts', 'exceptions', 'Association'));
-        }
-    }
-
-    /**
-     * @param Entity $entity
-     */
-    protected function updateBackwardAssociation(Entity $entity)
-    {
-        if (!empty($entity->skipUpdateBackwardAssociation)) {
-            return;
-        }
-
-        // unlink old
-        if (!empty($entity->getFetched('backwardAssociationId'))) {
-            $association = $this->getEntityManager()->getEntity('Association', $entity->getFetched('backwardAssociationId'));
-            $association->set('backwardAssociationId', null);
-            $association->skipUpdateBackwardAssociation = 1;
-            $this->getEntityManager()->saveEntity($association);
-        }
-
-        // link
-        if (!empty($entity->get('backwardAssociationId'))) {
-            $association = $this->getEntityManager()->getEntity('Association', $entity->get('backwardAssociationId'));
-            $association->set('backwardAssociationId', $entity->get('id'));
-            $association->skipUpdateBackwardAssociation = 1;
-            $this->getEntityManager()->saveEntity($association);
         }
     }
 
