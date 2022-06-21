@@ -54,18 +54,13 @@ class AssociatedProduct extends Base
 
         try {
             $entity = parent::createEntity($attachment);
-
             if (property_exists($attachment, 'backwardAssociationId')) {
-                $backwardAttachment = new \stdClass();
-                $backwardAttachment->mainProductId = $attachment->relatedProductId;
-                $backwardAttachment->mainProductName = $attachment->relatedProductName;
-                $backwardAttachment->relatedProductId = $attachment->mainProductId;
-                $backwardAttachment->relatedProductName = $attachment->mainProductName;
-                $backwardAttachment->associationId = $attachment->backwardAssociationId;
-                $backwardAttachment->associationName = $attachment->backwardAssociationName;
-                $backwardAttachment->backwardAssociatedProductId = $entity->get('id');
-
                 try {
+                    $backwardAttachment = new \stdClass();
+                    $backwardAttachment->mainProductId = $attachment->relatedProductId;
+                    $backwardAttachment->relatedProductId = $attachment->mainProductId;
+                    $backwardAttachment->associationId = $attachment->backwardAssociationId;
+                    $backwardAttachment->backwardAssociatedProductId = $entity->get('id');
                     $backwardEntity = parent::createEntity($backwardAttachment);
                     $entity->set('backwardAssociatedProductId', $backwardEntity->get('id'));
                     $this->getRepository()->save($entity, ['skipAll' => true]);
@@ -90,12 +85,58 @@ class AssociatedProduct extends Base
 
     public function updateEntity($id, $data)
     {
-        return parent::updateEntity($id, $data);
+        $pdo = $this->getEntityManager()->getPDO();
+
+        if (!$pdo->inTransaction()) {
+            $pdo->beginTransaction();
+            $inTransaction = true;
+        }
+
+        try {
+            $entity = parent::updateEntity($id, $data);
+            try {
+                $this->updateBackwardAssociation($entity, $data);
+            } catch (\Throwable $e) {
+                $classname = get_class($e);
+                throw new $classname(sprintf($this->getInjection('language')->translate('backwardAssociationError', 'exceptions', 'Product'), $e->getMessage()));
+            }
+
+            if (!empty($inTransaction)) {
+                $pdo->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!empty($inTransaction)) {
+                $pdo->rollBack();
+            }
+            throw $e;
+        }
+
+        return $entity;
     }
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
+
+        $this->prepareBackwardAssociation($entity);
+
+        if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
+            $entity->set('mainProductImageId', $image->get('id'));
+            $entity->set('mainProductImageName', $image->get('name'));
+            $entity->set('mainProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+        }
+
+        if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $this->getMainImage($relatedProduct))) {
+            $entity->set('relatedProductImageId', $image->get('id'));
+            $entity->set('relatedProductImageName', $image->get('name'));
+            $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+        }
+    }
+
+    public function prepareBackwardAssociation(Entity $entity): void
+    {
+        $entity->set('backwardAssociationId', null);
+        $entity->set('backwardAssociationName', null);
 
         if (!empty($entity->get('backwardAssociatedProductId'))) {
             $backwardAssociatedProduct = $this->getRepository()
@@ -108,17 +149,29 @@ class AssociatedProduct extends Base
                 $entity->set('backwardAssociationName', $backwardAssociatedProduct->get('associationName'));
             }
         }
+    }
 
-        if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
-            $entity->set('mainProductImageId', $image->get('id'));
-            $entity->set('mainProductImageName', $image->get('name'));
-            $entity->set('mainProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
-        }
+    public function updateBackwardAssociation(Entity $entity, \stdClass $data): void
+    {
+        if (property_exists($data, 'backwardAssociationId') && !Entity::areValuesEqual('varchar', $entity->get('backwardAssociationId'), $data->backwardAssociationId)) {
+            // delete backward association if it needs
+            if (!empty($entity->get('backwardAssociationId')) && empty($data->backwardAssociationId)) {
+                $this->getRepository()->deleteFromDb($entity->get('backwardAssociatedProductId'));
+                $entity->set('backwardAssociatedProductId', null);
+                $this->getRepository()->save($entity, ['skipAll' => true]);
+            }
 
-        if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $this->getMainImage($relatedProduct))) {
-            $entity->set('relatedProductImageId', $image->get('id'));
-            $entity->set('relatedProductImageName', $image->get('name'));
-            $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+            // create backward association if it needs
+            if (empty($entity->get('backwardAssociationId')) && !empty($data->backwardAssociationId)) {
+                $backwardAttachment = new \stdClass();
+                $backwardAttachment->mainProductId = $entity->get('relatedProductId');
+                $backwardAttachment->relatedProductId = $entity->get('mainProductId');
+                $backwardAttachment->associationId = $data->backwardAssociationId;
+                $backwardAttachment->backwardAssociatedProductId = $entity->get('id');
+                $backwardEntity = parent::createEntity($backwardAttachment);
+                $entity->set('backwardAssociatedProductId', $backwardEntity->get('id'));
+                $this->getRepository()->save($entity, ['skipAll' => true]);
+            }
         }
     }
 
@@ -157,5 +210,12 @@ class AssociatedProduct extends Base
         }
 
         return null;
+    }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        $this->prepareBackwardAssociation($entity);
+
+        return parent::isEntityUpdated($entity, $data);
     }
 }
