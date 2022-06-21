@@ -33,15 +33,43 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
-/**
- * AssociatedProduct service
- */
 class AssociatedProduct extends Base
 {
+    public function createEntity($attachment)
+    {
+        $result = parent::createEntity($attachment);
+
+        if (property_exists($attachment, 'backwardAssociationId')) {
+            $backwardAttachment = new \stdClass();
+            $backwardAttachment->mainProductId = $attachment->relatedProductId;
+            $backwardAttachment->mainProductName = $attachment->relatedProductName;
+            $backwardAttachment->relatedProductId = $attachment->mainProductId;
+            $backwardAttachment->relatedProductName = $attachment->mainProductName;
+            $backwardAttachment->associationId = $attachment->backwardAssociationId;
+            $backwardAttachment->associationName = $attachment->backwardAssociationName;
+            $backwardAttachment->backwardAssociationId = $attachment->associationId;
+            $backwardAttachment->backwardAssociationName = $attachment->associationName;
+
+            try {
+                parent::createEntity($backwardAttachment);
+            } catch (\Throwable $e) {
+                // ignore errors
+            }
+        }
+
+        return $result;
+    }
+
+    public function updateEntity($id, $data)
+    {
+        return parent::updateEntity($id, $data);
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -57,6 +85,23 @@ class AssociatedProduct extends Base
             $entity->set('relatedProductImageName', $image->get('name'));
             $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
         }
+    }
+
+    protected function storeEntity(Entity $entity)
+    {
+        try {
+            $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
+        } catch (\PDOException $e) {
+            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
+                $message = $e->getMessage();
+                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '(.*)'/", $message, $matches) && !empty($matches[2])) {
+                    throw new BadRequest($this->getInjection('language')->translate('productAssociationAlreadyExists', 'exceptions', 'Product'));
+                }
+            }
+            throw $e;
+        }
+
+        return $result;
     }
 
     /**

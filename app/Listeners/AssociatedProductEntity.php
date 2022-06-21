@@ -57,12 +57,6 @@ class AssociatedProductEntity extends AbstractListener
         if ($entity->get('mainProductId') == $entity->get('relatedProductId')) {
             throw new BadRequest($this->exception('itselfAssociation'));
         }
-
-        if ($entity->isNew()) {
-            if (!$this->isUnique($entity)) {
-                throw new BadRequest($this->exception('productAssociationAlreadyExists'));
-            }
-        }
     }
 
     /**
@@ -93,29 +87,6 @@ class AssociatedProductEntity extends AbstractListener
                 }
             }
         }
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    protected function isUnique(Entity $entity): bool
-    {
-        $exist = $this
-            ->getEntityManager()
-            ->getRepository('AssociatedProduct')
-            ->select(['id'])
-            ->where(
-                [
-                    'associationId'    => $entity->get('associationId'),
-                    'mainProductId'    => $entity->get('mainProductId'),
-                    'relatedProductId' => $entity->get('relatedProductId')
-                ]
-            )
-            ->findOne();
-
-        return empty($exist);
     }
 
     /**

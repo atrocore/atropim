@@ -31,11 +31,14 @@
 Espo.define('pim:views/associated-product/fields/association', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
-        selectBoolFilterList:  ['onlyActive', 'notUsedAssociations'],
+        selectBoolFilterList: ['onlyActive', 'notUsedAssociations'],
 
         boolFilterData: {
             notUsedAssociations() {
-                return {mainProductId: this.model.get('mainProductId'), relatedProductId: this.model.get('relatedProductId')};
+                return {
+                    mainProductId: this.model.get('mainProductId'),
+                    relatedProductId: this.model.get('relatedProductId')
+                };
             }
         },
 
@@ -44,7 +47,6 @@ Espo.define('pim:views/associated-product/fields/association', 'treo-core:views/
 
             if (model.get('backwardAssociationId') && !this.model.get('backwardAssociationId')) {
                 this.model.set({
-                    bothDirections: true,
                     backwardAssociationId: model.get('backwardAssociationId'),
                     backwardAssociationName: model.get('backwardAssociationName')
                 });

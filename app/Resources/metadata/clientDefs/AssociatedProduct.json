@@ -17,19 +17,5 @@
   },
   "recordViews": {
     "list": "pim:views/record/list"
-  },
-  "dynamicLogic": {
-    "fields": {
-      "association": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
-    }
   }
 }
