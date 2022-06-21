@@ -64,7 +64,10 @@ class V1Dot5Dot32 extends Base
             "CREATE UNIQUE INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product` (association_id, main_product_id, related_product_id, deleted)"
         );
 
-        $this->exec("UPDATE `associated_product` SET backward_association_id=NULL WHERE deleted=0");
+        $this->exec("DROP INDEX IDX_BACKWARD_ASSOCIATION_ID ON `associated_product`");
+        $this->exec("ALTER TABLE `associated_product` DROP backward_association_id");
+        $this->exec("ALTER TABLE `associated_product` ADD backward_associated_product_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("CREATE INDEX IDX_BACKWARD_ASSOCIATED_PRODUC ON `associated_product` (backward_associated_product_id)");
     }
 
     public function down(): void
@@ -72,6 +75,10 @@ class V1Dot5Dot32 extends Base
         $this->exec("ALTER TABLE `associated_product` ADD `name` VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("ALTER TABLE `associated_product` ADD both_directions TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("DROP INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product`");
+        $this->exec("DROP INDEX IDX_BACKWARD_ASSOCIATED_PRODUC ON `associated_product`");
+        $this->exec("ALTER TABLE `associated_product` DROP backward_associated_product_id");
+        $this->exec("ALTER TABLE `associated_product` ADD backward_association_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("CREATE INDEX IDX_BACKWARD_ASSOCIATION_ID ON `associated_product` (backward_association_id)");
     }
 
     protected function exec(string $query): void

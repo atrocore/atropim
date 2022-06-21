@@ -74,6 +74,7 @@ class AssociatedProduct extends Base
     {
         parent::prepareEntityForOutput($entity);
 
+        $entity->set('name', $entity->get('associationName'));
         if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
             $entity->set('mainProductImageId', $image->get('id'));
             $entity->set('mainProductImageName', $image->get('name'));
