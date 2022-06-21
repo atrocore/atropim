@@ -1,24 +1,20 @@
 {
-    "fields": {
-        "association": "Association",
-        "bothDirections": "Both Directions",
-        "backwardAssociation": "Backward Association",
-        "mainProduct": "Main Product",
-        "mainProductImage": "Main Product Image",
-        "relatedProduct": "Related Product",
-        "relatedProductImage": "Related Product Image"
-    },
-    "links": {
-        "association": "Association",
-        "mainProduct": "Main Product",
-        "mainProductImage": "Main Product Image",
-        "relatedProduct": "Related Product",
-        "relatedProductImage": "Related Product Image"
-    },
-    "labels": {
-        "Create AssociatedProduct": "Create Associated Product"
-    },
-    "exceptions": {
-        "isExistsAssociation": "This association already exists"
-    }
+  "fields": {
+    "association": "Association",
+    "backwardAssociation": "Backward Association",
+    "mainProduct": "Main Product",
+    "mainProductImage": "Main Product Image",
+    "relatedProduct": "Related Product",
+    "relatedProductImage": "Related Product Image"
+  },
+  "links": {
+    "association": "Association",
+    "mainProduct": "Main Product",
+    "mainProductImage": "Main Product Image",
+    "relatedProduct": "Related Product",
+    "relatedProductImage": "Related Product Image"
+  },
+  "labels": {
+    "Create AssociatedProduct": "Create Associated Product"
+  }
 }

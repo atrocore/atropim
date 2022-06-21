@@ -3,7 +3,6 @@
     "association": "Assoziation",
     "relatedProduct": "Verwandtes Produkt",
     "mainProduct": "Hauptprodukt",
-    "bothDirections": "Beide Richtungen",
     "backwardAssociation": "Umgekehrte Assoziation",
     "relatedProductImage": "Assoziiertes Produktbild",
     "mainProductImage": "Hauptproduktbild"
@@ -18,8 +17,5 @@
   },
   "labels": {
     "Create AssociatedProduct": "Assoziiertes Produkt erstellen"
-  },
-  "exceptions": {
-    "isExistsAssociation": "Die Assoziation existiert bereits"
   }
 }

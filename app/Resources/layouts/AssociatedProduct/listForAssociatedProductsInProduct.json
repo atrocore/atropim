@@ -1,6 +1,7 @@
 [
   {
-    "name": "relatedProductImage"
+    "name": "relatedProductImage",
+    "width": 20
   },
   {
     "name": "association"
