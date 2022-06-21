@@ -97,8 +97,7 @@
     },
     "backwardAssociation": {
       "type": "belongsTo",
-      "foreign": "associatedProducts",
-      "entity": "Association",
+      "entity": "AssociatedProduct",
       "audited": false
     }
   },

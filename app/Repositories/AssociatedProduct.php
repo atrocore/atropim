@@ -33,11 +33,21 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 class AssociatedProduct extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->get('mainProductId') == $entity->get('relatedProductId')) {
+            throw new BadRequest($this->getInjection('language')->translate('itselfAssociation', 'exceptions', 'Product'));
+        }
+    }
+
     public function removeByProductId(string $productId): void
     {
         $productId = $this->getPDO()->quote($productId);
@@ -46,6 +56,23 @@ class AssociatedProduct extends Base
 
     public function remove(Entity $entity, array $options = [])
     {
+//        /** @var string $backwardAssociationId */
+//        $backwardAssociationId = $associatedProduct->get('backwardAssociationId');
+//
+//        if (!empty($backwardAssociationId)) {
+//            $backwards = $associatedProduct->get('backwardAssociation')->get('associatedProducts');
+//            if ($backwards->count() > 0) {
+//                foreach ($backwards as $backward) {
+//                    if ($backward->get('mainProductId') == $associatedProduct->get('relatedProductId')
+//                        && $backward->get('relatedProductId') == $associatedProduct->get('mainProductId')
+//                        && $backward->get('associationId') == $backwardAssociationId) {
+//                        $backward->skipBackwardDelete = true;
+//                        $this->getEntityManager()->removeEntity($backward);
+//                    }
+//                }
+//            }
+//        }
+
         $this->beforeRemove($entity, $options);
         $result = $this->deleteFromDb($entity->get('id'));
         if ($result) {
@@ -53,5 +80,12 @@ class AssociatedProduct extends Base
         }
 
         return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

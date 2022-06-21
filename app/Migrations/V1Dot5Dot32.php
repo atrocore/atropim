@@ -63,6 +63,8 @@ class V1Dot5Dot32 extends Base
         $this->getPDO()->exec(
             "CREATE UNIQUE INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON `associated_product` (association_id, main_product_id, related_product_id, deleted)"
         );
+
+        $this->exec("UPDATE `associated_product` SET backward_association_id=NULL WHERE deleted=0");
     }
 
     public function down(): void
