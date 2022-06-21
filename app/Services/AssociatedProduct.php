@@ -153,17 +153,17 @@ class AssociatedProduct extends Base
 
     public function updateBackwardAssociation(Entity $entity, \stdClass $data): void
     {
+        $backwardAttachment = new \stdClass();
+
         if (property_exists($data, 'backwardAssociationId') && !Entity::areValuesEqual('varchar', $entity->get('backwardAssociationId'), $data->backwardAssociationId)) {
-            // delete backward association if it needs
             if (!empty($entity->get('backwardAssociationId')) && empty($data->backwardAssociationId)) {
+                // delete backward association
                 $this->getRepository()->deleteFromDb($entity->get('backwardAssociatedProductId'));
                 $entity->set('backwardAssociatedProductId', null);
                 $this->getRepository()->save($entity, ['skipAll' => true]);
-            }
-
-            // create backward association if it needs
-            if (empty($entity->get('backwardAssociationId')) && !empty($data->backwardAssociationId)) {
-                $backwardAttachment = new \stdClass();
+                return;
+            } elseif (empty($entity->get('backwardAssociationId')) && !empty($data->backwardAssociationId)) {
+                // create backward association
                 $backwardAttachment->mainProductId = $entity->get('relatedProductId');
                 $backwardAttachment->relatedProductId = $entity->get('mainProductId');
                 $backwardAttachment->associationId = $data->backwardAssociationId;
@@ -171,7 +171,23 @@ class AssociatedProduct extends Base
                 $backwardEntity = parent::createEntity($backwardAttachment);
                 $entity->set('backwardAssociatedProductId', $backwardEntity->get('id'));
                 $this->getRepository()->save($entity, ['skipAll' => true]);
+                return;
+            } else {
+                // update backward association
+                $backwardAttachment->associationId = $data->backwardAssociationId;
             }
+        }
+
+        if (property_exists($data, 'mainProductId')) {
+            $backwardAttachment->relatedProductId = $data->mainProductId;
+        }
+
+        if (property_exists($data, 'relatedProductId')) {
+            $backwardAttachment->mainProductId = $data->relatedProductId;
+        }
+
+        if (!empty((array)$backwardAttachment)) {
+            parent::updateEntity($entity->get('backwardAssociatedProductId'), $backwardAttachment);
         }
     }
 
