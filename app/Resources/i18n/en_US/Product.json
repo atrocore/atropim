@@ -121,6 +121,7 @@
     "productCatalogChangeConfirm": "Are you sure you want to set/unlink/modify the catalog for the current product? All categories allowed for the original catalog will be also unlinked for the product."
   },
   "exceptions": {
+    "backwardAssociationError": "Backward association error: %s",
     "wrongInputData": "Validation failed. Wrong input data.",
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Product cannot be associated with itself.",

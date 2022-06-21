@@ -34,6 +34,7 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Templates\Services\Base;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
@@ -44,25 +45,44 @@ class AssociatedProduct extends Base
 
     public function createEntity($attachment)
     {
-        $entity = parent::createEntity($attachment);
+        $pdo = $this->getEntityManager()->getPDO();
 
-        if (property_exists($attachment, 'backwardAssociationId')) {
-            $backwardAttachment = new \stdClass();
-            $backwardAttachment->mainProductId = $attachment->relatedProductId;
-            $backwardAttachment->mainProductName = $attachment->relatedProductName;
-            $backwardAttachment->relatedProductId = $attachment->mainProductId;
-            $backwardAttachment->relatedProductName = $attachment->mainProductName;
-            $backwardAttachment->associationId = $attachment->backwardAssociationId;
-            $backwardAttachment->associationName = $attachment->backwardAssociationName;
-            $backwardAttachment->backwardAssociatedProductId = $entity->get('id');
+        if (!$pdo->inTransaction()) {
+            $pdo->beginTransaction();
+            $inTransaction = true;
+        }
 
-            try {
-                $backwardEntity = parent::createEntity($backwardAttachment);
-                $entity->set('backwardAssociatedProductId', $backwardEntity->get('id'));
-                $this->getRepository()->save($entity, ['skipAll' => true]);
-            } catch (\Throwable $e) {
-                // ignore errors
+        try {
+            $entity = parent::createEntity($attachment);
+
+            if (property_exists($attachment, 'backwardAssociationId')) {
+                $backwardAttachment = new \stdClass();
+                $backwardAttachment->mainProductId = $attachment->relatedProductId;
+                $backwardAttachment->mainProductName = $attachment->relatedProductName;
+                $backwardAttachment->relatedProductId = $attachment->mainProductId;
+                $backwardAttachment->relatedProductName = $attachment->mainProductName;
+                $backwardAttachment->associationId = $attachment->backwardAssociationId;
+                $backwardAttachment->associationName = $attachment->backwardAssociationName;
+                $backwardAttachment->backwardAssociatedProductId = $entity->get('id');
+
+                try {
+                    $backwardEntity = parent::createEntity($backwardAttachment);
+                    $entity->set('backwardAssociatedProductId', $backwardEntity->get('id'));
+                    $this->getRepository()->save($entity, ['skipAll' => true]);
+                } catch (\Throwable $e) {
+                    $classname = get_class($e);
+                    throw new $classname(sprintf($this->getInjection('language')->translate('backwardAssociationError', 'exceptions', 'Product'), $e->getMessage()));
+                }
             }
+
+            if (!empty($inTransaction)) {
+                $pdo->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!empty($inTransaction)) {
+                $pdo->rollBack();
+            }
+            throw $e;
         }
 
         return $entity;
