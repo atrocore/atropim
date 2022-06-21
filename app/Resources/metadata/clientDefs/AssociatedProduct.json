@@ -15,10 +15,6 @@
     "detail": "pim:views/detail",
     "list": "pim:views/list"
   },
-  "modalViews": {
-    "detail": "pim:views/modals/detail-full-form-disabled",
-    "edit": "pim:views/associated-product/modals/create-associated-product"
-  },
   "recordViews": {
     "list": "pim:views/record/list"
   },
