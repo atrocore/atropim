@@ -40,9 +40,11 @@ use Espo\ORM\Entity;
 
 class AssociatedProduct extends Base
 {
+    protected $mandatorySelectAttributeList = ['backwardAssociatedProductId'];
+
     public function createEntity($attachment)
     {
-        $result = parent::createEntity($attachment);
+        $entity = parent::createEntity($attachment);
 
         if (property_exists($attachment, 'backwardAssociationId')) {
             $backwardAttachment = new \stdClass();
@@ -52,17 +54,18 @@ class AssociatedProduct extends Base
             $backwardAttachment->relatedProductName = $attachment->mainProductName;
             $backwardAttachment->associationId = $attachment->backwardAssociationId;
             $backwardAttachment->associationName = $attachment->backwardAssociationName;
-            $backwardAttachment->backwardAssociationId = $attachment->associationId;
-            $backwardAttachment->backwardAssociationName = $attachment->associationName;
+            $backwardAttachment->backwardAssociatedProductId = $entity->get('id');
 
             try {
-                parent::createEntity($backwardAttachment);
+                $backwardEntity = parent::createEntity($backwardAttachment);
+                $entity->set('backwardAssociatedProductId', $backwardEntity->get('id'));
+                $this->getRepository()->save($entity, ['skipAll' => true]);
             } catch (\Throwable $e) {
                 // ignore errors
             }
         }
 
-        return $result;
+        return $entity;
     }
 
     public function updateEntity($id, $data)
@@ -74,7 +77,18 @@ class AssociatedProduct extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('name', $entity->get('associationName'));
+        if (!empty($entity->get('backwardAssociatedProductId'))) {
+            $backwardAssociatedProduct = $this->getRepository()
+                ->select(['id', 'associationId', 'associationName'])
+                ->where(['id' => $entity->get('backwardAssociatedProductId')])
+                ->findOne();
+
+            if (!empty($backwardAssociatedProduct)) {
+                $entity->set('backwardAssociationId', $backwardAssociatedProduct->get('associationId'));
+                $entity->set('backwardAssociationName', $backwardAssociatedProduct->get('associationName'));
+            }
+        }
+
         if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
             $entity->set('mainProductImageId', $image->get('id'));
             $entity->set('mainProductImageName', $image->get('name'));

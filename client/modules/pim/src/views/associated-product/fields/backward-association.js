@@ -31,6 +31,8 @@
 Espo.define('pim:views/associated-product/fields/backward-association', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
+        foreignScope: "Association",
+
         selectBoolFilterList:  ['onlyActive', 'notUsedAssociations'],
 
         boolFilterData: {
