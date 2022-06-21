@@ -56,25 +56,27 @@ class AssociatedProduct extends Base
 
     public function remove(Entity $entity, array $options = [])
     {
-//        /** @var string $backwardAssociationId */
-//        $backwardAssociationId = $associatedProduct->get('backwardAssociationId');
-//
-//        if (!empty($backwardAssociationId)) {
-//            $backwards = $associatedProduct->get('backwardAssociation')->get('associatedProducts');
-//            if ($backwards->count() > 0) {
-//                foreach ($backwards as $backward) {
-//                    if ($backward->get('mainProductId') == $associatedProduct->get('relatedProductId')
-//                        && $backward->get('relatedProductId') == $associatedProduct->get('mainProductId')
-//                        && $backward->get('associationId') == $backwardAssociationId) {
-//                        $backward->skipBackwardDelete = true;
-//                        $this->getEntityManager()->removeEntity($backward);
-//                    }
-//                }
-//            }
-//        }
-
         $this->beforeRemove($entity, $options);
-        $result = $this->deleteFromDb($entity->get('id'));
+
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $result = $this->deleteFromDb($entity->get('id'));
+            if (!empty($entity->get('backwardAssociatedProductId'))) {
+                $this->deleteFromDb($entity->get('backwardAssociatedProductId'));
+            }
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
         if ($result) {
             $this->afterRemove($entity, $options);
         }

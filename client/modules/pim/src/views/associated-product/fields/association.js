@@ -47,6 +47,7 @@ Espo.define('pim:views/associated-product/fields/association', 'treo-core:views/
 
             if (model.get('backwardAssociationId') && !this.model.get('backwardAssociationId')) {
                 this.model.set({
+                    backwardAssociation: model.get('backwardAssociationId'),
                     backwardAssociationId: model.get('backwardAssociationId'),
                     backwardAssociationName: model.get('backwardAssociationName')
                 });
