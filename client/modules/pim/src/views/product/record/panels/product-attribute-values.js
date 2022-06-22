@@ -547,9 +547,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         applyOverviewFilters() {
-            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
-            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
-            const scopeFilter = this.getStorage().get('scopeFilter', 'OverviewFilter');
+            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter') || ['allValues'];
+            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'];
+            const scopeFilter = this.getStorage().get('scopeFilter', 'OverviewFilter') || ['allChannels'];
 
             $.each(this.getValueFields(), (name, fieldView) => {
                 let value = fieldView.model.get('value');
