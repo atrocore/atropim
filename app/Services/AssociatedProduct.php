@@ -54,7 +54,7 @@ class AssociatedProduct extends Base
 
         try {
             $entity = parent::createEntity($attachment);
-            if (property_exists($attachment, 'backwardAssociationId')) {
+            if (property_exists($attachment, 'backwardAssociationId') && !empty($attachment->backwardAssociationId)) {
                 try {
                     $backwardAttachment = new \stdClass();
                     $backwardAttachment->mainProductId = $attachment->relatedProductId;
