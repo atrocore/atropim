@@ -265,33 +265,24 @@ class Product extends Hierarchy
         $toSave = [];
         foreach ($data->ids as $mainProductId) {
             foreach ($data->foreignIds as $relatedProductId) {
-                $entity = $this->getEntityManager()->getEntity('AssociatedProduct');
-                $entity->set("associationId", $data->associationId);
-                $entity->set("mainProductId", $mainProductId);
-                $entity->set("relatedProductId", $relatedProductId);
-
+                $attachment = new \stdClass();
+                $attachment->associationId = $data->associationId;
+                $attachment->mainProductId = $mainProductId;
+                $attachment->relatedProductId = $relatedProductId;
                 if (!empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
-                    $entity->set('backwardAssociationId', $backwardAssociationId);
-                    $entity->set("bothDirections", true);
-
-                    $backwardEntity = $this->getEntityManager()->getEntity('AssociatedProduct');
-                    $backwardEntity->set("associationId", $backwardAssociationId);
-                    $backwardEntity->set("mainProductId", $entity->get('relatedProductId'));
-                    $backwardEntity->set("relatedProductId", $entity->get('mainProductId'));
-                    $backwardEntity->set("bothDirections", true);
-                    $backwardEntity->set("backwardAssociationId", $entity->get('associationId'));
-
-                    $toSave[] = $backwardEntity;
+                    $attachment->backwardAssociationId = $backwardAssociationId;
                 }
 
-                $toSave[] = $entity;
+                $toSave[] = $attachment;
             }
         }
 
+        $associatedProductService = $this->getServiceFactory()->create('AssociatedProduct');
+
         $error = [];
-        foreach ($toSave as $entity) {
+        foreach ($toSave as $attachment) {
             try {
-                $this->getEntityManager()->saveEntity($entity);
+                $entity = $associatedProductService->createEntity($attachment);
             } catch (BadRequest $e) {
                 $error[] = [
                     'id'          => $entity->get('mainProductId'),
@@ -420,6 +411,7 @@ class Product extends Hierarchy
                 $item = $row->toArray();
                 $item['id'] = Util::generateId();
                 $item['mainProductId'] = $product->get('id');
+                $item['backwardAssociatedProductId'] = null;
 
                 // prepare entity
                 $entity = $this->getEntityManager()->getEntity('AssociatedProduct');
@@ -446,6 +438,7 @@ class Product extends Hierarchy
                 $item = $row->toArray();
                 $item['id'] = Util::generateId();
                 $item['relatedProductId'] = $product->get('id');
+                $item['backwardAssociatedProductId'] = null;
 
                 // prepare entity
                 $entity = $this->getEntityManager()->getEntity('AssociatedProduct');

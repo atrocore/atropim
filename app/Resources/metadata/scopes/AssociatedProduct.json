@@ -1,12 +1,12 @@
 {
-    "entity": true,
-    "layouts": true,
-    "tab": true,
-    "acl": true,
-    "aclPortal": true,
-    "disabled": false,
-    "customizable": true,
-    "type": "Base",
-    "module": "Pim",
-    "importable": true
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "aclPortal": true,
+  "disabled": false,
+  "customizable": true,
+  "type": "Base",
+  "module": "Pim",
+  "importable": true
 }

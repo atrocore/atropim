@@ -33,23 +33,18 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-/**
- * Class AssociatedProduct
- */
 class AssociatedProduct extends Base
 {
-    /**
-     * @inheritDoc
-     */
-    public function beforeSave(Entity $entity, array $options = [])
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
-        if (empty($entity->get('name'))) {
-            $entity->set('name', $entity->get('associationName'));
+        if ($entity->get('mainProductId') == $entity->get('relatedProductId')) {
+            throw new BadRequest($this->getInjection('language')->translate('itselfAssociation', 'exceptions', 'Product'));
         }
     }
 
@@ -57,5 +52,42 @@ class AssociatedProduct extends Base
     {
         $productId = $this->getPDO()->quote($productId);
         $this->getPDO()->exec("DELETE FROM `associated_product` WHERE main_product_id=$productId OR related_product_id=$productId");
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->beforeRemove($entity, $options);
+
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $result = $this->deleteFromDb($entity->get('id'));
+            if (!empty($entity->get('backwardAssociatedProductId'))) {
+                $this->deleteFromDb($entity->get('backwardAssociatedProductId'));
+            }
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        if ($result) {
+            $this->afterRemove($entity, $options);
+        }
+
+        return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

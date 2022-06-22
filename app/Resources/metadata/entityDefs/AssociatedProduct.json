@@ -1,13 +1,66 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "trim": true
-    },
     "association": {
       "type": "link",
       "required": true,
       "view": "pim:views/associated-product/fields/association"
+    },
+    "mainProduct": {
+      "required": true,
+      "type": "link",
+      "view": "pim:views/associated-product/fields/main-product"
+    },
+    "relatedProduct": {
+      "required": true,
+      "type": "link",
+      "view": "pim:views/associated-product/fields/related-product",
+      "noLoad": false
+    },
+    "backwardAssociation": {
+      "type": "varchar",
+      "notStorable": true,
+      "view": "pim:views/associated-product/fields/backward-association"
+    },
+    "backwardAssociationId": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "backwardAssociationName": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "backwardAssociatedProduct": {
+      "type": "link",
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "createdAt": {
       "type": "datetime",
@@ -26,40 +79,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "ownerUser": {
-      "type": "link",
-      "required": true,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": true,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
-    },
-    "mainProduct": {
-      "required": true,
-      "type": "link",
-      "view": "pim:views/associated-product/fields/main-product"
-    },
-    "relatedProduct": {
-      "required": true,
-      "type": "link",
-      "view": "pim:views/associated-product/fields/related-product",
-      "noLoad": false
-    },
-    "bothDirections": {
-      "type": "bool",
-      "view": "pim:views/associated-product/fields/both-directions"
-    },
-    "backwardAssociation": {
-      "type": "link",
-      "hidden": true,
-      "view": "pim:views/associated-product/fields/backward-association"
     }
   },
   "links": {
@@ -68,28 +87,6 @@
       "foreign": "associatedProducts",
       "entity": "Association",
       "audited": false
-    },
-    "createdBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "modifiedBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "ownerUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "assignedUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "teams": {
-      "type": "hasMany",
-      "entity": "Team",
-      "relationName": "EntityTeam",
-      "layoutRelationshipsDisabled": true
     },
     "mainProduct": {
       "type": "belongsTo",
@@ -103,11 +100,26 @@
       "entity": "Product",
       "audited": false
     },
-    "backwardAssociation": {
+    "backwardAssociatedProduct": {
       "type": "belongsTo",
-      "foreign": "associatedProducts",
-      "entity": "Association",
+      "entity": "AssociatedProduct",
       "audited": false
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
     }
+  },
+  "uniqueIndexes": {
+    "unique_association": [
+      "association_id",
+      "main_product_id",
+      "related_product_id",
+      "deleted"
+    ]
   }
 }

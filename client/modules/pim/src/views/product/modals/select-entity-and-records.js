@@ -28,7 +28,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product/modals/select-entity-and-records', 'treo-core:views/modals/select-entity-and-records',
+Espo.define('pim:views/product/modals/select-entity-and-records', 'views/modals/select-entity-and-records',
     Dep => Dep.extend({
 
         template: 'pim:product/modals/select-entity-and-records',

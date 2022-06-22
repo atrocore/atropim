@@ -29,25 +29,38 @@
  */
 
 Espo.define('pim:views/associated-product/record/row-actions/edit-and-remove-in-product', 'views/record/row-actions/relationship',
-    Dep=> Dep.extend({
+    Dep => Dep.extend({
 
         getActionList() {
-            let list = [];
-            if (this.getAcl().check('Product', 'edit')) {
+            let list = [{
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                },
+                link: '#' + this.model.name + '/view/' + this.model.id
+            }];
+
+            if (this.options.acl.edit) {
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',
                     data: {
                         id: this.model.id
                     }
-                }, {
-                    action: 'quickRemove',
-                    label: 'Remove',
+                });
+            }
+
+            if (this.options.acl.delete) {
+                list.push({
+                    action: 'removeRelated',
+                    label: 'Unlink',
                     data: {
                         id: this.model.id
                     }
                 });
             }
+
             return list;
         }
 
