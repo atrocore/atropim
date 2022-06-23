@@ -18,7 +18,10 @@
     "enumDefault": "По умолчанию",
     "measure": "Мера",
     "unitDefault": "По умолчанию",
-    "virtualProductField": "Виртуальное поле продукта"
+    "virtualProductField": "Виртуальное поле продукта",
+    "defaultScope": "Область действия",
+    "defaultChannel": "Канал",
+    "defaultIsRequired": "Обязательно"
   },
   "links": {
     "attributeGroup": "Группа атрибутов",

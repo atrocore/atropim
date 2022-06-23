@@ -232,6 +232,26 @@
       "type": "unit",
       "notStorable": true,
       "view": "pim:views/attribute/fields/unit-default"
+    },
+    "defaultScope": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "Global",
+        "Channel"
+      ],
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
+      "default": "Global"
+    },
+    "defaultChannel": {
+      "type": "link"
+    },
+    "defaultIsRequired": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {
@@ -279,6 +299,11 @@
       "foreign": "attribute",
       "entity": "ProductFamilyAttribute",
       "layoutRelationshipsDisabled": true
+    },
+    "defaultChannel": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "Channel"
     }
   },
   "collection": {

@@ -27,7 +27,8 @@
     "channel": "Channel"
   },
   "labels": {
-    "Create ProductAttributeValue": "Create Attribute Value"
+    "Create ProductAttributeValue": "Create Attribute Value",
+    "cannotLinkDefaultChannel": "Default channel '{channel}' for the selected attribute is not linked to this product."
   },
   "exceptions": {
     "noSuchChannelInProduct": "Attribute '%s' for channel '%s' for product '%s' is not available.",

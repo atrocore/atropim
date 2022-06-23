@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -28,22 +29,45 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/attribute/modals/select-records', 'views/modals/select-records',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        mandatorySelectAttributeList: ['typeValue', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'defaultIsRequired'],
+namespace Pim\Migrations;
 
-        loadList() {
-            let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
-            if (this.getConfig().get('isMultilangActive') && inputLanguageList.length) {
-                let typeValueFields = inputLanguageList.map(lang => {
-                    return lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), 'typeValue');
-                });
-                this.mandatorySelectAttributeList = this.mandatorySelectAttributeList.concat(typeValueFields);
-            }
+use Treo\Core\Migration\Base;
 
-            Dep.prototype.loadList.call(this);
+/**
+ * Migration class for version 1.5.34
+ */
+class V1Dot5Dot34 extends Base
+{
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
+    {
+        $this->exec("ALTER TABLE `attribute` ADD default_scope VARCHAR(255) DEFAULT 'Global' COLLATE utf8mb4_unicode_ci, ADD default_is_required TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci, ADD default_channel_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("CREATE INDEX IDX_DEFAULT_CHANNEL_ID ON `attribute` (default_channel_id)");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->exec("DROP INDEX IDX_DEFAULT_CHANNEL_ID ON `attribute`");
+        $this->exec("ALTER TABLE `attribute` DROP default_channel_id, DROP default_is_required, DROP default_scope");
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return void
+     */
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
         }
-
-    })
-);
+    }
+}

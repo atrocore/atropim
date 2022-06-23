@@ -78,6 +78,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 return {
                     tabId: this.defs.tabId
                 }
+            },
+            onlyDefaultChannelAttributes() {
+                return {
+                    productId: this.model.id
+                }
             }
         },
 
@@ -272,8 +277,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     });
                     let attributes = {
                         assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name'),
-                        scope: 'Global'
+                        assignedUserName: this.getUser().get('name')
                     };
                     if (['enum'].includes(attributeModel.get('type'))) {
                         if (this.model.get('prohibitedEmptyValue')) {

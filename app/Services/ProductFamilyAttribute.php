@@ -75,8 +75,11 @@ class ProductFamilyAttribute extends Base
             $inTransaction = true;
         }
         try {
+            $cloned = clone $attachment;
+            $this->prepareDefaultValues($attachment);
+
             $result = parent::createEntity($attachment);
-            $this->createPseudoTransactionCreateJobs(clone $attachment);
+            $this->createPseudoTransactionCreateJobs($cloned);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }
@@ -88,6 +91,32 @@ class ProductFamilyAttribute extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return void
+     *
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function prepareDefaultValues($data): void
+    {
+        if (!isset($data->isRequired) && !isset($data->scope)) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $data->attributeId);
+            if ($attribute) {
+                $data->isRequired = $attribute->get('defaultIsRequired');
+
+                $defaultScope = $attribute->get('defaultScope');
+                if ($defaultScope === 'Global') {
+                    $data->scope = $defaultScope;
+                } else {
+                    $data->scope = $defaultScope;
+                    $data->channelId = $attribute->get('defaultChannelId');
+                    $data->channelName = $attribute->get('defaultChannelName');
+                }
+            }
+        }
     }
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data): void

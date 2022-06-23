@@ -164,6 +164,39 @@ class Attribute extends AbstractSelectManager
         }
     }
 
+    protected function boolFilterOnlyDefaultChannelAttributes(array &$result)
+    {
+        $data = (array)$this->getSelectCondition('onlyDefaultChannelAttributes');
+
+        if (isset($data['productId'])) {
+            $availableChannels = $this
+                ->getEntityManager()
+                ->getRepository('Channel')
+                ->select(['id'])
+                ->join('products')
+                ->where(['products.id' => $data['productId']])
+                ->find()
+                ->toArray();
+
+            $excludedAttributes = $this
+                ->getEntityManager()
+                ->getRepository('Attribute')
+                ->select(['id'])
+                ->where([
+                    'defaultScope' => 'Channel',
+                    'defaultChannelId!=' => array_column($availableChannels, 'id')
+                ])
+                ->find()
+                ->toArray();
+
+            if ($excludedAttributes) {
+                $result['whereClause'][] = [
+                    'id!=' => array_column($excludedAttributes, 'id')
+                ];
+            }
+        }
+    }
+
     /**
      * @param array $result
      */

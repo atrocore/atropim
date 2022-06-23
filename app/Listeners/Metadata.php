@@ -256,7 +256,7 @@ class Metadata extends AbstractListener
                 'label'                => $tab['name'],
                 'createAction'         => 'createRelatedConfigured',
                 'selectAction'         => 'selectRelatedEntity',
-                'selectBoolFilterList' => ['notLinkedProductAttributeValues', 'fromAttributesTab'],
+                'selectBoolFilterList' => ['notLinkedProductAttributeValues', 'fromAttributesTab', 'onlyDefaultChannelAttributes'],
                 'tabId'                => $tab['id'],
                 'view'                 => 'pim:views/product/record/panels/product-attribute-values',
                 "rowActionsView"       => "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",

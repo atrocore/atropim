@@ -233,8 +233,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                     });
                     model.set({
                         assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name'),
-                        scope: 'Global'
+                        assignedUserName: this.getUser().get('name')
                     });
                     promises.push(model.save());
                 });

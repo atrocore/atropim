@@ -27,7 +27,8 @@
     "attribute": "Attribut"
   },
   "labels": {
-    "Create ProductAttributeValue": "Produktattributwert erstellen"
+    "Create ProductAttributeValue": "Produktattributwert erstellen",
+    "cannotLinkDefaultChannel": "Der Standardkanal '{channel}' für das ausgewählte Attribut ist nicht mit diesem Produkt verknüpft."
   },
   "exceptions": {
     "noSuchChannelInProduct": "Das Attribut '%s' für den Kanal '%s' für das Produkt '%s' ist nicht verfügbar.",

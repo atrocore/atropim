@@ -70,6 +70,20 @@
         {
           "name": "unitDefault"
         }
+      ],
+      [
+        {
+          "name": "defaultScope"
+        },
+        {
+          "name": "defaultChannel"
+        }
+      ],
+      [
+        {
+          "name": "defaultIsRequired"
+        },
+        false
       ]
     ]
   }
