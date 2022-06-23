@@ -102,9 +102,9 @@ class ProductAttributeValue extends Base
      */
     public function prepareEntityForOutput(Entity $entity)
     {
-        parent::prepareEntityForOutput($entity);
-
         $this->prepareEntity($entity);
+
+        parent::prepareEntityForOutput($entity);
     }
 
     /**
