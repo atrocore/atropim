@@ -185,6 +185,26 @@
             }
           ]
         }
+      },
+      "defaultChannel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "defaultScope",
+              "value": "Channel"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "defaultScope",
+              "value": "Channel"
+            }
+          ]
+        }
       }
     }
   }
