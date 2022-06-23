@@ -101,7 +101,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     type: type,
                     options: typeValue,
                     view: this.getValueFieldView(type),
-                    required: !!this.model.get('isRequired')
+                    required: !!this.model.get('isRequired'),
+                    readOnly: !!this.model.get('isValueReadOnly')
                 };
 
                 if (type === 'unit') {

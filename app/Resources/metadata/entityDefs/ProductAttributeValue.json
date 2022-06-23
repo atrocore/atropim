@@ -215,6 +215,20 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "isValueReadOnly": {
+      "type": "bool",
+      "notStorable": true,
+      "default": false,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "value": {
       "type": "text",
       "notStorable": true,
