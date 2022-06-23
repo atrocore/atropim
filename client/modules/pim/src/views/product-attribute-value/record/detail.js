@@ -81,7 +81,8 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                         options: typeValue,
                         view: this.getFieldManager().getViewName(type),
                         prohibitedEmptyValue: !!this.model.get('prohibitedEmptyValue'),
-                        required: !!this.model.get('isRequired')
+                        required: !!this.model.get('isRequired'),
+                        readOnly: !!this.model.get('isValueReadOnly')
                     };
 
                     // for unit
