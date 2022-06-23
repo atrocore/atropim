@@ -113,6 +113,7 @@ class ProductAttributeValue extends Base
     public function createEntity($attachment)
     {
         $this->prepareInputValue($attachment);
+        $this->prepareDefaultValues($attachment);
 
         if ($this->isPseudoTransaction()) {
             return parent::createEntity($attachment);
@@ -569,6 +570,45 @@ class ProductAttributeValue extends Base
 
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = Json::encode($data->value);
+        }
+    }
+
+    /**
+     * @param $data
+     *
+     * @return void
+     *
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function prepareDefaultValues($data): void
+    {
+        if (!isset($data->isRequired) && !isset($data->scope)) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $data->attributeId);
+            if ($attribute) {
+                $data->isRequired = $attribute->get('defaultIsRequired');
+
+                $defaultScope = $attribute->get('defaultScope');
+                if ($defaultScope === 'Global') {
+                    $data->scope = $defaultScope;
+                } else {
+                    $productChannels = $this
+                        ->getEntityManager()
+                        ->getRepository('Channel')
+                        ->select(['id'])
+                        ->join('products')
+                        ->where(['products.id' => $data->productId])
+                        ->find()
+                        ->toArray();
+
+                    if (in_array($attribute->get('defaultChannelId'), array_column($productChannels, 'id'))) {
+                        $data->scope = $defaultScope;
+                        $data->channelId = $attribute->get('defaultChannelId');
+                        $data->channelName = $attribute->get('defaultChannelName');
+                    } else {
+                        $data->scope = 'Global';
+                    }
+                }
+            }
         }
     }
 

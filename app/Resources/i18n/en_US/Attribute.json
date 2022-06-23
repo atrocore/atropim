@@ -19,7 +19,10 @@
     "enumDefault": "Default",
     "measure": "Measure",
     "unitDefault": "Default",
-    "virtualProductField": "Virtual product field"
+    "virtualProductField": "Virtual product field",
+    "defaultScope": "Scope",
+    "defaultChannel": "Channel",
+    "defaultIsRequired": "Required"
   },
   "links": {
     "attributeTab": "Attribute Tab",

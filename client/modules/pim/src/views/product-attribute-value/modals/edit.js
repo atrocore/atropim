@@ -33,6 +33,8 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
 
         fullFormDisabled: true,
 
+        channels: [],
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -69,6 +71,41 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
 
                 this.reRender();
             }
+
+            this.ajaxGetRequest(`Product/${this.model.get('productId')}/channels`, null, {async: false}).done(response => {
+                if (response.total > 0) {
+                    response.list.forEach(channel => {
+                        this.channels.push(channel.id);
+                    });
+                }
+            });
+
+            this.listenTo(this.model, 'change:attributeId', () => {
+                const attributeId = this.model.get('attributeId');
+
+                if (attributeId) {
+                    const defaultRequired = this.model.get('defaultIsRequired');
+                    const defaultScope = this.model.get('defaultScope');
+                    const defaultChannelId = this.model.get('defaultChannelId');
+
+                    this.model.set('isRequired', defaultRequired);
+
+                    if (defaultScope === 'Global') {
+                        this.model.set('scope', this.model.get('defaultScope'))
+                    } else if (defaultScope === 'Channel') {
+                        if (this.channels.includes(defaultChannelId)) {
+                            this.model.set('scope', this.model.get('defaultScope'))
+                            this.model.set('channelId', defaultChannelId)
+                            this.model.set('channelName', this.model.get('defaultChannelName'));
+                        } else {
+                            this.model.set('scope', 'Global');
+
+                            const msg = this.getLanguage().translate('cannotLinkDefaultChannel', 'labels', 'ProductAttributeValue').replace('{channel}', this.model.get('defaultChannelName'))
+                            this.notify(msg, 'info');
+                        }
+                    }
+                }
+            });
         },
 
         setupOwnership: function (param, field) {
