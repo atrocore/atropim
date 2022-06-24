@@ -274,14 +274,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                         assignedUserName: this.getUser().get('name')
                     };
 
-                    if (this.model.defs.links[this.link].foreign === 'product') {
-                        attributes['productId'] = this.model.get('id');
-                        attributes['attributeId'] = item.id;
-                    } else {
-                        attributes['productId'] = item.id;
-                        attributes['attributeId'] = this.model.get('id');
-                    }
-
                     model.set(attributes);
                     promises.push(model.save());
                 });

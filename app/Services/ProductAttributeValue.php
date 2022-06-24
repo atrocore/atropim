@@ -174,9 +174,7 @@ class ProductAttributeValue extends Base
             if (property_exists($attachment, 'teamsIds')) {
                 $aData->teamsIds = $attachment->teamsIds;
             }
-            parent::createEntity($aData);
-
-            $this->createAssociatedAttributeValue($aData, $child);
+            $this->createEntity($aData);
         }
     }
 

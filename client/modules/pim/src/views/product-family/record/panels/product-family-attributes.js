@@ -221,17 +221,11 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
 
         relateAttributes(selectObj) {
             let promises = [];
-            selectObj.forEach(attributeModel => {
+            selectObj.forEach(item => {
                 this.getModelFactory().create(this.scope, model => {
-                    model.setRelate({
-                        model: this.model,
-                        link: this.model.defs.links[this.link].foreign
-                    });
-                    model.setRelate({
-                        model: attributeModel,
-                        link: attributeModel.defs.links[this.link].foreign
-                    });
                     model.set({
+                        productFamilyId: this.model.get('id'),
+                        attributeId: item.id,
                         assignedUserId: this.getUser().id,
                         assignedUserName: this.getUser().get('name')
                     });

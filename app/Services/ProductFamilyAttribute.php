@@ -79,6 +79,12 @@ class ProductFamilyAttribute extends Base
             $this->prepareDefaultValues($attachment);
 
             $result = parent::createEntity($attachment);
+
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
+            if (!empty($attribute)) {
+                $this->createAssociatedFamilyAttribute($cloned, $attribute);
+            }
+
             $this->createPseudoTransactionCreateJobs($cloned);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
@@ -91,6 +97,30 @@ class ProductFamilyAttribute extends Base
         }
 
         return $result;
+    }
+
+    protected function createAssociatedFamilyAttribute(\stdClass $attachment, Entity $attribute): void
+    {
+        $children = $attribute->get('children');
+        if (empty($children) || count($children) === 0) {
+            return;
+        }
+
+        foreach ($children as $child) {
+            $aData = new \stdClass();
+            $aData->attributeId = $child->get('id');
+            $aData->productFamilyId = $attachment->productFamilyId;
+            if (property_exists($attachment, 'ownerUserId')) {
+                $aData->ownerUserId = $attachment->ownerUserId;
+            }
+            if (property_exists($attachment, 'assignedUserId')) {
+                $aData->assignedUserId = $attachment->assignedUserId;
+            }
+            if (property_exists($attachment, 'teamsIds')) {
+                $aData->teamsIds = $attachment->teamsIds;
+            }
+            $this->createEntity($aData);
+        }
     }
 
     /**
