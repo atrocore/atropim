@@ -1,5 +1,6 @@
 {
   "fields": {
+    "children": "Associated attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
     "typeValue": "Values",
@@ -25,6 +26,7 @@
     "defaultIsRequired": "Required"
   },
   "links": {
+    "children": "Associated attributes",
     "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",
     "products": "Products",
