@@ -134,6 +134,12 @@ class ProductAttributeValue extends Base
         }
         try {
             $result = parent::createEntity($attachment);
+
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
+            if (!empty($attribute)) {
+                $this->createAssociatedAttributeValue($attachment, $attribute);
+            }
+
             $this->createPseudoTransactionCreateJobs(clone $attachment);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
@@ -146,6 +152,32 @@ class ProductAttributeValue extends Base
         }
 
         return $result;
+    }
+
+    protected function createAssociatedAttributeValue(\stdClass $attachment, Entity $attribute): void
+    {
+        $children = $attribute->get('children');
+        if (empty($children) || count($children) === 0) {
+            return;
+        }
+
+        foreach ($children as $child) {
+            $aData = new \stdClass();
+            $aData->attributeId = $child->get('id');
+            $aData->productId = $attachment->productId;
+            if (property_exists($attachment, 'ownerUserId')) {
+                $aData->ownerUserId = $attachment->ownerUserId;
+            }
+            if (property_exists($attachment, 'assignedUserId')) {
+                $aData->assignedUserId = $attachment->assignedUserId;
+            }
+            if (property_exists($attachment, 'teamsIds')) {
+                $aData->teamsIds = $attachment->teamsIds;
+            }
+            parent::createEntity($aData);
+
+            $this->createAssociatedAttributeValue($aData, $child);
+        }
     }
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
