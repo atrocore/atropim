@@ -79,12 +79,7 @@ class ProductFamilyAttribute extends Base
             $this->prepareDefaultValues($attachment);
 
             $result = parent::createEntity($attachment);
-
-            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
-            if (!empty($attribute)) {
-                $this->createAssociatedFamilyAttribute($cloned, $attribute);
-            }
-
+            $this->createAssociatedFamilyAttribute($cloned, $attachment->attributeId);
             $this->createPseudoTransactionCreateJobs($cloned);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
@@ -99,8 +94,13 @@ class ProductFamilyAttribute extends Base
         return $result;
     }
 
-    protected function createAssociatedFamilyAttribute(\stdClass $attachment, Entity $attribute): void
+    protected function createAssociatedFamilyAttribute(\stdClass $attachment, string $attributeId): void
     {
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
+        if (empty($attribute)) {
+            return;
+        }
+
         $children = $attribute->get('children');
         if (empty($children) || count($children) === 0) {
             return;
