@@ -257,6 +257,14 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
+    "sortOrderInAttributeGroup": {
+      "type": "int",
+      "default": null,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
     "sortOrder": {
       "type": "int",
       "default": null,

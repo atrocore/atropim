@@ -10,7 +10,7 @@
     "productAttributeValues": "Attribute Values",
     "isRequired": "Required",
     "isMultilang": "Multilingual",
-    "sortOrder": "Sort Order",
+    "sortOrderInAttributeGroup": "Sort Order in Attribute Group",
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",

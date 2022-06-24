@@ -9,7 +9,7 @@
     "productAttributeValues": "Значения атрибутов",
     "isRequired": "Обязательно",
     "isMultilang": "Многоязычность",
-    "sortOrder": "Порядок сортировки",
+    "sortOrderInAttributeGroup": "Порядок сортировки в группе атрибута",
     "assetType": "Тип ассета",
     "pattern": "Regex Pattern",
     "unique": "Unique",

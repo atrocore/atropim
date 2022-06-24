@@ -5,7 +5,7 @@
     "products": "Produkte",
     "typeValue": "Werttyp",
     "type": "Typ",
-    "sortOrder": "Sortierreihenfolge",
+    "sortOrderInAttributeGroup": "Sortierreihenfolge in Attributgruppe",
     "attributeGroup": "Attributgruppe",
     "attributeTab": "Attributtab",
     "code": "Code",
