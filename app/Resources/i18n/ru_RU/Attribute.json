@@ -1,5 +1,6 @@
 {
   "fields": {
+    "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "typeValue": "Значения",
     "type": "Тип атрибута",
@@ -9,7 +10,7 @@
     "productAttributeValues": "Значения атрибутов",
     "isRequired": "Обязательно",
     "isMultilang": "Многоязычность",
-    "sortOrder": "Порядок сортировки",
+    "sortOrderInAttributeGroup": "Порядок сортировки в группе атрибута",
     "assetType": "Тип ассета",
     "pattern": "Regex Pattern",
     "unique": "Unique",
@@ -24,6 +25,7 @@
     "defaultIsRequired": "Обязательно"
   },
   "links": {
+    "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "products": "Продукты",
     "productAttributeValues": "Значения атрибутов",

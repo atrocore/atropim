@@ -134,6 +134,7 @@ class ProductAttributeValue extends Base
         }
         try {
             $result = parent::createEntity($attachment);
+            $this->createAssociatedAttributeValue($attachment, $attachment->attributeId);
             $this->createPseudoTransactionCreateJobs(clone $attachment);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
@@ -146,6 +147,35 @@ class ProductAttributeValue extends Base
         }
 
         return $result;
+    }
+
+    protected function createAssociatedAttributeValue(\stdClass $attachment, string $attributeId): void
+    {
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
+        if (empty($attribute)) {
+            return;
+        }
+
+        $children = $attribute->get('children');
+        if (empty($children) || count($children) === 0) {
+            return;
+        }
+
+        foreach ($children as $child) {
+            $aData = new \stdClass();
+            $aData->attributeId = $child->get('id');
+            $aData->productId = $attachment->productId;
+            if (property_exists($attachment, 'ownerUserId')) {
+                $aData->ownerUserId = $attachment->ownerUserId;
+            }
+            if (property_exists($attachment, 'assignedUserId')) {
+                $aData->assignedUserId = $attachment->assignedUserId;
+            }
+            if (property_exists($attachment, 'teamsIds')) {
+                $aData->teamsIds = $attachment->teamsIds;
+            }
+            $this->createEntity($aData);
+        }
     }
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
@@ -532,7 +562,7 @@ class ProductAttributeValue extends Base
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-        $entity->set('sortOrder', $attribute->get('sortOrder'));
+        $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
         $entity->set('channelCode', null);
         if (!empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));

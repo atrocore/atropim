@@ -28,7 +28,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
+Espo.define('pim:views/attribute/record/detail', 'views/record/detail-tree',
     Dep => Dep.extend({
 
         sideView: "pim:views/attribute/record/detail-side",

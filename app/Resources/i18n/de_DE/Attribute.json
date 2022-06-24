@@ -1,11 +1,12 @@
 {
   "fields": {
+    "children": "Assoziierte Attribute",
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
     "productAttributeValues": "Attributwerte",
     "products": "Produkte",
     "typeValue": "Werttyp",
     "type": "Typ",
-    "sortOrder": "Sortierreihenfolge",
+    "sortOrderInAttributeGroup": "Sortierreihenfolge in Attributgruppe",
     "attributeGroup": "Attributgruppe",
     "attributeTab": "Attributtab",
     "code": "Code",
@@ -26,6 +27,7 @@
     "defaultIsRequired": "Erforderlich"
   },
   "links": {
+    "children": "Assoziierte Attribute",
     "attributeTab": "Attributtab",
     "products": "Produkte",
     "productAttributeValues": "Attributwerte",

@@ -33,14 +33,15 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Hierarchy;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-class Attribute extends \Espo\Core\Templates\Services\Base
+class Attribute extends Hierarchy
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'data'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'data'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -103,6 +104,11 @@ class Attribute extends \Espo\Core\Templates\Services\Base
      */
     public function updateEntity($id, $data)
     {
+        if (property_exists($data, 'sortOrderInAttributeGroup') && property_exists($data, '_sortedIds')) {
+            $this->getRepository()->updateSortOrderInAttributeGroup($data->_sortedIds);
+            return $this->getEntity($id);
+        }
+
         $entity = $this->getEntityManager()->getRepository('Attribute')->get($id);
 
         if (!empty($entity)) {
