@@ -54,14 +54,9 @@ class AttributeGroup extends \Espo\Core\Templates\Services\Base
             ->distinct()
             ->join('attributeGroup')
             ->where(['attributeGroupId' => $attributeGroupId, 'type' => $attributesTypes])
-            ->order('sortOrder', 'ASC')
+            ->order('sortOrderInAttributeGroup', 'ASC')
             ->find()
             ->toArray();
-
-        foreach ($result as $k => $v) {
-            $result[$k]['sortOrder'] = $k * 10;
-            $this->getEntityManager()->nativeQuery("UPDATE `attribute` SET sort_order={$result[$k]['sortOrder']} WHERE id='{$v['id']}'");
-        }
 
         return [
             'total' => count($result),
