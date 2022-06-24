@@ -33,12 +33,13 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Templates\Services\Hierarchy;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-class Attribute extends \Espo\Core\Templates\Services\Base
+class Attribute extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'data'];
 

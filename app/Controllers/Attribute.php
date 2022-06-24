@@ -33,32 +33,25 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
+use Espo\Core\Templates\Controllers\Hierarchy;
 use Espo\Core\Exceptions;
-use Slim\Http\Request;
 
-class Attribute extends AbstractController
+class Attribute extends Hierarchy
 {
-    public function actionFiltersData($params, $data, Request $request): array
+    public function actionFiltersData($params, $data, $request): array
     {
-        if ($this->isReadAction($request, $params)) {
-            return $this->getRecordService()->getFiltersData();
+        if (!$request->isGet()) {
+            throw new Exceptions\BadRequest();
         }
 
-        throw new Exceptions\Error();
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Exceptions\Forbidden();
+        }
+
+        return $this->getRecordService()->getFiltersData();
     }
 
-    /**
-     * @param $params
-     * @param $data
-     * @param Request $request
-     *
-     * @return array
-     *
-     * @throws Exceptions\BadRequest
-     * @throws Exceptions\Error
-     * @throws Exceptions\Forbidden
-     */
-    public function actionGetAttributesIdsFilter($params, $data, Request $request): array
+    public function actionGetAttributesIdsFilter($params, $data, $request): array
     {
         if (!$request->isGet()) {
             throw new Exceptions\BadRequest();

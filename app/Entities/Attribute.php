@@ -33,10 +33,10 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Entities\Hierarchy;
 use Espo\Core\Utils\Json;
 
-class Attribute extends Base
+class Attribute extends Hierarchy
 {
     protected const DATA_FIELD = 'field';
 

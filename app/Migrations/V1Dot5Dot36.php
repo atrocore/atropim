@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -28,7 +29,34 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/attribute/detail', 'pim:views/detail',
-        Dep => Dep.extend({})
-);
+declare(strict_types=1);
 
+namespace Pim\Migrations;
+
+use Treo\Core\Migration\Base;
+
+class V1Dot5Dot36 extends Base
+{
+    public function up(): void
+    {
+        $this->exec(
+            "CREATE TABLE `attribute_hierarchy` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `entity_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `parent_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `hierarchy_sort_order` INT DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_475B582881257D5D` (entity_id), INDEX `IDX_475B5828727ACA70` (parent_id), UNIQUE INDEX `UNIQ_475B582881257D5D727ACA70` (entity_id, parent_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->exec("DROP TABLE `attribute_hierarchy`");
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
+    }
+}

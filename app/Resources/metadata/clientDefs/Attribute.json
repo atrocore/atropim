@@ -9,7 +9,9 @@
     "notLinkedProductFamilyAttributes",
     "unitTypeDisabled",
     "notLinkedWithProductFamilyAttribute",
-    "notLinkedWithProductAttributeValue"
+    "notLinkedWithProductAttributeValue",
+    "notParents",
+    "notChildren"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
@@ -18,14 +20,16 @@
     "notLinkedProductFamilyAttributes",
     "unitTypeDisabled",
     "notLinkedWithProductFamilyAttribute",
-    "notLinkedWithProductAttributeValue"
+    "notLinkedWithProductAttributeValue",
+    "notParents",
+    "notChildren"
   ],
   "disabledMassActions": [
     "merge"
   ],
   "views": {
-    "list": "pim:views/list",
-    "detail": "pim:views/attribute/detail"
+    "list": "views/list-tree",
+    "detail": "views/detail-tree"
   },
   "recordViews": {
     "detail": "pim:views/attribute/record/detail",
@@ -36,6 +40,22 @@
     "select": "pim:views/attribute/modals/select-records"
   },
   "relationshipPanels": {
+    "parents": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notChildren"
+      ]
+    },
+    "children": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notParents"
+      ],
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      }
+    },
     "productAttributeValues": {
       "create": false,
       "select": false,
@@ -46,6 +66,16 @@
   },
   "dynamicLogic": {
     "fields": {
+      "sortOrder": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isRoot"
+            }
+          ]
+        }
+      },
       "type": {
         "readOnly": {
           "conditionGroup": [
