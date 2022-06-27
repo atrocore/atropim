@@ -75,8 +75,12 @@ class ProductFamilyAttribute extends Base
             $inTransaction = true;
         }
         try {
+            $cloned = clone $attachment;
+            $this->prepareDefaultValues($attachment);
+
             $result = parent::createEntity($attachment);
-            $this->createPseudoTransactionCreateJobs(clone $attachment);
+            $this->createAssociatedFamilyAttribute($cloned, $attachment->attributeId);
+            $this->createPseudoTransactionCreateJobs($cloned);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }
@@ -88,6 +92,61 @@ class ProductFamilyAttribute extends Base
         }
 
         return $result;
+    }
+
+    protected function createAssociatedFamilyAttribute(\stdClass $attachment, string $attributeId): void
+    {
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
+        if (empty($attribute)) {
+            return;
+        }
+
+        $children = $attribute->get('children');
+        if (empty($children) || count($children) === 0) {
+            return;
+        }
+
+        foreach ($children as $child) {
+            $aData = new \stdClass();
+            $aData->attributeId = $child->get('id');
+            $aData->productFamilyId = $attachment->productFamilyId;
+            if (property_exists($attachment, 'ownerUserId')) {
+                $aData->ownerUserId = $attachment->ownerUserId;
+            }
+            if (property_exists($attachment, 'assignedUserId')) {
+                $aData->assignedUserId = $attachment->assignedUserId;
+            }
+            if (property_exists($attachment, 'teamsIds')) {
+                $aData->teamsIds = $attachment->teamsIds;
+            }
+            $this->createEntity($aData);
+        }
+    }
+
+    /**
+     * @param $data
+     *
+     * @return void
+     *
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function prepareDefaultValues($data): void
+    {
+        if (!isset($data->isRequired) && !isset($data->scope)) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $data->attributeId);
+            if ($attribute) {
+                $data->isRequired = $attribute->get('defaultIsRequired');
+
+                $defaultScope = $attribute->get('defaultScope');
+                if ($defaultScope === 'Global') {
+                    $data->scope = $defaultScope;
+                } else {
+                    $data->scope = $defaultScope;
+                    $data->channelId = $attribute->get('defaultChannelId');
+                    $data->channelName = $attribute->get('defaultChannelName');
+                }
+            }
+        }
     }
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data): void

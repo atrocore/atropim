@@ -1,11 +1,12 @@
 {
   "fields": {
+    "children": "Assoziierte Attribute",
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
     "productAttributeValues": "Attributwerte",
     "products": "Produkte",
     "typeValue": "Werttyp",
     "type": "Typ",
-    "sortOrder": "Sortierreihenfolge",
+    "sortOrderInAttributeGroup": "Sortierreihenfolge in Attributgruppe",
     "attributeGroup": "Attributgruppe",
     "attributeTab": "Attributtab",
     "code": "Code",
@@ -20,9 +21,13 @@
     "enumDefault": "Standard",
     "measure": "Maß",
     "unitDefault": "Standard",
-    "virtualProductField": "Virtuelles Produktfeld"
+    "virtualProductField": "Virtuelles Produktfeld",
+    "defaultScope": "Scope",
+    "defaultChannel": "Kanal",
+    "defaultIsRequired": "Erforderlich"
   },
   "links": {
+    "children": "Assoziierte Attribute",
     "attributeTab": "Attributtab",
     "products": "Produkte",
     "productAttributeValues": "Attributwerte",

@@ -1,5 +1,11 @@
 [
   {
+    "name": "parents"
+  },
+  {
+    "name": "children"
+  },
+  {
     "name": "productAttributeValues"
   }
 ]

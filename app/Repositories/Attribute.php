@@ -98,6 +98,15 @@ class Attribute extends AbstractRepository
         $this->getPDO()->exec("UPDATE `attribute` SET type_value_ids='" . Json::encode($typeValueIds) . "' WHERE id='{$entity->get('id')}'");
     }
 
+    public function updateSortOrderInAttributeGroup(array $ids): void
+    {
+        foreach ($ids as $k => $id) {
+            $id = $this->getPDO()->quote($id);
+            $sortOrder = $k * 10;
+            $this->getPDO()->exec("UPDATE `attribute` SET sort_order_in_attribute_group=$sortOrder WHERE id=$id");
+        }
+    }
+
     /**
      * @inheritDoc
      *
@@ -115,12 +124,8 @@ class Attribute extends AbstractRepository
         }
 
         // set sort order
-        if (is_null($entity->get('sortOrder'))) {
-            $entity->set('sortOrder', (int)$this->max('sortOrder') + 1);
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('sortOrder')) {
-            $this->updateSortOrder($entity);
+        if (is_null($entity->get('sortOrderInAttributeGroup'))) {
+            $entity->set('sortOrderInAttributeGroup', (int)$this->max('sortOrderInAttributeGroup') + 1);
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
@@ -214,7 +219,7 @@ class Attribute extends AbstractRepository
     {
         $data = $this
             ->getPDO()
-            ->query("SELECT MAX(sort_order) AS max FROM attribute WHERE deleted=0")
+            ->query("SELECT MAX(sort_order_in_attribute_group) AS max FROM attribute WHERE deleted=0")
             ->fetch(\PDO::FETCH_ASSOC);
 
         return $data['max'];
@@ -377,46 +382,6 @@ class Attribute extends AbstractRepository
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
-    }
-
-    /**
-     * @param Entity $entity
-     */
-    protected function updateSortOrder(Entity $entity): void
-    {
-        $data = $this
-            ->select(['id'])
-            ->where(
-                [
-                    'id!='             => $entity->get('id'),
-                    'sortOrder>='      => $entity->get('sortOrder'),
-                    'attributeGroupId' => $entity->get('attributeGroupId')
-                ]
-            )
-            ->order('sortOrder')
-            ->find()
-            ->toArray();
-
-        if (!empty($data)) {
-            // create max
-            $max = $entity->get('sortOrder');
-
-            // prepare sql
-            $sql = '';
-            foreach ($data as $row) {
-                // increase max
-                $max = $max + 10;
-
-                // prepare id
-                $id = $row['id'];
-
-                // prepare sql
-                $sql .= "UPDATE attribute SET sort_order='$max' WHERE id='$id';";
-            }
-
-            // execute sql
-            $this->getEntityManager()->nativeQuery($sql);
-        }
     }
 
     /**

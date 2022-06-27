@@ -78,6 +78,11 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 return {
                     tabId: this.defs.tabId
                 }
+            },
+            onlyDefaultChannelAttributes() {
+                return {
+                    productId: this.model.id
+                }
             }
         },
 
@@ -260,30 +265,15 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         createProductAttributeValue(selectObj) {
             let promises = [];
-            selectObj.forEach(attributeModel => {
+            selectObj.forEach(item => {
                 this.getModelFactory().create(this.scope, model => {
-                    model.setRelate({
-                        model: this.model,
-                        link: this.model.defs.links[this.link].foreign
-                    });
-                    model.setRelate({
-                        model: attributeModel,
-                        link: attributeModel.defs.links[this.link].foreign
-                    });
                     let attributes = {
+                        productId: this.model.get('id'),
+                        attributeId: item.id,
                         assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name'),
-                        scope: 'Global'
+                        assignedUserName: this.getUser().get('name')
                     };
-                    if (['enum'].includes(attributeModel.get('type'))) {
-                        if (this.model.get('prohibitedEmptyValue')) {
-                            attributes.value = (attributeModel.get('typeValue') || [])[0];
-                            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                                let typeValues = this.getFieldManager().getActualAttributeList(attributeModel.get('type'), 'typeValue').splice(1);
-                                typeValues.forEach(typeValue => attributes[typeValue.replace('typeValue', 'value')] = (attributeModel.get(typeValue) || [])[0]);
-                            }
-                        }
-                    }
+
                     model.set(attributes);
                     promises.push(model.save());
                 });

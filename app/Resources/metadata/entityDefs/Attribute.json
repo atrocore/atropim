@@ -160,14 +160,6 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "sortOrder": {
-      "type": "int",
-      "default": null,
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true
-    },
     "isRequired": {
       "notStorable": true,
       "type": "bool",
@@ -232,6 +224,68 @@
       "type": "unit",
       "notStorable": true,
       "view": "pim:views/attribute/fields/unit-default"
+    },
+    "defaultScope": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "Global",
+        "Channel"
+      ],
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
+      "default": "Global"
+    },
+    "defaultChannel": {
+      "type": "link"
+    },
+    "defaultIsRequired": {
+      "type": "bool",
+      "default": false
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "sortOrderInAttributeGroup": {
+      "type": "int",
+      "default": null,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "hierarchySortOrder": {
+      "type": "int",
+      "notStorable": true,
+      "relatingEntityField": [
+        "Attribute"
+      ],
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -279,6 +333,38 @@
       "foreign": "attribute",
       "entity": "ProductFamilyAttribute",
       "layoutRelationshipsDisabled": true
+    },
+    "defaultChannel": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "Channel"
+    },
+    "children": {
+      "type": "hasMany",
+      "relationName": "AttributeHierarchy",
+      "foreign": "parents",
+      "entity": "Attribute",
+      "audited": false,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ],
+      "additionalColumns": {
+        "hierarchySortOrder": {
+          "type": "int"
+        }
+      }
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "AttributeHierarchy",
+      "foreign": "children",
+      "entity": "Attribute",
+      "audited": false,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
     }
   },
   "collection": {

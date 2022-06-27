@@ -1,5 +1,6 @@
 {
   "fields": {
+    "children": "Associated attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
     "typeValue": "Values",
@@ -10,7 +11,7 @@
     "productAttributeValues": "Attribute Values",
     "isRequired": "Required",
     "isMultilang": "Multilingual",
-    "sortOrder": "Sort Order",
+    "sortOrderInAttributeGroup": "Sort Order in Attribute Group",
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",
@@ -19,9 +20,13 @@
     "enumDefault": "Default",
     "measure": "Measure",
     "unitDefault": "Default",
-    "virtualProductField": "Virtual product field"
+    "virtualProductField": "Virtual product field",
+    "defaultScope": "Scope",
+    "defaultChannel": "Channel",
+    "defaultIsRequired": "Required"
   },
   "links": {
+    "children": "Associated attributes",
     "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",
     "products": "Products",
