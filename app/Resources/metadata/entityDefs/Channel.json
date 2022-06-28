@@ -75,7 +75,6 @@
     "code": {
       "type": "varchar",
       "massUpdateDisabled": true,
-      "required": true,
       "trim": true,
       "emHidden": true,
       "view": "pim:views/fields/code-from-name",
