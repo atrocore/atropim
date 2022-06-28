@@ -502,7 +502,7 @@ class ProductAttributeValue extends AbstractRepository
 
         $result = $attribute->get("typeValue$language");
         if (empty($result)) {
-            $result = $attribute->get('typeValue');
+            $result = empty($attribute->get('typeValue')) ? [] : $attribute->get('typeValue');
         }
         if (!$attribute->get('prohibitedEmptyValue')) {
             array_unshift($result, '');
