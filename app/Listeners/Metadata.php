@@ -70,6 +70,8 @@ class Metadata extends AbstractListener
 
         $data = $this->addVirtualProductFields($data);
 
+        $data = $this->updateCodeFieldsClientDefs($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -331,6 +333,27 @@ class Metadata extends AbstractListener
                 if (isset($data['entityDefs']['ProductAttributeValue']['fields'][$field . $preparedLocale])) {
                     $data['entityDefs']['ProductAttributeValue']['fields'][$field . $preparedLocale]['exportDisabled'] = true;
                 }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function updateCodeFieldsClientDefs(array $data): array
+    {
+        foreach ($data['entityDefs'] as $entityName => $entity) {
+            if (isset($entity['fields']['code'])) {
+                $data['clientDefs'][$entityName]['dynamicLogic']['fields']['code']['required']['conditionGroup'] = [
+                    [
+                        'type'      => 'isNotEmpty',
+                        'attribute' => 'id'
+                    ]
+                ];
             }
         }
 
