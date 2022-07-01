@@ -90,6 +90,14 @@ class ProductAttributeValue extends Base
         return true;
     }
 
+    public function findEntities($params)
+    {
+        // prepare all inconsistent attributes
+        $this->getEntityManager()->getRepository('Product')->updateAllInconsistentAttributes();
+
+        return parent::findEntities($params);
+    }
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));

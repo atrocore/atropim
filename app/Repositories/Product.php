@@ -189,6 +189,31 @@ class Product extends AbstractRepository
         $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=0 WHERE id=$id");
     }
 
+    public function getProductsWithInconsistentAttributes(): array
+    {
+        $products = $this
+            ->where(['hasInconsistentAttributes' => true])
+            ->limit(0, 1000)
+            ->order('id', true)
+            ->find();
+
+        $result = [];
+        foreach ($products as $product) {
+            $result[] = $product;
+        }
+
+        return $result;
+    }
+
+    public function updateAllInconsistentAttributes(): void
+    {
+        if (!empty($products = $this->getProductsWithInconsistentAttributes())) {
+            foreach ($products as $product) {
+                $this->updateInconsistentAttributes($product);
+            }
+        }
+    }
+
     public function updateInconsistentAttributes(Entity $product): void
     {
         if (empty($product->get('hasInconsistentAttributes'))) {
@@ -272,7 +297,7 @@ class Product extends AbstractRepository
 
                 try {
                     $this->getEntityManager()->saveEntity($languagePav);
-                    
+
                     switch ($mainLanguagePav->get('attributeType')) {
                         case 'enum':
                             $pavRepository->syncEnumValues($mainLanguagePav, $mainLanguagePav->get('attribute'));
