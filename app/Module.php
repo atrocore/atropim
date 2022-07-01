@@ -158,17 +158,6 @@ class Module extends AbstractModule
                     'attribute' => 'isMultilang'
                 ]
             ];
-            $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue' . $key]['required']['conditionGroup'] = [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'type',
-                    'value'     => ['enum', 'multiEnum']
-                ],
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isMultilang'
-                ]
-            ];
 
             /**
              * ProductAttributeValue
