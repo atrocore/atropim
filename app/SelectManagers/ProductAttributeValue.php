@@ -170,4 +170,9 @@ class ProductAttributeValue extends AbstractSelectManager
             ];
         }
     }
+
+    protected function boolFilterProductInStock(array &$result): void
+    {
+        $result['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM `product` WHERE `amount`>0 AND deleted=0)";
+    }
 }
