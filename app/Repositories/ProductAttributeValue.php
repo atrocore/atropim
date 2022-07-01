@@ -311,7 +311,8 @@ class ProductAttributeValue extends AbstractRepository
                     }
 
                     if ($entity->isAttributeChanged('varcharValue')) {
-                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value='{$entity->get('varcharValue')}' WHERE id='{$entity->get('id')}'");
+                        $varcharValue = $this->getPDO()->quote($entity->get('varcharValue'));
+                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET varchar_value=$varcharValue WHERE id='{$entity->get('id')}'");
                     }
                 }
                 $entity->set('value', $entity->get('varcharValue'));
@@ -332,7 +333,8 @@ class ProductAttributeValue extends AbstractRepository
                     $entity->set('textValue', Json::encode($languageValue, JSON_UNESCAPED_UNICODE));
 
                     if ($entity->isAttributeChanged('textValue')) {
-                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value='{$entity->get('textValue')}' WHERE id='{$entity->get('id')}'");
+                        $textValue = $this->getPDO()->quote($entity->get('textValue'));
+                        $this->getPDO()->exec("UPDATE `product_attribute_value` SET text_value=$textValue WHERE id='{$entity->get('id')}'");
                     }
                 }
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
