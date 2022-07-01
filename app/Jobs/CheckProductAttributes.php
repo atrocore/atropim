@@ -37,31 +37,8 @@ class CheckProductAttributes extends Base
 {
     public function run(): bool
     {
-        $productRepository = $this->getEntityManager()->getRepository('Product');
-        if (!empty($products = $this->getProductsWithInconsistentAttributes())) {
-            foreach ($products as $product) {
-                $productRepository->updateInconsistentAttributes($product);
-            }
-        }
+        $this->getEntityManager()->getRepository('Product')->updateAllInconsistentAttributes();
 
         return true;
-    }
-
-    protected function getProductsWithInconsistentAttributes(): array
-    {
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(['hasInconsistentAttributes' => true])
-            ->limit(0, 1000)
-            ->order('id', true)
-            ->find();
-
-        $result = [];
-        foreach ($products as $product) {
-            $result[] = $product;
-        }
-
-        return $result;
     }
 }
