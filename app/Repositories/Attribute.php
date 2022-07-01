@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
@@ -114,9 +115,7 @@ class Attribute extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if (!$this->isTypeValueValid($entity)) {
-            throw new BadRequest("The number of 'Values' items should be identical for all locales");
-        }
+        $this->prepareTypeValues($entity);
 
         if (!$entity->isNew()) {
             $this->updateEnumPav($entity);
@@ -384,24 +383,42 @@ class Attribute extends AbstractRepository
         return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
     }
 
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    protected function isTypeValueValid(Entity $entity): bool
+    protected function prepareTypeValues(Entity $entity): void
     {
-        if (!empty($entity->get('isMultilang')) && $this->getConfig()->get('isMultilangActive', false) && in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            $count = count($entity->get('typeValue'));
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $field = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($locale)));
-                if (count($entity->get($field)) != $count) {
-                    return false;
-                }
-            }
+        if (!in_array($entity->get('type'), ['enum', 'multiEnum'])) {
+            return;
         }
 
-        return true;
+        if (empty($this->getConfig()->get('isMultilangActive', false))) {
+            return;
+        }
+
+        if (!$entity->isAttributeChanged('isMultilang')) {
+            return;
+        }
+
+        if (empty($entity->get('isMultilang'))) {
+            return;
+        }
+
+        $typeValue = $entity->get('typeValue');
+        if (empty($typeValue)) {
+            return;
+        }
+
+        $em = $this->getInjection('eventManager');
+
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+            $languageField = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($language)));
+            $languageTypeValue = $entity->get($languageField);
+            foreach ($typeValue as $k => $value) {
+                if (empty($languageTypeValue[$k])) {
+                    $event = new Event(['option' => $value, 'language' => $language]);
+                    $languageTypeValue[$k] = $em->dispatch('AttributeRepository', 'generateEnumOption', $event)->getArgument('option');
+                }
+            }
+            $entity->set($languageField, $languageTypeValue);
+        }
     }
 
     protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string

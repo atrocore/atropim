@@ -86,7 +86,7 @@ class LayoutController extends AbstractListener
         $result = Json::decode($event->getArgument('result'), true);
 
         if ($this->getConfig()->get('isMultilangActive', false)) {
-            $multilangField = ['name' => 'isMultilang', 'inlineEditDisabled' => true];
+            $multilangField = ['name' => 'isMultilang', 'inlineEditDisabled' => false];
 
             $result[0]['rows'][] = [$multilangField, false];
         }

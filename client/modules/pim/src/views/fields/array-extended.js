@@ -31,8 +31,16 @@
 Espo.define('pim:views/fields/array-extended', 'views/fields/array-extended',
     Dep => Dep.extend({
 
-        isAttribute: true
-        
+        isAttribute: true,
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.reRender();
+            });
+        },
+
     })
 );
 
