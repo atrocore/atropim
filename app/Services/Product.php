@@ -199,6 +199,29 @@ class Product extends Hierarchy
     public function updateEntity($id, $data)
     {
         $conflicts = [];
+
+        $categoryId = null;
+        if (property_exists($data, '_mainEntityId')) {
+            $categoryId = (string)$data->_mainEntityId;
+        }
+        if (property_exists($data, '_relationEntityId')) {
+            $categoryId = (string)$data->_relationEntityId;
+        }
+
+        if (!empty($categoryId)) {
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->updateProductCategorySortOrder($id, $categoryId, (int)$data->pcSorting, false);
+        }
+
+        if (!empty($data->_id)) {
+            $this
+                ->getEntityManager()
+                ->getRepository('Product')
+                ->updateProductCategorySortOrder($id, (string)$data->_id, (int)$data->pcSorting);
+        }
+
         if ($this->isProductAttributeUpdating($data)) {
             if (!$this->getEntityManager()->getPDO()->inTransaction()) {
                 $this->getEntityManager()->getPDO()->beginTransaction();
