@@ -30,6 +30,9 @@
     "Create ProductAttributeValue": "Создать значение атрибута",
     "cannotLinkDefaultChannel": "Канал по умолчанию '{channel}' для выбранного атрибута не связан с этим продуктом."
   },
+  "boolFilters": {
+    "productInStock": "Продукт на складе"
+  },
   "exceptions": {
     "noSuchChannelInProduct": "Атрибут '%s' для канала '%s' для продукта '%s' недоступен.",
     "attributeUnitValueIsRequired": "Единица измерения для атрибута '%s' необходима.",

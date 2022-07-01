@@ -3,7 +3,8 @@
   "iconClass": "fas fa-list",
   "createDisabled": true,
   "boolFilterList": [
-    "onlyMy"
+    "onlyMy",
+    "productInStock"
   ],
   "disabledMassActions": [
     "merge"

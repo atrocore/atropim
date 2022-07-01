@@ -30,6 +30,9 @@
     "Create ProductAttributeValue": "Produktattributwert erstellen",
     "cannotLinkDefaultChannel": "Der Standardkanal '{channel}' für das ausgewählte Attribut ist nicht mit diesem Produkt verknüpft."
   },
+  "boolFilters": {
+    "productInStock": "Produkt auf Lager"
+  },
   "exceptions": {
     "noSuchChannelInProduct": "Das Attribut '%s' für den Kanal '%s' für das Produkt '%s' ist nicht verfügbar.",
     "attributeUnitValueIsRequired": "Die Einheit für das Attribut '%s' erforderlich.",
