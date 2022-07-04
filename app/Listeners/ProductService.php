@@ -44,34 +44,6 @@ class ProductService extends AbstractEntityListener
     /**
      * @param Event $event
      */
-    public function beforeUpdateEntity(Event $event)
-    {
-        $data = $event->getArgument('data');
-
-        $categoryId = null;
-        if (property_exists($data, '_mainEntityId')) {
-            $categoryId = (string)$data->_mainEntityId;
-        }
-        if (property_exists($data, '_relationEntityId')) {
-            $categoryId = (string)$data->_relationEntityId;
-        }
-
-        if (!empty($categoryId)) {
-            $this
-                ->getProductRepository()
-                ->updateProductCategorySortOrder((string)$event->getArgument('id'), $categoryId, (int)$data->pcSorting, false);
-        }
-
-        if (!empty($data->_id)) {
-            $this
-                ->getProductRepository()
-                ->updateProductCategorySortOrder((string)$event->getArgument('id'), (string)$data->_id, (int)$data->pcSorting);
-        }
-    }
-
-    /**
-     * @param Event $event
-     */
     public function afterFindLinkedEntities(Event $event)
     {
         $result = $event->getArgument('result');
