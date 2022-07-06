@@ -199,6 +199,12 @@ class Product extends Hierarchy
     public function updateEntity($id, $data)
     {
         $conflicts = [];
+
+        if (property_exists($data, '_sortedIds') && property_exists($data, '_scope') && $data->_scope == 'Category' && property_exists($data, '_id')) {
+            $this->getRepository()->updateSortOrderInCategory($data->_id, $data->_sortedIds);
+            return $this->getEntity($id);
+        }
+
         if ($this->isProductAttributeUpdating($data)) {
             if (!$this->getEntityManager()->getPDO()->inTransaction()) {
                 $this->getEntityManager()->getPDO()->beginTransaction();
