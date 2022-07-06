@@ -200,8 +200,8 @@ class Product extends Hierarchy
     {
         $conflicts = [];
 
-        if (property_exists($data, '_sortedIds') && property_exists($data, '_scope') && $data->_scope == 'Category') {
-            $this->getRepository()->updateSortOrderInCategory($data->_sortedIds);
+        if (property_exists($data, '_sortedIds') && property_exists($data, '_scope') && $data->_scope == 'Category' && property_exists($data, '_id')) {
+            $this->getRepository()->updateSortOrderInCategory($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
         }
 
