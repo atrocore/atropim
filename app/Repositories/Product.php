@@ -751,6 +751,20 @@ class Product extends AbstractRepository
     }
 
     /**
+     * @param array $ids
+     *
+     * @return void
+     */
+    public function updateSortOrderInCategory(array $ids): void
+    {
+        foreach ($ids as $k => $id) {
+            $id = $this->getPDO()->quote($id);
+            $sortOrder = (int)$k * 10;
+            $this->getPDO()->exec("UPDATE `product_category` SET sorting=$sortOrder WHERE product_id=$id");
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     protected function init()
