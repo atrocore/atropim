@@ -52,6 +52,8 @@ class AssociatedProduct extends Base
             $inTransaction = true;
         }
 
+        $this->prepareBackwardAssociationBeforeSave($attachment);
+
         try {
             $entity = parent::createEntity($attachment);
             if (property_exists($attachment, 'backwardAssociationId') && !empty($attachment->backwardAssociationId)) {
@@ -91,6 +93,8 @@ class AssociatedProduct extends Base
             $pdo->beginTransaction();
             $inTransaction = true;
         }
+
+        $this->prepareBackwardAssociationBeforeSave($data);
 
         try {
             $entity = parent::updateEntity($id, $data);
@@ -233,5 +237,17 @@ class AssociatedProduct extends Base
         $this->prepareBackwardAssociation($entity);
 
         return parent::isEntityUpdated($entity, $data);
+    }
+
+    /**
+     * @param \stdClass $data
+     *
+     * @return void
+     */
+    protected function prepareBackwardAssociationBeforeSave(\stdClass $data): void
+    {
+        if (property_exists($data, 'backwardAssociation') && !empty($data->backwardAssociation)) {
+            $data->backwardAssociationId = $data->backwardAssociation;
+        }
     }
 }
