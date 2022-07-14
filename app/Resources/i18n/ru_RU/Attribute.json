@@ -1,5 +1,6 @@
 {
   "fields": {
+    "parents": "Связывающие атрибуты",
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "typeValue": "Значения",
@@ -25,6 +26,7 @@
     "defaultIsRequired": "Обязательно"
   },
   "links": {
+    "parents": "Связывающие атрибуты",
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "products": "Продукты",

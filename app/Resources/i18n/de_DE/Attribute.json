@@ -1,5 +1,6 @@
 {
   "fields": {
+    "parents": "Assoziierende Attribute",
     "children": "Assoziierte Attribute",
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
     "productAttributeValues": "Attributwerte",
@@ -27,6 +28,7 @@
     "defaultIsRequired": "Erforderlich"
   },
   "links": {
+    "parents": "Assoziierende Attribute",
     "children": "Assoziierte Attribute",
     "attributeTab": "Attributtab",
     "products": "Produkte",

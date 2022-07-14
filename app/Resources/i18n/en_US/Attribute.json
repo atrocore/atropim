@@ -1,5 +1,6 @@
 {
   "fields": {
+    "parents": "Associating attributes",
     "children": "Associated attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
@@ -26,6 +27,7 @@
     "defaultIsRequired": "Required"
   },
   "links": {
+    "parents": "Associating attributes",
     "children": "Associated attributes",
     "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",

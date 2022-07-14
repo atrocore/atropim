@@ -334,6 +334,24 @@ class Category extends AbstractRepository
     }
 
     /**
+     * @return int
+     */
+    public function getChildrenCount(string $parentId): int
+    {
+        if (empty($parentId)) {
+            $query = "SELECT COUNT(id) as count
+                      FROM `category` c
+                      WHERE c.category_parent_id IS NULL AND c.deleted=0";
+        } else {
+            $query = "SELECT COUNT(id) as count
+                      FROM `category` c
+                      WHERE c.category_parent_id = '$parentId' AND c.deleted=0";
+        }
+
+        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+    }
+
+    /**
      * @param Entity $entity
      * @param array  $options
      *

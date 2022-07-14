@@ -66,7 +66,7 @@ class ProductAttributeValue extends AbstractRepository
         return $this->pavsAttributes[$entity->get('attributeId')];
     }
 
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
     {
         $pav = $this->get($parentId);
         if (empty($pav) || empty($pav->get('productId'))) {
