@@ -74,7 +74,10 @@ class Category extends Base
             ];
         }
 
-        return $result;
+        return [
+            'list' => $result,
+            'total' => $this->getRepository()->getChildrenCount($parentId)
+        ];
     }
 
     public function prepareEntityForOutput(Entity $entity)

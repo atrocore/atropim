@@ -51,22 +51,6 @@ class Product extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['data'];
 
-    public function getChildren(string $parentId, array $params): array
-    {
-        $result = parent::getChildren($parentId, $params);
-
-        if (!empty($params['isTreePanel']) && empty($parentId)) {
-            foreach ($result as $k => $v) {
-                if (empty($v['load_on_demand'])) {
-                    unset($result[$k]);
-                }
-            }
-            $result = array_values($result);
-        }
-
-        return $result;
-    }
-
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
         // set global main images
