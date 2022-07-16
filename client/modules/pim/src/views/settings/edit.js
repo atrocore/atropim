@@ -36,10 +36,12 @@ Espo.define('pim:views/settings/edit', 'views/settings/edit', function (Dep) {
 
         recordView: 'pim:views/admin/settings',
 
-        getHeader() {
-            return this.buildHeaderHtml([
-                this.getLanguage().translate('pim', 'labels', 'Admin')
-            ], true);
+        setupHeader: function () {
+            this.createView('header', this.headerView, {
+                model: this.model,
+                el: '#main > .header',
+                template: 'pim:admin/settings/headers/settings'
+            });
         }
     });
 
