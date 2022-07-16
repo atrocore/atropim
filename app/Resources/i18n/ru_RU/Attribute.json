@@ -40,7 +40,8 @@
   },
   "messages": {
     "sameNumberOptions": "Вы должны установить такое же количество опций",
-    "productsCountWithAttribute": "Количество продуктов, у которых задан данный атрибут: <strong>{count}</strong>"
+    "productsCountWithAttribute": "Количество продуктов, у которых задан данный атрибут: <strong>{count}</strong>",
+    "removeAttribute(s)": "Все значения для этого(этих) атрибута(ов) также удаляются. Вы действительно хотите удалить этот(эти) атрибут(ы)?"
   },
   "filterLabels": {
     "All": "All"

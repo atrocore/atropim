@@ -63,8 +63,6 @@ Espo.define('pim:views/attribute/record/list', 'pim:views/record/list',
                     ids.push(this.checkedList[i]);
                 }
 
-                data.force = $('.force-remove').is(':checked');
-
                 $.ajax({
                     url: this.entityType + '/action/massDelete',
                     type: 'POST',
@@ -154,13 +152,7 @@ Espo.define('pim:views/attribute/record/list', 'pim:views/record/list',
             return '' +
                 '<div class="row">' +
                     '<div class="col-xs-12">' +
-                        '<span class="confirm-message">' + this.translate('removeRecordConfirmation', 'messages') + '</span>' +
-                    '</div>' +
-                    '<div class="col-xs-12">' +
-                        '<div class="cell pull-left" style="margin-top: 15px;">' +
-                            '<input type="checkbox" class="force-remove"> ' +
-                            '<label class="control-label">' + this.translate('removeExplain', 'labels', 'Attribute') + '</label>' +
-                        '</div>' +
+                        '<span class="confirm-message">' + this.translate('removeAttribute(s)', 'messages', 'Attribute') + '</span>' +
                     '</div>' +
                 '</div>';
         },
