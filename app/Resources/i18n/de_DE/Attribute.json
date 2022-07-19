@@ -58,7 +58,8 @@
   },
   "messages": {
     "sameNumberOptions": "Die gleiche Anzahl von Optionen",
-    "productsCountWithAttribute": "Anzahl der Produkte, für die dieses Attribut festgelegt ist: <strong>{count}</strong>"
+    "productsCountWithAttribute": "Anzahl der Produkte, für die dieses Attribut festgelegt ist: <strong>{count}</strong>",
+    "removeAttribute(s)": "Alle Werte für dieses (diese) Attribut(e) werden ebenfalls gelöscht. Möchten Sie diese(n) Attribut(e) wirklich löschen?"
   },
   "filterLabels": {
     "All": "Alle"
