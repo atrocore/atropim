@@ -75,12 +75,11 @@ class ProductFamilyAttribute extends Base
             $inTransaction = true;
         }
         try {
-            $cloned = clone $attachment;
             $this->prepareDefaultValues($attachment);
 
             $result = parent::createEntity($attachment);
-            $this->createAssociatedFamilyAttribute($cloned, $attachment->attributeId);
-            $this->createPseudoTransactionCreateJobs($cloned);
+            $this->createAssociatedFamilyAttribute($attachment, $attachment->attributeId);
+            $this->createPseudoTransactionCreateJobs($attachment);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }
@@ -155,20 +154,17 @@ class ProductFamilyAttribute extends Base
             return;
         }
 
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->select(['id', 'name'])
-            ->where(['productFamilyId' => $data->productFamilyId])
-            ->find();
+        $products = $this->getRepository()->getAvailableChannelsForPavs($data->productFamilyId);
 
-        foreach ($products as $product) {
+        foreach ($products as $id => $channels) {
             $inputData = clone $data;
-            $inputData->productId = $product->get('id');
-            $inputData->productName = $product->get('name');
-            unset($inputData->productFamilyId);
 
-            $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
+            if ($data->scope === 'Global' || in_array($data->channelId, $channels)) {
+                $inputData->productId = $id;
+                unset($inputData->productFamilyId);
+
+                $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
+            }
         }
     }
 
