@@ -61,7 +61,7 @@ class Language extends AbstractListener
             }
             foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields'], []) as $fields => $fieldDefs) {
                 if (!empty($fieldDefs['attributeId'])) {
-                    $attributeName = $fieldDefs['attributeName'];
+                    $attributeName = empty($fieldDefs['attributeName']) ? $fieldDefs['attributeId'] : $fieldDefs['attributeName'];
                     if (isset($fieldDefs[Util::toCamelCase('attribute_name_' . strtolower($l))])) {
                         $attributeName = $fieldDefs[Util::toCamelCase('attribute_name_' . strtolower($l))];
                     }
