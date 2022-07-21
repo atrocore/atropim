@@ -79,6 +79,23 @@ class ProductFamilyAttribute extends Base
     }
 
     /**
+     * @param string $productFamilyId
+     *
+     * @return array
+     */
+    public function getAvailableChannelsForPavs(string $productFamilyId): array
+    {
+        $productFamilyId = $this->getPDO()->quote($productFamilyId);
+
+        $sql = "SELECT p.id, pc.channel_id 
+                FROM product p 
+                    LEFT JOIN product_channel pc on p.id = pc.product_id AND pc.deleted = 0 
+                WHERE p.product_family_id = $productFamilyId AND p.deleted = 0";
+
+        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_GROUP|\PDO::FETCH_COLUMN);
+    }
+
+    /**
      * @param Entity $entity
      *
      * @throws BadRequest
