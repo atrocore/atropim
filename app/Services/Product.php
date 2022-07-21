@@ -964,9 +964,11 @@ class Product extends Hierarchy
                             $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
                             break;
                         case 'asset':
-                            $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
-                            $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
-                            $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                            if (!empty($attributeField['assetFieldName'])) {
+                                $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
+                                $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
+                                $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                            }
                             break;
                     }
                 }
