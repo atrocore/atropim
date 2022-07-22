@@ -72,7 +72,7 @@ class Product extends AbstractSelectManager
         }
 
         // for products in category page
-        if ($params['sortBy'] == 'pcSorting') {
+        if (!empty($params['sortBy']) && $params['sortBy'] == 'pcSorting') {
             $selectParams['additionalColumns']['sorting'] = 'pcSorting';
             $selectParams['orderBy'] = 'product_category.sorting';
         }

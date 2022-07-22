@@ -467,7 +467,7 @@ class ProductAttributeValue extends Base
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
-        if ($field == 'value' || ((!empty($multilangField = $defs['multilangField']) && $multilangField == 'value'))) {
+        if ($field == 'value' || ((!empty($defs['multilangField']) && $defs['multilangField'] == 'value'))) {
             $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             $typesWithPattern = ['varchar'];
 
