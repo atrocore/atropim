@@ -542,6 +542,12 @@ class ProductAttributeValue extends Base
             $fields = [$entity->get('id') => $entity->get('attributeName')];
         }
 
+        foreach (['id', 'unit', 'currency'] as $item) {
+            if (isset($fields['value' . ucfirst($item)])) {
+                unset($fields['value' . ucfirst($item)]);
+            }
+        }
+
         return $fields;
     }
 
