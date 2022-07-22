@@ -57,11 +57,13 @@ class Language extends AbstractListener
         foreach ($data as $l => $rows) {
             foreach ($languages as $language) {
                 $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($language)));
-                $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;
+                if (!empty($data[$l]['Attribute']['fields']["name"])) {
+                    $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;
+                }
             }
             foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields'], []) as $fields => $fieldDefs) {
                 if (!empty($fieldDefs['attributeId'])) {
-                    $attributeName = $fieldDefs['attributeName'];
+                    $attributeName = empty($fieldDefs['attributeName']) ? $fieldDefs['attributeId'] : $fieldDefs['attributeName'];
                     if (isset($fieldDefs[Util::toCamelCase('attribute_name_' . strtolower($l))])) {
                         $attributeName = $fieldDefs[Util::toCamelCase('attribute_name_' . strtolower($l))];
                     }

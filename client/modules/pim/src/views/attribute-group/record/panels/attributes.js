@@ -212,7 +212,6 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
             }, function () {
                 this.notify('Removing...');
                 model.destroy({
-                    data: JSON.stringify({force: $('.force-remove').is(':checked')}),
                     success: function () {
                         this.notify('Removed', 'success');
                         this.collection.fetch();
@@ -227,13 +226,7 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
             return '' +
                 '<div class="row">' +
                     '<div class="col-xs-12">' +
-                        '<span class="confirm-message">' + this.translate('removeRecordConfirmation', 'messages') + '</span>' +
-                    '</div>' +
-                    '<div class="col-xs-12">' +
-                        '<div class="cell pull-left" style="margin-top: 15px;">' +
-                            '<input type="checkbox" class="force-remove"> ' +
-                            '<label class="control-label">' + this.translate('removeExplain', 'labels', 'Attribute') + '</label>' +
-                        '</div>' +
+                        '<span class="confirm-message">' + this.translate('removeAttribute(s)', 'messages', 'Attribute') + '</span>' +
                     '</div>' +
                 '</div>';
         }

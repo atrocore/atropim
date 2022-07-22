@@ -482,6 +482,50 @@ class Product extends Hierarchy
     }
 
     /**
+     * @inheritDoc
+     */
+    public function linkEntity($id, $link, $foreignId)
+    {
+        $result = parent::linkEntity($id, $link, $foreignId);
+
+        if (!empty($result) && $link === 'channels') {
+            $product = $this->getEntity($id);
+
+            if ($product) {
+                $pfas = $this
+                    ->getEntityManager()
+                    ->getRepository('ProductFamilyAttribute')
+                    ->where([
+                        'productFamilyId'   => $product->get('productFamilyId'),
+                        'scope'             => 'Channel',
+                        'channelId'         => $foreignId
+                    ])
+                    ->find();
+
+                if (count($pfas) > 0) {
+                    /** @var ProductAttributeValue $service */
+                    $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
+
+                    foreach ($pfas as $pfa) {
+                        $data = new \stdClass();
+                        $data->attributeId = $pfa->get('attributeId');
+                        $data->productId = $id;
+                        $data->scope = $pfa->get('scope');
+                        $data->channelId = $pfa->get('channelId');
+                        $data->channelName = $pfa->get('channelName');
+
+                        try {
+                            $service->createEntity($data);
+                        } catch (\Throwable $e) {}
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $id
      * @param array  $params
      *
@@ -964,9 +1008,11 @@ class Product extends Hierarchy
                             $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
                             break;
                         case 'asset':
-                            $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
-                            $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
-                            $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                            if (!empty($attributeField['assetFieldName'])) {
+                                $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
+                                $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
+                                $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                            }
                             break;
                     }
                 }
