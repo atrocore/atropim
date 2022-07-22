@@ -55,7 +55,7 @@ class ProductAttributeValue extends AbstractSelectManager
                     }
                     unset($params['where'][$k]);
                 }
-                if ($v['attribute'] === 'boolValue') {
+                if (!empty($v['attribute']) && $v['attribute'] === 'boolValue') {
                     $pushBoolAttributeType = true;
                 }
             }
