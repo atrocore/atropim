@@ -236,7 +236,7 @@ class Attribute extends Hierarchy
     {
         $result = parent::getFieldsThatConflict($entity, $data);
 
-        $fields = ['typeValue'];
+        $fields = ['typeValue', 'typeValueIds'];
         if ($this->getConfig()->get('isMultilangActive', false)) {
             foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
                 $fields[] = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($language)));
