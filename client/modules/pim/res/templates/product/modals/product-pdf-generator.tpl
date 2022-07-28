@@ -22,3 +22,17 @@
         <div class="field" data-name="fileName">{{{fileName}}}</div>
     </div>
 </div>
+{{#if isEnabledAssets}}
+    <div class="row">
+        <div class="col-xs-6 cell form-group">
+            <label class="control-label" data-name="saveAsAsset">{{translate 'saveAsAsset' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="saveAsAsset">{{{saveAsAsset}}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 cell form-group">
+            <label class="control-label" data-name="assetCategory">{{translate 'AssetCategory' category='scopeNames'}}</label>
+            <div class="field" data-name="assetCategory">{{{assetCategory}}}</div>
+        </div>
+    </div>
+{{/if}}

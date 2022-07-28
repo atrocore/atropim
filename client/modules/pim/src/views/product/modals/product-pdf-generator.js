@@ -34,10 +34,9 @@ Espo.define('pim:views/product/modals/product-pdf-generator', 'pdf-generator:vie
         template: 'pim:product/modals/product-pdf-generator',
 
         setupFields() {
-            this.createTemplateListView();
+            Dep.prototype.setupFields.call(this);
+
             this.createChannelsView();
-            this.createLocalView();
-            this.createFileNameView();
         },
 
         createChannelsView() {
@@ -67,70 +66,24 @@ Espo.define('pim:views/product/modals/product-pdf-generator', 'pdf-generator:vie
             }, view => view.render());
         },
 
-        actionOpenPdf() {
-            let data = this.getMetadata().get(['pdfGenerator', this.scope, 'templates', this.model.get('template')]);
+        generatePdfViewUrl() {
+            let url = Dep.prototype.generatePdfViewUrl.call(this);
 
-            if (this.isFilenameValid()) {
-                let url = `${this.getBasePath()}?entryPoint=atroPdf`;
-                url += '&' + $.param({'entityType': this.scope});
-                url += '&' + $.param({'entityId': this.model.get('entityId')});
-                url += '&' + $.param({'template': this.model.get('template')});
-                if (this.model.get('channel')) {
-                    url += '&' + $.param({'channel': this.model.get('channel')});
-                }
-                if (this.getConfig().get('isMultilangActive') && data['isMultilang'] && this.model.get('locale')) {
-                    url += '&' + $.param({'locale': this.model.get('locale')});
-                }
-                url += '&' + $.param({'filename': this.model.get('fileName')});
-                window.open(url, '_blank');
+            if (this.model.get('channel')) {
+                url += '&' + $.param({'channel': this.model.get('channel')});
             }
+
+            return url;
         },
 
-        actionDownloadPdf() {
-            let template = this.getMetadata().get(['pdfGenerator', this.scope, 'templates', this.model.get('template')]);
-
-            let data = {
-                entity: this.scope,
-                template: this.model.get('template')
-            };
-
-            if (this.getConfig().get('isMultilangActive') && template['isMultilang'] && this.model.get('locale')) {
-                data.locale = this.model.get('locale');
-            }
+        prepareDownloadPdfOptions() {
+            let data = Dep.prototype.prepareDownloadPdfOptions.call(this);
 
             if (this.model.get('channel')) {
                 data.channel = this.model.get('channel');
             }
 
-            if (this.model.get('entitiesIds')) {
-                data.entitiesId = this.model.get('entitiesIds');
-
-                this.ajaxPostRequest('PdfGenerator/action/GenerateEntities', data);
-                this.close();
-            } else {
-                if (this.isFilenameValid()) {
-                    data.entityId = this.model.get('entityId');
-
-                    this.notify('Please wait...');
-                    this.ajaxPostRequest('PdfGenerator/action/Generate', data).then(success => {
-                        this.notify(false);
-
-                        if (success === true) {
-                            this.close()
-                        } else {
-                            let id = success.id || null;
-                            let url = this.getBasePath() + '?entryPoint=download&showInline=false&id=' + id;
-
-                            const anchor = window.document.createElement('a');
-                            anchor.href = url;
-                            anchor.download = this.model.get('fileName');
-                            document.body.appendChild(anchor);
-                            anchor.click();
-                            document.body.removeChild(anchor);
-                        }
-                    });
-                }
-            }
+            return data;
         }
     })
 );
