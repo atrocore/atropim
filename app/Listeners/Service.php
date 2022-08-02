@@ -35,43 +35,58 @@ namespace Pim\Listeners;
 
 use Espo\Core\EventManager\Event;
 use Espo\Listeners\AbstractListener;
+use Espo\Core\ORM\Entity;
 
-class Entity extends AbstractListener
+class Service extends AbstractListener
 {
     /**
      * @param Event $event
      *
      * @return void
      */
-    public function afterSave(Event $event)
+    public function afterCreateEntity(Event $event): void
     {
-        /** @var \Espo\Core\ORM\Entity $entity */
+        /** @var Entity $entity */
         $entity = $event->getArgument('entity');
 
-        if ($entity->hasAttribute('code')) {
-            if (($entity->isNew() && empty($entity->get('code')))
-                || (!$entity->isNew() && $entity->isAttributeChanged('name'))) {
-                $this->setupCode($entity);
-            }
+        if ($entity->hasAttribute('code') && $entity->hasAttribute('name') && empty($entity->get('code'))) {
+            $this->setupCode($entity);
 
             $event->setArgument('entity', $entity);
         }
     }
 
     /**
-     * @param \Espo\Core\ORM\Entity $entity
+     * @param Event $event
+     *
+     * @return void
+     */
+    public function afterUpdateEntity(Event $event): void
+    {
+        /** @var Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        if ($entity->hasAttribute('code') && $entity->hasAttribute('name') && $entity->isAttributeChanged('name')) {
+            $this->setupCode($entity);
+
+            $event->setArgument('entity', $entity);
+        }
+    }
+
+    /**
+     * @param Entity $entity
      * @param int $index
      *
      * @return void
      */
-    protected function setupCode(\Espo\Core\ORM\Entity $entity, int $index = 0): void
+    protected function setupCode(Entity $entity, int $index = 0): void
     {
         $code = $this->generateCode($entity, $index);
 
         $exists = $this
             ->getEntityManager()
             ->getRepository($entity->getEntityName())
-            ->where(['code' => $code])
+            ->where(['code' => $code, 'id!=' => $entity->id])
             ->count();
 
         if ($exists > 0) {
@@ -83,11 +98,11 @@ class Entity extends AbstractListener
     }
 
     /**
-     * @param \Espo\Core\ORM\Entity $entity
+     * @param Entity $entity
      *
      * @return void
      */
-    protected function generateCode(\Espo\Core\ORM\Entity $entity, int $index): string
+    protected function generateCode(Entity $entity, int $index): string
     {
         $code = strtolower($entity->get('name'));
         $code = preg_replace('/ /', '_', $code);
