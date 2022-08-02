@@ -134,4 +134,57 @@ class Category extends Base
 
         return $categoriesIds;
     }
+
+    public function getTreeData(array $ids): array
+    {
+        $tree = [];
+
+        $treeBranches = [];
+        foreach ($this->getRepository()->where(['id' => $ids])->find() as $entity) {
+            $this->createTreeBranches($entity, $treeBranches);
+        }
+
+        if (!empty($treeBranches)) {
+            foreach ($treeBranches as $entity) {
+                $this->prepareTreeNode($entity, $tree, $ids);
+            }
+            $this->prepareTreeData($tree);
+        }
+
+        return ['total' => count($ids), 'tree' => $tree];
+    }
+
+    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
+    {
+        $parent = $entity->get('categoryParent');
+        if (empty($parent)) {
+            $treeBranches[] = $entity;
+        } else {
+            $parent->child = $entity;
+            $this->createTreeBranches($parent, $treeBranches);
+        }
+    }
+
+    protected function prepareTreeNode($entity, array &$tree, array $ids): void
+    {
+        $tree[$entity->get('id')]['id'] = $entity->get('id');
+        $tree[$entity->get('id')]['name'] = $entity->get('name');
+        $tree[$entity->get('id')]['disabled'] = !in_array($entity->get('id'), $ids);
+        if (!empty($entity->child)) {
+            if (empty($tree[$entity->get('id')]['children'])) {
+                $tree[$entity->get('id')]['children'] = [];
+            }
+            $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children'], $ids);
+        }
+    }
+
+    protected function prepareTreeData(array &$tree): void
+    {
+        $tree = array_values($tree);
+        foreach ($tree as &$v) {
+            if (!empty($v['children'])) {
+                $this->prepareTreeData($v['children']);
+            }
+        }
+    }
 }
