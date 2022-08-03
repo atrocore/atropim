@@ -53,10 +53,10 @@ class AttachmentController extends AbstractListener
     {
         $data = $event->getArgument('data');
 
-        if ($data->relatedType == 'ProductAttributeValue') {
+        if (property_exists($data, 'relatedType') && $data->relatedType === 'ProductAttributeValue') {
             $data->field = 'image';
         }
 
-       $event->setArgument('data', $data);
+        $event->setArgument('data', $data);
     }
 }
