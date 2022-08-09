@@ -788,7 +788,7 @@ class Product extends AbstractSelectManager
         }
 
         foreach ($params['where'] as $k => $row) {
-            if ($row['attribute'] == 'categories') {
+            if ($row['attribute'] == 'categories' && empty($row['subQuery'])) {
                 if (!empty($row['value'])) {
                     $categories = [];
                     foreach ($row['value'] as $id) {
