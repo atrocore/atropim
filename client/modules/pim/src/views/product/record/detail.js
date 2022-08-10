@@ -149,6 +149,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 scope: this.scope,
                 model: this.model
             }, view => {
+                this.listenTo(this.model, 'after:save', () => {
+                    view.reRender();
+                });
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
@@ -157,6 +160,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
+                });
+                this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
+                    if (['parents', 'children'].includes(link)) {
+                        view.reRender();
+                    }
                 });
                 view.listenTo(view, 'tree-width-changed', width => {
                     this.onTreeResize(width);
