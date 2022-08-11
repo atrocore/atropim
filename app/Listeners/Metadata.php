@@ -34,9 +34,9 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Espo\Core\EventManager\Event;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Listeners\AbstractListener;
+use Pim\SelectManagers\ProductAttributeValue;
 
 class Metadata extends AbstractListener
 {
@@ -72,7 +72,20 @@ class Metadata extends AbstractListener
 
         $data = $this->updateCodeFieldsClientDefs($data);
 
+        $data = $this->addLanguageBoolFiltersForPav($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function addLanguageBoolFiltersForPav(array $metadata): array
+    {
+        if ($this->getConfig()->get('isMultilangActive')) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createLanguagePrismBoolFilterName($language);
+            }
+        }
+
+        return $metadata;
     }
 
     protected function addVirtualProductFields(array $metadata): array

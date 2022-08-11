@@ -39,11 +39,21 @@ use Espo\Core\Utils\Util;
 
 class ProductAttributeValue extends AbstractSelectManager
 {
+    protected array $filterLanguages = [];
+
+    public static function createLanguagePrismBoolFilterName(string $language): string
+    {
+        return 'prismVia' . ucfirst(Util::toCamelCase(strtolower($language)));
+    }
+
     /**
      * @inheritdoc
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
+        // clear filter languages
+        $this->filterLanguages = [];
+
         if (isset($params['where']) && is_array($params['where'])) {
             $pushBoolAttributeType = false;
             foreach ($params['where'] as $k => $v) {
@@ -92,6 +102,8 @@ class ProductAttributeValue extends AbstractSelectManager
                 $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=$tabId AND deleted=0)";
             }
         }
+
+        $this->applyLanguageBoolFilters($params, $selectParams);
 
         return $selectParams;
     }
@@ -171,8 +183,25 @@ class ProductAttributeValue extends AbstractSelectManager
         }
     }
 
-    protected function boolFilterProductInStock(array &$result): void
+    public function applyBoolFilter($filterName, &$result)
     {
-        $result['customWhere'] .= " AND product_attribute_value.product_id IN (SELECT id FROM `product` WHERE `amount`>0 AND deleted=0)";
+        if ($this->getConfig()->get('isMultilangActive')) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                if (self::createLanguagePrismBoolFilterName($language) === $filterName) {
+                    $this->filterLanguages[] = $language;
+                }
+            }
+        }
+
+        parent::applyBoolFilter($filterName, $result);
+    }
+
+    public function applyLanguageBoolFilters($params, &$selectParams)
+    {
+        if (empty($this->filterLanguages)) {
+            return;
+        }
+        $languages = implode("','", $this->filterLanguages);
+        $selectParams['customWhere'] .= " AND (product_attribute_value.`language` IN ('$languages') OR product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE deleted=0 AND is_multilang=0))";
     }
 }
