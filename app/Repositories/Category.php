@@ -410,6 +410,14 @@ class Category extends AbstractRepository
             }
         }
 
+        if ($entity->isNew() && !empty($categoryParent = $entity->get('categoryParent')) && count($entity->get('catalogs')) == 0) {
+            $catalogs = $categoryParent->get('catalogs');
+
+            foreach ($catalogs as $catalog) {
+                $this->relate($entity, 'catalogs', $catalog);
+            }
+        }
+
         // activate parents
         $this->activateParents($entity);
 
