@@ -36,6 +36,7 @@ namespace Pim\Listeners;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 use Espo\Listeners\AbstractListener;
+use Pim\SelectManagers\ProductAttributeValue;
 
 /**
  * Class Language
@@ -55,7 +56,16 @@ class Language extends AbstractListener
         }
 
         foreach ($data as $l => $rows) {
+            if (isset($rows['Locale']['fields']['language'])) {
+                $languageLabel = $rows['Locale']['fields']['language'];
+            } elseif (isset($data['en_US']['Locale']['fields']['language'])) {
+                $languageLabel = $data['en_US']['Locale']['fields']['language'];
+            } else {
+                $languageLabel = 'Language';
+            }
+
             foreach ($languages as $language) {
+                $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createLanguagePrismBoolFilterName($language)] = $languageLabel . ': ' . $language;
                 $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($language)));
                 if (!empty($data[$l]['Attribute']['fields']["name"])) {
                     $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;

@@ -30,9 +30,6 @@
     "Create ProductAttributeValue": "Create Attribute Value",
     "cannotLinkDefaultChannel": "Default channel '{channel}' for the selected attribute is not linked to this product."
   },
-  "boolFilters": {
-    "productInStock": "Product in stock"
-  },
   "exceptions": {
     "noSuchChannelInProduct": "Attribute '%s' for channel '%s' for product '%s' is not available.",
     "attributeUnitValueIsRequired": "Unit for the attribute '%s' is required.",
