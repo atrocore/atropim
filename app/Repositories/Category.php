@@ -410,11 +410,17 @@ class Category extends AbstractRepository
             }
         }
 
-        if ($entity->isNew() && !empty($categoryParent = $entity->get('categoryParent')) && count($entity->get('catalogs')) == 0) {
-            $catalogs = $categoryParent->get('catalogs');
+        if ($entity->isNew() && !empty($categoryParent = $entity->get('categoryParent'))) {
+            $catalogs = $entity->get('catalogs');
 
-            foreach ($catalogs as $catalog) {
-                $this->relate($entity, 'catalogs', $catalog);
+            if (empty($catalogs) || count($catalogs) == 0) {
+                $parentCatalogs = $categoryParent->get('catalogs');
+
+                if (!empty($parentCatalogs) && count($parentCatalogs) > 0) {
+                    foreach ($catalogs as $catalog) {
+                        $this->relate($entity, 'catalogs', $catalog);
+                    }
+                }
             }
         }
 
