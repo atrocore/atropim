@@ -370,6 +370,12 @@ class Category extends AbstractRepository
             }
         }
 
+        if ($entity->isNew() && !empty($categoryParent = $entity->get('categoryParent'))) {
+            $parentCatalogs = $categoryParent->get('catalogs');
+            $parentCatalogsIds = empty($parentCatalogs) ? [] : array_column($parentCatalogs->toArray(), 'id');
+            $entity->set('catalogsIds', $parentCatalogsIds);
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && !empty($parent = $entity->get('categoryParent'))) {
             $categoryCatalogs = array_column($entity->get('catalogs')->toArray(), 'id');
             sort($categoryCatalogs);
@@ -406,20 +412,6 @@ class Category extends AbstractRepository
             if (!empty($parentChannels = $parent->get('channels')) && count($parentChannels) > 0) {
                 foreach ($parentChannels as $parentChannel) {
                     $this->relate($entity, 'channels', $parentChannel);
-                }
-            }
-        }
-
-        if ($entity->isNew() && !empty($categoryParent = $entity->get('categoryParent'))) {
-            $catalogs = $entity->get('catalogs');
-
-            if (empty($catalogs) || count($catalogs) == 0) {
-                $parentCatalogs = $categoryParent->get('catalogs');
-
-                if (!empty($parentCatalogs) && count($parentCatalogs) > 0) {
-                    foreach ($catalogs as $catalog) {
-                        $this->relate($entity, 'catalogs', $catalog);
-                    }
                 }
             }
         }
