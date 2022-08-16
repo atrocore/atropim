@@ -45,6 +45,12 @@
     "detail": "pim:views/channel/record/detail",
     "list": "pim:views/record/list"
   },
+  "relationshipPanels": {
+    "productChannels": {
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    }
+  },
   "dynamicLogic": {
     "fields": {
       "locales": {
