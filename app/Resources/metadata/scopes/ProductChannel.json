@@ -1,0 +1,20 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "aclPortal": true,
+  "aclPortalLevelList": [
+    "all",
+    "account",
+    "own",
+    "no"
+  ],
+  "type": "Relationship",
+  "module": "Pim",
+  "object": true,
+  "relationshipEntities": [
+    "Product",
+    "Channel"
+  ]
+}
