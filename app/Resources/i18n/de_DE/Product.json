@@ -16,7 +16,7 @@
     "productStatus": "Produktstatus",
     "scope": "Scope",
     "assets": "Assets",
-    "channels": "Kanäle",
+    "productChannels": "Kanäle",
     "mpn": "MPN",
     "price": "Preis",
     "product": "Produkt",
@@ -63,7 +63,7 @@
     "tax": "MwSt.",
     "packaging": "Verpackung",
     "catalog": "Katalog",
-    "channels": "Kanäle",
+    "productChannels": "Kanäle",
     "contents": "Contents"
   },
   "labels": {
