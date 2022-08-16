@@ -201,11 +201,10 @@
       "required": false,
       "view": "pim:views/product/fields/catalog"
     },
-    "channels": {
+    "productChannels": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "exportType": "text",
       "noLoad": true
     },
     "createdAt": {
@@ -428,21 +427,10 @@
       "entity": "ProductSerie",
       "audited": false
     },
-    "channels": {
+    "productChannels": {
       "type": "hasMany",
-      "relationName": "productChannel",
-      "foreign": "products",
-      "entity": "Channel",
-      "additionalColumns": {
-        "isActive": {
-          "type": "bool",
-          "default": false,
-          "notNull": true,
-          "audited": false,
-          "readOnly": false,
-          "tooltip": false
-        }
-      }
+      "foreign": "product",
+      "entity": "ProductChannel"
     },
     "createdBy": {
       "type": "belongsTo",
