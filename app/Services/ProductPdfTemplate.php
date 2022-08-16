@@ -37,6 +37,7 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use PdfGenerator\Services\DefaultPdfGenerator;
 
 /**
@@ -196,6 +197,8 @@ class ProductPdfTemplate extends DefaultPdfGenerator
             $translate = !empty($value->get('name' . $this->locale))
                 ? $value->get('name' . $this->locale)
                 : $value->get('name');
+        } elseif (is_object($value) && $value instanceof EntityCollection) {
+            $translate = array_column($value->toArray(), 'name' . $this->locale);
         } else {
             $translate = $value;
         }
