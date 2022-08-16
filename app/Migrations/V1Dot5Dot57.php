@@ -54,8 +54,7 @@ class V1Dot5Dot57 extends Base
 
     public function down(): void
     {
-        $this->exec("DROP TABLE `attribute_hierarchy`");
-        $this->exec("ALTER TABLE `attribute` DROP sort_order_in_attribute_group");
+        throw new \Error("Downgrade is prohibited!");
     }
 
     protected function exec(string $query): void
