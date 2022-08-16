@@ -80,11 +80,10 @@
       "view": "pim:views/fields/code-from-name",
       "pattern": "/^[a-z_0-9{}]+$/"
     },
-    "products": {
+    "productChannels": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": true,
       "noLoad": true
     },
     "productAttributeValues": {
@@ -168,11 +167,10 @@
       "relationName": "EntityTeam",
       "layoutRelationshipsDisabled": true
     },
-    "products": {
+    "productChannels": {
       "type": "hasMany",
-      "relationName": "productChannel",
-      "foreign": "channels",
-      "entity": "Product"
+      "foreign": "channel",
+      "entity": "ProductChannel"
     },
     "productAttributeValues": {
       "type": "hasMany",

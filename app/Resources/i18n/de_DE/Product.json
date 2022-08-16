@@ -16,7 +16,7 @@
     "productStatus": "Produktstatus",
     "scope": "Scope",
     "assets": "Assets",
-    "channels": "Kanäle",
+    "productChannels": "Produktkanäle",
     "mpn": "MPN",
     "price": "Preis",
     "product": "Produkt",
@@ -48,7 +48,6 @@
     "associatedRelatedProduct": "Verknüpfung von ähnlichen Produkten",
     "attachments": "Zubehör",
     "channelProductAttributeValues": "Attributwerte vom Kanalprodukt",
-    "channelProducts": "Kanalprodukte",
     "product": "Produkt",
     "productAttributeValues": "Attributwerte",
     "productFamily": "Produktfamilie",
@@ -63,7 +62,7 @@
     "tax": "MwSt.",
     "packaging": "Verpackung",
     "catalog": "Katalog",
-    "channels": "Kanäle",
+    "productChannels": "Produktkanäle",
     "contents": "Contents"
   },
   "labels": {

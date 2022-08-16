@@ -637,14 +637,13 @@ class ProductAttributeValue extends Base
                 } else {
                     $productChannels = $this
                         ->getEntityManager()
-                        ->getRepository('Channel')
-                        ->select(['id'])
-                        ->join('products')
-                        ->where(['products.id' => $data->productId])
+                        ->getRepository('ProductChannel')
+                        ->select(['channelId'])
+                        ->where(['productId' => $data->productId])
                         ->find()
                         ->toArray();
 
-                    if (in_array($attribute->get('defaultChannelId'), array_column($productChannels, 'id'))) {
+                    if (in_array($attribute->get('defaultChannelId'), array_column($productChannels, 'channelId'))) {
                         $data->scope = $defaultScope;
                         $data->channelId = $attribute->get('defaultChannelId');
                         $data->channelName = $attribute->get('defaultChannelName');

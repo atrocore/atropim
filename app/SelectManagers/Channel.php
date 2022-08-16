@@ -54,7 +54,7 @@ class Channel extends AbstractSelectManager
             $product = $this->getEntityManager()->getEntity('Product', $productId);
             if (!empty($product)) {
                 $result['whereClause'][] = [
-                    'id' => array_column($product->get('channels')->toArray(), 'id')
+                    'id' => array_column($product->get('productChannels')->toArray(), 'channelId')
                 ];
             }
         }
