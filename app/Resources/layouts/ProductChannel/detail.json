@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "product"
+        },
+        {
+          "name": "channel"
+        }
+      ],
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ]
+    ]
+  }
+]

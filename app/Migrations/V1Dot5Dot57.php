@@ -50,6 +50,8 @@ class V1Dot5Dot57 extends Base
         $this->exec("CREATE UNIQUE INDEX UNIQ_732095F7EB3B4E334584665A72F5A1AA ON product_channel (deleted, product_id, channel_id)");
         $this->exec("ALTER TABLE product_channel RENAME INDEX idx_732095f74584665a TO IDX_PRODUCT_ID");
         $this->exec("ALTER TABLE product_channel RENAME INDEX idx_732095f772f5a1aa TO IDX_CHANNEL_ID");
+
+        //@todo update layout for product
     }
 
     public function down(): void

@@ -113,14 +113,6 @@
       "sortBy": "attribute.sortOrder",
       "asc": true
     },
-    "channels": {
-      "selectBoolFilterList": [
-        "notLinkedWithProduct"
-      ],
-      "createAction": "createRelatedConfigured",
-      "selectAction": "selectRelatedEntity",
-      "layout": "listForChannelsInProduct"
-    },
     "categories": {
       "create": false,
       "selectAction": "selectRelatedEntity",
