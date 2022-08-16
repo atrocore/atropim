@@ -29,7 +29,7 @@
     "productSerie": "Серия продукта",
     "association": "Ассоциация",
     "catalog": "Каталог",
-    "productChannels": "Каналы",
+    "productChannels": "Каналы продуктов",
     "basePriceAmount": "Базовая цена",
     "packedAmount": "Кол-во в упаковке",
     "pcSorting": "Порядок сортировки",
@@ -53,7 +53,7 @@
     "tax": "Налог",
     "packaging": "Упаковка",
     "catalog": "Каталог",
-    "productChannels": "Каналы",
+    "productChannels": "Каналы продуктов",
     "contents": "Контент"
   },
   "labels": {

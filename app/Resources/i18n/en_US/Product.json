@@ -31,7 +31,7 @@
     "productSerie": "Product Serie",
     "association": "Association",
     "catalog": "Catalog",
-    "productChannels": "Channels",
+    "productChannels": "Products Channels",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
@@ -56,7 +56,7 @@
     "tax": "Tax",
     "packaging": "Packaging",
     "catalog": "Catalog",
-    "productChannels": "Channels",
+    "productChannels": "Products Channels",
     "contents": "Contents"
   },
   "labels": {
