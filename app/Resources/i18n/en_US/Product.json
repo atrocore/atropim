@@ -18,7 +18,6 @@
     "type": "Type",
     "productTypeConfigurables": "Product Type Configurables",
     "amount": "Amount",
-    "channelProducts": "Product Channels",
     "price": "Purchase Price",
     "tax": "Tax",
     "packaging": "Packaging",
@@ -31,7 +30,7 @@
     "productSerie": "Product Serie",
     "association": "Association",
     "catalog": "Catalog",
-    "productChannels": "Products Channels",
+    "productChannels": "Product Channels",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
@@ -56,7 +55,7 @@
     "tax": "Tax",
     "packaging": "Packaging",
     "catalog": "Catalog",
-    "productChannels": "Products Channels",
+    "productChannels": "Product Channels",
     "contents": "Contents"
   },
   "labels": {
