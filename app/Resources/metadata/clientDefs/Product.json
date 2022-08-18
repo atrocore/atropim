@@ -113,14 +113,6 @@
       "sortBy": "attribute.sortOrder",
       "asc": true
     },
-    "channels": {
-      "selectBoolFilterList": [
-        "notLinkedWithProduct"
-      ],
-      "createAction": "createRelatedConfigured",
-      "selectAction": "selectRelatedEntity",
-      "layout": "listForChannelsInProduct"
-    },
     "categories": {
       "create": false,
       "selectAction": "selectRelatedEntity",
@@ -140,6 +132,10 @@
         "AssociatedProduct"
       ],
       "layout": "listForAssociatedProductsInProduct"
+    },
+    "productChannels": {
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     }
   },
   "dynamicLogic": {

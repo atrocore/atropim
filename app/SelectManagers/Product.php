@@ -700,14 +700,12 @@ class Product extends AbstractSelectManager
                 $row['attribute'] = 'boolValue';
                 $where['value'][] = $row;
                 break;
-            case 'currency':
-            case 'unit':
-                // @todo we should do it in the future
-                break;
             case 'int':
                 $row['attribute'] = 'intValue';
                 $where['value'][] = $row;
                 break;
+            case 'currency':
+            case 'unit':
             case 'float':
                 $row['attribute'] = 'floatValue';
                 $where['value'][] = $row;
@@ -783,7 +781,7 @@ class Product extends AbstractSelectManager
 
     protected function filteringByCategories(array &$params): void
     {
-        if (empty($params['where'])){
+        if (empty($params['where'])) {
             return;
         }
 

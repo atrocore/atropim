@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "ProductChannel": "Product Channel",
     "Product": "Product",
     "Attribute": "Attribute",
     "Catalog": "Catalog",
@@ -23,6 +24,7 @@
     "ContentGroup": "Content Group"
   },
   "scopeNamesPlural": {
+    "ProductChannel": "Product Channels",
     "Attribute": "Attributes",
     "Catalog": "Catalogs",
     "Category": "Categories",

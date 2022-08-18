@@ -235,7 +235,8 @@
         "Global",
         "Channel"
       ],
-      "default": "Global"
+      "default": "Global",
+      "view": "pim:views/attribute/fields/default-scope"
     },
     "defaultChannel": {
       "type": "link"

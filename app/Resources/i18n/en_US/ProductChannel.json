@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "isActive": "Active",
+    "product": "Product",
+    "channel": "Channel"
+  },
+  "links": {
+    "product": "Product",
+    "channel": "Channel"
+  },
+  "labels": {
+    "Create ProductChannel": "Create Product Channel"
+  }
+}
