@@ -57,10 +57,15 @@ Espo.define('pim:views/asset/fields/channel', 'views/fields/enum',
 
             let channels = this.getStorage().get(key, 'Product');
             if (channels === null && this.getAcl().check('Channel', 'read')) {
-                this.ajaxGetRequest(`Product/${productId}/channels?silent=true`, null, {async: false}).done(response => {
+                this.ajaxGetRequest(`Product/${productId}/productChannels?silent=true`, null, {async: false}).done(response => {
+                    channels = [];
+                    if (response.total > 0) {
+                        response.list.forEach(record => {
+                            channels.push({id: record.channelId, name: record.channelName});
+                        });
+                    }
                     this.getStorage().set(key + '-time', 'Product', currentTime + 5);
-                    this.getStorage().set(key, 'Product', response.list);
-                    channels = response.list;
+                    this.getStorage().set(key, 'Product', channels);
                 });
             }
 

@@ -49,11 +49,11 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
 
             if (this.mode === 'edit' && this.getAcl().check('Channel', 'read')) {
                 let productId = window.location.hash.split('/').pop();
-                this.ajaxGetRequest(`Product/${productId}/channels`, null, {async: false}).done(response => {
+                this.ajaxGetRequest(`Product/${productId}/productChannels`, null, {async: false}).done(response => {
                     if (response.total > 0) {
                         response.list.forEach(channel => {
-                            this.params.options.push(channel.id);
-                            this.translatedOptions[channel.id] = channel.name;
+                            this.params.options.push(channel.channelId);
+                            this.translatedOptions[channel.id] = channel.channelName;
                         });
                     }
                 });
