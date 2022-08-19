@@ -217,7 +217,7 @@ class ProductAttributeValue extends Base
             && property_exists($data, 'productId')
             && property_exists($data, 'attributeId')
             && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
-            && !in_array($data->channelId, $product->getLinkMultipleIdList('channels'))
+            && !in_array($data->channelId, array_column($product->get('productChannels')->toArray(), 'channelId'))
         ) {
             $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
             $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
