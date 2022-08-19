@@ -130,7 +130,7 @@ class LayoutController extends AbstractListener
                 foreach ($row as $k2 => $field) {
                     foreach ($locales as $locale) {
                         $valueName = Util::toCamelCase('value_' . strtolower($locale));
-                        if ($field['name'] === $valueName) {
+                        if (is_array($field) && $field['name'] === $valueName) {
                             $result[$k]['rows'][$k1][$k2] = false;
                         }
                     }

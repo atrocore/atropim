@@ -37,7 +37,15 @@ Espo.define('pim:views/product/actions/show-pdf-generator', 'pdf-generator:views
                 model.set({fileName: this.prepareDefaultFileName()});
 
                 this.getChannelsData().then(response => {
-                    model.set({productChannels: response.list});
+                    let channels = [];
+                    response.list.forEach(record => {
+                        channels.push({
+                            "id": record.channelId,
+                            "name": record.channelName
+                        });
+                    });
+
+                    model.set({"productChannels": channels});
 
                     this.createView('dialog', 'pim:views/product/modals/product-pdf-generator', {
                         scope: 'Product',
@@ -49,7 +57,7 @@ Espo.define('pim:views/product/actions/show-pdf-generator', 'pdf-generator:views
 
         getChannelsData() {
             if (this.getAcl().check(this.model.name, 'read')) {
-                return this.ajaxGetRequest(`Product/${this.model.id}/channels`);
+                return this.ajaxGetRequest(`Product/${this.model.id}/productChannels`);
             } else {
                 return new Promise(resolve => resolve({list: [], total: 0}));
             }
