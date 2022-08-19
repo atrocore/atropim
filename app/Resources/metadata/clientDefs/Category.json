@@ -10,6 +10,8 @@
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
+    "notParents",
+    "notChildren",
     "onlyCatalogCategories",
     "onlyLeafCategories",
     "linkedWithProduct"
@@ -19,6 +21,8 @@
     "notLinkedWithProduct",
     "linkedWithCatalog",
     "onlyRootCategory",
+    "notParents",
+    "notChildren",
     "onlyCatalogCategories",
     "onlyLeafCategories"
   ],
@@ -64,6 +68,12 @@
       "sortBy": "pcSorting",
       "asc": true,
       "view": "pim:views/category/record/panels/products"
+    },
+    "categories": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notParents"
+      ]
     }
   }
 }

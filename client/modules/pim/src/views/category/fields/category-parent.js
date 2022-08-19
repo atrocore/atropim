@@ -31,11 +31,14 @@
 Espo.define('pim:views/category/fields/category-parent', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
-        selectBoolFilterList:  ['notEntity'],
+        selectBoolFilterList: ['notEntity', 'notChildren'],
 
         boolFilterData: {
             notEntity() {
                 return this.model.id || this.model.get('ids') || [];
+            },
+            notChildren() {
+                return this.model.get('id');
             }
         },
 

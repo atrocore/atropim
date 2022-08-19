@@ -44,7 +44,7 @@
     "onlyRootCategoryCanBeUnLinked": "Only root category can be unlinked from catalog.",
     "categoryHasChildren": "Selected category used by another category as parent and can not be selected as product category.",
     "categoryHasChildCategoryAndCantBeDeleted": "Category has child category and can't be deleted.",
-    "youCanNotChooseChildCategory": "You can not choose a child category.",
+    "youCanNotChooseChildCategory": "You can not choose a child category or itself.",
     "categoryHasProducts": "Category with related products can't be deleted.",
     "categoryCannotBeUnRelatedFromCatalog": "Category tree with linked products can't be unlinked from catalog.",
     "parentCategoryHasProducts": "This category cannot be set as a parent category, it is a leaf-category with assigned products.",
