@@ -109,15 +109,6 @@ class Category extends Base
         return $result;
     }
 
-    public function isChildCategory(string $categoryId, string $selectedCategoryId): bool
-    {
-        if (empty($category = $this->getEntityManager()->getEntity('Category', $selectedCategoryId))) {
-            return false;
-        }
-
-        return in_array($categoryId, explode("|", (string)$category->get('categoryRoute')));
-    }
-
     public function getIdsTree(string $id): array
     {
         $category = $this->getEntityManager()->getEntity('Category', $id);

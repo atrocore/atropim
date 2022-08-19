@@ -63,6 +63,18 @@ class Category extends \Espo\Core\Templates\Entities\Base
         return (isset($categoryRoute[1])) ? $this->getEntityManager()->getEntity('Category', $categoryRoute[1]) : $this;
     }
 
+    public function getParentsIds(): array
+    {
+        // validation
+        $this->isEntity();
+
+        $parentsIds = explode('|', (string)$this->get('categoryRoute'));
+        array_shift($parentsIds);
+        array_pop($parentsIds);
+
+        return $parentsIds;
+    }
+
     /**
      * @return bool
      * @throws Error

@@ -50,7 +50,7 @@
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Sie können die Parent-Kategorie in eine Stammkategorie mit den verknüpften Produkten nicht umwandeln.",
     "categoryHasChildren": "Kategorie hat untergeordnete Elemente.",
     "categoryHasChildCategoryAndCantBeDeleted": "Die Kategorie hat eine untergeordnete Kategorie und kann nicht gelöscht werden.",
-    "youCanNotChooseChildCategory": "Sie können keine untergeordnete Kategorie auswählen.",
+    "youCanNotChooseChildCategory": "Sie können keine untergeordnete Kategorie oder sich selbst auswählen.",
     "categoryHasProducts": "Kategorie mit verknüpften Produkten kann nicht gelöscht werden.",
     "categoryCannotBeUnRelatedFromCatalog": "Verknüpfung zwischen Katalog und Kategoriebaum mit verknüpften Produkten kann nicht aufgehoben werden.",
     "parentCategoryHasProducts": "Diese Kategorie kann nicht als übergeordnete Kategorie festgelegt werden, es ist eine Blattkategorie, die zugeordnete Produkte hat."

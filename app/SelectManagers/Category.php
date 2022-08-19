@@ -57,6 +57,26 @@ class Category extends AbstractSelectManager
         }
     }
 
+    protected function boolFilterNotParents(&$result): void
+    {
+        $category = $this->getEntityManager()->getRepository('Category')->get((string)$this->getSelectCondition('notParents'));
+        if (!empty($category)) {
+            $result['whereClause'][] = [
+                'id!=' => array_merge($category->getParentsIds(), [$category->get('id')])
+            ];
+        }
+    }
+
+    protected function boolFilterNotChildren(&$result): void
+    {
+        $category = $this->getEntityManager()->getRepository('Category')->get((string)$this->getSelectCondition('notChildren'));
+        if (!empty($category)) {
+            $result['whereClause'][] = [
+                'id!=' => array_merge(array_column($category->getChildren()->toArray(), 'id'), [$category->get('id')])
+            ];
+        }
+    }
+
     /**
      * @param array $result
      */
@@ -141,7 +161,7 @@ class Category extends AbstractSelectManager
                 foreach ($list as $category) {
                     $ids[] = $category['id'];
 
-                    $parentCategoriesIds =  explode("|", trim($category['categoryRoute'], "|"));
+                    $parentCategoriesIds = explode("|", trim($category['categoryRoute'], "|"));
                     $ids = array_merge($ids, $parentCategoriesIds);
                 }
 
