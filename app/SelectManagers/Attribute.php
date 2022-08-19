@@ -171,10 +171,9 @@ class Attribute extends AbstractSelectManager
         if (isset($data['productId'])) {
             $availableChannels = $this
                 ->getEntityManager()
-                ->getRepository('Channel')
-                ->select(['id'])
-                ->join('products')
-                ->where(['products.id' => $data['productId']])
+                ->getRepository('ProductChannel')
+                ->select(['channelId'])
+                ->where(['productId' => $data['productId']])
                 ->find()
                 ->toArray();
 
@@ -184,7 +183,7 @@ class Attribute extends AbstractSelectManager
                 ->select(['id'])
                 ->where([
                     'defaultScope' => 'Channel',
-                    'defaultChannelId!=' => array_column($availableChannels, 'id')
+                    'defaultChannelId!=' => array_column($availableChannels, 'channelId')
                 ])
                 ->find()
                 ->toArray();
