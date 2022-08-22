@@ -113,14 +113,14 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
+      "filterDisabled": false,
       "importDisabled": true
     },
     "categoryRouteName": {
       "type": "text",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
+      "filterDisabled": false,
       "importDisabled": true
     },
     "categories": {
