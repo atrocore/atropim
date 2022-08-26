@@ -38,12 +38,12 @@ use Espo\Core\Utils\Util;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use PdfGenerator\Services\DefaultPdfGenerator;
+use PdfGenerator\Services\AbstractHandler;
 
 /**
  * ProductPdfTemplate class
  */
-class ProductPdfTemplate extends DefaultPdfGenerator
+class ProductPdfTemplate extends AbstractHandler
 {
     /**
      * @var Entity
@@ -68,27 +68,9 @@ class ProductPdfTemplate extends DefaultPdfGenerator
     /**
      * @inheritDoc
      */
-    protected function getEntryPointUrl(string $entityType, string $entitiesIds, string $template, array $additionalData = []): string
+    protected function getFooter(): string
     {
-        $url = parent::getEntryPointUrl($entityType, $entitiesIds, $template, $additionalData);
-
-        if (!empty($additionalData['locale'])) {
-            $url .= '&locale=' . $additionalData['locale'];
-        }
-
-        if (!empty($additionalData['channelId'])) {
-            $url .= '&channel=' . $additionalData['channelId'];
-        }
-
-        return $url;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function setFooter(): void
-    {
-        $this->pdfOptions['footerTemplate'] = '
+        return '
             <div style="width: 100%; height: .7cm; transform: translateY(0.4cm); -webkit-print-color-adjust:exact; padding: 0 0.5cm; font-size: 8px; background-color: #efefef; display: flex; justify-content: space-between; align-items: center">
                 <div>@  ' . date('Y') . ' AtroCore. This is just an example of an automatically generated PDF document.</div>
                 <div class="pageNumber"></div>
@@ -147,8 +129,8 @@ class ProductPdfTemplate extends DefaultPdfGenerator
      */
     protected function getFields(): array
     {
-        $layout = $this->getContainer()->get('layout');
-        $metadata = $this->getContainer()->get('metadata');
+        $layout = $this->getInjection('container')->get('layout');
+        $metadata = $this->getMetadata();
         $layoutDetail = json_decode($layout->get('Product', 'detail'), true);
         $rows = $layoutDetail[0]['rows'];
         $resultFields = [];
@@ -276,7 +258,7 @@ class ProductPdfTemplate extends DefaultPdfGenerator
     {
         $result = ['main' => null, 'list' => null];
 
-        if ($this->getContainer()->get('metadata')->isModuleInstalled('Dam')) {
+        if ($this->getMetadata()->isModuleInstalled('Dam')) {
             $sql = "SELECT a.file_id AS attachmentId, pa.channel, pa.is_main_image AS isMainImage FROM asset a
                     JOIN product_asset pa ON pa.asset_id = a.id AND pa.deleted = 0
                     JOIN attachment at on at.id = a.file_id AND at.deleted = 0
@@ -397,7 +379,7 @@ class ProductPdfTemplate extends DefaultPdfGenerator
         if (empty($this->locale)) {
             return parent::getLanguage();
         } else {
-            return new Language($this->getContainer(), $this->locale);
+            return new Language($this->getInjection('container'), $this->locale);
         }
     }
 
