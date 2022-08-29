@@ -62,18 +62,6 @@ abstract class AbstractSelectManager extends \Treo\Core\SelectManagers\Base
     }
 
     /**
-     * OnlyActive filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterOnlyActive(&$result)
-    {
-        $result['whereClause'][] = array(
-            'isActive' => true
-        );
-    }
-
-    /**
      * NotEntity filter
      *
      * @param array $result
