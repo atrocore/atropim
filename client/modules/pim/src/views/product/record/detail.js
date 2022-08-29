@@ -127,11 +127,13 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         isTreeAllowed() {
             let result = false;
 
-            this.getMetadata().get('clientDefs.Product.treeScopes').forEach(scope => {
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [this.scope];
+
+            treeScopes.forEach(scope => {
                 if (this.getAcl().check(scope, 'read')) {
                     result = true;
-                    if (!localStorage.getItem('treeScope')) {
-                        localStorage.setItem('treeScope', scope);
+                    if (!this.getStorage().get('treeScope', this.scope)) {
+                        this.getStorage().set('treeScope', this.scope, scope);
                     }
                 }
             })
@@ -190,11 +192,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         selectNode(data) {
-            if (localStorage.getItem('treeScope') === 'Product') {
+            if (this.getStorage().get('treeScope', this.scope) === 'Product') {
                 window.location.href = `/#Product/view/${data.id}`;
             } else {
-                localStorage.setItem('selectedNodeId', data.id);
-                localStorage.setItem('selectedNodeRoute', data.route);
+                this.getStorage().set('selectedNodeId', this.scope, data.id);
+                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
                 window.location.href = `/#Product`;
             }
         },
@@ -272,8 +274,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         treeReset(view) {
-            localStorage.removeItem('selectedNodeId');
-            localStorage.removeItem('selectedNodeRoute');
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+            window.location.href = `/#${this.scope}`;
         },
 
         hotKeySave: function (e) {
