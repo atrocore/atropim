@@ -19,6 +19,11 @@
     "Create Channel": "Create Channel",
     "main": "Main Language"
   },
+  "options": {
+    "template": {
+      "default": "Default"
+    }
+  },
   "messages": {
     "categoryChangeConfirm": "Are you sure you want to unlink (or change) the category tree for this channel? All the product linked with original category tree, will be unlinked from this channel (and the the products of the new category tree will be linked with it)."
   },

@@ -34,6 +34,11 @@
     "withoutCatalog": "Ohne Katalogg",
     "Create Category": "Kategorie erstellen"
   },
+  "options": {
+    "template": {
+      "default": "Standard"
+    }
+  },
   "boolFilters": {
     "linkedWithProduct": "Hat Produkte"
   },

@@ -99,6 +99,9 @@
       "cat": "Cat",
       "ch": "Ch",
       "pr": "Pr"
+    },
+    "template": {
+      "default": "Default"
     }
   },
   "boolFilters": {
