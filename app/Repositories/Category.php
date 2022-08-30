@@ -292,11 +292,7 @@ class Category extends AbstractRepository
         try {
             $result = $this->getMapper()->addRelation($category, 'products', $product->get('id'));
             $this->getProductRepository()->updateProductCategorySortOrder($product, $category);
-            if (!empty($channels = $category->get('channels')) && count($channels) > 0) {
-                foreach ($channels as $channel) {
-                    $this->getProductRepository()->relate($product, 'channels', $channel);
-                }
-            }
+            $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
             $this->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getPDO()->rollBack();
@@ -319,11 +315,7 @@ class Category extends AbstractRepository
         $this->getPDO()->beginTransaction();
         try {
             $result = $this->getMapper()->removeRelation($category, 'products', $product->get('id'));
-            if (!empty($channels = $category->get('channels')) && count($channels) > 0) {
-                foreach ($channels as $channel) {
-                    $this->getProductRepository()->unrelate($product, 'channels', $channel);
-                }
-            }
+            $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
             $this->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getPDO()->rollBack();
