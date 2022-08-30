@@ -471,10 +471,14 @@ class Product extends Hierarchy
         /**
          * Mark channels as inherited from categories
          */
-        if ($link === 'channels' && $result['total'] > 0 && !empty($channelsIds = $this->getEntityManager()->getRepository('Product')->getCategoriesChannelsIds($id))) {
-            foreach ($result['collection'] as $channel) {
-                $channel->set('isInherited', in_array($channel->get('id'), $channelsIds));
+        if ($link === 'productChannels' && $result['total'] > 0) {
+            $channelsIds = $this->getEntityManager()->getRepository('Product')->getCategoriesChannelsIds($id);
+            if (!empty($channelsIds)) {
+                foreach ($result['collection'] as $record) {
+                    $record->set('isInherited', in_array($record->get('channelId'), $channelsIds));
+                }
             }
+
             return $result;
         }
 

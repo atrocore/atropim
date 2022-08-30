@@ -28,13 +28,15 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/channel/fields/name', 'views/fields/varchar',
+Espo.define('pim:views/product-channel/fields/channel-with-marking-inheritance-from-channel', 'views/fields/link',
     Dep => Dep.extend({
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'listLink' && this.model.get('isInherited')) {
+            let scope = window.location.hash.split('/').shift().replace('#', '');
+
+            if (scope === 'Product' && this.model.get('isInherited')) {
                 this.$el.find('a').attr('style', 'font-style: italic');
             }
         },
