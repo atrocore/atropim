@@ -97,6 +97,9 @@
       "cat": "Кат.",
       "ch": "Каналы",
       "pr": "PR"
+    },
+    "template": {
+      "default": "По умолчанию"
     }
   },
   "boolFilters": {

@@ -28,6 +28,11 @@
   "labels": {
     "Create Category": "Создать категории"
   },
+  "options": {
+    "template": {
+      "default": "По умолчанию"
+    }
+  },
   "boolFilters": {
     "linkedWithProduct": "Есть продукты"
   },

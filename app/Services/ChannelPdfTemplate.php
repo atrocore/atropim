@@ -42,7 +42,15 @@ class ChannelPdfTemplate extends ProductPdfTemplate
 {
     public function getData(Entity $entity, array $data = []): array
     {
-        if (empty($products = $entity->get('products')) || count($products) === 0) {
+        $products = [];
+
+        if (!empty($productChannels = $entity->get('productChannels')) && count($productChannels) > 0) {
+            foreach ($productChannels as $productChannel) {
+                $products[] = $productChannel->get('product');
+            }
+        }
+
+        if (empty($products)) {
             return [];
         }
 
