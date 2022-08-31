@@ -52,23 +52,6 @@ class Channel extends Base
     }
 
     /**
-     * @inheritDoc
-     */
-    public function findLinkedEntities($id, $link, $params)
-    {
-        $result = parent::findLinkedEntities($id, $link, $params);
-
-        if ($link === 'products' && !empty($result['total'])) {
-            $data = $this->getRepository()->getProductsRelationData($id);
-            foreach ($result['collection'] as $product) {
-                $product->set('isActiveForChannel', !empty($data[$product->get('id')]['isActive']));
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * Get product data for channel
      *
      * @param string $channelId

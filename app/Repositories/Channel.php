@@ -40,23 +40,6 @@ use Espo\ORM\Entity;
  */
 class Channel extends Base
 {
-    public function getProductsRelationData(string $id): array
-    {
-        $data = $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "SELECT product_id as productId, is_active AS isActive FROM product_channel WHERE channel_id='$id' AND deleted=0"
-            )
-            ->fetchAll(\PDO::FETCH_ASSOC);
-
-        $result = [];
-        foreach ($data as $row) {
-            $result[$row['productId']] = $row;
-        }
-
-        return $result;
-    }
-
     /**
      * @return array
      */
