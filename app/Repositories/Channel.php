@@ -98,29 +98,15 @@ class Channel extends Base
         return $this->getEntityManager()->getRepository('Category')->unrelateChannels($category, $entity, $options);
     }
 
-    public function unrelateProducts(Entity $entity, $foreign, $options)
-    {
-        if (is_bool($foreign)) {
-            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
-        }
-
-        $product = $foreign;
-        if (is_string($foreign)) {
-            $product = $this->getEntityManager()->getRepository('Product')->get($foreign);
-        }
-
-        return $this->getEntityManager()->getRepository('Product')->unrelateChannels($product, $entity, $options);
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
 
-        if (!empty($products = $entity->get('products')) && count($products) > 0) {
-            foreach ($products as $product) {
-                $this->unrelateProducts($entity, $product, []);
-            }
-        }
+        $this
+            ->getEntityManager()
+            ->getRepository('ProductChannel')
+            ->where(['channelId' => $entity->get('id')])
+            ->removeCollection();
 
         if (!empty($categories = $entity->get('categories')) && count($categories) > 0) {
             foreach ($categories as $category) {
@@ -136,15 +122,6 @@ class Channel extends Base
         }
 
         parent::beforeSave($entity, $options);
-    }
-
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
-    {
-        if ($relationName == 'products') {
-            $this->getEntityManager()->getRepository('Product')->relatePfas($foreign, $entity);
-        }
-
-        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
     }
 
     protected function init()
