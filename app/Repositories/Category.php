@@ -213,21 +213,18 @@ class Category extends AbstractRepository
             $channelId = $foreign->get('id');
         }
 
-        if (!empty($products = $category->get('products')) && count($products) > 0) {
-            foreach ($products as $product) {
-                $this->getProductRepository()->relate($product, 'channels', $channelId);
-            }
-        }
-
-        if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
-            return $this->getMapper()->addRelation($category, 'channels', $channelId);
-        }
-
         $this->getPDO()->beginTransaction();
         try {
             $result = $this->getMapper()->addRelation($category, 'channels', $channelId);
-            foreach ($category->getChildren() as $child) {
-                $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
+            if (!empty($products = $category->get('products')) && count($products) > 0) {
+                foreach ($products as $product) {
+                    $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
+                }
+            }
+            if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
+                foreach ($category->getChildren() as $child) {
+                    $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
+                }
             }
             $this->getPDO()->commit();
         } catch (\Throwable $e) {
@@ -249,22 +246,18 @@ class Category extends AbstractRepository
             $channelId = $foreign->get('id');
         }
 
-        if (!empty($products = $category->get('products')) && count($products) > 0) {
-            foreach ($products as $product) {
-                $this->getProductRepository()->unrelate($product, 'channels', $channelId);
-            }
-        }
-
-        if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
-            return $this->getMapper()->removeRelation($category, 'channels', $channelId);
-        }
-
         $this->getPDO()->beginTransaction();
-
         try {
+            if (!empty($products = $category->get('products')) && count($products) > 0) {
+                foreach ($products as $product) {
+                    $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
+                }
+            }
             $result = $this->getMapper()->removeRelation($category, 'channels', $channelId);
-            foreach ($category->getChildren() as $child) {
-                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
+            if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
+                foreach ($category->getChildren() as $child) {
+                    $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
+                }
             }
             $this->getPDO()->commit();
         } catch (\Throwable $e) {
