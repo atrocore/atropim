@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -29,28 +28,18 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/product-channel/fields/channel-with-marking-inheritance-from-channel', 'views/fields/link',
+    Dep => Dep.extend({
 
-namespace Pim\Services;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-use Espo\ORM\Entity;
+            let scope = window.location.hash.split('/').shift().replace('#', '');
 
-/**
- * CategoryPdfTemplate class
- */
-class CategoryPdfTemplate extends ProductPdfTemplate
-{
-    public function getData(Entity $entity, array $data = []): array
-    {        
-        if (empty($products = $entity->get('products')) || count($products) === 0) {
-            return [];
-        }
+            if (scope === 'Product' && this.model.get('isInherited')) {
+                this.$el.find('a').attr('style', 'font-style: italic');
+            }
+        },
 
-        $result = [];
-        foreach ($products as $product) {
-            $result = array_merge_recursive($result, parent::getData($product, $data));
-        }
-
-        return $result;
-    }
-}
+    })
+);

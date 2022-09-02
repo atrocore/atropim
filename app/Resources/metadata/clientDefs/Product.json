@@ -135,7 +135,12 @@
     },
     "productChannels": {
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "view": "views/record/panels/for-relationship-type",
+      "relationshipScope": "ProductChannel",
+      "relationshipEntities": [
+        "Product",
+        "Channel"
+      ]
     }
   },
   "dynamicLogic": {

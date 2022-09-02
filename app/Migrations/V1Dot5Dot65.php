@@ -31,26 +31,41 @@
 
 declare(strict_types=1);
 
-namespace Pim\Services;
+namespace Pim\Migrations;
 
-use Espo\ORM\Entity;
+use Treo\Core\Migration\Base;
 
-/**
- * ChannelPdfTemplate class
- */
-class ChannelPdfTemplate extends ProductPdfTemplate
+class V1Dot5Dot65 extends Base
 {
-    public function getData(Entity $entity, array $data = []): array
+    public function up(): void
     {
-        if (empty($products = $entity->get('products')) || count($products) === 0) {
-            return [];
+        $pavs = $this
+            ->getPDO()
+            ->query("SELECT id, product_id, channel_id FROM `product_attribute_value` WHERE deleted=0 AND scope='Channel'")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (empty($pavs)) {
+            return;
         }
 
-        $result = [];
-        foreach ($products as $product) {
-            $result = array_merge_recursive($result, parent::getData($product, $data));
+        $records = $this
+            ->getPDO()
+            ->query("SELECT product_id, channel_id FROM `product_channel` WHERE deleted=0 AND product_id IN ('" . implode("','", array_column($pavs, 'product_id')) . "')")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        $product = [];
+        foreach ($records as $row) {
+            $product[$row['product_id']][] = $row['channel_id'];
         }
 
-        return $result;
+        foreach ($pavs as $pav) {
+            if (!isset($product[$pav['product_id']]) || !in_array($pav['channel_id'], $product[$pav['product_id']])) {
+                $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE id='{$pav['id']}'");
+            }
+        }
+    }
+
+    public function down(): void
+    {
     }
 }

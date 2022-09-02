@@ -752,7 +752,7 @@ class Product extends AbstractRepository
 
     /**
      * @param string $categoryId
-     * @param array $ids
+     * @param array  $ids
      *
      * @return void
      */
@@ -873,11 +873,7 @@ class Product extends AbstractRepository
 
         $result = $this->getMapper()->addRelation($product, 'categories', $category->get('id'));
         $this->updateProductCategorySortOrder($product, $category);
-        if (!empty($channels = $category->get('channels')) && count($channels) > 0) {
-            foreach ($channels as $channel) {
-                $this->relate($product, 'channels', $channel);
-            }
-        }
+        $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
 
         return $result;
     }
@@ -893,46 +889,9 @@ class Product extends AbstractRepository
         }
 
         $result = $this->getMapper()->removeRelation($product, 'categories', $category->get('id'));
-        if (!empty($channels = $category->get('channels')) && count($channels) > 0) {
-            foreach ($channels as $channel) {
-                $this->unrelate($product, 'channels', $channel);
-            }
-        }
+        $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
 
         return $result;
-    }
-
-    public function relateChannels(Entity $product, $channel, $data, $options)
-    {
-        if (is_bool($channel)) {
-            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
-        }
-
-        if (is_string($channel)) {
-            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
-        }
-
-        $result = $this->getMapper()->addRelation($product, 'channels', $channel->get('id'));
-        $this->relatePfas($product, $channel);
-
-        return $result;
-    }
-
-    public function unrelateChannels(Entity $product, $channel, $options)
-    {
-        if (is_bool($channel)) {
-            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
-        }
-
-        if (is_string($channel)) {
-            $channel = $this->getEntityManager()->getRepository('Channel')->get($channel);
-        }
-
-        $this->getPDO()->exec("DELETE FROM product_channel WHERE product_id='{$product->get('id')}' AND channel_id='{$channel->get('id')}'");
-        $this->unrelatePfas($product, $channel);
-        $this->removeChannelAssets($product->get('id'), $channel->get('id'));
-
-        return true;
     }
 
     public function removeChannelAssets(string $productId, string $channelId): void

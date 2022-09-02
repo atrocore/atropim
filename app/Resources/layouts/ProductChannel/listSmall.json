@@ -3,7 +3,8 @@
     "name": "product"
   },
   {
-    "name": "channel"
+    "name": "channel",
+    "view": "pim:views/product-channel/fields/channel-with-marking-inheritance-from-channel"
   },
   {
     "name": "isActive"

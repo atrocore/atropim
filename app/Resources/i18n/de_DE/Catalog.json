@@ -14,6 +14,11 @@
   "labels": {
     "Create Catalog": "Katalog erstellen"
   },
+  "options": {
+    "template": {
+      "default": "Standard"
+    }
+  },
   "queueManager": {
     "createProductForCatalog": "Produkt '%s' für den Katalog '%s' erstellen"
   },
