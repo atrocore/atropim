@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim;
 
+use Espo\Core\Utils\Config;
 use Treo\Core\ModuleManager\AfterInstallAfterDelete;
 
 /**
@@ -96,7 +97,7 @@ class Event extends AfterInstallAfterDelete
      */
     protected function addGlobalSearchEntities(): void
     {
-        // get config
+        /** @var Config $config */
         $config = $this->getContainer()->get('config');
 
         // get config data
@@ -120,7 +121,7 @@ class Event extends AfterInstallAfterDelete
      */
     protected function addMenuItems()
     {
-        // get config
+        /** @var Config $config */
         $config = $this->getContainer()->get('config');
 
         // get config data

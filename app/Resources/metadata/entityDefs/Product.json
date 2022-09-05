@@ -37,8 +37,7 @@
       "filterDisabled": true,
       "noLoad": true,
       "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
+      "exportDisabled": false
     },
     "sku": {
       "type": "varchar",
@@ -62,9 +61,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+      "exportDisabled": false,
+      "importDisabled": true
     },
     "price": {
       "type": "currency",
