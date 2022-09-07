@@ -367,10 +367,16 @@ class ProductAttributeValue extends Base
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
+        if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
+            $entity->set('varcharValue', $data->data->currency);
+        }
         if (property_exists($data, 'valueCurrency')) {
             $entity->set('varcharValue', $data->valueCurrency);
         }
 
+        if (property_exists($data, 'data') && property_exists($data->data, 'unit')) {
+            $entity->set('varcharValue', $data->data->unit);
+        }
         if (property_exists($data, 'valueUnit')) {
             $entity->set('varcharValue', $data->valueUnit);
         }
@@ -592,6 +598,10 @@ class ProductAttributeValue extends Base
         }
 
         $this->getRepository()->convertValue($entity);
+
+        if ($entity->get('attributeType') === 'unit') {
+            $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
+        }
 
         $entity->clear('boolValue');
         $entity->clear('dateValue');
