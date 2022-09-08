@@ -221,9 +221,8 @@ class ProductAttributeValue extends Base
         ) {
             $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
             $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
-            throw new BadRequest(
-                sprintf($this->getInjection('language')->translate('noSuchChannelInProduct'), $attributeName, $channelName, $product->get('name'))
-            );
+            $message = $this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAttributeValue');
+            throw new BadRequest(sprintf($message, $attributeName, $channelName, $product->get('name')));
         }
 
         $this->setInputValue($entity, $data);
