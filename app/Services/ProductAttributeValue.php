@@ -581,7 +581,13 @@ class ProductAttributeValue extends Base
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-        $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
+
+        if (!empty($attribute->get('attributeGroup'))) {
+            $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
+        } else {
+            $entity->set('sortOrder', $attribute->get('sortOrderInProduct'));
+        }
+
         $entity->set('channelCode', null);
         if (!empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
