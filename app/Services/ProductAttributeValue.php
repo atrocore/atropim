@@ -217,13 +217,14 @@ class ProductAttributeValue extends Base
             && property_exists($data, 'productId')
             && property_exists($data, 'attributeId')
             && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
-            && !in_array($data->channelId, array_column($product->get('productChannels')->toArray(), 'channelId'))
         ) {
-            $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
-            $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
-            throw new BadRequest(
-                sprintf($this->getInjection('language')->translate('noSuchChannelInProduct'), $attributeName, $channelName, $product->get('name'))
-            );
+            $productChannels = $product->get('productChannels');
+            if (!empty($productChannels) && count($productChannels) > 0 && !in_array($data->channelId, array_column($productChannels->toArray(), 'channelId'))) {
+                $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
+                $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
+                $message = $this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAttributeValue');
+                throw new BadRequest(sprintf($message, $attributeName, $channelName, $product->get('name')));
+            }
         }
 
         $this->setInputValue($entity, $data);
@@ -367,10 +368,16 @@ class ProductAttributeValue extends Base
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
+        if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
+            $entity->set('varcharValue', $data->data->currency);
+        }
         if (property_exists($data, 'valueCurrency')) {
             $entity->set('varcharValue', $data->valueCurrency);
         }
 
+        if (property_exists($data, 'data') && property_exists($data->data, 'unit')) {
+            $entity->set('varcharValue', $data->data->unit);
+        }
         if (property_exists($data, 'valueUnit')) {
             $entity->set('varcharValue', $data->valueUnit);
         }
@@ -576,7 +583,13 @@ class ProductAttributeValue extends Base
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-        $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
+
+        if (!empty($attribute->get('attributeGroup'))) {
+            $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
+        } else {
+            $entity->set('sortOrder', $attribute->get('sortOrderInProduct'));
+        }
+
         $entity->set('channelCode', null);
         if (!empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
@@ -592,6 +605,10 @@ class ProductAttributeValue extends Base
         }
 
         $this->getRepository()->convertValue($entity);
+
+        if ($entity->get('attributeType') === 'unit') {
+            $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
+        }
 
         $entity->clear('boolValue');
         $entity->clear('dateValue');

@@ -1,6 +1,7 @@
 {
   "entity": true,
   "customizable": false,
+  "importable": true,
   "layouts": true,
   "tab": true,
   "acl": true,

@@ -25,7 +25,8 @@
     "virtualProductField": "Virtuelles Produktfeld",
     "defaultScope": "Scope",
     "defaultChannel": "Kanal",
-    "defaultIsRequired": "Erforderlich"
+    "defaultIsRequired": "Erforderlich",
+    "sortOrderInProduct": "Sortierreihenfolge im Produkt"
   },
   "links": {
     "parents": "Assoziierende Attribute",
@@ -67,7 +68,8 @@
   "tooltips": {
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "isSorted": "Optionen werden nach dem Speichern der Seite sortiert.",
-    "virtualProductField": "Werte für dieses Attribut werden als virtuelles Feld über das Produktlistenlayout hinzugefügt werden."
+    "virtualProductField": "Werte für dieses Attribut werden als virtuelles Feld über das Produktlistenlayout hinzugefügt werden.",
+    "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."
   },
   "exceptions": {
     "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",

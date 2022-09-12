@@ -392,6 +392,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                             value: valueKeys
                         }
                     ];
+                    collection.sortBy = 'sortOrder';
+                    collection.asc = true;
                     collection.fetch().then(() => {
                         this.applySortingForAttributeGroups();
                         if (callback) {
