@@ -217,12 +217,14 @@ class ProductAttributeValue extends Base
             && property_exists($data, 'productId')
             && property_exists($data, 'attributeId')
             && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
-            && !in_array($data->channelId, array_column($product->get('productChannels')->toArray(), 'channelId'))
         ) {
-            $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
-            $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
-            $message = $this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAttributeValue');
-            throw new BadRequest(sprintf($message, $attributeName, $channelName, $product->get('name')));
+            $productChannels = $product->get('productChannels');
+            if (!empty($productChannels) && count($productChannels) > 0 && !in_array($data->channelId, array_column($productChannels->toArray(), 'channelId'))) {
+                $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
+                $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
+                $message = $this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAttributeValue');
+                throw new BadRequest(sprintf($message, $attributeName, $channelName, $product->get('name')));
+            }
         }
 
         $this->setInputValue($entity, $data);
