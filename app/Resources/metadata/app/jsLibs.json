@@ -1,7 +1,0 @@
-{
-    "JsTree": {
-        "path": "client/modules/pim/lib/tree.jquery.js",
-        "exportsTo": "$",
-        "exportsAs": "jsTree"
-    }
-}
