@@ -34,7 +34,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
+      "filterDisabled": false,
       "noLoad": true,
       "importDisabled": true,
       "exportDisabled": false
@@ -59,7 +59,7 @@
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
+      "filterDisabled": false,
       "noLoad": true,
       "exportDisabled": false,
       "importDisabled": true
