@@ -72,20 +72,46 @@ class Metadata extends AbstractListener
 
         $data = $this->updateCodeFieldsClientDefs($data);
 
-        $data = $this->addLanguageBoolFiltersForPav($data);
+        $this->addLanguageBoolFiltersForPav($data);
+        $this->addScopeBoolFiltersForPav($data);
 
         $event->setArgument('data', $data);
     }
 
-    protected function addLanguageBoolFiltersForPav(array $metadata): array
+    protected function addLanguageBoolFiltersForPav(array &$metadata): void
     {
+        $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createLanguagePrismBoolFilterName('main');
         if ($this->getConfig()->get('isMultilangActive')) {
             foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
                 $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createLanguagePrismBoolFilterName($language);
             }
         }
+    }
 
-        return $metadata;
+    protected function addScopeBoolFiltersForPav(array &$metadata): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $channels = $dataManager->getCacheData('channels');
+        if (empty($channels)) {
+            try {
+                $channels = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM `channel` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+            } catch (\Throwable $e) {
+                $channels = [];
+            }
+            if (!empty($channels)) {
+                $dataManager->setCacheData('channels', $channels);
+            }
+        }
+        $metadata['clientDefs']['ProductAttributeValue']['channels'] = $channels;
+        $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createScopePrismBoolFilterName('global');
+        foreach ($channels as $channel) {
+            $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createScopePrismBoolFilterName($channel['id']);
+        }
     }
 
     protected function addVirtualProductFields(array $metadata): array
@@ -311,7 +337,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled"  => true,
+                "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "emHidden"                  => true

@@ -40,10 +40,16 @@ use Espo\Core\Utils\Util;
 class ProductAttributeValue extends AbstractSelectManager
 {
     protected array $filterLanguages = [];
+    protected array $filterScopes = [];
 
     public static function createLanguagePrismBoolFilterName(string $language): string
     {
         return 'prismVia' . ucfirst(Util::toCamelCase(strtolower($language)));
+    }
+
+    public static function createScopePrismBoolFilterName(string $id): string
+    {
+        return 'prismViaScope_' . $id;
     }
 
     /**
@@ -104,6 +110,7 @@ class ProductAttributeValue extends AbstractSelectManager
         }
 
         $this->applyLanguageBoolFilters($params, $selectParams);
+        $this->applyScopeBoolFilters($params, $selectParams);
 
         return $selectParams;
     }
@@ -185,11 +192,24 @@ class ProductAttributeValue extends AbstractSelectManager
 
     public function applyBoolFilter($filterName, &$result)
     {
+        if (self::createLanguagePrismBoolFilterName('main') === $filterName) {
+            $this->filterLanguages[] = 'main';
+        }
         if ($this->getConfig()->get('isMultilangActive')) {
             foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
                 if (self::createLanguagePrismBoolFilterName($language) === $filterName) {
                     $this->filterLanguages[] = $language;
                 }
+            }
+        }
+
+        if (self::createScopePrismBoolFilterName('global') === $filterName) {
+            $this->filterScopes[] = 'global';
+        }
+
+        foreach ($this->getMetadata()->get(['clientDefs', 'ProductAttributeValue', 'channels'], []) as $channel) {
+            if (self::createScopePrismBoolFilterName($channel['id']) === $filterName) {
+                $this->filterScopes[] = $channel['id'];
             }
         }
 
@@ -201,7 +221,43 @@ class ProductAttributeValue extends AbstractSelectManager
         if (empty($this->filterLanguages)) {
             return;
         }
+
         $languages = implode("','", $this->filterLanguages);
-        $selectParams['customWhere'] .= " AND (product_attribute_value.`language` IN ('$languages') OR product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE deleted=0 AND is_multilang=0))";
+
+        $selectParams['customWhere'] .= " AND (product_attribute_value.language IN ('$languages') OR product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE deleted=0 AND is_multilang=0))";
+    }
+
+    public function applyScopeBoolFilters($params, &$selectParams)
+    {
+        if (empty($this->filterScopes)) {
+            return;
+        }
+
+        $channelsIds = [];
+        foreach ($this->filterScopes as $channelId) {
+            if ($channelId !== 'global') {
+                $channelsIds[] = $channelId;
+            }
+        }
+        $channelsIds[] = '';
+
+        $pavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where(['channelId' => $channelsIds])
+            ->order('channelId', true)
+            ->find();
+
+        $data = [];
+        foreach ($pavs as $pav) {
+            $hash = "{$pav->get('productId')}_{$pav->get('attributeId')}_{$pav->get('language')}";
+            if (!isset($data[$hash])) {
+                $data[$hash] = $pav->get('id');
+            }
+        }
+
+        $ids = implode("','", array_values($data));
+
+        $selectParams['customWhere'] .= " AND product_attribute_value.id IN ('$ids')";
     }
 }

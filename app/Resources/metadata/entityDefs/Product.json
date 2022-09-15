@@ -14,7 +14,7 @@
       "layoutListSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
+      "exportDisabled": false,
       "importDisabled": true,
       "exportType": "text",
       "noLoad": true
