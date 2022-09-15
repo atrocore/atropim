@@ -64,6 +64,23 @@ class Language extends AbstractListener
                 $languageLabel = 'Language';
             }
 
+            if (isset($rows['Global']['labels']['mainLanguage'])) {
+                $mainLanguageLabel = $rows['Global']['labels']['mainLanguage'];
+            } elseif (isset($data['en_US']['Global']['labels']['mainLanguage'])) {
+                $mainLanguageLabel = $data['en_US']['Global']['labels']['mainLanguage'];
+            } else {
+                $mainLanguageLabel = 'Main Language';
+            }
+
+            if (isset($rows['Global']['scopeNames']['Channel'])) {
+                $channelLabel = $rows['Global']['scopeNames']['Channel'];
+            } elseif (isset($data['en_US']['Global']['scopeNames']['Channel'])) {
+                $channelLabel = $data['en_US']['Global']['scopeNames']['Channel'];
+            } else {
+                $channelLabel = 'Channel';
+            }
+
+            $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createLanguagePrismBoolFilterName('main')] = $languageLabel . ': ' . $mainLanguageLabel;
             foreach ($languages as $language) {
                 $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createLanguagePrismBoolFilterName($language)] = $languageLabel . ': ' . $language;
                 $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($language)));
@@ -71,6 +88,12 @@ class Language extends AbstractListener
                     $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;
                 }
             }
+
+            $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createScopePrismBoolFilterName('global')] = $channelLabel . ': Global';
+            foreach ($this->getMetadata()->get(['clientDefs', 'ProductAttributeValue', 'channels'], []) as $channel) {
+                $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createScopePrismBoolFilterName($channel['id'])] = $channelLabel . ': ' . $channel['name'];
+            }
+
             foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields'], []) as $fields => $fieldDefs) {
                 if (!empty($fieldDefs['attributeId'])) {
                     $attributeName = empty($fieldDefs['attributeName']) ? $fieldDefs['attributeId'] : $fieldDefs['attributeName'];
