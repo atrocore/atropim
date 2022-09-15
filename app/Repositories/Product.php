@@ -175,7 +175,9 @@ class Product extends AbstractRepository
     {
         $ids = [];
         foreach ($productIds as $id) {
-            $ids[] = $this->getPDO()->quote($id);
+            if ($id !== null) {
+                $ids[] = $this->getPDO()->quote((string)$id);
+            }
         }
 
         if (!empty($ids)) {
