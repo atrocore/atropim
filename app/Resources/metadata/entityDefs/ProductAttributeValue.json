@@ -419,7 +419,13 @@
       "emHidden": true
     },
     "language": {
-      "type": "varchar",
+      "type": "enum",
+      "options": [
+        "main"
+      ],
+      "optionsIds": [
+        "main"
+      ],
       "default": "main",
       "required": true,
       "readOnly": true,

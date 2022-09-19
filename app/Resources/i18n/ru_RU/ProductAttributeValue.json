@@ -12,8 +12,8 @@
     "value": "Значение",
     "scope": "Область действия",
     "channel": "Канал",
-    "varcharValue" :  "Value: Varchar",
-    "textValue":  "Value: Text",
+    "varcharValue": "Value: Varchar",
+    "textValue": "Value: Text",
     "intValue": "Value: Integer",
     "floatValue": "Value: Float",
     "dateValue": "Value: Date",
@@ -25,6 +25,11 @@
     "product": "Продукт",
     "attribute": "Атрибут",
     "channel": "Канал"
+  },
+  "options": {
+    "language": {
+      "main": "Основной язык"
+    }
   },
   "labels": {
     "Create ProductAttributeValue": "Создать значение атрибута",

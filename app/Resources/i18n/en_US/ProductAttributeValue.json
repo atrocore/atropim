@@ -26,6 +26,11 @@
     "attribute": "Attribute",
     "channel": "Channel"
   },
+  "options": {
+    "language": {
+      "main": "Main Language"
+    }
+  },
   "labels": {
     "Create ProductAttributeValue": "Create Attribute Value",
     "cannotLinkDefaultChannel": "Default channel '{channel}' for the selected attribute is not linked to this product."
