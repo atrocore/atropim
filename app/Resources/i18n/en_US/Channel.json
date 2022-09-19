@@ -6,11 +6,13 @@
     "categories": "Categories",
     "locales": "Languages",
     "code": "Code",
-    "productChannels": "Channel Products"
+    "productChannels": "Channel Products",
+    "products": "Channel Products"
   },
   "links": {
     "categories": "Categories",
-    "productChannels": "Channel Products"
+    "productChannels": "Channel Products",
+    "products": "Channel Products"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Unlink category '%s' from channel '%s'",

@@ -31,6 +31,7 @@
     "association": "Association",
     "catalog": "Catalog",
     "productChannels": "Product Channels",
+    "channels": "Product Channels",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
@@ -56,6 +57,7 @@
     "packaging": "Packaging",
     "catalog": "Catalog",
     "productChannels": "Product Channels",
+    "channels": "Product Channels",
     "contents": "Contents"
   },
   "labels": {

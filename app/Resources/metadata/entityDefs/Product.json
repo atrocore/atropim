@@ -429,7 +429,11 @@
     "productChannels": {
       "type": "hasMany",
       "foreign": "product",
-      "entity": "ProductChannel"
+      "entity": "ProductChannel",
+      "addRelationCustomDefs": {
+        "link": "channels",
+        "entity": "Channel"
+      }
     },
     "createdBy": {
       "type": "belongsTo",

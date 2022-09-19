@@ -6,11 +6,13 @@
     "categories": "Категории",
     "locales": "Языки",
     "code": "Код",
-    "productChannels": "Продукты канала"
+    "productChannels": "Продукты канала",
+    "products": "Продукты канала"
   },
   "links": {
     "categories": "Категории",
-    "productChannels": "Продукты канала"
+    "productChannels": "Продукты канала",
+    "products": "Продукты канала"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Разорвать связь категории '%s' с каналом '%s'",

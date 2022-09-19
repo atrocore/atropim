@@ -17,6 +17,7 @@
     "scope": "Scope",
     "assets": "Assets",
     "productChannels": "Produktkanäle",
+    "channels": "Produktkanäle",
     "mpn": "MPN",
     "price": "Preis",
     "product": "Produkt",
@@ -63,6 +64,7 @@
     "packaging": "Verpackung",
     "catalog": "Katalog",
     "productChannels": "Produktkanäle",
+    "channels": "Produktkanäle",
     "contents": "Contents"
   },
   "labels": {
