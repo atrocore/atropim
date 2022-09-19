@@ -83,7 +83,8 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "foreignName": "productName"
     },
     "productAttributeValues": {
       "type": "linkMultiple",

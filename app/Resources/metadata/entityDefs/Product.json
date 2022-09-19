@@ -203,7 +203,8 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "foreignName": "channelName"
     },
     "createdAt": {
       "type": "datetime",
