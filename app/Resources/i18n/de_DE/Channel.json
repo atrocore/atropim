@@ -11,7 +11,8 @@
     "productFamilyAttributes": "Produktfamilieattribute",
     "categories": "Kategorien",
     "code": "Code",
-    "productChannels": "Kanalprodukte"
+    "productChannels": "Kanalprodukte",
+    "products": "Kanalprodukte"
   },
   "links": {
     "categories": "Kategorien",
@@ -20,7 +21,8 @@
     "productAttributeValues": "Produktattributwerte",
     "productCategories": "Produktkategorien",
     "productFamilyAttributes": "Produktfamilieattribute",
-    "productChannels": "Kanalprodukte"
+    "productChannels": "Kanalprodukte",
+    "products": "Kanalprodukte"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Verknüpfung der Kategorie '%s' mit Kanal '%s' aufgeben",

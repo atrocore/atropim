@@ -30,6 +30,7 @@
     "association": "Ассоциация",
     "catalog": "Каталог",
     "productChannels": "Каналы продукта",
+    "channels": "Каналы продукта",
     "basePriceAmount": "Базовая цена",
     "packedAmount": "Кол-во в упаковке",
     "pcSorting": "Порядок сортировки",
@@ -54,6 +55,7 @@
     "packaging": "Упаковка",
     "catalog": "Каталог",
     "productChannels": "Каналы продукта",
+    "channels": "Каналы продукта",
     "contents": "Контент"
   },
   "labels": {

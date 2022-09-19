@@ -157,7 +157,11 @@
     "productChannels": {
       "type": "hasMany",
       "foreign": "channel",
-      "entity": "ProductChannel"
+      "entity": "ProductChannel",
+      "addRelationCustomDefs": {
+        "link": "products",
+        "entity": "Product"
+      }
     },
     "productAttributeValues": {
       "type": "hasMany",
