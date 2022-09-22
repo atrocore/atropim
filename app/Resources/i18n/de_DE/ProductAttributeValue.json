@@ -12,8 +12,8 @@
     "language": "Sprache",
     "value": "Wert",
     "scope": "Scope",
-    "varcharValue" :  "Wert: Einzeiliger Text",
-    "textValue":  "Wert: Text",
+    "varcharValue": "Wert: Einzeiliger Text",
+    "textValue": "Wert: Text",
     "intValue": "Wert: Ganzzahl",
     "floatValue": "Wert: Float",
     "dateValue": "Wert: Datum",
@@ -25,6 +25,11 @@
     "productAttribute": "Produktattribut",
     "channel": "Kanal",
     "attribute": "Attribut"
+  },
+  "options": {
+    "language": {
+      "main": "Hauptsprache"
+    }
   },
   "labels": {
     "Create ProductAttributeValue": "Produktattributwert erstellen",

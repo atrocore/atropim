@@ -1,7 +1,7 @@
 {
   "fields": {
-    "parents": "Associating attributes",
-    "children": "Associated attributes",
+    "parents": "Associating Attributes",
+    "children": "Associated Attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
     "typeValue": "Values",
@@ -28,8 +28,8 @@
     "sortOrderInProduct": "Sort Order in Product"
   },
   "links": {
-    "parents": "Associating attributes",
-    "children": "Associated attributes",
+    "parents": "Associating Attributes",
+    "children": "Associated Attributes",
     "attributeTab": "Attribute Tab",
     "attributeGroup": "Attribute Group",
     "products": "Products",
