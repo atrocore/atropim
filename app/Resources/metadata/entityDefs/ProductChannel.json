@@ -20,11 +20,13 @@
     },
     "product": {
       "type": "link",
-      "required": true
+      "required": true,
+      "relationshipField": true
     },
     "channel": {
       "type": "link",
-      "required": true
+      "required": true,
+      "relationshipField": true
     },
     "isActive": {
       "type": "bool"
