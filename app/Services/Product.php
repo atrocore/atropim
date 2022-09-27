@@ -564,7 +564,9 @@ class Product extends Hierarchy
 
         // get select params
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
-        $selectParams['orderBy'] = 'id';
+        if (empty($selectParams['orderBy'])) {
+            $selectParams['orderBy'] = 'id';
+        }
 
         // get record service
         $recordService = $this->getRecordService($foreignEntityName);
