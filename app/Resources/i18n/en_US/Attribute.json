@@ -25,7 +25,7 @@
     "defaultScope": "Scope",
     "defaultChannel": "Channel",
     "defaultIsRequired": "Required",
-    "sortOrderInProduct": "Sort Order in Product"
+    "sortOrderInProduct": "Sort Order for Product"
   },
   "links": {
     "parents": "Associating Attributes",
