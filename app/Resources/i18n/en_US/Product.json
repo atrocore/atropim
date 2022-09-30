@@ -36,7 +36,9 @@
     "packedAmount": "Packed Amount",
     "pcSorting": "Sort order",
     "contents": "Contents",
-    "taskStatus": "Task status"
+    "taskStatus": "Task status",
+    "children": "Child products",
+    "parents": "Parent Products"
   },
   "links": {
     "productSerie": "Product Series",
@@ -58,7 +60,9 @@
     "catalog": "Catalog",
     "productChannels": "Product Channels",
     "channels": "Product Channels",
-    "contents": "Contents"
+    "contents": "Contents",
+    "children": "Child products",
+    "parents": "Parent Products"
   },
   "labels": {
     "Create Product": "Create Product",
