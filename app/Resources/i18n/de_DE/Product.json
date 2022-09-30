@@ -42,7 +42,9 @@
     "packedAmount": "Gepackte Menge",
     "pcSorting": "Sortierreihenfolge",
     "contents": "Contents",
-    "taskStatus": "Task status"
+    "taskStatus": "Task status",
+    "children": "Kinderprodukte",
+    "parents": "Elternprodukte"
   },
   "links": {
     "associatedMainProducts": "zugehörige Produkte",
@@ -65,7 +67,9 @@
     "catalog": "Katalog",
     "productChannels": "Produktkanäle",
     "channels": "Produktkanäle",
-    "contents": "Contents"
+    "contents": "Contents",
+    "children": "Kinderprodukte",
+    "parents": "Elternprodukte"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
