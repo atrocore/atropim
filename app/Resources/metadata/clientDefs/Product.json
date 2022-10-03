@@ -124,21 +124,12 @@
       "view": "pim:views/product/record/panels/categories"
     },
     "associatedMainProducts": {
-      "select": false,
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
-      "aclScopesList": [
-        "AssociatedProduct"
-      ]
+      "view": "views/record/panels/for-relationship-type"
     },
     "productChannels": {
-      "select": false,
-      "view": "views/record/panels/for-relationship-type",
-      "relationshipScope": "ProductChannel",
-      "relationshipEntities": [
-        "Product",
-        "Channel"
-      ]
+      "view": "views/record/panels/for-relationship-type"
     }
   },
   "dynamicLogic": {
