@@ -125,6 +125,7 @@
     },
     "associatedMainProducts": {
       "select": false,
+      "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
       "aclScopesList": [
         "AssociatedProduct"
