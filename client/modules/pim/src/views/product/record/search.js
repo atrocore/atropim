@@ -94,6 +94,7 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 this.fetch();
                 this.updateSearch();
                 this.toggleFilterActionsVisibility();
+                this.toggleResetVisibility();
 
                 this.manageLabels();
                 this.handleLeftDropdownVisibility();
