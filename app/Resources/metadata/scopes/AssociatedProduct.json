@@ -6,7 +6,7 @@
   "aclPortal": true,
   "disabled": false,
   "customizable": true,
-  "type": "Base",
+  "type": "Relationship",
   "module": "Pim",
   "importable": true
 }

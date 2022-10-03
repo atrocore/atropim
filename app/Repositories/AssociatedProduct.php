@@ -34,10 +34,10 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
 
-class AssociatedProduct extends Base
+class AssociatedProduct extends Relationship
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {

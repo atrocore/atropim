@@ -34,6 +34,6 @@ namespace Pim\Controllers;
 /**
  * AssociatedProduct controller
  */
-class AssociatedProduct extends \Espo\Core\Templates\Controllers\Base
+class AssociatedProduct extends \Espo\Core\Templates\Controllers\Relationship
 {
 }

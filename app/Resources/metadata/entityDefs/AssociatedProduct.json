@@ -3,16 +3,19 @@
     "association": {
       "type": "link",
       "required": true,
+      "relationshipField": true,
       "view": "pim:views/associated-product/fields/association"
     },
     "mainProduct": {
       "required": true,
       "type": "link",
+      "relationshipField": true,
       "view": "pim:views/associated-product/fields/main-product"
     },
     "relatedProduct": {
       "required": true,
       "type": "link",
+      "relationshipField": true,
       "view": "pim:views/associated-product/fields/related-product",
       "noLoad": false
     },
