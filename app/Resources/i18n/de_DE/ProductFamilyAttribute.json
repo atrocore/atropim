@@ -1,7 +1,7 @@
 {
   "fields": {
     "isMultiChannel": "ist Multichannel",
-    "isRequired": "ist erforderlich",
+    "isRequired": "erforderlich",
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
     "channel": "Kanal",
