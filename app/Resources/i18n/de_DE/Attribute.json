@@ -11,7 +11,7 @@
     "attributeGroup": "Attributgruppe",
     "attributeTab": "Attributtab",
     "code": "Code",
-    "isRequired": "Ist Erforderlich",
+    "isRequired": "erforderlich",
     "isMultilang": "Mehrsprachig",
     "assetType": "Asset-Typ",
     "name": "Attributname",
@@ -25,7 +25,7 @@
     "virtualProductField": "Virtuelles Produktfeld",
     "defaultScope": "Scope",
     "defaultChannel": "Kanal",
-    "defaultIsRequired": "Erforderlich",
+    "defaultIsRequired": "erforderlich",
     "sortOrderInProduct": "Sortierreihenfolge für Produkt"
   },
   "links": {

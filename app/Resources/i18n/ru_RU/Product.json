@@ -56,7 +56,9 @@
     "catalog": "Каталог",
     "productChannels": "Каналы продукта",
     "channels": "Каналы продукта",
-    "contents": "Контент"
+    "contents": "Контент",
+    "children": "Дочерние продукты",
+    "parents": "Родительские продукты"
   },
   "labels": {
     "Create Product": "Создать продукт",
