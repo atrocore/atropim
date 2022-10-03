@@ -71,6 +71,7 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 this.updateExpandListButtonInFamily();
                 this.handleLeftDropdownVisibility();
                 this.toggleFilterActionsVisibility();
+                this.toggleResetVisibility();
 
                 this.manageLabels();
             },
