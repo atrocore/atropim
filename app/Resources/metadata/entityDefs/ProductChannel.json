@@ -72,7 +72,7 @@
     "fullTextSearch": false
   },
   "uniqueIndexes": {
-    "unique_1": [
+    "unique_relationship": [
       "deleted",
       "product_id",
       "channel_id"

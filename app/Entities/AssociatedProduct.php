@@ -31,7 +31,7 @@
 
 namespace Pim\Entities;
 
-class AssociatedProduct extends \Espo\Core\Templates\Entities\Base
+class AssociatedProduct extends \Espo\Core\Templates\Entities\Relationship
 {
     protected $entityType = "AssociatedProduct";
 }
