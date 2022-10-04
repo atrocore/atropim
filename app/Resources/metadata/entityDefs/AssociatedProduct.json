@@ -118,7 +118,7 @@
     }
   },
   "uniqueIndexes": {
-    "unique_association": [
+    "unique_relationship": [
       "association_id",
       "main_product_id",
       "related_product_id",
