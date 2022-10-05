@@ -1,8 +1,8 @@
 {
   "fields": {
-    "isActiveForChannel": "ist aktive Entität",
-    "associatedMainProducts": "zugehörige Produkte",
-    "associatedRelatedProduct": "Verknüpfung von ähnlichen Produkten",
+    "isActiveForChannel": "Aktiv",
+    "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
+    "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",
     "channelProducts": "Kanalprodukte",
     "isActive": "Aktiv",
@@ -47,8 +47,8 @@
     "parents": "Elternprodukte"
   },
   "links": {
-    "associatedMainProducts": "zugehörige Produkte",
-    "associatedRelatedProduct": "Verknüpfung von ähnlichen Produkten",
+    "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
+    "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",
     "channelProductAttributeValues": "Attributwerte vom Kanalprodukt",
     "product": "Produkt",

@@ -2,7 +2,7 @@
   "fields": {
     "productFamily": "Product Family",
     "attribute": "Attribute",
-    "isRequired": "Is required",
+    "isRequired": "required",
     "channel": "Channel",
     "scope": "Scope"
   },
