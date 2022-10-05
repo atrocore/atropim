@@ -124,23 +124,12 @@
       "view": "pim:views/product/record/panels/categories"
     },
     "associatedMainProducts": {
-      "view": "pim:views/product/record/panels/associated-main-product",
+      "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
-      "rowActionsView": "pim:views/associated-product/record/row-actions/edit-and-remove-in-product",
-      "select": false,
-      "aclScopesList": [
-        "AssociatedProduct"
-      ],
-      "layout": "listForAssociatedProductsInProduct"
+      "view": "views/record/panels/for-relationship-type"
     },
     "productChannels": {
-      "select": false,
-      "view": "views/record/panels/for-relationship-type",
-      "relationshipScope": "ProductChannel",
-      "relationshipEntities": [
-        "Product",
-        "Channel"
-      ]
+      "view": "views/record/panels/for-relationship-type"
     }
   },
   "dynamicLogic": {

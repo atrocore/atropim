@@ -70,6 +70,8 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 this.updateAddAttributeFilterButton();
                 this.updateExpandListButtonInFamily();
                 this.handleLeftDropdownVisibility();
+                this.toggleFilterActionsVisibility();
+                this.toggleResetVisibility();
 
                 this.manageLabels();
             },
@@ -91,6 +93,8 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
 
                 this.fetch();
                 this.updateSearch();
+                this.toggleFilterActionsVisibility();
+                this.toggleResetVisibility();
 
                 this.manageLabels();
                 this.handleLeftDropdownVisibility();

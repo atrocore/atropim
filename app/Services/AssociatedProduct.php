@@ -35,11 +35,11 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Templates\Services\Base;
+use Espo\Core\Templates\Services\Relationship;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
-class AssociatedProduct extends Base
+class AssociatedProduct extends Relationship
 {
     protected $mandatorySelectAttributeList = ['backwardAssociatedProductId'];
 

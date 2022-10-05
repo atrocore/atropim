@@ -1,8 +1,12 @@
 [
-    {
-        "name": "association"
-    },
-    {
-        "name": "relatedProduct"
-    }
+  {
+    "name": "relatedProductImage",
+    "width": 20
+  },
+  {
+    "name": "association"
+  },
+  {
+    "name": "relatedProduct"
+  }
 ]
