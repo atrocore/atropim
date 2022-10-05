@@ -177,7 +177,7 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
         selectAllResult() {
             Dep.prototype.selectAllResult.call(this);
 
-            this.$el.find('.list .plate-item').addClass('active');
+            this.$el.find('.list .plate-item').removeClass('active');
         },
 
         sortByDirection() {
