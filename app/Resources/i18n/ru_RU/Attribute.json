@@ -3,6 +3,7 @@
     "parents": "Связывающие атрибуты",
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
+    "attributeTab": "Вкладка атрибутов",
     "typeValue": "Значения",
     "type": "Тип атрибута",
     "code": "Код",
@@ -30,6 +31,7 @@
     "parents": "Связывающие атрибуты",
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
+    "attributeTab": "Вкладка атрибутов",
     "products": "Продукты",
     "productAttributeValues": "Значения атрибутов",
     "productFamilies": "Продуктовые семьи"
