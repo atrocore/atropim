@@ -59,7 +59,12 @@ class Category extends AbstractSelectManager
 
     protected function boolFilterNotParents(&$result): void
     {
-        $category = $this->getEntityManager()->getRepository('Category')->get((string)$this->getSelectCondition('notParents'));
+        $notParents = (string)$this->getSelectCondition('notParents');
+        if (empty($notParents)) {
+            return;
+        }
+
+        $category = $this->getEntityManager()->getRepository('Category')->get($notParents);
         if (!empty($category)) {
             $result['whereClause'][] = [
                 'id!=' => array_merge($category->getParentsIds(), [$category->get('id')])
@@ -69,7 +74,12 @@ class Category extends AbstractSelectManager
 
     protected function boolFilterNotChildren(&$result): void
     {
-        $category = $this->getEntityManager()->getRepository('Category')->get((string)$this->getSelectCondition('notChildren'));
+        $notChildren = (string)$this->getSelectCondition('notChildren');
+        if (empty($notChildren)) {
+            return;
+        }
+
+        $category = $this->getEntityManager()->getRepository('Category')->get($notChildren);
         if (!empty($category)) {
             $result['whereClause'][] = [
                 'id!=' => array_merge(array_column($category->getChildren()->toArray(), 'id'), [$category->get('id')])
