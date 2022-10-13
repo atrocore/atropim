@@ -206,6 +206,22 @@
       "noLoad": true,
       "foreignName": "channelName"
     },
+    "productChannels_channel": {
+      "type": "linkMultiple",
+      "entity": "Channel",
+      "relationshipFilterField": "productChannels",
+      "relationshipFilterForeignField": "channel",
+      "notStorable": true,
+      "filterDisabled": false,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
