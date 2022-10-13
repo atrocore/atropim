@@ -113,17 +113,6 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "isActiveForChannel": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "emHidden": true
-    },
     "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

@@ -1,6 +1,5 @@
 {
   "fields": {
-    "isActiveForChannel": "Aktiv",
     "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
     "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",
