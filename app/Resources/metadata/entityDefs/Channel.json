@@ -86,6 +86,22 @@
       "noLoad": true,
       "foreignName": "productName"
     },
+    "productChannels_product": {
+      "type": "linkMultiple",
+      "entity": "Product",
+      "relationshipFilterField": "productChannels",
+      "relationshipFilterForeignField": "product",
+      "notStorable": true,
+      "filterDisabled": false,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "productAttributeValues": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
