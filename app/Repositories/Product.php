@@ -514,45 +514,6 @@ class Product extends AbstractRepository
         return true;
     }
 
-    public function getChannelRelationData(string $productId): array
-    {
-        $data = $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "SELECT channel_id as channelId, is_active AS isActive FROM product_channel WHERE product_id='{$productId}' AND deleted=0"
-            )
-            ->fetchAll(\PDO::FETCH_ASSOC);
-
-        $result = [];
-        foreach ($data as $row) {
-            $result[$row['channelId']] = $row;
-        }
-
-        return $result;
-    }
-
-    public function updateChannelRelationData($productId, $channelId, bool $isActive = null): void
-    {
-        if ($productId instanceof Entity) {
-            $productId = $productId->get('id');
-        }
-
-        if ($channelId instanceof Entity) {
-            $channelId = $channelId->get('id');
-        }
-
-        $data = [];
-        if (!is_null($isActive)) {
-            $data[] = 'is_active=' . (int)$isActive;
-        }
-
-        if (!empty($data)) {
-            $this
-                ->getEntityManager()
-                ->nativeQuery("UPDATE product_channel SET " . implode(',', $data) . " WHERE product_id='$productId' AND channel_id='$channelId' AND deleted=0");
-        }
-    }
-
     /**
      * @param array $productsIds
      * @param array $categoriesIds

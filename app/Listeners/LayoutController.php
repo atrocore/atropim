@@ -99,19 +99,6 @@ class LayoutController extends AbstractListener
     /**
      * @param Event $event
      */
-    protected function modifyProductDetailSmall(Event $event)
-    {
-        /** @var array $result */
-        $result = Json::decode($event->getArgument('result'), true);
-
-        $result[0]['rows'][] = [['name' => 'isActiveForChannel'], false];
-
-        $event->setArgument('result', Json::encode($result));
-    }
-
-    /**
-     * @param Event $event
-     */
     protected function modifyProductAttributeValueDetailSmall(Event $event)
     {
         if (empty($this->getConfig()->get('isMultilangActive'))) {

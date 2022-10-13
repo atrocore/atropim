@@ -162,21 +162,6 @@ class Product extends Hierarchy
         }
     }
 
-    public function updateActiveForChannel(string $channelId, string $productId, bool $isActive): bool
-    {
-        if (empty($channel = $this->getEntityManager()->getEntity('Channel', $channelId)) || !$this->getAcl()->check($channel, 'edit')) {
-            return false;
-        }
-
-        if (empty($product = $this->getEntityManager()->getEntity('Product', $productId)) || !$this->getAcl()->check($product, 'edit')) {
-            return false;
-        }
-
-        $this->getEntityManager()->getRepository('Product')->updateChannelRelationData($productId, $channelId, $isActive);
-
-        return true;
-    }
-
     /**
      * @inheritDoc
      */
@@ -834,34 +819,6 @@ class Product extends Hierarchy
             ->find();
 
         return Json::encode($pavs->toArray());
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return string|null
-     */
-    protected function getAttributeChannelsFromEntityForExport(Entity $entity): ?string
-    {
-        if (empty($entity->get('channelsIds'))) {
-            return null;
-        }
-
-        $channelRelationData = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->getChannelRelationData($entity->get('id'));
-
-        $result = [];
-        foreach ($entity->get('channelsNames') as $id => $name) {
-            $result[] = [
-                'id'       => $id,
-                'name'     => $name,
-                'isActive' => $channelRelationData[$id]['isActive']
-            ];
-        }
-
-        return Json::encode($result);
     }
 
     /**

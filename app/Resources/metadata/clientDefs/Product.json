@@ -163,16 +163,6 @@
           ]
         }
       },
-      "isActiveForChannel": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "isActiveForChannel"
-            }
-          ]
-        }
-      },
       "pcSorting": {
         "visible": {
           "conditionGroup": [
