@@ -205,7 +205,6 @@
       "massUpdateDisabled": true,
       "noLoad": true,
       "foreignName": "channelName",
-      "exportDisabled": true,
       "importDisabled": true
     },
     "productChannels_channel": {
