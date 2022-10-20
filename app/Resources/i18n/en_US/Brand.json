@@ -14,7 +14,7 @@
     "Create Brand": "Create Brand"
   },
   "exceptions": {
-    "brandWithSuchCodeAlreadyExist": "Brand with such code already exist",
+    "brandWithSuchCodeAlreadyExist": "Brand with such code already exist.",
     "brandIsUsedInProducts": "Brand(s), which is(are) used in some products, cannot be deleted."
   }
 }
