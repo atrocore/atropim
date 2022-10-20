@@ -15,7 +15,7 @@
     "Create Brand": "Marke erstellen"
   },
   "exceptions": {
-    "brandIsUsedInProducts": "Die Marke wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
+    "brandIsUsedInProducts": "Die Marke(n), die in einigen Produkten verwendet wird(werden), kann (können) nicht gelöscht werden.",
     "brandWithSuchCodeAlreadyExist": "Die Marke mit einem solchen Code existiert bereits."
   }
 }
