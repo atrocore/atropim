@@ -204,7 +204,8 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true,
-      "foreignName": "channelName"
+      "foreignName": "channelName",
+      "importDisabled": true
     },
     "productChannels_channel": {
       "type": "linkMultiple",
