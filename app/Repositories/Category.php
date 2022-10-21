@@ -625,20 +625,26 @@ class Category extends AbstractRepository
             return;
         }
 
-        // set route for current category
-        $entity->set('categoryRoute', self::getCategoryRoute($entity));
-        $entity->set('categoryRouteName', self::getCategoryRoute($entity, true));
+        $this
+            ->getConnection()
+            ->createQueryBuilder()
+            ->update('category')
+            ->set('category_route', ':categoryRoute')->setParameter('categoryRoute', self::getCategoryRoute($entity))
+            ->set('category_route_name', ':categoryRouteName')->setParameter('categoryRouteName', self::getCategoryRoute($entity, true))
+            ->where('id=:id')->setParameter('id', $entity->get('id'))
+            ->executeQuery();
 
-        $this->saveEntity($entity);
-
-        // update all children
         if (!$entity->isNew()) {
             $children = $this->getEntityChildren($entity->get('categories'), []);
             foreach ($children as $child) {
-                // set route for child category
-                $child->set('categoryRoute', self::getCategoryRoute($child));
-                $child->set('categoryRouteName', self::getCategoryRoute($child, true));
-                $this->saveEntity($child);
+                $this
+                    ->getConnection()
+                    ->createQueryBuilder()
+                    ->update('category')
+                    ->set('category_route', ':categoryRoute')->setParameter('categoryRoute', self::getCategoryRoute($child))
+                    ->set('category_route_name', ':categoryRouteName')->setParameter('categoryRouteName', self::getCategoryRoute($child, true))
+                    ->where('id=:id')->setParameter('id', $child->get('id'))
+                    ->executeQuery();
             }
         }
     }
