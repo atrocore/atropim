@@ -248,13 +248,11 @@
     "children": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
       "noLoad": true
     },
     "parents": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
       "noLoad": true
     },
     "sortOrderInAttributeGroup": {
