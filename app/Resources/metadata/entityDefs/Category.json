@@ -105,8 +105,7 @@
     },
     "categoryParent": {
       "type": "link",
-      "view": "pim:views/category/fields/category-parent",
-      "massUpdateDisabled": true
+      "view": "pim:views/category/fields/category-parent"
     },
     "categoryRoute": {
       "type": "text",
@@ -127,7 +126,6 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "massUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true,
       "importDisabled": true
