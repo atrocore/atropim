@@ -31,15 +31,23 @@
 Espo.define('pim:views/dashlets/fields/colored-varchar-with-url', 'pim:views/dashlets/fields/varchar-with-url',
     Dep => Dep.extend({
 
+        defaultColor: 'FFFFFF',
+
         listTemplate: 'pim:dashlets/fields/colored-varchar-with-url/list',
 
         data() {
             let name = this.model.get(this.name);
             let fieldName = this.options.defs.params.filterField;
-            let backgroundcolors = this.getMetadata().get(['entityDefs', 'Product', 'fields', fieldName, 'optionColors']) || {};
+
+            let options = this.getMetadata().get(['entityDefs', 'Product', 'fields', fieldName, 'options']) || {},
+                optionColors = this.getMetadata().get(['entityDefs', 'Product', 'fields', fieldName, 'optionColors']) || {};
+
+            const index = options.findIndex(elem => elem === name),
+                  color = index !== -1 ? optionColors[index] : this.defaultColor;
+
             return _.extend({
-                backgroundColor: backgroundcolors[name],
-                color: this.getFontColor(backgroundcolors[name])
+                backgroundColor: color,
+                color: this.getFontColor(color)
             }, Dep.prototype.data.call(this));
         },
 
