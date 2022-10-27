@@ -131,14 +131,6 @@ class LayoutController extends AbstractListener
     /**
      * @param Event $event
      */
-    protected function modifyChannelDetailSmall(Event $event)
-    {
-        $this->modifyProductDetailSmall($event);
-    }
-
-    /**
-     * @param Event $event
-     */
     protected function modifyAttributeDetailSmall(Event $event)
     {
         $this->modifyAttributeDetail($event);
