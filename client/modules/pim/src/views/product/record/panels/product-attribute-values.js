@@ -551,13 +551,23 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
                 if (!fieldFilter.includes('allValues')) {
                     // hide filled
-                    if (!hide && !fieldFilter.includes('filled')) {
-                        hide = !this.isEmptyValue(value);
+                    if (!hide && fieldFilter.includes('filled')) {
+                        hide = this.isEmptyValue(value);
                     }
 
                     // hide empty
-                    if (!hide && !fieldFilter.includes('empty')) {
-                        hide = this.isEmptyValue(value);
+                    if (!hide && fieldFilter.includes('empty')) {
+                        hide = !this.isEmptyValue(value);
+                    }
+
+                    // hide optional
+                    if (!hide && fieldFilter.includes('optional')) {
+                        hide = this.isRequiredValue(fieldView);
+                    }
+
+                    // hide required
+                    if (!hide && fieldFilter.includes('required')) {
+                        hide = !this.isRequiredValue(fieldView);
                     }
                 }
 
@@ -584,6 +594,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         isEmptyValue(value) {
             return value === null || value === '' || (Array.isArray(value) && !value.length);
+        },
+
+        isRequiredValue(view) {
+            return view.model.get('isRequired') || false
         },
 
         getValueFields() {
