@@ -348,6 +348,37 @@ class ProductAttributeValue extends Base
         return $result;
     }
 
+    /**
+     * @param string $attributeGroupId
+     *
+     * @return bool
+     *
+     * @throws \Throwable
+     */
+    public function unlinkAttributeGroupHierarchy(string $attributeGroupId, string $productId): bool
+    {
+        $attributes = $this
+            ->getRepository()
+            ->select(['id'])
+            ->join('attribute')
+            ->where([
+                'attribute.attributeGroupId' => $attributeGroupId,
+                'productId' => $productId
+            ])
+            ->find()
+            ->toArray();
+
+        if (!empty($attributes)) {
+            foreach ($attributes as $attribute) {
+                try {
+                    $this->deleteEntity($attribute['id']);
+                } catch (\Throwable $e) {}
+            }
+        }
+
+        return true;
+    }
+
     protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
     {
         $children = $this->getRepository()->getChildrenArray($id);

@@ -31,5 +31,21 @@
       "controller": "Attribute",
       "action": "getAttributesIdsFilter"
     }
+  },
+  {
+    "route": "/ProductFamilyAttribute/action/unlinkAttributeGroupHierarchy",
+    "method": "delete",
+    "params": {
+      "controller": "ProductFamilyAttribute",
+      "action": "unlinkAttributeGroupHierarchy"
+    }
+  },
+  {
+    "route": "/ProductAttributeValue/action/unlinkAttributeGroupHierarchy",
+    "method": "delete",
+    "params": {
+      "controller": "ProductAttributeValue",
+      "action": "unlinkAttributeGroupHierarchy"
+    }
   }
 ]

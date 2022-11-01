@@ -13,8 +13,8 @@
   },
   "labels": {
     "Create ProductFamilyAttribute": "Create Product Family Attribute",
-    "unlinkRelatedAttribute": "Unlink",
-    "cascadeUnlinkRelatedAttribute": "Unlink Hierarchically"
+    "unlinkRelatedAttribute": "Delete here and retain for products",
+    "cascadeUnlinkRelatedAttribute": "Delete here and from products"
   },
   "options": {
     "scope": {
