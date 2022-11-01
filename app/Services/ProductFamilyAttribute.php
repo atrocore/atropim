@@ -254,7 +254,9 @@ class ProductFamilyAttribute extends Base
             foreach ($attributes as $attribute) {
                 try {
                     $this->deleteEntity($attribute['id']);
-                } catch (\Throwable $e) {}
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('AttributeGroup hierarchical removing from ProductFamily failed: ' . $e->getMessage());
+                }
             }
         }
 

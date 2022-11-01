@@ -81,7 +81,7 @@ class ProductAttributeValue extends Base
         if (!$request->isDelete()) {
             throw new BadRequest();
         }
-        if (empty($data->attributeGroupId) || empty($data->productId)) {
+        if (!property_exists($data, 'attributeGroupId') || !property_exists($data, 'productId')) {
             throw new BadRequest();
         }
         if (!$this->getAcl()->check('ProductFamilyAttribute', 'edit')) {
