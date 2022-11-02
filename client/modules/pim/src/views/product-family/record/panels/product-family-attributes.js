@@ -249,10 +249,10 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
 
             this.confirm({
                 message: this.translate('unlinkRelatedAttribute', 'messages', 'ProductFamilyAttribute'),
-                confirmText: this.translate('Unlink')
+                confirmText: this.translate('Remove')
             }, function () {
                 var model = this.collection.get(id);
-                this.notify('Unlinking...');
+                this.notify('removing');
                 $.ajax({
                     url: this.collection.url,
                     type: 'DELETE',
@@ -261,7 +261,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                     }),
                     contentType: 'application/json',
                     success: function () {
-                        this.notify('Unlinked', 'success');
+                        this.notify('Removed', 'success');
                         this.collection.fetch();
                         this.model.trigger('after:unrelate');
                     }.bind(this),
@@ -588,10 +588,10 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             }
 
             this.confirm({
-                message: this.translate('unlinkAttributeGroupConfirmation', 'messages', 'AttributeGroup'),
-                confirmText: this.translate('Unlink')
+                message: this.translate('removeRelatedAttributeGroup', 'messages', 'ProductFamilyAttribute'),
+                confirmText: this.translate('Remove')
             }, function () {
-                this.notify('Unlinking...');
+                this.notify('removing');
                 $.ajax({
                     url: `${this.model.name}/${this.link}/relation`,
                     data: JSON.stringify({
@@ -601,7 +601,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: function () {
-                        this.notify('Unlinked', 'success');
+                        this.notify('Removed', 'success');
                         this.model.trigger('after:unrelate');
                         this.actionRefresh();
                     }.bind(this),
@@ -624,10 +624,10 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             }
 
             this.confirm({
-                message: this.translate('unlinkAttributeGroupConfirmation', 'messages', 'AttributeGroup'),
-                confirmText: this.translate('Unlink')
+                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ProductFamilyAttribute'),
+                confirmText: this.translate('Remove')
             }, function () {
-                this.notify('Unlinking...');
+                this.notify('removing');
                 $.ajax({
                     url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
                     data: JSON.stringify({
@@ -637,7 +637,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: function () {
-                        this.notify('Unlinked', 'success');
+                        this.notify('Removed', 'success');
                         this.model.trigger('after:unrelate');
                         this.actionRefresh();
                     }.bind(this),

@@ -45,5 +45,9 @@
     "productAttributeAlreadyExists": "Attribut '%s' für den Kanal %s ist bereits verknüpft.",
     "attributeDontMatchToPattern": "Wert des Attributes \"{attribute}\" entspricht nicht dem Pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Das Attribut %s sollte einen eindeutigen Wert haben."
+  },
+  "messages": {
+    "removeRelatedAttributeGroup": "Möchten Sie wirklich alle Attribute mit ihren Werten für die ausgewählte Attributgruppe aus dem aktuellen Produkt löschen? Alle Attribute und ihre Werte für die untergeordneten Produkte werden beibehalten.",
+    "removeRelatedAttributeGroupCascade": "Möchten Sie wirklich alle Attribute mit ihren Werten für die ausgewählte Attributgruppe aus dem aktuellen Produkt und dessen untergeordneten Produkten löschen?"
   }
 }

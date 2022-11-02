@@ -26,6 +26,8 @@
   "messages": {
     "savedForNotAllChannels": "Attribut '%s' wurde nicht für alle ausgewählten Kanäle verknüpft.",
     "unlinkRelatedAttribute": "Möchten Sie die Verknüpfung des ausgewählten Attributs mit der Produktfamilie wirklich aufheben? Alle untergeordneten Produktfamilien und verwandten Produkte werden diesen Link beibehalten.",
-    "cascadeUnlinkRelatedAttribute": "Möchten Sie die Verknüpfung des ausgewählten Attributs mit der Produktfamilie, ihren untergeordneten Elementen und verwandten Produkten wirklich aufheben? Alle Attributwerte werden dabei entfernt."
+    "cascadeUnlinkRelatedAttribute": "Möchten Sie die Verknüpfung des ausgewählten Attributs mit der Produktfamilie, ihren untergeordneten Elementen und verwandten Produkten wirklich aufheben? Alle Attributwerte werden dabei entfernt.",
+    "removeRelatedAttributeGroup": "Möchten Sie alle Attribute der ausgewählten Attributgruppe aus der Produktfamilie löschen? Alle untergeordneten Produktfamilien und verwandten Produkte werden diese Attribute behalten.",
+    "removeRelatedAttributeGroupCascade": "Möchten Sie alle Attribute der ausgewählten Attributgruppe aus der Produktfamilie, ihren untergeordneten Produktfamilien und verwandten Produkten wirklich löschen? Alle Attributwerte werden auch gelöscht."
   }
 }

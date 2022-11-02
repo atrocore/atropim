@@ -680,10 +680,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }
 
             this.confirm({
-                message: this.translate('unlinkAttributeGroupConfirmation', 'messages', 'AttributeGroup'),
-                confirmText: this.translate('Unlink')
+                message: this.translate('removeRelatedAttributeGroup', 'messages', 'ProductAttributeValue'),
+                confirmText: this.translate('Remove')
             }, function () {
-                this.notify('Unlinking...');
+                this.notify('removing');
                 $.ajax({
                     url: `${this.model.name}/${this.link}/relation`,
                     data: JSON.stringify({
@@ -693,7 +693,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: function () {
-                        this.notify('Unlinked', 'success');
+                        this.notify('Removed', 'success');
                         this.model.trigger('after:unrelate', this.link, this.defs);
                         this.actionRefresh();
                     }.bind(this),
@@ -716,10 +716,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }
 
             this.confirm({
-                message: this.translate('unlinkAttributeGroupConfirmation', 'messages', 'AttributeGroup'),
-                confirmText: this.translate('Unlink')
+                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ProductAttributeValue'),
+                confirmText: this.translate('Remove')
             }, function () {
-                this.notify('Unlinking...');
+                this.notify('removing');
                 $.ajax({
                     url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
                     data:  JSON.stringify({
@@ -729,7 +729,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: function () {
-                        this.notify('Unlinked', 'success');
+                        this.notify('Removed', 'success');
                         this.model.trigger('after:unrelate', this.link, this.defs);
                         this.actionRefresh();
                     }.bind(this),

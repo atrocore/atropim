@@ -44,5 +44,9 @@
     "productAttributeAlreadyExists": "Attribute '%s' for the channel %s is already linked.",
     "attributeDontMatchToPattern": "The value of the attribute \"{attribute}\" does not correspond to the pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "%s attribute should have unique value."
+  },
+  "messages": {
+    "removeRelatedAttributeGroup": "Are you sure you want to delete all the attributes with their values for the selected Attribute Group from the current product? All attributes and their values for the child products will be retained.",
+    "removeRelatedAttributeGroupCascade": "Are you sure you want to delete all the attributes with their values for the selected Attribute Group from the current product and its child products?"
   }
 }
