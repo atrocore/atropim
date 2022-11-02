@@ -14,8 +14,8 @@
   },
   "labels": {
     "Create ProductFamilyAttribute": "Attribut der Produktfamilie erstellen",
-    "unlinkRelatedAttribute": "Verknüpfung aufheben",
-    "cascadeUnlinkRelatedAttribute": "Verknüpfung hierarchisch aufheben"
+    "unlinkRelatedAttribute": "Hier löschen und für Produkte behalten",
+    "cascadeUnlinkRelatedAttribute": "Hier und von Produkten löschen"
   },
   "options": {
     "scope": {

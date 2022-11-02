@@ -11,7 +11,8 @@
 	                <span class="caret"></span>
 	            </button>
 	            <ul class="dropdown-menu">
-	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroup" data-id="{{id}}">{{translate 'Unlink'}}</a></li>
+	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroup" data-id="{{id}}">{{translate 'Remove'}}</a></li>
+	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroupHierarchy" data-id="{{id}}">{{translate 'removeHierarchically'}}</a></li>
 	            </ul>
                 {{/if}}
 			</div>

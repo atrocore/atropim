@@ -13,8 +13,8 @@
   },
   "labels": {
     "Create ProductFamilyAttribute": "Создать атрибут продукт. семьи",
-    "unlinkRelatedAttribute": "Отменить связь",
-    "cascadeUnlinkRelatedAttribute": "Отменить связь иерархично"
+    "unlinkRelatedAttribute": "Удалить здесь и сохранить для продуктов",
+    "cascadeUnlinkRelatedAttribute": "Удалить здесь и из продуктов"
   },
   "options": {
     "scope": {

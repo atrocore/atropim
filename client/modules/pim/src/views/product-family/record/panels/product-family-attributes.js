@@ -59,6 +59,12 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
                 e.stopPropagation();
                 let data = $(e.currentTarget).data();
                 this.unlinkAttributeGroup(data);
+            },
+            'click [data-action="unlinkAttributeGroupHierarchy"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                let data = $(e.currentTarget).data();
+                this.unlinkAttributeGroupHierarchy(data);
             }
         }, Dep.prototype.events),
 
@@ -606,5 +612,40 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             }, this);
         },
 
+        unlinkAttributeGroupHierarchy(data) {
+            let id = data.id;
+            if (!id) {
+                return;
+            }
+
+            let group = this.groups.find(group => group.id === id);
+            if (!group || !group.rowList) {
+                return;
+            }
+
+            this.confirm({
+                message: this.translate('unlinkAttributeGroupConfirmation', 'messages', 'AttributeGroup'),
+                confirmText: this.translate('Unlink')
+            }, function () {
+                this.notify('Unlinking...');
+                $.ajax({
+                    url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
+                    data: JSON.stringify({
+                        attributeGroupId: id,
+                        productFamilyId: this.model.id
+                    }),
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    success: function () {
+                        this.notify('Unlinked', 'success');
+                        this.model.trigger('after:unrelate');
+                        this.actionRefresh();
+                    }.bind(this),
+                    error: function () {
+                        this.notify('Error occurred', 'error');
+                    }.bind(this),
+                });
+            }, this);
+        }
     })
 );

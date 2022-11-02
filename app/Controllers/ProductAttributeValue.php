@@ -36,6 +36,7 @@ namespace Pim\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Controllers\Base;
+use Slim\Http\Request;
 
 class ProductAttributeValue extends Base
 {
@@ -63,5 +64,30 @@ class ProductAttributeValue extends Base
         $service->deleteEntity($params['id']);
 
         return true;
+    }
+
+    /**
+     * @param array $params
+     * @param \stdClass $data
+     * @param Request $request
+     *
+     * @return bool
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function actionUnlinkAttributeGroupHierarchy(array $params, \stdClass $data, Request $request): bool
+    {
+        if (!$request->isDelete()) {
+            throw new BadRequest();
+        }
+        if (!property_exists($data, 'attributeGroupId') || !property_exists($data, 'productId')) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check('ProductFamilyAttribute', 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->productId);
     }
 }

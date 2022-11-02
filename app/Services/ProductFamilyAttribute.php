@@ -230,6 +230,39 @@ class ProductFamilyAttribute extends Base
         return $result;
     }
 
+    /**
+     * @param string $attributeGroupId
+     *
+     * @return bool
+     *
+     * @throws \Throwable
+     */
+    public function unlinkAttributeGroupHierarchy(string $attributeGroupId, string $productFamilyId): bool
+    {
+        $attributes = $this
+            ->getRepository()
+            ->select(['id'])
+            ->join('attribute')
+            ->where([
+                'attribute.attributeGroupId' => $attributeGroupId,
+                'productFamilyId' => $productFamilyId
+            ])
+            ->find()
+            ->toArray();
+
+        if (!empty($attributes)) {
+            foreach ($attributes as $attribute) {
+                try {
+                    $this->deleteEntity($attribute['id']);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('AttributeGroup hierarchical removing from ProductFamily failed: ' . $e->getMessage());
+                }
+            }
+        }
+
+        return true;
+    }
+
     protected function createPseudoTransactionDeleteJobs(string $id): void
     {
         foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
