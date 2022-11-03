@@ -125,7 +125,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
-      "filterDisabled": true,
+      "filterDisabled": false,
       "noLoad": true,
       "importDisabled": true
     },
