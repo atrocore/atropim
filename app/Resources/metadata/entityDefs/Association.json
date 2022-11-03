@@ -10,7 +10,6 @@
             "type": "varchar",
             "massUpdateDisabled": true,
             "trim": true,
-            "emHidden": true,
             "view": "pim:views/fields/code-from-name",
             "pattern": "/^[a-z_0-9{}]+$/"
         },
