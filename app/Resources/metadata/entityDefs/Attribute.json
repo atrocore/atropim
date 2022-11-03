@@ -154,7 +154,7 @@
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
+      "filterDisabled": false,
       "importDisabled": true,
       "noLoad": true
     },
