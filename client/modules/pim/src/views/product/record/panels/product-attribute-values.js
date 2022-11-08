@@ -550,10 +550,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             const scopeFilter = this.getStorage().get('scopeFilter', 'OverviewFilter') || ['allChannels'];
 
             $.each(this.getValueFields(), (name, fieldView) => {
-                let value = fieldView.model.get('value');
-                let channelId = fieldView.model.get('channelId') || 'Global';
-
-                let hide = false;
+                let value = fieldView.model.get('value'),
+                    hide = false;
 
                 if (!fieldFilter.includes('allValues')) {
                     // hide filled
@@ -579,7 +577,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
                 if (!scopeFilter.includes('allChannels')) {
                     // hide channel
-                    if (!hide && !scopeFilter.includes(channelId)) {
+                    if (!hide && !this.isScopeValid(fieldView, scopeFilter)) {
                         hide = true;
                     }
                 }
@@ -604,6 +602,34 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         isRequiredValue(view) {
             return view.model.get('isRequired') || false
+        },
+
+        isScopeValid(view, channels) {
+            const scope = view.model.get('scope');
+
+            let channelId = view.model.get('channelId') || 'Global';
+
+            if (scope === 'Global') {
+                if (!channels.includes(channelId)) {
+                    let hasChannelAttr = false;
+
+                    $.each(this.getValueFields(), (n, f) => {
+                        if (f.model.get('attributeId') === view.model.get('attributeId') && f.model.get('scope') === 'Channel' && channels.includes(f.model.get('channelId'))) {
+                            hasChannelAttr = true;
+                        }
+                    });
+
+                    if (hasChannelAttr) {
+                        return false;
+                    }
+                }
+            } else if (scope === 'Channel') {
+                if (!channels.includes(channelId)) {
+                    return false;
+                }
+            }
+
+            return true
         },
 
         getValueFields() {
