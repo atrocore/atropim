@@ -469,6 +469,19 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             if (group) {
                 group.rowList.push(model.id);
                 group.rowList.sort((a, b) => this.collection.get(a).get('sortOrder') - this.collection.get(b).get('sortOrder'));
+                group.rowList.sort((a, b) => {
+                    if (this.collection.get(a).get('attributeId') === this.collection.get(b).get('attributeId')) {
+                        if (this.collection.get(a).get('scope') === 'Global') {
+                            return -1;
+                        }
+
+                        if (this.collection.get(b).get('scope') === 'Global') {
+                            return 1;
+                        }
+
+                        return this.collection.get(a).get('channelName').localeCompare(this.collection.get(b).get('channelName'));
+                    }
+                });
             } else {
                 groups.push({
                     key: params.key,
