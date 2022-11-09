@@ -86,21 +86,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             }
         },
 
-        events: _.extend({
-            'click [data-action="unlinkAttributeGroup"]': function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                let data = $(e.currentTarget).data();
-                this.unlinkAttributeGroup(data);
-            },
-            'click [data-action="unlinkAttributeGroupHierarchy"]': function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                let data = $(e.currentTarget).data();
-                this.unlinkAttributeGroupHierarchy(data);
-            }
-        }, Dep.prototype.events),
-
         data() {
             return _.extend({
                 groups: this.groups,
@@ -487,8 +472,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     key: params.key,
                     id: !this.groupsWithoutId.includes(params.key) ? params.key : null,
                     label: params.label,
-                    rowList: [model.id],
-                    editable: true
+                    rowList: [model.id]
                 });
             }
         },
@@ -520,11 +504,16 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                         rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                         buttonsDisabled: true,
                         el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                        showMore: false
+                        showMore: false,
+                        groupId: group.id,
+                        groupName: group.label
                     };
 
                     this.createView(group.key, viewName, this.modifyListOptions(options), view => {
                         view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
+                        view.listenTo(view, 'remove-attribute-group', (data) => this.unlinkAttributeGroup(data));
+                        view.listenTo(view, 'remove-attribute-group-hierarchically', (data) => this.unlinkAttributeGroupHierarchy(data));
+
                         view.render(() => {
                             count++;
                             if (count === this.groups.length) {
