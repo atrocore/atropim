@@ -37,6 +37,23 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
 
         hiddenInEditColumns: ['isRequired'],
 
+        template: 'pim:product-attribute-value/record/list-in-product',
+
+        groupScope: 'AttributeGroup',
+
+        events: _.extend({
+            'click [data-action="unlinkAttributeGroup"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.trigger('remove-attribute-group', $(e.currentTarget).data())
+            },
+            'click [data-action="unlinkAttributeGroupHierarchy"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.trigger('remove-attribute-group-hierarchically', $(e.currentTarget).data());
+            }
+        }, Dep.prototype.events),
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -60,12 +77,42 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
             this.runPipeline('actionShowRevisionAttribute');
         },
 
+        data() {
+            let result = Dep.prototype.data.call(this);
+
+            result.groupScope = this.groupScope;
+            result.groupId = this.options.groupId;
+            result.headerDefs = this.updateHeaderDefs(result.headerDefs);
+            result.rowActionsColumnWidth = this.rowActionsColumnWidth;
+            result.editable = !!this.options.groupId && this.getAcl().check('ProductAttributeValue', 'delete');
+
+            return result;
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
                 this.setEditMode();
             }
+        },
+
+        updateHeaderDefs(defs) {
+            let index = defs.findIndex(item => item.name === 'attribute');
+
+            if (index !== -1) {
+                defs[index].name = this.options.groupName;
+
+                if (this.options.groupId) {
+                    defs[index].id = this.options.groupId;
+                }
+            }
+
+            if (this.rowActionsView && !this.rowActionsDisabled && this.options.groupId) {
+                defs.pop();
+            }
+
+            return defs;
         },
 
         updateEnumLocaleValue(eventModel) {
