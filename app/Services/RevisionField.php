@@ -83,7 +83,7 @@ class RevisionField extends MultilangRevisionField
 
                             // prepare data
                             $was = $became = [];
-                            if ($attribute->get('attribute')->get('type') === 'image') {
+                            if ($attribute->get('attribute')->get('type') === 'asset') {
                                 $was['valueId'] = $data['attributes']['was'][$field];
                                 $became['valueId'] = $data['attributes']['became'][$field];
                             }
