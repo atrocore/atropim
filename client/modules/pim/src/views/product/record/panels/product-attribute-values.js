@@ -366,115 +366,17 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         fetchCollectionGroups(callback) {
             this.collection.data.select = this.getSelectFields().join(',');
             this.collection.reset();
-            this.fetchCollectionPart(() => {
-                this.groups = [];
-                this.groups = this.getGroupsFromCollection();
 
-                let valueKeys = this.groups.map(group => group.key);
-                this.getCollectionFactory().create('AttributeGroup', collection => {
-                    this.attributeGroupCollection = collection;
-                    collection.select = 'sortOrder';
-                    collection.maxSize = 200;
-                    collection.offset = 0;
-                    collection.whereAdditional = [
-                        {
-                            attribute: 'id',
-                            type: 'in',
-                            value: valueKeys
-                        }
-                    ];
-                    collection.sortBy = 'sortOrder';
-                    collection.asc = true;
-                    collection.fetch().then(() => {
-                        this.applySortingForAttributeGroups();
-                        if (callback) {
-                            callback();
-                        }
-                    });
+            this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', {tabId: this.defs.tabId, productId: this.model.get('id')}).then(data => {
+                this.groups = data;
+                this.collection.fetch({remove: false, more: false}).then(response => {
+                    callback();
                 });
-            });
-        },
-
-        applySortingForAttributeGroups() {
-            this.groups.forEach(item => {
-                let sortOder = 0;
-                let attributeGroup = this.attributeGroupCollection.find(model => model.id === item.key);
-                if (attributeGroup) {
-                    sortOder = attributeGroup.get('sortOrder');
-                }
-                item.sortOrder = item.sortOrder || sortOder;
-            });
-            let noGroup = this.groups.find(item => item.key === 'no_group');
-            if (noGroup) {
-                noGroup.sortOrder = Math.max(...this.groups.map(group => group.sortOrder)) + 1;
-            }
-            this.groups.sort(function (a, b) {
-                return a.sortOrder - b.sortOrder;
             });
         },
 
         getSelectFields() {
             return this.baseSelectFields || [];
-        },
-
-        fetchCollectionPart(callback) {
-            this.collection.fetch({remove: false, more: true}).then((response) => {
-                if (callback) {
-                    callback();
-                }
-            });
-        },
-
-        getGroupsFromCollection() {
-            let groups = [];
-            this.collection.forEach(model => {
-                let params = this.getGroupParams(model);
-                this.setGroup(params, model, groups);
-            });
-            return groups;
-        },
-
-        getGroupParams(model) {
-            let key = model.get(this.groupKey);
-            if (!key) {
-                key = this.noGroup.key;
-            }
-            let label = model.get(this.groupLabel);
-            if (!label) {
-                label = this.translate(this.noGroup.label, 'labels', 'Product');
-            }
-            return {
-                key: key,
-                label: label
-            };
-        },
-
-        setGroup(params, model, groups) {
-            let group = groups.find(item => item.key === params.key);
-            if (group) {
-                group.rowList.push(model.id);
-                group.rowList.sort((a, b) => this.collection.get(a).get('sortOrder') - this.collection.get(b).get('sortOrder'));
-                group.rowList.sort((a, b) => {
-                    if (this.collection.get(a).get('attributeId') === this.collection.get(b).get('attributeId')) {
-                        if (this.collection.get(a).get('scope') === 'Global') {
-                            return -1;
-                        }
-
-                        if (this.collection.get(b).get('scope') === 'Global') {
-                            return 1;
-                        }
-
-                        return this.collection.get(a).get('channelName').localeCompare(this.collection.get(b).get('channelName'));
-                    }
-                });
-            } else {
-                groups.push({
-                    key: params.key,
-                    id: !this.groupsWithoutId.includes(params.key) ? params.key : null,
-                    label: params.label,
-                    rowList: [model.id]
-                });
-            }
         },
 
         buildGroups() {

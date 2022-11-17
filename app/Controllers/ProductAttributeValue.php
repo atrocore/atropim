@@ -40,6 +40,19 @@ use Slim\Http\Request;
 
 class ProductAttributeValue extends Base
 {
+    public function actionGroupsPavs($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getGroupsPavs((string)$request->get('productId'), (string)$request->get('tabId'));
+    }
+
     public function actionInheritPav($params, $data, $request)
     {
         if (!$request->isPost() || !property_exists($data, 'id')) {
@@ -67,9 +80,9 @@ class ProductAttributeValue extends Base
     }
 
     /**
-     * @param array $params
+     * @param array     $params
      * @param \stdClass $data
-     * @param Request $request
+     * @param Request   $request
      *
      * @return bool
      *
