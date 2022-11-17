@@ -77,6 +77,10 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
             this.runPipeline('actionShowRevisionAttribute');
         },
 
+        afterSave: function () {
+            // do nothing
+        },
+
         data() {
             let result = Dep.prototype.data.call(this);
 

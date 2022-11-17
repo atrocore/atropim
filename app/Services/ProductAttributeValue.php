@@ -699,7 +699,7 @@ class ProductAttributeValue extends Base
         }
 
         if ($entity->get('language') !== 'main') {
-            $entity->set('attributeName', $entity->get('attributeName') . ' / ' . $entity->get('language'));
+            $entity->set('attributeName', $attribute->get('name') . ' / ' . $entity->get('language'));
         }
 
         $entity->set('attributeAssetType', $attribute->get('assetType'));
@@ -718,6 +718,11 @@ class ProductAttributeValue extends Base
         $entity->set('channelCode', null);
         if (!empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
+        }
+
+        if ($entity->get('scope') === 'Global') {
+            $entity->set('channelId', null);
+            $entity->set('channelName', 'Global');
         }
 
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
