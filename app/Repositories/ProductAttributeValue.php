@@ -52,6 +52,62 @@ class ProductAttributeValue extends AbstractRepository
 
     private array $pavsAttributes = [];
 
+    public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language): array
+    {
+        // prepare tabId
+        if ($tabId === 'null') {
+            $tabId = null;
+        }
+
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb->select('pav.id, pav.attribute_id, pav.scope, pav.channel_id, c.name as channel_name, pav.language')
+            ->from('product_attribute_value', 'pav')
+            ->leftJoin('pav', 'channel', 'c', 'pav.channel_id=c.id AND c.deleted=0')
+            ->where('pav.deleted=0')
+            ->andWhere('pav.product_id=:productId')->setParameter('productId', $productId);
+        if (empty($tabId)) {
+            $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id IS NULL AND deleted=0)');
+        } else {
+            $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=:tabId AND deleted=0)')->setParameter('tabId', $tabId);
+        }
+
+        $pavs = $qb->fetchAllAssociative();
+
+        if (empty($pavs)) {
+            return [];
+        }
+
+        $attrsIds = array_values(array_unique(array_column($pavs, 'attribute_id')));
+
+        // prepare suffix
+        $languageSuffix = $language === $this->getConfig()->get('language') ? '' : '_' . strtolower($language);
+
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->select('a.*, ag.name' . $languageSuffix . ' as attribute_group_name, ag.sort_order as attribute_group_sort_order')
+            ->from('attribute', 'a')
+            ->where('a.deleted=0')
+            ->leftJoin('a', 'attribute_group', 'ag', 'a.attribute_group_id=ag.id AND ag.deleted=0')
+            ->andWhere('a.id IN (:attributesIds)')->setParameter('attributesIds', $attrsIds, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+
+        try {
+            $attrs = $qb->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Getting attributes failed: ' . $e->getMessage());
+            return [];
+        }
+
+        foreach ($pavs as $k => $pav) {
+            foreach ($attrs as $attr) {
+                if ($attr['id'] === $pav['attribute_id']) {
+                    $pavs[$k]['attribute_data'] = $attr;
+                    break 1;
+                }
+            }
+        }
+
+        return $pavs;
+    }
+
     public function getPavAttribute(Entity $entity): ?\Pim\Entities\Attribute
     {
         if (!isset($this->pavsAttributes[$entity->get('attributeId')])) {
@@ -895,7 +951,8 @@ class ProductAttributeValue extends AbstractRepository
         ];
 
         $result['attributes']['was'][$fieldName] = self::$beforeSaveData['value'];
-        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'multiEnum']) ? json_decode($entity->get('value'), true) : $entity->get('value');
+        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'multiEnum']) ? json_decode($entity->get('value'), true)
+            : $entity->get('value');
 
         if ($entity->get('attributeType') === 'unit') {
             $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['varcharValue'];

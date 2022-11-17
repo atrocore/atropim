@@ -37,6 +37,7 @@ use Espo\Core\Templates\Services\Base;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
@@ -61,6 +62,96 @@ class ProductAttributeValue extends Base
             'varcharValue',
             'textValue'
         ];
+
+    public function getGroupsPavs(string $productId, string $tabId, string $language = null): array
+    {
+        if (empty($productId)) {
+            throw new NotFound();
+        }
+
+        if ($language === null) {
+            $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
+        }
+
+        $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language);
+
+        /**
+         * Prepare attributes groups
+         */
+        $groups = [];
+        foreach ($data as $record) {
+            if (!empty($record['attribute_data']['attribute_group_id'])) {
+                $groups[] = [
+                    'id'        => $record['attribute_data']['attribute_group_id'],
+                    'key'       => $record['attribute_data']['attribute_group_id'],
+                    'label'     => $record['attribute_data']['attribute_group_name'],
+                    'sortOrder' => $record['attribute_data']['attribute_group_sort_order']
+                ];
+            }
+        }
+        $groups['no_group'] = [
+            'id'        => null,
+            'key'       => 'no_group',
+            'label'     => (new Language($this->getInjection('container'), $language))->translate('noGroup', 'labels', 'Product'),
+            'sortOrder' => PHP_INT_MAX
+        ];
+        usort($groups, function ($a, $b) {
+            if ($a['sortOrder'] == $b['sortOrder']) {
+                return 0;
+            }
+            return ($a['sortOrder'] < $b['sortOrder']) ? -1 : 1;
+        });
+        foreach ($groups as $group) {
+            unset($group['sortOrder']);
+            $result[$group['key']] = $group;
+            $result[$group['key']] = $group;
+
+        }
+        unset($groups);
+
+        /**
+         * Prepare attributes groups attributes
+         */
+        foreach ($data as $record) {
+            $row = [
+                'id'             => $record['id'],
+                'scope'          => $record['scope'],
+                'sortOrderScope' => $record['scope'] === 'Global' ? 1 : 2,
+                'channelId'      => $record['channel_id'],
+                'channelName'    => $record['channel_name'],
+                'language'       => $record['language'] === 'main' ? null : $record['language']
+            ];
+
+            if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
+                $key = 'no_group';
+                $row['sortOrder'] = $record['attribute_data']['sort_order_in_attribute_group'];
+            } else {
+                $key = $record['attribute_data']['attribute_group_id'];
+                $row['sortOrder'] = $record['attribute_data']['sort_order_in_product'];
+            }
+
+            $result[$key]['pavs'][] = $row;
+        }
+
+        foreach ($result as $key => $group) {
+            if (empty($group['pavs'])) {
+                unset($result[$key]);
+                continue 1;
+            }
+            $pavs = $group['pavs'];
+            array_multisort(
+                array_column($pavs, 'sortOrder'), SORT_ASC,
+                array_column($pavs, 'sortOrderScope'), SORT_ASC,
+                array_column($pavs, 'channelName'), SORT_ASC,
+                array_column($pavs, 'language'), SORT_ASC,
+                $pavs
+            );
+            $result[$key]['rowList'] = array_column($pavs, 'id');
+            unset($result[$key]['pavs']);
+        }
+
+        return array_values($result);
+    }
 
     public function inheritPav(string $id): bool
     {
@@ -363,7 +454,7 @@ class ProductAttributeValue extends Base
             ->join('attribute')
             ->where([
                 'attribute.attributeGroupId' => $attributeGroupId,
-                'productId' => $productId
+                'productId'                  => $productId
             ])
             ->find()
             ->toArray();
@@ -397,6 +488,7 @@ class ProductAttributeValue extends Base
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('container');
     }
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
