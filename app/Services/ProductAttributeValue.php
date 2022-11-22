@@ -114,20 +114,19 @@ class ProductAttributeValue extends Base
          */
         foreach ($data as $record) {
             $row = [
-                'id'             => $record['id'],
-                'scope'          => $record['scope'],
-                'sortOrderScope' => $record['scope'] === 'Global' ? 1 : 2,
-                'channelId'      => $record['channel_id'],
-                'channelName'    => $record['channel_name'],
-                'language'       => $record['language'] === 'main' ? null : $record['language']
+                'id'          => $record['id'],
+                'scope'       => $record['scope'],
+                'channelId'   => $record['channel_id'],
+                'channelName' => $record['scope'] === 'Global' ? '-9999' : $record['channel_name'],
+                'language'    => $record['language'] === 'main' ? null : $record['language']
             ];
 
             if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
                 $key = 'no_group';
-                $row['sortOrder'] = $record['attribute_data']['sort_order_in_attribute_group'];
+                $row['sortOrder'] = empty($record['attribute_data']['sort_order_in_product']) ? 0 : (int)$record['attribute_data']['sort_order_in_product'];
             } else {
                 $key = $record['attribute_data']['attribute_group_id'];
-                $row['sortOrder'] = $record['attribute_data']['sort_order_in_product'];
+                $row['sortOrder'] = empty($record['attribute_data']['sort_order_in_attribute_group']) ? 0 : (int)$record['attribute_data']['sort_order_in_attribute_group'];
             }
 
             $result[$key]['pavs'][] = $row;
@@ -141,7 +140,6 @@ class ProductAttributeValue extends Base
             $pavs = $group['pavs'];
             array_multisort(
                 array_column($pavs, 'sortOrder'), SORT_ASC,
-                array_column($pavs, 'sortOrderScope'), SORT_ASC,
                 array_column($pavs, 'channelName'), SORT_ASC,
                 array_column($pavs, 'language'), SORT_ASC,
                 $pavs
