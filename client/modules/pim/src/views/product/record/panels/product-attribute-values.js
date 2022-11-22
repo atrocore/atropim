@@ -204,7 +204,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
             }
 
-            this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.where = [];
                 collection.maxSize = 200;
@@ -238,7 +237,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 });
 
                 this.getMetadata().fetch();
-                this.fetchCollectionGroups(() => this.wait(false));
+                this.fetchCollectionGroups(() => {
+                    this.reRender();
+                });
             }, this);
 
             this.setupFilterActions();
@@ -380,6 +381,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         buildGroups() {
+            if (!this.groups || this.groups.length < 1) {
+                return;
+            }
+
             let count = 0;
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
@@ -594,6 +599,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         actionRefresh() {
             this.fetchCollectionGroups(() => {
+                // this.buildGroups();
                 this.reRender();
             });
         },
