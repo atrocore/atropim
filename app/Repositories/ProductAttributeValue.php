@@ -80,7 +80,12 @@ class ProductAttributeValue extends AbstractRepository
         $attrsIds = array_values(array_unique(array_column($pavs, 'attribute_id')));
 
         // prepare suffix
-        $languageSuffix = $language === $this->getConfig()->get('language') ? '' : '_' . strtolower($language);
+        $languageSuffix = '';
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            if (in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+                $languageSuffix = '_' . strtolower($language);
+            }
+        }
 
         $qb = $this->getConnection()->createQueryBuilder()
             ->select('a.*, ag.name' . $languageSuffix . ' as attribute_group_name, ag.sort_order as attribute_group_sort_order')
