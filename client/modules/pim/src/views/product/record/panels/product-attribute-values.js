@@ -56,8 +56,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         groupLabel: 'attributeGroupName',
 
-        groupScope: 'AttributeGroup',
-
         groupsWithoutId: ['no_group'],
 
         noGroup: {
@@ -115,8 +113,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     }
                 }
             }
-
-            var url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             this.filterList = this.defs.filterList || this.filterList || null;
 
@@ -204,28 +200,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 }
             }
 
-            this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.where = [];
-                collection.maxSize = 200;
-                if (this.defs.filters) {
-                    var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
-                    searchManager.setAdvanced(this.defs.filters);
-                    collection.where = searchManager.getWhere();
-                }
-
-                collection.url = collection.urlRoot = url + '?tabId=' + this.defs.tabId;
-                if (sortBy) {
-                    collection.sortBy = sortBy;
-                }
-                if (asc) {
-                    collection.asc = asc;
-                }
-
-                this.prepareCollection(collection);
-
+            this.wait(true);
+            this.getCollectionFactory().create(this.scope, collection => {
                 this.collection = collection;
 
                 this.setFilter(this.filter);
+
                 this.listenTo(this.model, 'updateAttributes change:productFamilyId update-all after:relate after:unrelate', link => {
                     if (!link || link === 'productAttributeValues') {
                         this.actionRefresh();
@@ -236,23 +216,16 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     this.applyOverviewFilters();
                 });
 
-                this.getMetadata().fetch();
                 this.fetchCollectionGroups(() => {
-                    this.reRender();
+                    this.wait(false);
                 });
-            }, this);
-
-            this.setupFilterActions();
+            });
 
             this.listenTo(this.model, 'after:relate after:unrelate', link => {
                 if (link === 'channels') {
                     this.actionRefresh();
                 }
             });
-        },
-
-        prepareCollection(collection) {
-
         },
 
         createProductAttributeValue(selectObj) {
@@ -365,14 +338,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         },
 
         fetchCollectionGroups(callback) {
-            this.collection.data.select = this.getSelectFields().join(',');
-            this.collection.reset();
-
-            this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', {tabId: this.defs.tabId, productId: this.model.get('id')}).then(data => {
+            this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', {
+                tabId: this.defs.tabId,
+                productId: this.model.get('id')
+            }).then(data => {
                 this.groups = data;
-                this.collection.fetch({remove: false, more: false}).then(response => {
-                    callback();
-                });
+                callback();
             });
         },
 
@@ -387,70 +358,64 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
             let count = 0;
             this.groups.forEach(group => {
-                this.getCollectionFactory().create(this.scope, collection => {
-                    group.rowList.forEach(id => {
-                        collection.add(this.collection.get(id));
-                    });
-
-                    this.setGroupCollectionDefs(group, collection);
-
-                    this.listenTo(collection, 'sync', () => {
-                        this.initialAttributes = this.getInitialAttributes();
-                        this.model.trigger('attributes-updated');
-                        collection.models.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
-                        this.applyOverviewFilters();
-                    });
-
-                    let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-
-                    let options = {
-                        collection: collection,
-                        layoutName: this.layoutName,
-                        listLayout: this.listLayout,
-                        checkboxes: false,
-                        rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
-                        buttonsDisabled: true,
-                        el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                        showMore: false,
-                        groupId: group.id,
-                        groupName: group.label
-                    };
-
-                    this.createView(group.key, viewName, this.modifyListOptions(options), view => {
-                        view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
-                        view.listenTo(view, 'remove-attribute-group', (data) => this.unlinkAttributeGroup(data));
-                        view.listenTo(view, 'remove-attribute-group-hierarchically', (data) => this.unlinkAttributeGroupHierarchy(data));
-
-                        view.render(() => {
-                            count++;
-                            if (count === this.groups.length) {
-                                this.trigger('groups-rendered');
+                this.getCollectionFactory().create(this.scope, groupCollection => {
+                    groupCollection.url = 'Product/' + this.model.id + '/productAttributeValues';
+                    groupCollection.data.select = this.getSelectFields().join(',');
+                    groupCollection.data.tabId = this.defs.tabId;
+                    groupCollection.where = [
+                        {
+                            type: 'bool',
+                            value: ['linkedWithAttributeGroup'],
+                            data: {
+                                linkedWithAttributeGroup: {
+                                    productId: this.model.id,
+                                    attributeGroupId: group.key !== 'no_group' ? group.key : null
+                                }
                             }
+                        }
+                    ];
+                    groupCollection.maxSize = 9999;
+                    groupCollection.fetch().success(() => {
+                        group.rowList.forEach(id => {
+                            this.collection.add(groupCollection.get(id));
+                        });
+
+                        this.listenTo(groupCollection, 'sync', () => {
+                            this.initialAttributes = this.getInitialAttributes();
+                            this.model.trigger('attributes-updated');
+                            this.applyOverviewFilters();
+                        });
+
+                        let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+
+                        let options = {
+                            collection: groupCollection,
+                            layoutName: this.layoutName,
+                            listLayout: this.listLayout,
+                            checkboxes: false,
+                            rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                            buttonsDisabled: true,
+                            el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
+                            showMore: false,
+                            groupId: group.id,
+                            groupName: group.label
+                        };
+
+                        this.createView(group.key, viewName, options, view => {
+                            view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
+                            view.listenTo(view, 'remove-attribute-group', (data) => this.unlinkAttributeGroup(data));
+                            view.listenTo(view, 'remove-attribute-group-hierarchically', (data) => this.unlinkAttributeGroupHierarchy(data));
+
+                            view.render(() => {
+                                count++;
+                                if (count === this.groups.length) {
+                                    this.trigger('groups-rendered');
+                                }
+                            });
                         });
                     });
                 });
             });
-        },
-
-        setGroupCollectionDefs(group, collection) {
-            collection.url = `Product/${this.model.id}/productAttributeValues`;
-            collection.where = [
-                {
-                    type: 'bool',
-                    value: ['linkedWithAttributeGroup'],
-                    data: {
-                        linkedWithAttributeGroup: {
-                            productId: this.model.id,
-                            attributeGroupId: group.key !== 'no_group' ? group.key : null
-                        }
-                    }
-                }
-            ];
-            collection.data.select = this.getSelectFields().join(',');
-        },
-
-        modifyListOptions(options) {
-            return options;
         },
 
         applyOverviewFilters() {
@@ -552,8 +517,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                             let containerView = rowView.getView('valueField');
                             if (containerView) {
                                 let fieldView = containerView.getView('valueField');
-                                fieldView.groupKey = group.key;
-                                fields[row] = fieldView;
+                                if (fieldView){
+                                    fieldView.groupKey = group.key;
+                                    fields[row] = fieldView;
+                                }
                             }
                         }
                     });
@@ -599,7 +566,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
         actionRefresh() {
             this.fetchCollectionGroups(() => {
-                // this.buildGroups();
                 this.reRender();
             });
         },
@@ -658,7 +624,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 this.notify('removing');
                 $.ajax({
                     url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
-                    data:  JSON.stringify({
+                    data: JSON.stringify({
                         attributeGroupId: id,
                         productId: this.model.id
                     }),

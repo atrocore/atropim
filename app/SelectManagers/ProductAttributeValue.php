@@ -161,10 +161,7 @@ class ProductAttributeValue extends AbstractSelectManager
         );
     }
 
-    /**
-     * @param array $result
-     */
-    protected function boolFilterLinkedWithAttributeGroup(array &$result)
+    protected function boolFilterLinkedWithAttributeGroup(array &$result): void
     {
         $data = (array)$this->getSelectCondition('linkedWithAttributeGroup');
 

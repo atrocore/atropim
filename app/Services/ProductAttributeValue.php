@@ -115,8 +115,6 @@ class ProductAttributeValue extends Base
         foreach ($data as $record) {
             $row = [
                 'id'          => $record['id'],
-                'scope'       => $record['scope'],
-                'channelId'   => $record['channel_id'],
                 'channelName' => $record['scope'] === 'Global' ? '-9999' : $record['channel_name'],
                 'language'    => $record['language'] === 'main' ? null : $record['language']
             ];
@@ -190,6 +188,39 @@ class ProductAttributeValue extends Base
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));
+
+        /**
+         * Sort attribute values
+         */
+        $pavs = [];
+        foreach ($collection as $k => $entity) {
+            $row = [
+                'entity'      => $entity,
+                'channelName' => $entity->get('scope') === 'Global' ? '-9999' : $entity->get('channelName'),
+                'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
+            ];
+
+            $attribute = $this->getRepository()->getPavAttribute($entity);
+
+            if (!empty($attribute->get('attributeGroupId'))) {
+                $row['sortOrder'] = empty($attribute->get('sortOrderInAttributeGroup')) ? 0 : (int)$attribute->get('sortOrderInAttributeGroup');
+            } else {
+                $row['sortOrder'] = empty($attribute->get('sortOrderInProduct')) ? 0 : (int)$attribute->get('sortOrderInProduct');
+            }
+
+            $pavs[$k] = $row;
+        }
+
+        array_multisort(
+            array_column($pavs, 'sortOrder'), SORT_ASC,
+            array_column($pavs, 'channelName'), SORT_ASC,
+            array_column($pavs, 'language'), SORT_ASC,
+            $pavs
+        );
+
+        foreach ($pavs as $k => $pav) {
+            $collection->offsetSet($k, $pav['entity']);
+        }
 
         parent::prepareCollectionForOutput($collection);
     }
