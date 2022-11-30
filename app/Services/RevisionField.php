@@ -123,7 +123,7 @@ class RevisionField extends MultilangRevisionField
                                 "id"       => $note->get('id'),
                                 "date"     => $note->get('createdAt'),
                                 "userId"   => $note->get('createdById'),
-                                "userName" => $note->get('createdBy')->get('name'),
+                                "userName" => $note->get('createdBy') ? $note->get('createdBy')->get('name') : null,
                                 "was"      => $was,
                                 "became"   => $became,
                                 "field"    => 'value'
