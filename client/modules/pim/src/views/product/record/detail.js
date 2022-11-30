@@ -87,11 +87,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             Dep.prototype.afterRender.call(this);
 
             if (this.isCatalogTreePanel) {
-                let observer = new ResizeObserver(() => {
-                    let view = this.getView('catalogTreePanel'),
-                        width = view.$el.innerWidth();
+                const treePanel = this.getView('catalogTreePanel');
 
-                    this.onTreeResize(width);
+                treePanel.buildTree();
+
+                let observer = new ResizeObserver(() => {
+                    this.onTreeResize(treePanel.$el.innerWidth());
 
                     observer.unobserve($('#content').get(0));
                 });
@@ -276,7 +277,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         treeReset(view) {
             this.getStorage().clear('selectedNodeId', this.scope);
             this.getStorage().clear('selectedNodeRoute', this.scope);
-            window.location.href = `/#${this.scope}`;
+
+            this.getStorage().clear('treeSearchValue', view.treeScope);
+            this.getStorage().clear('treeWhereData', view.treeScope);
+
+            this.getStorage().clear('listSearch', view.treeScope);
+            this.getStorage().set('reSetupSearchManager', view.treeScope, true);
+
+            view.toggleVisibilityForResetButton();
+            view.buildTree();
         },
 
         hotKeySave: function (e) {
