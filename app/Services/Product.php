@@ -195,6 +195,51 @@ class Product extends Hierarchy
             }
         }
 
+        // mass update attribute values
+        if (isset($data->massUpdateAttributes) && !empty($data->massUpdateAttributes)) {
+            $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
+
+            $pavs = $this
+                ->getEntityManager()
+                ->getRepository('ProductAttributeValue')
+                ->where([
+                    'productId' => $id
+                ])
+                ->find();
+
+            foreach ($data->massUpdateAttributes as $item) {
+
+                $exist = null;
+
+                foreach ($pavs as $pav) {
+                    if ($pav->get('attributeId') == $item->attributeId && $pav->get('scope') == $item->scope) {
+                        if ($item->scope == 'Global' || ($item->scope === 'Channel' && $pav->get('channelId') == $item->channelId)) {
+                            $exist = $pav;
+                            break;
+                        }
+                    }
+                }
+
+                try {
+                    if (!empty($exist)) {
+                        unset($item->attributeId);
+                        unset($item->scope);
+                        unset($item->channelId);
+
+                        $service->updateEntity($exist->id, $item);
+                    } else {
+                        $item->productId = $id;
+
+                        $service->createEntity($item);
+                    }
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('Mass Update error: ' . $e->getMessage());
+                }
+            }
+
+            unset($data->massUpdateAttributes);
+        }
+
         try {
             $result = parent::updateEntity($id, $data);
         } catch (Conflict $e) {
