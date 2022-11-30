@@ -80,7 +80,10 @@ class Category extends AbstractController
         }
 
         if (empty($ids)) {
-            return [];
+            return [
+                'total' => 0,
+                'tree'  => []
+            ];
         }
 
         return $this->getRecordService()->getTreeData($ids);
