@@ -724,6 +724,11 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        // for unique index
+        if ($entity->get('channelId') === null) {
+            $entity->set('channelId', '');
+        }
+
         if (!$entity->isNew()) {
             self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
         }
