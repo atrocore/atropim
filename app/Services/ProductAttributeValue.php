@@ -262,7 +262,11 @@ class ProductAttributeValue extends Base
         }
         try {
             $result = parent::createEntity($attachment);
-            $this->createAssociatedAttributeValue($attachment, $attachment->attributeId);
+            try {
+                $this->createAssociatedAttributeValue($attachment, $attachment->attributeId);
+            } catch (\Throwable $e) {
+                // ignore errors
+            }
             $this->createPseudoTransactionCreateJobs(clone $attachment);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
