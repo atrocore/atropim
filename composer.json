@@ -4,7 +4,7 @@
   "homepage": "https://atropim.com",
   "license": "GPL-3.0-only",
   "require": {
-    "atrocore/core": "~1.4.126"
+    "atrocore/core": "~1.4.129"
   },
   "conflict": {
     "atrocore/product-variants": "*"
