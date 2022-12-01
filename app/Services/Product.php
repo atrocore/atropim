@@ -560,7 +560,6 @@ class Product extends Hierarchy
          * Prepare select list
          */
         $selectAttributeList = $recordService->getSelectAttributeList($params);
-
         if ($selectAttributeList) {
             $selectAttributeList[] = 'ownerUserId';
             $selectAttributeList[] = 'assignedUserId';
@@ -568,10 +567,7 @@ class Product extends Hierarchy
         }
 
         $collection = $this->getEntityManager()->getRepository('Product')->findRelated($entity, $link, $selectParams);
-
-
         $recordService->prepareCollectionForOutput($collection);
-
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
             if (!empty($params['loadAdditionalFields'])) {
