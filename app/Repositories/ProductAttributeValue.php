@@ -964,6 +964,10 @@ class ProductAttributeValue extends AbstractRepository
         $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'multiEnum']) ? json_decode($entity->get('value'), true)
             : $entity->get('value');
 
+        if ($result['attributes']['was'][$fieldName] === null && ($result['attributes']['became'][$fieldName] === null || $result['attributes']['became'][$fieldName] === '')) {
+            return [];
+        }
+
         if ($entity->get('attributeType') === 'unit') {
             $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['varcharValue'];
             $result['attributes']['became'][$fieldName . 'Unit'] = $entity->get('varcharValue');
