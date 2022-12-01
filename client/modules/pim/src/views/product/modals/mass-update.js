@@ -170,7 +170,9 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             let result = Dep.prototype.prepareData.call(this);
 
             if (this.attributeList.length) {
-                result.massUpdateAttributes = [];
+                result.panelsData = {
+                    productAttributeValues: []
+                };
 
                 this.attributeList.forEach(function (item) {
                     let view = this.getView(item.name),
@@ -196,7 +198,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         attribute['valueCurrency'] = data[name + 'Currency'];
                     }
 
-                    result.massUpdateAttributes.push(attribute);
+                    result.panelsData.productAttributeValues.push(attribute);
                 }.bind(this));
             }
 
