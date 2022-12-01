@@ -180,13 +180,34 @@ class Product extends Hierarchy
                 $inTransaction = true;
             }
             $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
+
+            $pavs = $this
+                ->getEntityManager()
+                ->getRepository('ProductAttributeValue')
+                ->where(['productId' => $id])
+                ->find();
+
             foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
-                if (!empty($data->_ignoreConflict)) {
-                    $pavData->_prev = null;
-                }
-                $pavData->isProductUpdate = true;
+                $existPavId = $this->getProductAttributeIdForUpdating($pavs, $pavData, (string)$pavId);
+
                 try {
-                    $service->updateEntity($pavId, $pavData);
+                    if (!is_null($existPavId)) {
+                        if (!empty($data->_ignoreConflict)) {
+                            $pavData->_prev = null;
+                        }
+
+                        $pavData->isProductUpdate = true;
+
+                        unset($pavData->attributeId);
+                        unset($pavData->channelId);
+                        unset($pavData->channelName);
+
+                        $service->updateEntity($existPavId, $pavData);
+                    } else {
+                        $pavData->productId = $id;
+
+                        $service->createEntity($pavData);
+                    }
                 } catch (Conflict $e) {
                     $conflicts = array_merge($conflicts, $e->getFields());
                 } catch (NotModified $e) {
@@ -848,6 +869,35 @@ class Product extends Hierarchy
     {
         return !empty($data->panelsData->productAttributeValues);
     }
+
+    /**
+     * @param EntityCollection $pavs
+     * @param \stdClass $data
+     * @param string $id
+     *
+     * @return \stdClass|null
+     */
+    protected function getProductAttributeIdForUpdating(EntityCollection $pavs ,\stdClass $data, string $id): ?string
+    {
+        if (!property_exists($data, 'attributeId') || !property_exists($data, 'scope')) {
+            $pavsIds = array_column($pavs->toArray(), 'id');
+
+            if (in_array($id, $pavsIds)) {
+                return $id;
+            }
+        } else {
+            foreach ($pavs as $pav) {
+                if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope) {
+                    if ($data->scope == 'Global' || ($data->scope === 'Channel' && property_exists($data, 'channelId') && $pav->get('channelId') == $data->channelId)) {
+                        return $pav->id;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * @inheritDoc
