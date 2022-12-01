@@ -24,6 +24,7 @@
   "overviewFilters": true,
   "addRelationEnabled": true,
   "multiParents": false,
+  "dragAndDrop": true,
   "fieldValueInheritance": true,
   "mandatoryUnInheritedFields": [
     "productAttributeValues",

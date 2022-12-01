@@ -11,6 +11,7 @@
   "disabled": false,
   "type": "Hierarchy",
   "multiParents": true,
+  "dragAndDrop": true,
   "module": "Pim",
   "object": true,
   "hasOwner": true,
