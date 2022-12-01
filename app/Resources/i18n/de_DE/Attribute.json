@@ -26,7 +26,8 @@
     "defaultScope": "Scope",
     "defaultChannel": "Kanal",
     "defaultIsRequired": "erforderlich",
-    "sortOrderInProduct": "Sortierreihenfolge für Produkt"
+    "sortOrderInProduct": "Sortierreihenfolge für Produkt",
+    "tooltip": "Kurzinfo"
   },
   "links": {
     "parents": "Assoziierende Attribute",

@@ -288,6 +288,15 @@
       "importDisabled": true,
       "exportDisabled": true,
       "emHidden": true
+    },
+    "tooltip": {
+      "type": "varchar",
+      "isMultilang": true,
+      "trim": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     }
   },
   "links": {
