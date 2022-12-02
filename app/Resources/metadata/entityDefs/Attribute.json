@@ -290,7 +290,7 @@
       "emHidden": true
     },
     "tooltip": {
-      "type": "varchar",
+      "type": "text",
       "isMultilang": true,
       "trim": true,
       "layoutListDisabled": true,

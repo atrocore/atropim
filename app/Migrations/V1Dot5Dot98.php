@@ -46,10 +46,10 @@ class V1Dot5Dot98 extends Base
             }
         }
 
-        $this->exec("ALTER TABLE attribute ADD tooltip VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE attribute ADD tooltip LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
 
         foreach ($languages as $language) {
-            $this->exec("ALTER TABLE attribute ADD tooltip_{$language} VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+            $this->exec("ALTER TABLE attribute ADD tooltip_{$language} LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
         }
     }
 

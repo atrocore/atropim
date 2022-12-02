@@ -75,7 +75,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
                         placement: 'bottom',
                         container: 'body',
                         html: true,
-                        content: this.model.get('attributeTooltip'),
+                        content: this.model.get('attributeTooltip').replace(/\n/g, "<br />"),
                         trigger: 'click',
                     }).on('shown.bs.popover', function () {
                         $('body').one('click', function () {
