@@ -118,12 +118,14 @@ class RevisionField extends MultilangRevisionField
                             if (is_bool($became)) {
                                 $was = (bool)$was;
                             }
+                            
+                            $createdBy = $this->getEntityManager()->getRepository('User')->get($note->get('createdById'));
 
                             $result['list'][] = [
                                 "id"       => $note->get('id'),
                                 "date"     => $note->get('createdAt'),
                                 "userId"   => $note->get('createdById'),
-                                "userName" => $note->get('createdBy') ? $note->get('createdBy')->get('name') : null,
+                                "userName" => empty($createdBy) ? $note->get('createdById') : $createdBy->get('name'),
                                 "was"      => $was,
                                 "became"   => $became,
                                 "field"    => 'value'
