@@ -80,7 +80,27 @@ Espo.define('pim:views/product/modals/attributes-for-mass-update', 'views/modal'
                 bottomDisabled: true,
                 exit: function () {}
             };
-            this.createView('edit', viewName, options, callback);
+            this.createView('edit', viewName, options, (view) => {
+                view.listenTo(view, 'after:render', (view) => {
+                    view.getField('language').hide();
+                });
+
+                view.listenTo(view.model, 'change:attributeId', function (model) {
+                    const language = view.getField('language');
+
+                    if (language) {
+                        if (model.get('attributeId') && model.get('attributeIsMultilang') && !['enum', 'multiEnum'].includes(model.get('attributeType'))) {
+                            language.setNotReadOnly();
+                            language.show();
+
+                            language.setMode('edit');
+                            language.reRender();
+                        } else {
+                            language.hide();
+                        }
+                    }
+                }.bind(view))
+            });
         },
 
         actionAddAttribute() {

@@ -85,20 +85,26 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
         },
 
         createAttributeFieldView(model) {
-            let name = model.get('attributeId');
+            let name = model.get('attributeId'),
+                language = model.get('language') || 'main';
             if (model.get('channelId')) {
                 name += '_' + model.get('channelId');
             }
+            name += '_' + language;
 
             let data = {
                 name: name,
                 attributeId: model.get('attributeId'),
                 scope: model.get('scope') || 'Global',
                 channelId: model.get('channelId') || null,
-                channelName: model.get('channelName') || null
+                channelName: model.get('channelName') || null,
+                language: language
             };
             let exist = this.attributeList.find(item => {
-                if (item.attributeId === data.attributeId && item.scope === data.scope && item.channelId === data.channelId) {
+                if (item.attributeId === data.attributeId
+                    && item.scope === data.scope
+                    && item.channelId === data.channelId
+                    && item.language === data.language) {
                     return item;
                 }
 
@@ -140,10 +146,8 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
             this.createView(name, this.getViewFieldType(type), options, view => {
                 view.listenTo(view, 'after:render', () => {
-                    let name = 'Scope: ' + data.scope;
-                    if (data.channelName) {
-                        name += ', Channel: ' + data.channelName;
-                    }
+                    let name = data.channelName ? data.channelName : 'Global';
+                    name += ', ' + this.getLanguage().translateOption(data.language, 'language', 'ProductAttributeValue');
 
                     view.$el.append('<div class="text-muted small">' + name + '</div>');
                 });
@@ -182,7 +186,8 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                     let attribute = {
                         attributeId: item.attributeId,
                         scope: item.scope,
-                        value: data[name]
+                        value: data[name],
+                        language: item.language
                     };
 
                     if (item.scope === 'Channel') {

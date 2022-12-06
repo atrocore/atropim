@@ -181,11 +181,7 @@ class Product extends Hierarchy
             }
             $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
 
-            $pavs = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->where(['productId' => $id])
-                ->find();
+            $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id])->find();
 
             foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
                 $existPavId = $this->getProductAttributeIdForUpdating($pavs, $pavData, (string)$pavId);
@@ -201,12 +197,19 @@ class Product extends Hierarchy
                         unset($pavData->attributeId);
                         unset($pavData->channelId);
                         unset($pavData->channelName);
+                        unset($pavData->language);
 
                         $service->updateEntity($existPavId, $pavData);
                     } else {
                         $pavData->productId = $id;
 
-                        $service->createEntity($pavData);
+                        $result = $service->createEntity($pavData);
+
+                        if (!$result->get('attributeIsMultilang')) {
+                            $pavs->append($result);
+                        } else {
+                            $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id])->find();
+                        }
                     }
                 } catch (Conflict $e) {
                     $conflicts = array_merge($conflicts, $e->getFields());
@@ -879,7 +882,7 @@ class Product extends Hierarchy
      */
     protected function getProductAttributeIdForUpdating(EntityCollection $pavs ,\stdClass $data, string $id): ?string
     {
-        if (!property_exists($data, 'attributeId') || !property_exists($data, 'scope')) {
+        if (!property_exists($data, 'attributeId') || !property_exists($data, 'scope') || !property_exists($data, 'language')) {
             $pavsIds = array_column($pavs->toArray(), 'id');
 
             if (in_array($id, $pavsIds)) {
@@ -887,7 +890,7 @@ class Product extends Hierarchy
             }
         } else {
             foreach ($pavs as $pav) {
-                if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope) {
+                if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope && $pav->get('language') == $data->language) {
                     if ($data->scope == 'Global' || ($data->scope === 'Channel' && property_exists($data, 'channelId') && $pav->get('channelId') == $data->channelId)) {
                         return $pav->id;
                     }
