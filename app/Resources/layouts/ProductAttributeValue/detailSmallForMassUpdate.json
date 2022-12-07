@@ -16,6 +16,12 @@
         {
           "name": "channel"
         }
+      ],
+      [
+        {
+          "name": "language"
+        },
+        false
       ]
     ]
   }
