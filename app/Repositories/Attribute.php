@@ -115,6 +115,11 @@ class Attribute extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
+        // disable isMultilang for not multilingual attribute types
+        if (!in_array($entity->get('type'), \Pim\Module::$multiLangTypes)) {
+            $entity->set('isMultilang', false);
+        }
+
         $this->prepareTypeValues($entity);
 
         if (!$entity->isNew()) {
