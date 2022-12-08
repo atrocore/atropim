@@ -81,12 +81,23 @@ Espo.define('pim:views/product/modals/attributes-for-mass-update', 'views/modal'
                 exit: function () {}
             };
             this.createView('edit', viewName, options, (view) => {
+                if (callback) {
+                    callback();
+                }
+
                 view.listenTo(view, 'after:render', (view) => {
                     view.getField('language').hide();
                 });
 
                 view.listenTo(view.model, 'change:attributeId', function (model) {
                     const language = view.getField('language');
+
+                    if (model.get('attributeId') && (model.get('attributeIsMultilang') === undefined || model.get('type') === undefined)) {
+                        this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, {}, {async: false}).then(result => {
+                            model.set('attributeIsMultilang', result.isMultilang);
+                            model.set('attributeType', result.type);
+                        });
+                    }
 
                     if (language) {
                         if (model.get('attributeId') && model.get('attributeIsMultilang') && !['enum', 'multiEnum'].includes(model.get('attributeType'))) {
