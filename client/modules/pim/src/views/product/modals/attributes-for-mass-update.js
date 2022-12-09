@@ -92,10 +92,11 @@ Espo.define('pim:views/product/modals/attributes-for-mass-update', 'views/modal'
                 view.listenTo(view.model, 'change:attributeId', function (model) {
                     const language = view.getField('language');
 
-                    if (model.get('attributeId') && (model.get('attributeIsMultilang') === undefined || model.get('type') === undefined)) {
+                    if (model.get('attributeId') && (model.get('attributeIsMultilang') === undefined || model.get('type') === undefined || model.get('typeValue') === undefined)) {
                         this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, {}, {async: false}).then(result => {
                             model.set('attributeIsMultilang', result.isMultilang);
                             model.set('attributeType', result.type);
+                            model.set('typeValue', result.typeValue);
                         });
                     }
 
