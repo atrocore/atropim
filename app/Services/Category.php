@@ -56,6 +56,17 @@ class Category extends Hierarchy
         return $route;
     }
 
+    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
+    {
+        $parent = $entity->get('categoryParent');
+        if (empty($parent)) {
+            $treeBranches[] = $entity;
+        } else {
+            $parent->child = $entity;
+            $this->createTreeBranches($parent, $treeBranches);
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         Record::prepareEntityForOutput($entity);
@@ -83,16 +94,5 @@ class Category extends Hierarchy
         }
 
         return $result;
-    }
-
-    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
-    {
-        $parent = $entity->get('categoryParent');
-        if (empty($parent)) {
-            $treeBranches[] = $entity;
-        } else {
-            $parent->child = $entity;
-            $this->createTreeBranches($parent, $treeBranches);
-        }
     }
 }
