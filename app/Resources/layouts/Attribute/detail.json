@@ -90,6 +90,12 @@
           "name": "sortOrderInProduct"
         },
         false
+      ],
+      [
+        {
+          "name": "tooltip"
+        },
+        false
       ]
     ]
   }

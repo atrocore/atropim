@@ -41,6 +41,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             'attributeGroupName',
             'attributeId',
             'attributeName',
+            'attributeTooltip',
             'isRequired',
             'scope',
             'value',
