@@ -95,6 +95,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             let data = {
                 name: name,
                 attributeId: model.get('attributeId'),
+                attributeType: model.get('attributeType'),
                 scope: model.get('scope') || 'Global',
                 channelId: model.get('channelId') || null,
                 channelName: model.get('channelName') || null,
@@ -186,9 +187,14 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                     let attribute = {
                         attributeId: item.attributeId,
                         scope: item.scope,
-                        value: data[name],
                         language: item.language
                     };
+
+                    if (item.attributeType === 'asset') {
+                        attribute.valueId = data[name + 'Id'];
+                    } else {
+                        attribute.value = data[name];
+                    }
 
                     if (item.scope === 'Channel') {
                         attribute.channelId = item.channelId;
