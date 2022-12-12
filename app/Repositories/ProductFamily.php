@@ -153,6 +153,8 @@ class ProductFamily extends AbstractRepository
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
     {
+        self::onlyForAdvancedClassification();
+
         $select = 'pf.*';
         if ($withChildrenCount) {
             $select .= ", (SELECT COUNT(pf1.id) FROM product_family pf1 WHERE pf1.parent_id=pf.id AND pf1.deleted=0) as childrenCount";
@@ -185,6 +187,8 @@ class ProductFamily extends AbstractRepository
      */
     public function getChildrenCount(string $parentId): int
     {
+        self::onlyForAdvancedClassification();
+
         if (empty($parentId)) {
             $query = "SELECT COUNT(id) as count
                       FROM `product_family` pf
