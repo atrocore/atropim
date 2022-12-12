@@ -205,7 +205,7 @@ class Product extends Hierarchy
                     } else {
                         $isValidChannel = true;
 
-                        if (!empty($copy->channelId)) {
+                        if (property_exists($copy, 'channelId') && !empty($copy->channelId)) {
                             $channelIds = $this->getEntityManager()->getRepository('ProductChannel')->select(['channelId'])->where(['productId' => $id])->find()->toArray();
                             $channelIds = array_column($channelIds, 'channelId');
 
