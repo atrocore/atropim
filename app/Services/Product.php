@@ -187,28 +187,43 @@ class Product extends Hierarchy
                 $existPavId = $this->getProductAttributeIdForUpdating($pavs, $pavData, (string)$pavId);
 
                 try {
+                    $copy = clone $pavData;
+
                     if (!is_null($existPavId)) {
                         if (!empty($data->_ignoreConflict)) {
-                            $pavData->_prev = null;
+                            $copy->_prev = null;
                         }
 
-                        $pavData->isProductUpdate = true;
+                        $copy->isProductUpdate = true;
 
-                        unset($pavData->attributeId);
-                        unset($pavData->channelId);
-                        unset($pavData->channelName);
-                        unset($pavData->language);
+                        unset($copy->attributeId);
+                        unset($copy->channelId);
+                        unset($copy->channelName);
+                        unset($copy->language);
 
-                        $service->updateEntity($existPavId, $pavData);
+                        $service->updateEntity($existPavId, $copy);
                     } else {
-                        $pavData->productId = $id;
+                        $isValidChannel = true;
 
-                        $result = $service->createEntity($pavData);
+                        if (!empty($copy->channelId)) {
+                            $channelIds = $this->getEntityManager()->getRepository('ProductChannel')->select(['channelId'])->where(['productId' => $id])->find()->toArray();
+                            $channelIds = array_column($channelIds, 'channelId');
 
-                        if (!$result->get('attributeIsMultilang')) {
-                            $pavs->append($result);
-                        } else {
-                            $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id])->find();
+                            if (!in_array($copy->channelId, $channelIds)) {
+                                $isValidChannel = false;
+                            }
+                        }
+
+                        if ($isValidChannel) {
+                            $copy->productId = $id;
+
+                            $result = $service->createEntity($copy);
+
+                            if (!$result->get('attributeIsMultilang')) {
+                                $pavs->append($result);
+                            } else {
+                                $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id])->find();
+                            }
                         }
                     }
                 } catch (Conflict $e) {
