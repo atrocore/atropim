@@ -34,22 +34,19 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\ORM\Entity;
+use Espo\Services\Record;
 
-class ProductFamily extends \Espo\Core\Templates\Services\Base
+class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
 {
-    /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
 
-        $this->addDependency('serviceFactory');
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        Record::prepareEntityForOutput($entity);
     }
 
     public function findLinkedEntities($id, $link, $params)
     {
-        $result = parent::findLinkedEntities($id, $link, $params);
+        $result = Record::findLinkedEntities($id, $link, $params);
 
         if ($link === 'productFamilyAttributes') {
             if (isset($result['collection'])) {
@@ -106,5 +103,12 @@ class ProductFamily extends \Espo\Core\Templates\Services\Base
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         return true;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
     }
 }

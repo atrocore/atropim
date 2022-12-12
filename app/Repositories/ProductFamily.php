@@ -151,6 +151,57 @@ class ProductFamily extends AbstractRepository
         return array_column($data, 'id');
     }
 
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
+    {
+        self::onlyForAdvancedClassification();
+
+        $select = 'pf.*';
+        if ($withChildrenCount) {
+            $select .= ", (SELECT COUNT(pf1.id) FROM product_family pf1 WHERE pf1.parent_id=pf.id AND pf1.deleted=0) as childrenCount";
+        }
+
+        if (empty($parentId)) {
+            $query = "SELECT {$select} 
+                      FROM `product_family` pf
+                      WHERE pf.parent_id IS NULL
+                      AND pf.deleted=0
+                      ORDER BY pf.sort_order, pf.id";
+        } else {
+            $parentId = $this->getPDO()->quote($parentId);
+            $query = "SELECT {$select} 
+                      FROM `product_family` pf
+                      WHERE pf.parent_id=$parentId
+                      AND pf.deleted=0
+                      ORDER BY pf.sort_order, pf.id";
+        }
+
+        if (!is_null($offset) && !is_null($maxSize)) {
+            $query .= " LIMIT $maxSize OFFSET $offset";
+        }
+
+        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @return int
+     */
+    public function getChildrenCount(string $parentId): int
+    {
+        self::onlyForAdvancedClassification();
+
+        if (empty($parentId)) {
+            $query = "SELECT COUNT(id) as count
+                      FROM `product_family` pf
+                      WHERE pf.parent_id IS NULL AND pf.deleted=0";
+        } else {
+            $query = "SELECT COUNT(id) as count
+                      FROM `product_family` pf
+                      WHERE pf.parent_id = '$parentId' AND pf.deleted=0";
+        }
+
+        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$this->isCodeValid($entity)) {
