@@ -213,15 +213,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return route;
         },
 
-        prepareTreeRoute(list, route) {
-            list.forEach(item => {
-                if (item.children) {
-                    route.push(item.id);
-                    this.prepareTreeRoute(item.children, route);
-                }
-            });
-        },
-
         treeInit(view) {
             if (view.treeScope === 'ProductFamily') {
                 if (view.model.get('productFamilyId')) {
