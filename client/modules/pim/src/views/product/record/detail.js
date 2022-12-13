@@ -213,11 +213,20 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return route;
         },
 
+        prepareTreeRoute(list, route) {
+            list.forEach(item => {
+                if (item.children) {
+                    route.push(item.id);
+                    this.prepareTreeRoute(item.children, route);
+                }
+            });
+        },
+
         treeInit(view) {
             if (view.treeScope === 'ProductFamily') {
                 if (view.model.get('productFamilyId')) {
                     $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
-                        view.selectTreeNode(this.parseRoute(pf.categoryRoute), view.model.get('productFamilyId'));
+                        view.selectTreeNode(view.model.get('productFamilyId'), this.parseRoute(pf.categoryRoute));
                     });
                 }
             }
@@ -231,12 +240,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (view.treeScope === 'Product') {
-                if (view.model && view.model.get('id')) {
-                    this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
-                        view.selectTreeNode(route, view.model.get('id'));
-                    });
-                }
+            if (view.treeScope === 'Product' && view.model && view.model.get('id')) {
+                view.selectTreeNode(view.model.get('id'));
             }
         },
 
