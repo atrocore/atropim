@@ -214,12 +214,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         treeInit(view) {
-            if (view.treeScope === 'ProductFamily') {
-                if (view.model.get('productFamilyId')) {
-                    $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
-                        view.selectTreeNode(view.model.get('productFamilyId'), this.parseRoute(pf.categoryRoute));
-                    });
-                }
+            if (view.treeScope === 'ProductFamily' && view.model.get('productFamilyId')) {
+                $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
+                    view.selectTreeNode(view.model.get('productFamilyId'), this.parseRoute(pf.categoryRoute));
+                });
             }
 
             if (view.treeScope === 'Category') {
