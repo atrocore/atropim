@@ -648,32 +648,28 @@ class Category extends AbstractRepository
         return $children;
     }
 
+    protected function updateRoute(Entity $entity): void
+    {
+        $route = self::getCategoryRoute($entity);
+        $routeName = self::getCategoryRoute($entity, true);
+
+        $this
+            ->getEntityManager()
+            ->nativeQuery("UPDATE category SET category_route='$route', category_route_name='$routeName' WHERE id='{$entity->get('id')}'");
+    }
+
     protected function updateCategoryTree(Entity $entity): void
     {
         if (!empty($entity->recursiveSave)) {
             return;
         }
 
-        $this
-            ->getConnection()
-            ->createQueryBuilder()
-            ->update('category')
-            ->set('category_route', ':categoryRoute')->setParameter('categoryRoute', self::getCategoryRoute($entity))
-            ->set('category_route_name', ':categoryRouteName')->setParameter('categoryRouteName', self::getCategoryRoute($entity, true))
-            ->where('id=:id')->setParameter('id', $entity->get('id'))
-            ->executeQuery();
+        $this->updateRoute($entity);
 
         if (!$entity->isNew()) {
             $children = $this->getEntityChildren($entity->get('categories'), []);
             foreach ($children as $child) {
-                $this
-                    ->getConnection()
-                    ->createQueryBuilder()
-                    ->update('category')
-                    ->set('category_route', ':categoryRoute')->setParameter('categoryRoute', self::getCategoryRoute($child))
-                    ->set('category_route_name', ':categoryRouteName')->setParameter('categoryRouteName', self::getCategoryRoute($child, true))
-                    ->where('id=:id')->setParameter('id', $child->get('id'))
-                    ->executeQuery();
+                $this->updateRoute($child);
             }
         }
     }

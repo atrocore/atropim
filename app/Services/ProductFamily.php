@@ -38,6 +38,30 @@ use Espo\Services\Record;
 
 class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
 {
+    public function createEntity($attachment)
+    {
+        return Record::createEntity($attachment);
+    }
+
+    public function updateEntity($id, $data)
+    {
+        return Record::updateEntity($id, $data);
+    }
+
+    public function linkEntity($id, $link, $foreignId)
+    {
+        return Record::linkEntity($id, $link, $foreignId);
+    }
+
+    public function deleteEntity($id)
+    {
+        return Record::deleteEntity($id);
+    }
+
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        return Record::unlinkEntity($id, $link, $foreignId);
+    }
 
     public function prepareEntityForOutput(Entity $entity)
     {
