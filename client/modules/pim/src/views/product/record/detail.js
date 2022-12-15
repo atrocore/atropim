@@ -158,8 +158,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
@@ -213,7 +213,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return route;
         },
 
-        treeInit(view) {
+        treeLoad(view, treeData) {
             if (view.treeScope === 'ProductFamily' && view.model.get('productFamilyId')) {
                 $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
                     view.selectTreeNode(view.model.get('productFamilyId'), this.parseRoute(pf.categoryRoute));
@@ -230,7 +230,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             if (view.treeScope === 'Product' && view.model && view.model.get('id')) {
-                view.selectTreeNode(view.model.get('id'));
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+                view.selectTreeNode(view.model.get('id'), route);
             }
         },
 
