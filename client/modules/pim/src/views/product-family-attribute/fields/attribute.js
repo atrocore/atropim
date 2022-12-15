@@ -41,7 +41,10 @@ Espo.define('pim:views/product-family-attribute/fields/attribute', 'treo-core:vi
                 };
             }
         },
-
+        select: function (model) {
+            Dep.prototype.select.call(this, model);
+            this.model.trigger('change:attribute', model);
+        },
     })
 );
 

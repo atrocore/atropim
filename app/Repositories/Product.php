@@ -218,6 +218,8 @@ class Product extends AbstractRepository
 
     public function updateInconsistentAttributes(Entity $product): void
     {
+        $this->disableHasInconsistentAttributes($product->get('id'));
+        return;
         if (empty($product->get('hasInconsistentAttributes'))) {
             $this->disableHasInconsistentAttributes($product->get('id'));
             return;

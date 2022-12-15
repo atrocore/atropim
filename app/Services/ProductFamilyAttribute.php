@@ -76,10 +76,29 @@ class ProductFamilyAttribute extends Base
         }
         try {
             $this->prepareDefaultValues($attachment);
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId);
+            if ($attribute->get('isMultilang')) {
+                $langs = $attachment->languages ?: array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
+                if (!empty($attachment->channelId)) {
+                    $channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId);
+                    $langs = array_intersect($langs, $channel->get('locales'));
+                }
+                $attachments = [];
+                foreach ($langs as $lang) {
+                    $attach = clone $attachment;
+                    $attach->language = $lang;
+                    $attachments[] = $attach;
+                }
+            } else {
+                $attachments = [$attachment];
+            }
 
-            $result = parent::createEntity($attachment);
-            $this->createAssociatedFamilyAttribute($attachment, $attachment->attributeId);
-            $this->createPseudoTransactionCreateJobs($attachment);
+            foreach ($attachments as $attachment_clone) {
+                $result = parent::createEntity($attachment_clone);
+                $this->createAssociatedFamilyAttribute($attachment_clone, $attachment_clone->attributeId);
+                $this->createPseudoTransactionCreateJobs($attachment_clone);
+            }
+
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }

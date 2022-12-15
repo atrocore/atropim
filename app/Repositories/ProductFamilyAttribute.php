@@ -62,6 +62,11 @@ class ProductFamilyAttribute extends Base
             $query .= " AND channel_id='{$pfa->get('channelId')}'";
         }
 
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $pfa->get('attributeId'));
+        if ($attribute->get('isMultilang')) {
+            $query .= " AND language='{$pfa->get('language')}'";
+        }
+
         return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
     }
 
@@ -147,6 +152,7 @@ class ProductFamilyAttribute extends Base
             'id!='            => $entity->get('id'),
             'productFamilyId' => $entity->get('productFamilyId'),
             'attributeId'     => $entity->get('attributeId'),
+            'language'        => $entity->get('language'),
             'scope'           => $entity->get('scope'),
         ];
         if ($entity->get('scope') == 'Channel') {

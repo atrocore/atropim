@@ -34,7 +34,7 @@
       "emHidden": true
     },
     "locales": {
-      "type": "multiEnum",
+      "type": "multiLanguage",
       "required": true,
       "options": [],
       "view": "pim:views/channel/fields/locales"

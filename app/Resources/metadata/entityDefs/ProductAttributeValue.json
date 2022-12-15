@@ -13,19 +13,6 @@
       "type": "bool",
       "default": false
     },
-    "mainLanguage": {
-      "type": "link",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "languagesIds": {
       "type": "array",
       "notStorable": true,
@@ -419,16 +406,9 @@
       "emHidden": true
     },
     "language": {
-      "type": "enum",
-      "options": [
-        "main"
-      ],
-      "optionsIds": [
-        "main"
-      ],
+      "type": "language",
       "default": "main",
       "required": true,
-      "readOnly": true,
       "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -437,7 +417,8 @@
       "layoutMassUpdateDisabled": true,
       "filterDisabled": false,
       "exportDisabled": false,
-      "importDisabled": false
+      "importDisabled": false,
+      "view": "pim:views/product-attribute-value/fields/language"
     },
     "createdAt": {
       "type": "datetime",
@@ -547,10 +528,6 @@
     "attribute": {
       "type": "belongsTo",
       "entity": "Attribute"
-    },
-    "mainLanguage": {
-      "type": "belongsTo",
-      "entity": "ProductAttributeValue"
     },
     "channel": {
       "type": "belongsTo",

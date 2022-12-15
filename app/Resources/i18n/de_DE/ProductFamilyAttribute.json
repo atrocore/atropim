@@ -5,7 +5,8 @@
     "productFamily": "Produktfamilie",
     "attribute": "Attribute",
     "channel": "Kanal",
-    "scope": "Scope"
+    "scope": "Scope",
+    "languages": "Sprachen"
   },
   "links": {
     "productFamily": "Produktfamilie",

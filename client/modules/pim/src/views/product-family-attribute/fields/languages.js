@@ -28,20 +28,31 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product-family-attribute/fields/channel', 'treo-core:views/fields/filtered-link',
-    Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductFamilyAttribute'],
+Espo.define('pim:views/product-family-attribute/fields/languages', 'views/fields/multi-language', function (Dep) {
+    return Dep.extend({
+        setup: function () {
+            this.listenTo(this.model, 'change:attribute', (attr) => {
+                if ( attr.get('isMultilang')) {
+                    this.show();
+                } else {
+                    this.hide();
+                }
+            });
+            this.listenTo(this.model, 'change:channel', (channel) => {
+                this.model.set('languages',channel.get('locales'));
+                this.params.options  = channel.get('locales');
+                this.reRender();
+            });
+            this.listenTo(this.model, 'change:attributeId', (model) => {
+                if (! model.get('attributeId')) {
+                    this.hide();
+                }
+            });
 
-        boolFilterData: {
-            notLinkedWithProductFamilyAttribute() {
-                return {productFamilyId: this.model.get('productFamilyId'), attributeId: this.model.get('attributeId')};
-            }
+            this.model.set('languages', ['main'].concat(this.getConfig().get('inputLanguageList')),{silent:true});
+            Dep.prototype.setup.call(this);
+            this.listenToOnce(this, 'after:render', () => this.hide());
         },
-        select: function (model) {
-            Dep.prototype.select.call(this, model);
-            this.model.trigger('change:channel', model);
-        },
-    })
-);
-
+    });
+});
