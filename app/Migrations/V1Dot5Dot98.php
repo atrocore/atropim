@@ -41,7 +41,24 @@ class V1Dot5Dot98 extends Base
 {
     public function up(): void
     {
+        try {
+            $this->getPDO()->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+            $this->getPDO()->exec("ALTER TABLE `product_attribute_value` DROP main_language_id");
+        } catch (\Throwable $e) {
+
+        }
         $connection = $this->getSchema()->getConnection();
+        $chanel_records = $connection->createQueryBuilder()
+            ->select('id', 'locales')
+            ->from('channel')
+            ->where('deleted = 0')
+            ->fetchAllAssociative();
+
+        $channels = [];
+        foreach ($chanel_records as $chanel) {
+            $channels[$chanel['id']] = @json_decode($chanel['locales']);
+        }
+
         $records = $connection->createQueryBuilder()
             ->select('id')
             ->from('attribute')
@@ -72,7 +89,11 @@ class V1Dot5Dot98 extends Base
 
             $locales = $this->getConfig()->get('inputLanguageList', []);
             foreach ($pfas as $pfa) {
-                foreach ($locales as $locale) {
+                $pfa_locales = $locales;
+                if ($pfa['channel_id'] && !empty($channels[$pfa['channel_id']])) {
+                    $pfa_locales = $channels[$pfa['channel_id']];
+                }
+                foreach ($pfa_locales as $locale) {
                     $pfa['id'] = Util::generateId();
                     $pfa['language'] = $locale;
 
@@ -88,7 +109,6 @@ class V1Dot5Dot98 extends Base
                         ->executeQuery();
                 }
             }
-
         }
     }
 }
