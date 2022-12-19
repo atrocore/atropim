@@ -114,11 +114,18 @@ class ProductAttributeValue extends Base
          * Prepare attributes groups attributes
          */
         foreach ($data as $record) {
+            $tooltip = null;
+            if ($language === 'main') {
+                $tooltip = $record['attribute_data']['tooltip'];
+            } elseif (!empty($record['attribute_data']['tooltip_' . ucwords($language)])) {
+                $tooltip = $record['attribute_data']['tooltip_' . ucwords($language)];
+            }
+
             $row = [
                 'id'          => $record['id'],
                 'channelName' => $record['scope'] === 'Global' ? '-9999' : $record['channel_name'],
                 'language'    => $record['language'] === 'main' ? null : $record['language'],
-                'tooltip'     => $language === 'main' ? $record['attribute_data']['tooltip'] : $record['attribute_data']['tooltip_'. ucwords($language)]
+                'tooltip'     => $tooltip
             ];
 
             if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
