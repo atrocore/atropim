@@ -737,7 +737,7 @@ class ProductAttributeValue extends Base
             $entity->set('attributeName', $attribute->get('name') . ' / ' . $entity->get('language'));
         }
 
-        $locale = $this->getInjection('container')->get('language')->getLanguage();
+        $locale = $entity->get('language');
         $tooltipFieldName = $locale == 'main' ? 'tooltip' : Util::toCamelCase('tooltip_' . strtolower($locale));
         $entity->set('attributeTooltip', $attribute->get($tooltipFieldName));
 
