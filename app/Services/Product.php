@@ -263,7 +263,7 @@ class Product extends Hierarchy
     public function addAssociateProducts(\stdClass $data): array
     {
         // input data validation
-        if (empty($data->where) || empty($data->foreignIds) || empty($data->associationId) || !is_array($data->foreignIds)) {
+        if (empty($data->foreignIds) || empty($data->associationId) || !is_array($data->foreignIds)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -327,7 +327,7 @@ class Product extends Hierarchy
     public function removeAssociateProducts(\stdClass $data): array
     {
         // input data validation
-        if (empty($data->where) || empty($data->foreignIds) || empty($data->associationId) || !is_array($data->foreignIds)) {
+        if (empty($data->foreignIds) || empty($data->associationId) || !is_array($data->foreignIds)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
