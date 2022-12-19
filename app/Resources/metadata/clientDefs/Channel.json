@@ -52,19 +52,5 @@
         "Channel"
       ]
     }
-  },
-  "dynamicLogic": {
-    "fields": {
-      "locales": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasLocales"
-            }
-          ]
-        }
-      }
-    }
   }
 }

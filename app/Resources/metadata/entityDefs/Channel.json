@@ -19,20 +19,6 @@
       "type": "bool",
       "default": false
     },
-    "hasLocales": {
-      "type": "bool",
-      "notStorable": true,
-      "default": false,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "locales": {
       "type": "multiLanguage",
       "required": true
