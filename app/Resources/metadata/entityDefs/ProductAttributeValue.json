@@ -439,6 +439,20 @@
       "exportDisabled": false,
       "importDisabled": false
     },
+    "attributeTooltip": {
+      "type": "varchar",
+      "readOnly": true,
+      "aclFieldDisabled": true,
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

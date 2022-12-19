@@ -33,72 +33,8 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Templates\Controllers\Hierarchy;
 
-class Category extends AbstractController
+class Category extends Hierarchy
 {
-    public function actionTree($params, $data, $request): array
-    {
-        if (!$request->isGet()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getCategoryTree((string)$request->get('node'));
-    }
-
-    public function actionTreeData($params, $data, $request): array
-    {
-        if (!$request->isGet()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        if (!empty($request->get('ids'))) {
-            $ids = (array)$request->get('ids');
-        } elseif (!empty($request->get('where'))) {
-            $params = [
-                'select'  => ['id'],
-                'where'   => $this->prepareWhereQuery($request->get('where')),
-                'offset'  => 0,
-                'maxSize' => 5000,
-                'asc'     => true,
-                'sortBy'  => 'id'
-            ];
-
-            $result = $this->getRecordService()->findEntities($params);
-            if (!empty($result['total'])) {
-                $ids = array_column($result['collection']->toArray(), 'id');
-            }
-        }
-
-        if (empty($ids)) {
-            return [
-                'total' => 0,
-                'tree'  => []
-            ];
-        }
-
-        return $this->getRecordService()->getTreeData($ids);
-    }
-
-    public function actionRoute($params, $data, $request): array
-    {
-        if (!$request->isGet()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getRoute((string)$request->get('id'));
-    }
 }

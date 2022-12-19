@@ -288,6 +288,19 @@
       "importDisabled": true,
       "exportDisabled": true,
       "emHidden": true
+    },
+    "tooltip": {
+      "type": "text",
+      "isMultilang": true,
+      "trim": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     }
   },
   "links": {

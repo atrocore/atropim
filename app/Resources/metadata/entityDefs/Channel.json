@@ -19,25 +19,9 @@
       "type": "bool",
       "default": false
     },
-    "hasLocales": {
-      "type": "bool",
-      "notStorable": true,
-      "default": false,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "locales": {
-      "type": "multiEnum",
-      "required": true,
-      "options": [],
-      "view": "pim:views/channel/fields/locales"
+      "type": "multiLanguage",
+      "required": true
     },
     "createdAt": {
       "type": "datetime",

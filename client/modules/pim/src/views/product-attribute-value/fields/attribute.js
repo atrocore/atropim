@@ -64,6 +64,33 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
                 this.mandatorySelectAttributeList = this.mandatorySelectAttributeList.concat(this.typeValueFields);
             }
 
+            if (this.model.get('attributeTooltip')) {
+                var $a;
+                this.once('after:render', function () {
+                    $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+                    var $label = this.$el.find('a[data-tooltip="'+this.model.get('attributeId')+'"]');
+                    $label.append(' ');
+                    $label.append($a);
+                    $a.popover({
+                        placement: 'bottom',
+                        container: 'body',
+                        html: true,
+                        content: this.model.get('attributeTooltip').replace(/\n/g, "<br />"),
+                        trigger: 'click',
+                    }).on('shown.bs.popover', function () {
+                        $('body').one('click', function () {
+                            $a.popover('hide');
+                        });
+                    });
+                }, this);
+                this.on('remove', function () {
+                    if ($a) {
+                        $a.popover('destroy')
+                    }
+                }, this);
+            }
+
+
             Dep.prototype.setup.call(this);
         },
 

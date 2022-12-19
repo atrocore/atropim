@@ -318,6 +318,35 @@ class Category extends AbstractRepository
         return $result;
     }
 
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
+    {
+        $select = 'c.*';
+        if ($withChildrenCount) {
+            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=c.id AND c1.deleted=0) as childrenCount";
+        }
+
+        if (empty($parentId)) {
+            $query = "SELECT {$select} 
+                      FROM category c
+                      WHERE c.category_parent_id IS NULL
+                      AND c.deleted=0
+                      ORDER BY c.sort_order, c.id";
+        } else {
+            $parentId = $this->getPDO()->quote($parentId);
+            $query = "SELECT {$select} 
+                      FROM category c
+                      WHERE c.category_parent_id=$parentId
+                      AND c.deleted=0
+                      ORDER BY c.sort_order, c.id";
+        }
+
+        if (!is_null($offset) && !is_null($maxSize)) {
+            $query .= " LIMIT $maxSize OFFSET $offset";
+        }
+
+        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     /**
      * @return int
      */
@@ -619,32 +648,28 @@ class Category extends AbstractRepository
         return $children;
     }
 
+    protected function updateRoute(Entity $entity): void
+    {
+        $route = self::getCategoryRoute($entity);
+        $routeName = self::getCategoryRoute($entity, true);
+
+        $this
+            ->getEntityManager()
+            ->nativeQuery("UPDATE category SET category_route='$route', category_route_name='$routeName' WHERE id='{$entity->get('id')}'");
+    }
+
     protected function updateCategoryTree(Entity $entity): void
     {
         if (!empty($entity->recursiveSave)) {
             return;
         }
 
-        $this
-            ->getConnection()
-            ->createQueryBuilder()
-            ->update('category')
-            ->set('category_route', ':categoryRoute')->setParameter('categoryRoute', self::getCategoryRoute($entity))
-            ->set('category_route_name', ':categoryRouteName')->setParameter('categoryRouteName', self::getCategoryRoute($entity, true))
-            ->where('id=:id')->setParameter('id', $entity->get('id'))
-            ->executeQuery();
+        $this->updateRoute($entity);
 
         if (!$entity->isNew()) {
             $children = $this->getEntityChildren($entity->get('categories'), []);
             foreach ($children as $child) {
-                $this
-                    ->getConnection()
-                    ->createQueryBuilder()
-                    ->update('category')
-                    ->set('category_route', ':categoryRoute')->setParameter('categoryRoute', self::getCategoryRoute($child))
-                    ->set('category_route_name', ':categoryRouteName')->setParameter('categoryRouteName', self::getCategoryRoute($child, true))
-                    ->where('id=:id')->setParameter('id', $child->get('id'))
-                    ->executeQuery();
+                $this->updateRoute($child);
             }
         }
     }
