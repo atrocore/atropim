@@ -181,5 +181,15 @@
         "deleted"
       ]
     }
+  },
+  "uniqueIndexes": {
+    "unique_pfa": [
+      "product_family_id",
+      "attribute_id",
+      "scope",
+      "channel_id",
+      "language",
+      "deleted"
+    ]
   }
 }

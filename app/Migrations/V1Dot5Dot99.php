@@ -34,6 +34,7 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Doctrine\DBAL\Connection;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
@@ -41,12 +42,12 @@ class V1Dot5Dot99 extends Base
 {
     public function up(): void
     {
-        try {
-            $this->getPDO()->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-            $this->getPDO()->exec("ALTER TABLE `product_attribute_value` DROP main_language_id");
-        } catch (\Throwable $e) {
+        $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
+        $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
-        }
+        $this->exec("CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)");
+
         $connection = $this->getSchema()->getConnection();
         $chanel_records = $connection->createQueryBuilder()
             ->select('id', 'locales')
@@ -109,6 +110,21 @@ class V1Dot5Dot99 extends Base
                         ->executeQuery();
                 }
             }
+        }
+
+        //            $this->getPDO()->exec("ALTER TABLE `product_attribute_value` DROP main_language_id");
+    }
+
+    public function down(): void
+    {
+        throw new BadRequest('Downgrade is prohibited.');
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
         }
     }
 }

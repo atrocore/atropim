@@ -73,7 +73,7 @@ class ProductFamilyAttribute extends Base
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('scope') === 'Global') {
-            $entity->set('channelId', null);
+            $entity->set('channelId', '');
         }
 
         if (empty($options['skipValidation'])) {
