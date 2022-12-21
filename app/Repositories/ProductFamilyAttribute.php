@@ -72,12 +72,8 @@ class ProductFamilyAttribute extends Base
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('scope') === 'Global') {
+        if ($entity->get('scope') === 'Global' || $entity->get('channelId') === null) {
             $entity->set('channelId', '');
-        }
-
-        if (empty($options['skipValidation'])) {
-            $this->isValid($entity);
         }
 
         parent::beforeSave($entity, $options);
@@ -97,76 +93,7 @@ class ProductFamilyAttribute extends Base
                     LEFT JOIN product_channel pc on p.id = pc.product_id AND pc.deleted = 0 
                 WHERE p.product_family_id = $productFamilyId AND p.deleted = 0";
 
-        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_GROUP|\PDO::FETCH_COLUMN);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws BadRequest
-     */
-    protected function isValid(Entity $entity): void
-    {
-        if (!$entity->isNew() && $entity->isAttributeChanged('attributeId')) {
-            throw new BadRequest('Attribute change blocked.');
-        }
-
-        if (empty($entity->get('productFamilyId')) || empty($entity->get('attributeId'))) {
-            throw new BadRequest($this->exception('ProductFamily and Attribute cannot be empty'));
-        }
-
-        if (!$this->isUnique($entity)) {
-            throw new ProductFamilyAttributeAlreadyExists($this->exception($this->createUnUniqueValidationMessage($entity, $entity->get('channelId'))));
-        }
-    }
-
-    /**
-     * @param Entity      $entity
-     * @param string|null $channelId
-     *
-     * @return string
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function createUnUniqueValidationMessage(Entity $entity, string $channelId = null): string
-    {
-        $channelName = $entity->get('scope');
-        if ($channelName == 'Channel') {
-            $channel = $this->getEntityManager()->getEntity('Channel', $channelId);
-            $channelName = !empty($channel) ? "'" . $channel->get('name') . "'" : '';
-        }
-
-        $message = $this->translate('productAttributeAlreadyExists', 'exceptions', 'ProductAttributeValue');
-        $message = sprintf($message, $entity->get('attribute')->get('name'), $channelName);
-
-        return $message;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    protected function isUnique(Entity $entity): bool
-    {
-        $where = [
-            'id!='            => $entity->get('id'),
-            'productFamilyId' => $entity->get('productFamilyId'),
-            'attributeId'     => $entity->get('attributeId'),
-            'language'        => $entity->get('language'),
-            'scope'           => $entity->get('scope'),
-        ];
-        if ($entity->get('scope') == 'Channel') {
-            $where['channelId'] = $entity->get('channelId');
-        }
-
-        $item = $this
-            ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
-            ->select(['id'])
-            ->where($where)
-            ->findOne();
-
-        return empty($item);
+        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_GROUP | \PDO::FETCH_COLUMN);
     }
 
     /**
