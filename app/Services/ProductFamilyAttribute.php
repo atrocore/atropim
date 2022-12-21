@@ -76,17 +76,24 @@ class ProductFamilyAttribute extends Base
         }
         try {
             $this->prepareDefaultValues($attachment);
-            $attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId);
-            if ($attribute->get('isMultilang')) {
-                $langs = $attachment->languages ?: array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
-                if (!empty($attachment->channelId)) {
-                    $channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId);
-                    $langs = array_intersect($langs, $channel->get('locales'));
+            if (
+                property_exists($attachment, 'attributeId')
+                && !empty($attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId))
+                && $attribute->get('isMultilang')
+            ) {
+                if (!property_exists($attachment, 'languages')) {
+                    $attachment->languages = array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
                 }
+
+                if (property_exists($attachment, 'channelId') && !empty($channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId))) {
+                    $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
+                }
+
                 $attachments = [];
-                foreach ($langs as $lang) {
+                foreach ($attachment->languages as $language) {
                     $attach = clone $attachment;
-                    $attach->language = $lang;
+                    unset($attach->languages);
+                    $attach->language = $language;
                     $attachments[] = $attach;
                 }
             } else {
@@ -264,7 +271,7 @@ class ProductFamilyAttribute extends Base
             ->join('attribute')
             ->where([
                 'attribute.attributeGroupId' => $attributeGroupId,
-                'productFamilyId' => $productFamilyId
+                'productFamilyId'            => $productFamilyId
             ])
             ->find()
             ->toArray();

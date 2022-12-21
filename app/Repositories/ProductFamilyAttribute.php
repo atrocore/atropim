@@ -85,6 +85,9 @@ class ProductFamilyAttribute extends Base
         } catch (\Throwable $e) {
             // if duplicate
             if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                if ($entity->isNew()) {
+                    return $this->getDuplicateEntity($entity);
+                }
                 $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
                 $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
 
@@ -105,6 +108,20 @@ class ProductFamilyAttribute extends Base
         return $result;
     }
 
+    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
+    {
+        return $this
+            ->where([
+                'productFamilyId' => $entity->get('productFamilyId'),
+                'attributeId'     => $entity->get('attributeId'),
+                'scope'           => $entity->get('scope'),
+                'channelId'       => $entity->get('channelId'),
+                'language'        => $entity->get('language'),
+                'deleted'         => $deleted,
+            ])
+            ->findOne(['withDeleted' => $deleted]);
+    }
+
     public function remove(Entity $entity, array $options = [])
     {
         try {
@@ -112,22 +129,9 @@ class ProductFamilyAttribute extends Base
         } catch (\Throwable $e) {
             // delete duplicate
             if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                $toDelete = $this
-                    ->select(['id'])
-                    ->where([
-                        'productFamilyId' => $entity->get('productFamilyId'),
-                        'attributeId'     => $entity->get('attributeId'),
-                        'scope'           => $entity->get('scope'),
-                        'channelId'       => $entity->get('channelId'),
-                        'language'        => $entity->get('language'),
-                        'deleted'         => true,
-                    ])
-                    ->findOne(['withDeleted' => true]);
-
-                if (!empty($toDelete)) {
+                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
                     $this->deleteFromDb($toDelete->get('id'), true);
                 }
-
                 return parent::remove($entity, $options);
             }
             throw $e;
