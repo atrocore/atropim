@@ -26,9 +26,6 @@
   "relationshipPanels": {
     "productFamilyAttributes": {
       "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "notLinkedProductFamilyAttributes"
-      ],
       "view": "pim:views/product-family/record/panels/product-family-attributes",
       "rowActionsView": "pim:views/product-family/record/row-actions/product-family-attribute",
       "aclScopesList": [
