@@ -105,6 +105,37 @@ class ProductFamilyAttribute extends Base
         return $result;
     }
 
+    public function remove(Entity $entity, array $options = [])
+    {
+        try {
+            $result = parent::remove($entity, $options);
+        } catch (\Throwable $e) {
+            // delete duplicate
+            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                $toDelete = $this
+                    ->select(['id'])
+                    ->where([
+                        'productFamilyId' => $entity->get('productFamilyId'),
+                        'attributeId'     => $entity->get('attributeId'),
+                        'scope'           => $entity->get('scope'),
+                        'channelId'       => $entity->get('channelId'),
+                        'language'        => $entity->get('language'),
+                        'deleted'         => true,
+                    ])
+                    ->findOne(['withDeleted' => true]);
+
+                if (!empty($toDelete)) {
+                    $this->deleteFromDb($toDelete->get('id'), true);
+                }
+
+                return parent::remove($entity, $options);
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
     /**
      * @param string $productFamilyId
      *
