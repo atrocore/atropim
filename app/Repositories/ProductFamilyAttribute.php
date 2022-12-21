@@ -33,7 +33,6 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
@@ -77,6 +76,33 @@ class ProductFamilyAttribute extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        try {
+            $result = parent::save($entity, $options);
+        } catch (\Throwable $e) {
+            // if duplicate
+            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+                $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
+
+                $channelName = $entity->get('scope');
+                if ($channelName === 'Channel') {
+                    $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+                    $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
+                }
+
+                throw new ProductFamilyAttributeAlreadyExists(
+                    sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, "'$channelName'")
+                );
+            }
+
+            throw $e;
+        }
+
+        return $result;
     }
 
     /**

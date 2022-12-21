@@ -363,6 +363,7 @@ class ProductAttributeValue extends AbstractRepository
                 break;
         }
     }
+
     public function getChannelLanguages(string $channelId): array
     {
         if (empty($channelId)) {
@@ -447,11 +448,18 @@ class ProductAttributeValue extends AbstractRepository
 
             // if duplicate
             if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+                $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
+
                 $channelName = $entity->get('scope');
-                if ($channelName == 'Channel') {
-                    $channelName = !empty($entity->get('channelId')) ? "'" . $entity->get('channel')->get('name') . "'" : '';
+                if ($channelName === 'Channel') {
+                    $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+                    $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
                 }
-                throw new ProductAttributeAlreadyExists(sprintf($this->exception('productAttributeAlreadyExists'), $entity->get('attribute')->get('name'), $channelName));
+
+                throw new ProductAttributeAlreadyExists(
+                    sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, $channelName)
+                );
             }
 
             throw $e;
@@ -562,7 +570,7 @@ class ProductAttributeValue extends AbstractRepository
             $this->getConnection()->createQueryBuilder()
                 ->update('product_attribute_value')
                 ->set('varchar_value', ':val')
-                ->where('id = "'.$entity_translation->get('id').'"')
+                ->where('id = "' . $entity_translation->get('id') . '"')
                 ->setParameter('val', !empty($options[$key]) ? $options[$key] : '')
                 ->executeQuery();
         }
@@ -572,7 +580,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         $where = [
             'id!='            => $entity->get('id'),
-            'productId'   => $entity->get('productId'),
+            'productId'       => $entity->get('productId'),
             'attributeId'     => $entity->get('attributeId'),
             'scope'           => $entity->get('scope'),
             'product.deleted' => false
@@ -632,7 +640,7 @@ class ProductAttributeValue extends AbstractRepository
             $this->getConnection()->createQueryBuilder()
                 ->update('product_attribute_value')
                 ->set('text_value', ':val')
-                ->where('id = "'.$entity_translation->get('id').'"')
+                ->where('id = "' . $entity_translation->get('id') . '"')
                 ->setParameter('val', $value)
                 ->executeQuery();
         }
@@ -979,7 +987,8 @@ class ProductAttributeValue extends AbstractRepository
 
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
-                    var_dump($fieldOptions, $value);die;
+                    var_dump($fieldOptions, $value);
+                    die;
                     throw new BadRequest($errorMessage);
                 }
             }
