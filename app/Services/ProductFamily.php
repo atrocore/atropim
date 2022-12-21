@@ -34,22 +34,43 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\ORM\Entity;
+use Espo\Services\Record;
 
-class ProductFamily extends \Espo\Core\Templates\Services\Base
+class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
 {
-    /**
-     * @inheritdoc
-     */
-    protected function init()
+    public function createEntity($attachment)
     {
-        parent::init();
+        return Record::createEntity($attachment);
+    }
 
-        $this->addDependency('serviceFactory');
+    public function updateEntity($id, $data)
+    {
+        return Record::updateEntity($id, $data);
+    }
+
+    public function linkEntity($id, $link, $foreignId)
+    {
+        return Record::linkEntity($id, $link, $foreignId);
+    }
+
+    public function deleteEntity($id)
+    {
+        return Record::deleteEntity($id);
+    }
+
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        return Record::unlinkEntity($id, $link, $foreignId);
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        Record::prepareEntityForOutput($entity);
     }
 
     public function findLinkedEntities($id, $link, $params)
     {
-        $result = parent::findLinkedEntities($id, $link, $params);
+        $result = Record::findLinkedEntities($id, $link, $params);
 
         if ($link === 'productFamilyAttributes') {
             if (isset($result['collection'])) {
@@ -106,5 +127,12 @@ class ProductFamily extends \Espo\Core\Templates\Services\Base
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         return true;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
     }
 }

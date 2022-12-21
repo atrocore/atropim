@@ -25,7 +25,8 @@
     "defaultScope": "Область действия",
     "defaultChannel": "Канал",
     "defaultIsRequired": "Обязательно",
-    "sortOrderInProduct": "Порядок сортировки в продукте"
+    "sortOrderInProduct": "Порядок сортировки в продукте",
+    "tooltip": "Текст подсказки"
   },
   "links": {
     "parents": "Связывающие атрибуты",

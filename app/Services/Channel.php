@@ -42,16 +42,6 @@ use Espo\ORM\Entity;
 class Channel extends Base
 {
     /**
-     * @inheritDoc
-     */
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        $entity->set('hasLocales', $this->getConfig()->get('isMultilangActive', false) && !empty($this->getConfig()->get('inputLanguageList', [])));
-    }
-
-    /**
      * Get product data for channel
      *
      * @param string $channelId

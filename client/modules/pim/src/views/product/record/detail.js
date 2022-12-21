@@ -92,7 +92,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 treePanel.buildTree();
 
                 let observer = new ResizeObserver(() => {
-                    this.onTreeResize(treePanel.$el.innerWidth());
+                    this.onTreeResize();
 
                     observer.unobserve($('#content').get(0));
                 });
@@ -153,20 +153,20 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 model: this.model
             }, view => {
                 this.listenTo(this.model, 'after:save', () => {
-                    view.reRender();
+                    view.rebuildTree();
                 });
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
                 });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
-                        view.reRender();
+                        view.rebuildTree();
                     }
                 });
                 view.listenTo(view, 'tree-width-changed', width => {
@@ -213,13 +213,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return route;
         },
 
-        treeInit(view) {
-            if (view.treeScope === 'ProductFamily') {
-                if (view.model.get('productFamilyId')) {
-                    $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
-                        view.selectTreeNode(this.parseRoute(pf.categoryRoute), view.model.get('productFamilyId'));
-                    });
-                }
+        treeLoad(view, treeData) {
+            if (view.treeScope === 'ProductFamily' && view.model.get('productFamilyId')) {
+                $.ajax({url: `ProductFamily/${view.model.get('productFamilyId')}`, type: 'GET'}).done(pf => {
+                    view.selectTreeNode(view.model.get('productFamilyId'), this.parseRoute(pf.categoryRoute));
+                });
             }
 
             if (view.treeScope === 'Category') {
@@ -231,12 +229,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (view.treeScope === 'Product') {
-                if (view.model && view.model.get('id')) {
-                    this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
-                        view.selectTreeNode(route, view.model.get('id'));
-                    });
-                }
+            if (view.treeScope === 'Product' && view.model && view.model.get('id')) {
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+                view.selectTreeNode(view.model.get('id'), route);
             }
         },
 
@@ -285,7 +281,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             this.getStorage().set('reSetupSearchManager', view.treeScope, true);
 
             view.toggleVisibilityForResetButton();
-            view.buildTree();
+            view.rebuildTree();
         },
 
         hotKeySave: function (e) {
@@ -620,7 +616,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         onTreeResize(width) {
             if ($('.catalog-tree-panel').length) {
-                width = parseInt(width);
+                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
 
                 const content = $('#content');
                 const main = content.find('#main');
@@ -642,7 +638,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 btnContainer.css('marginLeft', width + 1 + 'px');
 
                 overview.outerWidth(Math.floor(content.outerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', (width - 1) + 'px');
+                overview.css('marginLeft', width + 'px');
             }
         }
     })

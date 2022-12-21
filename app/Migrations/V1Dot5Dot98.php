@@ -33,82 +33,48 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Doctrine\DBAL\Connection;
-use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
 class V1Dot5Dot98 extends Base
 {
     public function up(): void
     {
-        try {
-            $this->getPDO()->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-            $this->getPDO()->exec("ALTER TABLE `product_attribute_value` DROP main_language_id");
-        } catch (\Throwable $e) {
-
-        }
-        $connection = $this->getSchema()->getConnection();
-        $chanel_records = $connection->createQueryBuilder()
-            ->select('id', 'locales')
-            ->from('channel')
-            ->where('deleted = 0')
-            ->fetchAllAssociative();
-
-        $channels = [];
-        foreach ($chanel_records as $chanel) {
-            $channels[$chanel['id']] = @json_decode($chanel['locales']);
-        }
-
-        $records = $connection->createQueryBuilder()
-            ->select('id')
-            ->from('attribute')
-            ->where('is_multilang = :multilang')
-            ->setParameter('multilang', 1)
-            ->fetchAllAssociative();
-
-        $multilangAttributeIds = array_column($records, 'id');
-
-        $result = $connection->createQueryBuilder()
-            ->update('product_family_attribute', 'pfa')
-            ->set('pfa.language', ':main')
-            ->where('pfa.attribute_id in (:attributeIds)')
-            ->setParameter('main', 'main')
-            ->setParameter('attributeIds', $multilangAttributeIds, Connection::PARAM_STR_ARRAY)
-            ->executeQuery();
-
-
+        $languages = [];
         if ($this->getConfig()->get('isMultilangActive', false)) {
-
-            $pfas = $connection->createQueryBuilder()
-                ->select('*')
-                ->from('product_family_attribute')
-                ->where('language = :main')
-                ->setParameter('main', 'main')
-                ->fetchAllAssociative();
-
-
-            $locales = $this->getConfig()->get('inputLanguageList', []);
-            foreach ($pfas as $pfa) {
-                $pfa_locales = $locales;
-                if ($pfa['channel_id'] && !empty($channels[$pfa['channel_id']])) {
-                    $pfa_locales = $channels[$pfa['channel_id']];
-                }
-                foreach ($pfa_locales as $locale) {
-                    $pfa['id'] = Util::generateId();
-                    $pfa['language'] = $locale;
-
-                    $columns = [];
-                    foreach ($pfa as $key => $value) {
-                        $columns[$key] = ':' . $key;
-                    }
-
-                    $connection->createQueryBuilder()
-                        ->insert('product_family_attribute')
-                        ->values($columns)
-                        ->setParameters($pfa)
-                        ->executeQuery();
-                }
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $languages[$language] = strtolower($language);
             }
         }
+
+        $this->exec("ALTER TABLE attribute ADD tooltip LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+
+        foreach ($languages as $language) {
+            $this->exec("ALTER TABLE attribute ADD tooltip_{$language} LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        }
     }
+
+    public function down(): void
+    {
+        $languages = [];
+        if ($this->getConfig()->get('isMultilangActive', false)) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                $languages[$language] = strtolower($language);
+            }
+        }
+
+        $this->exec("ALTER TABLE attribute DROP COLUMN tooltip");
+
+        foreach ($languages as $language) {
+            $this->exec("ALTER TABLE attribute DROP COLUMN tooltip_{$language}");
+        }
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
+    }
+
 }

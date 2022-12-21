@@ -54,6 +54,7 @@ class ProductAttributeValue extends Base
             'attributeId',
             'attributeName',
             'attributeType',
+            'attributeTooltip',
             'intValue',
             'boolValue',
             'dateValue',
@@ -113,10 +114,18 @@ class ProductAttributeValue extends Base
          * Prepare attributes groups attributes
          */
         foreach ($data as $record) {
+            $tooltip = null;
+            if ($language === 'main') {
+                $tooltip = $record['attribute_data']['tooltip'];
+            } elseif (!empty($record['attribute_data']['tooltip_' . ucwords($language)])) {
+                $tooltip = $record['attribute_data']['tooltip_' . ucwords($language)];
+            }
+
             $row = [
                 'id'          => $record['id'],
                 'channelName' => $record['scope'] === 'Global' ? '-9999' : $record['channel_name'],
-                'language'    => $record['language'] === 'main' ? null : $record['language']
+                'language'    => $record['language'] === 'main' ? null : $record['language'],
+                'tooltip'     => $tooltip
             ];
 
             if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
@@ -735,13 +744,16 @@ class ProductAttributeValue extends Base
             $entity->set('attributeName', $attribute->get('name') . ' / ' . $entity->get('language'));
         }
 
+        $locale = $entity->get('language');
+        $tooltipFieldName = $locale == 'main' ? 'tooltip' : Util::toCamelCase('tooltip_' . strtolower($locale));
+        $entity->set('attributeTooltip', $attribute->get($tooltipFieldName));
+
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-
         if (!empty($attribute->get('attributeGroup'))) {
             $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
         } else {
