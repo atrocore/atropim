@@ -48,7 +48,6 @@ class ProductAttributeValue extends Base
     protected $mandatorySelectAttributeList
         = [
             'language',
-            'mainLanguageId',
             'productId',
             'productName',
             'attributeId',
