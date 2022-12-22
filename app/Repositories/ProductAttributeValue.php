@@ -33,8 +33,6 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
@@ -49,8 +47,6 @@ class ProductAttributeValue extends AbstractRepository
     protected array $channelLanguages = [];
 
     protected array $productPavs = [];
-
-    private array $mainLanguageEntities = [];
 
     private array $pavsAttributes = [];
 
