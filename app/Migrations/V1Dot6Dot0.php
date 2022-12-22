@@ -87,6 +87,18 @@ class V1Dot6Dot0 extends Base
         $this->exec("ALTER TABLE product_attribute_value DROP main_language_id");
 
         $this->exec("ALTER TABLE product DROP has_inconsistent_attributes");
+
+        $attributes = $this->getSchema()->getConnection()->createQueryBuilder()
+            ->select('a.*')
+            ->from('attribute', 'a')
+            ->andWhere('a.deleted=0')
+            ->andWhere('a.sort_order_in_product IS NULL')
+            ->fetchAllAssociative();
+
+        foreach ($attributes as $k => $attribute) {
+            $sort = time() + $k;
+            $this->exec("UPDATE attribute SET sort_order_in_product=$sort WHERE id='{$attribute['id']}'");
+        }
     }
 
     public function down(): void
