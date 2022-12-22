@@ -31,7 +31,6 @@
     "isInheritAssignedUser",
     "isInheritOwnerUser",
     "isInheritTeams",
-    "hasInconsistentAttributes",
     "data"
   ],
   "unInheritedFields": [

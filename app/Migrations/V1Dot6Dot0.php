@@ -46,7 +46,15 @@ class V1Dot6Dot0 extends Base
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
-        $this->exec("CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)");
+
+        // update updateInconsistentAttributes
+        // CheckProductAttributes JOB
+        // hasInconsistentAttributes
+
+        echo '<pre>';
+        print_r('123');
+        die();
 
         $connection = $this->getSchema()->getConnection();
         $chanel_records = $connection->createQueryBuilder()

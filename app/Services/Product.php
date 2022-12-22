@@ -578,8 +578,6 @@ class Product extends Hierarchy
             throw new Forbidden();
         }
 
-        $this->getEntityManager()->getRepository('Product')->updateInconsistentAttributes($entity);
-
         $link = 'productAttributeValues';
 
         if (!empty($params['maxSize'])) {
