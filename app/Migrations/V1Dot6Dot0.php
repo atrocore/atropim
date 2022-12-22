@@ -46,7 +46,14 @@ class V1Dot6Dot0 extends Base
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
-        $this->exec("CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)");
+        $this->exec(
+            "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)"
+        );
+
+//        $records = $this->getSchema()->getConnection()->createQueryBuilder()
+//            ->select('pfa.*')
+//            ->from('product_family_attribute', 'pfa')
+//            ->leftJoin('pav', 'channel', 'c', 'pav.channel_id=c.id AND c.deleted=0');
 
         // update updateInconsistentAttributes
         // CheckProductAttributes JOB
@@ -55,36 +62,6 @@ class V1Dot6Dot0 extends Base
         echo '<pre>';
         print_r('123');
         die();
-
-        $connection = $this->getSchema()->getConnection();
-        $chanel_records = $connection->createQueryBuilder()
-            ->select('id', 'locales')
-            ->from('channel')
-            ->where('deleted = 0')
-            ->fetchAllAssociative();
-
-        $channels = [];
-        foreach ($chanel_records as $chanel) {
-            $channels[$chanel['id']] = @json_decode($chanel['locales']);
-        }
-
-        $records = $connection->createQueryBuilder()
-            ->select('id')
-            ->from('attribute')
-            ->where('is_multilang = :multilang')
-            ->setParameter('multilang', 1)
-            ->fetchAllAssociative();
-
-        $multilangAttributeIds = array_column($records, 'id');
-
-        $result = $connection->createQueryBuilder()
-            ->update('product_family_attribute', 'pfa')
-            ->set('pfa.language', ':main')
-            ->where('pfa.attribute_id in (:attributeIds)')
-            ->setParameter('main', 'main')
-            ->setParameter('attributeIds', $multilangAttributeIds, Connection::PARAM_STR_ARRAY)
-            ->executeQuery();
-
 
         if ($this->getConfig()->get('isMultilangActive', false)) {
 
@@ -120,7 +97,10 @@ class V1Dot6Dot0 extends Base
             }
         }
 
-        //            $this->getPDO()->exec("ALTER TABLE `product_attribute_value` DROP main_language_id");
+        $this->exec("DROP INDEX IDX_MAIN_LANGUAGE_ID ON product_attribute_value");
+        $this->exec("ALTER TABLE product_attribute_value DROP main_language_id");
+
+        $this->exec("ALTER TABLE product DROP has_inconsistent_attributes");
     }
 
     public function down(): void
