@@ -515,6 +515,8 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function getAttributeOptions(Entity $attribute, string $language): ?array
     {
+        // @todo refactor it
+
         if ($language !== 'main') {
             $language = ucfirst(Util::toCamelCase(strtolower($language)));
         } else {
@@ -530,116 +532,6 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return $result;
-    }
-
-    public function syncEnumValues(Entity $entity, Entity $attribute): void
-    {
-        if ($entity->isNew()) {
-            return;
-        }
-
-        if ($attribute->get('type') !== 'enum') {
-            return;
-        }
-
-        if (!$entity->isAttributeChanged('varcharValue')) {
-            return;
-        }
-
-        if (empty($this->getConfig()->get('isMultilangActive')) || empty($attribute->get('isMultilang'))) {
-            return;
-        }
-
-        $translations = $this->findPavTranslations($entity);
-        if (empty($translations)) {
-            return;
-        }
-
-        $key = array_search($entity->get('varcharValue'), $this->getAttributeOptions($attribute, $entity->get('language')));
-        if ($key === false) {
-            return;
-        }
-
-        foreach ($translations as $entity_translation) {
-            $options = $this->getAttributeOptions($attribute, $entity_translation->get('language'));
-
-            $this->getConnection()->createQueryBuilder()
-                ->update('product_attribute_value')
-                ->set('varchar_value', ':val')
-                ->where('id = "' . $entity_translation->get('id') . '"')
-                ->setParameter('val', !empty($options[$key]) ? $options[$key] : '')
-                ->executeQuery();
-        }
-    }
-
-    protected function findPavTranslations(Entity $entity)
-    {
-        $where = [
-            'id!='            => $entity->get('id'),
-            'productId'       => $entity->get('productId'),
-            'attributeId'     => $entity->get('attributeId'),
-            'scope'           => $entity->get('scope'),
-            'product.deleted' => false
-        ];
-        if ($entity->get('scope') === 'Channel') {
-            $where['channelId'] = $entity->get('channelId');
-        }
-
-        return $this->where($where)->find();
-    }
-
-    public function syncMultiEnumValues(Entity $entity, Entity $attribute): void
-    {
-        if ($entity->isNew()) {
-            return;
-        }
-
-        if ($attribute->get('type') !== 'multiEnum') {
-            return;
-        }
-
-        if (!$entity->isAttributeChanged('textValue')) {
-            return;
-        }
-
-        if (empty($attribute->get('isMultilang')) || empty($this->getConfig()->get('isMultilangActive'))) {
-            return;
-        }
-
-        $values = @json_decode((string)$entity->get('textValue'), true);
-        if (empty($values)) {
-            $values = [];
-        }
-
-        $keys = [];
-        foreach ($values as $value) {
-            $keys[] = array_search($value, $this->getAttributeOptions($attribute, $entity->get('language')));
-        }
-
-        $id = $entity->get('id');
-
-        $translations = $this->findPavTranslations($entity);
-
-        if (empty($translations)) {
-            return;
-        }
-
-        foreach ($translations as $entity_translation) {
-            $options = $this->getAttributeOptions($attribute, $entity_translation->get('language'));
-            $values = [];
-            foreach ($keys as $key) {
-                if ($key !== false) {
-                    $values[] = $options[$key] ?? '';
-                }
-            }
-            $value = str_replace(["'", '\"'], ["\'", '\\\"'], Json::encode($values, JSON_UNESCAPED_UNICODE));
-            $this->getConnection()->createQueryBuilder()
-                ->update('product_attribute_value')
-                ->set('text_value', ':val')
-                ->where('id = "' . $entity_translation->get('id') . '"')
-                ->setParameter('val', $value)
-                ->executeQuery();
-        }
     }
 
     protected function populateDefault(Entity $entity, Entity $attribute): void
@@ -769,9 +661,6 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest(sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name')));
             }
         }
-
-        $this->syncEnumValues($entity, $attribute);
-        $this->syncMultiEnumValues($entity, $attribute);
 
         // create note
         if (!$entity->isNew() && $entity->isAttributeChanged('value')) {

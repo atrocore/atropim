@@ -40,6 +40,35 @@ class V1Dot6Dot0 extends Base
 {
     public function up(): void
     {
+        $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
+        $this->exec("UPDATE attribute SET is_multilang=0 WHERE attribute.type IN ('enum', 'multiEnum')");
+
+        $attributes = $this->getSchema()->getConnection()->createQueryBuilder()
+            ->select('a.*')
+            ->from('attribute', 'a')
+            ->andWhere('a.deleted=0')
+            ->andWhere('a.type=:enum OR a.type=:multiEnum')->setParameter('enum', 'enum')->setParameter('multiEnum', 'multiEnum')
+            ->fetchAllAssociative();
+
+        foreach ($attributes as $attribute) {
+            $typeValue = @json_decode($attribute['type_value']);
+            if (empty($typeValue)) {
+                continue;
+            }
+            $typeValueIds = @json_decode($attribute['type_value_ids']);
+            if (empty($typeValueIds)) {
+                $typeValueIds = array_keys($typeValue);
+                $this->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'");
+            }
+
+            foreach ($typeValue as $k => $v) {
+                $this->exec(
+                    "UPDATE product_attribute_value SET varchar_value='{$typeValueIds[$k]}' WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value='$v'"
+                );
+            }
+        }
+        unset($attributes);
+
         $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");

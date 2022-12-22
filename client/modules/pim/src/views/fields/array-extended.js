@@ -41,6 +41,10 @@ Espo.define('pim:views/fields/array-extended', 'views/fields/array-extended',
             });
         },
 
+        hasMultilingualOptions() {
+            return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
+        },
+
     })
 );
 

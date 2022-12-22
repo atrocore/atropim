@@ -83,22 +83,6 @@ class Attribute extends AbstractRepository
         $this->getInjection('dataManager')->clearCache();
     }
 
-    public function prepareTypeValueIds(Entity $entity): void
-    {
-        if (!in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            return;
-        }
-
-        if (!(empty($entity->get('typeValueIds')) && !empty($entity->get('typeValue')))) {
-            return;
-        }
-
-        $typeValueIds = array_map('strval', array_keys($entity->get('typeValue')));
-        $entity->set('typeValueIds', $typeValueIds);
-
-        $this->getPDO()->exec("UPDATE `attribute` SET type_value_ids='" . Json::encode($typeValueIds) . "' WHERE id='{$entity->get('id')}'");
-    }
-
     public function updateSortOrderInAttributeGroup(array $ids): void
     {
         foreach ($ids as $k => $id) {
@@ -120,12 +104,11 @@ class Attribute extends AbstractRepository
             $entity->set('isMultilang', false);
         }
 
-        $this->prepareTypeValues($entity);
-
-        if (!$entity->isNew()) {
-            $this->updateEnumPav($entity);
-            $this->updateMultiEnumPav($entity);
+        if (empty($entity->get('sortOrderInProduct'))) {
+            $entity->set('sortOrderInProduct', time());
         }
+
+        $this->prepareTypeValues($entity);
 
         // set sort order
         if (is_null($entity->get('sortOrderInAttributeGroup'))) {
@@ -242,102 +225,6 @@ class Attribute extends AbstractRepository
             if ($this->isProductFamilyAttribute($attributeId, $productId)) {
                 throw new Error($this->exception("youCanNotUnlinkProductFamilyAttribute"));
             }
-        }
-    }
-
-    protected function updateEnumPav(Entity $attribute): void
-    {
-        if ($attribute->get('type') != 'enum') {
-            return;
-        }
-
-        if (!$this->isEnumTypeValueValid($attribute)) {
-            return;
-        }
-
-        if (empty($attribute->getFetched('typeValueIds'))) {
-            return;
-        }
-
-        // prepare became values
-        $becameValues = [];
-        foreach ($attribute->get('typeValueIds') as $k => $v) {
-            foreach ($attribute->getFetched('typeValueIds') as $k1 => $v1) {
-                if ($v1 === $v) {
-                    $becameValues[$attribute->getFetched('typeValue')[$k1]] = $attribute->get('typeValue')[$k];
-                }
-            }
-        }
-
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select(['id', 'language', 'varcharValue'])
-            ->where(['attributeId' => $attribute->get('id'), 'language' => 'main'])
-            ->find()
-            ->toArray();
-
-        foreach ($pavs as $pav) {
-            $value = !empty($becameValues[$pav['varcharValue']]) ? $this->getPDO()->quote($becameValues[$pav['varcharValue']]) : 'NULL';
-            $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=$value WHERE id='{$pav['id']}'");
-            $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=NULL WHERE main_language_id='{$pav['id']}'");
-        }
-    }
-
-    protected function updateMultiEnumPav(Entity $attribute): void
-    {
-        if ($attribute->get('type') != 'multiEnum') {
-            return;
-        }
-
-        if (!$this->isEnumTypeValueValid($attribute)) {
-            return;
-        }
-
-        if (empty($attribute->getFetched('typeValueIds'))) {
-            return;
-        }
-
-        // prepare became values
-        $becameValues = [];
-        foreach ($attribute->get('typeValueIds') as $k => $v) {
-            foreach ($attribute->getFetched('typeValueIds') as $k1 => $v1) {
-                if ($v1 === $v) {
-                    $becameValues[$attribute->getFetched('typeValue')[$k1]] = $attribute->get('typeValue')[$k];
-                }
-            }
-        }
-
-        /** @var array $pavs */
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select(['id', 'language', 'textValue'])
-            ->where(['attributeId' => $attribute->get('id'), 'language' => 'main'])
-            ->find()
-            ->toArray();
-
-        foreach ($pavs as $pav) {
-            $values = [];
-            if (!empty($pav['textValue'])) {
-                $jsonData = @json_decode($pav['textValue'], true);
-                if (!empty($jsonData)) {
-                    $values = $jsonData;
-                }
-            }
-
-            if (!empty($values)) {
-                $newValues = [];
-                foreach ($values as $value) {
-                    if (isset($becameValues[$value])) {
-                        $newValues[] = $becameValues[$value];
-                    }
-                }
-                $pav['textValue'] = str_replace(["'", '\"'], ["\'", '\\\"'], Json::encode($newValues, JSON_UNESCAPED_UNICODE));
-            }
-
-            $this->getPDO()->exec("UPDATE product_attribute_value SET text_value='{$pav['textValue']}' WHERE id='{$pav['id']}'");
-            $this->getPDO()->exec("UPDATE product_attribute_value SET text_value=NULL WHERE main_language_id='{$pav['id']}'");
         }
     }
 
