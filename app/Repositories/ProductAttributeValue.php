@@ -299,22 +299,31 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
-            // get pav attribute
-            $attribute = $this->getPavAttribute($entity);
-
-            if (empty($attribute)) {
+            if (empty($attribute = $this->getPavAttribute($entity))) {
                 return;
             }
 
-            // prepare typeValue
             $entity->set('typeValue', $this->getAttributeOptions($attribute, $entity->get('language')));
-
+            $entity->set('typeValueIds', $this->getAttributeOptionsIds($attribute));
         }
 
         switch ($entity->get('attributeType')) {
             case 'array':
             case 'multiEnum':
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                $entity->set('value', null);
+                $entity->set('valueOptionIds', @json_decode((string)$entity->get('textValue'), true));
+
+                if ($entity->get('valueOptionIds') !== null && is_array($entity->get('valueOptionIds'))) {
+                    $values = [];
+                    foreach ($entity->get('valueOptionIds') as $optionId) {
+                        $key = array_search($optionId, $entity->get('typeValueIds'));
+                        if ($key !== false) {
+                            $values[] = $entity->get('typeValue')[$key];
+                        }
+
+                    }
+                    $entity->set('value', $values);
+                }
                 break;
             case 'text':
             case 'wysiwyg':
@@ -354,7 +363,16 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'enum':
-                $entity->set('value', $entity->get('varcharValue'));
+                $entity->set('value', null);
+                $entity->set('valueOptionId', $entity->get('varcharValue'));
+
+                if ($entity->get('valueOptionId') !== null) {
+                    $key = array_search($entity->get('varcharValue'), $entity->get('typeValueIds'));
+                    if ($key !== false) {
+                        $entity->set('value', $entity->get('typeValue')[$key]);
+                    }
+                }
+                break;
             default:
                 $entity->set('value', $entity->get('varcharValue'));
                 break;
@@ -516,8 +534,6 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function getAttributeOptions(Entity $attribute, string $language): ?array
     {
-        // @todo refactor it
-
         if ($language !== 'main') {
             $language = ucfirst(Util::toCamelCase(strtolower($language)));
         } else {
@@ -528,6 +544,16 @@ class ProductAttributeValue extends AbstractRepository
         if (empty($result)) {
             $result = empty($attribute->get('typeValue')) ? [] : $attribute->get('typeValue');
         }
+        if (!$attribute->get('prohibitedEmptyValue')) {
+            array_unshift($result, '');
+        }
+
+        return $result;
+    }
+
+    protected function getAttributeOptionsIds(Entity $attribute): ?array
+    {
+        $result = !empty($attribute->get('typeValueIds')) ? $attribute->get('typeValueIds') : [];
         if (!$attribute->get('prohibitedEmptyValue')) {
             array_unshift($result, '');
         }
@@ -548,17 +574,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($attribute->get('type') === 'enum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
-            $enumDefault = $attribute->get('enumDefault');
-            if ($entity->get('language') !== 'main') {
-                $key = array_search($enumDefault, $this->getAttributeOptions($attribute, 'main'));
-                if ($key !== false) {
-                    $options = $this->getAttributeOptions($attribute, $entity->get('language'));
-                    if (isset($options[$key])) {
-                        $enumDefault = $options[$key];
-                    }
-                }
-            }
-            $entity->set('varcharValue', $enumDefault);
+            $entity->set('varcharValue', $attribute->get('enumDefault'));
         }
 
         if ($attribute->get('type') === 'unit') {
@@ -847,7 +863,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isAttributeChanged('value') && !empty($entity->get('value'))) {
-            $fieldOptions = $this->getAttributeOptions($attribute, $entity->get('language'));
+            $fieldOptions = $this->getAttributeOptionsIds($attribute);
 
             if (empty($fieldOptions) && $type === 'multiEnum') {
                 $entity->set('value', null);
@@ -873,8 +889,6 @@ class ProductAttributeValue extends AbstractRepository
 
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
-                    var_dump($fieldOptions, $value);
-                    die;
                     throw new BadRequest($errorMessage);
                 }
             }

@@ -268,6 +268,34 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "valueOptionId": {
+      "type": "varchar",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueOptionIds": {
+      "type": "varchar",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "valueId": {
       "type": "varchar",
       "notStorable": true,
@@ -469,6 +497,19 @@
       "view": "views/fields/teams"
     },
     "typeValue": {
+      "type": "array",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "typeValueIds": {
       "type": "array",
       "notStorable": true,
       "layoutListDisabled": true,

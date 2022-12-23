@@ -40,6 +40,12 @@ class V1Dot6Dot0 extends Base
 {
     public function up(): void
     {
+        //enumDefault
+
+        echo '<pre>';
+        print_r('123');
+        die();
+
         $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
         $this->exec("UPDATE attribute SET is_multilang=0 WHERE attribute.type IN ('enum', 'multiEnum')");
 
