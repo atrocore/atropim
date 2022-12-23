@@ -263,7 +263,7 @@ class Product extends Hierarchy
     public function addAssociateProducts(\stdClass $data): array
     {
         // input data validation
-        if (empty($data->ids) || empty($data->foreignIds) || empty($data->associationId) || !is_array($data->ids) || !is_array($data->foreignIds) || empty($data->associationId)) {
+        if (empty($data->foreignIds) || empty($data->associationId) || !is_array($data->foreignIds)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -273,11 +273,16 @@ class Product extends Hierarchy
             throw new BadRequest($this->exception('noSuchAssociation'));
         }
 
+        $selectParams = $this->getSelectManager()->getSelectParams(['where' => Json::decode(Json::encode($data->where), true)], true);
+
+        $products = $this->getRepository()->select(['id'])->find($selectParams);
+        $ids = array_column($products->toArray(), 'id');
+
         /**
          * Collect entities for saving
          */
         $toSave = [];
-        foreach ($data->ids as $mainProductId) {
+        foreach ($ids as $mainProductId) {
             foreach ($data->foreignIds as $relatedProductId) {
                 $attachment = new \stdClass();
                 $attachment->associationId = $data->associationId;
@@ -322,9 +327,14 @@ class Product extends Hierarchy
     public function removeAssociateProducts(\stdClass $data): array
     {
         // input data validation
-        if (empty($data->ids) || empty($data->foreignIds) || empty($data->associationId) || !is_array($data->ids) || !is_array($data->foreignIds) || empty($data->associationId)) {
+        if (empty($data->foreignIds) || empty($data->associationId) || !is_array($data->foreignIds)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
+
+        $selectParams = $this->getSelectManager()->getSelectParams(['where' => Json::decode(Json::encode($data->where), true)], true);
+
+        $products = $this->getRepository()->select(['id'])->find($selectParams);
+        $ids = array_column($products->toArray(), 'id');
 
         $associatedProducts = $this
             ->getEntityManager()
@@ -332,7 +342,7 @@ class Product extends Hierarchy
             ->where(
                 [
                     'associationId'    => $data->associationId,
-                    'mainProductId'    => $data->ids,
+                    'mainProductId'    => $ids,
                     'relatedProductId' => $data->foreignIds
                 ]
             )
@@ -347,7 +357,7 @@ class Product extends Hierarchy
 
         $success = 0;
         $error = [];
-        foreach ($data->ids as $id) {
+        foreach ($ids as $id) {
             foreach ($data->foreignIds as $foreignId) {
                 $success++;
                 if (isset($exists["{$id}_{$foreignId}"])) {
