@@ -55,7 +55,7 @@ class Product extends \Espo\Core\Templates\Controllers\Hierarchy
         if (!$request->isPost()) {
             throw new Exceptions\BadRequest();
         }
-        if (!property_exists($data, 'where') || !is_array($data->where) || empty($data->foreignIds)) {
+        if (!property_exists($data, 'where') || !is_array($data->where) || !property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)) {
             throw new Exceptions\BadRequest();
         }
         if (!$this->getAcl()->check('Product', 'edit')) {
@@ -82,7 +82,7 @@ class Product extends \Espo\Core\Templates\Controllers\Hierarchy
         if (!$request->isDelete()) {
             throw new Exceptions\BadRequest();
         }
-        if (!property_exists($data, 'where') || !is_array($data->where) || empty($data->foreignIds)) {
+        if (!property_exists($data, 'where') || !is_array($data->where) || !property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)) {
             throw new Exceptions\BadRequest();
         }
         if (!$this->getAcl()->check('Product', 'edit')) {

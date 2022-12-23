@@ -42,8 +42,8 @@ Espo.define('pim:views/product/modals/select-entity-and-records', 'views/modals/
             this.createAssociationSelectView();
         },
 
-        getDataForUpdateRelation(foreignIds, viewModel) {
-            let data = Dep.prototype.getDataForUpdateRelation.call(this, foreignIds, viewModel);
+        getDataForUpdateRelation(foreign, viewModel) {
+            let data = Dep.prototype.getDataForUpdateRelation.call(this, foreign, viewModel);
             if (this.model.get('selectedLink') === 'associatedMainProducts') {
                 data.associationId = viewModel.get('associationId');
             }
