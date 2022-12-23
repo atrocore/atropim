@@ -329,7 +329,7 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('value', $entity->get('textValue'));
                 break;
             case 'bool':
-                $entity->set('value', $entity->get('boolValue'));
+                $entity->set('value', !empty($entity->get('boolValue')));
                 break;
             case 'currency':
                 $entity->set('value', $entity->get('floatValue'));
