@@ -354,6 +354,7 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'enum':
+                $entity->set('value', $entity->get('varcharValue'));
             default:
                 $entity->set('value', $entity->get('varcharValue'));
                 break;
