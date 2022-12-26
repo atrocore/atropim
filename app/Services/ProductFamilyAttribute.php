@@ -36,6 +36,7 @@ namespace Pim\Services;
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 /**
  * Class ProductFamilyAttribute
@@ -76,10 +77,36 @@ class ProductFamilyAttribute extends Base
         }
         try {
             $this->prepareDefaultValues($attachment);
+            if (
+                property_exists($attachment, 'attributeId')
+                && !empty($attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId))
+                && $attribute->get('isMultilang')
+            ) {
+                if (!property_exists($attachment, 'languages')) {
+                    $attachment->languages = array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
+                }
 
-            $result = parent::createEntity($attachment);
-            $this->createAssociatedFamilyAttribute($attachment, $attachment->attributeId);
-            $this->createPseudoTransactionCreateJobs($attachment);
+                if (property_exists($attachment, 'channelId') && !empty($channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId))) {
+                    $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
+                }
+
+                $attachments = [];
+                foreach ($attachment->languages as $language) {
+                    $attach = clone $attachment;
+                    unset($attach->languages);
+                    $attach->language = $language;
+                    $attachments[] = $attach;
+                }
+            } else {
+                $attachments = [$attachment];
+            }
+
+            foreach ($attachments as $attachment_clone) {
+                $result = parent::createEntity($attachment_clone);
+                $this->createAssociatedFamilyAttribute($attachment_clone, $attachment_clone->attributeId);
+                $this->createPseudoTransactionCreateJobs($attachment_clone);
+            }
+
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }
@@ -230,6 +257,51 @@ class ProductFamilyAttribute extends Base
         return $result;
     }
 
+    public function sortCollection(EntityCollection $collection): void
+    {
+        $attributes = [];
+        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => array_column($collection->toArray(), 'attributeId')])->find() as $attribute) {
+            $attributes[$attribute->get('id')] = $attribute;
+        }
+
+        $records = [];
+        foreach ($collection as $k => $entity) {
+            $row = [
+                'entity'      => $entity,
+                'channelName' => $entity->get('scope') === 'Global' ? '-9999' : $entity->get('channelName'),
+                'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
+            ];
+
+            $attribute = $attributes[$entity->get('attributeId')];
+
+            if (!empty($attribute->get('attributeGroupId'))) {
+                $row['sortOrder'] = empty($attribute->get('sortOrderInAttributeGroup')) ? 0 : (int)$attribute->get('sortOrderInAttributeGroup');
+            } else {
+                $row['sortOrder'] = empty($attribute->get('sortOrderInProduct')) ? 0 : (int)$attribute->get('sortOrderInProduct');
+            }
+
+            $records[$k] = $row;
+        }
+
+        array_multisort(
+            array_column($records, 'sortOrder'), SORT_ASC,
+            array_column($records, 'channelName'), SORT_ASC,
+            array_column($records, 'language'), SORT_ASC,
+            $records
+        );
+
+        foreach ($records as $k => $record) {
+            $collection->offsetSet($k, $record['entity']);
+        }
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        $this->sortCollection($collection);
+
+        parent::prepareCollectionForOutput($collection);
+    }
+
     /**
      * @param string $attributeGroupId
      *
@@ -245,7 +317,7 @@ class ProductFamilyAttribute extends Base
             ->join('attribute')
             ->where([
                 'attribute.attributeGroupId' => $attributeGroupId,
-                'productFamilyId' => $productFamilyId
+                'productFamilyId'            => $productFamilyId
             ])
             ->find()
             ->toArray();

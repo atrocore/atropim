@@ -76,5 +76,4 @@ class V1Dot5Dot98 extends Base
         } catch (\Throwable $e) {
         }
     }
-
 }

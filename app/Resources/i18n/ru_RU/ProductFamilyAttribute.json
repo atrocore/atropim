@@ -4,7 +4,8 @@
     "attribute": "Атрибут",
     "isRequired": "Обязательно",
     "channel": "Канал",
-    "scope": "Область действия"
+    "scope": "Область действия",
+    "languages": "Языки"
   },
   "links": {
     "productFamily": "Продуктовая семья",

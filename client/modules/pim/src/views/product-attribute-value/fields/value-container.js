@@ -42,18 +42,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             let collection = this.model.collection || null;
 
             this.getModelFactory().create(this.model.name, model => {
+                this.model = this.getConfiguratedValueModel(model);
                 this.updateDataForValueField();
                 this.updateModelDefs();
-
-                model = this.getConfiguratedValueModel(model);
-                this.model = model;
                 this.createValueFieldView(collection);
-            });
-
-            this.listenTo(this.model, 'change:value', () => {
-                if ((this.model.get('attributeType') === 'enum' || this.model.get('attributeType') === 'multiEnum')) {
-                    this.getParentView().getParentView().trigger('change:enumLocaleValue', this.model);
-                }
             });
         },
 
@@ -91,22 +83,26 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         },
 
         updateModelDefs() {
-            // prepare data
             let type = this.model.get('attributeType');
-            let typeValue = this.model.get('typeValue');
 
             if (type) {
-                // prepare field defs
                 let fieldDefs = {
                     type: type,
-                    options: typeValue,
                     view: this.getValueFieldView(type),
                     required: !!this.model.get('isRequired'),
                     readOnly: !!this.model.get('isValueReadOnly')
                 };
 
                 if (type === 'unit') {
-                    fieldDefs.measure = (typeValue || ['Length'])[0];
+                    fieldDefs.measure = (this.model.get('typeValue') || ['Length'])[0];
+                }
+
+                if (type === 'enum' || type === 'multiEnum') {
+                    fieldDefs['options'] = this.model.get('typeValueIds') || [];
+                    fieldDefs['translatedOptions'] = {};
+                    fieldDefs['options'].forEach((option, k) => {
+                        fieldDefs['translatedOptions'][option] = this.model.get('typeValue')[k];
+                    });
                 }
 
                 // set field defs

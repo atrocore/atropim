@@ -5,6 +5,10 @@
     "view": "pim:views/product-family-attribute/fields/attribute-with-inheritance-sign"
   },
   {
+    "name": "language",
+    "notSortable": true
+  },
+  {
     "name": "channel",
     "notSortable": true
   }

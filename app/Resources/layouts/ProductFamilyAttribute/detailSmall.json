@@ -23,7 +23,9 @@
         {
           "name": "isRequired"
         },
-        false
+        {
+          "name": "languages"
+        }
       ]
     ],
     "style": "default",

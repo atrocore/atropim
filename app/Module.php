@@ -49,8 +49,6 @@ class Module extends AbstractModule
     public static $multiLangTypes
         = [
             'bool',
-            'enum',
-            'multiEnum',
             'varchar',
             'text',
             'wysiwyg',

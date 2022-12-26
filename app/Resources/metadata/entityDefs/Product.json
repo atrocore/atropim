@@ -331,18 +331,6 @@
         "pr"
       ],
       "default": []
-    },
-    "hasInconsistentAttributes": {
-      "type": "bool",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
     }
   },
   "links": {

@@ -98,6 +98,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
             this.setAttributeFieldsToModel(model);
 
             Dep.prototype.select.call(this, model);
+            this.model.trigger('change:attribute', model);
         },
 
         setAttributeFieldsToModel(model) {

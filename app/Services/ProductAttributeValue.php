@@ -48,7 +48,6 @@ class ProductAttributeValue extends Base
     protected $mandatorySelectAttributeList
         = [
             'language',
-            'mainLanguageId',
             'productId',
             'productName',
             'attributeId',
@@ -184,14 +183,6 @@ class ProductAttributeValue extends Base
         $this->updateEntity($id, $input);
 
         return true;
-    }
-
-    public function findEntities($params)
-    {
-        // prepare all inconsistent attributes
-        $this->getEntityManager()->getRepository('Product')->updateAllInconsistentAttributes();
-
-        return parent::findEntities($params);
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void

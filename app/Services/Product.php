@@ -546,9 +546,9 @@ class Product extends Hierarchy
                     ->getEntityManager()
                     ->getRepository('ProductFamilyAttribute')
                     ->where([
-                        'productFamilyId'   => $product->get('productFamilyId'),
-                        'scope'             => 'Channel',
-                        'channelId'         => $foreignId
+                        'productFamilyId' => $product->get('productFamilyId'),
+                        'scope'           => 'Channel',
+                        'channelId'       => $foreignId
                     ])
                     ->find();
 
@@ -566,7 +566,8 @@ class Product extends Hierarchy
 
                         try {
                             $service->createEntity($data);
-                        } catch (\Throwable $e) {}
+                        } catch (\Throwable $e) {
+                        }
                     }
                 }
             }
@@ -599,8 +600,6 @@ class Product extends Hierarchy
         if (!$this->getAcl()->check($foreignEntityName, 'read')) {
             throw new Forbidden();
         }
-
-        $this->getEntityManager()->getRepository('Product')->updateInconsistentAttributes($entity);
 
         $link = 'productAttributeValues';
 
@@ -713,39 +712,11 @@ class Product extends Hierarchy
 
         // filtering via header language
         if (!empty($headerLanguage)) {
-            foreach ($records as $pav) {
-                if (!empty($pav->get('mainLanguageId')) && isset($records[$pav->get('mainLanguageId')])) {
-                    unset($records[$pav->get('mainLanguageId')]);
+            foreach ($records as $id => $pav) {
+                if ($pav['language'] !== $headerLanguage) {
+                    unset($records[$id]);
                 }
             }
-        }
-
-        // sorting via languages
-        if (empty($headerLanguage)) {
-            $newRecords = [];
-            foreach ($records as $pav) {
-                if (empty($pav->get('mainLanguageId'))) {
-                    $newRecords[$pav->get('id')] = $pav;
-                    $languagesIds = [];
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                        foreach ($records as $pav1) {
-                            if ($pav1->get('mainLanguageId') === $pav->get('id') && $language === $pav1->get('language')) {
-                                $newRecords[$pav1->get('id')] = $pav1;
-                                $languagesIds[] = $pav1->get('id');
-                            }
-                        }
-                    }
-                    $newRecords[$pav->get('id')]->set('languagesIds', $languagesIds);
-                }
-            }
-
-            foreach ($records as $pav) {
-                if (!isset($newRecords[$pav->get('id')])) {
-                    $newRecords[$pav->get('id')] = $pav;
-                }
-            }
-
-            $records = $newRecords;
         }
 
         foreach ($records as $pav) {
@@ -900,24 +871,12 @@ class Product extends Hierarchy
         return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
     }
 
-    /**
-     * @param \stdClass $data
-     *
-     * @return bool
-     */
     protected function isProductAttributeUpdating(\stdClass $data): bool
     {
         return !empty($data->panelsData->productAttributeValues);
     }
 
-    /**
-     * @param EntityCollection $pavs
-     * @param \stdClass $data
-     * @param string $id
-     *
-     * @return \stdClass|null
-     */
-    protected function getProductAttributeIdForUpdating(EntityCollection $pavs ,\stdClass $data, string $id): ?string
+    protected function getProductAttributeIdForUpdating(EntityCollection $pavs, \stdClass $data, string $id): ?string
     {
         if (!property_exists($data, 'attributeId') || !property_exists($data, 'scope') || !property_exists($data, 'language')) {
             $pavsIds = array_column($pavs->toArray(), 'id');

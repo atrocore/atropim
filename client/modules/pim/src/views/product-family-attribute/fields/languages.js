@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -25,20 +24,35 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
+ *
+ * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
 
-namespace Pim\Jobs;
+Espo.define('pim:views/product-family-attribute/fields/languages', 'views/fields/multi-language', function (Dep) {
+    return Dep.extend({
+        setup: function () {
+            this.listenTo(this.model, 'change:attribute', (attr) => {
+                if ( attr.get('isMultilang')) {
+                    this.show();
+                } else {
+                    this.hide();
+                }
+            });
+            this.listenTo(this.model, 'change:channel', (channel) => {
+                this.model.set('languages',channel.get('locales'));
+                this.params.options  = channel.get('locales');
+                this.reRender();
+            });
+            this.listenTo(this.model, 'change:attributeId', (model) => {
+                if (! model.get('attributeId')) {
+                    this.hide();
+                }
+            });
 
-use Espo\Core\Jobs\Base;
-
-class CheckProductAttributes extends Base
-{
-    public function run(): bool
-    {
-        $this->getEntityManager()->getRepository('Product')->updateAllInconsistentAttributes();
-
-        return true;
-    }
-}
+            this.model.set('languages', ['main'].concat(this.getConfig().get('inputLanguageList')),{silent:true});
+            Dep.prototype.setup.call(this);
+            this.listenToOnce(this, 'after:render', () => this.hide());
+        },
+    });
+});

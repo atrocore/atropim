@@ -71,7 +71,6 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
             if (this.model.get('attributeId')) {
                 // prepare data
                 let type = this.model.get('attributeType');
-                let isMultiLang = this.model.get('attributeIsMultilang');
                 let typeValue = this.model.get('typeValue');
 
                 if (type) {
@@ -101,6 +100,14 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
 
                     if (type === 'multiEnum') {
                         fieldDefs.view = 'views/fields/multi-enum';
+                    }
+
+                    if (type === 'enum' || type === 'multiEnum') {
+                        fieldDefs['options'] = this.model.get('typeValueIds') || [];
+                        fieldDefs['translatedOptions'] = {};
+                        fieldDefs['options'].forEach((option, k) => {
+                            fieldDefs['translatedOptions'][option] = this.model.get('typeValue')[k];
+                        });
                     }
 
                     // set field defs

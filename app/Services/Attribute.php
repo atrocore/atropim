@@ -90,7 +90,6 @@ class Attribute extends Hierarchy
             }
         }
         if (!empty($entity)) {
-            $this->getRepository()->prepareTypeValueIds($entity);
             $this->prepareEntityForOutput($entity);
         }
 

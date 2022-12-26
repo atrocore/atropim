@@ -199,21 +199,6 @@ class Attribute extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotLinkedProductFamilyAttributes(array &$result)
-    {
-        // prepare data
-        $data = (array)$this->getSelectCondition('notLinkedProductFamilyAttributes');
-
-        if (isset($data['productFamilyId'])) {
-            $result['whereClause'][] = [
-                'id!=' => $this->getEntityManager()->getRepository('ProductFamily')->getLinkedAttributesIds($data['productFamilyId'])
-            ];
-        }
-    }
-
-    /**
-     * @param array $result
-     */
     protected function boolFilterUnitTypeDisabled(array &$result)
     {
         $unitAttributes = $this

@@ -70,10 +70,6 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
                 }
             });
 
-            this.listenTo(this, 'change:enumLocaleValue', eventModel => {
-                this.updateEnumLocaleValue(eventModel);
-            });
-
             this.runPipeline('actionShowRevisionAttribute');
         },
 
@@ -117,52 +113,6 @@ Espo.define('pim:views/product-attribute-value/record/list-in-product', 'views/r
             }
 
             return defs;
-        },
-
-        updateEnumLocaleValue(eventModel) {
-            let typeValue = eventModel.get('typeValue') || [];
-            let position = null;
-            if (eventModel.get('attributeType') === 'multiEnum') {
-                position = [];
-                $.each(eventModel.get('value'), (k, v) => {
-                    $.each(typeValue, (key, item) => {
-                        if (v === item) {
-                            position.push(key);
-                        }
-                    });
-                });
-            } else {
-                $.each(typeValue, (key, item) => {
-                    if (eventModel.get('value') === item) {
-                        position = key;
-                    }
-                });
-            }
-
-            let viewName = eventModel.get('mainLanguageId') || eventModel.get('id');
-
-            if (this.nestedViews[viewName] && this.nestedViews[viewName].getView('valueField') && this.nestedViews[viewName].getView('valueField').model) {
-                let ids = Espo.Utils.clone(this.nestedViews[viewName].getView('valueField').model.get('languagesIds')) || [];
-                ids.push(viewName);
-                ids.forEach(id => {
-                    if (eventModel.get('id') !== id) {
-                        let relatedModel = this.nestedViews[id].getView('valueField').model;
-                        if (eventModel.get('attributeType') === 'multiEnum') {
-                            let value = [];
-                            $.each(position, (k, v) => {
-                                if (relatedModel.get('typeValue') && relatedModel.get('typeValue')[v]) {
-                                    value.push(relatedModel.get('typeValue')[v]);
-                                }
-                            });
-                            relatedModel.set('value', value);
-                        } else {
-                            if (relatedModel.get('typeValue') && relatedModel.get('typeValue')[position]) {
-                                relatedModel.set('value', relatedModel.get('typeValue')[position]);
-                            }
-                        }
-                    }
-                });
-            }
         },
 
         prepareInternalLayout(internalLayout, model) {

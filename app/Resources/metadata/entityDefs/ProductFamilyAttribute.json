@@ -15,6 +15,14 @@
       "required": true,
       "view": "pim:views/product-family-attribute/fields/attribute"
     },
+    "language": {
+      "type": "language"
+    },
+    "languages": {
+      "type": "multiLanguage",
+      "notStorable": true,
+      "view": "pim:views/product-family-attribute/fields/languages"
+    },
     "isRequired": {
       "type": "bool",
       "default": true
@@ -173,5 +181,15 @@
         "deleted"
       ]
     }
+  },
+  "uniqueIndexes": {
+    "unique_pfa": [
+      "product_family_id",
+      "attribute_id",
+      "scope",
+      "channel_id",
+      "language",
+      "deleted"
+    ]
   }
 }

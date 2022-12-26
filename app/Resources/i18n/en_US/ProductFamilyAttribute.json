@@ -4,7 +4,8 @@
     "attribute": "Attribute",
     "isRequired": "required",
     "channel": "Channel",
-    "scope": "Scope"
+    "scope": "Scope",
+    "languages": "Languages"
   },
   "links": {
     "productFamily": "Product Family",

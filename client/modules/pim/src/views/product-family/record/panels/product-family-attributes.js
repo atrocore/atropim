@@ -44,14 +44,7 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             label: 'No Group'
         },
 
-        boolFilterData: {
-            notLinkedProductFamilyAttributes() {
-                return {
-                    productFamilyId: this.model.id,
-                    scope: 'Global'
-                }
-            }
-        },
+        boolFilterData: {},
 
         events: _.extend({
             'click [data-action="unlinkAttributeGroup"]': function (e) {
