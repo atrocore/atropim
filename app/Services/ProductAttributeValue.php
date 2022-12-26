@@ -561,7 +561,7 @@ class ProductAttributeValue extends Base
                     $entity->set('textValue', $data->value);
                     break;
                 case 'bool':
-                    $entity->set('boolValue', $data->value);
+                    $entity->set('boolValue', !empty($data->value));
                     break;
                 case 'int':
                     $entity->set('intValue', $data->value);

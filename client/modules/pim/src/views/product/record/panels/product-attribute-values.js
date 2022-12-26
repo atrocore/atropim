@@ -378,13 +378,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     groupCollection.maxSize = 9999;
                     groupCollection.fetch().success(() => {
                         group.rowList.forEach(id => {
+                            if (this.collection.get(id)) {
+                                this.collection.remove(id);
+                            }
                             this.collection.add(groupCollection.get(id));
-                        });
-
-                        this.listenTo(groupCollection, 'sync', () => {
-                            this.initialAttributes = this.getInitialAttributes();
-                            this.model.trigger('attributes-updated');
-                            this.applyOverviewFilters();
                         });
 
                         let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
@@ -410,6 +407,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                             view.render(() => {
                                 count++;
                                 if (count === this.groups.length) {
+                                    this.initialAttributes = this.getInitialAttributes();
+                                    this.applyOverviewFilters();
                                     this.trigger('groups-rendered');
                                 }
                             });
@@ -518,7 +517,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                             let containerView = rowView.getView('valueField');
                             if (containerView) {
                                 let fieldView = containerView.getView('valueField');
-                                if (fieldView){
+                                if (fieldView) {
                                     fieldView.groupKey = group.key;
                                     fields[row] = fieldView;
                                 }
