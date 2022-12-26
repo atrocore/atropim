@@ -282,7 +282,7 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "valueOptionIds": {
+    "valueOptionsIds": {
       "type": "varchar",
       "notStorable": true,
       "default": null,

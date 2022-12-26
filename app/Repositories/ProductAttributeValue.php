@@ -311,11 +311,11 @@ class ProductAttributeValue extends AbstractRepository
             case 'array':
             case 'multiEnum':
                 $entity->set('value', null);
-                $entity->set('valueOptionIds', @json_decode((string)$entity->get('textValue'), true));
+                $entity->set('valueOptionsIds', @json_decode((string)$entity->get('textValue'), true));
 
-                if ($entity->get('valueOptionIds') !== null && is_array($entity->get('valueOptionIds'))) {
+                if ($entity->get('valueOptionsIds') !== null && is_array($entity->get('valueOptionsIds'))) {
                     $values = [];
-                    foreach ($entity->get('valueOptionIds') as $optionId) {
+                    foreach ($entity->get('valueOptionsIds') as $optionId) {
                         $key = array_search($optionId, $entity->get('typeValueIds'));
                         if ($key !== false) {
                             $values[] = $entity->get('typeValue')[$key];
@@ -544,7 +544,7 @@ class ProductAttributeValue extends AbstractRepository
         if (empty($result)) {
             $result = empty($attribute->get('typeValue')) ? [] : $attribute->get('typeValue');
         }
-        if (!$attribute->get('prohibitedEmptyValue')) {
+        if ($attribute->get('type') === 'enum' && !$attribute->get('prohibitedEmptyValue')) {
             array_unshift($result, '');
         }
 
@@ -554,7 +554,7 @@ class ProductAttributeValue extends AbstractRepository
     protected function getAttributeOptionsIds(Entity $attribute): ?array
     {
         $result = !empty($attribute->get('typeValueIds')) ? $attribute->get('typeValueIds') : [];
-        if (!$attribute->get('prohibitedEmptyValue')) {
+        if ($attribute->get('type') === 'enum' && !$attribute->get('prohibitedEmptyValue')) {
             array_unshift($result, '');
         }
 
