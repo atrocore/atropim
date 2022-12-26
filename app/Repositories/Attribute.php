@@ -281,32 +281,58 @@ class Attribute extends AbstractRepository
             return;
         }
 
-        if (empty($this->getConfig()->get('isMultilangActive', false))) {
-            return;
+        if (empty($entity->get('typeValue')) || empty($entity->get('typeValueIds'))) {
+            throw new BadRequest($this->exception('attributeValueRequired'));
         }
 
-        if (!$entity->isAttributeChanged('isMultilang')) {
-            return;
+        if ($entity->getFetched('typeValueIds') !== $entity->get('typeValueIds') && !empty($entity->getFetched('typeValueIds'))) {
+            foreach ($entity->getFetched('typeValueIds') as $optionId) {
+                if (empty($entity->get('typeValueIds')) || !in_array($optionId, $entity->get('typeValueIds'))) {
+                    if ($entity->get('type') === 'enum') {
+                        $pav = $this
+                            ->getEntityManager()
+                            ->getRepository('ProductAttributeValue')
+                            ->where([
+                                'varcharValue' => $optionId,
+                                'attributeId'  => $entity->get('id')
+                            ])
+                            ->findOne();
+
+                        if (!empty($pav)) {
+                            throw new BadRequest($this->exception('attributeValueIsInUse'));
+                        }
+                    } elseif ($entity->get('type') === 'multiEnum') {
+                        $pav = $this
+                            ->getEntityManager()
+                            ->getRepository('ProductAttributeValue')
+                            ->where([
+                                'textValue*'  => '%"' . $optionId . '"%',
+                                'attributeId' => $entity->get('id')
+                            ])
+                            ->findOne();
+
+                        if (!empty($pav)) {
+                            throw new BadRequest($this->exception('attributeValueIsInUse'));
+                        }
+                    }
+
+                }
+            }
         }
 
-        if (empty($entity->get('isMultilang'))) {
-            return;
-        }
-
-        $typeValue = $entity->get('typeValue');
-        if (empty($typeValue)) {
-            return;
-        }
-
-        $em = $this->getInjection('eventManager');
-
+        /**
+         * Translate type values
+         */
         foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
             $languageField = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($language)));
+            if ($entity->getFetched($languageField) === $entity->get($languageField)) {
+                continue;
+            }
             $languageTypeValue = $entity->get($languageField);
-            foreach ($typeValue as $k => $value) {
+            foreach ($entity->get('typeValue') as $k => $value) {
                 if (empty($languageTypeValue[$k])) {
                     $event = new Event(['option' => $value, 'language' => $language]);
-                    $languageTypeValue[$k] = $em->dispatch('AttributeRepository', 'generateEnumOption', $event)->getArgument('option');
+                    $languageTypeValue[$k] = $this->getInjection('eventManager')->dispatch('AttributeRepository', 'generateEnumOption', $event)->getArgument('option');
                 }
             }
             $entity->set($languageField, $languageTypeValue);

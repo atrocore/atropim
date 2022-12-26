@@ -73,6 +73,8 @@
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."
   },
   "exceptions": {
+    "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
+    "attributeValueRequired": "Attributwerte sind erforderlich.",
     "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
     "attributeIsUsedInProductFamilies": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
