@@ -40,12 +40,6 @@ class V1Dot6Dot0 extends Base
 {
     public function up(): void
     {
-        //enumDefault
-
-        echo '<pre>';
-        print_r('123');
-        die();
-
         $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
         $this->exec("UPDATE attribute SET is_multilang=0 WHERE attribute.type IN ('enum', 'multiEnum')");
 
@@ -64,13 +58,20 @@ class V1Dot6Dot0 extends Base
             $typeValueIds = @json_decode($attribute['type_value_ids']);
             if (empty($typeValueIds)) {
                 $typeValueIds = array_keys($typeValue);
-                $this->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'");
+                $this->getPDO()->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'");
             }
 
             foreach ($typeValue as $k => $v) {
-                $this->exec(
+                $this->getPDO()->exec(
                     "UPDATE product_attribute_value SET varchar_value='{$typeValueIds[$k]}' WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value='$v'"
                 );
+            }
+
+            if ($attribute['type'] === 'enum' && !empty($attribute['enum_default'])) {
+                $defaultKey = array_search($attribute['enum_default'], $typeValue);
+                if ($defaultKey !== false) {
+                    $this->getPDO()->exec("UPDATE attribute SET enum_default='{$typeValueIds[$defaultKey]}' WHERE id='{$attribute['id']}'");
+                }
             }
         }
         unset($attributes);
