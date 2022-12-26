@@ -35,20 +35,23 @@ Espo.define('pim:views/fields/enum-default', 'views/fields/enum', function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.setOptionList(this.getOptionListItems());
-            this.listenTo(this.model, 'change:typeValue', function () {
-                this.setOptionList(this.getOptionListItems());
-            }, this);
+            this.updateOptions();
+            this.listenTo(this.model, 'after:save', () => {
+                this.updateOptions();
+                this.reRender();
+            });
         },
 
-        getOptionListItems() {
-            let options = [];
-            if (this.model.get('typeValue')) {
-                options = Espo.Utils.clone(this.model.get('typeValue'));
-            }
-            options.unshift('');
+        updateOptions() {
+            this.params.options = ['']
+            this.translatedOptions = {'': ''};
 
-            return options;
+            if (this.model.get('typeValueIds')) {
+                Espo.Utils.clone(this.model.get('typeValueIds') || []).forEach((id, k) => {
+                    this.params.options.push(id);
+                    this.translatedOptions[id] = this.model.get('typeValue') && this.model.get('typeValue')[k] ? this.model.get('typeValue')[k] : id;
+                });
+            }
         },
 
         validate() {
