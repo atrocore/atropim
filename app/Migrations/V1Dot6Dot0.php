@@ -40,6 +40,10 @@ class V1Dot6Dot0 extends Base
 {
     public function up(): void
     {
+        while (!empty($pfaId = $this->getDuplicatePfa())) {
+            $this->getPDO()->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'");
+        }
+
         $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
         $this->exec("UPDATE attribute SET is_multilang=0 WHERE attribute.type IN ('enum', 'multiEnum')");
 
@@ -77,10 +81,6 @@ class V1Dot6Dot0 extends Base
         unset($attributes);
 
         $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
-
-        while (!empty($pfaId = $this->getDuplicatePfa())) {
-            $this->getPDO()->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'");
-        }
 
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
@@ -159,7 +159,6 @@ class V1Dot6Dot0 extends Base
                      WHERE pfa1.deleted=0
                        AND pfa2.deleted=0
                        AND pfa1.id!=pfa2.id
-                       AND pfa1.language='main'
                      ORDER BY pfa1.id
                      LIMIT 0,1"
             )->fetch(\PDO::FETCH_COLUMN);
