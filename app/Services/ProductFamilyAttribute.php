@@ -204,7 +204,7 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
     {
         foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
             $inputData = new \stdClass();
-            foreach (['scope', 'channelId', 'isRequired'] as $key) {
+            foreach (['scope', 'channelId', 'isRequired', 'language'] as $key) {
                 if (property_exists($data, $key)) {
                     $inputData->$key = $data->$key;
                 }

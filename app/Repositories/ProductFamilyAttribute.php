@@ -56,14 +56,11 @@ class ProductFamilyAttribute extends Base
                   WHERE deleted=0
                     AND product_id IN ('" . implode("','", $productsIds) . "')
                     AND attribute_id='{$pfa->get('attributeId')}'
+                    AND language='{$pfa->get('language')}'
                     AND scope='{$pfa->get('scope')}'";
+
         if ($pfa->get('scope') === 'Channel') {
             $query .= " AND channel_id='{$pfa->get('channelId')}'";
-        }
-
-        $attribute = $this->getEntityManager()->getEntity('Attribute', $pfa->get('attributeId'));
-        if ($attribute->get('isMultilang')) {
-            $query .= " AND language='{$pfa->get('language')}'";
         }
 
         return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
