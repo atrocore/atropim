@@ -28,31 +28,36 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-
-Espo.define('pim:views/product-family-attribute/fields/languages', 'views/fields/multi-language', function (Dep) {
+Espo.define('pim:views/product-family-attribute/fields/languages', 'views/fields/multi-language', Dep => {
     return Dep.extend({
-        setup: function () {
-            this.listenTo(this.model, 'change:attribute', (attr) => {
-                if ( attr.get('isMultilang')) {
-                    this.show();
-                } else {
-                    this.hide();
-                }
-            });
-            this.listenTo(this.model, 'change:channel', (channel) => {
-                this.model.set('languages',channel.get('locales'));
-                this.params.options  = channel.get('locales');
+
+        setup() {
+            this.params.options = ['main'].concat(this.getConfig().get('inputLanguageList'));
+
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:attribute', () => {
+                this.model.set('languages', null);
                 this.reRender();
             });
-            this.listenTo(this.model, 'change:attributeId', (model) => {
-                if (! model.get('attributeId')) {
-                    this.hide();
-                }
-            });
-
-            this.model.set('languages', ['main'].concat(this.getConfig().get('inputLanguageList')),{silent:true});
-            Dep.prototype.setup.call(this);
-            this.listenToOnce(this, 'after:render', () => this.hide());
         },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.hide();
+
+            if (this.model.get('attributeId')) {
+                this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
+                    if (attr.isMultilang) {
+                        this.show();
+                        if (this.model.isNew()) {
+                            this.model.set('languages', this.params.options);
+                        }
+                    }
+                });
+            }
+        }
+
     });
 });
