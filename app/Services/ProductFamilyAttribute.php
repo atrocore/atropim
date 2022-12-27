@@ -81,6 +81,7 @@ class ProductFamilyAttribute extends Base
                 property_exists($attachment, 'attributeId')
                 && !empty($attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId))
                 && $attribute->get('isMultilang')
+                && !property_exists($attachment, 'language')
             ) {
                 if (!property_exists($attachment, 'languages')) {
                     $attachment->languages = array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
