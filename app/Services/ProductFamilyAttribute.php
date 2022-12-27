@@ -68,45 +68,65 @@ class ProductFamilyAttribute extends Base
         }
     }
 
+    protected function prepareDefaultLanguages(\stdClass $attachment): void
+    {
+        if (
+            !property_exists($attachment, 'language')
+            && !property_exists($attachment, 'languages')
+            && property_exists($attachment, 'attributeId')
+            && !empty($attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId))
+            && $attribute->get('isMultilang')
+        ) {
+            $attachment->languages = array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
+        }
+    }
+
+    protected function multipleCreateViaLanguages(\stdClass $attachment)
+    {
+        if (property_exists($attachment, 'channelId') && !empty($channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId))) {
+            $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
+        }
+
+        foreach ($attachment->languages as $language) {
+            $attach = clone $attachment;
+            unset($attach->languages);
+            $attach->language = $language;
+
+            try {
+                $result = $this->createEntity($attach);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('MultipleCreateViaLanguages: ' . $e->getMessage());
+            }
+        }
+
+        if (empty($result)) {
+            throw $e;
+        }
+
+        return $result;
+    }
+
     public function createEntity($attachment)
     {
+        /**
+         * For multiple creation via languages
+         */
+        $this->prepareDefaultLanguages($attachment);
+        if (property_exists($attachment, 'languages')) {
+            return $this->multipleCreateViaLanguages($attachment);
+        }
+
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getEntityManager()->getPDO()->beginTransaction();
             $inTransaction = true;
         }
+
         try {
             $this->prepareDefaultValues($attachment);
-            if (
-                property_exists($attachment, 'attributeId')
-                && !empty($attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId))
-                && $attribute->get('isMultilang')
-                && !property_exists($attachment, 'language')
-            ) {
-                if (!property_exists($attachment, 'languages')) {
-                    $attachment->languages = array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
-                }
-
-                if (property_exists($attachment, 'channelId') && !empty($channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId))) {
-                    $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
-                }
-
-                $attachments = [];
-                foreach ($attachment->languages as $language) {
-                    $attach = clone $attachment;
-                    unset($attach->languages);
-                    $attach->language = $language;
-                    $attachments[] = $attach;
-                }
-            } else {
-                $attachments = [$attachment];
-            }
-
-            foreach ($attachments as $attachment_clone) {
-                $result = parent::createEntity($attachment_clone);
-                $this->createAssociatedFamilyAttribute($attachment_clone, $attachment_clone->attributeId);
-                $this->createPseudoTransactionCreateJobs($attachment_clone);
-            }
+            $result = parent::createEntity($attachment);
+            $this->createAssociatedFamilyAttribute($attachment, $attachment->attributeId);
+            $this->createPseudoTransactionCreateJobs($attachment);
 
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
