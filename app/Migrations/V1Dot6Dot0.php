@@ -77,6 +77,12 @@ class V1Dot6Dot0 extends Base
         unset($attributes);
 
         $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+
+        while (!empty($pfaId = $this->getDuplicatePfa())) {
+            $this->getPDO()->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'");
+        }
+
+        $this->getPDO()->exec("UPDATE product_family_attribute SET language='main' WHERE language IS NULL AND deleted=0");
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
@@ -140,6 +146,24 @@ class V1Dot6Dot0 extends Base
     public function down(): void
     {
         throw new BadRequest('Downgrade is prohibited.');
+    }
+
+    protected function getDuplicatePfa()
+    {
+        return $this
+            ->getPDO()
+            ->query(
+                "SELECT pfa1.id
+                     FROM product_family_attribute pfa1
+                     JOIN product_family_attribute pfa2 ON pfa1.product_family_id=pfa2.product_family_id AND pfa1.attribute_id=pfa2.attribute_id AND pfa1.scope=pfa2.scope
+                     AND pfa1.channel_id=pfa2.channel_id
+                     WHERE pfa1.deleted=0
+                       AND pfa2.deleted=0
+                       AND pfa1.id!=pfa2.id
+                       AND pfa1.language IS NULL
+                     ORDER BY pfa1.id
+                     LIMIT 0,1"
+            )->fetch(\PDO::FETCH_COLUMN);
     }
 
     protected function exec(string $query): void

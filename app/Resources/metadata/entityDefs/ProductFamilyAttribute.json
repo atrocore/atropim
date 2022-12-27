@@ -16,7 +16,9 @@
       "view": "pim:views/product-family-attribute/fields/attribute"
     },
     "language": {
-      "type": "language"
+      "type": "language",
+      "view": "pim:views/product-family-attribute/fields/language",
+      "prohibitedEmptyValue": true
     },
     "languages": {
       "type": "multiLanguage",

@@ -28,12 +28,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('pim:views/product-family-attribute/fields/languages', 'views/fields/multi-language', Dep => {
+Espo.define('pim:views/product-family-attribute/fields/language', 'views/fields/language', Dep => {
     return Dep.extend({
 
         setup() {
-            this.params.options = ['main'].concat(this.getConfig().get('inputLanguageList'));
-
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:attribute', () => {
@@ -46,11 +44,10 @@ Espo.define('pim:views/product-family-attribute/fields/languages', 'views/fields
 
             if (this.mode === 'edit' || this.mode === 'detail') {
                 this.hide();
-                if (this.model.isNew() && this.model.get('attributeId')) {
+                if (!this.model.isNew() && this.model.get('attributeId')) {
                     this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                         if (attr.isMultilang) {
                             this.show();
-                            this.model.set('languages', this.params.options);
                         }
                     });
                 }
