@@ -33,7 +33,6 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -41,7 +40,7 @@ use Espo\ORM\EntityCollection;
 /**
  * Class ProductFamilyAttribute
  */
-class ProductFamilyAttribute extends Base
+class ProductFamilyAttribute extends AbstractProductAttributeService
 {
     /**
      * @var array
@@ -66,44 +65,6 @@ class ProductFamilyAttribute extends Base
                 }
             }
         }
-    }
-
-    protected function prepareDefaultLanguages(\stdClass $attachment): void
-    {
-        if (
-            !property_exists($attachment, 'language')
-            && !property_exists($attachment, 'languages')
-            && property_exists($attachment, 'attributeId')
-            && !empty($attribute = $this->getEntityManager()->getEntity('Attribute', $attachment->attributeId))
-            && $attribute->get('isMultilang')
-        ) {
-            $attachment->languages = array_merge($this->getConfig()->get('inputLanguageList', []), ['main']);
-        }
-    }
-
-    protected function multipleCreateViaLanguages(\stdClass $attachment)
-    {
-        if (property_exists($attachment, 'channelId') && !empty($channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId))) {
-            $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
-        }
-
-        foreach ($attachment->languages as $language) {
-            $attach = clone $attachment;
-            unset($attach->languages);
-            $attach->language = $language;
-
-            try {
-                $result = $this->createEntity($attach);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error('MultipleCreateViaLanguages: ' . $e->getMessage());
-            }
-        }
-
-        if (empty($result)) {
-            throw $e;
-        }
-
-        return $result;
     }
 
     public function createEntity($attachment)
