@@ -603,9 +603,6 @@ class ProductAttributeValue extends AbstractRepository
 
         if ($entity->isNew()) {
             $this->populateDefault($entity, $attribute);
-            if (!empty($attribute->get('isMultilang'))) {
-                $this->getEntityManager()->getRepository('Product')->updateProductsAttributesViaProductIds([$entity->get('productId')]);
-            }
         }
 
         if ($entity->isNew() && !$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {

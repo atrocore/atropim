@@ -166,25 +166,6 @@ class Product extends AbstractRepository
         return $mainImageForChannel;
     }
 
-    public function updateProductsAttributes(string $subQuery, bool $createJob = false): void
-    {
-        $this->getPDO()->exec("UPDATE `product` SET has_inconsistent_attributes=1 WHERE id IN ($subQuery) AND deleted=0");
-    }
-
-    public function updateProductsAttributesViaProductIds(array $productIds, bool $createJob = false): void
-    {
-        $ids = [];
-        foreach ($productIds as $id) {
-            if ($id !== null) {
-                $ids[] = $this->getPDO()->quote((string)$id);
-            }
-        }
-
-        if (!empty($ids)) {
-            $this->updateProductsAttributes(implode(',', $ids), $createJob);
-        }
-    }
-
     public function getProductsAssets(array $productIds): array
     {
         $query = "SELECT r.*
@@ -495,8 +476,6 @@ class Product extends AbstractRepository
             } catch (ProductAttributeAlreadyExists $e) {
             }
         }
-
-        $this->updateProductsAttributesViaProductIds([$product->get('id')]);
     }
 
     /**

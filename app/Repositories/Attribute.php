@@ -180,13 +180,6 @@ class Attribute extends AbstractRepository
 
         parent::afterSave($entity, $options);
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('isMultilang')) {
-            $this
-                ->getEntityManager()
-                ->getRepository('Product')
-                ->updateProductsAttributes("SELECT product_id FROM `product_attribute_value` WHERE attribute_id='{$entity->get('id')}' AND deleted=0", true);
-        }
-
         $this->setInheritedOwnership($entity);
     }
 
