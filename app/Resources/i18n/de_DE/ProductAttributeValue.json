@@ -10,6 +10,7 @@
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
     "language": "Sprache",
+    "languages": "Sprachen",
     "value": "Wert",
     "scope": "Scope",
     "varcharValue": "Wert: Einzeiliger Text",
