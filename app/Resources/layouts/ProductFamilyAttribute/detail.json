@@ -26,6 +26,12 @@
           "name": "attribute"
         },
         false
+      ],
+      [
+        {
+          "name": "language"
+        },
+        false
       ]
     ],
     "style": "default",

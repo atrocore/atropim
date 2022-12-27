@@ -5,6 +5,7 @@
     "isRequired": "required",
     "channel": "Channel",
     "scope": "Scope",
+    "language": "Language",
     "languages": "Languages"
   },
   "links": {

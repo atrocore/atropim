@@ -7,7 +7,7 @@
     "product": "Product",
     "attribute": "Attribute",
     "language": "Language",
-    "isRequired": "required",
+    "isRequired": "Required",
     "productFamilyAttribute": "Product Family Attribute",
     "value": "Value",
     "scope": "Scope",

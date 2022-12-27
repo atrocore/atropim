@@ -5,6 +5,7 @@
     "isRequired": "Обязательно",
     "channel": "Канал",
     "scope": "Область действия",
+    "language": "Язык",
     "languages": "Языки"
   },
   "links": {

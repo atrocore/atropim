@@ -6,6 +6,9 @@
     "name": "attribute"
   },
   {
+    "name": "language"
+  },
+  {
     "name": "isRequired"
   },
   {
