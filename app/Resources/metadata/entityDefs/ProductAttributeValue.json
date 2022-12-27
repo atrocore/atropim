@@ -435,6 +435,7 @@
     },
     "language": {
       "type": "language",
+      "default": "main",
       "view": "pim:views/product-family-attribute/fields/language",
       "prohibitedEmptyValue": true
     },

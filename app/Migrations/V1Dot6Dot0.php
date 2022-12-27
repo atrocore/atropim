@@ -76,17 +76,16 @@ class V1Dot6Dot0 extends Base
         }
         unset($attributes);
 
-        $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
 
         while (!empty($pfaId = $this->getDuplicatePfa())) {
             $this->getPDO()->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'");
         }
 
-        $this->getPDO()->exec("UPDATE product_family_attribute SET language='main' WHERE language IS NULL AND deleted=0");
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
-        $this->exec(
+        $this->getPDO()->exec(
             "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)"
         );
 
@@ -160,7 +159,7 @@ class V1Dot6Dot0 extends Base
                      WHERE pfa1.deleted=0
                        AND pfa2.deleted=0
                        AND pfa1.id!=pfa2.id
-                       AND pfa1.language IS NULL
+                       AND pfa1.language='main'
                      ORDER BY pfa1.id
                      LIMIT 0,1"
             )->fetch(\PDO::FETCH_COLUMN);
