@@ -76,17 +76,25 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 this.manageLabels();
             },
             'click .advanced-filters a.remove-attribute-filter': function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
                 var $target = $(e.currentTarget);
                 var name = $target.data('name');
 
                 this.selectedAttributesWithOneFilter.splice(this.selectedAttributesWithOneFilter.indexOf($target.data('id')), 1);
                 this.$el.find('a[data-id="' + name.split('-')[0] + '"]').parent().removeClass('hide');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
-                this.clearView('filter-' + name);
-                container.remove();
-                delete this.advanced[name];
 
-                this.presetName = this.primary;
+                if (!(name in this.pinned) || this.pinned[name] === false) {
+                    this.clearView('filter-' + name);
+                    container.remove();
+                    delete this.advanced[name];
+
+                    this.presetName = this.primary;
+                } else {
+                    this.getView('filter-' + name).getView('field').clearSearch();
+                }
 
                 this.updateAddAttributeFilterButton();
                 this.updateExpandListButtonInFamily();
@@ -411,7 +419,8 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 model: this.model,
                 params: params.fieldParams,
                 searchParams: params,
-                el: this.options.el + ' .filter[data-name="' + name + '"]'
+                el: this.options.el + ' .filter[data-name="' + name + '"]',
+                pinned: this.pinned[name] || false
             }, function (view) {
                 if (!this.selectedAttributesWithOneFilter.includes(name.split('-')[0])) {
                     this.selectedAttributesWithOneFilter.push(name.split('-')[0]);
@@ -430,6 +439,16 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                     });
                 }
                 view.render();
+
+                this.listenTo(view, 'pin-filter', function (pinned) {
+                    if (pinned) {
+                        this.pinned[view.name] = pinned;
+                    } else {
+                        delete this.pinned[view.name];
+                    }
+
+                    this.updateSearch();
+                });
             }.bind(this));
         },
 
@@ -444,8 +463,10 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
             var isPreset = !(this.primary === this.presetName);
 
             if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
-                this.removeFilters();
-                this.advanced = advanced;
+                if (Object.keys(this.pinned).length === 0) {
+                    this.removeFilters();
+                    this.advanced = advanced;
+                }
             }
 
             this.updateSearch();
