@@ -43,6 +43,12 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
 
                 this.pinned = !this.pinned;
 
+                if (this.pinned) {
+                    this.$el.find('.pin-filter').addClass('pinned');
+                } else {
+                    this.$el.find('.pin-filter').removeClass('pinned');
+                }
+
                 this.trigger('pin-filter', this.pinned);
             },
         },
