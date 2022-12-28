@@ -52,6 +52,10 @@ class ProductAttributeValue extends AbstractRepository
 
     public function getMainLanguagePav(Entity $pav): Entity
     {
+        if ($pav->get('language') === 'main') {
+            return $pav;
+        }
+
         $mainLanguagePav = $this
             ->where([
                 'productId'   => $pav->get('productId'),
