@@ -835,8 +835,37 @@ class ProductAttributeValue extends AbstractRepository
         ];
 
         $result['attributes']['was'][$fieldName] = self::$beforeSaveData['value'];
-        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'multiEnum']) ? json_decode($entity->get('value'), true)
-            : $entity->get('value');
+
+        $became = null;
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            if (!empty($attribute = $entity->get('attribute'))) {
+                $value = Json::decode($entity->get('value'), true);
+                $typeValues = $entity->get('attribute')->get('typeValue');
+
+                if (is_array($value)) {
+                    $became = [];
+
+                    foreach ($value as $item) {
+                        $key = array_search($item, $attribute->get('typeValueIds'));
+
+                        if ($key !== false && isset($typeValues[$key])) {
+                            $became[] = $typeValues[$key];
+                        }
+                    }
+                } else {
+                    $key = array_search($value, $attribute->get('typeValueIds'));
+
+                    if ($key !== false && isset($typeValues[$key])) {
+                        $became = $typeValues[$key];
+                    }
+                }
+            }
+        } elseif ($entity->get('entityType') == 'array') {
+            $became = Json::decode($entity->get('value'), true);
+        } else {
+            $became = $entity->get('value');
+        }
+        $result['attributes']['became'][$fieldName] = $became;
 
         if ($result['attributes']['was'][$fieldName] === null && ($result['attributes']['became'][$fieldName] === null || $result['attributes']['became'][$fieldName] === '')) {
             return [];
