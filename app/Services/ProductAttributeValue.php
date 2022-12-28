@@ -779,7 +779,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getRepository()->convertValue($entity);
 
-        if (!empty($attribute->get('isMultilang')) && $entity->get('language') !== 'main') {
+        if (!empty($attribute->get('isMultilang'))) {
             $entity->set('mainLanguageId', $this->getRepository()->getMainLanguagePav($entity)->get('id'));
         }
 
