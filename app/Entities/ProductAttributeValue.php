@@ -35,6 +35,7 @@ namespace Pim\Entities;
 
 use Espo\Core\Templates\Entities\Base;
 use Espo\Core\Utils\Json;
+use Espo\ORM\Entity;
 
 class ProductAttributeValue extends Base
 {
@@ -85,5 +86,18 @@ class ProductAttributeValue extends Base
     public function getChannelLanguages(): array
     {
         return $this->entityManager->getRepository('ProductAttributeValue')->getChannelLanguages((string)$this->get('channelId'));
+    }
+
+    public function _getMainLanguageId(): string
+    {
+        return $this->_getMainLanguage()->get('id');
+    }
+
+    public function _getMainLanguage(): Entity
+    {
+        return $this
+            ->entityManager
+            ->getRepository('ProductAttributeValue')
+            ->getMainLanguagePav($this);
     }
 }

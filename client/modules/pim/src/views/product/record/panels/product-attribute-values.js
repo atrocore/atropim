@@ -67,12 +67,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
         initialAttributes: null,
 
         boolFilterData: {
-            notLinkedProductAttributeValues() {
-                return {
-                    productId: this.model.id,
-                    scope: 'Global'
-                }
-            },
             fromAttributesTab() {
                 return {
                     tabId: this.defs.tabId

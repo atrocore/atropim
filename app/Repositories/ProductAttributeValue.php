@@ -50,6 +50,21 @@ class ProductAttributeValue extends AbstractRepository
 
     private array $pavsAttributes = [];
 
+    public function getMainLanguagePav(Entity $pav): Entity
+    {
+        $mainLanguagePav = $this
+            ->where([
+                'productId'   => $pav->get('productId'),
+                'attributeId' => $pav->get('attributeId'),
+                'language'    => 'main',
+                'scope'       => $pav->get('scope'),
+                'channelId'   => $pav->get('channelId'),
+            ])
+            ->findOne();
+
+        return empty($mainLanguagePav) ? $pav : $mainLanguagePav;
+    }
+
     public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language): array
     {
         // prepare tabId
