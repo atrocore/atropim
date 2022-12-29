@@ -57,11 +57,11 @@ class V1Dot6Dot0 extends Base
         while (!empty($attributes)) {
             $attribute = array_shift($attributes);
 
-            $typeValue = @json_decode($attribute['type_value']);
+            $typeValue = @json_decode((string)$attribute['type_value']);
             if (empty($typeValue)) {
                 continue;
             }
-            $typeValueIds = @json_decode($attribute['type_value_ids']);
+            $typeValueIds = @json_decode((string)$attribute['type_value_ids']);
             if (empty($typeValueIds)) {
                 $typeValueIds = array_keys($typeValue);
                 $this->getPDO()->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'");
@@ -88,7 +88,7 @@ class V1Dot6Dot0 extends Base
                 while (!empty($pavs)) {
                     $pav = array_shift($pavs);
 
-                    $values = @json_decode($pav['text_value']);
+                    $values = @json_decode((string)$pav['text_value']);
                     if (empty($values)) {
                         $values = [];
                     }
