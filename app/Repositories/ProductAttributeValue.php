@@ -207,6 +207,22 @@ class ProductAttributeValue extends AbstractRepository
         return null;
     }
 
+    public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
+    {
+        $where = [
+            'productId'   => $childProduct->get('id'),
+            'attributeId' => $parentPav->get('attributeId'),
+            'language'    => $parentPav->get('language'),
+            'scope'       => $parentPav->get('scope'),
+        ];
+
+        if ($parentPav->get('scope') === 'Channel') {
+            $where['channelId'] = $parentPav->get('channelId');
+        }
+
+        return $this->where($where)->findOne();
+    }
+
     public function isPavRelationInherited(Entity $entity): bool
     {
         return !empty($this->getParentPav($entity));
