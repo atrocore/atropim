@@ -74,7 +74,7 @@ class ProductService extends AbstractListener
                         $parentValue = $parentPav->get('valueId');
                     }
 
-                    if ($value === null || $parentValue === null) {
+                    if ($value === null) {
                         try {
                             $pavService->inheritPav($childPav->get('id'));
                         } catch (\Throwable $e) {
