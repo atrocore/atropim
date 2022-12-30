@@ -343,20 +343,7 @@ class ProductAttributeValue extends AbstractRepository
         switch ($entity->get('attributeType')) {
             case 'array':
             case 'multiEnum':
-                $entity->set('value', null);
-                $entity->set('valueOptionsIds', @json_decode((string)$entity->get('textValue'), true));
-
-                if ($entity->get('valueOptionsIds') !== null && is_array($entity->get('valueOptionsIds'))) {
-                    $values = [];
-                    foreach ($entity->get('valueOptionsIds') as $optionId) {
-                        $key = array_search($optionId, $entity->get('typeValueIds'));
-                        if ($key !== false) {
-                            $values[] = $entity->get('typeValue')[$key];
-                        }
-
-                    }
-                    $entity->set('value', $values);
-                }
+                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 break;
             case 'text':
             case 'wysiwyg':
@@ -392,17 +379,6 @@ class ProductAttributeValue extends AbstractRepository
                     if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
                         $entity->set('valueName', $attachment->get('name'));
                         $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-                    }
-                }
-                break;
-            case 'enum':
-                $entity->set('value', null);
-                $entity->set('valueOptionId', $entity->get('varcharValue'));
-
-                if ($entity->get('valueOptionId') !== null) {
-                    $key = array_search($entity->get('varcharValue'), $entity->get('typeValueIds'));
-                    if ($key !== false) {
-                        $entity->set('value', $entity->get('typeValue')[$key]);
                     }
                 }
                 break;

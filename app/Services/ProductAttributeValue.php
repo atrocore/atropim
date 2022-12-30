@@ -783,8 +783,33 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('mainLanguageId', $mainLanguagePav->get('id'));
         }
 
-        if ($entity->get('attributeType') === 'unit') {
-            $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
+        switch ($entity->get('attributeType')) {
+            case 'unit':
+                $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
+                break;
+            case 'enum':
+                $entity->set('valueOptionId', $entity->get('value'));
+                if ($entity->get('valueOptionId') !== null && !empty($entity->get('typeValueIds'))) {
+                    $key = array_search((string)$entity->get('valueOptionId'), $entity->get('typeValueIds'));
+                    if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
+                        $entity->set('value', $entity->get('typeValue')[$key]);
+                    }
+                }
+                break;
+            case 'multiEnum':
+
+//                $entity->set('valueOptionsIds', $entity->get('value'));
+
+                echo '<pre>';
+                print_r($entity->toArray());
+                die();
+                if ($entity->get('valueOptionId') !== null && !empty($entity->get('typeValueIds'))) {
+                    $key = array_search((string)$entity->get('valueOptionId'), $entity->get('typeValueIds'));
+                    if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
+                        $entity->set('value', $entity->get('typeValue')[$key]);
+                    }
+                }
+                break;
         }
 
         $entity->clear('boolValue');
