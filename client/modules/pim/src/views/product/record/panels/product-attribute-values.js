@@ -203,7 +203,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
 
                 this.listenTo(this.model, 'updateAttributes change:productFamilyId update-all after:relate after:unrelate', link => {
                     if (!link || link === 'productAttributeValues') {
-                        this.actionRefresh();
+                        this.getCollectionFactory().create(this.scope, collection => {
+                            this.collection = collection;
+                            this.actionRefresh();
+                        });
                     }
                 });
 
