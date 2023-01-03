@@ -268,34 +268,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "valueOptionId": {
-      "type": "varchar",
-      "notStorable": true,
-      "default": null,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "valueOptionsIds": {
-      "type": "varchar",
-      "notStorable": true,
-      "default": null,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "valueId": {
       "type": "varchar",
       "notStorable": true,

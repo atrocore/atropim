@@ -366,6 +366,13 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     public function updateEntity($id, $data)
     {
+        if (!property_exists($data, 'attributeId')) {
+            $entity = $this->getRepository()->get($id);
+            if (!empty($entity)) {
+                $data->attributeId = $entity->get('attributeId');
+            }
+        }
+
         $this->prepareInputValue($data);
 
         if ($this->isPseudoTransaction()) {
@@ -788,26 +795,26 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
                 break;
             case 'enum':
-                $entity->set('valueOptionId', $entity->get('value'));
-                if ($entity->get('valueOptionId') !== null && !empty($entity->get('typeValueIds'))) {
-                    $key = array_search((string)$entity->get('valueOptionId'), $entity->get('typeValueIds'));
+                if ($entity->get('varcharValue') !== null && !empty($entity->get('typeValueIds'))) {
+                    $key = array_search((string)$entity->get('varcharValue'), $entity->get('typeValueIds'));
                     if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
                         $entity->set('value', $entity->get('typeValue')[$key]);
                     }
                 }
                 break;
             case 'multiEnum':
-
-//                $entity->set('valueOptionsIds', $entity->get('value'));
-
-                echo '<pre>';
-                print_r($entity->toArray());
-                die();
-                if ($entity->get('valueOptionId') !== null && !empty($entity->get('typeValueIds'))) {
-                    $key = array_search((string)$entity->get('valueOptionId'), $entity->get('typeValueIds'));
-                    if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
-                        $entity->set('value', $entity->get('typeValue')[$key]);
+                if ($entity->get('textValue') !== null && !empty($entity->get('typeValueIds'))) {
+                    $values = [];
+                    $options = @json_decode((string)$entity->get('textValue'), true);
+                    if (!empty($options)) {
+                        foreach ($options as $option) {
+                            $key = array_search($option, $entity->get('typeValueIds'));
+                            if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
+                                $values[] = $entity->get('typeValue')[$key];
+                            }
+                        }
                     }
+                    $entity->set('value', $values);
                 }
                 break;
         }
@@ -827,12 +834,43 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
+        if (property_exists($data, 'attributeId')) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
+        }
+
         if (property_exists($data, 'valueId') && !empty($data->valueId)) {
             $data->value = $data->valueId;
         }
 
         if (property_exists($data, 'value') && is_array($data->value)) {
-            $data->value = Json::encode($data->value);
+            $data->value = json_encode($data->value);
+        }
+
+        /**
+         * Prepare via attribute type
+         */
+        if (property_exists($data, 'value') && !empty($attribute)) {
+            switch ($attribute->get('type')) {
+                case 'enum':
+                    $key = array_search((string)$data->value, $attribute->get('typeValue'));
+                    if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
+                        $data->value = $attribute->get('typeValueIds')[$key];
+                    }
+                    break;
+                case 'multiEnum':
+                    $values = [];
+                    $options = @json_decode((string)$data->value, true);
+                    if (!empty($options)) {
+                        foreach ($options as $option) {
+                            $key = array_search($option, $attribute->get('typeValue'));
+                            if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
+                                $values[] = $attribute->get('typeValueIds')[$key];
+                            }
+                        }
+                    }
+                    $data->value = json_encode($values);
+                    break;
+            }
         }
     }
 
