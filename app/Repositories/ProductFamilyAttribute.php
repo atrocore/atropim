@@ -109,6 +109,7 @@ class ProductFamilyAttribute extends Base
     {
         return $this
             ->where([
+                'id!='            => $entity->get('id'),
                 'productFamilyId' => $entity->get('productFamilyId'),
                 'attributeId'     => $entity->get('attributeId'),
                 'scope'           => $entity->get('scope'),

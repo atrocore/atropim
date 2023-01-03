@@ -133,7 +133,7 @@ class ProductAttributeValue extends AbstractRepository
         if (!isset($this->pavsAttributes[$entity->get('attributeId')])) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             if (empty($attribute)) {
-                $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE id='{$entity->get('id')}'");
+                $this->getEntityManager()->removeEntity($entity);
                 return null;
             }
             $this->pavsAttributes[$entity->get('attributeId')] = $attribute;
@@ -494,38 +494,30 @@ class ProductAttributeValue extends AbstractRepository
 
     public function removeByProductId(string $productId): void
     {
-        $productId = $this->getPDO()->quote($productId);
-
-        $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE product_id=$productId");
+        $this
+            ->where(['productId' => $productId])
+            ->removeCollection();
     }
 
     public function remove(Entity $entity, array $options = [])
     {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        $this->beforeRemove($entity, $options);
-
         try {
-            $this->deleteFromDb($entity->get('id'));
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
+            $result = parent::remove($entity, $options);
         } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
+            // delete duplicate
+            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                    $this->deleteFromDb($toDelete->get('id'), true);
+                }
+                return parent::remove($entity, $options);
             }
-            return false;
+            throw $e;
         }
 
-        $this->afterRemove($entity, $options);
-
-        return true;
+        return $result;
     }
 
-    public function findCopy(Entity $entity): ?Entity
+    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         $where = [
             'id!='        => $entity->get('id'),
@@ -533,12 +525,13 @@ class ProductAttributeValue extends AbstractRepository
             'productId'   => $entity->get('productId'),
             'attributeId' => $entity->get('attributeId'),
             'scope'       => $entity->get('scope'),
+            'deleted'     => $deleted,
         ];
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
         }
 
-        return $this->where($where)->findOne();
+        return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 
     protected function getAttributeOptions(Entity $attribute, string $language): ?array
@@ -771,7 +764,7 @@ class ProductAttributeValue extends AbstractRepository
      */
     protected function isUnique(Entity $entity): bool
     {
-        return empty($this->findCopy($entity));
+        return empty($this->getDuplicateEntity($entity));
     }
 
     /**
