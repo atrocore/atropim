@@ -98,11 +98,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 }
 
                 if (type === 'enum' || type === 'multiEnum') {
-                    fieldDefs['options'] = this.model.get('typeValueIds') || [];
-                    fieldDefs['translatedOptions'] = {};
-                    fieldDefs['options'].forEach((option, k) => {
-                        fieldDefs['translatedOptions'][option] = this.model.get('typeValue')[k];
-                    });
+                    fieldDefs['options'] = this.model.get('typeValue') || [];
                 }
 
                 // set field defs
