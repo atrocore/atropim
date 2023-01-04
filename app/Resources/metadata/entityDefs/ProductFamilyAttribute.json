@@ -90,7 +90,8 @@
       "view": "pim:views/product-family-attribute/fields/channel"
     },
     "maxLength": {
-      "type": "int"
+      "type": "int",
+      "view": "pim:views/fields/max-length"
     },
     "createdAt": {
       "type": "datetime",

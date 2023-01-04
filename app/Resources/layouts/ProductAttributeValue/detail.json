@@ -37,6 +37,12 @@
       ],
       [
         {
+          "name": "maxLength"
+        },
+        false
+      ],
+      [
+        {
           "name": "value"
         },
         false

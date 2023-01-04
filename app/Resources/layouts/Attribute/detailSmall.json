@@ -70,6 +70,12 @@
         {
           "name": "unitDefault"
         }
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
       ]
     ]
   }

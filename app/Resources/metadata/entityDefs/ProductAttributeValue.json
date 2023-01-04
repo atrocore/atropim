@@ -203,7 +203,8 @@
       "emHidden": true
     },
     "maxLength": {
-      "type": "int"
+      "type": "int",
+      "view": "pim:views/fields/max-length"
     },
     "isValueReadOnly": {
       "type": "bool",
