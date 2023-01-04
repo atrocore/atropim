@@ -202,6 +202,10 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "maxLength": {
+      "type": "int",
+      "view": "pim:views/fields/max-length"
+    },
     "isValueReadOnly": {
       "type": "bool",
       "notStorable": true,

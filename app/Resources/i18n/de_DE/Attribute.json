@@ -27,7 +27,8 @@
     "defaultChannel": "Kanal",
     "defaultIsRequired": "erforderlich",
     "sortOrderInProduct": "Sortierreihenfolge für Produkt",
-    "tooltip": "Kurzinfo"
+    "tooltip": "Kurzinfo",
+    "maxLength": "Maximallänge"
   },
   "links": {
     "parents": "Assoziierende Attribute",

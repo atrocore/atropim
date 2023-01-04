@@ -301,6 +301,10 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
+    },
+    "maxLength": {
+      "type": "int",
+      "view": "pim:views/fields/max-length"
     }
   },
   "links": {

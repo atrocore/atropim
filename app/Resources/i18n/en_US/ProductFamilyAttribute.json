@@ -6,7 +6,8 @@
     "channel": "Channel",
     "scope": "Scope",
     "language": "Language",
-    "languages": "Languages"
+    "languages": "Languages",
+    "maxLength": "Max Length"
   },
   "links": {
     "productFamily": "Product Family",

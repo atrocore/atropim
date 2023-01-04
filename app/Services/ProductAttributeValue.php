@@ -46,6 +46,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 {
     protected $mandatorySelectAttributeList
         = [
+            'maxLength',
             'language',
             'productId',
             'productName',

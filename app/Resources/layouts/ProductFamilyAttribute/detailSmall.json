@@ -36,6 +36,12 @@
           "name": "languages"
         },
         false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
       ]
     ],
     "style": "default",

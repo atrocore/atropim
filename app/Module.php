@@ -38,9 +38,6 @@ use Treo\Core\ModuleManager\AbstractModule;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Util;
 
-/**
- * Class Module
- */
 class Module extends AbstractModule
 {
     /**
@@ -61,13 +58,6 @@ class Module extends AbstractModule
     public static function getLoadOrder(): int
     {
         return 5120;
-    }
-
-    public function onLoad()
-    {
-        parent::onLoad();
-
-        $this->container->setClassAlias('entityManager', \Pim\Core\Factories\EntityManager::class);
     }
 
     /**

@@ -297,32 +297,30 @@ class ProductAttributeValue extends AbstractRepository
 
     public function isInheritedFromPf(Entity $pav): bool
     {
-        $productFamilyId = $this
-            ->getPDO()
-            ->query("SELECT product_family_id FROM `product` WHERE id='{$pav->get('productId')}'")
-            ->fetch(\PDO::FETCH_COLUMN);
-
-        if (empty($productFamilyId)) {
+        $product = $this->getEntityManager()->getRepository('Product')->get($pav->get('productId'));
+        if (empty($product) || empty($product->get('productFamilyId'))) {
             return false;
         }
 
-        $isRequired = !empty($pav->get('isRequired')) ? 1 : 0;
-
-        $query = "SELECT pfa.id
-                  FROM `product_family_attribute` pfa
-                  LEFT JOIN `product_family` pf ON pf.id=pfa.product_family_id
-                  WHERE pfa.deleted=0
-                    AND pf.deleted=0
-                    AND pf.id='$productFamilyId'
-                    AND pfa.is_required=$isRequired
-                    AND pfa.attribute_id='{$pav->get('attributeId')}'
-                    AND pfa.scope='{$pav->get('scope')}'";
+        $where = [
+            'productFamilyId' => $product->get('productFamilyId'),
+            'attributeId'     => $pav->get('attributeId'),
+            'scope'           => $pav->get('scope'),
+            'isRequired'      => $pav->get('isRequired'),
+            'maxLength'       => $pav->get('maxLength'),
+        ];
 
         if ($pav->get('scope') === 'Channel') {
-            $query .= " AND pfa.channel_id='{$pav->get('channelId')}'";
+            $where['scope'] = $pav->get('channelId');
         }
 
-        return !empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN));
+        $pfa = $this->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->select(['id'])
+            ->where($where)
+            ->findOne();
+
+        return !empty($pfa);
     }
 
     public function convertValue(Entity $entity): void
@@ -620,6 +618,16 @@ class ProductAttributeValue extends AbstractRepository
 
             if (empty($entity->get('teamsIds'))) {
                 $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
+            }
+        }
+
+        /**
+         * Text length validation
+         */
+        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
+            $maxLength = (int)$entity->get('maxLength');
+            if (!empty($maxLength) && $maxLength > 0 && strlen($entity->get('value')) > $maxLength) {
+                throw new BadRequest($this->exception('valueMoreThanMaxLength'));
             }
         }
 
