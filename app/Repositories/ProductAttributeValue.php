@@ -624,6 +624,16 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         /**
+         * Text length validation
+         */
+        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
+            $maxLength = (int)$entity->get('maxLength');
+            if (!empty($maxLength) && $maxLength > 0 && strlen($entity->get('value')) > $maxLength) {
+                throw new BadRequest($this->exception('valueMoreThanMaxLength'));
+            }
+        }
+
+        /**
          * Check if UNIQUE enabled
          */
         if (!$entity->isNew() && $attribute->get('unique') && $entity->isAttributeChanged('value')) {

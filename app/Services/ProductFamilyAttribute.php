@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -69,6 +70,19 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
 
     public function createEntity($attachment)
     {
+        if (!property_exists($attachment, 'attributeId')) {
+            throw new BadRequest("'attributeId' is required.");
+        }
+
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
+        if (empty($attribute)) {
+            throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
+        }
+
+        if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
+            $attachment->maxLength = $attribute->get('maxLength');
+        }
+
         /**
          * For multiple creation via languages
          */

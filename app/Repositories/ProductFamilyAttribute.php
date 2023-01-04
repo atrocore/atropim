@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
@@ -68,7 +69,7 @@ class ProductFamilyAttribute extends Base
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('scope') === 'Global' || $entity->get('channelId') === null) {
+        if ($entity->get('scope') === 'Global') {
             $entity->set('channelId', '');
         }
 
