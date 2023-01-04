@@ -33,7 +33,6 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
