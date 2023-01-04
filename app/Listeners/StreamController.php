@@ -64,11 +64,15 @@ class StreamController extends AbstractListener
     protected function injectAttributeType(array $result): array
     {
         if (isset($result['list']) && is_array($result['list'])) {
-            if (!empty($attributes = $this->getAttributesType(array_column($result['list'], 'attributeId')))) {
+            $pavsIds = array_unique(array_column($result['list'], 'attributeId'));
+
+            if (!empty($attributes = $this->getAttributesData($pavsIds))) {
                 foreach ($result['list'] as $key => $item) {
                     if (isset($attributes[$item['attributeId']])) {
-                        $result['list'][$key]['attributeType'] = $attributes[$item['attributeId']];
-                        if ($result["list"][$key]["attributeType"] === 'image') {
+                        $type = $attributes[$item['attributeId']]['type'];
+                        $result['list'][$key]['attributeType'] = $type;
+
+                        if ($type === 'image') {
                             foreach ($result['list'][$key]['data']->fields as $field) {
                                 $becameValue = $result["list"][$key]["data"]->attributes->became->{$field};
                                 $result["list"][$key]["data"]->attributes->became->{$field . 'Id'} = $becameValue;
@@ -77,6 +81,14 @@ class StreamController extends AbstractListener
                                 $wasValue = $result["list"][$key]["data"]->attributes->was->{$field};
                                 $result["list"][$key]["data"]->attributes->was->{$field . 'Id'} = $wasValue;
                                 unset ($result["list"][$key]["data"]->attributes->was->{$field});
+                            }
+                        } elseif (in_array($type, ['enum', 'multiEnum'])) {
+                            $result["list"][$key]["data"]->typeValue = new \stdClass();
+                            $result["list"][$key]["data"]->typeValueIds = new \stdClass();
+
+                            foreach ($result['list'][$key]['data']->fields as $field) {
+                                $result["list"][$key]["data"]->typeValue->{$field} = $attributes[$item['attributeId']]['typeValue'];
+                                $result["list"][$key]["data"]->typeValueIds->{$field} = $attributes[$item['attributeId']]['typeValueIds'];
                             }
                         }
                     }
@@ -131,7 +143,7 @@ class StreamController extends AbstractListener
      *
      * @return array
      */
-    protected function getAttributesType(array $ids): array
+    protected function getAttributesData(array $ids): array
     {
         $result = [];
 
@@ -143,7 +155,9 @@ class StreamController extends AbstractListener
         if (count($attributes) > 0) {
             foreach ($attributes as $attribute) {
                 if (!empty($attribute->get('attribute'))) {
-                    $result[$attribute->get('id')] = $attribute->get('attribute')->get('type');
+                    $result[$attribute->get('id')]['type'] = $attribute->get('attribute')->get('type');
+                    $result[$attribute->get('id')]['typeValue'] = $attribute->get('attribute')->get('typeValue');
+                    $result[$attribute->get('id')]['typeValueIds'] = $attribute->get('attribute')->get('typeValueIds');
                 }
             }
         }

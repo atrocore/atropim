@@ -60,7 +60,8 @@ class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Base
             $attach->language = $language;
 
             try {
-                $result = $this->createEntity($attach);
+                $entity = $this->createEntity($attach);
+                $result = $entity;
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error('MultipleCreateViaLanguages: ' . $e->getMessage());
             }

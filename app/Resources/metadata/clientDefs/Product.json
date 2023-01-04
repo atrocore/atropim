@@ -98,7 +98,6 @@
       "createAction": "createRelatedConfigured",
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
-        "notLinkedProductAttributeValues",
         "fromAttributesTab",
         "onlyDefaultChannelAttributes"
       ],

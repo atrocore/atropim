@@ -50,6 +50,23 @@ class ProductAttributeValue extends AbstractRepository
 
     private array $pavsAttributes = [];
 
+    public function getMainLanguagePav(Entity $pav): ?Entity
+    {
+        if ($pav->get('language') === 'main') {
+            return null;
+        }
+
+        return $this
+            ->where([
+                'productId'   => $pav->get('productId'),
+                'attributeId' => $pav->get('attributeId'),
+                'language'    => 'main',
+                'scope'       => $pav->get('scope'),
+                'channelId'   => $pav->get('channelId'),
+            ])
+            ->findOne();
+    }
+
     public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language): array
     {
         // prepare tabId
@@ -116,7 +133,7 @@ class ProductAttributeValue extends AbstractRepository
         if (!isset($this->pavsAttributes[$entity->get('attributeId')])) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             if (empty($attribute)) {
-                $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE id='{$entity->get('id')}'");
+                $this->getEntityManager()->removeEntity($entity);
                 return null;
             }
             $this->pavsAttributes[$entity->get('attributeId')] = $attribute;
@@ -188,6 +205,22 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return null;
+    }
+
+    public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
+    {
+        $where = [
+            'productId'   => $childProduct->get('id'),
+            'attributeId' => $parentPav->get('attributeId'),
+            'language'    => $parentPav->get('language'),
+            'scope'       => $parentPav->get('scope'),
+        ];
+
+        if ($parentPav->get('scope') === 'Channel') {
+            $where['channelId'] = $parentPav->get('channelId');
+        }
+
+        return $this->where($where)->findOne();
     }
 
     public function isPavRelationInherited(Entity $entity): bool
@@ -264,32 +297,30 @@ class ProductAttributeValue extends AbstractRepository
 
     public function isInheritedFromPf(Entity $pav): bool
     {
-        $productFamilyId = $this
-            ->getPDO()
-            ->query("SELECT product_family_id FROM `product` WHERE id='{$pav->get('productId')}'")
-            ->fetch(\PDO::FETCH_COLUMN);
-
-        if (empty($productFamilyId)) {
+        $product = $this->getEntityManager()->getRepository('Product')->get($pav->get('productId'));
+        if (empty($product) || empty($product->get('productFamilyId'))) {
             return false;
         }
 
-        $isRequired = !empty($pav->get('isRequired')) ? 1 : 0;
-
-        $query = "SELECT pfa.id
-                  FROM `product_family_attribute` pfa
-                  LEFT JOIN `product_family` pf ON pf.id=pfa.product_family_id
-                  WHERE pfa.deleted=0
-                    AND pf.deleted=0
-                    AND pf.id='$productFamilyId'
-                    AND pfa.is_required=$isRequired
-                    AND pfa.attribute_id='{$pav->get('attributeId')}'
-                    AND pfa.scope='{$pav->get('scope')}'";
+        $where = [
+            'productFamilyId' => $product->get('productFamilyId'),
+            'attributeId'     => $pav->get('attributeId'),
+            'scope'           => $pav->get('scope'),
+            'isRequired'      => $pav->get('isRequired'),
+            'maxLength'       => $pav->get('maxLength'),
+        ];
 
         if ($pav->get('scope') === 'Channel') {
-            $query .= " AND pfa.channel_id='{$pav->get('channelId')}'";
+            $where['scope'] = $pav->get('channelId');
         }
 
-        return !empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN));
+        $pfa = $this->getEntityManager()
+            ->getRepository('ProductFamilyAttribute')
+            ->select(['id'])
+            ->where($where)
+            ->findOne();
+
+        return !empty($pfa);
     }
 
     public function convertValue(Entity $entity): void
@@ -310,20 +341,7 @@ class ProductAttributeValue extends AbstractRepository
         switch ($entity->get('attributeType')) {
             case 'array':
             case 'multiEnum':
-                $entity->set('value', null);
-                $entity->set('valueOptionsIds', @json_decode((string)$entity->get('textValue'), true));
-
-                if ($entity->get('valueOptionsIds') !== null && is_array($entity->get('valueOptionsIds'))) {
-                    $values = [];
-                    foreach ($entity->get('valueOptionsIds') as $optionId) {
-                        $key = array_search($optionId, $entity->get('typeValueIds'));
-                        if ($key !== false) {
-                            $values[] = $entity->get('typeValue')[$key];
-                        }
-
-                    }
-                    $entity->set('value', $values);
-                }
+                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 break;
             case 'text':
             case 'wysiwyg':
@@ -359,17 +377,6 @@ class ProductAttributeValue extends AbstractRepository
                     if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
                         $entity->set('valueName', $attachment->get('name'));
                         $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-                    }
-                }
-                break;
-            case 'enum':
-                $entity->set('value', null);
-                $entity->set('valueOptionId', $entity->get('varcharValue'));
-
-                if ($entity->get('valueOptionId') !== null) {
-                    $key = array_search($entity->get('varcharValue'), $entity->get('typeValueIds'));
-                    if ($key !== false) {
-                        $entity->set('value', $entity->get('typeValue')[$key]);
                     }
                 }
                 break;
@@ -485,38 +492,30 @@ class ProductAttributeValue extends AbstractRepository
 
     public function removeByProductId(string $productId): void
     {
-        $productId = $this->getPDO()->quote($productId);
-
-        $this->getPDO()->exec("DELETE FROM `product_attribute_value` WHERE product_id=$productId");
+        $this
+            ->where(['productId' => $productId])
+            ->removeCollection();
     }
 
     public function remove(Entity $entity, array $options = [])
     {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        $this->beforeRemove($entity, $options);
-
         try {
-            $this->deleteFromDb($entity->get('id'));
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
+            $result = parent::remove($entity, $options);
         } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
+            // delete duplicate
+            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                    $this->deleteFromDb($toDelete->get('id'), true);
+                }
+                return parent::remove($entity, $options);
             }
-            return false;
+            throw $e;
         }
 
-        $this->afterRemove($entity, $options);
-
-        return true;
+        return $result;
     }
 
-    public function findCopy(Entity $entity): ?Entity
+    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         $where = [
             'id!='        => $entity->get('id'),
@@ -524,12 +523,13 @@ class ProductAttributeValue extends AbstractRepository
             'productId'   => $entity->get('productId'),
             'attributeId' => $entity->get('attributeId'),
             'scope'       => $entity->get('scope'),
+            'deleted'     => $deleted,
         ];
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
         }
 
-        return $this->where($where)->findOne();
+        return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 
     protected function getAttributeOptions(Entity $attribute, string $language): ?array
@@ -618,6 +618,16 @@ class ProductAttributeValue extends AbstractRepository
 
             if (empty($entity->get('teamsIds'))) {
                 $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
+            }
+        }
+
+        /**
+         * Text length validation
+         */
+        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
+            $maxLength = (int)$entity->get('maxLength');
+            if (!empty($maxLength) && $maxLength > 0 && strlen($entity->get('value')) > $maxLength) {
+                throw new BadRequest($this->exception('valueMoreThanMaxLength'));
             }
         }
 
@@ -762,7 +772,7 @@ class ProductAttributeValue extends AbstractRepository
      */
     protected function isUnique(Entity $entity): bool
     {
-        return empty($this->findCopy($entity));
+        return empty($this->getDuplicateEntity($entity));
     }
 
     /**

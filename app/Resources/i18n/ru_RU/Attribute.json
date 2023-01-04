@@ -26,7 +26,8 @@
     "defaultChannel": "Канал",
     "defaultIsRequired": "Обязательно",
     "sortOrderInProduct": "Порядок сортировки в продукте",
-    "tooltip": "Текст подсказки"
+    "tooltip": "Текст подсказки",
+    "maxLength": "Максимальная длина"
   },
   "links": {
     "parents": "Связывающие атрибуты",

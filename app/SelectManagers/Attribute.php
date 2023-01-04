@@ -135,35 +135,6 @@ class Attribute extends AbstractSelectManager
         }
     }
 
-    /**
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedProductAttributeValues(array &$result)
-    {
-        // prepare data
-        $data = (array)$this->getSelectCondition('notLinkedProductAttributeValues');
-
-        if (isset($data['productId']) && isset($data['scope'])) {
-            // get linked to product attributes
-            $attributes = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->select(['attributeId'])
-                ->where(
-                    [
-                        'productId' => $data['productId'],
-                        'scope'     => $data['scope']
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($attributes, 'attributeId')
-            ];
-        }
-    }
-
     protected function boolFilterOnlyDefaultChannelAttributes(array &$result)
     {
         $data = (array)$this->getSelectCondition('onlyDefaultChannelAttributes');

@@ -423,7 +423,7 @@ class Product extends Hierarchy
             $entity->set('productId', $product->get('id'));
 
             try {
-                if (!empty($duplicate = $repository->findCopy($entity))) {
+                if (!empty($duplicate = $repository->getDuplicateEntity($entity))) {
                     $repository->remove($duplicate);
                 }
                 $repository->save($entity);

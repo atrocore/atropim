@@ -6,7 +6,8 @@
     "channel": "Канал",
     "scope": "Область действия",
     "language": "Язык",
-    "languages": "Языки"
+    "languages": "Языки",
+    "maxLength": "Максимальная длина"
   },
   "links": {
     "productFamily": "Продуктовая семья",

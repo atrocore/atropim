@@ -54,21 +54,57 @@ class V1Dot6Dot0 extends Base
             ->andWhere('a.type=:enum OR a.type=:multiEnum')->setParameter('enum', 'enum')->setParameter('multiEnum', 'multiEnum')
             ->fetchAllAssociative();
 
-        foreach ($attributes as $attribute) {
-            $typeValue = @json_decode($attribute['type_value']);
+        while (!empty($attributes)) {
+            $attribute = array_shift($attributes);
+
+            $typeValue = @json_decode((string)$attribute['type_value']);
             if (empty($typeValue)) {
                 continue;
             }
-            $typeValueIds = @json_decode($attribute['type_value_ids']);
+            $typeValueIds = @json_decode((string)$attribute['type_value_ids']);
             if (empty($typeValueIds)) {
                 $typeValueIds = array_keys($typeValue);
                 $this->getPDO()->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'");
             }
 
-            foreach ($typeValue as $k => $v) {
-                $this->getPDO()->exec(
-                    "UPDATE product_attribute_value SET varchar_value='{$typeValueIds[$k]}' WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value='$v'"
-                );
+            if ($attribute['type'] === 'enum') {
+                foreach ($typeValue as $k => $v) {
+                    $this
+                        ->getPDO()
+                        ->exec(
+                            "UPDATE product_attribute_value SET varchar_value='{$typeValueIds[$k]}' WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value='$v'"
+                        );
+                }
+            }
+
+            if ($attribute['type'] === 'multiEnum') {
+                $pavs = $this->getSchema()->getConnection()->createQueryBuilder()
+                    ->select('pav.*')
+                    ->from('product_attribute_value', 'pav')
+                    ->andWhere('pav.deleted=0')
+                    ->andWhere('pav.attribute_id=:attributeId')->setParameter('attributeId', $attribute['id'])
+                    ->fetchAllAssociative();
+
+                while (!empty($pavs)) {
+                    $pav = array_shift($pavs);
+
+                    $values = @json_decode((string)$pav['text_value']);
+                    if (empty($values)) {
+                        $values = [];
+                    }
+
+                    $valuesIds = [];
+                    foreach ($values as $value) {
+                        $key = array_search($value, $typeValue);
+                        if ($key !== false) {
+                            $valuesIds[] = $typeValueIds[$key];
+                        }
+                    }
+
+                    $textValue = json_encode($valuesIds);
+
+                    $this->getPDO()->exec("UPDATE product_attribute_value SET text_value='$textValue' WHERE id='{$pav['id']}'");
+                }
             }
 
             if ($attribute['type'] === 'enum' && !empty($attribute['enum_default'])) {
@@ -78,9 +114,8 @@ class V1Dot6Dot0 extends Base
                 }
             }
         }
-        unset($attributes);
 
-        $this->exec("ALTER TABLE `product_family_attribute` ADD language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
+        $this->exec("ALTER TABLE product_family_attribute ADD language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
 
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");

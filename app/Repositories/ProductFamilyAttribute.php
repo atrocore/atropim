@@ -42,7 +42,7 @@ class ProductFamilyAttribute extends Base
     public function getInheritedPavsIds(string $id): array
     {
         $pfa = $this->get($id);
-        if (empty($pfa) || empty($pf = $pfa->get('productFamily'))) {
+        if (empty($pfa) || empty($pf = $this->getEntityManager()->getRepository('ProductFamily')->get($pfa->get('productFamilyId')))) {
             return [];
         }
 
@@ -51,24 +51,30 @@ class ProductFamilyAttribute extends Base
             return [];
         }
 
-        $query = "SELECT id 
-                  FROM `product_attribute_value` 
-                  WHERE deleted=0
-                    AND product_id IN ('" . implode("','", $productsIds) . "')
-                    AND attribute_id='{$pfa->get('attributeId')}'
-                    AND language='{$pfa->get('language')}'
-                    AND scope='{$pfa->get('scope')}'";
+        $where = [
+            'productId'   => $productsIds,
+            'attributeId' => $pfa->get('attributeId'),
+            'language'    => $pfa->get('language'),
+            'scope'       => $pfa->get('scope'),
+        ];
 
         if ($pfa->get('scope') === 'Channel') {
-            $query .= " AND channel_id='{$pfa->get('channelId')}'";
+            $where['channelId'] = $pfa->get('channelId');
         }
 
-        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+        $result = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->select(['id'])
+            ->where($where)
+            ->find();
+
+        return array_column($result->toArray(), 'id');
     }
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('scope') === 'Global' || $entity->get('channelId') === null) {
+        if ($entity->get('scope') === 'Global') {
             $entity->set('channelId', '');
         }
 
@@ -109,6 +115,7 @@ class ProductFamilyAttribute extends Base
     {
         return $this
             ->where([
+                'id!='            => $entity->get('id'),
                 'productFamilyId' => $entity->get('productFamilyId'),
                 'attributeId'     => $entity->get('attributeId'),
                 'scope'           => $entity->get('scope'),

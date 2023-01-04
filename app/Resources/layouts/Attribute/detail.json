@@ -96,6 +96,12 @@
           "name": "tooltip"
         },
         false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
       ]
     ]
   }

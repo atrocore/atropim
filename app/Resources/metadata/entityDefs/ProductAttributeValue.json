@@ -202,6 +202,10 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "maxLength": {
+      "type": "int",
+      "view": "pim:views/fields/max-length"
+    },
     "isValueReadOnly": {
       "type": "bool",
       "notStorable": true,
@@ -256,34 +260,6 @@
     },
     "valueAllUnits": {
       "type": "jsonObject",
-      "notStorable": true,
-      "default": null,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "valueOptionId": {
-      "type": "varchar",
-      "notStorable": true,
-      "default": null,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "valueOptionsIds": {
-      "type": "varchar",
       "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
@@ -443,6 +419,19 @@
       "type": "multiLanguage",
       "notStorable": true,
       "view": "pim:views/product-family-attribute/fields/languages"
+    },
+    "mainLanguageId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "attributeTooltip": {
       "type": "varchar",

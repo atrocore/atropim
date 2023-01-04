@@ -31,25 +31,31 @@
 
 declare(strict_types=1);
 
-namespace Pim\Core\ORM;
+namespace Pim\Migrations;
 
-use Pim\ORM\DB\Query\Mysql;
+use Treo\Core\Migration\Base;
 
-/**
- * Class of EntityManager
- */
-class EntityManager extends \Espo\Core\ORM\EntityManager
+class V1Dot6Dot1 extends Base
 {
-
-    /**
-     * @inheritdoc
-     */
-    public function getQuery()
+    public function up(): void
     {
-        if (empty($this->query)) {
-            $this->query = new Mysql($this->getPDO(), $this->entityFactory);
-        }
+        $this->exec("ALTER TABLE attribute ADD max_length INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE product_attribute_value ADD max_length INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE product_family_attribute ADD max_length INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+    }
 
-        return $this->query;
+    public function down(): void
+    {
+        $this->exec("ALTER TABLE attribute DROP max_length");
+        $this->exec("ALTER TABLE product_attribute_value DROP max_length");
+        $this->exec("ALTER TABLE product_family_attribute DROP max_length");
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
