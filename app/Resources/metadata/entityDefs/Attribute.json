@@ -301,6 +301,9 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
+    },
+    "maxLength": {
+      "type": "int"
     }
   },
   "links": {

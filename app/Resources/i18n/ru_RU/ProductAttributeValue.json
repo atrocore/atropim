@@ -19,7 +19,8 @@
     "floatValue": "Value: Float",
     "dateValue": "Value: Date",
     "datetimeValue": "Value: DateTime",
-    "boolValue": "Value: Boolean"
+    "boolValue": "Value: Boolean",
+    "maxLength": "Максимальная длина"
   },
   "links": {
     "productAttribute": "Атрибут продукта",

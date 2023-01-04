@@ -19,7 +19,8 @@
     "floatValue": "Value: Float",
     "dateValue": "Value: Date",
     "datetimeValue": "Value: Date-time",
-    "boolValue": "Value: Boolean"
+    "boolValue": "Value: Boolean",
+    "maxLength": "Max Length"
   },
   "links": {
     "productAttribute": "Product attribute",

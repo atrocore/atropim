@@ -26,7 +26,8 @@
     "defaultChannel": "Channel",
     "defaultIsRequired": "Required",
     "sortOrderInProduct": "Sort Order for Product",
-    "tooltip": "Tooltip"
+    "tooltip": "Tooltip",
+    "maxLength": "Max Length"
   },
   "links": {
     "parents": "Associating Attributes",

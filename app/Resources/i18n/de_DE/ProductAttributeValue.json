@@ -19,7 +19,8 @@
     "floatValue": "Wert: Float",
     "dateValue": "Wert: Datum",
     "datetimeValue": "Wert: Datum-Uhrzeit",
-    "boolValue": "Wert: Boolesch"
+    "boolValue": "Wert: Boolesch",
+    "maxLength": "Maximallänge"
   },
   "links": {
     "product": "Produkt",
