@@ -352,10 +352,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
         ) {
             $productChannels = $product->get('productChannels');
             if (!empty($productChannels) && count($productChannels) > 0 && !in_array($data->channelId, array_column($productChannels->toArray(), 'channelId'))) {
-                $attributeName = property_exists($data, 'attributeName') ? $data->attributeName : $data->attributeId;
-                $channelName = property_exists($data, 'channelName') ? $data->channelName : $data->channelId;
+                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
+                $attributeCode = empty($attribute) ? $data->attributeId : $attribute->get('code');
+
+                $channel = $this->getEntityManager()->getRepository('Channel')->get($data->channelId);
+                $channelCode = empty($channel) ? $data->channelId : $channel->get('code');
+
                 $message = $this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAttributeValue');
-                throw new BadRequest(sprintf($message, $attributeName, $channelName, $product->get('name')));
+                throw new BadRequest(sprintf($message, $attributeCode, $channelCode, $product->get('name')));
             }
         }
 
