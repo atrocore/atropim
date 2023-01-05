@@ -240,6 +240,23 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     public function createEntity($attachment)
     {
+        if (!property_exists($attachment, 'attributeId')) {
+            throw new BadRequest("'attributeId' is required.");
+        }
+
+        /**
+         * Prepare maxLength
+         */
+        if (!property_exists($attachment, 'maxLength')) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
+            if (empty($attribute)) {
+                throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
+            }
+            if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
+                $attachment->maxLength = $attribute->get('maxLength');
+            }
+        }
+
         /**
          * For multiple creation via languages
          */

@@ -626,7 +626,7 @@ class ProductAttributeValue extends AbstractRepository
          */
         if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
             $maxLength = (int)$entity->get('maxLength');
-            if (!empty($maxLength) && $maxLength > 0 && strlen($entity->get('value')) > $maxLength) {
+            if (!empty($maxLength) && $maxLength > 0 && mb_strlen($entity->get('value')) > $maxLength) {
                 throw new BadRequest($this->exception('valueMoreThanMaxLength'));
             }
         }
