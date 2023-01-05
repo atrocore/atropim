@@ -713,7 +713,7 @@ class Product extends Hierarchy
         // filtering via header language
         if (!empty($headerLanguage)) {
             foreach ($records as $id => $pav) {
-                if ($pav['language'] !== $headerLanguage) {
+                if ($pav->get('language') !== $headerLanguage) {
                     unset($records[$id]);
                 }
             }
