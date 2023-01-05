@@ -53,6 +53,9 @@ Espo.define('pim:views/fields/max-length', 'views/fields/int', Dep => {
                     if (this.model.get('attributeId')) {
                         this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
                             this.toggleVisibility(attribute.type);
+                            if (this.mode === 'edit' && this.model.isNew() && attribute.maxLength) {
+                                this.model.set('maxLength', attribute.maxLength);
+                            }
                         });
                     }
                 }
