@@ -244,7 +244,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
          * For multiple creation via languages
          */
         $this->prepareDefaultLanguages($attachment);
-        if (property_exists($attachment, 'languages')) {
+        if (property_exists($attachment, 'languages') && !empty($attachment->languages)) {
             return $this->multipleCreateViaLanguages($attachment);
         }
 
