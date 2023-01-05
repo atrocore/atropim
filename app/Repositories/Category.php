@@ -395,22 +395,8 @@ class Category extends AbstractRepository
             }
         }
 
-        if ($entity->isNew() && !empty($categoryParent = $entity->get('categoryParent'))) {
-            $parentCatalogs = $categoryParent->get('catalogs');
-            $parentCatalogsIds = empty($parentCatalogs) ? [] : array_column($parentCatalogs->toArray(), 'id');
-            $entity->set('catalogsIds', $parentCatalogsIds);
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('categoryParentId') && !empty($parent = $entity->get('categoryParent'))) {
-            $categoryCatalogs = array_column($entity->get('catalogs')->toArray(), 'id');
-            sort($categoryCatalogs);
-
-            $parentCatalogs = array_column($parent->get('catalogs')->toArray(), 'id');
-            sort($parentCatalogs);
-
-            if ($categoryCatalogs !== $parentCatalogs) {
-                throw new BadRequest($this->exception('catalogsShouldBeSame'));
-            }
+        if ($entity->isAttributeChanged('categoryParentId') && !empty($parent = $this->get($entity->get('categoryParentId')))) {
+            $entity->set('catalogsIds', $parent->getLinkMultipleIdList('catalogs'));
         }
 
         if ($entity->isNew()) {
