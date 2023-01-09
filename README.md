@@ -95,7 +95,7 @@ Installation Guide is available [here](https://github.com/atrocore/docs/blob/mas
      
 ## License
 
-AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt). This software is not allowed to be used in Russia and Belarus.
+AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Support
 
