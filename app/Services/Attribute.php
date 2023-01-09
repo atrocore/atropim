@@ -39,7 +39,7 @@ use Espo\ORM\Entity;
 
 class Attribute extends Hierarchy
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'data'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'data', 'typeValue', 'typeValueIds'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -128,76 +128,6 @@ class Attribute extends Hierarchy
         }
 
         return parent::updateEntity($id, $data);
-    }
-
-    /**
-     * Get filters
-     *
-     * @return array
-     */
-    public function getFiltersData(): array
-    {
-        // prepare result
-        $result = [];
-
-        // get all attributes
-        if (!empty($data = $this->getAttributesForFilter())) {
-            // get multilang fields
-            $multilangFields = $this->getMultilangFields();
-
-            // prepare no family data
-            $noFamilyData = [
-                'id'   => 'all',
-                'name' => $this->getInjection('language')->translate('All', 'filterLabels', 'Attribute'),
-                'rows' => []
-            ];
-
-            foreach ($data as $row) {
-                // skip multilang types
-                if (in_array($row['attributeType'], $multilangFields)) {
-                    continue;
-                }
-
-                // prepare attribute typeValue param
-                $attributeTypeValue = [];
-                if (!empty($row['attributeTypeValue'])) {
-                    $attributeTypeValue = json_decode($row['attributeTypeValue'], true);
-                }
-
-                if (!empty($row['productFamilyId'])) {
-                    $result[$row['productFamilyId']]['id'] = $row['productFamilyId'];
-                    $result[$row['productFamilyId']]['name'] = $row['productFamilyName'];
-                    $result[$row['productFamilyId']]['rows'][$row['attributeId']] = [
-                        'attributeId' => $row['attributeId'],
-                        'name'        => $row['attributeName'],
-                        'type'        => $row['attributeType'],
-                        'typeValue'   => $attributeTypeValue
-                    ];
-                }
-
-                // push to all
-                $noFamilyData['rows'][$row['attributeId']] = [
-                    'attributeId' => $row['attributeId'],
-                    'name'        => $row['attributeName'],
-                    'type'        => $row['attributeType'],
-                    'typeValue'   => $attributeTypeValue
-                ];
-            }
-            $noFamilyData['rows'] = array_values($noFamilyData['rows']);
-
-            // prepare result
-            $result = array_values($result);
-            foreach ($result as $k => $v) {
-                $result[$k]['rows'] = array_values($v['rows']);
-            }
-
-            // push no family to the end of result
-            if (!empty($noFamilyData['rows'])) {
-                $result[] = $noFamilyData;
-            }
-        }
-
-        return $result;
     }
 
     /**

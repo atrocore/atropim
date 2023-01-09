@@ -31,48 +31,11 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
 
         template: 'pim:product/record/search',
 
-        familiesAttributes: [],
-
         existsAttributes: [],
-
-        attributesDownloaded: false,
 
         selectedAttributesWithOneFilter: [],
 
         events: _.extend({}, Dep.prototype.events, {
-            'click a[data-action="addAttributeFilter"]': function (e) {
-                var $target = $(e.currentTarget);
-                var id = $target.data('id');
-                var nameCount = 1;
-                var getLastIndexName = function () {
-                    if (this.advanced.hasOwnProperty(id + '-' + nameCount)) {
-                        nameCount++;
-                        getLastIndexName.call(this);
-                    }
-                };
-                getLastIndexName.call(this);
-                let compiledName = id + '-' + nameCount;
-                this.advanced[compiledName] = {};
-                this.advanced = this.sortAdvanced(this.advanced);
-
-                this.presetName = this.primary;
-                let params = this.getAttributeParams(compiledName);
-                if (this.typesWithOneFilter.includes(params.fieldParams.type) && !this.selectedAttributesWithOneFilter.includes(id)) {
-                    this.selectedAttributesWithOneFilter.push(id);
-                }
-                this.createAttributeFilter(compiledName, params, function (view) {
-                    view.populateDefaults();
-                    this.fetch();
-                    this.updateSearch();
-                }.bind(this));
-                this.updateAddAttributeFilterButton();
-                this.updateExpandListButtonInFamily();
-                this.handleLeftDropdownVisibility();
-                this.toggleFilterActionsVisibility();
-                this.toggleResetVisibility();
-
-                this.manageLabels();
-            },
             'click .advanced-filters a.remove-attribute-filter': function (e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -123,29 +86,63 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 e.stopPropagation();
                 e.preventDefault();
 
-                let a = $(e.currentTarget);
-                a.parents('.dropdown-menu').find('> .dropdown-submenu > a:not(.add-attribute-filter-button)').next('ul').toggle(false);
-                if (this.attributesDownloaded) {
-                    a.next('ul').toggle();
-                } else {
-                    if (this.getAcl().check('Attribute', 'read')) {
-                        this.$el.find('.family-list .no-family-data').text(this.translate('Loading...', 'labels', 'Global'));
-                        this.$el.find('.family-list').toggle();
+                this.$leftDropdown.click();
 
-                        this.ajaxGetRequest('Attribute/action/filtersData')
-                            .then(response => {
-                                this.attributesDownloaded = true;
-                                this.familiesAttributes = response;
-                            })
-                            .always(() => {
-                                this.listenToOnce(this, 'after:render', () => {
-                                    this.$el.find('.left-dropdown').addClass('open');
-                                    this.$el.find('.family-list').toggle();
+                const scope = 'Attribute';
+                if (this.getAcl().check(scope, 'read')) {
+                    const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
+                    this.notify('Loading...');
+                    this.createView('dialog', viewName, {
+                        scope: scope,
+                        multiple: false,
+                        createButton: false,
+                        massRelateEnabled: false
+                    }, dialog => {
+                        dialog.render();
+                        this.notify(false);
+                        dialog.once('select', attribute => {
+                            let nameCount = 1;
+                            let getLastIndexName = () => {
+                                if (this.advanced.hasOwnProperty(attribute.id + '-' + nameCount)) {
+                                    nameCount++;
+                                    getLastIndexName.call(this);
+                                }
+                            };
+                            getLastIndexName.call(this);
+
+                            let compiledName = attribute.id + '-' + nameCount;
+                            this.advanced[compiledName] = {};
+                            this.advanced = this.sortAdvanced(this.advanced);
+
+                            let params = {
+                                isAttribute: true,
+                                label: attribute.get('name'),
+                                type: attribute.get('type')
+                            };
+
+                            if (['enum', 'multiEnum'].includes(attribute.get('type'))) {
+                                params.isTypeValue = true;
+                                params.options = attribute.get('typeValueIds') || [];
+                                params.translatedOptions = {};
+                                params.options.forEach((option, k) => {
+                                    params.translatedOptions[option] = attribute.get('typeValue')[k];
                                 });
-                                this.reRender();
+                            }
+
+                            this.createAttributeFilter(compiledName, {fieldParams: params}, view => {
+                                view.populateDefaults();
+                                this.fetch();
+                                this.updateSearch();
                             });
 
-                    }
+                            this.handleLeftDropdownVisibility();
+                            this.toggleFilterActionsVisibility();
+                            this.toggleResetVisibility();
+
+                            this.manageLabels();
+                        });
+                    });
+
                 }
             },
             'click .dropdown-submenu a.expand-list': function (e) {
@@ -190,41 +187,10 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
         },
 
         data() {
-            var data = Dep.prototype.data.call(this);
-
-            data.familiesAttributes = this.familiesAttributes;
+            let data = Dep.prototype.data.call(this);
             data.showFamiliesAttributes = this.getAcl().check('Attribute', 'read');
+
             return data;
-        },
-
-        hideAttributesWithOneFilter() {
-            this.familiesAttributes.some(family => family.rows.some(row => {
-                if (this.selectedAttributesWithOneFilter.includes(row.attributeId)) {
-                    this.$el.find(`a[data-id="${row.attributeId}"]`).parent().addClass('hide');
-                }
-            }));
-        },
-
-        getAttributeParams(name) {
-            let params = {
-                isAttribute: true
-            };
-            this.familiesAttributes.some(family => family.rows.some(row => {
-                if (row.attributeId === name.split('-')[0]) {
-                    params.label = row.name;
-                    params.type = row.type;
-                    if (['enum', 'multiEnum'].includes(row.type)) {
-                        params.isTypeValue = true;
-                        params.options = row.typeValue;
-                        row.typeValue.forEach(value => {
-                            params.translatedOptions = params.translatedOptions || {};
-                            params.translatedOptions[value] = this.getLanguage().translateOption(value, row.name, 'Attribute');
-                        });
-                    }
-                    return true;
-                }
-            }));
-            return {fieldParams: params};
         },
 
         fetch: function () {
@@ -243,17 +209,22 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 if (fieldParams.isAttribute) {
                     this.advanced[field].fieldParams = fieldParams;
                 }
-                this.familiesAttributes.forEach(function (family) {
-                    family.rows.forEach(function (row) {
-                        let name = field.split('-')[0];
-                        if (row.attributeId === name) {
-                            if (this.advanced[field] === false) {
-                                this.advanced[field] = {};
-                            }
-                            this.advanced[field] = _.extend(this.getAttributeParams(name), this.advanced[field]);
-                        }
-                    }, this);
-                }, this);
+
+                let name = field.split('-')[0];
+
+                console.log(name)
+
+                // this.familiesAttributes.forEach(function (family) {
+                //     family.rows.forEach(function (row) {
+                //         let name = field.split('-')[0];
+                //         if (row.attributeId === name) {
+                //             if (this.advanced[field] === false) {
+                //                 this.advanced[field] = {};
+                //             }
+                //             this.advanced[field] = _.extend(this.getAttributeParams(name), this.advanced[field]);
+                //         }
+                //     }, this);
+                // }, this);
                 view.searchParams = this.advanced[field];
             }
         },
@@ -286,96 +257,6 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
 
             this.selectedAttributesWithOneFilter = [];
             this.$el.find('.family-list li.hide').removeClass('hide');
-        },
-
-        updateAddAttributeFilterButton: function () {
-            var $ul = this.$el.find('ul.family-list');
-            if ($ul.children().not('.hide').size() == 0) {
-                this.$el.find('a.add-attribute-filter-button').addClass('disabled');
-            } else {
-                this.$el.find('a.add-attribute-filter-button').removeClass('disabled');
-            }
-        },
-
-        updateExpandListButtonInFamily: function () {
-            this.$el.find('ul.attribute-filter-list').each((i, el) => {
-                let ul = $(el);
-                if (ul.children().not('.hide').size() === 0) {
-                    ul.parent().find('a.expand-list').addClass('hide');
-                } else {
-                    ul.parent().find('a.expand-list').removeClass('hide');
-                }
-            });
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            this.updateAddAttributeFilterButton();
-            this.updateExpandListButtonInFamily();
-            this.addAutoCompleteToAttributeSearch();
-            this.hideAttributesWithOneFilter();
-        },
-
-        addAutoCompleteToAttributeSearch() {
-            let attrSearchElement = this.$el.find('.attribute-text-filter');
-            if (attrSearchElement.length) {
-                let attributes = [];
-                (this.familiesAttributes || []).forEach(family => {
-                    (family.rows || []).forEach(attribute => {
-                        if (!attributes.find(item => (item.data || {}).attributeId === attribute.attributeId)) {
-                            attributes.push({value: attribute.name, data: attribute});
-                        }
-                    });
-                });
-                attrSearchElement.autocomplete({
-                    appendTo: attrSearchElement.parents('ul.family-list'),
-                    lookup: attributes,
-                    paramName: 'q',
-                    minChars: 1,
-                    onSelect: function (s) {
-                        attrSearchElement.val('');
-                        var name = (s.data || {}).attributeId;
-                        var nameCount = 1;
-                        var getLastIndexName = function () {
-                            if (this.advanced.hasOwnProperty(
-                                name + '-' + nameCount)) {
-                                nameCount++;
-                                getLastIndexName.call(this);
-                            }
-                        };
-                        getLastIndexName.call(this);
-                        name = name + '-' + nameCount;
-                        this.advanced[name] = {};
-                        this.advanced = this.sortAdvanced(this.advanced);
-
-                        this.presetName = this.primary;
-                        this.createAttributeFilter(name, this.getAttributeParams(name), function (view) {
-                            view.populateDefaults();
-                            this.fetch();
-                            this.updateSearch();
-                        }.bind(this));
-                        this.updateAddAttributeFilterButton();
-                        this.updateExpandListButtonInFamily();
-                        this.handleLeftDropdownVisibility();
-
-                        this.manageLabels();
-                    }.bind(this)
-                });
-                $(attrSearchElement.autocomplete().suggestionsContainer).css({top: attrSearchElement.outerHeight(true)});
-                this.once('render remove', function () {
-                    attrSearchElement.autocomplete('dispose');
-                    attrSearchElement.val('');
-                }, this);
-                this.listenToOnce(this.getRouter(), 'routed', () => {
-                    attrSearchElement.autocomplete('dispose');
-                    attrSearchElement.val('');
-                });
-                this.$el.find('.add-attribute-filter-button').click(function () {
-                    attrSearchElement.autocomplete().hide();
-                    attrSearchElement.val('');
-                });
-            }
         },
 
         createFilter: function (name, params, callback, noRender) {
@@ -423,7 +304,6 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                 if (!this.selectedAttributesWithOneFilter.includes(name.split('-')[0])) {
                     this.selectedAttributesWithOneFilter.push(name.split('-')[0]);
                 }
-                this.hideAttributesWithOneFilter();
 
                 if (typeof callback === 'function') {
                     view.once('after:render', function () {

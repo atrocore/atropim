@@ -39,33 +39,6 @@
                         <a href="javascript:" class=" add-attribute-filter-button" tabindex="-1">
                             {{translate 'addAttributeFilter' category="labels" scope=scope}}
                         </a>
-                        <ul class="dropdown-menu show-list family-list">
-                            {{#if familiesAttributes}}
-                            <li>
-                                <input type="text" class="form-control attribute-text-filter" tabindex="1">
-                                <span class="fa fa-search form-control-feedback"></span>
-                            </li>
-                            {{else}}
-                            <li><div class="no-family-data">No Data</div></li>
-                            {{/if}}
-                            {{#each familiesAttributes}}
-                            <li data-name="{{name}}" class="dropdown-submenu">
-                                {{#if rows}}
-                                <a href="javascript:" class="expand-list" tabindex="-1">
-                                    {{#ifEqual name 'No family'}}{{translate 'All'}}{{else}}{{name}}{{/ifEqual}}
-                                    <span class="caret"></span>
-                                </a>
-                                {{/if}}
-                                <ul class="dropdown-menu attribute-filter-list">
-                                    {{#each rows}}
-                                    <li data-family="{{../name}}" data-name="{{name}}">
-                                        <a href="javascript:" class="add-filter" data-action="addAttributeFilter" data-id="{{attributeId}}" data-name="{{name}}" data-type="{{type}}">{{name}}</a>
-                                    </li>
-                                    {{/each}}
-                                </ul>
-                            </li>
-                            {{/each}}
-                        </ul>
                     </li>
                     {{/if}}
                     {{#if boolFilterListLength}}
