@@ -272,11 +272,11 @@ class Attribute extends AbstractRepository
             return;
         }
 
-        if (empty($entity->get('typeValue')) || empty($entity->get('typeValueIds'))) {
+        if (empty($entity->get('typeValueIds'))) {
             throw new BadRequest($this->exception('attributeValueRequired'));
         }
 
-        if ($entity->getFetched('typeValueIds') !== $entity->get('typeValueIds') && !empty($entity->getFetched('typeValueIds'))) {
+        if (!empty($entity->getFetched('typeValueIds')) && !Entity::areValuesEqual('jsonArray', $entity->getFetched('typeValueIds'), $entity->get('typeValueIds'))) {
             foreach ($entity->getFetched('typeValueIds') as $optionId) {
                 if (empty($entity->get('typeValueIds')) || !in_array($optionId, $entity->get('typeValueIds'))) {
                     if ($entity->get('type') === 'enum') {
