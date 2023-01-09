@@ -26,14 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/record/search', ['views/record/search', 'search-manager'],
-    (Dep, SearchManager) => Dep.extend({
-
-        template: 'pim:product/record/search',
+Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep.extend({
 
         existsAttributes: [],
 
         selectedAttributesWithOneFilter: [],
+
+        attrsFieldParams: {},
 
         events: _.extend({}, Dep.prototype.events, {
             'click .advanced-filters a.remove-attribute-filter': function (e) {
@@ -82,7 +81,7 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                     }, this);
                 }.bind(this));
             },
-            'click .dropdown-submenu > a.add-attribute-filter-button': function (e) {
+            'click .dropdown-submenu > a[data-filter-name="addAttributeFilter"]': function (e) {
                 e.stopPropagation();
                 e.preventDefault();
 
@@ -110,26 +109,26 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                             };
                             getLastIndexName.call(this);
 
-                            let compiledName = attribute.id + '-' + nameCount;
+                            let compiledName = attribute.id + '-attr-' + nameCount;
                             this.advanced[compiledName] = {};
                             this.advanced = this.sortAdvanced(this.advanced);
 
-                            let params = {
+                            this.attrsFieldParams[attribute.id] = {
                                 isAttribute: true,
                                 label: attribute.get('name'),
                                 type: attribute.get('type')
                             };
 
                             if (['enum', 'multiEnum'].includes(attribute.get('type'))) {
-                                params.isTypeValue = true;
-                                params.options = attribute.get('typeValueIds') || [];
-                                params.translatedOptions = {};
-                                params.options.forEach((option, k) => {
-                                    params.translatedOptions[option] = attribute.get('typeValue')[k];
+                                this.attrsFieldParams[attribute.id].isTypeValue = true;
+                                this.attrsFieldParams[attribute.id].options = attribute.get('typeValueIds') || [];
+                                this.attrsFieldParams[attribute.id].translatedOptions = {};
+                                this.attrsFieldParams[attribute.id].options.forEach((option, k) => {
+                                    this.attrsFieldParams[attribute.id].translatedOptions[option] = attribute.get('typeValue')[k];
                                 });
                             }
 
-                            this.createAttributeFilter(compiledName, {fieldParams: params}, view => {
+                            this.createAttributeFilter(compiledName, {fieldParams: this.attrsFieldParams[attribute.id]}, view => {
                                 view.populateDefaults();
                                 this.fetch();
                                 this.updateSearch();
@@ -154,6 +153,11 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
 
         setup() {
             Dep.prototype.setup.call(this);
+
+            this.additionalFilters.push({
+                name: 'addAttributeFilter',
+                label: this.translate('addAttributeFilter', 'labels', 'Product')
+            });
 
             this.ajaxGetRequest('Attribute/action/getAttributesIdsFilter')
                 .then(function (response) {
@@ -210,21 +214,13 @@ Espo.define('pim:views/product/record/search', ['views/record/search', 'search-m
                     this.advanced[field].fieldParams = fieldParams;
                 }
 
-                let name = field.split('-')[0];
-
-                console.log(name)
-
-                // this.familiesAttributes.forEach(function (family) {
-                //     family.rows.forEach(function (row) {
-                //         let name = field.split('-')[0];
-                //         if (row.attributeId === name) {
-                //             if (this.advanced[field] === false) {
-                //                 this.advanced[field] = {};
-                //             }
-                //             this.advanced[field] = _.extend(this.getAttributeParams(name), this.advanced[field]);
-                //         }
-                //     }, this);
-                // }, this);
+                let fieldParts = field.split('-attr-');
+                if (fieldParts.length === 2) {
+                    if (this.advanced[field] === false) {
+                        this.advanced[field] = {};
+                    }
+                    this.advanced[field] = _.extend({fieldParams: this.attrsFieldParams[fieldParts[0]]}, this.advanced[field]);
+                }
                 view.searchParams = this.advanced[field];
             }
         },
