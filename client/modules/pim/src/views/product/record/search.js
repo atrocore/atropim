@@ -56,9 +56,6 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                     this.getView('filter-' + name).getView('field').clearSearch();
                 }
 
-                this.updateAddAttributeFilterButton();
-                this.updateExpandListButtonInFamily();
-
                 this.fetch();
                 this.updateSearch();
                 this.toggleFilterActionsVisibility();
@@ -223,17 +220,6 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                 }
                 view.searchParams = this.advanced[field];
             }
-        },
-
-        updateCollection() {
-            const defaultFilters = this.searchManager.get();
-            const catalogTreeData = this.getCatalogTreeData();
-            let extendedFilters = _.extend(Espo.Utils.cloneDeep(defaultFilters), catalogTreeData);
-            this.searchManager.set(extendedFilters);
-
-            Dep.prototype.updateCollection.call(this);
-
-            this.searchManager.set(defaultFilters);
         },
 
         getCatalogTreeData() {
