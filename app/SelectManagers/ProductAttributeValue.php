@@ -94,10 +94,14 @@ class ProductAttributeValue extends AbstractSelectManager
 
         $language = \Pim\Services\ProductAttributeValue::getHeader('language');
         if (!empty($language)) {
-            if (!$this->getConfig()->get('isMultilangActive') || !in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+            $languages = ['main'];
+            if ($this->getConfig()->get('isMultilangActive')) {
+                $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
+            }
+            if (!in_array($language, $languages)) {
                 throw new BadRequest('No such language is available.');
             }
-            $selectParams['customWhere'] .= " AND product_attribute_value.language IN ('main','$language')";
+            $selectParams['customWhere'] .= " AND product_attribute_value.language='$language'";
         }
 
         if (!empty($onlyTabAttributes)) {
