@@ -118,11 +118,7 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
 
                             if (['enum', 'multiEnum'].includes(attribute.get('type'))) {
                                 this.attrsFieldParams[attribute.id].isTypeValue = true;
-                                this.attrsFieldParams[attribute.id].options = attribute.get('typeValueIds') || [];
-                                this.attrsFieldParams[attribute.id].translatedOptions = {};
-                                this.attrsFieldParams[attribute.id].options.forEach((option, k) => {
-                                    this.attrsFieldParams[attribute.id].translatedOptions[option] = attribute.get('typeValue')[k];
-                                });
+                                this.attrsFieldParams[attribute.id].options = attribute.get('typeValue') || [];
                             }
 
                             this.createAttributeFilter(compiledName, {fieldParams: this.attrsFieldParams[attribute.id]}, view => {
