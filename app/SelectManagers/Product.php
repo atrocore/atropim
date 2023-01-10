@@ -637,6 +637,7 @@ class Product extends AbstractSelectManager
         switch ($attribute->get('type')) {
             case 'array':
             case 'multiEnum':
+                $this->prepareEnumValue($attribute, $row);
                 if ($row['type'] === 'arrayIsEmpty') {
                     $where['value'][] = [
                         'type'  => 'or',
@@ -721,6 +722,7 @@ class Product extends AbstractSelectManager
                 $where['value'][] = $row;
                 break;
             case 'enum':
+                $this->prepareEnumValue($attribute, $row);
                 $row['attribute'] = 'varcharValue';
                 $where['value'][] = $row;
                 $where['value'][] = [
@@ -744,6 +746,22 @@ class Product extends AbstractSelectManager
         }
 
         return $where;
+    }
+
+    protected function prepareEnumValue(Attribute $attribute, array &$row): void
+    {
+        if (!empty($row['value']) && !empty($attribute->get('typeValue'))) {
+            $values = [];
+            foreach ($attribute->get('typeValue') as $k => $typeValue) {
+                foreach ($row['value'] as $val) {
+                    if ($val === $typeValue) {
+                        $values[] = $attribute->get('typeValueIds')[$k];
+                    }
+                }
+            }
+
+            $row['value'] = $values;
+        }
     }
 
     protected function addProductAttributesFilter(array &$selectParams, array $attributes): void

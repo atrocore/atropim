@@ -32,33 +32,7 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Templates\Controllers\Hierarchy;
-use Espo\Core\Exceptions;
 
 class Attribute extends Hierarchy
 {
-    public function actionFiltersData($params, $data, $request): array
-    {
-        if (!$request->isGet()) {
-            throw new Exceptions\BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Exceptions\Forbidden();
-        }
-
-        return $this->getRecordService()->getFiltersData();
-    }
-
-    public function actionGetAttributesIdsFilter($params, $data, $request): array
-    {
-        if (!$request->isGet()) {
-            throw new Exceptions\BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            return [];
-        }
-
-        return $this->getRecordService()->getAttributesIdsFilter();
-    }
 }
