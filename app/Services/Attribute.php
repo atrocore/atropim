@@ -130,27 +130,6 @@ class Attribute extends Hierarchy
         return parent::updateEntity($id, $data);
     }
 
-    /**
-     * @return array
-     */
-    public function getAttributesIdsFilter(): array
-    {
-        $result = [];
-
-        $attributes = $this
-            ->getEntityManager()
-            ->getRepository('Attribute')
-            ->select(['id'])
-            ->find()
-            ->toArray();
-
-        if (count($attributes) > 0) {
-            $result = array_column($attributes, 'id');
-        }
-
-        return $result;
-    }
-
     protected function init()
     {
         parent::init();
