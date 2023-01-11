@@ -207,6 +207,10 @@ class Metadata extends AbstractListener
                     break;
                 case 'enum':
                 case 'multiEnum':
+                    $defs['optionsIds'] = @json_decode((string)$attribute['type_value_ids'], true);
+                    if (empty($defs['optionsIds'])) {
+                        $defs['optionsIds'] = [];
+                    }
                     $defs['options'] = [];
                     if (!empty($attribute['type_value'])) {
                         $typeValue = @json_decode($attribute['type_value'], true);

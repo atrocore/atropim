@@ -133,6 +133,10 @@
     "scope": {
       "type": "enum",
       "notStorable": true,
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
       "options": [
         "Global",
         "Channel"
