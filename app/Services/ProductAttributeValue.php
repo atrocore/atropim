@@ -773,7 +773,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $locale = $entity->get('language');
         $tooltipFieldName = $locale == 'main' ? 'tooltip' : Util::toCamelCase('tooltip_' . strtolower($locale));
         $entity->set('attributeTooltip', $attribute->get($tooltipFieldName));
-
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
@@ -806,6 +805,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         $this->getRepository()->convertValue($entity);
+
+        $entity->set('typeValue', $attribute->get('typeValue'));
+        if (!empty($language = self::getHeader('language'))) {
+            $entity->set('typeValue', $attribute->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($language)))));
+        }
 
         if (!empty($attribute->get('isMultilang')) && !empty($mainLanguagePav = $this->getRepository()->getMainLanguagePav($entity))) {
             $entity->set('mainLanguageId', $mainLanguagePav->get('id'));
