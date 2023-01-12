@@ -361,6 +361,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (
             !$this->isPseudoTransaction()
             && property_exists($data, 'channelId')
+            && !empty($data->channelId)
             && property_exists($data, 'productId')
             && property_exists($data, 'attributeId')
             && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
