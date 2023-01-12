@@ -712,7 +712,25 @@ class Product extends Hierarchy
         if (!empty($headerLanguage)) {
             foreach ($records as $id => $pav) {
                 if ($pav->get('language') !== $headerLanguage) {
-                    unset($records[$id]);
+                    if ($headerLanguage === 'main') {
+                        unset($records[$id]);
+                    } else {
+                        if ($pav->get('language') !== 'main') {
+                            unset($records[$id]);
+                        } else {
+                            foreach ($records as $pav1) {
+                                if (
+                                    $pav1->get('language') === $headerLanguage
+                                    && $pav1->get('attributeId') == $pav->get('attributeId')
+                                    && $pav1->get('scope') == $pav->get('scope')
+                                    && $pav1->get('channelId') == $pav->get('channelId')
+                                ) {
+                                    unset($records[$id]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

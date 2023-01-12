@@ -99,7 +99,7 @@ class ProductAttributeValue extends AbstractSelectManager
             if (!in_array($language, $languages)) {
                 throw new BadRequest('No such language is available.');
             }
-            $selectParams['customWhere'] .= " AND product_attribute_value.language='$language'";
+            $selectParams['customWhere'] .= " AND product_attribute_value.language IN ('main','$language')";
         }
 
         if (!empty($onlyTabAttributes)) {
