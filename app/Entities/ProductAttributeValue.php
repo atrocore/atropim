@@ -85,19 +85,4 @@ class ProductAttributeValue extends Base
     {
         return $this->entityManager->getRepository('ProductAttributeValue')->getChannelLanguages((string)$this->get('channelId'));
     }
-
-    public function _getMainLanguageId(): ?string
-    {
-        $mainLanguage = $this->_getMainLanguage();
-
-        return !empty($mainLanguage) ? $mainLanguage->get('id') : null;
-    }
-
-    public function _getMainLanguage(): ?Entity
-    {
-        return $this
-            ->entityManager
-            ->getRepository('ProductAttributeValue')
-            ->getMainLanguagePav($this);
-    }
 }

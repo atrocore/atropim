@@ -808,11 +808,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $entity->set('typeValue', $attribute->get('typeValue'));
         if (!empty($language = self::getHeader('language'))) {
-            $entity->set('typeValue', $attribute->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($language)))));
-        }
-
-        if (!empty($attribute->get('isMultilang')) && !empty($mainLanguagePav = $this->getRepository()->getMainLanguagePav($entity))) {
-            $entity->set('mainLanguageId', $mainLanguagePav->get('id'));
+            $lingualTypeValue = $attribute->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($language))));
+            if (!empty($lingualTypeValue)) {
+                $entity->set('typeValue', $lingualTypeValue);
+            }
         }
 
         switch ($entity->get('attributeType')) {
