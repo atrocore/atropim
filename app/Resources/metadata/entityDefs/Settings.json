@@ -22,6 +22,10 @@
       "type": "enum",
       "tooltip": true,
       "required": true,
+      "optionsIds": [
+        "cascade",
+        "restrict"
+      ],
       "options": [
         "cascade",
         "restrict"
@@ -32,6 +36,10 @@
       "type": "enum",
       "tooltip": true,
       "required": true,
+      "optionsIds": [
+        "cascade",
+        "restrict"
+      ],
       "options": [
         "cascade",
         "restrict"
@@ -42,6 +50,11 @@
       "type": "enum",
       "tooltip": false,
       "required": true,
+      "optionsIds": [
+        "retainAllInheritedAttributes",
+        "removeAllInheritedAttributes",
+        "removeOnlyInheritedAttributesWithNoValue"
+      ],
       "options": [
         "retainAllInheritedAttributes",
         "removeAllInheritedAttributes",
