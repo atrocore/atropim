@@ -874,9 +874,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
          * Prepare via attribute type
          */
         if (property_exists($data, 'value') && !empty($attribute)) {
+            $typeValueKey = 'typeValue';
+            if (!empty($language = self::getHeader('language'))) {
+                $typeValueKey .= ucfirst(Util::toCamelCase(strtolower($language)));
+            }
+
             switch ($attribute->get('type')) {
                 case 'enum':
-                    $key = array_search((string)$data->value, $attribute->get('typeValue'));
+                    $key = array_search((string)$data->value, $attribute->get($typeValueKey));
                     if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
                         $data->value = $attribute->get('typeValueIds')[$key];
                     }
@@ -886,7 +891,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     $options = @json_decode((string)$data->value, true);
                     if (!empty($options)) {
                         foreach ($options as $option) {
-                            $key = array_search($option, $attribute->get('typeValue'));
+                            $key = array_search($option, $attribute->get($typeValueKey));
                             if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
                                 $values[] = $attribute->get('typeValueIds')[$key];
                             }
