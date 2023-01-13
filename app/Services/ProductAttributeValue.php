@@ -806,14 +806,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getRepository()->convertValue($entity);
 
-        $entity->set('typeValue', $attribute->get('typeValue'));
-        if (!empty($language = self::getHeader('language'))) {
-            $lingualTypeValue = $attribute->get('typeValue' . ucfirst(Util::toCamelCase(strtolower($language))));
-            if (!empty($lingualTypeValue)) {
-                $entity->set('typeValue', $lingualTypeValue);
-            }
-        }
-
         switch ($entity->get('attributeType')) {
             case 'unit':
                 $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));

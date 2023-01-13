@@ -315,7 +315,12 @@ class ProductAttributeValue extends AbstractRepository
                 return;
             }
 
-            $entity->set('typeValue', $this->getAttributeOptions($attribute, $entity->get('language')));
+            $language = $entity->get('language');
+            if (!empty($headerLanguage = \Pim\Services\ProductAttributeValue::getHeader('language'))) {
+                $language = $headerLanguage;
+            }
+
+            $entity->set('typeValue', $this->getAttributeOptions($attribute, $language));
             $entity->set('typeValueIds', $this->getAttributeOptionsIds($attribute));
         }
 
