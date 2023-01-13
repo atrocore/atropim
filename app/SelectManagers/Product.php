@@ -619,7 +619,7 @@ class Product extends AbstractSelectManager
             unset($row['isAttribute']);
         }
 
-        if (!isset($row['type']) || (empty($row['value']) && !in_array($row['type'], ['isTrue', 'isFalse']))) {
+        if (!isset($row['type']) || (empty($row['value']) && !in_array($row['type'], ['isTrue', 'isFalse', 'isNull', 'isNotNull']))) {
             $row['type'] = in_array($attribute->get('type'), ['array', 'multiEnum']) ? 'arrayIsEmpty' : 'isNull';
         }
 
