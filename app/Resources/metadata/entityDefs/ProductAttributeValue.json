@@ -2,12 +2,42 @@
   "fields": {
     "product": {
       "type": "link",
-      "required": true
+      "required": true,
+      "relationshipField": true
     },
     "attribute": {
       "type": "link",
       "required": true,
+      "relationshipField": true,
       "view": "pim:views/product-attribute-value/fields/attribute"
+    },
+    "language": {
+      "type": "language",
+      "default": "main",
+      "relationshipField": true,
+      "view": "pim:views/product-family-attribute/fields/language",
+      "prohibitedEmptyValue": true
+    },
+    "scope": {
+      "type": "enum",
+      "required": true,
+      "relationshipField": true,
+      "prohibitedEmptyValue": true,
+      "layoutListSmallDisabled": true,
+      "options": [
+        "Global",
+        "Channel"
+      ],
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
+      "default": "Global"
+    },
+    "channel": {
+      "type": "link",
+      "relationshipField": true,
+      "view": "pim:views/product-attribute-value/fields/channel"
     },
     "isRequired": {
       "type": "bool",
@@ -327,25 +357,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "scope": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "layoutListSmallDisabled": true,
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "optionsIds": [
-        "Global",
-        "Channel"
-      ],
-      "default": "Global"
-    },
-    "channel": {
-      "type": "link",
-      "view": "pim:views/product-attribute-value/fields/channel"
-    },
     "attributeType": {
       "type": "varchar",
       "aclFieldDisabled": true,
@@ -408,12 +419,6 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
-    },
-    "language": {
-      "type": "language",
-      "default": "main",
-      "view": "pim:views/product-family-attribute/fields/language",
-      "prohibitedEmptyValue": true
     },
     "languages": {
       "type": "multiLanguage",
@@ -598,7 +603,7 @@
     }
   },
   "uniqueIndexes": {
-    "unique_pav": [
+    "unique_relationship": [
       "product_id",
       "attribute_id",
       "scope",

@@ -29,40 +29,29 @@
 
 declare(strict_types=1);
 
-namespace Pim\Controllers;
+namespace Pim\Migrations;
 
-use Espo\Core\Templates\Controllers\Relationship;
-use Slim\Http\Request;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Treo\Core\Migration\Base;
 
-/**
- * Class ProductFamilyAttribute
- */
-class ProductFamilyAttribute extends Relationship
+class V1Dot6Dot14 extends Base
 {
-    /**
-     * @param array $params
-     * @param \stdClass $data
-     * @param Request $request
-     *
-     * @return bool
-     *
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function actionUnlinkAttributeGroupHierarchy(array $params, \stdClass $data, Request $request): bool
+    public function up(): void
     {
-        if (!$request->isDelete()) {
-            throw new BadRequest();
-        }
-        if (!property_exists($data, 'attributeGroupId') || !property_exists($data, 'productFamilyId')) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check('ProductFamilyAttribute', 'edit')) {
-            throw new Forbidden();
-        }
+        $this->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON product_attribute_value");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1FEB3B4E334584665AB6E62EFAD4DB71B5AF55D372F5A1AA ON product_attribute_value (deleted, product_id, attribute_id, language, scope, channel_id)");
+    }
 
-        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->productFamilyId);
+    public function down(): void
+    {
+        throw new BadRequest('Downgrade is prohibited.');
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
