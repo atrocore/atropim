@@ -9,12 +9,11 @@
   "notifications": true,
   "stream": false,
   "disabled": false,
-  "type": "Base",
+  "type": "Relationship",
   "module": "Pim",
-  "object": false,
+  "object": true,
   "overviewFilters": false,
-  "hasAssignedUser": true,
-  "hasTeam": true,
   "hasOwner": true,
-  "statusField": null
+  "hasAssignedUser": true,
+  "hasTeam": true
 }

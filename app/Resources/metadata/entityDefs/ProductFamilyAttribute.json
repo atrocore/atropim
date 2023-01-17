@@ -1,22 +1,19 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "trim": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "productFamily": {
       "type": "link",
-      "required": true
+      "required": true,
+      "relationshipField": true
     },
     "attribute": {
       "type": "link",
       "required": true,
+      "relationshipField": true,
       "view": "pim:views/product-family-attribute/fields/attribute"
     },
     "language": {
       "type": "language",
+      "relationshipField": true,
       "default": "main",
       "view": "pim:views/product-family-attribute/fields/language",
       "prohibitedEmptyValue": true
@@ -71,6 +68,7 @@
     },
     "scope": {
       "type": "enum",
+      "relationshipField": true,
       "required": true,
       "prohibitedEmptyValue": true,
       "layoutListSmallDisabled": true,
@@ -87,6 +85,7 @@
     },
     "channel": {
       "type": "link",
+      "relationshipField": true,
       "view": "pim:views/product-family-attribute/fields/channel"
     },
     "maxLength": {
@@ -110,20 +109,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "ownerUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
     }
   },
   "links": {
@@ -149,20 +134,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "ownerUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "assignedUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "teams": {
-      "type": "hasMany",
-      "entity": "Team",
-      "relationName": "EntityTeam",
-      "layoutRelationshipsDisabled": true
     }
   },
   "collection": {
@@ -175,22 +146,8 @@
       "channel.name"
     ]
   },
-  "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    },
-    "assignedUser": {
-      "columns": [
-        "assignedUserId",
-        "deleted"
-      ]
-    }
-  },
   "uniqueIndexes": {
-    "unique_pfa": [
+    "unique_relationship": [
       "product_family_id",
       "attribute_id",
       "scope",

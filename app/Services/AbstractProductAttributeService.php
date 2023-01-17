@@ -31,7 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Base
+class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Relationship
 {
     protected function prepareDefaultLanguages(\stdClass $attachment): void
     {

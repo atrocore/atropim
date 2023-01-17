@@ -33,10 +33,10 @@ namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Templates\Controllers\Base;
+use Espo\Core\Templates\Controllers\Relationship;
 use Slim\Http\Request;
 
-class ProductAttributeValue extends Base
+class ProductAttributeValue extends Relationship
 {
     public function actionGroupsPavs($params, $data, $request)
     {

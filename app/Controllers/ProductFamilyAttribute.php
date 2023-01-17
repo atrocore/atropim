@@ -31,7 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-use Espo\Core\Templates\Controllers\Base;
+use Espo\Core\Templates\Controllers\Relationship;
 use Slim\Http\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\Forbidden;
 /**
  * Class ProductFamilyAttribute
  */
-class ProductFamilyAttribute extends Base
+class ProductFamilyAttribute extends Relationship
 {
     /**
      * @param array $params

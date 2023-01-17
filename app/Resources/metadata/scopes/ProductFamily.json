@@ -11,5 +11,8 @@
     "disabled": false,
     "type": "Base",
     "module": "Pim",
-    "object": true
+    "object": true,
+    "hasOwner": true,
+    "hasAssignedUser": true,
+    "hasTeam": true
 }
