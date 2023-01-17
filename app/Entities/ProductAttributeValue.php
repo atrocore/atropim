@@ -31,11 +31,10 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Entities\Relationship;
 use Espo\Core\Utils\Json;
-use Espo\ORM\Entity;
 
-class ProductAttributeValue extends Base
+class ProductAttributeValue extends Relationship
 {
     protected $entityType = "ProductAttributeValue";
 
