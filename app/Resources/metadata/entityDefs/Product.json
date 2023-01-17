@@ -13,10 +13,6 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": false,
-      "importDisabled": true,
-      "exportType": "text",
       "noLoad": true
     },
     "productFamily": {
