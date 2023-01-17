@@ -8,15 +8,18 @@
     },
     "productFamily": {
       "type": "link",
-      "required": true
+      "required": true,
+      "relationshipField": true
     },
     "attribute": {
       "type": "link",
       "required": true,
+      "relationshipField": true,
       "view": "pim:views/product-family-attribute/fields/attribute"
     },
     "language": {
       "type": "language",
+      "relationshipField": true,
       "default": "main",
       "view": "pim:views/product-family-attribute/fields/language",
       "prohibitedEmptyValue": true
@@ -71,6 +74,7 @@
     },
     "scope": {
       "type": "enum",
+      "relationshipField": true,
       "required": true,
       "prohibitedEmptyValue": true,
       "layoutListSmallDisabled": true,
@@ -87,6 +91,7 @@
     },
     "channel": {
       "type": "link",
+      "relationshipField": true,
       "view": "pim:views/product-family-attribute/fields/channel"
     },
     "maxLength": {
@@ -190,7 +195,7 @@
     }
   },
   "uniqueIndexes": {
-    "unique_pfa": [
+    "unique_relationship": [
       "product_family_id",
       "attribute_id",
       "scope",

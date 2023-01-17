@@ -31,11 +31,11 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
 use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
 
-class ProductFamilyAttribute extends Base
+class ProductFamilyAttribute extends Relationship
 {
     public function getInheritedPavsIds(string $id): array
     {
