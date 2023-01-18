@@ -569,8 +569,12 @@ class ProductAttributeValue extends AbstractRepository
         return $result;
     }
 
-    protected function populateDefault(Entity $entity, Entity $attribute): void
+    protected function populateDefault(Entity $entity, ?Entity $attribute): void
     {
+        if (empty($attribute)) {
+            return;
+        }
+
         $entity->set('attributeType', $attribute->get('type'));
 
         if (empty($entity->get('channelId'))) {
