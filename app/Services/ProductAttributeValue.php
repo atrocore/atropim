@@ -806,33 +806,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getRepository()->convertValue($entity);
 
-        switch ($entity->get('attributeType')) {
-            case 'unit':
-                $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
-                break;
-            case 'enum':
-                if ($entity->get('varcharValue') !== null && !empty($entity->get('typeValueIds'))) {
-                    $key = array_search((string)$entity->get('varcharValue'), $entity->get('typeValueIds'));
-                    if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
-                        $entity->set('value', $entity->get('typeValue')[$key]);
-                    }
-                }
-                break;
-            case 'multiEnum':
-                if ($entity->get('textValue') !== null && !empty($entity->get('typeValueIds'))) {
-                    $values = [];
-                    $options = @json_decode((string)$entity->get('textValue'), true);
-                    if (!empty($options)) {
-                        foreach ($options as $option) {
-                            $key = array_search($option, $entity->get('typeValueIds'));
-                            if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
-                                $values[] = $entity->get('typeValue')[$key];
-                            }
-                        }
-                    }
-                    $entity->set('value', $values);
-                }
-                break;
+        if ($entity->get('attributeType') === 'unit') {
+            $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
         }
 
         $entity->clear('boolValue');
