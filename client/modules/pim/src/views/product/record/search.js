@@ -64,6 +64,35 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                     });
                 }
             },
+            'click .advanced-filters a.remove-attribute-filter': function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                var $target = $(e.currentTarget);
+                var name = $target.data('name');
+
+                this.$el.find('a[data-id="' + name.split('-')[0] + '"]').parent().removeClass('hide');
+                var container = this.getView('filter-' + name).$el.closest('div.filter');
+
+                if (!(name in this.pinned) || this.pinned[name] === false) {
+                    this.clearView('filter-' + name);
+                    container.remove();
+                    delete this.advanced[name];
+
+                    this.presetName = this.primary;
+                } else {
+                    this.getView('filter-' + name).getView('field').clearSearch();
+                }
+
+                this.fetch();
+                this.updateSearch();
+                this.toggleFilterActionsVisibility();
+                this.toggleResetVisibility();
+
+                this.manageLabels();
+                this.handleLeftDropdownVisibility();
+                this.setupOperatorLabels();
+            }
         }),
 
         setup() {
