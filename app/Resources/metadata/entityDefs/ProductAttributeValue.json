@@ -568,11 +568,13 @@
   "links": {
     "product": {
       "type": "belongsTo",
-      "entity": "Product"
+      "entity": "Product",
+      "foreign": "productAttributeValues"
     },
     "attribute": {
       "type": "belongsTo",
-      "entity": "Attribute"
+      "entity": "Attribute",
+      "foreign": "productAttributeValues"
     },
     "channel": {
       "type": "belongsTo",
