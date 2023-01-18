@@ -221,6 +221,8 @@ Espo.define('pim:views/product-family/record/panels/product-family-attributes', 
             selectObj.forEach(item => {
                 this.getModelFactory().create(this.scope, model => {
                     model.set({
+                        scope: 'Global',
+                        channelId: '',
                         productFamilyId: this.model.get('id'),
                         attributeId: item.id,
                         assignedUserId: this.getUser().id,
