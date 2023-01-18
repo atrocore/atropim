@@ -38,7 +38,6 @@
     "cannotLinkDefaultChannel": "Der Standardkanal '{channel}' für das ausgewählte Attribut ist nicht mit diesem Produkt verknüpft."
   },
   "exceptions": {
-    "valueMoreThanMaxLength": "Der Wert ist größer als die maximale Länge.",
     "noSuchChannelInProduct": "Das Attribut '%s' für den Kanal '%s' für das Produkt '%s' ist nicht verfügbar.",
     "attributeUnitValueIsRequired": "Die Einheit für das Attribut '%s' erforderlich.",
     "noSuchAttributeUnit": "Die Einheit für das Attribut '%s' ist ungültig.",

@@ -38,7 +38,6 @@
     "cannotLinkDefaultChannel": "Канал по умолчанию '{channel}' для выбранного атрибута не связан с этим продуктом."
   },
   "exceptions": {
-    "valueMoreThanMaxLength": "Значение превышает максимальную длину.",
     "noSuchChannelInProduct": "Атрибут '%s' для канала '%s' для продукта '%s' недоступен.",
     "attributeUnitValueIsRequired": "Единица измерения для атрибута '%s' необходима.",
     "noSuchAttributeUnit": "Единица измерения для атрибута '%s' не допустима.",
