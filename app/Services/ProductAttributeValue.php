@@ -842,7 +842,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
          */
         if (property_exists($data, 'value') && !empty($attribute)) {
             $typeValueKey = 'typeValue';
-            if (!empty($language = self::getHeader('language'))) {
+            if (!empty($language = $this->getHeaderLanguage())) {
                 $typeValueKey .= ucfirst(Util::toCamelCase(strtolower($language)));
             }
 

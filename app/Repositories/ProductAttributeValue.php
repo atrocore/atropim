@@ -316,7 +316,7 @@ class ProductAttributeValue extends AbstractRepository
             }
 
             $language = $entity->get('language');
-            if (!empty($headerLanguage = \Pim\Services\ProductAttributeValue::getHeader('language'))) {
+            if (!empty($headerLanguage = \Pim\Services\ProductAttributeValue::getLanguagePrism())) {
                 $language = $headerLanguage;
             }
 

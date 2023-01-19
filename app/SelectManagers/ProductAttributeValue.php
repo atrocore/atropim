@@ -90,7 +90,7 @@ class ProductAttributeValue extends AbstractSelectManager
             $selectParams['customWhere'] = '';
         }
 
-        $language = \Pim\Services\ProductAttributeValue::getHeader('language');
+        $language = \Pim\Services\ProductAttributeValue::getLanguagePrism();
         if (!empty($language)) {
             $languages = ['main'];
             if ($this->getConfig()->get('isMultilangActive')) {
