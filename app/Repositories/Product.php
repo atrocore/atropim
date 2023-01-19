@@ -458,7 +458,12 @@ class Product extends AbstractRepository
         $pfas = $this
             ->getEntityManager()
             ->getRepository('ProductFamilyAttribute')
-            ->where(['productFamilyId' => $product->get('productFamilyId'), 'channelId' => $channelId])
+            ->join('attribute')
+            ->where([
+                'attribute.id !=' => null,
+                'productFamilyId' => $product->get('productFamilyId'),
+                'channelId'       => $channelId
+            ])
             ->find();
 
         foreach ($pfas as $pfa) {
