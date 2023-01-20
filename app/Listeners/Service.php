@@ -102,7 +102,7 @@ class Service extends AbstractListener
      */
     protected function generateCode(Entity $entity, int $index): string
     {
-        $code = strtolower($entity->get('name'));
+        $code = strtolower((string)$entity->get('name'));
         $code = preg_replace('/ /', '_', $code);
         $code = preg_replace('/[^a-z_0-9]/', '', $code);
 
