@@ -22,7 +22,11 @@
     "backwardAssociation": {
       "type": "varchar",
       "notStorable": true,
-      "view": "pim:views/associated-product/fields/backward-association"
+      "view": "pim:views/associated-product/fields/backward-association",
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "backwardAssociationId": {
       "type": "varchar",
