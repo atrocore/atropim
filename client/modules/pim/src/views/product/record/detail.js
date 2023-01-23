@@ -85,13 +85,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             Dep.prototype.afterRender.call(this);
 
             if (this.isCatalogTreePanel) {
-                const treePanel = this.getView('catalogTreePanel');
-
-                treePanel.buildTree();
-
                 let observer = new ResizeObserver(() => {
                     this.onTreeResize();
-
                     observer.unobserve($('#content').get(0));
                 });
                 observer.observe($('#content').get(0));
