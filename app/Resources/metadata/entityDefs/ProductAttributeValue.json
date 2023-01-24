@@ -37,6 +37,7 @@
     "channel": {
       "type": "link",
       "relationshipField": true,
+      "required": false,
       "view": "pim:views/product-attribute-value/fields/channel"
     },
     "isRequired": {
