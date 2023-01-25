@@ -706,7 +706,7 @@ class Product extends Hierarchy
             }
         }
 
-        $headerLanguage = self::getHeader('language');
+        $headerLanguage = $this->getHeaderLanguage();
 
         // filtering via header language
         if (!empty($headerLanguage)) {
