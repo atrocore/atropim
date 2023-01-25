@@ -74,15 +74,15 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                 this.$el.find('a[data-id="' + name.split('-')[0] + '"]').parent().removeClass('hide');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
 
-                if (!(name in this.pinned) || this.pinned[name] === false) {
-                    this.clearView('filter-' + name);
-                    container.remove();
-                    delete this.advanced[name];
+                this.clearView('filter-' + name);
+                container.remove();
+                delete this.advanced[name];
 
-                    this.presetName = this.primary;
-                } else {
-                    this.getView('filter-' + name).getView('field').clearSearch();
+                if (name in this.pinned) {
+                    delete this.pinned[name];
                 }
+
+                this.presetName = this.primary;
 
                 this.fetch();
                 this.updateSearch();
@@ -92,6 +92,8 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                 this.manageLabels();
                 this.handleLeftDropdownVisibility();
                 this.setupOperatorLabels();
+
+                this.search();
             }
         }),
 
