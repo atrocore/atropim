@@ -640,7 +640,7 @@ class ProductAttributeValue extends AbstractRepository
             $length = mb_strlen((string)$entity->get('value'));
             $maxLength = (int)$entity->get('maxLength');
             if (!empty($maxLength) && $length > $maxLength) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $attribute->get('name'), $maxLength, $length));
+                throw new BadRequest(sprintf($this->getInjection('language')->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $attribute->get('name'), $maxLength, $length));
             }
         }
 
