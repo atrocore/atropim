@@ -46,8 +46,9 @@ class StreamController extends AbstractListener
     public function afterActionList(Event $event)
     {
         $result = $event->getArgument('result');
+        $params = $event->getArgument('params');
 
-        $result = $this->prepareDataForUserStream($result);
+        $result = $this->prepareDataForUserStream($result, $params);
         $result = $this->injectAttributeType($result);
         $result = $this->injectDiffForTextAttributes($result);
 
@@ -93,7 +94,7 @@ class StreamController extends AbstractListener
 
             if (!empty($attributes = $this->getAttributesData($pavsIds))) {
                 foreach ($result['list'] as $key => $item) {
-                    if (isset($attributes[$item['attributeId']])) {
+                    if (isset($item['attributeId']) && isset($attributes[$item['attributeId']])) {
                         $type = $attributes[$item['attributeId']]['type'];
                         $result['list'][$key]['attributeType'] = $type;
 
@@ -128,12 +129,13 @@ class StreamController extends AbstractListener
      * Prepare data for user stream panel in dashlet
      *
      * @param array $result
+     * @param array $params
      *
      * @return array
      */
-    protected function prepareDataForUserStream(array $result): array
+    protected function prepareDataForUserStream(array $result, array $params): array
     {
-        if (!empty($result['list']) && isset($result['scope']) && $result['scope'] == 'User') {
+        if (!empty($result['list']) && isset($params['scope']) && $params['scope'] == 'User') {
             // prepare notes ids
             $noteIds = array_column($result['list'], 'id');
 
