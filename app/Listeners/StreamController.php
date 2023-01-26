@@ -29,6 +29,7 @@
 
 namespace Pim\Listeners;
 
+use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\EventManager\Event;
 use Espo\Listeners\AbstractListener;
 
@@ -48,8 +49,34 @@ class StreamController extends AbstractListener
 
         $result = $this->prepareDataForUserStream($result);
         $result = $this->injectAttributeType($result);
+        $result = $this->injectDiffForTextAttributes($result);
 
         $event->setArgument('result', $result);
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return array
+     */
+    protected function injectDiffForTextAttributes(array $result): array
+    {
+        if (isset($result['list']) && is_array($result['list'])) {
+            foreach ($result['list'] as $key => $item) {
+                if (isset($item['attributeType']) && $item['attributeType'] == 'text') {
+                    $data = $item['data'];
+
+                    $was = $data->attributes->was->{$data->fields[0]};
+                    $became = nl2br($data->attributes->became->{$data->fields[0]});
+
+                    $diff = (new HtmlDiff(html_entity_decode($was), html_entity_decode($became)))->build();
+
+                    $result['list'][$key]['diff'] = $diff;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
