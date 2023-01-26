@@ -109,13 +109,14 @@ class ProductAttributeValue extends AbstractRepository
         return $pavs;
     }
 
-    public function getPavAttribute(Entity $entity): ?\Pim\Entities\Attribute
+    public function getPavAttribute(Entity $entity): \Pim\Entities\Attribute
     {
-        if (!isset($this->pavsAttributes[$entity->get('attributeId')])) {
+        if (empty($this->pavsAttributes[$entity->get('attributeId')])) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             if (empty($attribute)) {
-                $this->getEntityManager()->removeEntity($entity);
-                return null;
+                $this->getEntityManager()->getRepository('ProductFamilyAttribute')->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
+                $this->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
+                throw new BadRequest("Attribute '{$entity->get('attributeId')}' does not exist.");
             }
             $this->pavsAttributes[$entity->get('attributeId')] = $attribute;
         }
@@ -311,9 +312,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
-            if (empty($attribute = $this->getPavAttribute($entity))) {
-                return;
-            }
+            $attribute = $this->getPavAttribute($entity);
 
             $language = $entity->get('language');
             if (!empty($headerLanguage = \Pim\Services\ProductAttributeValue::getLanguagePrism())) {
@@ -640,7 +639,9 @@ class ProductAttributeValue extends AbstractRepository
             $length = mb_strlen((string)$entity->get('value'));
             $maxLength = (int)$entity->get('maxLength');
             if (!empty($maxLength) && $length > $maxLength) {
-                throw new BadRequest(sprintf($this->getInjection('language')->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $attribute->get('name'), $maxLength, $length));
+                throw new BadRequest(
+                    sprintf($this->getInjection('language')->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $attribute->get('name'), $maxLength, $length)
+                );
             }
         }
 
