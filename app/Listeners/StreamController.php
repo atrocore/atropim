@@ -29,6 +29,7 @@
 
 namespace Pim\Listeners;
 
+use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\EventManager\Event;
 use Espo\Listeners\AbstractListener;
 
@@ -45,11 +46,38 @@ class StreamController extends AbstractListener
     public function afterActionList(Event $event)
     {
         $result = $event->getArgument('result');
+        $params = $event->getArgument('params');
 
-        $result = $this->prepareDataForUserStream($result);
+        $result = $this->prepareDataForUserStream($result, $params);
         $result = $this->injectAttributeType($result);
+        $result = $this->injectDiffForTextAttributes($result);
 
         $event->setArgument('result', $result);
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return array
+     */
+    protected function injectDiffForTextAttributes(array $result): array
+    {
+        if (isset($result['list']) && is_array($result['list'])) {
+            foreach ($result['list'] as $key => $item) {
+                if (isset($item['attributeType']) && $item['attributeType'] == 'text') {
+                    $data = $item['data'];
+
+                    $was = $data->attributes->was->{$data->fields[0]};
+                    $became = nl2br($data->attributes->became->{$data->fields[0]});
+
+                    $diff = (new HtmlDiff(html_entity_decode($was), html_entity_decode($became)))->build();
+
+                    $result['list'][$key]['diff'] = $diff;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -66,7 +94,7 @@ class StreamController extends AbstractListener
 
             if (!empty($attributes = $this->getAttributesData($pavsIds))) {
                 foreach ($result['list'] as $key => $item) {
-                    if (isset($attributes[$item['attributeId']])) {
+                    if (isset($item['attributeId']) && isset($attributes[$item['attributeId']])) {
                         $type = $attributes[$item['attributeId']]['type'];
                         $result['list'][$key]['attributeType'] = $type;
 
@@ -101,12 +129,13 @@ class StreamController extends AbstractListener
      * Prepare data for user stream panel in dashlet
      *
      * @param array $result
+     * @param array $params
      *
      * @return array
      */
-    protected function prepareDataForUserStream(array $result): array
+    protected function prepareDataForUserStream(array $result, array $params): array
     {
-        if (!empty($result['list']) && isset($result['scope']) && $result['scope'] == 'User') {
+        if (!empty($result['list']) && isset($params['scope']) && $params['scope'] == 'User') {
             // prepare notes ids
             $noteIds = array_column($result['list'], 'id');
 
