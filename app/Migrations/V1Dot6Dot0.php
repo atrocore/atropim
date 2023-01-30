@@ -38,141 +38,148 @@ class V1Dot6Dot0 extends Base
 {
     public function up(): void
     {
-        while (!empty($pfaId = $this->getDuplicatePfa())) {
-            $this->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'", false);
-        }
-
-        $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
-        $this->exec("UPDATE attribute SET is_multilang=0 WHERE attribute.type IN ('enum', 'multiEnum')");
-
-        $attributes = $this->getSchema()->getConnection()->createQueryBuilder()
-            ->select('a.*')
-            ->from('attribute', 'a')
-            ->andWhere('a.deleted=0')
-            ->andWhere('a.type=:enum OR a.type=:multiEnum')->setParameter('enum', 'enum')->setParameter('multiEnum', 'multiEnum')
-            ->fetchAllAssociative();
-
-        while (!empty($attributes)) {
-            $attribute = array_shift($attributes);
-
-            $typeValue = @json_decode((string)$attribute['type_value']);
-            if (empty($typeValue)) {
-                continue;
-            }
-            $typeValueIds = @json_decode((string)$attribute['type_value_ids']);
-            if (empty($typeValueIds)) {
-                $typeValueIds = array_keys($typeValue);
-                $this->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'", false);
+        try {
+            while (!empty($pfaId = $this->getDuplicatePfa())) {
+                $this->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'", false);
             }
 
-            if ($attribute['type'] === 'enum') {
-                foreach ($typeValue as $k => $v) {
-                    $this
-                        ->getPDO()
-                        ->exec(
-                            "UPDATE product_attribute_value SET varchar_value='{$typeValueIds[$k]}' WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value='$v'"
-                        );
-                }
-            }
+            $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
+            $this->exec("UPDATE attribute SET is_multilang=0 WHERE attribute.type IN ('enum', 'multiEnum')");
 
-            if ($attribute['type'] === 'multiEnum') {
-                $pavs = $this->getSchema()->getConnection()->createQueryBuilder()
-                    ->select('pav.*')
-                    ->from('product_attribute_value', 'pav')
-                    ->andWhere('pav.deleted=0')
-                    ->andWhere('pav.attribute_id=:attributeId')->setParameter('attributeId', $attribute['id'])
-                    ->fetchAllAssociative();
-
-                while (!empty($pavs)) {
-                    $pav = array_shift($pavs);
-
-                    $values = @json_decode((string)$pav['text_value']);
-                    if (empty($values)) {
-                        $values = [];
-                    }
-
-                    $valuesIds = [];
-                    foreach ($values as $value) {
-                        $key = array_search($value, $typeValue);
-                        if ($key !== false) {
-                            $valuesIds[] = $typeValueIds[$key];
-                        }
-                    }
-
-                    $textValue = json_encode($valuesIds);
-
-                    $this->exec("UPDATE product_attribute_value SET text_value='$textValue' WHERE id='{$pav['id']}'", false);
-                }
-            }
-
-            if ($attribute['type'] === 'enum' && !empty($attribute['enum_default'])) {
-                $defaultKey = array_search($attribute['enum_default'], $typeValue);
-                if ($defaultKey !== false) {
-                    $this->exec("UPDATE attribute SET enum_default='{$typeValueIds[$defaultKey]}' WHERE id='{$attribute['id']}'", false);
-                }
-            }
-        }
-
-        $this->exec("ALTER TABLE product_family_attribute ADD language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
-
-        $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
-        $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
-
-        $this->exec(
-            "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)",
-            false
-        );
-
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            $records = $this->getSchema()->getConnection()->createQueryBuilder()
-                ->select('pfa.*')
-                ->from('product_family_attribute', 'pfa')
-                ->leftJoin('pfa', 'attribute', 'a', 'pfa.attribute_id=a.id')
-                ->where('pfa.deleted=0')
+            $attributes = $this->getSchema()->getConnection()->createQueryBuilder()
+                ->select('a.*')
+                ->from('attribute', 'a')
                 ->andWhere('a.deleted=0')
-                ->andWhere('a.is_multilang=1')
+                ->andWhere('a.type=:enum OR a.type=:multiEnum')->setParameter('enum', 'enum')->setParameter('multiEnum', 'multiEnum')
                 ->fetchAllAssociative();
 
-            if (!empty($records)) {
-                $container = (new \Espo\Core\Application())->getContainer();
-                $auth = new \Espo\Core\Utils\Auth($container);
-                $auth->useNoAuth();
-                $service = $container->get('serviceFactory')->create('ProductFamilyAttribute');
-                foreach ($records as $record) {
-                    $attachment = new \stdClass();
-                    $attachment->languages = $this->getConfig()->get('inputLanguageList', []);
-                    $attachment->productFamilyId = $record['product_family_id'];
-                    $attachment->attributeId = $record['attribute_id'];
-                    $attachment->isRequired = !empty($record['is_required']);
-                    $attachment->scope = $record['scope'];
-                    $attachment->channelId = $record['channel_id'];
+            while (!empty($attributes)) {
+                $attribute = array_shift($attributes);
 
-                    try {
-                        $service->createEntity($attachment);
-                    } catch (\Throwable $e) {
+                $typeValue = @json_decode((string)$attribute['type_value']);
+                if (empty($typeValue)) {
+                    continue;
+                }
+                $typeValueIds = @json_decode((string)$attribute['type_value_ids']);
+                if (empty($typeValueIds)) {
+                    $typeValueIds = array_keys($typeValue);
+                    $this->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'", false);
+                }
+
+                if ($attribute['type'] === 'enum') {
+                    foreach ($typeValue as $k => $v) {
+                        $this
+                            ->getPDO()
+                            ->exec(
+                                "UPDATE product_attribute_value SET varchar_value='{$typeValueIds[$k]}' WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value='$v'"
+                            );
+                    }
+                }
+
+                if ($attribute['type'] === 'multiEnum') {
+                    $pavs = $this->getSchema()->getConnection()->createQueryBuilder()
+                        ->select('pav.*')
+                        ->from('product_attribute_value', 'pav')
+                        ->andWhere('pav.deleted=0')
+                        ->andWhere('pav.attribute_id=:attributeId')->setParameter('attributeId', $attribute['id'])
+                        ->fetchAllAssociative();
+
+                    while (!empty($pavs)) {
+                        $pav = array_shift($pavs);
+
+                        $values = @json_decode((string)$pav['text_value']);
+                        if (empty($values)) {
+                            $values = [];
+                        }
+
+                        $valuesIds = [];
+                        foreach ($values as $value) {
+                            $key = array_search($value, $typeValue);
+                            if ($key !== false) {
+                                $valuesIds[] = $typeValueIds[$key];
+                            }
+                        }
+
+                        $textValue = json_encode($valuesIds);
+
+                        $this->exec("UPDATE product_attribute_value SET text_value='$textValue' WHERE id='{$pav['id']}'", false);
+                    }
+                }
+
+                if ($attribute['type'] === 'enum' && !empty($attribute['enum_default'])) {
+                    $defaultKey = array_search($attribute['enum_default'], $typeValue);
+                    if ($defaultKey !== false) {
+                        $this->exec("UPDATE attribute SET enum_default='{$typeValueIds[$defaultKey]}' WHERE id='{$attribute['id']}'", false);
                     }
                 }
             }
-        }
 
-        $this->exec("DELETE FROM job WHERE job.name='CheckProductAttributes'");
-        $this->exec("DELETE FROM scheduled_job WHERE scheduled_job.job='CheckProductAttributes'");
+            $this->exec("ALTER TABLE product_family_attribute ADD language VARCHAR(255) DEFAULT 'main' COLLATE utf8mb4_unicode_ci");
 
-        $this->exec("DROP INDEX IDX_MAIN_LANGUAGE_ID ON product_attribute_value");
-        $this->exec("ALTER TABLE product_attribute_value DROP main_language_id");
+            $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
+            $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
-        $this->exec("ALTER TABLE product DROP has_inconsistent_attributes");
+            $this->exec(
+                "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)",
+                false
+            );
 
-        $attributes = $this->getSchema()->getConnection()->createQueryBuilder()
-            ->select('a.*')
-            ->from('attribute', 'a')
-            ->andWhere('a.deleted=0')
-            ->andWhere('a.sort_order_in_product IS NULL')
-            ->fetchAllAssociative();
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                $records = $this->getSchema()->getConnection()->createQueryBuilder()
+                    ->select('pfa.*')
+                    ->from('product_family_attribute', 'pfa')
+                    ->leftJoin('pfa', 'attribute', 'a', 'pfa.attribute_id=a.id')
+                    ->where('pfa.deleted=0')
+                    ->andWhere('a.deleted=0')
+                    ->andWhere('a.is_multilang=1')
+                    ->fetchAllAssociative();
 
-        foreach ($attributes as $k => $attribute) {
-            $sort = time() + $k;
-            $this->exec("UPDATE attribute SET sort_order_in_product=$sort WHERE id='{$attribute['id']}'");
+                if (!empty($records)) {
+                    $container = (new \Espo\Core\Application())->getContainer();
+                    $auth = new \Espo\Core\Utils\Auth($container);
+                    $auth->useNoAuth();
+                    $service = $container->get('serviceFactory')->create('ProductFamilyAttribute');
+                    foreach ($records as $record) {
+                        $attachment = new \stdClass();
+                        $attachment->languages = $this->getConfig()->get('inputLanguageList', []);
+                        $attachment->productFamilyId = $record['product_family_id'];
+                        $attachment->attributeId = $record['attribute_id'];
+                        $attachment->isRequired = !empty($record['is_required']);
+                        $attachment->scope = $record['scope'];
+                        $attachment->channelId = $record['channel_id'];
+
+                        try {
+                            $service->createEntity($attachment);
+                        } catch (\Throwable $e) {
+                        }
+                    }
+                }
+            }
+
+            $this->exec("DELETE FROM job WHERE job.name='CheckProductAttributes'");
+            $this->exec("DELETE FROM scheduled_job WHERE scheduled_job.job='CheckProductAttributes'");
+
+            $this->exec("DROP INDEX IDX_MAIN_LANGUAGE_ID ON product_attribute_value");
+            $this->exec("ALTER TABLE product_attribute_value DROP main_language_id");
+
+            $this->exec("ALTER TABLE product DROP has_inconsistent_attributes");
+
+            $attributes = $this->getSchema()->getConnection()->createQueryBuilder()
+                ->select('a.*')
+                ->from('attribute', 'a')
+                ->andWhere('a.deleted=0')
+                ->andWhere('a.sort_order_in_product IS NULL')
+                ->fetchAllAssociative();
+
+            foreach ($attributes as $k => $attribute) {
+                $sort = time() + $k;
+                $this->exec("UPDATE attribute SET sort_order_in_product=$sort WHERE id='{$attribute['id']}'");
+            }
+
+        } catch (\Throwable $e) {
+            echo $e->getMessage() . PHP_EOL;
+            echo $e->getTraceAsString() . PHP_EOL;
+            throw $e;
         }
     }
 
