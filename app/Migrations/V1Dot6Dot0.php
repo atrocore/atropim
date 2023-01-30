@@ -39,7 +39,7 @@ class V1Dot6Dot0 extends Base
     public function up(): void
     {
         while (!empty($pfaId = $this->getDuplicatePfa())) {
-            $this->getPDO()->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'");
+            $this->exec("DELETE FROM product_family_attribute WHERE id='$pfaId'", false);
         }
 
         $this->exec("DELETE FROM product_attribute_value WHERE attribute_type IN ('enum', 'multiEnum') AND language!='main'");
@@ -62,7 +62,7 @@ class V1Dot6Dot0 extends Base
             $typeValueIds = @json_decode((string)$attribute['type_value_ids']);
             if (empty($typeValueIds)) {
                 $typeValueIds = array_keys($typeValue);
-                $this->getPDO()->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'");
+                $this->exec("UPDATE attribute SET type_value_ids='" . json_encode($typeValueIds) . "' WHERE id='{$attribute['id']}'", false);
             }
 
             if ($attribute['type'] === 'enum') {
@@ -101,14 +101,14 @@ class V1Dot6Dot0 extends Base
 
                     $textValue = json_encode($valuesIds);
 
-                    $this->getPDO()->exec("UPDATE product_attribute_value SET text_value='$textValue' WHERE id='{$pav['id']}'");
+                    $this->exec("UPDATE product_attribute_value SET text_value='$textValue' WHERE id='{$pav['id']}'", false);
                 }
             }
 
             if ($attribute['type'] === 'enum' && !empty($attribute['enum_default'])) {
                 $defaultKey = array_search($attribute['enum_default'], $typeValue);
                 if ($defaultKey !== false) {
-                    $this->getPDO()->exec("UPDATE attribute SET enum_default='{$typeValueIds[$defaultKey]}' WHERE id='{$attribute['id']}'");
+                    $this->exec("UPDATE attribute SET enum_default='{$typeValueIds[$defaultKey]}' WHERE id='{$attribute['id']}'", false);
                 }
             }
         }
@@ -118,8 +118,9 @@ class V1Dot6Dot0 extends Base
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
 
-        $this->getPDO()->exec(
-            "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)"
+        $this->exec(
+            "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)",
+            false
         );
 
         if ($this->getConfig()->get('isMultilangActive', false)) {
@@ -197,11 +198,15 @@ class V1Dot6Dot0 extends Base
             )->fetch(\PDO::FETCH_COLUMN);
     }
 
-    protected function exec(string $query): void
+    protected function exec(string $query, bool $silent = true): void
     {
         try {
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
+            if (!$silent) {
+                echo $query . PHP_EOL;
+                throw $e;
+            }
         }
     }
 }
