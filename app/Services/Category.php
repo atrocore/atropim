@@ -59,9 +59,38 @@ class Category extends Hierarchy
         return Record::createEntity($attachment);
     }
 
+    protected function afterCreateEntity(Entity $entity, $data)
+    {
+        parent::afterCreateEntity($entity, $data);
+
+        $this->saveMainImage($entity, $data);
+    }
+
     public function updateEntity($id, $data)
     {
         return Record::updateEntity($id, $data);
+    }
+
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        parent::afterUpdateEntity($entity, $data);
+
+        $this->saveMainImage($entity, $data);
+    }
+
+    protected function saveMainImage(Entity $entity, $data): void
+    {
+        if (!property_exists($data, 'mainImageId')) {
+            return;
+        }
+
+        $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $data->mainImageId])->findOne();
+        if (empty($asset)) {
+            return;
+        }
+
+        $this->linkEntity($entity->get('id'), 'assets', $asset->get('id'));
+        $this->getRepository()->updateRelationData('categoryAsset', ['isMainImage' => true], 'categoryId', $entity->get('id'), 'assetId', $asset->get('id'));
     }
 
     public function linkEntity($id, $link, $foreignId)
