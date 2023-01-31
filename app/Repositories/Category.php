@@ -634,12 +634,12 @@ class Category extends AbstractRepository
 
     protected function updateRoute(Entity $entity): void
     {
-        $route = self::getCategoryRoute($entity);
-        $routeName = self::getCategoryRoute($entity, true);
+        $route = $this->getPDO()->quote(self::getCategoryRoute($entity));
+        $routeName = $this->getPDO()->quote(self::getCategoryRoute($entity, true));
 
         $this
             ->getEntityManager()
-            ->nativeQuery("UPDATE category SET category_route='$route', category_route_name='$routeName' WHERE id='{$entity->get('id')}'");
+            ->nativeQuery("UPDATE category SET category_route=$route, category_route_name=$routeName WHERE id='{$entity->get('id')}'");
     }
 
     protected function updateCategoryTree(Entity $entity): void
