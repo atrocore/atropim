@@ -889,6 +889,14 @@ class Product extends Hierarchy
 
     protected function isProductAttributeUpdating(\stdClass $data): bool
     {
+        if (!property_exists($data, 'panelsData')) {
+            return false;
+        }
+
+        if (!is_object($data->panelsData) || !property_exists($data->panelsData, 'productAttributeValues')) {
+            return false;
+        }
+
         return !empty($data->panelsData->productAttributeValues);
     }
 
