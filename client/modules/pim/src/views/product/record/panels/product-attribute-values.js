@@ -218,7 +218,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             });
 
             this.listenTo(this.model, 'after:relate after:unrelate', link => {
-                if (link === 'channels') {
+                if (link === 'productChannels') {
                     this.actionRefresh();
                 }
             });
