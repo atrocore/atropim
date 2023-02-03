@@ -761,13 +761,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         if (!empty($userLanguage = $this->getInjection('preferences')->get('language'))) {
             $nameField = Util::toCamelCase('name_' . strtolower($userLanguage));
-            if ($attribute->has($nameField)) {
+            if ($attribute->has($nameField) && !empty($attribute->get($nameField))) {
                 $entity->set('attributeName', $attribute->get($nameField));
             }
         }
 
         if ($entity->get('language') !== 'main') {
-            $entity->set('attributeName', $attribute->get('name') . ' / ' . $entity->get('language'));
+            $attributeName = !empty($attribute->get('name')) ? $attribute->get('name') : $attribute->get('id');
+            $entity->set('attributeName', $attributeName . ' / ' . $entity->get('language'));
         }
 
         $locale = $entity->get('language');
