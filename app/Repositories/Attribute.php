@@ -273,7 +273,8 @@ class Attribute extends AbstractRepository
         }
 
         if (empty($entity->get('typeValueIds'))) {
-            throw new BadRequest($this->exception('attributeValueRequired'));
+            $entity->set('typeValueIds', []);
+            return;
         }
 
         if (!empty($entity->getFetched('typeValueIds')) && !Entity::areValuesEqual('jsonArray', $entity->getFetched('typeValueIds'), $entity->get('typeValueIds'))) {
@@ -306,7 +307,6 @@ class Attribute extends AbstractRepository
                             throw new BadRequest($this->exception('attributeValueIsInUse'));
                         }
                     }
-
                 }
             }
         }
