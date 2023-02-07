@@ -4,7 +4,8 @@
     "children": "Associated Attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
-    "typeValue": "Values",
+    "typeValueIds": "Options IDs",
+    "typeValue": "Options Values",
     "type": "Attribute Type",
     "code": "Code",
     "name": "Attribute Name",
@@ -74,7 +75,6 @@
   },
   "exceptions": {
     "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",
-    "attributeValueRequired": "Attribute values is required.",
     "attributeValueShouldBeUnique": "Attribute value should be unique.",
     "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",
     "youCanNotUnlinkProductFamilyAttribute": "You cannot unlink product family attribute.",

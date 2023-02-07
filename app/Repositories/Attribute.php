@@ -273,7 +273,31 @@ class Attribute extends AbstractRepository
         }
 
         if (empty($entity->get('typeValueIds'))) {
-            throw new BadRequest($this->exception('attributeValueRequired'));
+            $entity->set('typeValueIds', []);
+            return;
+        }
+
+        /**
+         * Delete not unique option(s)
+         */
+        $toDelete = [];
+        foreach (array_count_values($entity->get('typeValueIds')) as $optionId => $count) {
+            if ($count > 1) {
+                $toDelete[] = array_search($optionId, $entity->get('typeValueIds'));
+            }
+        }
+        while (count($toDelete) > 0) {
+            $key = array_shift($toDelete);
+            foreach ($this->getMetadata()->get(['entityDefs', 'Attribute', 'fields']) as $field => $fieldDefs) {
+                if (empty($fieldDefs['isTypeValueField'])) {
+                    continue;
+                }
+                $values = $entity->get($field);
+                if (is_array($entity->get($field)) && array_key_exists($key, $values)) {
+                    unset($values[$key]);
+                    $entity->set($field, array_values($values));
+                }
+            }
         }
 
         if (!empty($entity->getFetched('typeValueIds')) && !Entity::areValuesEqual('jsonArray', $entity->getFetched('typeValueIds'), $entity->get('typeValueIds'))) {
@@ -306,7 +330,6 @@ class Attribute extends AbstractRepository
                             throw new BadRequest($this->exception('attributeValueIsInUse'));
                         }
                     }
-
                 }
             }
         }

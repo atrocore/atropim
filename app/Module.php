@@ -108,16 +108,6 @@ class Module extends AbstractModule
                 ]
             ]
         ];
-        $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue']['required']['conditionGroup'] = [
-            [
-                'type'      => 'in',
-                'attribute' => 'type',
-                'value'     => [
-                    'enum',
-                    'multiEnum'
-                ]
-            ]
-        ];
 
         /**
          * ProductAttributeValue

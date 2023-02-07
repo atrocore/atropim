@@ -120,6 +120,16 @@
       "hideMultilang": true,
       "layoutDetailDisabled": true
     },
+    "typeValueIds": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "isTypeValueField": true
+    },
     "typeValue": {
       "type": "array",
       "massUpdateDisabled": true,
@@ -129,20 +139,9 @@
       "readOnly": false,
       "tooltip": false,
       "isMultilang": true,
+      "isTypeValueField": true,
       "layoutDetailDisabled": true,
       "view": "pim:views/fields/array-extended"
-    },
-    "typeValueIds": {
-      "type": "array",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
     },
     "isSorted": {
       "type": "bool",

@@ -4,7 +4,8 @@
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "attributeTab": "Вкладка атрибутов",
-    "typeValue": "Значения",
+    "typeValueIds": "Идентификаторы опций",
+    "typeValue": "Значения опций",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Название атрибута",
@@ -59,7 +60,6 @@
   },
   "exceptions": {
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
-    "attributeValueRequired": "Требуются значения атрибутов.",
     "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "youCanNotUnlinkProductFamilyAttribute": "Невозможно отменить связь атрибута продуктовой семьи.",
