@@ -120,6 +120,15 @@
       "hideMultilang": true,
       "layoutDetailDisabled": true
     },
+    "typeValueIds": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
     "typeValue": {
       "type": "array",
       "massUpdateDisabled": true,
@@ -131,18 +140,6 @@
       "isMultilang": true,
       "layoutDetailDisabled": true,
       "view": "pim:views/fields/array-extended"
-    },
-    "typeValueIds": {
-      "type": "array",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
     },
     "isSorted": {
       "type": "bool",
