@@ -127,7 +127,8 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "isTypeValueField": true
     },
     "typeValue": {
       "type": "array",
@@ -138,6 +139,7 @@
       "readOnly": false,
       "tooltip": false,
       "isMultilang": true,
+      "isTypeValueField": true,
       "layoutDetailDisabled": true,
       "view": "pim:views/fields/array-extended"
     },
