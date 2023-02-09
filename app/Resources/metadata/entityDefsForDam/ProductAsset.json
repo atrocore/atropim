@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "product": {
+      "type": "link",
+      "relationshipField": true
+    },
+    "asset": {
+      "type": "link",
+      "relationshipField": true
+    },
+    "isMainImage": {
+      "type": "bool"
+    },
+    "sorting": {
+      "type": "int"
+    },
+    "channel": {
+      "type": "varchar"
+    },
+    "mainImageForChannel": {
+      "type": "array"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "product": {
+      "type": "belongsTo",
+      "foreign": "productAssets",
+      "entity": "Foo"
+    },
+    "asset": {
+      "type": "belongsTo",
+      "foreign": "productAssets",
+      "entity": "Asset"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}

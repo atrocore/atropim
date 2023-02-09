@@ -195,6 +195,7 @@ class Module extends AbstractModule
         $data['dashlets'] = array_merge_recursive($data['dashlets'], $data['dashletsForDam']);
         $data['clientDefs'] = array_merge_recursive($data['clientDefs'], $data['clientDefsForDam']);
         $data['entityDefs'] = array_merge_recursive($data['entityDefs'], $data['entityDefsForDam']);
+        $data['scopes'] = array_merge_recursive($data['entityDefs'], $data['scopesForDam']);
 
         return $data;
     }
