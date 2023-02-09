@@ -212,13 +212,6 @@ class ProductAttributeValue extends AbstractRepository
 
     public function isPavValueInherited(Entity $entity): ?bool
     {
-//        $pav = $this->getParentPav($entity);
-//        if (empty($pav)) {
-//            return null;
-//        }
-//
-//        return $this->arePavsValuesEqual($pav, $entity);
-
         $pavs = $this->getParentsPavs($entity);
         if ($pavs === null) {
             return null;
