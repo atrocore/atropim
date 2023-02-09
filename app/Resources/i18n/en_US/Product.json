@@ -1,7 +1,7 @@
 {
   "fields": {
     "attachments": "Attachments",
-    "assets": "Assets",
+    "productAssets": "Assets",
     "data": "Data",
     "categories": "Product Categories",
     "product": "Main Product",
@@ -44,7 +44,7 @@
     "image": "Image",
     "calls": "Calls",
     "attachments": "Attachments",
-    "assets": "Assets",
+    "productAssets": "Assets",
     "categories": "Categories",
     "products": "Products",
     "productAttributeValues": "Attribute Values",

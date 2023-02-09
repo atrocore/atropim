@@ -1,12 +1,12 @@
 {
   "fields": {
     "categories": "Категории",
-    "products": "Продукты",
+    "productAssets": "Продукты",
     "channel": "Канал",
     "mainImageForChannel": "Основное изображение для канала"
   },
   "links": {
     "categories": "Категории",
-    "products": "Продукты"
+    "productAssets": "Продукты"
   }
 }

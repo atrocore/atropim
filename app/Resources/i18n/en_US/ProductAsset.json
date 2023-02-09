@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "product": "Product",
+    "asset": "Asset",
+    "channel": "Channel",
+    "mainImageForChannel": "Main Image for Channel"
+  },
+  "links": {
+    "product": "Product",
+    "asset": "Asset"
+  }
+}

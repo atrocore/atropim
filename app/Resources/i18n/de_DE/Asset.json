@@ -1,12 +1,12 @@
 {
   "fields": {
     "categories": "Kategorien",
-    "products": "Produkte",
+    "productAssets": "Produkte",
     "channel": "Kanal",
     "mainImageForChannel": "Hauptbild für Kanal"
   },
   "links": {
     "categories": "Kategorien",
-    "products": "Produkte"
+    "productAssets": "Produkte"
   }
 }

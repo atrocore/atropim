@@ -2,11 +2,6 @@
   "boolFilterList": [
     "withoutImageAssets"
   ],
-  "relationshipPanels": {
-    "assets": {
-      "recordListView": "pim:views/asset/record/list-in-product"
-    }
-  },
   "menu": {
     "list": {
       "buttons": [
