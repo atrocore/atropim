@@ -39,13 +39,25 @@ class V1Dot6Dot31 extends Base
     public function up(): void
     {
         $this->exec("DROP INDEX UNIQ_A3F321005DA19414584665A ON product_asset");
-        $this->exec("ALTER TABLE product_asset ADD created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE id id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE is_main_image is_main_image TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE main_image_for_channel main_image_for_channel LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'");
+        $this->exec("DROP INDEX idx_a3f321004584665a ON product_asset");
+        $this->exec("DROP INDEX idx_a3f321005da1941 ON product_asset");
 
-        $this->exec("CREATE INDEX IDX_CREATED_BY_ID ON product_asset (created_by_id)");
-        $this->exec("CREATE INDEX IDX_MODIFIED_BY_ID ON product_asset (modified_by_id)");
+        $this->getPDO()->exec(
+            "ALTER TABLE product_asset ADD created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE id id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE is_main_image is_main_image TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE main_image_for_channel main_image_for_channel LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'"
+        );
 
-        $this->exec("ALTER TABLE product_asset RENAME INDEX idx_a3f321004584665a TO IDX_PRODUCT_ID");
-        $this->exec("ALTER TABLE product_asset RENAME INDEX idx_a3f321005da1941 TO IDX_ASSET_ID");
+        $this->getPDO()->exec("CREATE INDEX IDX_CREATED_BY_ID ON product_asset (created_by_id)");
+        $this->getPDO()->exec("CREATE INDEX IDX_MODIFIED_BY_ID ON product_asset (modified_by_id)");
+
+        $this->getPDO()->exec("CREATE INDEX IDX_PRODUCT_ID ON product_asset (product_id)");
+        $this->getPDO()->exec("CREATE INDEX IDX_ASSET_ID ON product_asset (asset_id)");
+
+        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_A3F32100EB3B4E334584665A5DA1941 ON product_asset (deleted, product_id, asset_id)");
+
+        $this->getPDO()->exec("DELETE FROM product_asset WHERE deleted=0 AND asset_id NOT IN (SELECT id FROM asset WHERE deleted=0)");
+
+        $this->getPDO()->exec("ALTER TABLE product_asset CHANGE channel channel_id varchar(24) null");
+        $this->getPDO()->exec("CREATE INDEX IDX_CHANNEL_ID ON product_asset (channel_id)");
     }
 
     public function down(): void

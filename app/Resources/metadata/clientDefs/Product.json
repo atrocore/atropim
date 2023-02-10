@@ -130,6 +130,9 @@
     },
     "productChannels": {
       "view": "views/record/panels/for-relationship-type"
+    },
+    "productAssets": {
+      "view": "views/record/panels/for-relationship-type"
     }
   },
   "dynamicLogic": {

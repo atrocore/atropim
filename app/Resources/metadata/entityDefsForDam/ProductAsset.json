@@ -15,7 +15,7 @@
       "type": "int"
     },
     "channel": {
-      "type": "varchar"
+      "type": "link"
     },
     "mainImageForChannel": {
       "type": "array"
@@ -49,6 +49,11 @@
       "type": "belongsTo",
       "foreign": "productAssets",
       "entity": "Asset"
+    },
+    "channel": {
+      "type": "belongsTo",
+      "foreign": "productAssets",
+      "entity": "Channel"
     },
     "createdBy": {
       "type": "belongsTo",

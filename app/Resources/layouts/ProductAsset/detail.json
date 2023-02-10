@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "product"
+        },
+        {
+          "name": "asset"
+        }
+      ],
+      [
+        {
+          "name": "isMainImage"
+        },
+        {
+          "name": "sorting"
+        }
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        false
+      ]
+    ]
+  }
+]

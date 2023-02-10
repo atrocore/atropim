@@ -1,0 +1,13 @@
+[
+  {
+    "name": "product",
+    "link": true
+  },
+  {
+    "name": "asset",
+    "link": true
+  },
+  {
+    "name": "channel"
+  }
+]
