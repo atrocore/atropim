@@ -44,25 +44,21 @@ Espo.define('pim:views/product/record/panels/product-assets', 'views/record/pane
         },
 
         actionMassAssetCreate(data) {
-            const link = data.link;
-            const foreignLink = this.model.defs['links'][link].foreign;
-
-            this.model.defs['_relationName'] = link;
-
             this.notify('Loading...');
             this.createView('massCreate', 'dam:views/asset/modals/edit', {
                 name: 'massCreate',
                 scope: 'Asset',
-                relate: {
-                    model: this.model,
-                    link: foreignLink,
-                },
                 attributes: {},
                 fullFormDisabled: true,
                 layoutName: 'massCreateDetailSmall'
             }, view => {
                 view.render();
                 view.notify(false);
+
+                this.listenTo(view, 'before:save', attrs => {
+                    attrs['_product'] = this.model.get('id');
+                });
+
                 this.listenToOnce(view, 'after:save', () => {
                     this.actionRefresh();
                     this.model.trigger('after:relate', this.link, this.defs);
