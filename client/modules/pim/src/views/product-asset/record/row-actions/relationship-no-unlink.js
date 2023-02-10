@@ -32,7 +32,7 @@ Espo.define('pim:views/product-asset/record/row-actions/relationship-no-unlink',
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
 
-            if (this.isImage() && this.options.acl.edit) {
+            if (this.isImage() && !this.model.get('isMainImage') && this.options.acl.edit) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage', 'labels', 'ProductAsset'),
