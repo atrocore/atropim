@@ -14,6 +14,20 @@
     "sorting": {
       "type": "int"
     },
+    "scope": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": true,
+      "options": [
+        "Global",
+        "Channel"
+      ],
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
+      "default": "Global"
+    },
     "channel": {
       "type": "link"
     },

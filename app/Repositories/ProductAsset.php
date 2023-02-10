@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
@@ -40,6 +41,27 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
         if ($entity->isNew() && $entity->get('sorting') === null) {
             $last = $this->where(['productId' => $entity->get('productId')])->order('sorting', 'DESC')->findOne();
             $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
+        }
+
+        if ($entity->get('scope') === 'Global') {
+            $entity->set('channelId', null);
+        }
+
+        if ($entity->isAttributeChanged('channelId') && !empty($entity->get('channelId'))) {
+            $productChannel = $this
+                ->getEntityManager()
+                ->getRepository('ProductChannel')
+                ->where([
+                    'productId' => $entity->get('productId'),
+                    'channelId' => $entity->get('channelId')
+                ])
+                ->findOne();
+
+            if (empty($productChannel)) {
+                $channelName = empty($entity->get('channelName')) ? $entity->get('channelId') : $entity->get('channelName');
+                $productName = empty($entity->get('productName')) ? $entity->get('productId') : $entity->get('productName');
+                throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAsset'), $channelName, $productName));
+            }
         }
 
         parent::beforeSave($entity, $options);
@@ -64,5 +86,12 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
             $sortOrder = (int)$k * 10;
             $this->getPDO()->exec("UPDATE `product_asset` SET sorting=$sortOrder WHERE id=$id");
         }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

@@ -2,6 +2,7 @@
   "fields": {
     "product": "Product",
     "asset": "Asset",
+    "scope": "Scope",
     "channel": "Channel",
     "isMainImage": "Main Image",
     "tags": "Tags",
@@ -14,5 +15,8 @@
   },
   "labels": {
     "setAsMainImage": "Set as Main Image"
+  },
+  "exceptions": {
+    "noSuchChannelInProduct": "Channel '%s' for product '%s' is not available."
   }
 }

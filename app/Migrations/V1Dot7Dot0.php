@@ -62,6 +62,10 @@ class V1Dot7Dot0 extends Base
         $this->getPDO()->exec("ALTER TABLE product_asset DROP main_image_for_channel");
 
         $this->getPDO()->exec("ALTER TABLE product_asset ADD tags LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'");
+
+        $this->getPDO()->exec("ALTER TABLE product_asset ADD scope VARCHAR(255) DEFAULT 'Global' COLLATE `utf8mb4_unicode_ci`");
+
+        $this->getPDO()->exec("UPDATE product_asset SET scope='Channel' WHERE channel_id IS NOT NULL AND channel_id!=''");
     }
 
     public function down(): void
