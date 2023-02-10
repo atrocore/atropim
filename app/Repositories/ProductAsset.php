@@ -33,4 +33,12 @@ namespace Pim\Repositories;
 
 class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
 {
+    public function updateSortOrder(array $ids): void
+    {
+        foreach ($ids as $k => $id) {
+            $id = $this->getPDO()->quote((string)$id);
+            $sortOrder = (int)$k * 10;
+            $this->getPDO()->exec("UPDATE `product_asset` SET sorting=$sortOrder WHERE id=$id");
+        }
+    }
 }

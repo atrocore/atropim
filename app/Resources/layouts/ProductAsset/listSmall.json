@@ -1,11 +1,9 @@
 [
   {
-    "name": "product",
-    "link": true
+    "name": "product"
   },
   {
-    "name": "asset",
-    "link": true
+    "name": "asset"
   },
   {
     "name": "preview",
