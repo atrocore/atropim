@@ -58,6 +58,10 @@ class V1Dot7Dot0 extends Base
 
         $this->getPDO()->exec("ALTER TABLE product_asset CHANGE channel channel_id varchar(24) null");
         $this->getPDO()->exec("CREATE INDEX IDX_CHANNEL_ID ON product_asset (channel_id)");
+
+        $this->getPDO()->exec("ALTER TABLE product_asset DROP main_image_for_channel");
+
+        $this->getPDO()->exec("ALTER TABLE product_asset ADD tags LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'");
     }
 
     public function down(): void

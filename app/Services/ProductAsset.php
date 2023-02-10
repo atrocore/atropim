@@ -35,6 +35,8 @@ use Espo\ORM\Entity;
 
 class ProductAsset extends \Espo\Core\Templates\Services\Relationship
 {
+    protected $mandatorySelectAttributeList = ['isMainImage'];
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

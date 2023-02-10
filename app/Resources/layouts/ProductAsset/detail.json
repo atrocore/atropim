@@ -21,9 +21,11 @@
       ],
       [
         {
-          "name": "channel"
+          "name": "tags"
         },
-        false
+        {
+          "name": "channel"
+        }
       ]
     ]
   }

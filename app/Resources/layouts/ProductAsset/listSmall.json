@@ -12,5 +12,8 @@
   },
   {
     "name": "channel"
+  },
+  {
+    "name": "tags"
   }
 ]

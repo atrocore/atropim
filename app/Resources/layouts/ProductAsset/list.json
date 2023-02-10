@@ -6,9 +6,9 @@
     "name": "asset"
   },
   {
-    "name": "isMainImage"
+    "name": "channel"
   },
   {
-    "name": "channel"
+    "name": "tags"
   }
 ]

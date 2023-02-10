@@ -68,16 +68,6 @@ class LayoutController extends AbstractListener
     /**
      * @param Event $event
      */
-    protected function modifyAssetDetailSmall(Event $event)
-    {
-        $result = Json::decode($event->getArgument('result'), true);
-        $result[0]['rows'][] = [['name' => 'channel'], ['name' => 'mainImageForChannel']];
-        $event->setArgument('result', Json::encode($result));
-    }
-
-    /**
-     * @param Event $event
-     */
     protected function modifyAttributeDetail(Event $event)
     {
         /** @var array $result */
