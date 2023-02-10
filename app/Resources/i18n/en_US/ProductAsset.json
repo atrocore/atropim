@@ -16,6 +16,12 @@
   "labels": {
     "setAsMainImage": "Set as Main Image"
   },
+  "options": {
+    "scope": {
+      "Global": "Global",
+      "Channel": "Channel"
+    }
+  },
   "exceptions": {
     "noSuchChannelInProduct": "Channel '%s' for product '%s' is not available."
   }

@@ -29,7 +29,8 @@
       "default": "Global"
     },
     "channel": {
-      "type": "link"
+      "type": "link",
+      "view": "pim:views/product-asset/fields/channel"
     },
     "tags": {
       "type": "array"
