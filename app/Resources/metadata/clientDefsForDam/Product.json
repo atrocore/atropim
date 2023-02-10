@@ -4,7 +4,8 @@
   ],
   "relationshipPanels": {
     "productAssets": {
-      "view": "views/record/panels/for-relationship-type",
+      "view": "pim:views/product/record/panels/product-assets",
+      "rowActionsView": "pim:views/product-asset/record/row-actions/relationship-no-unlink",
       "dragDrop": {
         "isActive": true,
         "sortField": "sorting"

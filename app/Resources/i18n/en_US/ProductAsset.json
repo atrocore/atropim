@@ -11,5 +11,8 @@
   "links": {
     "product": "Product",
     "asset": "Asset"
+  },
+  "labels": {
+    "setAsMainImage": "Set as Main Image"
   }
 }
