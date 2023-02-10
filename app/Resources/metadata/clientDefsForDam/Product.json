@@ -2,6 +2,15 @@
   "boolFilterList": [
     "withoutImageAssets"
   ],
+  "relationshipPanels": {
+    "productAssets": {
+      "view": "views/record/panels/for-relationship-type",
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sorting"
+      }
+    }
+  },
   "menu": {
     "list": {
       "buttons": [

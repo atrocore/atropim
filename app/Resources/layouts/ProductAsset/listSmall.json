@@ -8,6 +8,11 @@
     "link": true
   },
   {
+    "name": "preview",
+    "notSortable": true,
+    "align": "center"
+  },
+  {
     "name": "channel"
   }
 ]

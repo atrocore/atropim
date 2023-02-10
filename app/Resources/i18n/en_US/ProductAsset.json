@@ -3,7 +3,10 @@
     "product": "Product",
     "asset": "Asset",
     "channel": "Channel",
-    "mainImageForChannel": "Main Image for Channel"
+    "isMainImage": "Main Image",
+    "mainImageForChannel": "Main Image for Channel",
+    "preview": "Preview",
+    "sorting": "Sort Order"
   },
   "links": {
     "product": "Product",

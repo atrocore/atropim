@@ -31,6 +31,19 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\ORM\Entity;
+
 class ProductAsset extends \Espo\Core\Templates\Services\Relationship
 {
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (!empty($entity->get('assetId')) && !empty($asset = $this->getServiceFactory()->create('Asset')->getEntity($entity->get('assetId')))) {
+            $entity->set('fileId', $asset->get('fileId'));
+            $entity->set('fileName', $asset->get('fileName'));
+            $entity->set('filePathsData', $asset->get('filePathsData'));
+            $entity->set('icon', $asset->get('icon'));
+        }
+    }
 }

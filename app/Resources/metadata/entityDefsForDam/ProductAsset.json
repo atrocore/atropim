@@ -37,6 +37,67 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "preview": {
+      "type": "varchar",
+      "view": "dam:views/asset/fields/preview",
+      "notStorable": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "fileId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "fileName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "filePathsData": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "icon": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
