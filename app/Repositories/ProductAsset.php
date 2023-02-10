@@ -35,6 +35,16 @@ use Espo\ORM\Entity;
 
 class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew() && $entity->get('sorting') === null) {
+            $last = $this->where(['productId' => $entity->get('productId')])->order('sorting', 'DESC')->findOne();
+            $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
