@@ -262,7 +262,8 @@ class Product extends Hierarchy
     {
         // input data validation
         if (!property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)
-            || !property_exists($data, 'associationId') || empty($data->associationId)) {
+            || !property_exists($data, 'associationId')
+            || empty($data->associationId)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -332,7 +333,8 @@ class Product extends Hierarchy
     {
         // input data validation
         if (!property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)
-            || !property_exists($data, 'associationId') || empty($data->associationId)) {
+            || !property_exists($data, 'associationId')
+            || empty($data->associationId)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -810,8 +812,21 @@ class Product extends Hierarchy
             return;
         }
 
-        $this->linkEntity($entity->get('id'), 'assets', $asset->get('id'));
-        $this->getRepository()->updateRelationData('productAsset', ['isMainImage' => true], 'productId', $entity->get('id'), 'assetId', $asset->get('id'));
+        $where = [
+            'productId' => $entity->get('id'),
+            'assetId'   => $asset->get('id')
+        ];
+
+        $repository = $this->getEntityManager()->getRepository('ProductAsset');
+
+        $productAsset = $repository->where($where)->findOne();
+        if (empty($productAsset)) {
+            $productAsset = $repository->get();
+            $productAsset->set($where);
+        }
+        $productAsset->set('isMainImage', true);
+
+        $this->getEntityManager()->saveEntity($productAsset);
     }
 
     /**

@@ -31,8 +31,19 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\ORM\Entity;
+
 class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
 {
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isAttributeChanged('isMainImage')) {
+            $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE deleted=0 AND product_id='{$entity->get('productId')}' AND id!='{$entity->get('id')}'");
+        }
+    }
+
     public function updateSortOrder(array $ids): void
     {
         foreach ($ids as $k => $id) {
