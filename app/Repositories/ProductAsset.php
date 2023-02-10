@@ -39,8 +39,11 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isAttributeChanged('isMainImage')) {
-            $this->getPDO()->exec("UPDATE `product_asset` SET is_main_image=0 WHERE deleted=0 AND product_id='{$entity->get('productId')}' AND id!='{$entity->get('id')}'");
+        if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
+            foreach ($this->where(['isMainImage' => true, 'productId' => $entity->get('productId'), 'id!=' => $entity->get('id')])->find() as $productAsset) {
+                $productAsset->set('isMainImage', false);
+                $this->getEntityManager()->saveEntity($productAsset);
+            }
         }
     }
 
