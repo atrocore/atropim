@@ -2,6 +2,24 @@
   "boolFilterList": [
     "withoutImageAssets"
   ],
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/product/fields/main-image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/product/fields/main-image"
+      }
+    ]
+  },
   "relationshipPanels": {
     "productAssets": {
       "view": "pim:views/product/record/panels/product-assets",

@@ -73,6 +73,7 @@ Espo.define('pim:views/product/record/panels/product-assets', 'views/record/pane
         actionSetAsMainImage(data) {
             this.notify('Saving...');
             this.ajaxPutRequest(`ProductAsset/${data.id}`, {isMainImage: true}).done(entity => {
+                this.model.trigger('asset:saved');
                 this.notify('Saved', 'success');
                 this.actionRefresh();
             });

@@ -1,5 +1,14 @@
 {
   "fields": {
+    "mainImage": {
+      "type": "image",
+      "previewSize": "medium",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
     "productAssets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -8,6 +17,11 @@
     }
   },
   "links": {
+    "mainImage": {
+      "type": "belongsTo",
+      "entity": "Attachment",
+      "skipOrmDefs": true
+    },
     "productAssets": {
       "type": "hasMany",
       "foreign": "product",
