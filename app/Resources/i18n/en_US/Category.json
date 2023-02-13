@@ -4,6 +4,7 @@
     "description": "Description",
     "code": "Code",
     "isActive": "Active",
+    "mainImage": "Main Image",
     "assets": "Assets",
     "categoryAssets": "Category Assets",
     "categoryParent": "Parent Category",

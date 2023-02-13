@@ -1,6 +1,7 @@
 {
   "fields": {
     "attachments": "Вложения",
+    "mainImage": "Основное изображение",
     "assets": "Ассеты",
     "productAssets": "Ассеты продукта",
     "data": "Данные",

@@ -4,6 +4,7 @@
     "description": "Описание",
     "code": "Код",
     "isActive": "Активный",
+    "mainImage": "Основное изображение",
     "assets": "Ассеты",
     "categoryAssets": "Ассеты категории",
     "categoryParent": "Родительская категория",

@@ -1,6 +1,7 @@
 {
   "fields": {
     "attachments": "Attachments",
+    "mainImage": "Main Image",
     "assets": "Assets",
     "productAssets": "Product Assets",
     "data": "Data",

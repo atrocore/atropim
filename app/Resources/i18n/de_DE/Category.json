@@ -7,6 +7,7 @@
     "scope": "Scope",
     "markupType": "Typ",
     "markupValue": "Wert",
+    "mainImage": "Hauptbild",
     "assets": "Assets",
     "categoryAssets": "Kategorie-Assets",
     "categoryRoute": "Kategoriebaum (ID)",
