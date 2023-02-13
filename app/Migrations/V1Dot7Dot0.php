@@ -84,6 +84,7 @@ class V1Dot7Dot0 extends Base
         try {
             /** @var \Espo\Core\Utils\Layout $layoutManager */
             $layoutManager = (new \Espo\Core\Application())->getContainer()->get('layout');
+            $layoutManager->set(json_decode(str_replace('"assets"', '"productAssets"', $layoutManager->get('Product', 'relationships'))), 'Product', 'relationships');
             $layoutManager->set(json_decode(str_replace('"assets"', '"categoryAssets"', $layoutManager->get('Category', 'relationships'))), 'Category', 'relationships');
             $layoutManager->save();
         } catch (\Throwable $e) {
