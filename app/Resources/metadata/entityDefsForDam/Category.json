@@ -1,5 +1,25 @@
 {
   "fields": {
+    "mainImage": {
+      "type": "image",
+      "previewSize": "medium",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "assets": {
+      "type": "linkMultiple",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
     "categoryAssets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -8,6 +28,17 @@
     }
   },
   "links": {
+    "mainImage": {
+      "type": "belongsTo",
+      "entity": "Attachment",
+      "skipOrmDefs": true
+    },
+    "assets": {
+      "type": "hasMany",
+      "notStorable": true,
+      "entity": "Asset",
+      "layoutRelationshipsDisabled": true
+    },
     "categoryAssets": {
       "type": "hasMany",
       "foreign": "category",

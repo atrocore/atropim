@@ -835,6 +835,34 @@ class Product extends Hierarchy
         $this->createProductAssets($entity, $data);
     }
 
+    protected function saveMainImage(Entity $entity, $data): void
+    {
+        if (!property_exists($data, 'mainImageId')) {
+            return;
+        }
+
+        $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $data->mainImageId])->findOne();
+        if (empty($asset)) {
+            return;
+        }
+
+        $where = [
+            'productId' => $entity->get('id'),
+            'assetId'   => $asset->get('id')
+        ];
+
+        $repository = $this->getEntityManager()->getRepository('ProductAsset');
+
+        $productAsset = $repository->where($where)->findOne();
+        if (empty($productAsset)) {
+            $productAsset = $repository->get();
+            $productAsset->set($where);
+        }
+        $productAsset->set('isMainImage', true);
+
+        $this->getEntityManager()->saveEntity($productAsset);
+    }
+
     /**
      * This needs for old import feeds. For import assets from product
      */
@@ -875,34 +903,6 @@ class Product extends Hierarchy
                 ])
                 ->removeCollection();
         }
-    }
-
-    protected function saveMainImage(Entity $entity, $data): void
-    {
-        if (!property_exists($data, 'mainImageId')) {
-            return;
-        }
-
-        $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $data->mainImageId])->findOne();
-        if (empty($asset)) {
-            return;
-        }
-
-        $where = [
-            'productId' => $entity->get('id'),
-            'assetId'   => $asset->get('id')
-        ];
-
-        $repository = $this->getEntityManager()->getRepository('ProductAsset');
-
-        $productAsset = $repository->where($where)->findOne();
-        if (empty($productAsset)) {
-            $productAsset = $repository->get();
-            $productAsset->set($where);
-        }
-        $productAsset->set('isMainImage', true);
-
-        $this->getEntityManager()->saveEntity($productAsset);
     }
 
     /**
