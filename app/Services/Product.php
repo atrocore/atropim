@@ -764,12 +764,6 @@ class Product extends Hierarchy
         return $collection;
     }
 
-    /**
-     * Before create entity method
-     *
-     * @param Entity $entity
-     * @param        $data
-     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
@@ -814,7 +808,10 @@ class Product extends Hierarchy
         $this->createProductAssets($entity, $data);
     }
 
-    protected function createProductAssets(Entity $entity, $data): void
+    /**
+     * This needs for old import feeds. For import assets from product
+     */
+    protected function createProductAssets(Entity $entity, \stdClass $data): void
     {
         if (!property_exists($data, '_paAssetsIds')) {
             return;
