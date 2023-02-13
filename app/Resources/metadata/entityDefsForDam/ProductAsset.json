@@ -9,7 +9,8 @@
       "relationshipField": true
     },
     "isMainImage": {
-      "type": "bool"
+      "type": "bool",
+      "view": "pim:views/fields/is-main-image"
     },
     "sorting": {
       "type": "int"
