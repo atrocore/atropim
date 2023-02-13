@@ -13,9 +13,6 @@
     "product": "Product",
     "asset": "Asset"
   },
-  "labels": {
-    "setAsMainImage": "Set as Main Image"
-  },
   "options": {
     "scope": {
       "Global": "Global",

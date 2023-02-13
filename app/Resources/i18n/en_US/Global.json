@@ -79,6 +79,7 @@
     "role": "Role"
   },
   "labels": {
+    "setAsMainImage": "Set as Main Image",
     "allChannels": "All Channels",
     "nonHierarchicalProducts": "Non-hierarchical products",
     "productHierarchies": "Product hierarchies",

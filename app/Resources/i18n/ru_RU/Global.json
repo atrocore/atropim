@@ -75,6 +75,7 @@
     "role": "Роль"
   },
   "labels": {
+    "setAsMainImage": "Назначить основным изображением",
     "allChannels": "Все каналы",
     "nonHierarchicalProducts": "Неиерархические продукты",
     "productHierarchies": "Продуктовые иерархии",

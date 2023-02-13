@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-asset/record/row-actions/relationship-no-unlink', 'views/record/row-actions/relationship-no-unlink',
+Espo.define('pim:views/record/row-actions/relationship-asset', 'views/record/row-actions/relationship-no-unlink',
     Dep => Dep.extend({
 
         getActionList: function () {
@@ -35,7 +35,7 @@ Espo.define('pim:views/product-asset/record/row-actions/relationship-no-unlink',
             if (this.isImage() && !this.model.get('isMainImage') && this.options.acl.edit) {
                 list.unshift({
                     action: 'setAsMainImage',
-                    label: this.translate('setAsMainImage', 'labels', 'ProductAsset'),
+                    label: this.translate('setAsMainImage'),
                     data: {
                         id: this.model.get('id')
                     }
