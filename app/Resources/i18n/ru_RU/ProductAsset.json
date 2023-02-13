@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "product": "Продукт",
+    "asset": "Ассет",
+    "scope": "Основное изображение",
+    "channel": "Канал",
+    "isMainImage": "Главная картинка",
+    "tags": "Теги",
+    "preview": "Предпросмотр",
+    "sorting": "Порядок сортировки"
+  },
+  "links": {
+    "product": "Продукт",
+    "asset": "Ассет"
+  },
+  "exceptions": {
+    "noSuchChannelInProduct": "Канал '%s' для продукта '%s' не доступен."
+  }
+}
