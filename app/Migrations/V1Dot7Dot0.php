@@ -67,10 +67,24 @@ class V1Dot7Dot0 extends Base
 
         $this->getPDO()->exec("UPDATE product_asset SET scope='Channel' WHERE channel_id IS NOT NULL AND channel_id!=''");
 
+        $this->exec("DROP INDEX UNIQ_EA9C15155DA194112469DE2 ON category_asset");
+        $this->getPDO()->exec("ALTER TABLE category_asset ADD tags LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)', ADD created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE id id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE is_main_image is_main_image TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+
+        $this->getPDO()->exec("CREATE INDEX IDX_CREATED_BY_ID ON category_asset (created_by_id)");
+        $this->getPDO()->exec("CREATE INDEX IDX_MODIFIED_BY_ID ON category_asset (modified_by_id)");
+
+        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_EA9C1515EB3B4E3312469DE25DA1941 ON category_asset (deleted, category_id, asset_id)");
+
+        $this->exec("DROP INDEX idx_ea9c151512469de2 ON category_asset");
+        $this->exec("DROP INDEX idx_ea9c15155da1941 ON category_asset");
+
+        $this->getPDO()->exec("CREATE INDEX IDX_CATEGORY_ID ON category_asset (category_id)");
+        $this->getPDO()->exec("CREATE INDEX IDX_ASSET_ID ON category_asset (asset_id)");
+
         try {
             /** @var \Espo\Core\Utils\Layout $layoutManager */
             $layoutManager = (new \Espo\Core\Application())->getContainer()->get('layout');
-            $layoutManager->set(json_decode(str_replace('"assets"', '"productAssets"', $layoutManager->get('Product', 'relationships'))), 'Product', 'relationships');
+            $layoutManager->set(json_decode(str_replace('"assets"', '"categoryAssets"', $layoutManager->get('Category', 'relationships'))), 'Category', 'relationships');
             $layoutManager->save();
         } catch (\Throwable $e) {
         }
