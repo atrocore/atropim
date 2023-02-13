@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "category": "Category",
+    "asset": "Asset",
+    "isMainImage": "Main Image",
+    "tags": "Tags",
+    "preview": "Preview",
+    "sorting": "Sort Order"
+  },
+  "links": {
+    "category": "Category",
+    "asset": "Asset"
+  }
+}

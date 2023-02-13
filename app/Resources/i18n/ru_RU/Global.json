@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ProductAsset": "Ассет продукта",
+    "CategoryAsset": "Ассет категории",
     "ProductChannel": "Канал продукта",
     "AttributeTab": "Вкладка атрибута",
     "Product": "Продукт",
@@ -24,6 +26,8 @@
     "ContentGroup": "Група контента"
   },
   "scopeNamesPlural": {
+    "ProductAsset": "Ассеты продукта",
+    "CategoryAsset": "Ассеты категории",
     "ProductChannel": "Каналы продукта",
     "AttributeTab": "Вкладки атрибутов",
     "Attribute": "Атрибуты",
@@ -75,6 +79,7 @@
     "role": "Роль"
   },
   "labels": {
+    "setAsMainImage": "Назначить основным изображением",
     "allChannels": "Все каналы",
     "nonHierarchicalProducts": "Неиерархические продукты",
     "productHierarchies": "Продуктовые иерархии",

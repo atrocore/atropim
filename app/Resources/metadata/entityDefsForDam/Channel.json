@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "productAssets": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "productAssets": {
+      "type": "hasMany",
+      "foreign": "channel",
+      "entity": "ProductAsset"
+    }
+  }
+}

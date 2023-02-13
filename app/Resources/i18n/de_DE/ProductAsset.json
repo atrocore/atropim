@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "product": "Produkt",
+    "asset": "Asset",
+    "scope": "Scope",
+    "channel": "Kanal",
+    "isMainImage": "Hauptbild",
+    "tags": "Tags",
+    "preview": "Vorschau",
+    "sorting": "Sortierreihenfolge"
+  },
+  "links": {
+    "product": "Produkt",
+    "asset": "Asset"
+  },
+  "exceptions": {
+    "noSuchChannelInProduct": "Kanal '%s' für Produkt '%s' ist nicht verfügbar."
+  }
+}

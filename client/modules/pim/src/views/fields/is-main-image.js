@@ -26,43 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi-enum',
+Espo.define('pim:views/fields/is-main-image', 'views/fields/bool',
     Dep => Dep.extend({
-
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:isMainImage change:channel', () => {
-                this.reRender()
-            });
-        },
-
-        setupOptions: function () {
-            if (this.getHashScope() !== 'Product') {
-                return;
-            }
-
-            this.params.options = [];
-            this.translatedOptions = {};
-
-            if (this.mode === 'edit' && this.getAcl().check('Channel', 'read')) {
-                let productId = window.location.hash.split('/').pop();
-                this.ajaxGetRequest(`Product/${productId}/productChannels`, null, {async: false}).done(response => {
-                    if (response.total > 0) {
-                        response.list.forEach(channel => {
-                            this.params.options.push(channel.channelId);
-                            this.translatedOptions[channel.id] = channel.channelName;
-                        });
-                    }
-                });
-            }
-        },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                if (this.getHashScope() !== 'Product' || !this.model.get('isMainImage') || !!this.model.get('channel')) {
+                if (!this.isImage()) {
                     this.hide();
                 } else {
                     this.show();
@@ -70,9 +41,13 @@ Espo.define('pim:views/asset/fields/main-image-for-channel', 'views/fields/multi
             }
         },
 
-        getHashScope() {
-            return window.location.hash.split('/').shift().replace('#', '');
+        isImage() {
+            const imageExtensions = this.getMetadata().get('dam.image.extensions') || [];
+            const fileExt = (this.model.get('fileName') || '').split('.').pop().toLowerCase();
+
+            return $.inArray(fileExt, imageExtensions) !== -1;
         },
 
     })
 );
+

@@ -1,0 +1,32 @@
+{
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/fields/main-image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/fields/main-image"
+      }
+    ]
+  },
+  "relationshipPanels": {
+    "categoryAssets": {
+      "view": "pim:views/record/panels/assets",
+      "rowActionsView": "pim:views/record/row-actions/relationship-asset",
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sorting"
+      },
+      "sortBy": "sorting",
+      "asc": true
+    }
+  }
+}

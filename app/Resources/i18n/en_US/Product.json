@@ -2,6 +2,7 @@
   "fields": {
     "attachments": "Attachments",
     "assets": "Assets",
+    "productAssets": "Product Assets",
     "data": "Data",
     "categories": "Product Categories",
     "product": "Main Product",
@@ -45,6 +46,7 @@
     "calls": "Calls",
     "attachments": "Attachments",
     "assets": "Assets",
+    "productAssets": "Product Assets",
     "categories": "Categories",
     "products": "Products",
     "productAttributeValues": "Attribute Values",

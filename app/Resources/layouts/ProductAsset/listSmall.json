@@ -1,0 +1,19 @@
+[
+  {
+    "name": "product"
+  },
+  {
+    "name": "asset"
+  },
+  {
+    "name": "preview",
+    "notSortable": true,
+    "align": "center"
+  },
+  {
+    "name": "channel"
+  },
+  {
+    "name": "tags"
+  }
+]

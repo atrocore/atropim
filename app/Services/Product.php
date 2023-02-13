@@ -51,23 +51,24 @@ class Product extends Hierarchy
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
-        // set global main images
-        if (count($collection) > 0 && !empty($records = $this->getRepository()->getProductsAssets(array_column($collection->toArray(), 'id')))) {
+        // set main images
+        if (count($collection) > 0) {
+            $assets = $this
+                ->getEntityManager()
+                ->getRepository('Asset')
+                ->select(['id', 'fileId', 'fileName', 'productAssets.productId'])
+                ->join('productAssets')
+                ->where([
+                    'productAssets.productId'   => array_column($collection->toArray(), 'id'),
+                    'productAssets.isMainImage' => true
+                ])
+                ->find();
+
             foreach ($collection as $entity) {
-                if (!isset($records[$entity->get('id')])) {
-                    continue 1;
-                }
-
-                $assetsCollection = $records[$entity->get('id')];
-
-                if (count($assetsCollection) === 0) {
-                    continue 1;
-                }
-
                 $entity->set('mainImageId', null);
                 $entity->set('mainImageName', null);
-                foreach ($this->getPreparedProductAssets($entity->get('id'), $assetsCollection, $this->getPrismChannelId()) as $asset) {
-                    if (!empty($asset->get('isGlobalMainImage'))) {
+                foreach ($assets as $asset) {
+                    if ($asset->rowData['productAssets.productId'] === $entity->get('id')) {
                         $entity->set('mainImageId', $asset->get('fileId'));
                         $entity->set('mainImageName', $asset->get('fileName'));
                     }
@@ -145,17 +146,19 @@ class Product extends Hierarchy
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
 
-            if (!empty($records = $this->getEntityManager()->getRepository('Product')->getProductsAssets([$entity->get('id')])) && isset($records[$entity->get('id')])) {
-                $assetsCollection = $records[$entity->get('id')];
-                if (count($assetsCollection) > 0) {
-                    foreach ($this->getPreparedProductAssets($entity->get('id'), $assetsCollection, $this->getPrismChannelId()) as $asset) {
-                        if (!empty($asset->get('isGlobalMainImage'))) {
-                            $entity->set('mainImageId', $asset->get('fileId'));
-                            $entity->set('mainImageName', $asset->get('fileName'));
-                            $entity->set('mainImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($asset->get('fileId')));
-                        }
-                    }
-                }
+            $productAsset = $this
+                ->getEntityManager()
+                ->getRepository('ProductAsset')
+                ->where([
+                    'productId'   => $entity->get('id'),
+                    'isMainImage' => true
+                ])
+                ->findOne();
+
+            if (!empty($productAsset) && !empty($asset = $this->getServiceFactory()->create('Asset')->getEntity($productAsset->get('assetId')))) {
+                $entity->set('mainImageId', $asset->get('fileId'));
+                $entity->set('mainImageName', $asset->get('fileName'));
+                $entity->set('mainImagePathsData', $asset->get('filePathsData'));
             }
         }
     }
@@ -262,7 +265,8 @@ class Product extends Hierarchy
     {
         // input data validation
         if (!property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)
-            || !property_exists($data, 'associationId') || empty($data->associationId)) {
+            || !property_exists($data, 'associationId')
+            || empty($data->associationId)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -332,7 +336,8 @@ class Product extends Hierarchy
     {
         // input data validation
         if (!property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)
-            || !property_exists($data, 'associationId') || empty($data->associationId)) {
+            || !property_exists($data, 'associationId')
+            || empty($data->associationId)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -499,18 +504,34 @@ class Product extends Hierarchy
 
     public function findLinkedEntities($id, $link, $params)
     {
-        $result = parent::findLinkedEntities($id, $link, $params);
-
         /**
-         * Set global main image
+         * For old export feeds. In old export feeds relations to assets is still existing, so we have to returns it.
          */
-        if ($link === 'assets' && $result['total'] > 0 && isset($result['collection'])) {
-            $channelId = isset($params['exportByChannelId']) ? $params['exportByChannelId'] : $this->getPrismChannelId();
-            $result['collection'] = $this->getPreparedProductAssets($id, $result['collection'], $channelId);
-            $result['total'] = $result['collection']->count();
+        if ($link === 'assets') {
+            if (empty($params['where'])) {
+                $params['where'] = [];
+            }
 
-            return $result;
+            $productAssets = $this
+                ->getEntityManager()
+                ->getRepository('ProductAsset')
+                ->select(['assetId'])
+                ->where(['productId' => $id])
+                ->find();
+
+            $assetsIds = array_column($productAssets->toArray(), 'assetId');
+            $assetsIds[] = 'no-such-id';
+
+            $params['where'][] = [
+                'type'      => 'equals',
+                'attribute' => 'id',
+                'value'     => $assetsIds
+            ];
+
+            return $this->getServiceFactory()->create('Asset')->findEntities($params);
         }
+
+        $result = parent::findLinkedEntities($id, $link, $params);
 
         /**
          * Mark channels as inherited from categories
@@ -770,12 +791,6 @@ class Product extends Hierarchy
         return $collection;
     }
 
-    /**
-     * Before create entity method
-     *
-     * @param Entity $entity
-     * @param        $data
-     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
@@ -785,11 +800,31 @@ class Product extends Hierarchy
         }
     }
 
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        if (property_exists($data, 'assetsNames')) {
+            unset($data->assetsNames);
+        }
+
+        if (property_exists($data, 'assetsIds')) {
+            $data->_paAssetsIds = $data->assetsIds;
+            unset($data->assetsIds);
+        }
+
+        if (property_exists($data, 'assetsAddOnlyMode')) {
+            $data->_paAddMode = $data->assetsAddOnlyMode;
+            unset($data->assetsAddOnlyMode);
+        }
+
+        parent::handleInput($data, $id);
+    }
+
     protected function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
+        $this->createProductAssets($entity, $data);
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
@@ -797,6 +832,7 @@ class Product extends Hierarchy
         parent::afterUpdateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
+        $this->createProductAssets($entity, $data);
     }
 
     protected function saveMainImage(Entity $entity, $data): void
@@ -810,8 +846,63 @@ class Product extends Hierarchy
             return;
         }
 
-        $this->linkEntity($entity->get('id'), 'assets', $asset->get('id'));
-        $this->getRepository()->updateRelationData('productAsset', ['isMainImage' => true], 'productId', $entity->get('id'), 'assetId', $asset->get('id'));
+        $where = [
+            'productId' => $entity->get('id'),
+            'assetId'   => $asset->get('id')
+        ];
+
+        $repository = $this->getEntityManager()->getRepository('ProductAsset');
+
+        $productAsset = $repository->where($where)->findOne();
+        if (empty($productAsset)) {
+            $productAsset = $repository->get();
+            $productAsset->set($where);
+        }
+        $productAsset->set('isMainImage', true);
+
+        $this->getEntityManager()->saveEntity($productAsset);
+    }
+
+    /**
+     * This needs for old import feeds. For import assets from product
+     */
+    protected function createProductAssets(Entity $entity, \stdClass $data): void
+    {
+        if (!property_exists($data, '_paAssetsIds')) {
+            return;
+        }
+
+        $assets = $this
+            ->getEntityManager()
+            ->getRepository('Asset')
+            ->where(['id' => $data->_paAssetsIds])
+            ->find();
+
+        /** @var ProductAsset $service */
+        $service = $this->getServiceFactory()->create('ProductAsset');
+
+        foreach ($assets as $asset) {
+            $input = new \stdClass();
+            $input->productId = $entity->get('id');
+            $input->assetId = $asset->get('id');
+
+            try {
+                $service->createEntity($input);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('ProductAsset creating failed: ' . $e->getMessage());
+            }
+        }
+
+        if (!property_exists($data, '_paAddMode') || empty($data->_paAddMode)) {
+            $this
+                ->getEntityManager()
+                ->getRepository('ProductAsset')
+                ->where([
+                    'productId' => $entity->get('id'),
+                    'assetId!=' => array_column($assets->toArray(), 'id')
+                ])
+                ->removeCollection();
+        }
     }
 
     /**
@@ -929,6 +1020,10 @@ class Product extends Hierarchy
     {
         $post = clone $data;
 
+        if (property_exists($post, '_paAssetsIds')) {
+            return true;
+        }
+
         if ($this->isProductAttributeUpdating($post)) {
             return true;
         }
@@ -951,50 +1046,6 @@ class Product extends Hierarchy
         parent::init();
 
         $this->addDependency('serviceFactory');
-    }
-
-    protected function getPreparedProductAssets(string $productId, EntityCollection $assets, ?string $channelId): EntityCollection
-    {
-        if (empty($channelId)) {
-            foreach ($assets as $asset) {
-                $asset->set('isGlobalMainImage', !empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel')));
-            }
-            return $assets;
-        }
-
-        $newCollection = new EntityCollection();
-
-        $hasMainImage = false;
-        foreach ($assets as $asset) {
-            $asset->set('isGlobalMainImage', false);
-            if (!$asset->has('channel')) {
-                $assetData = $this->getEntityManager()->getRepository('Product')->getAssetData($productId, $asset->get('id'));
-                $asset->set('channel', $assetData['channel']);
-                $mainImageForChannel = @json_decode((string)$assetData['main_image_for_channel'], true);
-                $asset->set('mainImageForChannel', empty($mainImageForChannel) ? [] : $mainImageForChannel);
-            }
-
-            if (!empty($asset->get('channel')) && $asset->get('channel') !== $channelId) {
-                continue 1;
-            }
-
-            if (!empty($asset->get('isMainImage'))) {
-                if (in_array($channelId, $asset->get('mainImageForChannel')) || $asset->get('channel') === $channelId) {
-                    $asset->set('isGlobalMainImage', true);
-                    $hasMainImage = true;
-                }
-            }
-
-            $newCollection->append($asset);
-        }
-
-        if (!$hasMainImage) {
-            foreach ($assets as $asset) {
-                $asset->set('isGlobalMainImage', !empty($asset->get('isMainImage')) && empty($asset->get('channel')) && empty($asset->get('mainImageForChannel')));
-            }
-        }
-
-        return $newCollection;
     }
 
     protected function findProductAttributeValuesForProductsViaAttributes(array $attributesIds, array $productIds): ?EntityCollection

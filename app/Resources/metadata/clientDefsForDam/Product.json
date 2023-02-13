@@ -2,9 +2,34 @@
   "boolFilterList": [
     "withoutImageAssets"
   ],
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/fields/main-image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/fields/main-image"
+      }
+    ]
+  },
   "relationshipPanels": {
-    "assets": {
-      "recordListView": "pim:views/asset/record/list-in-product"
+    "productAssets": {
+      "view": "pim:views/record/panels/assets",
+      "rowActionsView": "pim:views/record/row-actions/relationship-asset",
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sorting"
+      },
+      "sortBy": "sorting",
+      "asc": true
     }
   },
   "menu": {

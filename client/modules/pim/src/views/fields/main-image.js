@@ -26,53 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/asset/record/list-in-product', 'views/record/list',
+Espo.define('pim:views/fields/main-image', 'views/fields/image',
     Dep => Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            if (this.options.panelView) {
-                this.listenTo(this.options.panelView.model, 'overview-filters-changed', () => {
-                    this.applyOverviewFilters();
-                });
-            }
+            this.listenTo(this.model, 'asset:saved after:unrelate', () => {
+                this.model.fetch().then(() => this.reRender());
+            });
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.applyOverviewFilters();
-        },
-
-        applyOverviewFilters() {
-            if (!this.collection || this.collection.total === 0) {
-                return
-            }
-
-            const scopeFilter = this.getStorage().get('scopeFilter', 'OverviewFilter');
-
-            this.collection.models.forEach(model => {
-                let channelId = model.get('channel') || 'Global';
-
-                let hide = false;
-                if (!scopeFilter.includes('allChannels')) {
-                    // hide channel
-                    if (!hide && !scopeFilter.includes(channelId)) {
-                        hide = true;
-                    }
-                }
-
-                this.controlFieldVisibility(this.getView(model.get('id')), hide);
-            });
-        },
-
-        controlFieldVisibility(view, hide) {
-            if (hide) {
-                view.$el.hide();
-                view.overviewFiltersHidden = true;
-            } else if (view.overviewFiltersHidden) {
-                view.$el.show();
+            if (this.mode === 'detail') {
+                this.$el.find('.attachment-preview').css({'display': 'block'});
+                this.$el.find('img').css({'display': 'block', 'margin': '0 auto'});
             }
         },
 
