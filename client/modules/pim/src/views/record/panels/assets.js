@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/record/panels/product-assets', 'views/record/panels/for-relationship-type',
+Espo.define('pim:views/record/panels/assets', 'views/record/panels/for-relationship-type',
     Dep => Dep.extend({
 
         setup() {
@@ -56,7 +56,10 @@ Espo.define('pim:views/product/record/panels/product-assets', 'views/record/pane
                 view.notify(false);
 
                 this.listenTo(view, 'before:save', attrs => {
-                    attrs['_createProductAssetForProductId'] = this.model.get('id');
+                    attrs['_createAssetRelation'] = {
+                        entityType: this.model.urlRoot,
+                        entityId: this.model.get('id')
+                    };
                 });
 
                 this.listenToOnce(view, 'after:save', () => {
@@ -68,7 +71,7 @@ Espo.define('pim:views/product/record/panels/product-assets', 'views/record/pane
 
         actionSetAsMainImage(data) {
             this.notify('Saving...');
-            this.ajaxPutRequest(`ProductAsset/${data.id}`, {isMainImage: true}).done(entity => {
+            this.ajaxPutRequest(`${this.model.urlRoot}Asset/${data.id}`, {isMainImage: true}).done(entity => {
                 this.model.trigger('asset:saved');
                 this.notify('Saved', 'success');
                 this.actionRefresh();
