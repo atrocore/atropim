@@ -37,7 +37,7 @@
     },
     "preview": {
       "type": "varchar",
-      "view": "dam:views/asset/fields/preview",
+      "view": "pim:views/fields/preview",
       "notStorable": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
