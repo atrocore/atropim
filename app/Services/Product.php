@@ -504,12 +504,22 @@ class Product extends Hierarchy
 
     public function findLinkedEntities($id, $link, $params)
     {
+        /**
+         * For old export feeds. In old export feeds relations to assets is still existing, so we have to returns it.
+         */
         if ($link === 'assets') {
             if (empty($params['where'])) {
                 $params['where'] = [];
             }
 
-            $assetsIds = array_column($this->getEntityManager()->getRepository('ProductAsset')->where(['productId' => $id])->find()->toArray(), 'assetId');
+            $productAssets = $this
+                ->getEntityManager()
+                ->getRepository('ProductAsset')
+                ->select(['assetId'])
+                ->where(['productId' => $id])
+                ->find();
+
+            $assetsIds = array_column($productAssets->toArray(), 'assetId');
             $assetsIds[] = 'no-such-id';
 
             $params['where'][] = [
