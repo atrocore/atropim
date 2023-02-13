@@ -66,6 +66,14 @@ class V1Dot7Dot0 extends Base
         $this->getPDO()->exec("ALTER TABLE product_asset ADD scope VARCHAR(255) DEFAULT 'Global' COLLATE `utf8mb4_unicode_ci`");
 
         $this->getPDO()->exec("UPDATE product_asset SET scope='Channel' WHERE channel_id IS NOT NULL AND channel_id!=''");
+
+        try {
+            /** @var \Espo\Core\Utils\Layout $layoutManager */
+            $layoutManager = (new \Espo\Core\Application())->getContainer()->get('layout');
+            $layoutManager->set(json_decode(str_replace('"assets"', '"productAssets"', $layoutManager->get('Product', 'relationships'))), 'Product', 'relationships');
+            $layoutManager->save();
+        } catch (\Throwable $e) {
+        }
     }
 
     public function down(): void
