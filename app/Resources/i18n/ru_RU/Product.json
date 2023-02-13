@@ -1,7 +1,8 @@
 {
   "fields": {
     "attachments": "Вложения",
-    "productAssets": "Ассеты",
+    "assets": "Ассеты",
+    "productAssets": "Ассеты продукта",
     "data": "Данные",
     "categories": "Категории продукта",
     "product": "Основной продукт",
@@ -44,7 +45,8 @@
     "image": "Изображение",
     "calls": "Звонки",
     "attachments": "Вложения",
-    "productAssets": "Ассеты",
+    "assets": "Ассеты",
+    "productAssets": "Ассеты продукта",
     "categories": "Категории продукта",
     "products": "Продукты",
     "productAttributeValues": "Значения атрибутов",

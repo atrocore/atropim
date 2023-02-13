@@ -40,16 +40,14 @@ class AssetService extends AbstractEntityListener
         $attachment = $event->getArgument('attachment');
         $entity = $event->getArgument('entity');
 
-        if (property_exists($attachment, '_product') && !empty($attachment->_product)) {
-            $productAsset = $this->getEntityManager()->getRepository('ProductAsset')->get();
-            $productAsset->set([
-                'productId' => $attachment->_product,
-                'assetId'   => $entity->get('id')
-            ]);
+        if (property_exists($attachment, '_createProductAssetForProductId') && !empty($attachment->_createProductAssetForProductId)) {
+            $input = new \stdClass();
+            $input->productId = $attachment->_createProductAssetForProductId;
+            $input->assetId = $entity->get('id');
             try {
-                $this->getEntityManager()->saveEntity($productAsset);
+                $this->getServiceFactory()->create('ProductAsset')->createEntity($input);
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error('ProductAsset did not created: ' . $e->getMessage());
+                $GLOBALS['log']->error('ProductAsset creating failed: ' . $e->getMessage());
             }
         }
     }

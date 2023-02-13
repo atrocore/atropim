@@ -56,7 +56,7 @@ Espo.define('pim:views/product/record/panels/product-assets', 'views/record/pane
                 view.notify(false);
 
                 this.listenTo(view, 'before:save', attrs => {
-                    attrs['_product'] = this.model.get('id');
+                    attrs['_createProductAssetForProductId'] = this.model.get('id');
                 });
 
                 this.listenToOnce(view, 'after:save', () => {
