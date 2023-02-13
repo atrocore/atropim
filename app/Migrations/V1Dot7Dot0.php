@@ -68,7 +68,9 @@ class V1Dot7Dot0 extends Base
         $this->getPDO()->exec("UPDATE product_asset SET scope='Channel' WHERE channel_id IS NOT NULL AND channel_id!=''");
 
         $this->exec("DROP INDEX UNIQ_EA9C15155DA194112469DE2 ON category_asset");
-        $this->getPDO()->exec("ALTER TABLE category_asset ADD tags LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)', ADD created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE id id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE is_main_image is_main_image TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec(
+            "ALTER TABLE category_asset ADD tags LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)', ADD created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE id id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE is_main_image is_main_image TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`"
+        );
 
         $this->getPDO()->exec("CREATE INDEX IDX_CREATED_BY_ID ON category_asset (created_by_id)");
         $this->getPDO()->exec("CREATE INDEX IDX_MODIFIED_BY_ID ON category_asset (modified_by_id)");
@@ -85,8 +87,21 @@ class V1Dot7Dot0 extends Base
             /** @var \Espo\Core\Utils\Layout $layoutManager */
             $layoutManager = (new \Espo\Core\Application())->getContainer()->get('layout');
             $layoutManager->set(json_decode(str_replace('"assets"', '"productAssets"', $layoutManager->get('Product', 'relationships'))), 'Product', 'relationships');
+            $layoutManager->set(json_decode(str_replace('"products"', '"productAssets"', $layoutManager->get('Asset', 'relationships'))), 'Asset', 'relationships');
             $layoutManager->set(json_decode(str_replace('"assets"', '"categoryAssets"', $layoutManager->get('Category', 'relationships'))), 'Category', 'relationships');
+            $layoutManager->set(json_decode(str_replace('"categories"', '"categoryAssets"', $layoutManager->get('Asset', 'relationships'))), 'Asset', 'relationships');
             $layoutManager->save();
+        } catch (\Throwable $e) {
+        }
+
+        try {
+            /** @var \Espo\Core\Utils\Metadata $metadata */
+            $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
+            $metadata->delete('entityDefs', 'Product', ['fields.assets', 'links.assets']);
+            $metadata->delete('entityDefs', 'Asset', ['fields.products', 'links.products']);
+            $metadata->delete('entityDefs', 'Category', ['fields.assets', 'links.assets']);
+            $metadata->delete('entityDefs', 'Asset', ['fields.categories', 'links.categories']);
+            $metadata->save();
         } catch (\Throwable $e) {
         }
     }
