@@ -6,18 +6,16 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true
     },
-    "categories": {
+    "categoryAssets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
       "noLoad": true
     },
     "brands": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
       "noLoad": true
     }
   },
@@ -28,11 +26,10 @@
       "entity": "ProductAsset",
       "audited": false
     },
-    "categories": {
+    "categoryAssets": {
       "type": "hasMany",
-      "relationName": "categoryAsset",
-      "foreign": "assets",
-      "entity": "Category",
+      "foreign": "asset",
+      "entity": "CategoryAsset",
       "audited": false
     },
     "brands": {

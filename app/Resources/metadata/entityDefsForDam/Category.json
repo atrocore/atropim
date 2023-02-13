@@ -1,19 +1,17 @@
 {
   "fields": {
-    "assets": {
+    "categoryAssets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": false,
       "noLoad": true
     }
   },
   "links": {
-    "assets": {
+    "categoryAssets": {
       "type": "hasMany",
-      "relationName": "categoryAsset",
-      "foreign": "categories",
-      "entity": "Asset",
+      "foreign": "category",
+      "entity": "CategoryAsset",
       "audited": false
     }
   }
