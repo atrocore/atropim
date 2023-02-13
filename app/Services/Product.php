@@ -504,6 +504,23 @@ class Product extends Hierarchy
 
     public function findLinkedEntities($id, $link, $params)
     {
+        if ($link === 'assets') {
+            if (empty($params['where'])) {
+                $params['where'] = [];
+            }
+
+            $assetsIds = array_column($this->getEntityManager()->getRepository('ProductAsset')->where(['productId' => $id])->find()->toArray(), 'assetId');
+            $assetsIds[] = 'no-such-id';
+
+            $params['where'][] = [
+                'type'      => 'equals',
+                'attribute' => 'id',
+                'value'     => $assetsIds
+            ];
+
+            return $this->getServiceFactory()->create('Asset')->findEntities($params);
+        }
+
         $result = parent::findLinkedEntities($id, $link, $params);
 
         /**
