@@ -1,11 +1,11 @@
 {
   "fields": {
-    "categories": "Categories",
+    "categoryAssets": "Asset Categories",
     "productAssets": "Asset Products",
     "channel": "Channel"
   },
   "links": {
-    "categories": "Categories",
+    "categoryAssets": "Asset Categories",
     "productAssets": "Asset Products"
   }
 }
