@@ -43,7 +43,7 @@ Espo.define('pim:views/fields/max-length', 'views/fields/int', Dep => {
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (['detail', 'edit'].includes(this.mode)) {
+            if (['detail', 'edit'].includes(this.mode) && (this.model.has('type') || this.model.has('attributeId'))) {
                 this.hide();
                 if (this.model.urlRoot === 'Attribute') {
                     this.toggleVisibility(this.model.get('type'));
