@@ -61,10 +61,6 @@
         "notEntity",
         "onlyCategoryCatalogsProducts"
       ],
-      "dragDrop": {
-        "isActive": true,
-        "sortField": "pcSorting"
-      },
       "sortBy": "pcSorting",
       "asc": true,
       "view": "pim:views/category/record/panels/products"
