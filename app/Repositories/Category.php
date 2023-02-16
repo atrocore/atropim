@@ -319,41 +319,26 @@ class Category extends AbstractRepository
 
     public function getEntityPosition(Entity $entity, string $parentId): ?int
     {
-        $limit = 2000;
-        $offset = 0;
-
-        $globalPosition = 0;
-
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
 
-        while (true) {
-            if (empty($parentId)) {
-                $additionalWhere = ' AND category_parent_id IS NULL ';
-            } else {
-                $additionalWhere = ' AND category_parent_id=' . $this->getPDO()->quote($parentId);
-            }
-
-            $query = "SELECT id 
-                      FROM `category` 
-                      WHERE deleted=0 $additionalWhere 
-                      ORDER BY sort_order ASC, $sortBy {$sortOrder}, id ASC 
-                      LIMIT $offset, $limit";
-
-            $ids = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
-            if (empty($ids)) {
-                return null;
-            }
-
-            $position = array_search($entity->get('id'), $ids);
-            if ($position !== false) {
-                $globalPosition += $position;
-                return $globalPosition;
-            } else {
-                $globalPosition += $limit;
-            }
-            $offset = $offset + $limit;
+        if (empty($parentId)) {
+            $additionalWhere = ' AND t.category_parent_id IS NULL ';
+        } else {
+            $additionalWhere = ' AND t.category_parent_id=' . $this->getPDO()->quote($parentId);
         }
+
+        $query = "SELECT x.position
+                  FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
+                        FROM `category` t
+                            JOIN (SELECT @rownum:=0) r
+                        WHERE t.deleted=0 $additionalWhere
+                        ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                  WHERE x.id=" . $this->getPDO()->quote($entity->get('id'));
+
+        $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+
+        return (int)$position;
     }
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
