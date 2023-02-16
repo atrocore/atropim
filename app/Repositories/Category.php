@@ -346,21 +346,21 @@ class Category extends AbstractRepository
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
 
-        $select = '*';
+        $select = 'c.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=id AND c1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=c.id AND c1.deleted=0) as childrenCount";
         }
 
         if (empty($parentId)) {
-            $additionalWhere = ' AND category_parent_id IS NULL ';
+            $additionalWhere = ' AND c.category_parent_id IS NULL ';
         } else {
-            $additionalWhere = ' AND category_parent_id=' . $this->getPDO()->quote($parentId);
+            $additionalWhere = ' AND c.category_parent_id=' . $this->getPDO()->quote($parentId);
         }
 
         $query = "SELECT {$select} 
-                  FROM category
-                  WHERE deleted=0 $additionalWhere
-                  ORDER BY sort_order ASC, $sortBy {$sortOrder}, id ASC";
+                  FROM category c
+                  WHERE c.deleted=0 $additionalWhere
+                  ORDER BY c.sort_order ASC, c.$sortBy {$sortOrder}, c.id ASC";
 
         if (!is_null($offset) && !is_null($maxSize)) {
             $query .= " LIMIT $maxSize OFFSET $offset";

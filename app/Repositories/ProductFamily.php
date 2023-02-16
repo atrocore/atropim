@@ -183,21 +183,21 @@ class ProductFamily extends AbstractRepository
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
 
-        $select = '*';
+        $select = 'c.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(pf1.id) FROM product_family pf1 WHERE pf1.parent_id=id AND pf1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(pf1.id) FROM product_family pf1 WHERE pf1.parent_id=c.id AND pf1.deleted=0) as childrenCount";
         }
 
         if (empty($parentId)) {
-            $additionalWhere = ' AND parent_id IS NULL ';
+            $additionalWhere = ' AND c.parent_id IS NULL ';
         } else {
-            $additionalWhere = ' AND parent_id=' . $this->getPDO()->quote($parentId);
+            $additionalWhere = ' AND c.parent_id=' . $this->getPDO()->quote($parentId);
         }
 
         $query = "SELECT {$select} 
-                  FROM `product_family`
-                  WHERE deleted=0 $additionalWhere
-                  ORDER BY sort_order ASC, $sortBy {$sortOrder}, id ASC";
+                  FROM `product_family` c
+                  WHERE c.deleted=0 $additionalWhere
+                  ORDER BY c.sort_order ASC, c.$sortBy {$sortOrder}, c.id ASC";
 
         if (!is_null($offset) && !is_null($maxSize)) {
             $query .= " LIMIT $maxSize OFFSET $offset";
