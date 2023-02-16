@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Listeners\AbstractEntityListener;
@@ -316,27 +317,65 @@ class Category extends AbstractRepository
         return $result;
     }
 
+    public function getEntityPosition(Entity $entity, string $parentId): ?int
+    {
+        $limit = 2000;
+        $offset = 0;
+
+        $globalPosition = 0;
+
+        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+
+        while (true) {
+            if (empty($parentId)) {
+                $additionalWhere = ' AND category_parent_id IS NULL ';
+            } else {
+                $additionalWhere = ' AND category_parent_id=' . $this->getPDO()->quote($parentId);
+            }
+
+            $query = "SELECT id 
+                      FROM `category` 
+                      WHERE deleted=0 $additionalWhere 
+                      ORDER BY sort_order ASC, $sortBy {$sortOrder}, id ASC 
+                      LIMIT $offset, $limit";
+
+            $ids = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+            if (empty($ids)) {
+                return null;
+            }
+
+            $position = array_search($entity->get('id'), $ids);
+            if ($position !== false) {
+                $globalPosition += $position;
+                return $globalPosition;
+            } else {
+                $globalPosition += $limit;
+            }
+            $offset = $offset + $limit;
+        }
+    }
+
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
     {
-        $select = 'c.*';
+        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+
+        $select = '*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=c.id AND c1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=id AND c1.deleted=0) as childrenCount";
         }
 
         if (empty($parentId)) {
-            $query = "SELECT {$select} 
-                      FROM category c
-                      WHERE c.category_parent_id IS NULL
-                      AND c.deleted=0
-                      ORDER BY c.sort_order, c.id";
+            $additionalWhere = ' AND category_parent_id IS NULL ';
         } else {
-            $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT {$select} 
-                      FROM category c
-                      WHERE c.category_parent_id=$parentId
-                      AND c.deleted=0
-                      ORDER BY c.sort_order, c.id";
+            $additionalWhere = ' AND category_parent_id=' . $this->getPDO()->quote($parentId);
         }
+
+        $query = "SELECT {$select} 
+                  FROM category
+                  WHERE deleted=0 $additionalWhere
+                  ORDER BY sort_order ASC, $sortBy {$sortOrder}, id ASC";
 
         if (!is_null($offset) && !is_null($maxSize)) {
             $query .= " LIMIT $maxSize OFFSET $offset";
