@@ -192,10 +192,10 @@ class ProductAttributeValue extends AbstractRepository
     public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
     {
         $where = [
-            'productId' => $childProduct->get('id'),
+            'productId'   => $childProduct->get('id'),
             'attributeId' => $parentPav->get('attributeId'),
-            'language' => $parentPav->get('language'),
-            'scope' => $parentPav->get('scope'),
+            'language'    => $parentPav->get('language'),
+            'scope'       => $parentPav->get('scope'),
         ];
 
         if ($parentPav->get('scope') === 'Channel') {
@@ -299,10 +299,10 @@ class ProductAttributeValue extends AbstractRepository
 
         $where = [
             'productFamilyId' => $product->get('productFamilyId'),
-            'attributeId' => $pav->get('attributeId'),
-            'scope' => $pav->get('scope'),
-            'isRequired' => $pav->get('isRequired'),
-            'maxLength' => $pav->get('maxLength'),
+            'attributeId'     => $pav->get('attributeId'),
+            'scope'           => $pav->get('scope'),
+            'isRequired'      => $pav->get('isRequired'),
+            'maxLength'       => $pav->get('maxLength'),
         ];
 
         if ($pav->get('scope') === 'Channel') {
@@ -425,7 +425,7 @@ class ProductAttributeValue extends AbstractRepository
     public function clearRecord(string $id): void
     {
         $this->getPDO()->exec(
-            "UPDATE `product_attribute_value` SET varchar_value=NULL, text_value=NULL, bool_value=0, float_value=NULL, int_value=NULL, date_value=NULL, datetime_value=NULL, owner_user_id=NULL, assigned_user_id=NULL WHERE id='$id'"
+            "UPDATE `product_attribute_value` SET varchar_value=NULL, text_value=NULL, bool_value=0, float_value=NULL, int_value=NULL, date_value=NULL, datetime_value=NULL WHERE id='$id'"
         );
     }
 
@@ -538,12 +538,12 @@ class ProductAttributeValue extends AbstractRepository
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         $where = [
-            'id!=' => $entity->get('id'),
-            'language' => $entity->get('language'),
-            'productId' => $entity->get('productId'),
+            'id!='        => $entity->get('id'),
+            'language'    => $entity->get('language'),
+            'productId'   => $entity->get('productId'),
             'attributeId' => $entity->get('attributeId'),
-            'scope' => $entity->get('scope'),
-            'deleted' => $deleted,
+            'scope'       => $entity->get('scope'),
+            'deleted'     => $deleted,
         ];
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
@@ -663,10 +663,10 @@ class ProductAttributeValue extends AbstractRepository
          */
         if (!$entity->isNew() && $attribute->get('unique') && $entity->isAttributeChanged('value')) {
             $where = [
-                'id!=' => $entity->id,
-                'language' => $entity->get('language'),
-                'attributeId' => $entity->get('attributeId'),
-                'scope' => $entity->get('scope'),
+                'id!='            => $entity->id,
+                'language'        => $entity->get('language'),
+                'attributeId'     => $entity->get('attributeId'),
+                'scope'           => $entity->get('scope'),
                 'product.deleted' => false
             ];
 
@@ -723,7 +723,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
