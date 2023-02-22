@@ -59,10 +59,20 @@ class CategoryAsset extends \Espo\Core\Templates\Repositories\Relationship
 
     public function updateSortOrder(array $ids): void
     {
+        $collection = $this->select(['id'])->where(['id' => $ids])->find();
+        if (count($collection) === 0) {
+            return;
+        }
+
         foreach ($ids as $k => $id) {
-            $id = $this->getPDO()->quote((string)$id);
             $sortOrder = (int)$k * 10;
-            $this->getPDO()->exec("UPDATE `category_asset` SET sorting=$sortOrder WHERE id=$id");
+            foreach ($collection as $entity) {
+                if ($entity->get('id') !== $id) {
+                    continue;
+                }
+                $entity->set('sorting', $sortOrder);
+                $this->save($entity);
+            }
         }
     }
 }
