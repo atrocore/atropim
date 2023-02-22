@@ -237,6 +237,19 @@
       "type": "int",
       "view": "pim:views/fields/max-length"
     },
+    "maxLengthCounter": {
+      "type": "int",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "isValueReadOnly": {
       "type": "bool",
       "notStorable": true,

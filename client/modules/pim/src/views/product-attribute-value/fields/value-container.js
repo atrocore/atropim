@@ -99,8 +99,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     fieldDefs['options'] = this.model.get('typeValue') || [];
                 }
 
-                if (this.model.get('maxLength')) {
-                    fieldDefs['maxLength'] = this.model.get('maxLength');
+                if (this.model.get('maxLengthCounter')) {
+                    fieldDefs['maxLength'] = this.model.get('maxLengthCounter');
                 }
 
                 // set field defs
