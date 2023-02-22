@@ -230,6 +230,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
+        if (!empty($entity->get('maxLength'))) {
+            $entity->set('maxLengthCounter', $entity->get('maxLength'));
+        }
+
         parent::prepareEntityForOutput($entity);
     }
 
