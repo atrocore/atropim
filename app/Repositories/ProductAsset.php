@@ -81,7 +81,7 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
 
     public function updateSortOrder(array $ids): void
     {
-        $collection = $this->select(['id'])->where(['id' => $ids])->find();
+        $collection = $this->where(['id' => $ids])->find();
         if (count($collection) === 0) {
             return;
         }
