@@ -1,0 +1,10 @@
+{
+  "relationshipPanels": {
+    "productAssets": {
+      "view": "views/record/panels/for-relationship-type"
+    },
+    "categoryAssets": {
+      "view": "views/record/panels/for-relationship-type"
+    }
+  }
+}

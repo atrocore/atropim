@@ -43,7 +43,10 @@
       "type": "hasMany",
       "foreign": "category",
       "entity": "CategoryAsset",
-      "audited": false
+      "addRelationCustomDefs": {
+        "link": "assets",
+        "entity": "Asset"
+      }
     }
   }
 }

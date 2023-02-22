@@ -42,7 +42,11 @@
     "productAssets": {
       "type": "hasMany",
       "foreign": "product",
-      "entity": "ProductAsset"
+      "entity": "ProductAsset",
+      "addRelationCustomDefs": {
+        "link": "assets",
+        "entity": "Asset"
+      }
     }
   }
 }
