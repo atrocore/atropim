@@ -2,10 +2,12 @@
   "fields": {
     "category": {
       "type": "link",
+      "required": true,
       "relationshipField": true
     },
     "asset": {
       "type": "link",
+      "required": true,
       "relationshipField": true
     },
     "isMainImage": {
