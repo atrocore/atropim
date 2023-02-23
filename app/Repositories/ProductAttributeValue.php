@@ -614,6 +614,14 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if (empty($entity->get('productId'))) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('fieldIsRequired', 'exceptions', 'Global'), 'Product'));
+        }
+
+        if (empty($entity->get('attributeId'))) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('fieldIsRequired', 'exceptions', 'Global'), 'Attribute'));
+        }
+
         // for unique index
         if ($entity->get('channelId') === null) {
             $entity->set('channelId', '');
@@ -630,18 +638,17 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isNew() && !$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
-            $product = $entity->get('product');
-
-            if (empty($entity->get('assignedUserId'))) {
-                $entity->set('assignedUserId', $product->get('assignedUserId'));
-            }
-
-            if (empty($entity->get('ownerUserId'))) {
-                $entity->set('ownerUserId', $product->get('ownerUserId'));
-            }
-
-            if (empty($entity->get('teamsIds'))) {
-                $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
+            $product = $this->getEntityManager()->getRepository('Product')->get($entity->get('productId'));
+            if (!empty($product)) {
+                if (empty($entity->get('assignedUserId'))) {
+                    $entity->set('assignedUserId', $product->get('assignedUserId'));
+                }
+                if (empty($entity->get('ownerUserId'))) {
+                    $entity->set('ownerUserId', $product->get('ownerUserId'));
+                }
+                if (empty($entity->get('teamsIds'))) {
+                    $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
+                }
             }
         }
 
