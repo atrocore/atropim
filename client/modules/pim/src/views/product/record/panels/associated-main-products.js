@@ -31,7 +31,9 @@ Espo.define('pim:views/product/record/panels/associated-main-products', 'views/r
         setup() {
             Dep.prototype.setup.call(this);
 
-            if (this.getAcl().check('AssociatedProducts', 'create')) {
+            let create = this.buttonList.find(item => item.action === (this.defs.createAction || 'createRelated'));
+
+            if (this.getAcl().check('AssociatedProducts', 'create') && !create) {
                 this.buttonList.push({
                     title: 'Create',
                     action: this.defs.actionCreate || 'createRelated',
