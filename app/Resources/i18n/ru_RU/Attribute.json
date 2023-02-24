@@ -59,6 +59,7 @@
     "sortOrderInProduct": "Порядок сортировки значений атрибутов продукта.W"
   },
   "exceptions": {
+    "typeValueIsInconsistent": "Данные для значений опций противоречивы.",
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",

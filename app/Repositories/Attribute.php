@@ -277,26 +277,13 @@ class Attribute extends AbstractRepository
             return;
         }
 
-        /**
-         * Delete not unique option(s)
-         */
-        $toDelete = [];
-        foreach (array_count_values($entity->get('typeValueIds')) as $optionId => $count) {
-            if ($count > 1) {
-                $toDelete[] = array_search($optionId, $entity->get('typeValueIds'));
+        foreach ($this->getMetadata()->get(['entityDefs', 'Attribute', 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['isTypeValueField'])) {
+                continue;
             }
-        }
-        while (count($toDelete) > 0) {
-            $key = array_shift($toDelete);
-            foreach ($this->getMetadata()->get(['entityDefs', 'Attribute', 'fields']) as $field => $fieldDefs) {
-                if (empty($fieldDefs['isTypeValueField'])) {
-                    continue;
-                }
-                $values = $entity->get($field);
-                if (is_array($entity->get($field)) && array_key_exists($key, $values)) {
-                    unset($values[$key]);
-                    $entity->set($field, array_values($values));
-                }
+
+            if (count($entity->get($field)) !== count($entity->get('typeValueIds'))) {
+                throw new BadRequest($this->exception('typeValueIsInconsistent'));
             }
         }
 

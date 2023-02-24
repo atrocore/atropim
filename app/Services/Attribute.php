@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Hierarchy;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Forbidden;
@@ -146,6 +147,59 @@ class Attribute extends Hierarchy
         }
 
         return parent::updateEntity($id, $data);
+    }
+
+    protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
+    {
+        if (property_exists($data, 'typeValueIds') && property_exists($data, 'typeValueIdsAddOnlyMode')) {
+            $entity = $this->getEntity($id);
+            if (empty($entity)) {
+                return;
+            }
+
+            unset($data->typeValueIdsAddOnlyMode);
+
+            foreach ($this->getMetadata()->get(['entityDefs', 'Attribute', 'fields']) as $field => $fieldDefs) {
+                if (empty($fieldDefs['isTypeValueField']) || $field === 'typeValueIds') {
+                    continue;
+                }
+                $typeValues[$field] = empty($entity->get($field)) ? [] : $entity->get($field);
+                if (empty($typeValues[$field]) && !empty($entity->get('typeValue'))) {
+                    $typeValues[$field] = $entity->get('typeValue');
+                }
+
+                $addModeKey = $field . 'AddOnlyMode';
+                if (property_exists($data, $addModeKey)) {
+                    unset($data->$addModeKey);
+                }
+            }
+            if (empty($typeValues)) {
+                return;
+            }
+
+            $typeValueIds = empty($entity->get('typeValueIds')) ? [] : $entity->get('typeValueIds');
+
+            foreach ($data->typeValueIds as $k => $id) {
+                if (!in_array($id, $typeValueIds)) {
+                    $typeValueIds[] = $id;
+                    foreach ($typeValues as $field => $value) {
+                        if (property_exists($data, $field) && is_array($data->$field) && array_key_exists($k, $data->$field)) {
+                            $typeValues[$field][] = $data->$field[$k];
+                        } else {
+                            $typeValues[$field][] = '';
+                        }
+                    }
+                }
+            }
+
+
+            $data->typeValueIds = $typeValueIds;
+            foreach ($typeValues as $field => $value) {
+                $data->$field = $value;
+            }
+        }
+
+        parent::prepareInputForAddOnlyMode($id, $data);
     }
 
     protected function init()

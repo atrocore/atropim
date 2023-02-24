@@ -75,6 +75,7 @@
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."
   },
   "exceptions": {
+    "typeValueIsInconsistent": "Daten für Optionswerte sind inkonsistent.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
     "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
     "attributeIsUsedInProductFamilies": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien.",
