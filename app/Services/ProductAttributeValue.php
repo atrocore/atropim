@@ -917,6 +917,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $entity = $this->getRepository()->get($entity->get('id'));
 
+        // keep original value
+        $entity->_varcharValue = $entity->get('varcharValue');
+        $entity->_textValue = $entity->get('textValue');
+
         $this->prepareEntity($entity);
 
         return parent::isEntityUpdated($entity, $data);
@@ -927,6 +931,16 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (in_array($field, array_merge(['value'], array_values($this->getInputLanguageList())))) {
             $type = $entity->get('attributeType');
             $type = $this->getMetadata()->get(['fields', $type, 'fieldDefs', 'type'], $type);
+
+            // compare with original value
+            switch ($entity->get('attributeType')) {
+                case 'enum':
+                    $value2 = $entity->_varcharValue;
+                    break;
+                case 'multiEnum':
+                    $value2 = $entity->_textValue;
+                    break;
+            }
         } else {
             $type = isset($entity->getFields()[$field]['type']) ? $entity->getFields()[$field]['type'] : 'varchar';
         }
