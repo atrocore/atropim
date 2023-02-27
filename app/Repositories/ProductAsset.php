@@ -89,7 +89,7 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
         foreach ($ids as $k => $id) {
             $sortOrder = (int)$k * 10;
             foreach ($collection as $entity) {
-                if ($entity->get('id') !== $id) {
+                if ($entity->get('id') !== (string)$id) {
                     continue;
                 }
                 $entity->set('sorting', $sortOrder);
