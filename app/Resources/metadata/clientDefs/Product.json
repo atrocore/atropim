@@ -126,7 +126,7 @@
     "associatedMainProducts": {
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
-      "view": "views/record/panels/for-relationship-type"
+      "view": "pim:views/product/record/panels/associated-main-products"
     },
     "productChannels": {
       "view": "views/record/panels/for-relationship-type"
