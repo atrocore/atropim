@@ -54,7 +54,10 @@ Espo.define('pim:views/product/actions/show-pdf-generator', 'pdf-generator:views
         },
 
         getChannelsData() {
-            if (this.getAcl().check(this.model.name, 'read')) {
+            if (this.getAcl().check(this.model.name, 'read')
+                && this.getAcl().check('Channel', 'read')
+                && this.getAcl().check('ProductChannel', 'read')
+            ) {
                 return this.ajaxGetRequest(`Product/${this.model.id}/productChannels`);
             } else {
                 return new Promise(resolve => resolve({list: [], total: 0}));
