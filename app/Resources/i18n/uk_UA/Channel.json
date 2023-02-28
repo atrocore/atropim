@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "description": "Описание",
+    "isActive": "Активный",
+    "categories": "Категории",
+    "locales": "Языки",
+    "code": "Код",
+    "productChannels": "Продукты канала",
+    "products": "Продукты канала"
+  },
+  "links": {
+    "categories": "Категории",
+    "productChannels": "Продукты канала",
+    "products": "Продукты канала"
+  },
+  "labels": {
+    "unLinkCategoryFromChannel": "Разорвать связь категории '%s' с каналом '%s'",
+    "linkCategoryWithChannel": "Связать категорию '%s' с каналом '%s'",
+    "changeCategoryForChannel": "Изменить категорию на '%s' для канала '%s'",
+    "Create Channel": "Создать канал",
+    "main": "Основной язык"
+  },
+  "options": {
+    "template": {
+      "default": "По умолчанию"
+    }
+  },
+  "messages": {
+    "categoryChangeConfirm": "Вы действительно хотите отключить (или изменить) дерево категорий для этого канала? Все продукты, связанные с исходным деревом категорий, будут отключены от этого канала (и продукты из нового дерева категорий будут связаны с ним)."
+  },
+  "exceptions": {
+    "channelWithSuchCodeAlreadyExist": "Канал с таким КОДОМ уже существует.",
+    "channelHasProducts": "Канал со связанными продуктами удалить нельзя.",
+    "channelHasCategory": "Канал со связанным деревом категорий удалить нельзя."
+  }
+}

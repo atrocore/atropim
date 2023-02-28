@@ -1,0 +1,17 @@
+{
+    "listFields": {
+        "generalStatistics": {
+            "product": "Продукты",
+            "category": "Категории",
+            "productFamily": "Продуктовые семьи",
+            "attribute": "Атрибуты",
+            "productWithoutAssociatedProduct": "Продукты без связанных продуктов",
+            "productWithoutCategory": "Продукты без категории",
+            "productWithoutAttribute": "Продукты без атрибутов продукта",
+            "productWithoutAssets": "Продукты без ассетов"
+        }
+    },
+    "fields": {
+        "amount": "Количество"
+    }
+}

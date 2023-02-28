@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "association": "Связь",
+    "backwardAssociation": "Обратная связь",
+    "mainProduct": "Главный продукт",
+    "mainProductImage": "Изображение главного продукта",
+    "relatedProduct": "Связанный продукт",
+    "relatedProductImage": "Изображение связанного продукта"
+  },
+  "links": {
+    "association": "Связь",
+    "mainProduct": "Главный продукт",
+    "mainProductImage": "Изображение главного продукта",
+    "relatedProduct": "Связанный продукт",
+    "relatedProductImage": "Изображение похожего продукта"
+  },
+  "labels": {
+    "Create AssociatedProduct": "Создать связанный продукт"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "isActive": "Активный",
+    "products": "Продукты",
+    "categories": "Категории",
+    "code": "Код"
+  },
+  "links": {
+    "channels": "Каналы",
+    "products": "Продукты",
+    "categories": "Категории"
+  },
+  "labels": {
+    "withoutCatalog": "Без каталога",
+    "Create Catalog": "Создать каталог"
+  },
+  "options": {
+    "template": {
+      "default": "По умолчанию"
+    }
+  },
+  "queueManager": {
+    "createProductForCatalog": "Создать продукт '%s' для каталога '%s'"
+  },
+  "exceptions": {
+    "catalogCannotBeDeleted": "Каталог не может быть удален. Есть несколько каналов, которые используют текущий каталог."
+  }
+}

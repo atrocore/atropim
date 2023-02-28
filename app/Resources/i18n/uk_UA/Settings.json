@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "Разрешить привязывать продукты к субкатегориям.",
+    "behaviorOnCatalogChange": "Поведение при удалении/изменении каталога для продукта",
+    "behaviorOnCategoryDelete": "Поведение при удалении категории",
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведение при разрыве связи дерева категорий с каталогом",
+    "behaviorOnProductFamilyChange": "Действия при изменении / удалении продукт семьи"
+  },
+  "labels": {
+    "retainAllInheritedAttributes": "Сохранить все унаследованные атрибуты",
+    "removeAllInheritedAttributes": "Удалить все унаследованные атрибуты",
+    "removeOnlyInheritedAttributesWithNoValue": "Удалить только унаследованные атрибуты без значения"
+  },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Вы уверены, что хотите запретить привязывать продукты к субкатегориям? Все продукты привязанные к ним будут автоматически отвязаны."
+  },
+  "exceptions": {
+    "languageUsedInChannel": "Язык, используемый в каком-либо канале, не может быть удален."
+  },
+  "queueManager": {
+    "updatingOwnershipInformation": "Обновление информации о владельце"
+  },
+  "tooltips": {
+    "productCanLinkedWithNonLeafCategories": "Если установлено Вы сможете связывать товары с категориями, у которых есть дочерние категории.",
+    "behaviorOnCatalogChange": "В случае «Распространить» все категории, связанные с продуктом, будут автоматически отсоединены.",
+    "behaviorOnCategoryDelete": "В случае «Распространить» все подкатегории этой категории также будут удалены, и все продукты, связанные с этой категорией или ее подкатегориями, будут отсоединены.",
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "В случае «Распространить» все категории этого дерева, связанные с продуктами, будут автоматически отсоединены."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "tags": "Теги",
+    "name": "Название",
+    "status": "Статус",
+    "type": "Тип",
+    "description": "Описание",
+    "text": "Текст",
+    "metaTitle": "Meta Title",
+    "metaDescription": "Meta Description",
+    "contentGroup": "Группа контента",
+    "products": "Продукты"
+  },
+  "links": {
+    "contentGroup": "Группа контента",
+    "products": "Продукты"
+  },
+  "labels": {
+    "Create Content": "Создать контент",
+    "draft": "Черновик",
+    "written": "Написано",
+    "reviewed": "Проверено",
+    "published": "Опубликовано",
+    "review": "Проверка",
+    "news": "Новости",
+    "promotional": "Реклама"
+  }
+}

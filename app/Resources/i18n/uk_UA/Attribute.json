@@ -1,0 +1,73 @@
+{
+  "fields": {
+    "parents": "Связывающие атрибуты",
+    "children": "Связанные атрибуты",
+    "attributeGroup": "Группа атрибутов",
+    "attributeTab": "Вкладка атрибутов",
+    "typeValueIds": "Идентификаторы опций",
+    "typeValue": "Значения опций",
+    "type": "Тип атрибута",
+    "code": "Код",
+    "name": "Название атрибута",
+    "products": "Продукты",
+    "productAttributeValues": "Значения атрибутов",
+    "isRequired": "Обязательно",
+    "isMultilang": "Многоязычность",
+    "sortOrderInAttributeGroup": "Порядок сортировки в группе атрибута",
+    "assetType": "Тип ассета",
+    "pattern": "Regex Pattern",
+    "unique": "Unique",
+    "isSorted": "Сортировать (по алфавиту)",
+    "prohibitedEmptyValue": "Запретить пустые значения",
+    "enumDefault": "По умолчанию",
+    "measure": "Мера",
+    "unitDefault": "По умолчанию",
+    "virtualProductField": "Виртуальное поле продукта",
+    "defaultScope": "Область действия",
+    "defaultChannel": "Канал",
+    "defaultIsRequired": "Обязательно",
+    "sortOrderInProduct": "Порядок сортировки в продукте",
+    "tooltip": "Текст подсказки",
+    "maxLength": "Максимальная длина"
+  },
+  "links": {
+    "parents": "Связывающие атрибуты",
+    "children": "Связанные атрибуты",
+    "attributeGroup": "Группа атрибутов",
+    "attributeTab": "Вкладка атрибутов",
+    "products": "Продукты",
+    "productAttributeValues": "Значения атрибутов",
+    "productFamilies": "Продуктовые семьи"
+  },
+  "labels": {
+    "Create Attribute": "Создать атрибут",
+    "productFamily": "Продуктовая семья",
+    "addNewValue": "Добавить новое значение"
+  },
+  "messages": {
+    "sameNumberOptions": "Вы должны установить такое же количество опций",
+    "productsCountWithAttribute": "Количество продуктов, у которых задан данный атрибут: <strong>{count}</strong>",
+    "removeAttribute(s)": "Все значения для этого(этих) атрибута(ов) также удаляются. Вы действительно хотите удалить этот(эти) атрибут(ы)?"
+  },
+  "filterLabels": {
+    "All": "All"
+  },
+  "tooltips": {
+    "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"\/^[A-Z]{1,10}$\/\"",
+    "isSorted": "Опции будут отсортированы после сохранения.",
+    "virtualProductField": "Значения этого атрибута будут добавлены в виде виртуального поля через лейаут списка товаров.",
+    "sortOrderInProduct": "Порядок сортировки значений атрибутов продукта.W"
+  },
+  "exceptions": {
+    "typeValueIsInconsistent": "Данные для значений опций противоречивы.",
+    "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
+    "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
+    "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
+    "youCanNotUnlinkProductFamilyAttribute": "Невозможно отменить связь атрибута продуктовой семьи.",
+    "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
+    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
+    "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи.",
+    "attributeNotHaveUniqueValue": "Атрибут не имеет уникального значения.",
+    "someAttributeDontMathToPattern": "Некоторые атрибуты не соответствуют шаблону."
+  }
+}

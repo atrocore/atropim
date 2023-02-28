@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "name": "Название",
+        "price": "Цена",
+        "description": "Описание",
+        "isActive": "Активный"
+    },
+    "links": {
+        "products": "Продукт"
+    },
+    "labels": {
+        "Create Packaging": "Создать упаковку"
+    }
+}

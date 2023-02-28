@@ -1,0 +1,53 @@
+{
+  "custom": {
+    "Attribute": "Атрибут"
+  },
+  "fields": {
+    "productAttribute": "Атрибут продукта",
+    "product": "Продукт",
+    "attribute": "Атрибут",
+    "language": "Язык",
+    "languages": "Языки",
+    "isRequired": "Обязательно",
+    "productFamilyAttribute": "Атрибут продуктовой семьи",
+    "value": "Значение",
+    "scope": "Область действия",
+    "channel": "Канал",
+    "varcharValue": "Value: Varchar",
+    "textValue": "Value: Text",
+    "intValue": "Value: Integer",
+    "floatValue": "Value: Float",
+    "dateValue": "Value: Date",
+    "datetimeValue": "Value: DateTime",
+    "boolValue": "Value: Boolean",
+    "maxLength": "Максимальная длина"
+  },
+  "links": {
+    "productAttribute": "Атрибут продукта",
+    "product": "Продукт",
+    "attribute": "Атрибут",
+    "channel": "Канал"
+  },
+  "options": {
+    "language": {
+      "main": "Основной язык"
+    }
+  },
+  "labels": {
+    "Create ProductAttributeValue": "Создать значение атрибута",
+    "cannotLinkDefaultChannel": "Канал по умолчанию '{channel}' для выбранного атрибута не связан с этим продуктом."
+  },
+  "exceptions": {
+    "noSuchChannelInProduct": "Атрибут '%s' для канала '%s' для продукта '%s' недоступен.",
+    "attributeUnitValueIsRequired": "Единица измерения для атрибута '%s' необходима.",
+    "noSuchAttributeUnit": "Единица измерения для атрибута '%s' не допустима.",
+    "noSuchAttributeOptions": "Значение для атрибута '%s' не допустимо.",
+    "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",
+    "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"{pattern}\".",
+    "attributeShouldHaveBeUnique": "Атрибут %s должен иметь уникальное значение."
+  },
+  "messages": {
+    "removeRelatedAttributeGroup": "Вы уверены, что хотите удалить все атрибуты с их значениями для выбранной группы атрибутов из текущего продукта? Все атрибуты и их значения для дочерних продуктов будут сохранены.",
+    "removeRelatedAttributeGroupCascade": "Вы уверены, что хотите удалить все атрибуты с их значениями для выбранной группы атрибутов из текущего продукта и его дочерних продуктов?"
+  }
+}
