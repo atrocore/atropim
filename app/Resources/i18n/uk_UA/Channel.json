@@ -1,36 +1,36 @@
 {
   "fields": {
-    "description": "Описание",
-    "isActive": "Активный",
-    "categories": "Категории",
-    "locales": "Языки",
+    "description": "Опис",
+    "isActive": "Активний",
+    "categories": "Категорії",
+    "locales": "Мови",
     "code": "Код",
-    "productChannels": "Продукты канала",
-    "products": "Продукты канала"
+    "productChannels": "Продукти каналу",
+    "products": "Продукти каналу"
   },
   "links": {
-    "categories": "Категории",
-    "productChannels": "Продукты канала",
-    "products": "Продукты канала"
+    "categories": "Категорії",
+    "productChannels": "Продукти каналу",
+    "products": "Продукти каналу"
   },
   "labels": {
-    "unLinkCategoryFromChannel": "Разорвать связь категории '%s' с каналом '%s'",
-    "linkCategoryWithChannel": "Связать категорию '%s' с каналом '%s'",
-    "changeCategoryForChannel": "Изменить категорию на '%s' для канала '%s'",
-    "Create Channel": "Создать канал",
-    "main": "Основной язык"
+    "unLinkCategoryFromChannel": "Розірвати зв'язок категорії '%s' з каналом '%s'",
+    "linkCategoryWithChannel": "Зв'язати категорію '%s' з каналом '%s'",
+    "changeCategoryForChannel": "Змінити категорію на '%s' для каналу '%s'",
+    "Create Channel": "Створити канал",
+    "main": "Основна мова"
   },
   "options": {
     "template": {
-      "default": "По умолчанию"
+      "default": "За замовчуванням"
     }
   },
   "messages": {
-    "categoryChangeConfirm": "Вы действительно хотите отключить (или изменить) дерево категорий для этого канала? Все продукты, связанные с исходным деревом категорий, будут отключены от этого канала (и продукты из нового дерева категорий будут связаны с ним)."
+    "categoryChangeConfirm": "Ви дійсно хочете відключити (або змінити) дерево категорій для цього каналу? Всі продукти, пов'язані з вихідним деревом категорій, будуть відключені від цього каналу (і продукти з нового дерева категорій будуть пов'язані з ним)."
   },
   "exceptions": {
-    "channelWithSuchCodeAlreadyExist": "Канал с таким КОДОМ уже существует.",
-    "channelHasProducts": "Канал со связанными продуктами удалить нельзя.",
-    "channelHasCategory": "Канал со связанным деревом категорий удалить нельзя."
+    "channelWithSuchCodeAlreadyExist": "Канал із таким КОДОМ вже існує.",
+    "channelHasProducts": "Канал із пов'язаними продуктами видалити не можна.",
+    "channelHasCategory": "Канал із пов'язаним деревом категорій видалити не можна."
   }
 }
