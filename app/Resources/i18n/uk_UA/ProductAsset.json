@@ -2,18 +2,18 @@
   "fields": {
     "product": "Продукт",
     "asset": "Ассет",
-    "scope": "Основное изображение",
+    "scope": "Основне зображення",
     "channel": "Канал",
-    "isMainImage": "Главная картинка",
+    "isMainImage": "Головна картинка",
     "tags": "Теги",
-    "preview": "Предпросмотр",
-    "sorting": "Порядок сортировки"
+    "preview": "Попередній перегляд",
+    "sorting": "Порядок сортування"
   },
   "links": {
     "product": "Продукт",
     "asset": "Ассет"
   },
   "exceptions": {
-    "noSuchChannelInProduct": "Канал '%s' для продукта '%s' не доступен."
+    "noSuchChannelInProduct": "Канал '%s' для продукту '%s' не доступний."
   }
 }
