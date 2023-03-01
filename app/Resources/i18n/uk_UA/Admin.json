@@ -4,9 +4,9 @@
   },
   "labels": {
     "pim": "PIM",
-    "pimSettings": "Общие настройки"
+    "pimSettings": "Загальні налаштування"
   },
   "descriptions": {
-    "pimSettings": "PIM настройки системы"
+    "pimSettings": "PIM налаштування системи"
   }
 }
