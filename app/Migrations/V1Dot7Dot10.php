@@ -52,6 +52,15 @@ class V1Dot7Dot10 extends Base
                 $offset = $offset + $limit;
             }
         }
+
+        $ids = $this->getPDO()->query("SELECT id FROM attribute_group WHERE deleted=0")->fetchAll(\PDO::FETCH_COLUMN);
+        foreach ($ids as $id) {
+            $relationIds = $this->getPDO()->query("SELECT id FROM attribute WHERE attribute_group_id='$id' AND deleted=0 ORDER BY sort_order_in_attribute_group")->fetchAll(\PDO::FETCH_COLUMN);
+            foreach ($relationIds as $k => $relationId) {
+                $sorting = $k * 10;
+                $this->getPDO()->exec("UPDATE attribute SET sort_order_in_attribute_group=$sorting WHERE id='$relationId'");
+            }
+        }
     }
 
     public function down(): void
