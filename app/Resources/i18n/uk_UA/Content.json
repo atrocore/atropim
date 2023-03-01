@@ -1,28 +1,28 @@
 {
   "fields": {
     "tags": "Теги",
-    "name": "Название",
+    "name": "Назва",
     "status": "Статус",
     "type": "Тип",
-    "description": "Описание",
+    "description": "Опис",
     "text": "Текст",
     "metaTitle": "Meta Title",
     "metaDescription": "Meta Description",
-    "contentGroup": "Группа контента",
-    "products": "Продукты"
+    "contentGroup": "Група контенту",
+    "products": "Продукти"
   },
   "links": {
-    "contentGroup": "Группа контента",
-    "products": "Продукты"
+    "contentGroup": "Група контенту",
+    "products": "Продукти"
   },
   "labels": {
-    "Create Content": "Создать контент",
-    "draft": "Черновик",
+    "Create Content": "Створити контент",
+    "draft": "Чернетка",
     "written": "Написано",
-    "reviewed": "Проверено",
-    "published": "Опубликовано",
-    "review": "Проверка",
-    "news": "Новости",
+    "reviewed": "Перевірено",
+    "published": "Опубліковано",
+    "review": "Перевірка",
+    "news": "Новини",
     "promotional": "Реклама"
   }
 }
