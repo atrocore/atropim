@@ -1,6 +1,6 @@
 {
   "fields": {
-    "isActive": "Активный",
+    "isActive": "Активний",
     "product": "Продукт",
     "channel": "Канал"
   },
@@ -9,6 +9,6 @@
     "channel": "Канал"
   },
   "labels": {
-    "Create ProductChannel": "Создать канал продукта"
+    "Create ProductChannel": "Створити канал продукту"
   }
 }
