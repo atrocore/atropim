@@ -3,15 +3,15 @@
     "Attribute": "Атрибут"
   },
   "fields": {
-    "productAttribute": "Атрибут продукта",
+    "productAttribute": "Атрибут продукту",
     "product": "Продукт",
     "attribute": "Атрибут",
-    "language": "Язык",
-    "languages": "Языки",
-    "isRequired": "Обязательно",
-    "productFamilyAttribute": "Атрибут продуктовой семьи",
-    "value": "Значение",
-    "scope": "Область действия",
+    "language": "Мова",
+    "languages": "Мови",
+    "isRequired": "Обов'язково",
+    "productFamilyAttribute": "Атрибут продуктової сім'ї",
+    "value": "Значення",
+    "scope": "Область дії",
     "channel": "Канал",
     "varcharValue": "Value: Varchar",
     "textValue": "Value: Text",
@@ -20,34 +20,34 @@
     "dateValue": "Value: Date",
     "datetimeValue": "Value: DateTime",
     "boolValue": "Value: Boolean",
-    "maxLength": "Максимальная длина"
+    "maxLength": "Максимальна довжина"
   },
   "links": {
-    "productAttribute": "Атрибут продукта",
+    "productAttribute": "Атрибут продукту",
     "product": "Продукт",
     "attribute": "Атрибут",
     "channel": "Канал"
   },
   "options": {
     "language": {
-      "main": "Основной язык"
+      "main": "Основна мова"
     }
   },
   "labels": {
-    "Create ProductAttributeValue": "Создать значение атрибута",
-    "cannotLinkDefaultChannel": "Канал по умолчанию '{channel}' для выбранного атрибута не связан с этим продуктом."
+    "Create ProductAttributeValue": "Створити значення атрибута",
+    "cannotLinkDefaultChannel": "Канал за замовчуванням '{channel}' для обраного атрибута не пов'язаний із цим продуктом."
   },
   "exceptions": {
-    "noSuchChannelInProduct": "Атрибут '%s' для канала '%s' для продукта '%s' недоступен.",
-    "attributeUnitValueIsRequired": "Единица измерения для атрибута '%s' необходима.",
-    "noSuchAttributeUnit": "Единица измерения для атрибута '%s' не допустима.",
-    "noSuchAttributeOptions": "Значение для атрибута '%s' не допустимо.",
-    "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",
-    "attributeDontMatchToPattern": "Значение атрибута \"{attribute}\" не соответствует паттерну \"{pattern}\".",
-    "attributeShouldHaveBeUnique": "Атрибут %s должен иметь уникальное значение."
+    "noSuchChannelInProduct": "Атрибут '%s' для каналу '%s' для продукту '%s' недоступний.",
+    "attributeUnitValueIsRequired": "Одиниця виміру для атрибута '%s' необхідна.",
+    "noSuchAttributeUnit": "Одиниця виміру для атрибута '%s' не допустима.",
+    "noSuchAttributeOptions": "Значення для атрибута '%s' не допустиме.",
+    "youHaveNoAclRightsToReadAttributeValues": "У вас немає прав на читання значень атрибутів.",
+    "attributeDontMatchToPattern": "Значення атрибута \"{attribute}\" не відповідає патерну \"{pattern}\".".",
+    "attributeShouldHaveBeUnique": "Атрибут %s повинен мати унікальне значення."
   },
   "messages": {
-    "removeRelatedAttributeGroup": "Вы уверены, что хотите удалить все атрибуты с их значениями для выбранной группы атрибутов из текущего продукта? Все атрибуты и их значения для дочерних продуктов будут сохранены.",
-    "removeRelatedAttributeGroupCascade": "Вы уверены, что хотите удалить все атрибуты с их значениями для выбранной группы атрибутов из текущего продукта и его дочерних продуктов?"
+    "removeRelatedAttributeGroup": "Ви впевнені, що хочете видалити всі атрибути з їхніми значеннями для обраної групи атрибутів з поточного продукту? Усі атрибути та їхні значення для дочірніх продуктів будуть збережені.",
+    "removeRelatedAttributeGroupCascade": "Ви впевнені, що хочете видалити всі атрибути з їхніми значеннями для обраної групи атрибутів із поточного продукту та його дочірніх продуктів?"
   }
 }
