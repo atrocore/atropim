@@ -643,8 +643,8 @@
     }
   },
   "collection": {
-    "sortBy": "attribute.sortOrder",
-    "asc": true,
+    "sortBy": "createdAt",
+    "asc": false,
     "textFilterFields": [
       "product.name",
       "attribute.name",
