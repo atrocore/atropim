@@ -1,8 +1,8 @@
 {
   "fields": {
     "name": "Канал",
-    "products": "Продукты",
-    "active": "Активный",
-    "notActive": "Неактивный"
+    "products": "Продукти",
+    "active": "Активний",
+    "notActive": "Неактивний"
   }
 }
