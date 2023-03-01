@@ -102,16 +102,15 @@ class Attribute extends AbstractRepository
             $entity->set('isMultilang', false);
         }
 
-        if (empty($entity->get('sortOrderInProduct'))) {
+        if ($entity->get('sortOrderInProduct') === null) {
             $entity->set('sortOrderInProduct', time());
         }
 
-        $this->prepareTypeValues($entity);
-
-        // set sort order
-        if (is_null($entity->get('sortOrderInAttributeGroup'))) {
-            $entity->set('sortOrderInAttributeGroup', (int)$this->max('sortOrderInAttributeGroup') + 1);
+        if ($entity->get('sortOrderInAttributeGroup') === null) {
+            $entity->set('sortOrderInAttributeGroup', time());
         }
+
+        $this->prepareTypeValues($entity);
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
             $query = "SELECT COUNT(*) 
@@ -188,19 +187,6 @@ class Attribute extends AbstractRepository
         }
 
         parent::afterRemove($entity, $options);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function max($field)
-    {
-        $data = $this
-            ->getPDO()
-            ->query("SELECT MAX(sort_order_in_attribute_group) AS max FROM attribute WHERE deleted=0")
-            ->fetch(\PDO::FETCH_ASSOC);
-
-        return $data['max'];
     }
 
     /**
