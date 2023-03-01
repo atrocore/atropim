@@ -1,19 +1,19 @@
 {
   "fields": {
-    "products": "Продукты",
-    "description": "Описание",
+    "products": "Продукти",
+    "description": "Опис",
     "code": "Код",
-    "isActive": "Активный",
-    "productFamilies": "Продуктовые семьи",
-    "productFamilyAttributes": "Атрибуты продуктовой семьи"
+    "isActive": "Активний",
+    "productFamilies": "Продуктові сім'ї",
+    "productFamilyAttributes": "Атрибути продуктової сім'ї"
   },
   "links": {
-    "products": "Продукты",
-    "productFamilies": "Продуктовые семьи",
-    "productFamilyAttributes": "Атрибуты продуктовой семьи"
+    "products": "Продукти",
+    "productFamilies": "Продуктові сім'ї",
+    "productFamilyAttributes": "Атрибути продуктової сім'ї"
   },
   "labels": {
-    "Create ProductFamily": "Создать продуктовую семью",
-    "selectAttributeGroup": "Выбрать группу атрибутов"
+    "Create ProductFamily": "Створити продуктову сім'ю",
+    "selectAttributeGroup": "Вибрати групу атрибутів"
   }
 }
