@@ -1,20 +1,20 @@
 {
   "fields": {
-    "association": "Связь",
-    "backwardAssociation": "Обратная связь",
-    "mainProduct": "Главный продукт",
-    "mainProductImage": "Изображение главного продукта",
-    "relatedProduct": "Связанный продукт",
-    "relatedProductImage": "Изображение связанного продукта"
+    "асоціація": "Зв'язок",
+    "backwardAssociation": "Зворотній зв'язок",
+    "mainProduct": "Головний продукт",
+    "mainProductImage": "Зображення головного продукту",
+    "relatedProduct": "Пов'язаний продукт",
+    "relatedProductImage": "Зображення пов'язаного продукту"
   },
   "links": {
-    "association": "Связь",
-    "mainProduct": "Главный продукт",
-    "mainProductImage": "Изображение главного продукта",
-    "relatedProduct": "Связанный продукт",
-    "relatedProductImage": "Изображение похожего продукта"
+    "association": "Зв'язок",
+    "mainProduct": "Головний продукт",
+    "mainProductImage": "Зображення головного продукту",
+    "relatedProduct": "Пов'язаний продукт",
+    "relatedProductImage": "Зображення пов'язаного продукту"
   },
   "labels": {
-    "Create AssociatedProduct": "Создать связанный продукт"
+    "Create AssociatedProduct": "Створити пов'язаний продукт"
   }
 }
