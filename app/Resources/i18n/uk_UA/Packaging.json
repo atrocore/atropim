@@ -1,14 +1,14 @@
 {
-    "fields": {
-        "name": "Назва",
-        "price": "Ціна",
-        "description": "Опис",
-        "isActive": "Активний"
-    },
-    "links": {
-        "products": "Продукт"
-    },
-    "labels": {
-        "Create Packaging": "Створити упаковку"
-    }
+  "fields": {
+    "name": "Назва",
+    "price": "Ціна",
+    "description": "Опис",
+    "isActive": "Активний"
+  },
+  "links": {
+    "products": "Продукт"
+  },
+  "labels": {
+    "Create Packaging": "Створити упаковку"
+  }
 }

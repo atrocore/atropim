@@ -1,17 +1,17 @@
 {
-    "listFields": {
-        "generalStatistics": {
-            "product": "Продукти",
-            "category": "Категорії",
-            "productFamily": "Продуктові сім'ї",
-            "attribute": "Атрибути",
-            "productWithoutAssociatedProduct": "Продукти без пов'язаних продуктів",
-            "productWithoutCategory": "Продукти без категорії",
-            "productWithoutAttribute": "Продукти без атрибутів продукту",
-            "productWithoutAssets": "Продукти без ассетів"
-        }
-    },
-    "fields": {
-        "amount": "Кількість"
+  "listFields": {
+    "generalStatistics": {
+      "product": "Продукти",
+      "category": "Категорії",
+      "productFamily": "Продуктові сім'ї",
+      "attribute": "Атрибути",
+      "productWithoutAssociatedProduct": "Продукти без пов'язаних продуктів",
+      "productWithoutCategory": "Продукти без категорії",
+      "productWithoutAttribute": "Продукти без атрибутів продукту",
+      "productWithoutAssets": "Продукти без ассетів"
     }
-
+  },
+  "fields": {
+    "amount": "Кількість"
+  }
+}

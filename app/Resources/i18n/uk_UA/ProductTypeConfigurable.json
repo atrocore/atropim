@@ -1,13 +1,13 @@
-
-    "fields": {
-        "product": "Продукт",
-        "configurableProduct": "Конфігурований продукт"
-    },
-    "links": {
-        "product": "Продукт",
-        "configurableProduct": "Конфігурований продукт"
-    },
-    "labels": {
-        "Create ProductTypeConfigurable": "Створити конфігурований продукт"
-    }
+{
+  "fields": {
+    "product": "Продукт",
+    "configurableProduct": "Конфігурований продукт"
+  },
+  "links": {
+    "product": "Продукт",
+    "configurableProduct": "Конфігурований продукт"
+  },
+  "labels": {
+    "Create ProductTypeConfigurable": "Створити конфігурований продукт"
+  }
 }

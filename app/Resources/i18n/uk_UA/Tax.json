@@ -1,13 +1,13 @@
 {
-    "fields": {
-        "value": "Значення",
-        "isActive": "Активний",
-        "products": "Продукти"
-    },
-    "links": {
-        "products": "Продукти"
-    },
-    "labels": {
-        "Create Tax": "Створити податок"
-    }
+  "fields": {
+    "value": "Значення",
+    "isActive": "Активний",
+    "products": "Продукти"
+  },
+  "links": {
+    "products": "Продукти"
+  },
+  "labels": {
+    "Create Tax": "Створити податок"
+  }
 }

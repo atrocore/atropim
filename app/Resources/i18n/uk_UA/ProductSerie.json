@@ -1,11 +1,11 @@
 {
-    "fields": {
-        "products": "Продукти"
-    },
-    "links": {
-        "products": "Продукти"
-    },
-    "labels": {
-        "Create ProductSerie": "Створити серію продуктів"
-    }
+  "fields": {
+    "products": "Продукти"
+  },
+  "links": {
+    "products": "Продукти"
+  },
+  "labels": {
+    "Create ProductSerie": "Створити серію продуктів"
+  }
 }
