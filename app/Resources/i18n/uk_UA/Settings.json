@@ -1,29 +1,29 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Разрешить привязывать продукты к субкатегориям.",
-    "behaviorOnCatalogChange": "Поведение при удалении/изменении каталога для продукта",
-    "behaviorOnCategoryDelete": "Поведение при удалении категории",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведение при разрыве связи дерева категорий с каталогом",
-    "behaviorOnProductFamilyChange": "Действия при изменении / удалении продукт семьи"
+    "productCanLinkedWithNonLeafCategories": "Дозволити прив'язувати продукти до субкатегорій.",
+    "behaviorOnCatalogChange": "Поведінка при видаленні/зміні каталогу для продукту",
+    "behaviorOnCategoryDelete": "Поведінка при видаленні категорії",
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведінка під час розриву зв'язку дерева категорій із каталогом",
+    "behaviorOnProductFamilyChange": "Дії при зміні/видаленні продукт сім'ї"
   },
   "labels": {
-    "retainAllInheritedAttributes": "Сохранить все унаследованные атрибуты",
-    "removeAllInheritedAttributes": "Удалить все унаследованные атрибуты",
-    "removeOnlyInheritedAttributesWithNoValue": "Удалить только унаследованные атрибуты без значения"
+    "retainAllInheritedAttributes": "Зберегти всі успадковані атрибути",
+    "removeAllInheritedAttributes": "Видалити всі успадковані атрибути",
+"removeOnlyInheritedAttributesWithNoValue": "Видалити лише успадковані атрибути без значення"
   },
   "messages": {
-    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Вы уверены, что хотите запретить привязывать продукты к субкатегориям? Все продукты привязанные к ним будут автоматически отвязаны."
+"productCanLinkedWithNonLeafCategoriesChangeConfirm": "Ви впевнені, що бажаєте заборонити прив'язувати продукти до субкатегорій? Усі продукти прив'язані до них будуть автоматично відв'язані."
   },
   "exceptions": {
-    "languageUsedInChannel": "Язык, используемый в каком-либо канале, не может быть удален."
+    "languageUsedInChannel": "Мову, що використовується в будь-якому каналі, не може бути видалено."
   },
   "queueManager": {
-    "updatingOwnershipInformation": "Обновление информации о владельце"
+    "updatingOwnershipInformation": "Оновлення інформації стосовно власника"
   },
   "tooltips": {
-    "productCanLinkedWithNonLeafCategories": "Если установлено Вы сможете связывать товары с категориями, у которых есть дочерние категории.",
-    "behaviorOnCatalogChange": "В случае «Распространить» все категории, связанные с продуктом, будут автоматически отсоединены.",
-    "behaviorOnCategoryDelete": "В случае «Распространить» все подкатегории этой категории также будут удалены, и все продукты, связанные с этой категорией или ее подкатегориями, будут отсоединены.",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "В случае «Распространить» все категории этого дерева, связанные с продуктами, будут автоматически отсоединены."
+    "productCanLinkedWithNonLeafCategories": "Якщо встановлено Ви зможете пов'язувати товари з категоріями, у яких є дочірні категорії.",
+    "behaviorOnCatalogChange": "У разі "Поширити" всі категорії, пов'язані з продуктом, будуть автоматично від'єднані.",
+    "behaviorOnCategoryDelete": "У разі "Розповсюдити" всі підкатегорії цієї категорії також будуть видалені, і всі продукти, пов'язані з цією категорією або її підкатегоріями, будуть від'єднані.",
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "У разі "Розповсюдити" всі категорії цього дерева, пов'язані з продуктами, будуть автоматично від'єднані."
   }
 }
