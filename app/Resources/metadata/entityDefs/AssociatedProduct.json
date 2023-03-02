@@ -86,6 +86,9 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "sorting": {
+      "type": "int"
     }
   },
   "links": {

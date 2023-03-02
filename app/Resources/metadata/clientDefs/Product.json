@@ -126,7 +126,13 @@
     "associatedMainProducts": {
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
-      "view": "pim:views/product/record/panels/associated-main-products"
+      "view": "pim:views/product/record/panels/associated-main-products",
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sorting"
+      },
+      "sortBy": "sorting",
+      "asc": true
     },
     "productChannels": {
       "view": "views/record/panels/for-relationship-type"

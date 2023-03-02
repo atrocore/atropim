@@ -85,6 +85,11 @@ class AssociatedProduct extends Relationship
 
     public function updateEntity($id, $data)
     {
+        if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
+            $this->getRepository()->updateSortOrder($data->_sortedIds);
+            return $this->getEntity($id);
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
         if (!$pdo->inTransaction()) {

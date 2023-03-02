@@ -5,7 +5,8 @@
     "mainProduct": "Main Product",
     "mainProductImage": "Main Product Image",
     "relatedProduct": "Related Product",
-    "relatedProductImage": "Related Product Image"
+    "relatedProductImage": "Related Product Image",
+    "sorting": "Sort Order"
   },
   "links": {
     "association": "Association",
