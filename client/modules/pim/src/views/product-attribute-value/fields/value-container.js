@@ -116,11 +116,11 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         getValueFieldView(type) {
             if (type === 'enum') {
-                return 'views/fields/enum';
+                return 'pim:views/product-attribute-value/fields/enum';
             }
 
             if (type === 'multiEnum') {
-                return 'views/fields/multi-enum';
+                return 'pim:views/product-attribute-value/fields/multi-enum';
             }
 
             return this.getFieldManager().getViewName(type);

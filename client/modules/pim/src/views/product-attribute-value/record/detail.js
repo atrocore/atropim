@@ -75,9 +75,7 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                     // prepare field defs
                     let fieldDefs = {
                         type: type,
-                        options: typeValue,
                         view: this.getFieldManager().getViewName(type),
-                        prohibitedEmptyValue: !!this.model.get('prohibitedEmptyValue'),
                         required: !!this.model.get('isRequired'),
                         readOnly: !!this.model.get('isValueReadOnly')
                     };
@@ -93,15 +91,11 @@ Espo.define('pim:views/product-attribute-value/record/detail', 'views/record/det
                     }
 
                     if (type === 'enum') {
-                        fieldDefs.view = 'views/fields/enum';
+                        fieldDefs.view = 'pim:views/product-attribute-value/fields/enum';
                     }
 
                     if (type === 'multiEnum') {
-                        fieldDefs.view = 'views/fields/multi-enum';
-                    }
-
-                    if (type === 'enum' || type === 'multiEnum') {
-                        fieldDefs['options'] = this.model.get('typeValue') || [];
+                        fieldDefs.view = 'pim:views/product-attribute-value/fields/multi-enum';
                     }
 
                     if (this.model.get('maxLengthCounter')) {
