@@ -1,12 +1,12 @@
 {
   "fields": {
-    "attributes": "Атрибуты"
+    "attributes": "Атрибути"
   },
   "links": {
-    "attributes": "Атрибуты"
+    "attributes": "Атрибути"
   },
   "labels": {
-    "selectAttributeGroup": "Выбрать группу атрибута",
-    "Create AttributeTab": "Создать таб атрибутов"
+    "selectAttributeGroup": "Вибрати групу атрибута",
+    "Create AttributeTab": "Створити атрибут таб"
   }
 }
