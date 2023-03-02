@@ -38,6 +38,20 @@ class V1Dot7Dot11 extends Base
     public function up(): void
     {
         $this->getPDO()->exec("ALTER TABLE associated_product ADD sorting INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+
+        $limit = 5000;
+        $offset = 0;
+
+        while (!empty($ids = $this->getPDO()->query("SELECT id FROM product WHERE deleted=0 LIMIT $limit OFFSET $offset")->fetchAll(\PDO::FETCH_COLUMN))) {
+            foreach ($ids as $id) {
+                $relationIds = $this->getPDO()->query("SELECT id FROM associated_product WHERE main_product_id='$id' AND deleted=0 ORDER BY sorting")->fetchAll(\PDO::FETCH_COLUMN);
+                foreach ($relationIds as $k => $relationId) {
+                    $sorting = $k * 10;
+                    $this->getPDO()->exec("UPDATE associated_product SET sorting=$sorting WHERE id='$relationId'");
+                }
+            }
+            $offset = $offset + $limit;
+        }
     }
 
     public function down(): void
