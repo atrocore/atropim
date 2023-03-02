@@ -1,28 +1,28 @@
 {
   "fields": {
-    "isActive": "Активный",
-    "products": "Продукты",
-    "categories": "Категории",
+    "isActive": "Активний",
+    "products": "Продукти",
+    "categories": "Категорії",
     "code": "Код"
   },
   "links": {
-    "channels": "Каналы",
-    "products": "Продукты",
-    "categories": "Категории"
+    "channels": "Канали",
+    "products": "Продукти",
+    "categories": "Категорії"
   },
   "labels": {
-    "withoutCatalog": "Без каталога",
-    "Create Catalog": "Создать каталог"
+    "withoutCatalog": "Без каталогу",
+    "Create Catalog": "Створити каталог"
   },
   "options": {
     "template": {
-      "default": "По умолчанию"
+      "default": "За замовчуванням"
     }
   },
   "queueManager": {
-    "createProductForCatalog": "Создать продукт '%s' для каталога '%s'"
+    "createProductForCatalog": "Створити продукт '%s' для каталогу '%s'"
   },
   "exceptions": {
-    "catalogCannotBeDeleted": "Каталог не может быть удален. Есть несколько каналов, которые используют текущий каталог."
+    "catalogCannotBeDeleted": "Каталог не може бути видалений. Є декілька каналів, які використовують поточний каталог."
   }
 }
