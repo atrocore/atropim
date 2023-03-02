@@ -1,12 +1,12 @@
 {
   "fields": {
-    "name": "Название",
+    "name": "Назва",
     "contents": "Контент"
   },
   "links": {
     "contents": "Контент"
   },
   "labels": {
-    "Create ContentGroup": "Создать группу контента"
+    "Create ContentGroup": "Створити групу контенту"
   }
-}
+
