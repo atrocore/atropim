@@ -1,9 +1,11 @@
 [
   {
-    "name": "product"
+    "name": "product",
+    "notSortable": true
   },
   {
-    "name": "attribute"
+    "name": "attribute",
+    "notSortable": true
   },
   {
     "name": "isRequired"
@@ -15,6 +17,7 @@
     "name": "scope"
   },
   {
-    "name": "channel"
+    "name": "channel",
+    "notSortable": true
   }
 ]
