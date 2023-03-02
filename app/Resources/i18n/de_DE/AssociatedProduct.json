@@ -5,7 +5,8 @@
     "mainProduct": "Hauptprodukt",
     "backwardAssociation": "Umgekehrte Assoziation",
     "relatedProductImage": "Assoziiertes Produktbild",
-    "mainProductImage": "Hauptproduktbild"
+    "mainProductImage": "Hauptproduktbild",
+    "sorting": "Sortierreihenfolge"
   },
   "links": {
     "association": "Assoziation",

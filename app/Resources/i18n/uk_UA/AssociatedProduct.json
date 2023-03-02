@@ -5,7 +5,8 @@
     "mainProduct": "Главный продукт",
     "mainProductImage": "Изображение главного продукта",
     "relatedProduct": "Связанный продукт",
-    "relatedProductImage": "Изображение связанного продукта"
+    "relatedProductImage": "Изображение связанного продукта",
+    "sorting": "Порядок сортування"
   },
   "links": {
     "association": "Связь",

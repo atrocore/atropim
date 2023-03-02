@@ -18,6 +18,12 @@
         {
           "name": "relatedProduct"
         }
+      ],
+      [
+        {
+          "name": "sorting"
+        },
+        false
       ]
     ]
   }
