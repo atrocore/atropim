@@ -1,73 +1,73 @@
 {
   "fields": {
-    "parents": "Связывающие атрибуты",
-    "children": "Связанные атрибуты",
-    "attributeGroup": "Группа атрибутов",
-    "attributeTab": "Вкладка атрибутов",
-    "typeValueIds": "Идентификаторы опций",
-    "typeValue": "Значения опций",
+    "parents": "Пов'язуючі атрибути",
+    "children": "Пов'язані атрибути",
+    "attributeGroup": "Група атрибутів",
+    "attributeTab": "Вкладка атрибутів",
+    "typeValueIds": "Ідентифікатори опцій",
+    "typeValue": "Значення опцій",
     "type": "Тип атрибута",
     "code": "Код",
-    "name": "Название атрибута",
-    "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов",
-    "isRequired": "Обязательно",
-    "isMultilang": "Многоязычность",
-    "sortOrderInAttributeGroup": "Порядок сортировки в группе атрибута",
-    "assetType": "Тип ассета",
+    "name": "Назва атрибута",
+    "products": "Продукти",
+    "productAttributeValues": "Значення атрибутів",
+    "isRequired": "Обов'язково",
+    "isMultilang": "Багатомовність",
+    "sortOrderInAttributeGroup": "Порядок сортування в групі атрибута",
+    "assetType": "Тип асета",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Сортировать (по алфавиту)",
-    "prohibitedEmptyValue": "Запретить пустые значения",
-    "enumDefault": "По умолчанию",
-    "measure": "Мера",
-    "unitDefault": "По умолчанию",
-    "virtualProductField": "Виртуальное поле продукта",
-    "defaultScope": "Область действия",
+    "isSorted": "Сортувати (за алфавітом)",
+    "prohibitedEmptyValue": "Заборонити порожні значення",
+    "enumDefault": "За замовчуванням",
+    "measure": "Міра",
+    "unitDefault": "За замовчуванням",
+    "virtualProductField": "Віртуальне поле продукту",
+    "defaultScope": "Область дії",
     "defaultChannel": "Канал",
-    "defaultIsRequired": "Обязательно",
-    "sortOrderInProduct": "Порядок сортировки в продукте",
-    "tooltip": "Текст подсказки",
-    "maxLength": "Максимальная длина"
+    "defaultIsRequired": "Обов'язково",
+    "sortOrderInProduct": "Порядок сортування в продукті",
+    "tooltip": "Текст підказки",
+    "maxLength": "Максимальна довжина"
   },
   "links": {
-    "parents": "Связывающие атрибуты",
-    "children": "Связанные атрибуты",
-    "attributeGroup": "Группа атрибутов",
-    "attributeTab": "Вкладка атрибутов",
-    "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов",
-    "productFamilies": "Продуктовые семьи"
+    "parents": "Пов'язуючі атрибути",
+    "children": "Пов'язані атрибути",
+    "attributeGroup": "Група атрибутів",
+    "attributeTab": "Вкладка атрибутів",
+    "products": "Продукти",
+    "productAttributeValues": "Значення атрибутів",
+    "productFamilies": "Продуктові сім'ї"
   },
   "labels": {
-    "Create Attribute": "Создать атрибут",
-    "productFamily": "Продуктовая семья",
-    "addNewValue": "Добавить новое значение"
+    "Create Attribute": "Створити атрибут",
+    "productFamily": "Продуктова сім'я",
+    "addNewValue": "Додати нове значення"
   },
   "messages": {
-    "sameNumberOptions": "Вы должны установить такое же количество опций",
-    "productsCountWithAttribute": "Количество продуктов, у которых задан данный атрибут: <strong>{count}</strong>",
-    "removeAttribute(s)": "Все значения для этого(этих) атрибута(ов) также удаляются. Вы действительно хотите удалить этот(эти) атрибут(ы)?"
-  },
-  "filterLabels": {
-    "All": "All"
-  },
-  "tooltips": {
-    "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"\/^[A-Z]{1,10}$\/\"",
-    "isSorted": "Опции будут отсортированы после сохранения.",
-    "virtualProductField": "Значения этого атрибута будут добавлены в виде виртуального поля через лейаут списка товаров.",
-    "sortOrderInProduct": "Порядок сортировки значений атрибутов продукта.W"
-  },
+     "sameNumberOptions": "Ви повинні встановити таку саму кількість опцій",
+     "productsCountWithAttribute": "Кількість продуктів, які мають заданий атрибут: <strong>{count}</strong>",
+     "removeAttribute(s)": "Усі значення для цього(цих) атрибуту(ів) також видаляються. Ви дійсно хочете видалити цей(ці) атрибут(и)?"
+   },
+   "filterLabels": {
+     "All": "All"
+   },
+   "tooltips": {
+     "pattern": "Щоб дозволити лише великі літери довжиною 10 символів використовуйте \"\/^[A-Z]{1,10}$\/\"",
+     "isSorted": "Опції будуть відсортовані після збереження.",
+     "virtualProductField": "Значення цього атрибуту будуть додані у вигляді віртуального поля через лейаут списку товарів.",
+     "sortOrderInProduct": "Порядок сортування значень атрибутів продукту.W"
+   },
   "exceptions": {
-    "typeValueIsInconsistent": "Данные для значений опций противоречивы.",
-    "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
-    "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
-    "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
-    "youCanNotUnlinkProductFamilyAttribute": "Невозможно отменить связь атрибута продуктовой семьи.",
-    "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
-    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи.",
-    "attributeNotHaveUniqueValue": "Атрибут не имеет уникального значения.",
-    "someAttributeDontMathToPattern": "Некоторые атрибуты не соответствуют шаблону."
+    "typeValueIsInconsistent": "Дані для значень опцій суперечливі.",
+    "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
+    "attributeValueShouldBeUnique": "Значення атрибута має бути унікальним.",
+    "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",
+    "youCanNotUnlinkProductFamilyAttribute": "Неможливо скасувати зв'язок атрибута продуктової сім'ї.",
+    "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
+    "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
+    "attributeIsUsedInProductFamilies": "Атрибут уже використовується в продуктових сім'ях. Будь ласка, спочатку оновіть продуктові сім'ї.",
+    "attributeNotHaveUniqueValue": "Атрибут не має унікального значення.",
+    "someAttributeDontMathToPattern": "Деякі атрибути не відповідають шаблону."
   }
 }
