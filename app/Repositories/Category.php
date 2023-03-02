@@ -142,15 +142,22 @@ class Category extends AbstractRepository
             throw new BadRequest($this->exception('onlyRootCategoryCanBeLinked'));
         }
 
-        $this->getPDO()->beginTransaction();
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $result = $this->getMapper()->addRelation($category, 'catalogs', $catalogId);
             foreach ($category->getChildren() as $child) {
                 $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
             }
-            $this->getPDO()->commit();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -180,7 +187,10 @@ class Category extends AbstractRepository
             $this->canUnRelateCatalog($category, $catalogId);
         }
 
-        $this->getPDO()->beginTransaction();
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
 
         try {
             $result = $this->getMapper()->removeRelation($category, 'catalogs', $catalogId);
@@ -192,9 +202,13 @@ class Category extends AbstractRepository
                     ->exec("DELETE FROM `product_category` WHERE category_id='{$child->get('id')}' AND product_id IN (SELECT id FROM product WHERE catalog_id='$catalogId')");
             }
 
-            $this->getPDO()->commit();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -212,7 +226,11 @@ class Category extends AbstractRepository
             $channelId = $foreign->get('id');
         }
 
-        $this->getPDO()->beginTransaction();
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
         try {
             $result = $this->getMapper()->addRelation($category, 'channels', $channelId);
             if (!empty($products = $category->get('products')) && count($products) > 0) {
@@ -225,9 +243,13 @@ class Category extends AbstractRepository
                     $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
                 }
             }
-            $this->getPDO()->commit();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -245,7 +267,10 @@ class Category extends AbstractRepository
             $channelId = $foreign->get('id');
         }
 
-        $this->getPDO()->beginTransaction();
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             if (!empty($products = $category->get('products')) && count($products) > 0) {
                 foreach ($products as $product) {
@@ -258,9 +283,14 @@ class Category extends AbstractRepository
                     $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
                 }
             }
-            $this->getPDO()->commit();
+
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -280,14 +310,22 @@ class Category extends AbstractRepository
         $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
         $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
 
-        $this->getPDO()->beginTransaction();
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
         try {
             $result = $this->getMapper()->addRelation($category, 'products', $product->get('id'));
             $this->getProductRepository()->updateProductCategorySortOrder($product, $category);
             $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
-            $this->getPDO()->commit();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -304,13 +342,20 @@ class Category extends AbstractRepository
             $product = $this->getProductRepository()->get($product);
         }
 
-        $this->getPDO()->beginTransaction();
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $result = $this->getMapper()->removeRelation($category, 'products', $product->get('id'));
             $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
-            $this->getPDO()->commit();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getPDO()->rollBack();
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
