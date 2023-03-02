@@ -1,14 +1,14 @@
 {
   "fields": {
-    "category": "Категория",
+    "category": "Категорія",
     "asset": "Ассет",
-    "isMainImage": "Основное изображение",
+    "isMainImage": "Основне зображення",
     "tags": "Теги",
-    "preview": "Предпросмотр",
-    "sorting": "Порядок сортировки"
+    "preview": "Попередній перегляд",
+    "sorting": "Порядок сортування"
   },
   "links": {
-    "category": "Category",
-    "asset": "Категория"
+    "category": "Категорія",
+    "asset": "Ассет"
   }
 }
