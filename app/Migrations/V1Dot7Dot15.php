@@ -50,25 +50,41 @@ class V1Dot7Dot15 extends Base
             "CREATE UNIQUE INDEX UNIQ_CCC4BE1FEB3B4E334584665AB6E62EFAD4DB71B5AF55D372F5A1AA ON product_attribute_value (deleted, product_id, attribute_id, language, scope, channel_id)"
         );
 
-        $limit = 2000;
-
-        $offset = 0;
         $this->getPDO()->exec("DELETE FROM `category_asset` WHERE deleted=1");
-        while (!empty($records = $this->getPDO()->query("SELECT * FROM `category_asset` ORDER BY id LIMIT $limit OFFSET $offset")->fetchAll(\PDO::FETCH_ASSOC))) {
-            foreach ($records as $v) {
-                $this->getPDO()->exec("DELETE FROM `category_asset` WHERE asset_id='{$v['asset_id']}' AND category_id='{$v['category_id']}' AND id!='{$v['id']}'");
+        $duplicates = $this
+            ->getPDO()
+            ->query("SELECT category_id, asset_id FROM category_asset GROUP BY category_id, asset_id HAVING count(*) > 1")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($duplicates as $duplicate) {
+            $records = $this
+                ->getPDO()
+                ->query("SELECT * FROM category_asset WHERE asset_id='{$duplicate['asset_id']}' AND category_id='{$duplicate['category_id']}' ORDER BY id")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($records as $k => $v) {
+                if ($k === 0) {
+                    continue;
+                }
+                $this->getPDO()->exec("DELETE FROM `category_asset` WHERE id='{$v['id']}'");
             }
-            $offset = $offset + $limit;
         }
         $this->exec("CREATE UNIQUE INDEX UNIQ_EA9C1515EB3B4E3312469DE25DA1941 ON category_asset (deleted, category_id, asset_id)");
 
-        $offset = 0;
         $this->getPDO()->exec("DELETE FROM `product_asset` WHERE deleted=1");
-        while (!empty($records = $this->getPDO()->query("SELECT * FROM `product_asset` ORDER BY id LIMIT $limit OFFSET $offset")->fetchAll(\PDO::FETCH_ASSOC))) {
-            foreach ($records as $v) {
-                $this->getPDO()->exec("DELETE FROM `product_asset` WHERE is_main_image=0 AND asset_id='{$v['asset_id']}' AND product_id='{$v['product_id']}' AND id!='{$v['id']}'");
+        $duplicates = $this
+            ->getPDO()
+            ->query("SELECT product_id, asset_id FROM product_asset GROUP BY product_id, asset_id HAVING count(*) > 1")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($duplicates as $duplicate) {
+            $records = $this
+                ->getPDO()
+                ->query("SELECT * FROM product_asset WHERE asset_id='{$duplicate['asset_id']}' AND product_id='{$duplicate['product_id']}' ORDER BY id")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($records as $k => $v) {
+                if ($k === 0) {
+                    continue;
+                }
+                $this->getPDO()->exec("DELETE FROM `product_asset` WHERE id='{$v['id']}'");
             }
-            $offset = $offset + $limit;
         }
         $this->exec("CREATE UNIQUE INDEX UNIQ_A3F32100EB3B4E334584665A5DA1941 ON product_asset (deleted, product_id, asset_id)");
     }
