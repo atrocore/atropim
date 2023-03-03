@@ -310,20 +310,35 @@ class Category extends AbstractRepository
         $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
         $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
 
+<<<<<<< Updated upstream
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
 
+=======
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+        }
+>>>>>>> Stashed changes
         try {
             $result = $this->getMapper()->addRelation($category, 'products', $product->get('id'));
             $this->getProductRepository()->updateProductCategorySortOrder($product, $category);
             $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
+<<<<<<< Updated upstream
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
         } catch (\Throwable $e) {
             if (!empty($inTransaction)) {
+=======
+
+            if (!$this->getPDO()->inTransaction()) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!$this->getPDO()->inTransaction()) {
+>>>>>>> Stashed changes
                 $this->getPDO()->rollBack();
             }
             throw $e;
@@ -342,18 +357,32 @@ class Category extends AbstractRepository
             $product = $this->getProductRepository()->get($product);
         }
 
+<<<<<<< Updated upstream
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
+=======
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+>>>>>>> Stashed changes
         }
         try {
             $result = $this->getMapper()->removeRelation($category, 'products', $product->get('id'));
             $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
+<<<<<<< Updated upstream
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
         } catch (\Throwable $e) {
             if (!empty($inTransaction)) {
+=======
+
+            if (!$this->getPDO()->inTransaction()) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!$this->getPDO()->inTransaction()) {
+>>>>>>> Stashed changes
                 $this->getPDO()->rollBack();
             }
             throw $e;
