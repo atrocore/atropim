@@ -163,50 +163,6 @@ class ProductAttributeValue extends AbstractSelectManager
         );
     }
 
-    protected function pushAttributeType(array $condition): array
-    {
-        $attributesValueTypeMap = [
-            'dateValue' => [
-                'type'      => 'equals',
-                'attribute' => 'attributeType',
-                'value'     => 'date'
-            ], 'datetimeValue' => [
-                'type'      => 'equals',
-                'attribute' => 'attributeType',
-                'value'     => 'datetime'
-            ], 'floatValue' => [
-                'type'      => 'equals',
-                'attribute' => 'attributeType',
-                'value'     => 'float'
-            ], 'intValue' => [
-                'type'      => 'equals',
-                'attribute' => 'attributeType',
-                'value'     => 'int'
-            ], 'varcharValue' => [
-                'type'      => 'equals',
-                'attribute' => 'attributeType',
-                'value'     => 'varchar'
-            ], 'textValue' => [
-                'type'      => 'in',
-                'attribute' => 'attributeType',
-                'value'     => [
-                    'text',
-                    'wysiwyg'
-                ]
-            ], 'boolValue' => [
-                'type'      => 'equals',
-                'attribute' => 'attributeType',
-                'value'     => 'bool'
-            ]
-        ];
-
-        if (!empty($condition['attribute']) && in_array($condition['attribute'], array_keys($attributesValueTypeMap))) {
-            return $attributesValueTypeMap[$condition['attribute']];
-        }
-
-        return [];
-    }
-
     protected function boolFilterLinkedWithAttributeGroup(array &$result): void
     {
         $data = (array)$this->getSelectCondition('linkedWithAttributeGroup');
