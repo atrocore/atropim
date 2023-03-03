@@ -38,21 +38,37 @@ class V1Dot7Dot14 extends Base
     public function up(): void
     {
         $this->exec("DROP INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON product_family_attribute");
-        $this->exec("CREATE UNIQUE INDEX UNIQ_BD38116AEB3B4E33ADFEE0E7B6E62EFAD4DB71B5AF55D372F5A1AA ON product_family_attribute (deleted, product_family_id, attribute_id, language, scope, channel_id)");
+        $this->exec(
+            "CREATE UNIQUE INDEX UNIQ_BD38116AEB3B4E33ADFEE0E7B6E62EFAD4DB71B5AF55D372F5A1AA ON product_family_attribute (deleted, product_family_id, attribute_id, language, scope, channel_id)"
+        );
 
         $this->exec("DROP INDEX UNIQ_C803FBE9EFB9C8A57D7C1239CF496EEAEB3B4E33 ON associated_product");
         $this->exec("CREATE UNIQUE INDEX UNIQ_C803FBE9EB3B4E33EFB9C8A57D7C1239CF496EEA ON associated_product (deleted, association_id, main_product_id, related_product_id)");
 
         $this->exec("DROP INDEX UNIQ_CCC4BE1F4584665AB6E62EFAAF55D372F5A1AAD4DB71B5EB3B4E33 ON product_attribute_value");
-        $this->exec("CREATE UNIQUE INDEX UNIQ_CCC4BE1FEB3B4E334584665AB6E62EFAD4DB71B5AF55D372F5A1AA ON product_attribute_value (deleted, product_id, attribute_id, language, scope, channel_id)");
+        $this->exec(
+            "CREATE UNIQUE INDEX UNIQ_CCC4BE1FEB3B4E334584665AB6E62EFAD4DB71B5AF55D372F5A1AA ON product_attribute_value (deleted, product_id, attribute_id, language, scope, channel_id)"
+        );
 
-        foreach ($this->getPDO()->query("SELECT * FROM `category_asset`")->fetchAll(\PDO::FETCH_ASSOC) as $v) {
-            $this->exec("DELETE FROM `category_asset` WHERE asset_id='{$v['asset_id']}' AND category_id='{$v['category_id']}' AND id!='{$v['id']}'");
+        $limit = 2000;
+
+        $offset = 0;
+        $this->getPDO()->exec("DELETE FROM `category_asset` WHERE deleted=1");
+        while (!empty($records = $this->getPDO()->query("SELECT * FROM `category_asset` ORDER BY id LIMIT $limit OFFSET $offset")->fetchAll(\PDO::FETCH_ASSOC))) {
+            foreach ($records as $v) {
+                $this->getPDO()->exec("DELETE FROM `category_asset` WHERE asset_id='{$v['asset_id']}' AND category_id='{$v['category_id']}' AND id!='{$v['id']}'");
+            }
+            $offset = $offset + $limit;
         }
         $this->exec("CREATE UNIQUE INDEX UNIQ_EA9C1515EB3B4E3312469DE25DA1941 ON category_asset (deleted, category_id, asset_id)");
 
-        foreach ($this->getPDO()->query("SELECT * FROM `product_asset`")->fetchAll(\PDO::FETCH_ASSOC) as $v) {
-            $this->exec("DELETE FROM `product_asset` WHERE asset_id='{$v['asset_id']}' AND product_id='{$v['product_id']}' AND id!='{$v['id']}'");
+        $offset = 0;
+        $this->getPDO()->exec("DELETE FROM `product_asset` WHERE deleted=1");
+        while (!empty($records = $this->getPDO()->query("SELECT * FROM `product_asset` ORDER BY id LIMIT $limit OFFSET $offset")->fetchAll(\PDO::FETCH_ASSOC))) {
+            foreach ($records as $v) {
+                $this->getPDO()->exec("DELETE FROM `product_asset` WHERE is_main_image=0 AND asset_id='{$v['asset_id']}' AND product_id='{$v['product_id']}' AND id!='{$v['id']}'");
+            }
+            $offset = $offset + $limit;
         }
         $this->exec("CREATE UNIQUE INDEX UNIQ_A3F32100EB3B4E334584665A5DA1941 ON product_asset (deleted, product_id, asset_id)");
     }
