@@ -599,6 +599,18 @@
     ]
   },
   "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
     "boolValue": {
       "columns": [
         "boolValue",
@@ -646,10 +658,7 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "product.name",
-      "attribute.name",
       "scope",
-      "channel.name",
       "varcharValue",
       "textValue",
       "intValue",
