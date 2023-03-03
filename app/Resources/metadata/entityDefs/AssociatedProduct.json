@@ -126,10 +126,10 @@
   },
   "uniqueIndexes": {
     "unique_relationship": [
+      "deleted",
       "association_id",
       "main_product_id",
-      "related_product_id",
-      "deleted"
+      "related_product_id"
     ]
   }
 }

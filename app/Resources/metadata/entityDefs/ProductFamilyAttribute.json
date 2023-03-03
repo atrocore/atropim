@@ -149,12 +149,12 @@
   },
   "uniqueIndexes": {
     "unique_relationship": [
+      "deleted",
       "product_family_id",
       "attribute_id",
-      "scope",
-      "channel_id",
       "language",
-      "deleted"
+      "scope",
+      "channel_id"
     ]
   }
 }

@@ -146,5 +146,12 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_relationship": [
+      "deleted",
+      "product_id",
+      "asset_id"
+    ]
   }
 }
