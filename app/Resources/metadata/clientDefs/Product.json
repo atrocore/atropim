@@ -91,6 +91,7 @@
       ],
       "dragDrop": {
         "isActive": true,
+        "maxSize": 20,
         "sortField": "sortOrder"
       }
     },
