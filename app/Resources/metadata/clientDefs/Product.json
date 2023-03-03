@@ -170,12 +170,12 @@
           ]
         }
       },
-      "pcSorting": {
+      "sorting": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isNotEmpty",
-              "attribute": "pcSorting"
+              "attribute": "sorting"
             }
           ]
         }

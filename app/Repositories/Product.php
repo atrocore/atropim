@@ -141,8 +141,8 @@ class Product extends AbstractRepository
         }
 
         if ($relationName == 'categories' && !empty($params)) {
-            if (isset($params['additionalColumns']['pcSorting'])) {
-                unset($params['additionalColumns']['pcSorting']);
+            if (isset($params['additionalColumns']['sorting'])) {
+                unset($params['additionalColumns']['sorting']);
             }
         }
 

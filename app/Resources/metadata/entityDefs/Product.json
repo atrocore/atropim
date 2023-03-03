@@ -259,10 +259,10 @@
       "massUpdateDisabled": true,
       "noLoad": true,
       "columns": {
-        "pcSorting": "sorting"
+        "sorting": "sorting"
       }
     },
-    "pcSorting": {
+    "sorting": {
       "type": "int",
       "notStorable": true,
       "layoutListDisabled": true,
@@ -271,7 +271,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "description": "Sorting products in category"
     },
     "contents": {
       "type": "linkMultiple"

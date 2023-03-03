@@ -34,7 +34,7 @@
     "channels": "Каналы продукта",
     "basePriceAmount": "Базовая цена",
     "packedAmount": "Кол-во в упаковке",
-    "pcSorting": "Порядок сортировки",
+    "sorting": "Порядок сортировки",
     "contents": "Контент",
     "taskStatus": "Статус задачи",
     "children": "Дочерние продукты",

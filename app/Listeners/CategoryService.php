@@ -63,7 +63,7 @@ class CategoryService extends AbstractEntityListener
             foreach ($result['collection'] as $product) {
                 foreach ($linkData as $item) {
                     if ($item['category_id'] == $categoryId && $item['product_id'] == $product->get('id')) {
-                        $product->set('pcSorting', (int)$item['sorting']);
+                        $product->set('sorting', (int)$item['sorting']);
                         continue 2;
                     }
                 }

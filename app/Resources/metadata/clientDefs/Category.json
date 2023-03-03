@@ -61,7 +61,7 @@
         "notEntity",
         "onlyCategoryCatalogsProducts"
       ],
-      "sortBy": "pcSorting",
+      "sortBy": "sorting",
       "asc": true,
       "view": "pim:views/category/record/panels/products"
     },
