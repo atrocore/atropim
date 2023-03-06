@@ -24,13 +24,21 @@
       "type": "hasMany",
       "foreign": "asset",
       "entity": "ProductAsset",
-      "audited": false
+      "audited": false,
+      "addRelationCustomDefs": {
+        "link": "products",
+        "entity": "Product"
+      }
     },
     "categoryAssets": {
       "type": "hasMany",
       "foreign": "asset",
       "entity": "CategoryAsset",
-      "audited": false
+      "audited": false,
+      "addRelationCustomDefs": {
+        "link": "categories",
+        "entity": "Category"
+      }
     },
     "brands": {
       "type": "hasMany",
