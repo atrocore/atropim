@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
@@ -75,6 +76,11 @@ class ProductFamily extends AbstractRepository
         if (!self::isAdvancedClassificationInstalled()) {
             throw new BadRequest("Advanced Classification module isn't installed.");
         }
+    }
+
+    public function findRelated(Entity $entity, $relationName, array $params = [])
+    {
+        return RDB::findRelated($entity, $relationName, $params);
     }
 
     public function getParentsIds(Entity $entity, array $ids = []): array
