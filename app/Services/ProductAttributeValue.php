@@ -818,11 +818,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         if ($entity->get('attributeType') === 'unit') {
             $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
-
-            $data = !empty($entity->get('data')) ? json_decode($entity->get('data')) : [];
-            $data['measure'] = $entity->get('attribute')->get('typeValue');
-
-            $entity->set('data', $data);
         }
 
         $entity->clear('boolValue');
