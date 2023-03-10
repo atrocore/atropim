@@ -102,6 +102,12 @@
           "name": "maxLength"
         },
         false
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
       ]
     ]
   }
