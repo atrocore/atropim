@@ -43,22 +43,26 @@
   "labels": {
     "Create Attribute": "Attribut erstellen",
     "productFamily": "Produktfamilie",
-    "addNewValue": "Neuen Wert hinzufügen",
-    "array": "Anordnung",
-    "bool": "Boolesch",
-    "currency": "Währung",
-    "date": "Datum",
-    "datetime": "Datum-Uhrzeit",
-    "enum": "Liste",
-    "float": "Kommazahl",
-    "int": "Ganzzahl",
-    "multiEnum": "Liste mit Mehrfachauswahl",
-    "text": "Text",
-    "unit": "Einheit",
-    "url": "Url",
-    "varchar": "Einzeiliger Text",
-    "wysiwyg": "HTML",
-    "asset": "Asset"
+    "addNewValue": "Neuen Wert hinzufügen"
+  },
+  "options": {
+    "type": {
+      "array": "Anordnung",
+      "bool": "Boolesch",
+      "currency": "Währung",
+      "date": "Datum",
+      "datetime": "Datum-Uhrzeit",
+      "enum": "Liste",
+      "float": "Kommazahl",
+      "int": "Ganzzahl",
+      "multiEnum": "Liste mit Mehrfachauswahl",
+      "text": "Text",
+      "unit": "Einheit",
+      "url": "Url",
+      "varchar": "Einzeiliger Text",
+      "wysiwyg": "HTML",
+      "asset": "Asset"
+    }
   },
   "messages": {
     "sameNumberOptions": "Die gleiche Anzahl von Optionen",

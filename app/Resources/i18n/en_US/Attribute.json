@@ -42,22 +42,26 @@
   "labels": {
     "Create Attribute": "Create Attribute",
     "productFamily": "Product Family",
-    "addNewValue": "Add new value",
-    "array": "Array",
-    "bool": "Boolean",
-    "currency": "Currency",
-    "date": "Date",
-    "datetime": "Date-time",
-    "enum": "List",
-    "float": "Float",
-    "int": "Integer",
-    "multiEnum": "Multi-value list",
-    "text": "Text",
-    "unit": "Unit",
-    "url": "Url",
-    "varchar": "String",
-    "wysiwyg": "HTML",
-    "asset": "Asset"
+    "addNewValue": "Add new value"
+  },
+  "options": {
+    "type": {
+      "array": "Array",
+      "bool": "Boolean",
+      "currency": "Currency",
+      "date": "Date",
+      "datetime": "Date-time",
+      "enum": "List",
+      "float": "Float",
+      "int": "Integer",
+      "multiEnum": "Multi-value list",
+      "text": "Text",
+      "unit": "Unit",
+      "url": "Url",
+      "varchar": "String",
+      "wysiwyg": "HTML",
+      "asset": "Asset"
+    }
   },
   "messages": {
     "sameNumberOptions": "You must set the same number of options",
