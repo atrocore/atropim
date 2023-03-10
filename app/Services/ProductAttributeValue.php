@@ -234,8 +234,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('maxLengthCounter', $entity->get('maxLength'));
         }
 
-        $entity->clear('typeValueIds');
-        $entity->clear('typeValue');
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            $entity->clear('typeValueIds');
+            $entity->clear('typeValue');
+        }
 
         parent::prepareEntityForOutput($entity);
     }
@@ -816,6 +818,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         if ($entity->get('attributeType') === 'unit') {
             $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
+
+            $data = !empty($entity->get('data')) ? json_decode($entity->get('data')) : [];
+            $data['measure'] = $entity->get('attribute')->get('typeValue');
+
+            $entity->set('data', $data);
         }
 
         $entity->clear('boolValue');
