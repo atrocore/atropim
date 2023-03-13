@@ -43,9 +43,9 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     this.clearValue();
                     this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                         this.model.set('attributeType', attr.type);
-                        this.model.set('typeValueIds', attr.typeValueIds);
-                        this.model.set('typeValue', attr.typeValue);
-
+                        this.model.set('typeValueIds', attr.typeValueIds || []);
+                        this.model.set('typeValue', attr.typeValue || []);
+                        this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                         this.reRender();
                     });
                 }
@@ -69,7 +69,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 let collection = this.model.collection || null;
                 let attributeType = this.model.get('attributeType');
 
-                let view = this.getValueFieldView(attributeType);
+                let view = this.getFieldManager().getViewName(attributeType);
+
                 let params = {
                     required: !!this.model.get('isRequired'),
                     readOnly: !!this.model.get('isValueReadOnly')
@@ -81,6 +82,12 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 if (attributeType === 'unit') {
                     params.measure = (this.model.get('typeValue') || ['Length'])[0];
+                }
+
+                if (attributeType === 'enum' || attributeType === 'multiEnum') {
+                    params.optionsIds = this.model.get('typeValueIds') || [];
+                    params.options = this.model.get('typeValue') || [];
+                    params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                 }
 
                 if (attributeType === 'asset') {
@@ -105,18 +112,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             if (this.mode === 'edit' && ['multiEnum'].includes(this.model.get('attributeType'))) {
                 this.$el.addClass('over-visible');
             }
-        },
-
-        getValueFieldView(type) {
-            if (type === 'enum') {
-                return 'pim:views/product-attribute-value/fields/enum';
-            }
-
-            if (type === 'multiEnum') {
-                return 'pim:views/product-attribute-value/fields/multi-enum';
-            }
-
-            return this.getFieldManager().getViewName(type);
         },
 
         fetch() {
