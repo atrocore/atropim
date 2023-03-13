@@ -31,12 +31,6 @@
       ],
       [
         {
-          "name": "languages"
-        },
-        false
-      ],
-      [
-        {
           "name": "maxLength"
         },
         false

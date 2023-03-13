@@ -44,19 +44,6 @@
       "type": "bool",
       "default": false
     },
-    "languagesIds": {
-      "type": "array",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "isPavRelationInherited": {
       "type": "bool",
       "notStorable": true,
@@ -433,11 +420,6 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
-    },
-    "languages": {
-      "type": "multiLanguage",
-      "notStorable": true,
-      "view": "pim:views/product-family-attribute/fields/languages"
     },
     "mainLanguageId": {
       "type": "varchar",
