@@ -301,6 +301,12 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "description": {
+      "type": "text",
+      "rows": 4,
+      "lengthOfCut": 400,
+      "isMultilang": true
+    },
     "maxLength": {
       "type": "int",
       "view": "pim:views/fields/max-length"

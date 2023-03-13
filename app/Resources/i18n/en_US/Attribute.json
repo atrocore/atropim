@@ -19,16 +19,17 @@
     "unique": "Unique",
     "isSorted": "Is Sorted (alphabetically)",
     "prohibitedEmptyValue": "Disable empty value",
-    "enumDefault": "Default",
+    "enumDefault": "Default(List)",
     "measure": "Measure",
-    "unitDefault": "Default",
+    "unitDefault": "Default(Unit)",
     "virtualProductField": "Virtual product field",
     "defaultScope": "Scope",
     "defaultChannel": "Channel",
     "defaultIsRequired": "Required",
     "sortOrderInProduct": "Sort Order for Product",
     "tooltip": "Tooltip",
-    "maxLength": "Max Length"
+    "maxLength": "Max Length",
+    "description": "Description"
   },
   "links": {
     "parents": "Associating Attributes",

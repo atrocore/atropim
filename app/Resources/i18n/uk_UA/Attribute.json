@@ -19,16 +19,17 @@
     "unique": "Unique",
     "isSorted": "Сортувати (за алфавітом)",
     "prohibitedEmptyValue": "Заборонити порожні значення",
-    "enumDefault": "За замовчуванням",
+    "enumDefault": "За замовчуванням(Список)",
     "measure": "Міра",
-    "unitDefault": "За замовчуванням",
+    "unitDefault": "За замовчуванням(Одиниця виміру)",
     "virtualProductField": "Віртуальне поле продукту",
     "defaultScope": "Область дії",
     "defaultChannel": "Канал",
     "defaultIsRequired": "Обов'язково",
     "sortOrderInProduct": "Порядок сортування в продукті",
     "tooltip": "Текст підказки",
-    "maxLength": "Максимальна довжина"
+    "maxLength": "Максимальна довжина",
+    "description": "Опис"
   },
   "links": {
     "parents": "Пов'язуючі атрибути",
