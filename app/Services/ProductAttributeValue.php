@@ -155,13 +155,26 @@ class ProductAttributeValue extends AbstractProductAttributeService
         return array_values($result);
     }
 
-    public function inheritPav(string $id): bool
+    /**
+     * @param string|\Pim\Entities\ProductAttributeValue $pav
+     *
+     * @return bool
+     */
+    public function inheritPav($pav): bool
     {
-        $pav = $this->getEntity($id);
+        if (is_string($pav)) {
+            $pav = $this->getEntity($pav);
+        }
+
+        if (!($pav instanceof \Pim\Entities\ProductAttributeValue)) {
+            return false;
+        }
+
         $parentPav = $this->getRepository()->getParentPav($pav);
         if (empty($parentPav)) {
             return false;
         }
+
         $this->getRepository()->convertValue($parentPav);
 
         $input = new \stdClass();
@@ -178,7 +191,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 break;
         }
 
-        $this->updateEntity($id, $input);
+        $this->updateEntity($pav->get('id'), $input);
 
         return true;
     }
@@ -311,6 +324,22 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         return $result;
+    }
+
+    protected function afterCreateEntity(Entity $entity, $data)
+    {
+        parent::afterCreateEntity($entity, $data);
+
+        /**
+         * Inherit value from parent
+         */
+        if (!property_exists($data, 'value') && !property_exists($data, 'valueId') && !property_exists($data, 'valueUnit') && !property_exists($data, 'valueCurrency')) {
+            try {
+                $this->inheritPav($entity);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('Inheriting of ProductAttributeValue failed: ' . $e->getMessage());
+            }
+        }
     }
 
     protected function createAssociatedAttributeValue(\stdClass $attachment, string $attributeId): void

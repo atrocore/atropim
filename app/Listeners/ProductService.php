@@ -74,7 +74,7 @@ class ProductService extends AbstractListener
 
                     if ($value === null) {
                         try {
-                            $pavService->inheritPav($childPav->get('id'));
+                            $pavService->inheritPav($childPav);
                         } catch (\Throwable $e) {
                             $GLOBALS['log']->error('Inherit PAV failed: ' . $e->getMessage());
                         }
