@@ -183,6 +183,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         switch ($parentPav->get('attributeType')) {
             case 'currency':
                 $input->valueCurrency = $parentPav->get('valueCurrency');
+                break;
             case 'unit':
                 $input->valueUnit = $parentPav->get('valueUnit');
                 break;

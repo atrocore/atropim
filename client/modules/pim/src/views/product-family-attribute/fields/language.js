@@ -42,7 +42,7 @@ Espo.define('pim:views/product-family-attribute/fields/language', 'views/fields/
 
             if (this.mode === 'edit' || this.mode === 'detail') {
                 this.hide();
-                if (!this.model.isNew() && this.model.get('attributeId')) {
+                if ((!this.model.isNew() || this.model.urlRoot === 'ProductAttributeValue') && this.model.get('attributeId')) {
                     this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                         if (attr.isMultilang) {
                             this.show();

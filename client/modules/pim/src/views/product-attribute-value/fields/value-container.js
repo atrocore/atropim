@@ -37,93 +37,76 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         setup() {
             this.name = this.options.name || this.defs.name;
-            let collection = this.model.collection || null;
 
-            this.getModelFactory().create(this.model.name, model => {
-                this.model = this.getConfiguratedValueModel(model);
-                this.updateDataForValueField();
-                this.updateModelDefs();
-                this.createValueFieldView(collection);
+            this.listenTo(this.model, 'change:attributeId', () => {
+                if (this.mode === 'detail' || this.mode === 'edit') {
+                    this.clearValue();
+                    this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
+                        this.model.set('attributeType', attr.type);
+                        this.model.set('typeValueIds', attr.typeValueIds || []);
+                        this.model.set('typeValue', attr.typeValue || []);
+                        this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
+                        this.reRender();
+                    });
+                }
             });
+        },
+
+        clearValue() {
+            this.model.set('value', undefined);
+            this.model.set('valueCurrency', undefined);
+            this.model.set('valueUnit', undefined);
+            this.model.set('valueAllUnits', undefined);
+            this.model.set('valueId', undefined);
+            this.model.set('valueName', undefined);
+            this.model.set('valuePathsData', undefined);
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit' && ['multiEnum'].includes(this.model.get('attributeType'))) {
-                this.$el.addClass('over-visible');
-            }
-        },
+            if (this.model.get('attributeType')) {
+                let attributeType = this.model.get('attributeType');
 
-        getConfiguratedValueModel(model) {
-            model = this.model.clone();
-            model.id = this.model.id;
-            model.defs = Espo.Utils.cloneDeep(this.model.defs);
-            return model;
-        },
+                let fieldView = this.getFieldManager().getViewName(attributeType);
 
-        createValueFieldView(collection) {
-            this.clearView('valueField');
-
-            let type = this.model.get('attributeType') || 'base';
-
-            this.createView('valueField', this.getValueFieldView(type), {
-                el: `${this.options.el} > .field[data-name="valueField"]`,
-                name: this.name,
-                model: this.model,
-                collection: collection,
-                mode: this.mode,
-                prohibitedEmptyValue: !!this.model.get('prohibitedEmptyValue'),
-                inlineEditDisabled: true
-            }, view => {
-                view.render();
-            });
-        },
-
-        updateModelDefs() {
-            let type = this.model.get('attributeType');
-
-            if (type) {
-                let fieldDefs = {
-                    type: type,
-                    view: this.getValueFieldView(type),
+                let params = {
                     required: !!this.model.get('isRequired'),
                     readOnly: !!this.model.get('isValueReadOnly')
                 };
 
-                if (type === 'unit') {
-                    fieldDefs.measure = (this.model.get('typeValue') || ['Length'])[0];
-                }
-
-                if (type === 'enum' || type === 'multiEnum') {
-                    fieldDefs['options'] = this.model.get('typeValue') || [];
-                }
-
                 if (this.model.get('maxLengthCounter')) {
-                    fieldDefs['maxLength'] = this.model.get('maxLengthCounter');
+                    params.maxLength = this.model.get('maxLengthCounter');
                 }
 
-                // set field defs
-                this.model.defs.fields.value = fieldDefs;
-            }
-        },
+                if (attributeType === 'unit') {
+                    params.measure = (this.model.get('typeValue') || ['Length'])[0];
+                }
 
-        updateDataForValueField() {
-            if (this.model.get('attributeType') === 'asset') {
-                this.model.set({[`${this.name}Id`]: this.model.get(this.name)});
-            }
-        },
+                if (attributeType === 'enum' || attributeType === 'multiEnum') {
+                    params.optionsIds = this.model.get('typeValueIds') || [];
+                    params.options = this.model.get('typeValue') || [];
+                    params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
+                }
 
-        getValueFieldView(type) {
-            if (type === 'enum') {
-                return 'pim:views/product-attribute-value/fields/enum';
-            }
+                let options = {
+                    el: `${this.options.el} > .field[data-name="valueField"]`,
+                    name: this.name,
+                    model: this.model,
+                    collection: this.model.collection || null,
+                    params: params,
+                    mode: this.mode,
+                    inlineEditDisabled: true
+                };
 
-            if (type === 'multiEnum') {
-                return 'pim:views/product-attribute-value/fields/multi-enum';
-            }
+                this.createView('valueField', fieldView, options, view => {
+                    view.render();
+                });
 
-            return this.getFieldManager().getViewName(type);
+                if (this.mode === 'edit' && 'multiEnum' === attributeType) {
+                    this.$el.addClass('over-visible');
+                }
+            }
         },
 
         fetch() {
