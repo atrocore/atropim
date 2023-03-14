@@ -66,10 +66,9 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             Dep.prototype.afterRender.call(this);
 
             if (this.model.get('attributeType')) {
-                let collection = this.model.collection || null;
                 let attributeType = this.model.get('attributeType');
 
-                let view = this.getFieldManager().getViewName(attributeType);
+                let fieldView = this.getFieldManager().getViewName(attributeType);
 
                 let params = {
                     required: !!this.model.get('isRequired'),
@@ -90,27 +89,23 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                 }
 
-                if (attributeType === 'asset') {
-                    this.model.set({[`${this.name}Id`]: this.model.get(this.name)});
-                }
-
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,
                     name: this.name,
                     model: this.model,
-                    collection: collection,
+                    collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
                     inlineEditDisabled: true
                 };
 
-                this.createView('valueField', view, options, view => {
+                this.createView('valueField', fieldView, options, view => {
                     view.render();
                 });
-            }
 
-            if (this.mode === 'edit' && ['multiEnum'].includes(this.model.get('attributeType'))) {
-                this.$el.addClass('over-visible');
+                if (this.mode === 'edit' && 'multiEnum' === attributeType) {
+                    this.$el.addClass('over-visible');
+                }
             }
         },
 
