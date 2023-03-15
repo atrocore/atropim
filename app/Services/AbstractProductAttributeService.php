@@ -49,7 +49,9 @@ class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Rela
     protected function multipleCreateViaLanguages(\stdClass $attachment)
     {
         if (property_exists($attachment, 'channelId') && !empty($channel = $this->getEntityManager()->getEntity('Channel', $attachment->channelId))) {
-            $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
+            if (!empty($channel->get('locales'))) {
+                $attachment->languages = array_intersect($attachment->languages, $channel->get('locales'));
+            }
         }
 
         foreach ($attachment->languages as $language) {
