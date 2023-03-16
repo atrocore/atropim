@@ -67,8 +67,8 @@ class V1Dot6Dot0 extends Base
 
             if ($attribute['type'] === 'enum') {
                 foreach ($typeValue as $k => $v) {
-                    $was = $this->getPDO()->quote($v);
-                    $became = $this->getPDO()->quote($typeValueIds[$k]);
+                    $was = $this->getPDO()->quote((string)$v);
+                    $became = $this->getPDO()->quote((string)$typeValueIds[$k]);
 
                     $this->exec(
                         "UPDATE product_attribute_value SET varchar_value=$became WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value=$was", false
