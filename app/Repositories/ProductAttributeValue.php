@@ -306,7 +306,7 @@ class ProductAttributeValue extends AbstractRepository
         ];
 
         if ($pav->get('scope') === 'Channel') {
-            $where['scope'] = $pav->get('channelId');
+            $where['channelId'] = $pav->get('channelId');
         }
 
         $pfa = $this->getEntityManager()
