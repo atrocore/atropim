@@ -592,7 +592,119 @@ class Product extends Hierarchy
             }
         }
 
+        if (in_array($link, ['parents', 'children'])) {
+            $parentId = $link == 'children' ? $id : $foreignId;
+
+            $this->proceedVariantsAttributes($parentId);
+        }
+
         return $result;
+    }
+
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        $result = parent::unlinkEntity($id, $link, $foreignId);
+
+        if (in_array($link, ['parents', 'children'])) {
+            $parentId = $link == 'children' ? $id : $foreignId;
+
+            $product = $this->getEntity($parentId);
+
+            if (!empty($product) && count($product->get('children')) == 0) {
+                foreach ($product->get('productAttributeValues') as $pav) {
+                    if ($pav->get('isVariantSpecificAttribute')) {
+                        $pav->set('isVariantSpecificAttribute', false);
+
+                        $this->getEntityManager()->saveEntity($pav, ['skipAll' => true]);
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $parentId
+     * @param string $childId
+     *
+     * @return void
+     *
+     * @throws BadRequest
+     * @throws \Throwable
+     */
+    public function proceedVariantsAttributes(string $parentId): void
+    {
+        $variantPavs = $this
+            ->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->where([
+                'productId' => $parentId,
+                'isVariantSpecificAttribute' => true
+            ])
+            ->find();
+
+        if (count($variantPavs) > 0) {
+            foreach ($variantPavs as $pav) {
+                $attachment = new \stdClass();
+                $attachment->attributeId = $pav->get('attributeId');
+                $attachment->productId = $pav->get('productId');
+                $attachment->scope = $pav->get('scope');
+                $attachment->channelId = $pav->get('channelId');
+                $attachment->channelName = $pav->get('channelName');
+                $attachment->language = $pav->get('language');
+                $attachment->isVariantSpecificAttribute = $pav->get('isVariantSpecificAttribute');
+
+                $clonedAttachment = clone $attachment;
+
+                $this->createPseudoTransactionCreateJobs($attachment);
+                $this->createPseudoTransactionUpdateJobs($clonedAttachment);
+            }
+        }
+    }
+
+    public function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
+    {
+        if (!property_exists($data, 'productId')) {
+            return;
+        }
+
+        $children = $this->getRepository()->getChildrenArray($data->productId);
+        foreach ($children as $child) {
+            $inputData = clone $data;
+            $inputData->productId = $child['id'];
+            $inputData->productName = $child['name'];
+            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
+            }
+        }
+    }
+
+    public function createPseudoTransactionUpdateJobs(\stdClass $data, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($data->productId);
+        foreach ($children as $child) {
+            $product = $this->getEntity($child['id']);
+
+            if (!empty($product)) {
+                $data->productId = $child['id'];
+
+                $transactionId = null;
+
+                foreach ($product->get('productAttributeValues') as $pav) {
+                    if ($pav->get('attributeId') == $data->attributeId
+                        && $pav->get('scope') == $data->scope
+                        && $pav->get('channelId') == $data->channelId
+                        && $pav->get('language') == $data->language) {
+                        $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->id, $data, $parentTransactionId);
+                    }
+                }
+
+                if ($child['childrenCount'] > 0) {
+                    $this->createPseudoTransactionUpdateJobs(clone $data, $transactionId);
+                }
+            }
+        }
     }
 
     /**

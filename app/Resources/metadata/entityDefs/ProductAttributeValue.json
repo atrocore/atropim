@@ -70,6 +70,38 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "isVariantSpecificAttribute": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true,
+      "view": "pim:views/product-attribute-value/fields/is-variant-specific-attribute"
+    },
+    "isVariantSpecificAttributeAllowed": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "isVariantSpecificAttributeInherited": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "icons": {
       "type": "varchar",
       "notStorable": true,
