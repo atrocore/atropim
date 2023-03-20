@@ -313,15 +313,15 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->prepareDefaultValues($attachment);
 
         if ($this->isPseudoTransaction()) {
-            return parent::createEntity($attachment);
+            return $this->originalCreateEntity($attachment);
         }
 
         if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
-            return parent::createEntity($attachment);
+            return $this->originalCreateEntity($attachment);
         }
 
         if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
-            return parent::createEntity($attachment);
+            return $this->originalCreateEntity($attachment);
         }
 
         $inTransaction = false;
@@ -330,12 +330,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $inTransaction = true;
         }
         try {
-            $result = parent::createEntity($attachment);
-            try {
-                $this->createAssociatedAttributeValue($attachment, $attachment->attributeId);
-            } catch (\Throwable $e) {
-                // ignore errors
-            }
+            $result = $this->originalCreateEntity($attachment);
             $this->createPseudoTransactionCreateJobs(clone $attachment);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
@@ -345,6 +340,18 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $this->getEntityManager()->getPDO()->rollBack();
             }
             throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function originalCreateEntity(\stdClass $attachment): Entity
+    {
+        $result = parent::createEntity($attachment);
+        try {
+            $this->createAssociatedAttributeValue($attachment, $attachment->attributeId);
+        } catch (\Throwable $e) {
+            // ignore errors
         }
 
         return $result;

@@ -67,8 +67,8 @@ class V1Dot6Dot0 extends Base
 
             if ($attribute['type'] === 'enum') {
                 foreach ($typeValue as $k => $v) {
-                    $was = $this->getPDO()->quote($v);
-                    $became = $this->getPDO()->quote($typeValueIds[$k]);
+                    $was = $this->getPDO()->quote((string)$v);
+                    $became = $this->getPDO()->quote((string)$typeValueIds[$k]);
 
                     $this->exec(
                         "UPDATE product_attribute_value SET varchar_value=$became WHERE attribute_type='enum' AND attribute_id='{$attribute['id']}' AND varchar_value=$was", false
@@ -118,6 +118,8 @@ class V1Dot6Dot0 extends Base
 
         $this->exec("UPDATE product_family_attribute SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("DELETE FROM product_family_attribute WHERE deleted=1");
+        $this->exec("DELETE FROM product_family_attribute WHERE product_family_id IS NULL");
+        $this->exec("DELETE FROM product_family_attribute WHERE scope='Channel' AND (channel_id IS NULL OR channel_id='')");
 
         $this->exec(
             "CREATE UNIQUE INDEX UNIQ_BD38116AADFEE0E7B6E62EFAAF55D372F5A1AAD04DB71B5EB3B4E33 ON product_family_attribute (product_family_id, attribute_id, scope, channel_id, language, deleted)",
