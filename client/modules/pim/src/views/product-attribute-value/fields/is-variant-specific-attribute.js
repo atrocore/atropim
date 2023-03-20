@@ -32,12 +32,21 @@ Espo.define('pim:views/product-attribute-value/fields/is-variant-specific-attrib
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('hasChild') === false) {
+            if (!this.model.has('hasChild') || !this.model.has('hasParent')) {
                 this.hide();
-            }
+                this.ajaxGetRequest(`Product/${this.model.get('productId')}/children`, {select: 'id'}).done(response => {
+                    if (response.total > 0) {
+                        this.show();
+                    }
+                });
+            } else {
+                if (this.model.get('hasChild') === false) {
+                    this.hide();
+                }
 
-            if (this.model.get('hasParent') === true) {
-                this.setReadOnly();
+                if (this.model.get('hasParent') === true) {
+                    this.setReadOnly();
+                }
             }
         }
     })

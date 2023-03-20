@@ -623,6 +623,27 @@ class Product extends Hierarchy
         return $result;
     }
 
+    public function deleteEntity($id)
+    {
+        $parentsIds = $this->getEntity($id)->get('parentsIds');
+
+        $result = parent::deleteEntity($id);
+
+        if (!empty($parentsIds)) {
+            $parent = $this->getEntity($parentsIds[0]);
+
+            foreach ($parent->get('productAttributeValues') as $pav) {
+                if ($pav->get('isVariantSpecificAttribute')) {
+                    $pav->set('isVariantSpecificAttribute', false);
+
+                    $this->getEntityManager()->saveEntity($pav, ['skipAll' => true]);
+                }
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * @param string $parentId
      * @param string $childId
