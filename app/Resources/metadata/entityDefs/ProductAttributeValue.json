@@ -76,7 +76,7 @@
       "tooltip": true,
       "view": "pim:views/product-attribute-value/fields/is-variant-specific-attribute"
     },
-    "isVariantSpecificAttributeAllowed": {
+    "isVariantSpecificAttributeHasChild": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,
@@ -85,11 +85,10 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
     },
-    "isVariantSpecificAttributeInherited": {
+    "isVariantSpecificAttributeHasParent": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,
@@ -98,7 +97,6 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
     },

@@ -937,6 +937,14 @@ class Product extends Hierarchy
 
         $this->saveMainImage($entity, $data);
         $this->createProductAssets($entity, $data);
+
+        if (property_exists($data, 'parentsIds') || property_exists($data, 'childrenIds')) {
+            $parentId = property_exists($data, 'parentsIds') ? $data->parentsIds[0] : $entity->id;
+
+            if (!empty($parentId)) {
+                $this->proceedVariantsAttributes($parentId);
+            }
+        }
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
@@ -945,6 +953,14 @@ class Product extends Hierarchy
 
         $this->saveMainImage($entity, $data);
         $this->createProductAssets($entity, $data);
+
+        if (property_exists($data, 'parentsIds') || property_exists($data, 'childrenIds')) {
+            $parentId = property_exists($data, 'parentsIds') ? $data->parentsIds[0] : $entity->id;
+
+            if (!empty($parentId)) {
+                $this->proceedVariantsAttributes($parentId);
+            }
+        }
     }
 
     protected function saveMainImage(Entity $entity, $data): void
