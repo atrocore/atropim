@@ -629,7 +629,7 @@ class Product extends Hierarchy
 
         $result = parent::deleteEntity($id);
 
-        if (!empty($parentsIds)) {
+        if ($result && !empty($parentsIds)) {
             $parent = $this->getEntity($parentsIds[0]);
 
             foreach ($parent->get('productAttributeValues') as $pav) {
