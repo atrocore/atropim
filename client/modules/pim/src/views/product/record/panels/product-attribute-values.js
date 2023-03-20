@@ -46,7 +46,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
             'attributeIsMultilang',
             'isInheritAssignedUser',
             'isInheritOwnerUser',
-            'isInheritTeams'
+            'isInheritTeams',
+            'isVariantSpecificAttribute'
         ],
 
         scope: 'ProductAttributeValue',

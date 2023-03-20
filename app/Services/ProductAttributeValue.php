@@ -253,6 +253,29 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->clear('typeValue');
         }
 
+        $product = $entity->get('product');
+
+        $entity->set('hasChild', false);
+        if (count($product->get('children')) > 0) {
+            $entity->set('hasChild', true);
+        }
+
+        $entity->set('hasParent', false);
+        if (count($product->get('parents')) > 0) {
+            foreach ($product->get('parents') as $parent) {
+                $parentPavs = $parent->get('productAttributeValues');
+
+                foreach ($parentPavs as $pav) {
+                    if ($pav->get('attributeId') == $entity->get('attributeId')
+                        && $pav->get('channelId') == $entity->get('channelId')
+                        && $pav->get('isVariantSpecificAttribute')) {
+                        $entity->set('hasParent', true);
+                        break;
+                    }
+                }
+            }
+        }
+
         parent::prepareEntityForOutput($entity);
     }
 
@@ -347,6 +370,19 @@ class ProductAttributeValue extends AbstractProductAttributeService
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error('Inheriting of ProductAttributeValue failed: ' . $e->getMessage());
             }
+        }
+
+        if (property_exists($data, 'isVariantSpecificAttribute') && $data->isVariantSpecificAttribute == true) {
+            $this->getServiceFactory()->create('Product')->proceedVariantsAttributes($entity->get('productId'));
+        }
+    }
+
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        parent::afterUpdateEntity($entity, $data);
+
+        if (property_exists($data, 'isVariantSpecificAttribute') && $data->isVariantSpecificAttribute == true) {
+            $this->getServiceFactory()->create('Product')->proceedVariantsAttributes($entity->get('productId'));
         }
     }
 
@@ -493,6 +529,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
             if (Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired')) && property_exists($data, 'isRequired')) {
                 $inputData->isRequired = $data->isRequired;
+            }
+            if (property_exists($data, 'isVariantSpecificAttribute')) {
+                $inputData->isVariantSpecificAttribute = $data->isVariantSpecificAttribute;
             }
 
             if (!empty((array)$inputData)) {

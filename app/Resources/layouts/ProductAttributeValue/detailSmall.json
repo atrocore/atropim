@@ -23,7 +23,9 @@
         {
           "name": "language"
         },
-        false
+        {
+          "name": "isVariantSpecificAttribute"
+        }
       ],
       [
         {

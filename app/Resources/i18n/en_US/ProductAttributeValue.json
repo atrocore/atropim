@@ -20,7 +20,8 @@
     "dateValue": "Value: Date",
     "datetimeValue": "Value: Date-time",
     "boolValue": "Value: Boolean",
-    "maxLength": "Max Length"
+    "maxLength": "Max Length",
+    "isVariantSpecificAttribute": "Variant-specific"
   },
   "links": {
     "productAttribute": "Product attribute",
@@ -49,5 +50,8 @@
   "messages": {
     "removeRelatedAttributeGroup": "Are you sure you want to delete all the attributes with their values for the selected Attribute Group from the current product? All attributes and their values for the child products will be retained.",
     "removeRelatedAttributeGroupCascade": "Are you sure you want to delete all the attributes with their values for the selected Attribute Group from the current product and its child products?"
+  },
+  "tooltips": {
+    "isVariantSpecificAttribute": "Variant-specific attribute values are required for all child products and will be added automatically, if not added before."
   }
 }
