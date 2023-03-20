@@ -255,11 +255,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $product = $entity->get('product');
 
-        $entity->set('hasChild', false);
-        if (count($product->get('children')) > 0) {
-            $entity->set('hasChild', true);
-        }
-
         $entity->set('hasParent', false);
         if (count($product->get('parents')) > 0) {
             foreach ($product->get('parents') as $parent) {
