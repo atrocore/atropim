@@ -255,12 +255,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $product = $entity->get('product');
 
-        $entity->set('isVariantSpecificAttributeHasChild', false);
+        $entity->set('hasChild', false);
         if (count($product->get('children')) > 0) {
-            $entity->set('isVariantSpecificAttributeHasChild', true);
+            $entity->set('hasChild', true);
         }
 
-        $entity->set('isVariantSpecificAttributeHasParent', false);
+        $entity->set('hasParent', false);
         if (count($product->get('parents')) > 0) {
             foreach ($product->get('parents') as $parent) {
                 $parentPavs = $parent->get('productAttributeValues');
@@ -269,7 +269,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     if ($pav->get('attributeId') == $entity->get('attributeId')
                         && $pav->get('channelId') == $entity->get('channelId')
                         && $pav->get('isVariantSpecificAttribute')) {
-                        $entity->set('isVariantSpecificAttributeHasParent', true);
+                        $entity->set('hasParent', true);
                         break;
                     }
                 }

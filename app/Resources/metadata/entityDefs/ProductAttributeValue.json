@@ -76,7 +76,7 @@
       "tooltip": true,
       "view": "pim:views/product-attribute-value/fields/is-variant-specific-attribute"
     },
-    "isVariantSpecificAttributeHasChild": {
+    "hasChild": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,
@@ -88,7 +88,7 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "isVariantSpecificAttributeHasParent": {
+    "hasParent": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,

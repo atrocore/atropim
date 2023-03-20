@@ -32,11 +32,11 @@ Espo.define('pim:views/product-attribute-value/fields/is-variant-specific-attrib
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('isVariantSpecificAttributeHasChild') === false) {
+            if (this.model.get('hasChild') === false) {
                 this.hide();
             }
 
-            if (this.model.get('isVariantSpecificAttributeHasParent') === true) {
+            if (this.model.get('hasParent') === true) {
                 this.setReadOnly();
             }
         }
