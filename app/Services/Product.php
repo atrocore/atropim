@@ -601,51 +601,6 @@ class Product extends Hierarchy
         return $result;
     }
 
-    public function unlinkEntity($id, $link, $foreignId)
-    {
-        $result = parent::unlinkEntity($id, $link, $foreignId);
-
-        if (in_array($link, ['parents', 'children'])) {
-            $parentId = $link == 'children' ? $id : $foreignId;
-
-            $product = $this->getEntity($parentId);
-
-            if (!empty($product) && count($product->get('children')) == 0) {
-                foreach ($product->get('productAttributeValues') as $pav) {
-                    if ($pav->get('isVariantSpecificAttribute')) {
-                        $pav->set('isVariantSpecificAttribute', false);
-
-                        $this->getEntityManager()->saveEntity($pav, ['skipAll' => true]);
-                    }
-                }
-            }
-        }
-        return $result;
-    }
-
-    public function deleteEntity($id)
-    {
-        $parentsIds = $this->getEntity($id)->getLinkMultipleIdList('parents');
-
-        $result = parent::deleteEntity($id);
-
-        if ($result && !empty($parentsIds)) {
-            $parent = $this->getEntity($parentsIds[0]);
-
-            if (count($parent->getLinkMultipleIdList('children')) == 0) {
-                foreach ($parent->get('productAttributeValues') as $pav) {
-                    if ($pav->get('isVariantSpecificAttribute')) {
-                        $pav->set('isVariantSpecificAttribute', false);
-
-                        $this->getEntityManager()->saveEntity($pav, ['skipAll' => true]);
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
     /**
      * @param string $parentId
      * @param string $childId
