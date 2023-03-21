@@ -17,6 +17,7 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "hideLastViewed": true,
+  "hasNoRelationVirtualFields": true,
   "completeness": {
     "replacement": "Product",
     "service": "Completeness\\Services\\ProductCompleteness"
