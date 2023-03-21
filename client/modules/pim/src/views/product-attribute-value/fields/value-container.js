@@ -41,13 +41,16 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.listenTo(this.model, 'change:attributeId', () => {
                 if (this.mode === 'detail' || this.mode === 'edit') {
                     this.clearValue();
-                    this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
-                        this.model.set('attributeType', attr.type);
-                        this.model.set('typeValueIds', attr.typeValueIds || []);
-                        this.model.set('typeValue', attr.typeValue || []);
-                        this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
-                        this.reRender();
-                    });
+
+                    if (this.model.get('attributeId')) {
+                        this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
+                            this.model.set('attributeType', attr.type);
+                            this.model.set('typeValueIds', attr.typeValueIds || []);
+                            this.model.set('typeValue', attr.typeValue || []);
+                            this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
+                            this.reRender();
+                        });
+                    }
                 }
             });
         },
