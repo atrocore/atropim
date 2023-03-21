@@ -265,13 +265,8 @@
     "sorting": {
       "type": "int",
       "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
       "description": "Sorting products in category"
     },
     "contents": {
