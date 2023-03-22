@@ -248,6 +248,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('maxLengthCounter', $entity->get('maxLength'));
         }
 
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            $entity->clear('typeValueIds');
+            $entity->clear('typeValue');
+        }
+
         $product = $entity->get('product');
 
         $entity->set('hasParent', false);

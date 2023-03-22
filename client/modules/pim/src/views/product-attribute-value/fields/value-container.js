@@ -43,13 +43,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     this.clearValue();
 
                     if (this.model.get('attributeId')) {
-                        this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
-                            this.model.set('attributeType', attr.type);
-                            this.model.set('typeValueIds', attr.typeValueIds || []);
-                            this.model.set('typeValue', attr.typeValue || []);
-                            this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
-                            this.reRender();
-                        });
+                        this.fetchAttributeData();
                     }
                 }
             });
@@ -87,6 +81,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 }
 
                 if (attributeType === 'enum' || attributeType === 'multiEnum') {
+                    if (this.mode === 'edit' && !this.model.get('typeValue') && !this.model.get('typeValueIds')) {
+                        this.fetchAttributeData();
+                    }
+
                     params.optionsIds = this.model.get('typeValueIds') || [];
                     params.options = this.model.get('typeValue') || [];
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
@@ -176,8 +174,17 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             if (valueField) {
                 valueField.setMode(mode);
             }
-        }
+        },
 
+        fetchAttributeData() {
+            this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
+                this.model.set('attributeType', attr.type);
+                this.model.set('typeValueIds', attr.typeValueIds || []);
+                this.model.set('typeValue', attr.typeValue || []);
+                this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
+                this.reRender();
+            });
+        }
     })
 );
 
