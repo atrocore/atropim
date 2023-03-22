@@ -149,6 +149,32 @@ class Attribute extends Hierarchy
         return parent::updateEntity($id, $data);
     }
 
+    protected function duplicateProductAttributeValues(Entity $entity, Entity $duplicatingEntity)
+    {
+        foreach ($duplicatingEntity->get('productAttributeValues') as $item) {
+            $record = $this->getEntityManager()->getEntity('ProductAttributeValue');
+            $record->set($item->toArray());
+            $record->id = null;
+
+            $record->clear('createdAt');
+            $record->clear('modifiedAt');
+            $record->clear('createdById');
+            $record->clear('modifiedById');
+
+            $record->clear('boolValue');
+            $record->clear('dateValue');
+            $record->clear('datetimeValue');
+            $record->clear('intValue');
+            $record->clear('floatValue');
+            $record->clear('varcharValue');
+            $record->clear('textValue');
+
+            $record->set('attributeId', $entity->get('id'));
+            $record->set('attributeName', $entity->get('name'));
+            $this->getEntityManager()->saveEntity($record);
+        }
+    }
+
     protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
     {
         if (property_exists($data, 'typeValueIds') && property_exists($data, 'typeValueIdsAddOnlyMode')) {
