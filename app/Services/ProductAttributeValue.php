@@ -201,6 +201,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));
 
+        $variantPavs = null;
+        if (count($collection) > 0) {
+            $variantPavs = $this->getParentVariantAttributes($collection[0]->get('productId'));
+        }
+
         /**
          * Sort attribute values
          */
@@ -221,6 +226,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
 
             $pavs[$k] = $row;
+
+            $this->setHasParent($entity, $variantPavs);
+            $entity->setHasParent = true;
         }
 
         array_multisort(
@@ -253,25 +261,55 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->clear('typeValue');
         }
 
-        $product = $entity->get('product');
-
-        $entity->set('hasParent', false);
-        if (count($product->get('parents')) > 0) {
-            foreach ($product->get('parents') as $parent) {
-                $parentPavs = $parent->get('productAttributeValues');
-
-                foreach ($parentPavs as $pav) {
-                    if ($pav->get('attributeId') == $entity->get('attributeId')
-                        && $pav->get('channelId') == $entity->get('channelId')
-                        && $pav->get('isVariantSpecificAttribute')) {
-                        $entity->set('hasParent', true);
-                        break;
-                    }
-                }
-            }
+        if (empty($entity->setHasParent)) {
+            $variantPavs = $this->getParentVariantAttributes($entity->get('productId'));
+            $this->setHasParent($entity, $variantPavs);
         }
 
         parent::prepareEntityForOutput($entity);
+    }
+
+    /**
+     * @param string $productId
+     *
+     * @return EntityCollection|null
+     */
+    protected function getParentVariantAttributes(string $productId): ?EntityCollection
+    {
+        $result = null;
+
+        $parentProduct = $this->getEntityManager()->getRepository('Product')->getParentRecord($productId);
+
+        if (!empty($parentProduct)) {
+            $result = $this
+                ->getRepository()
+                ->where(['isVariantSpecificAttribute' => true, 'productId' => $parentProduct['id']])
+                ->find();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @param EntityCollection|null $parentVariantPavs
+     *
+     * @return void
+     */
+    protected function setHasParent(Entity $entity, ?EntityCollection $parentVariantPavs): void
+    {
+        $entity->set('hasParent', false);
+
+        if (!is_null($parentVariantPavs)) {
+            foreach ($parentVariantPavs as $pav) {
+                if ($pav->get('attributeId') == $entity->get('attributeId')
+                    && $pav->get('channelId') == $entity->get('channelId')) {
+                    $entity->set('hasParent', true);
+                    break;
+                }
+            }
+        }
     }
 
     /**
