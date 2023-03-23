@@ -102,6 +102,14 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
+
+                    this.listenTo(this.model, 'change:isRequired', () => {
+                        if (this.model.get('isRequired')) {
+                            view.setRequired();
+                        } else {
+                            view.setNotRequired();
+                        }
+                    });
                 });
 
                 if (this.mode === 'edit' && 'multiEnum' === attributeType) {

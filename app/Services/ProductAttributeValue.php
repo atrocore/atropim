@@ -432,6 +432,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         parent::beforeCreateEntity($entity, $data);
 
+        $this->validateRequired($entity);
+
         /**
          * Validate channel
          */
@@ -545,7 +547,26 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         parent::beforeUpdateEntity($entity, $data);
 
+        $this->validateRequired($entity);
+
         $this->setInputValue($entity, $data);
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return void
+     *
+     * @throws BadRequest
+     */
+    protected function validateRequired(Entity $entity): void
+    {
+        if ($entity->get('isRequired') && ($entity->get('value') === null || $entity->get('value') === '')) {
+            $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
+            $message = $this->getInjection('language')->translate('fieldIsRequired', 'exceptions', $entity->getEntityType());
+
+            throw new BadRequest(sprintf($message, $field));
+        }
     }
 
     public function deleteEntity($id)
