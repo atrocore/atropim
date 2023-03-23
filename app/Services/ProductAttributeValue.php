@@ -283,22 +283,24 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (!empty($productIds)) {
             $productHierarchyMap = $this->getEntityManager()->getRepository('Product')->getProductsHierarchyMap($productIds);
 
-            $parentsVariantPavs = $this
-                ->getRepository()
-                ->select(['productId', 'attributeId', 'channelId'])
-                ->where(['isVariantSpecificAttribute' => true, 'productId' => array_unique(array_column($productHierarchyMap, 'parentId'))])
-                ->find()
-                ->toArray();
+            if (!empty($productHierarchyMap)) {
+                $parentsVariantPavs = $this
+                    ->getRepository()
+                    ->select(['productId', 'attributeId', 'channelId'])
+                    ->where(['isVariantSpecificAttribute' => true, 'productId' => array_unique(array_column($productHierarchyMap, 'parentId'))])
+                    ->find()
+                    ->toArray();
 
 
-            foreach ($parentsVariantPavs as $pav) {
-                foreach ($productHierarchyMap as $item) {
-                    if ($pav['productId'] == $item['parentId']) {
-                        if (!isset($result[$item['childId']])) {
-                            $result[$item['childId']] = [];
+                foreach ($parentsVariantPavs as $pav) {
+                    foreach ($productHierarchyMap as $item) {
+                        if ($pav['productId'] == $item['parentId']) {
+                            if (!isset($result[$item['childId']])) {
+                                $result[$item['childId']] = [];
+                            }
+
+                            $result[$item['childId']][] = $pav;
                         }
-
-                        $result[$item['childId']][] = $pav;
                     }
                 }
             }
