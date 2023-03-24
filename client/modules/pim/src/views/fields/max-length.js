@@ -44,17 +44,22 @@ Espo.define('pim:views/fields/max-length', 'views/fields/int', Dep => {
             Dep.prototype.afterRender.call(this);
 
             if (['detail', 'edit'].includes(this.mode) && (this.model.has('type') || this.model.has('attributeId'))) {
-                this.hide();
-                if (this.model.urlRoot === 'Attribute') {
-                    this.toggleVisibility(this.model.get('type'));
-                } else if (this.model.urlRoot === 'ProductFamilyAttribute' || this.model.urlRoot === 'ProductAttributeValue') {
-                    if (this.model.get('attributeId')) {
-                        this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
-                            this.toggleVisibility(attribute.type);
-                            if (this.mode === 'edit' && this.model.isNew() && attribute.maxLength) {
-                                this.model.set('maxLength', attribute.maxLength);
-                            }
-                        });
+                let scope = this.model.urlRoot,
+                    forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(scope, 'read');
+
+                if (!forbiddenFieldList.includes(this.name)) {
+                    this.hide();
+                    if (this.model.urlRoot === 'Attribute') {
+                        this.toggleVisibility(this.model.get('type'));
+                    } else if (this.model.urlRoot === 'ProductFamilyAttribute' || this.model.urlRoot === 'ProductAttributeValue') {
+                        if (this.model.get('attributeId')) {
+                            this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
+                                this.toggleVisibility(attribute.type);
+                                if (this.mode === 'edit' && this.model.isNew() && attribute.maxLength) {
+                                    this.model.set('maxLength', attribute.maxLength);
+                                }
+                            });
+                        }
                     }
                 }
             }
