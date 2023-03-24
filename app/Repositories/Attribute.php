@@ -78,7 +78,7 @@ class Attribute extends AbstractRepository
 
     public function clearCache(): void
     {
-        $this->getInjection('dataManager')->clearCache();
+        $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
     }
 
     public function updateSortOrderInAttributeGroup(array $ids): void

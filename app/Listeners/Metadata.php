@@ -133,16 +133,14 @@ class Metadata extends AbstractListener
         $dataManager = $this->getContainer()->get('dataManager');
 
         $attributes = $dataManager->getCacheData('attribute_product_fields');
-        if (empty($attributes)) {
+        if ($attributes === null) {
             try {
                 $attributes = $this->getContainer()->get('pdo')->query("SELECT * FROM attribute WHERE deleted=0 AND virtual_product_field=1")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
                 $attributes = [];
             }
 
-            if (!empty($attributes)) {
-                $dataManager->setCacheData('attribute_product_fields', $attributes);
-            }
+            $dataManager->setCacheData('attribute_product_fields', $attributes);
         }
 
         $languages = [];
@@ -293,15 +291,13 @@ class Metadata extends AbstractListener
         $dataManager = $this->getContainer()->get('dataManager');
 
         $tabs = $dataManager->getCacheData('attribute_tabs');
-        if (empty($tabs)) {
+        if ($tabs === null) {
             try {
                 $tabs = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
             } catch (\Throwable $e) {
                 $tabs = [];
             }
-            if (!empty($tabs)) {
-                $dataManager->setCacheData('attribute_tabs', $tabs);
-            }
+            $dataManager->setCacheData('attribute_tabs', $tabs);
         }
 
         foreach ($tabs as $tab) {

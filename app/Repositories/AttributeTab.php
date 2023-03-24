@@ -76,6 +76,6 @@ class AttributeTab extends Base
      */
     protected function clearCache(): void
     {
-        $this->getInjection('dataManager')->clearCache();
+        $this->getInjection('dataManager')->setCacheData('attribute_tabs', null);
     }
 }
