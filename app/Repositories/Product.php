@@ -541,6 +541,17 @@ class Product extends AbstractRepository
         return $result;
     }
 
+    public function getProductsHierarchyMap(array $productIds): array
+    {
+        $query = "SELECT entity_id AS childId, parent_id AS parentId
+                FROM product_hierarchy
+                WHERE entity_id IN ('" . implode("','", $productIds) . "') and deleted = 0";
+
+        $result = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+
+        return empty($result) ? [] : $result;
+    }
+
     protected function onProductFamilyChange(Entity $product): void
     {
         if (empty($product->getFetched('productFamilyId'))) {
