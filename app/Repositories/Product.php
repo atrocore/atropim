@@ -669,7 +669,13 @@ class Product extends AbstractRepository
             ->where(['productFamilyId' => $product->get('productFamilyId')])
             ->find();
 
+        $channels = array_column($product->get('productChannels')->toArray(), 'channelId');
+
         foreach ($pfas as $pfa) {
+            if (!empty($pfa->get('channelId')) && !in_array($pfa->get('channelId'), $channels)) {
+                continue;
+            }
+
             $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
             $productAttributeValue->set(
                 [
