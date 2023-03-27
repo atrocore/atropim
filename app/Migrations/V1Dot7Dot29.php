@@ -38,7 +38,7 @@ class V1Dot7Dot29 extends Base
     public function up(): void
     {
         $this->exec("DELETE FROM product_attribute_value pav
-                    WHERE deleted = 0 AND pav.scope = 'Channel' AND pav.channel_id NOT IN (
+                    WHERE pav.deleted = 0 AND pav.scope = 'Channel' AND pav.channel_id NOT IN (
                         SELECT DISTINCT pc.channel_id
                         FROM product_channel pc
                         WHERE pc.product_id = pav.product_id AND pc.deleted = 0
