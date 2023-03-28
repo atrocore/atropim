@@ -29,6 +29,7 @@
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
 
@@ -78,6 +79,25 @@ class ProductChannel extends Relationship
             }
             $this->where(['productId' => $product->get('id'), 'channelId' => $channel->get('id')])->removeCollection();
         }
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew()) {
+            $exist = $this
+                ->where([
+                    'productId' => $entity->get('productId'),
+                    'channelId' => $entity->get('channelId'),
+                    'id!=' => $entity->id
+                ])
+                ->findOne();
+
+            if (!empty($exist)) {
+                throw new BadRequest($this->getLanguage()->translate('productChannelAlreadyExist', 'exceptions', 'ProductChannel'));
+            }
+        }
+
+        parent::beforeSave($entity, $options);
     }
 
     protected function afterSave(Entity $entity, array $options = [])

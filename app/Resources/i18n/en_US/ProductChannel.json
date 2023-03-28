@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create ProductChannel": "Create Product Channel"
+  },
+  "exceptions": {
+    "productChannelAlreadyExist": "Such Product Channel already exist."
   }
 }

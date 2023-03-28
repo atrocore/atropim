@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create ProductChannel": "Створити канал продукту"
+  },
+  "exceptions": {
+    "productChannelAlreadyExist": "Такий Канал Продукту вже існує."
   }
 }
