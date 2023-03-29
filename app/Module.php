@@ -109,60 +109,6 @@ class Module extends AbstractModule
             ]
         ];
 
-        /**
-         * ProductAttributeValue
-         */
-        $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value']['required']['conditionGroup'] = [
-            [
-                'type'      => 'isTrue',
-                'attribute' => 'isRequired'
-            ]
-        ];
-
-        foreach ($this->getInputLanguageList() as $locale => $key) {
-            /**
-             * Attribute
-             */
-            $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue' . $key]['visible']['conditionGroup'] = [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'type',
-                    'value'     => ['enum', 'multiEnum']
-                ],
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isMultilang'
-                ]
-            ];
-
-            /**
-             * ProductAttributeValue
-             */
-            $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value' . $key]['visible']['conditionGroup'] = [
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'attributeIsMultilang'
-                ]
-            ];
-            $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value' . $key]['readOnly']['conditionGroup'] = [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'attributeType',
-                    'value'     => ['enum', 'multiEnum']
-                ]
-            ];
-            $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value' . $key]['required']['conditionGroup'] = [
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isRequired'
-                ],
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'attributeIsMultilang'
-                ]
-            ];
-        }
-
         return $result;
     }
 

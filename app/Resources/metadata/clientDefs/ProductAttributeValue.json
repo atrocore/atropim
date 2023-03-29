@@ -51,6 +51,14 @@
         }
       },
       "value": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isRequired"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {

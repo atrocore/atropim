@@ -7,9 +7,7 @@
         {
           "name": "attribute"
         },
-        {
-          "name": "isRequired"
-        }
+        false
       ],
       [
         {
