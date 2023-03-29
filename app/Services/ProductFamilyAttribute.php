@@ -147,29 +147,26 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
         }
     }
 
-    /**
-     * @param $data
-     *
-     * @return void
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function prepareDefaultValues($data): void
+    protected function prepareDefaultValues(\stdClass $data): void
     {
-        if (!isset($data->isRequired) && !isset($data->scope)) {
+        if (property_exists($data, 'attributeId') && !empty($data->attributeId)) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $data->attributeId);
-            if ($attribute) {
-                $data->isRequired = $attribute->get('isRequired');
+        }
 
-                $defaultScope = $attribute->get('defaultScope');
-                if ($defaultScope === 'Global') {
-                    $data->scope = $defaultScope;
-                } else {
-                    $data->scope = $defaultScope;
-                    $data->channelId = $attribute->get('defaultChannelId');
-                    $data->channelName = $attribute->get('defaultChannelName');
-                }
+        if (empty($attribute)) {
+            return;
+        }
+
+        if (!property_exists($data, 'isRequired') && !property_exists($data, 'scope')) {
+            $data->isRequired = $attribute->get('isRequired');
+            $data->scope = $attribute->get('defaultScope');
+            if ($data->scope === 'Channel') {
+                $data->channelId = $attribute->get('defaultChannelId');
             }
+        }
+
+        if (!property_exists($data, 'maxLength')) {
+            $data->maxLength = $attribute->get('maxLength');
         }
     }
 
