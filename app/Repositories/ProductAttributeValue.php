@@ -43,9 +43,8 @@ class ProductAttributeValue extends AbstractRepository
     protected static $beforeSaveData = [];
 
     protected array $channelLanguages = [];
-
     protected array $products = [];
-
+    protected array $productFamilyAttributes = [];
     protected array $productPavs = [];
 
     private array $pavsAttributes = [];
@@ -299,22 +298,29 @@ class ProductAttributeValue extends AbstractRepository
             return null;
         }
 
-        $where = [
-            'productFamilyId' => $product->get('productFamilyId'),
-            'attributeId'     => $pav->get('attributeId'),
-            'scope'           => $pav->get('scope'),
-            'language'        => $pav->get('language'),
-        ];
+        $productFamilyAttributes = $this->getProductFamilyAttributesByProductFamilyId((string)$product->get('productFamilyId'));
 
-        if ($pav->get('scope') === 'Channel') {
-            $where['channelId'] = $pav->get('channelId');
+        foreach ($productFamilyAttributes as $pfa) {
+            if ($pfa->get('attributeId') !== $pav->get('attributeId')) {
+                continue;
+            }
+
+            if ($pfa->get('scope') !== $pav->get('scope')) {
+                continue;
+            }
+
+            if ($pfa->get('language') !== $pav->get('language')) {
+                continue;
+            }
+
+            if ($pav->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
+                continue;
+            }
+
+            return $pfa;
         }
 
-        return $this
-            ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
-            ->where($where)
-            ->findOne();
+        return null;
     }
 
     public function convertValue(Entity $entity): void
@@ -978,5 +984,18 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return $this->products[$productId];
+    }
+
+    public function getProductFamilyAttributesByProductFamilyId(string $productFamilyId): EntityCollection
+    {
+        if (!array_key_exists($productFamilyId, $this->productFamilyAttributes)) {
+            $this->productFamilyAttributes[$productFamilyId] = $this
+                ->getEntityManager()
+                ->getRepository('ProductFamilyAttribute')
+                ->where(['productFamilyId' => $productFamilyId])
+                ->find();
+        }
+
+        return $this->productFamilyAttributes[$productFamilyId];
     }
 }
