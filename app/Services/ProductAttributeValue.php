@@ -946,20 +946,17 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelName', 'Global');
         }
 
-        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])) {
-            $entity->set('maxLength', $attribute->get('maxLength'));
+        $productFamilyAttribute = $this->getRepository()->findProductFamilyAttribute($entity);
 
-            $productFamilyAttribute = $this->getRepository()->findProductFamilyAttribute($entity);
-            if (!empty($productFamilyAttribute)) {
-                $entity->set('maxLength', $productFamilyAttribute->get('maxLength'));
-            }
+        $entity->set('isRequired', $attribute->get('isRequired'));
+        $entity->set('maxLength', $attribute->get('maxLength'));
+        if (!empty($productFamilyAttribute)) {
+            $entity->set('isRequired', $productFamilyAttribute->get('isRequired'));
+            $entity->set('maxLength', $productFamilyAttribute->get('maxLength'));
         }
 
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
         if (!$entity->get('isPavRelationInherited')) {
-            if (!isset($productFamilyAttribute)) {
-                $productFamilyAttribute = $this->getRepository()->findProductFamilyAttribute($entity);
-            }
             $entity->set('isPavRelationInherited', !empty($productFamilyAttribute));
         }
 
