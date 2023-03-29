@@ -82,7 +82,7 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
                 const attributeId = this.model.get('attributeId');
 
                 if (attributeId) {
-                    const defaultRequired = this.model.get('defaultIsRequired');
+                    const defaultRequired = this.model.get('isRequired');
                     const defaultScope = this.model.get('defaultScope');
                     const defaultChannelId = this.model.get('defaultChannelId');
 

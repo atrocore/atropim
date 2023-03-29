@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -26,22 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/attribute/modals/select-records', 'views/modals/select-records',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        mandatorySelectAttributeList: ['typeValue', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'],
+namespace Pim\Migrations;
 
-        loadList() {
-            let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
-            if (this.getConfig().get('isMultilangActive') && inputLanguageList.length) {
-                let typeValueFields = inputLanguageList.map(lang => {
-                    return lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), 'typeValue');
-                });
-                this.mandatorySelectAttributeList = this.mandatorySelectAttributeList.concat(typeValueFields);
-            }
+use Treo\Core\Migration\Base;
 
-            Dep.prototype.loadList.call(this);
-        }
+class V1Dot7Dot30 extends Base
+{
+    public function up(): void
+    {
+        $this->getPDO()->exec("ALTER TABLE product_attribute_value DROP is_required, DROP max_length");
+        $this->getPDO()->exec("ALTER TABLE attribute CHANGE default_is_required is_required TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+    }
 
-    })
-);
+    public function down(): void
+    {
+        throw new \Exception('Downgrade is prohibited.');
+    }
+}

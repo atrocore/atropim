@@ -1048,7 +1048,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (!isset($data->isRequired) && !isset($data->scope)) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $data->attributeId);
             if ($attribute) {
-                $data->isRequired = $attribute->get('defaultIsRequired');
+                $data->isRequired = $attribute->get('isRequired');
 
                 $defaultScope = $attribute->get('defaultScope');
                 if ($defaultScope === 'Global') {

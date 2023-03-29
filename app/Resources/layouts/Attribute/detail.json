@@ -81,7 +81,7 @@
       ],
       [
         {
-          "name": "defaultIsRequired"
+          "name": "isRequired"
         },
         false
       ],

@@ -42,7 +42,12 @@
     },
     "isRequired": {
       "type": "bool",
-      "default": false
+      "notStorable": true,
+      "readOnly": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "isPavRelationInherited": {
       "type": "bool",
