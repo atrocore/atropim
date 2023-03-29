@@ -7,9 +7,7 @@
         {
           "name": "attribute"
         },
-        {
-          "name": "isRequired"
-        }
+        false
       ],
       [
         {
@@ -26,12 +24,6 @@
         {
           "name": "isVariantSpecificAttribute"
         }
-      ],
-      [
-        {
-          "name": "maxLength"
-        },
-        false
       ],
       [
         {

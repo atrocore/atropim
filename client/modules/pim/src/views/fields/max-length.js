@@ -33,7 +33,7 @@ Espo.define('pim:views/fields/max-length', 'views/fields/int', Dep => {
         setup() {
             Dep.prototype.setup.call(this);
 
-            if (this.model.urlRoot === 'ProductFamilyAttribute' || this.model.urlRoot === 'ProductAttributeValue') {
+            if (this.model.urlRoot === 'ProductFamilyAttribute') {
                 this.listenTo(this.model, 'change:attributeId', () => {
                     this.reRender();
                 });
@@ -51,7 +51,7 @@ Espo.define('pim:views/fields/max-length', 'views/fields/int', Dep => {
                     this.hide();
                     if (this.model.urlRoot === 'Attribute') {
                         this.toggleVisibility(this.model.get('type'));
-                    } else if (this.model.urlRoot === 'ProductFamilyAttribute' || this.model.urlRoot === 'ProductAttributeValue') {
+                    } else if (this.model.urlRoot === 'ProductFamilyAttribute') {
                         if (this.model.get('attributeId')) {
                             this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
                                 this.toggleVisibility(attribute.type);

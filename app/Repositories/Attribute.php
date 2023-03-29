@@ -90,6 +90,17 @@ class Attribute extends AbstractRepository
         }
     }
 
+    public function getMultilingualAttributeTypes(): array
+    {
+        foreach ($this->getMetadata()->get(['clientDefs', 'Attribute', 'dynamicLogic', 'fields', 'isMultilang', 'visible', 'conditionGroup'], []) as $item) {
+            if (!empty($item['type']) && !empty($item['attribute']) && !empty($item['value']) && $item['type'] === 'in' && $item['attribute'] === 'type') {
+                return $item['value'];
+            }
+        }
+
+        return [];
+    }
+
     /**
      * @inheritDoc
      *
@@ -97,8 +108,7 @@ class Attribute extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
-        // disable isMultilang for not multilingual attribute types
-        if (!in_array($entity->get('type'), \Pim\Module::$multiLangTypes)) {
+        if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
             $entity->set('isMultilang', false);
         }
 

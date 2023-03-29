@@ -303,7 +303,6 @@ class Product extends AbstractRepository
             $pav = $this->getEntityManager()->getEntity('ProductAttributeValue');
             $pav->set('productId', $product->get('id'));
             $pav->set('attributeId', $pfa->get('attributeId'));
-            $pav->set('isRequired', $pfa->get('isRequired'));
             $pav->set('scope', $pfa->get('scope'));
             $pav->set('channelId', $pfa->get('channelId'));
 
@@ -594,7 +593,7 @@ class Product extends AbstractRepository
 
         foreach ($pfas as $pfa) {
             foreach ($pavs as $pav) {
-                if ($pav->get('attributeId') === $pfa->get('attributeId') && $pav->get('scope') === $pfa->get('scope') && $pav->get('isRequired') === $pfa->get('isRequired')) {
+                if ($pav->get('attributeId') === $pfa->get('attributeId') && $pav->get('scope') === $pfa->get('scope')) {
                     if ($pfa->get('scope') === 'Channel' && $pav->get('channelId') !== $pfa->get('channelId')) {
                         continue 1;
                     }

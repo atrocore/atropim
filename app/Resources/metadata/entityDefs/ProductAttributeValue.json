@@ -42,7 +42,12 @@
     },
     "isRequired": {
       "type": "bool",
-      "default": false
+      "notStorable": true,
+      "readOnly": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "isPavRelationInherited": {
       "type": "bool",
@@ -240,18 +245,10 @@
     },
     "maxLength": {
       "type": "int",
-      "view": "pim:views/fields/max-length"
-    },
-    "maxLengthCounter": {
-      "type": "int",
       "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
+      "readOnly": true,
       "filterDisabled": true,
-      "exportDisabled": true,
+      "massUpdateDisabled": true,
       "importDisabled": true,
       "emHidden": true
     },

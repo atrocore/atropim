@@ -44,7 +44,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 {
     protected $mandatorySelectAttributeList
         = [
-            'maxLength',
             'language',
             'productId',
             'productName',
@@ -254,10 +253,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        if (!empty($entity->get('maxLength'))) {
-            $entity->set('maxLengthCounter', $entity->get('maxLength'));
-        }
-
         if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
             $entity->clear('typeValueIds');
             $entity->clear('typeValue');
@@ -312,7 +307,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      *
-     * @param array $parentVariantPavs
+     * @param array  $parentVariantPavs
      *
      * @return void
      */
@@ -580,9 +575,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                         $inputData->$key = $data->$key;
                     }
                 }
-            }
-            if (Entity::areValuesEqual(Entity::BOOL, $pav1->get('isRequired'), $pav2->get('isRequired')) && property_exists($data, 'isRequired')) {
-                $inputData->isRequired = $data->isRequired;
             }
             if (property_exists($data, 'isVariantSpecificAttribute')) {
                 $inputData->isVariantSpecificAttribute = $data->isVariantSpecificAttribute;
@@ -954,9 +946,18 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelName', 'Global');
         }
 
+        $productFamilyAttribute = $this->getRepository()->findProductFamilyAttribute($entity);
+
+        $entity->set('isRequired', $attribute->get('isRequired'));
+        $entity->set('maxLength', $attribute->get('maxLength'));
+        if (!empty($productFamilyAttribute)) {
+            $entity->set('isRequired', $productFamilyAttribute->get('isRequired'));
+            $entity->set('maxLength', $productFamilyAttribute->get('maxLength'));
+        }
+
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
         if (!$entity->get('isPavRelationInherited')) {
-            $entity->set('isPavRelationInherited', $this->getRepository()->isInheritedFromPf($entity));
+            $entity->set('isPavRelationInherited', !empty($productFamilyAttribute));
         }
 
         if ($entity->get('isPavRelationInherited')) {
@@ -1029,39 +1030,31 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
     }
 
-    /**
-     * @param $data
-     *
-     * @return void
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function prepareDefaultValues($data): void
+    protected function prepareDefaultValues(\stdClass $data): void
     {
-        if (!isset($data->isRequired) && !isset($data->scope)) {
+        if (property_exists($data, 'attributeId') && !empty($data->attributeId)) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $data->attributeId);
-            if ($attribute) {
-                $data->isRequired = $attribute->get('defaultIsRequired');
+        }
 
-                $defaultScope = $attribute->get('defaultScope');
-                if ($defaultScope === 'Global') {
-                    $data->scope = $defaultScope;
+        if (empty($attribute)) {
+            return;
+        }
+
+        if (!property_exists($data, 'scope')) {
+            $data->scope = $attribute->get('defaultScope');
+            if ($data->scope === 'Channel') {
+                $productChannels = $this
+                    ->getEntityManager()
+                    ->getRepository('ProductChannel')
+                    ->select(['channelId'])
+                    ->where(['productId' => $data->productId])
+                    ->find()
+                    ->toArray();
+
+                if (in_array($attribute->get('defaultChannelId'), array_column($productChannels, 'channelId'))) {
+                    $data->channelId = $attribute->get('defaultChannelId');
                 } else {
-                    $productChannels = $this
-                        ->getEntityManager()
-                        ->getRepository('ProductChannel')
-                        ->select(['channelId'])
-                        ->where(['productId' => $data->productId])
-                        ->find()
-                        ->toArray();
-
-                    if (in_array($attribute->get('defaultChannelId'), array_column($productChannels, 'channelId'))) {
-                        $data->scope = $defaultScope;
-                        $data->channelId = $attribute->get('defaultChannelId');
-                        $data->channelName = $attribute->get('defaultChannelName');
-                    } else {
-                        $data->scope = 'Global';
-                    }
+                    $data->scope = 'Global';
                 }
             }
         }

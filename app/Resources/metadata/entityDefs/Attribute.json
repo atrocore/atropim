@@ -157,14 +157,6 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "isRequired": {
-      "notStorable": true,
-      "type": "bool",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true
-    },
     "productFamilyAttributes": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
@@ -239,7 +231,7 @@
     "defaultChannel": {
       "type": "link"
     },
-    "defaultIsRequired": {
+    "isRequired": {
       "type": "bool",
       "default": false
     },

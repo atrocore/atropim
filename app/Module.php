@@ -33,23 +33,9 @@ namespace Pim;
 
 use Espo\Core\Utils\Json;
 use Treo\Core\ModuleManager\AbstractModule;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Util;
 
 class Module extends AbstractModule
 {
-    /**
-     * @var array
-     */
-    public static $multiLangTypes
-        = [
-            'bool',
-            'varchar',
-            'text',
-            'wysiwyg',
-            'asset'
-        ];
-
     /**
      * @inheritdoc
      */
@@ -65,138 +51,15 @@ class Module extends AbstractModule
     {
         parent::loadMetadata($data);
 
-        // prepare result
-        $result = Json::decode(Json::encode($data), true);
+        $data = Json::decode(Json::encode($data), true);
 
-        // prepare attribute scope
-        $result = $this->attributeScope($result);
-
-        // add images
         if ($this->container->get('metadata')->isModuleInstalled('Dam')) {
-            $result = $this->addImage($result);
+            $data['dashlets'] = array_merge_recursive($data['dashlets'], $data['dashletsForDam']);
+            $data['clientDefs'] = array_merge_recursive($data['clientDefs'], $data['clientDefsForDam']);
+            $data['entityDefs'] = array_merge_recursive($data['entityDefs'], $data['entityDefsForDam']);
+            $data['scopes'] = array_merge_recursive($data['scopes'], $data['scopesForDam']);
         }
 
-        // set data
-        $data = Json::decode(Json::encode($result));
-    }
-
-    /**
-     * @param array $result
-     *
-     * @return array
-     */
-    protected function attributeScope(array $result): array
-    {
-        /**
-         * Attribute
-         */
-        $result['clientDefs']['Attribute']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'] = [
-            [
-                'type'      => 'in',
-                'attribute' => 'type',
-                'value'     => self::$multiLangTypes
-            ]
-        ];
-
-        $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue']['visible']['conditionGroup'] = [
-            [
-                'type'      => 'in',
-                'attribute' => 'type',
-                'value'     => [
-                    'enum',
-                    'multiEnum'
-                ]
-            ]
-        ];
-
-        /**
-         * ProductAttributeValue
-         */
-        $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value']['required']['conditionGroup'] = [
-            [
-                'type'      => 'isTrue',
-                'attribute' => 'isRequired'
-            ]
-        ];
-
-        foreach ($this->getInputLanguageList() as $locale => $key) {
-            /**
-             * Attribute
-             */
-            $result['clientDefs']['Attribute']['dynamicLogic']['fields']['typeValue' . $key]['visible']['conditionGroup'] = [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'type',
-                    'value'     => ['enum', 'multiEnum']
-                ],
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isMultilang'
-                ]
-            ];
-
-            /**
-             * ProductAttributeValue
-             */
-            $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value' . $key]['visible']['conditionGroup'] = [
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'attributeIsMultilang'
-                ]
-            ];
-            $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value' . $key]['readOnly']['conditionGroup'] = [
-                [
-                    'type'      => 'in',
-                    'attribute' => 'attributeType',
-                    'value'     => ['enum', 'multiEnum']
-                ]
-            ];
-            $result['clientDefs']['ProductAttributeValue']['dynamicLogic']['fields']['value' . $key]['required']['conditionGroup'] = [
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'isRequired'
-                ],
-                [
-                    'type'      => 'isTrue',
-                    'attribute' => 'attributeIsMultilang'
-                ]
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getInputLanguageList(): array
-    {
-        $result = [];
-
-        /** @var Config $config */
-        $config = $this->container->get('config');
-
-        if ($config->get('isMultilangActive', false)) {
-            foreach ($config->get('inputLanguageList', []) as $locale) {
-                $result[$locale] = ucfirst(Util::toCamelCase(strtolower($locale)));
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function addImage(array $data): array
-    {
-        $data['dashlets'] = array_merge_recursive($data['dashlets'], $data['dashletsForDam']);
-        $data['clientDefs'] = array_merge_recursive($data['clientDefs'], $data['clientDefsForDam']);
-        $data['entityDefs'] = array_merge_recursive($data['entityDefs'], $data['entityDefsForDam']);
-        $data['scopes'] = array_merge_recursive($data['scopes'], $data['scopesForDam']);
-
-        return $data;
+        $data = Json::decode(Json::encode($data));
     }
 }

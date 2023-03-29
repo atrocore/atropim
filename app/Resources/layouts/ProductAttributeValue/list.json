@@ -8,7 +8,8 @@
     "notSortable": true
   },
   {
-    "name": "isRequired"
+    "name": "isRequired",
+    "notSortable": true
   },
   {
     "name": "value"

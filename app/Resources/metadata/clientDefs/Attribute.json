@@ -62,6 +62,37 @@
   },
   "dynamicLogic": {
     "fields": {
+      "typeValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "enum",
+                "multiEnum"
+              ]
+            }
+          ]
+        }
+      },
+      "isMultilang": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "bool",
+                "varchar",
+                "text",
+                "wysiwyg",
+                "asset"
+              ]
+            }
+          ]
+        }
+      },
       "sortOrder": {
         "visible": {
           "conditionGroup": [

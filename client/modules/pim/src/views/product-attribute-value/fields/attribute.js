@@ -53,7 +53,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
         createDisabled: true,
 
         setup() {
-            this.mandatorySelectAttributeList = ['type', 'typeValue', 'isMultilang', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'defaultIsRequired'];
+            this.mandatorySelectAttributeList = ['type', 'typeValue', 'isMultilang', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
             let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
             if (this.getConfig().get('isMultilangActive') && inputLanguageList.length) {
                 this.typeValueFields = inputLanguageList.map(lang => {
@@ -107,7 +107,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
                 defaultScope: model.get('defaultScope'),
                 defaultChannelId: model.get('defaultChannelId'),
                 defaultChannelName: model.get('defaultChannelName'),
-                defaultIsRequired: model.get('defaultIsRequired')
+                isRequired: model.get('isRequired')
             };
             (this.typeValueFields || []).forEach(item => attributes[item] = model.get(item));
             this.model.set(attributes);
