@@ -44,6 +44,8 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $channelLanguages = [];
 
+    protected array $products = [];
+
     protected array $productPavs = [];
 
     private array $pavsAttributes = [];
@@ -290,32 +292,29 @@ class ProductAttributeValue extends AbstractRepository
         return $this->productPavs[$entity->get('productId')];
     }
 
-    public function isInheritedFromPf(Entity $pav): bool
+    public function findProductFamilyAttribute(Entity $pav): ?Entity
     {
-        $product = $this->getEntityManager()->getRepository('Product')->get($pav->get('productId'));
+        $product = $this->getProductById((string)$pav->get('productId'));
         if (empty($product) || empty($product->get('productFamilyId'))) {
-            return false;
+            return null;
         }
 
         $where = [
             'productFamilyId' => $product->get('productFamilyId'),
             'attributeId'     => $pav->get('attributeId'),
             'scope'           => $pav->get('scope'),
-            'isRequired'      => $pav->get('isRequired'),
-            'maxLength'       => $pav->get('maxLength'),
+            'language'        => $pav->get('language'),
         ];
 
         if ($pav->get('scope') === 'Channel') {
             $where['channelId'] = $pav->get('channelId');
         }
 
-        $pfa = $this->getEntityManager()
+        return $this
+            ->getEntityManager()
             ->getRepository('ProductFamilyAttribute')
-            ->select(['id'])
             ->where($where)
             ->findOne();
-
-        return !empty($pfa);
     }
 
     public function convertValue(Entity $entity): void
@@ -476,10 +475,6 @@ class ProductAttributeValue extends AbstractRepository
 
         try {
             $result = parent::save($entity, $options);
-            if ($result) {
-                $this->updateIsRequiredForLanguages($entity);
-            }
-
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
@@ -972,8 +967,16 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
-    protected function updateIsRequiredForLanguages(Entity $entity): void
+    public function getProductById(string $productId): ?Entity
     {
+        if (empty($productId)) {
+            return null;
+        }
 
+        if (!array_key_exists($productId, $this->products)) {
+            $this->products[$productId] = $this->getEntityManager()->getRepository('Product')->get($productId);
+        }
+
+        return $this->products[$productId];
     }
 }

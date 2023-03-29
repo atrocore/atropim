@@ -44,7 +44,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 {
     protected $mandatorySelectAttributeList
         = [
-            'maxLength',
             'language',
             'productId',
             'productName',
@@ -312,7 +311,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      *
-     * @param array $parentVariantPavs
+     * @param array  $parentVariantPavs
      *
      * @return void
      */
@@ -954,9 +953,21 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelName', 'Global');
         }
 
+        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])) {
+            $entity->set('maxLength', $attribute->get('maxLength'));
+
+            $productFamilyAttribute = $this->getRepository()->findProductFamilyAttribute($entity);
+            if (!empty($productFamilyAttribute)) {
+                $entity->set('maxLength', $productFamilyAttribute->get('maxLength'));
+            }
+        }
+
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
         if (!$entity->get('isPavRelationInherited')) {
-            $entity->set('isPavRelationInherited', $this->getRepository()->isInheritedFromPf($entity));
+            if (!isset($productFamilyAttribute)) {
+                $productFamilyAttribute = $this->getRepository()->findProductFamilyAttribute($entity);
+            }
+            $entity->set('isPavRelationInherited', !empty($productFamilyAttribute));
         }
 
         if ($entity->get('isPavRelationInherited')) {

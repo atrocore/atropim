@@ -240,7 +240,12 @@
     },
     "maxLength": {
       "type": "int",
-      "view": "pim:views/fields/max-length"
+      "notStorable": true,
+      "readOnly": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "maxLengthCounter": {
       "type": "int",
