@@ -601,6 +601,15 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->setInputValue($entity, $data);
     }
 
+    protected function hasCompleteness(Entity $entity): bool
+    {
+        if (!$this->getMetadata()->isModuleInstalled('Completeness')) {
+            return false;
+        }
+
+        return !empty($this->getMetadata()->get(['scopes', 'Product', 'hasCompleteness']));
+    }
+
     /**
      * @param Entity $entity
      *
@@ -610,6 +619,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     protected function validateRequired(Entity $entity): void
     {
+        if ($this->hasCompleteness($entity)) {
+            return;
+        }
+
         if ($entity->get('isRequired') && ($entity->get('value') === null || $entity->get('value') === '')) {
             $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
             $message = $this->getInjection('language')->translate('fieldIsRequired', 'exceptions', $entity->getEntityType());
