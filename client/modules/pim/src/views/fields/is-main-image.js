@@ -32,7 +32,7 @@ Espo.define('pim:views/fields/is-main-image', 'views/fields/bool',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (!this.defs.isMassUpdate && this.mode === 'edit') {
                 if (!this.isImage()) {
                     this.hide();
                 } else {
