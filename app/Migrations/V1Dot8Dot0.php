@@ -50,10 +50,41 @@ class V1Dot8Dot0 extends Base
         $this->getPDO()->exec("DROP INDEX IDX_PRODUCT_FAMILY_ID ON product");
         $this->getPDO()->exec("ALTER TABLE product CHANGE product_family_id classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
         $this->getPDO()->exec("CREATE INDEX IDX_CLASSIFICATION_ID ON product (classification_id)");
+
+        $this->updateLayout('Product', 'detail', 'productFamily', 'classification');
+        $this->updateConfig();
     }
 
     public function down(): void
     {
         throw new \Exception('Downgrade is prohibited.');
+    }
+
+    protected function updateLayout(string $entityName, string $type, string $was, string $became): void
+    {
+        $path = "custom/Espo/Custom/Resources/layouts/$entityName/$type.json";
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $contents = file_get_contents($path);
+        $contents = str_replace('"' . $was . '"', '"' . $became . '"', $contents);
+
+        file_put_contents($path, $contents);
+    }
+
+    protected function updateConfig(): void
+    {
+        $path = "data/config.php";
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $contents = file_get_contents($path);
+        $contents = str_replace("'ProductFamily'", "'Classification'", $contents);
+        $contents = str_replace("'ProductFamilyAttribute'", "'ClassificationAttribute'", $contents);
+        $contents = str_replace("'behaviorOnProductFamilyChange'", "'behaviorOnClassificationChange'", $contents);
+
+        file_put_contents($path, $contents);
     }
 }
