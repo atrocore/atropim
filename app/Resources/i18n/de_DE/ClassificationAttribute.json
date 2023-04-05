@@ -2,7 +2,7 @@
   "fields": {
     "isMultiChannel": "ist Multichannel",
     "isRequired": "erforderlich",
-    "classification": "Klassifikation",
+    "classification": "Klassifizierung",
     "attribute": "Attribute",
     "channel": "Kanal",
     "scope": "Scope",
@@ -11,12 +11,12 @@
     "maxLength": "Maximallänge"
   },
   "links": {
-    "classification": "Klassifikation",
+    "classification": "Klassifizierung",
     "attribute": "Attribute",
     "channel": "Kanal"
   },
   "labels": {
-    "Create ClassificationAttribute": "Attribut der Klassifikation erstellen",
+    "Create ClassificationAttribute": "Attribut der Klassifizierung erstellen",
     "unlinkRelatedAttribute": "Hier löschen und für Produkte behalten",
     "cascadeUnlinkRelatedAttribute": "Hier und von Produkten löschen"
   },

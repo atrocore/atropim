@@ -2,19 +2,19 @@
   "fields": {
     "description": "Beschreibung",
     "isActive": "Aktiv",
-    "classifications": "Klassifikationen",
-    "classificationAttributes": "Klassifikationattribute",
+    "classifications": "Klassifizierungen",
+    "classificationAttributes": "Klassifizierungattribute",
     "products": "Produkte",
     "code": "Code"
   },
   "links": {
-    "classifications": "Klassifikationen",
-    "classificationAttributes": "Klassifikationattribute",
+    "classifications": "Klassifizierungen",
+    "classificationAttributes": "Klassifizierungattribute",
     "products": "Produkte",
     "attributes": "Attribute"
   },
   "labels": {
     "selectAttributeGroup": "Attributgruppe auswählen",
-    "Create Classification": "Klassifikation erstellen"
+    "Create Classification": "Klassifizierung erstellen"
   }
 }
