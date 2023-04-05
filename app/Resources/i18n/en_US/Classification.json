@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "products": "Products",
+    "description": "Description",
+    "code": "Code",
+    "isActive": "Active",
+    "classifications": "Classifications",
+    "classificationAttributes": "Classification Attributes"
+  },
+  "links": {
+    "products": "Products",
+    "classifications": "Classifications",
+    "classificationAttributes": "Classification Attributes"
+  },
+  "labels": {
+    "Create Classification": "Create Classification",
+    "selectAttributeGroup": "Select Attribute Group"
+  }
+}

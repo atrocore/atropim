@@ -1,6 +1,6 @@
 {
   "fields": {
-    "productFamily": "Product Family",
+    "classification": "Classification",
     "attribute": "Attribute",
     "isRequired": "Required",
     "channel": "Channel",
@@ -10,12 +10,12 @@
     "maxLength": "Max Length"
   },
   "links": {
-    "productFamily": "Product Family",
+    "classification": "Classification",
     "attribute": "Attribute",
     "channel": "Channel"
   },
   "labels": {
-    "Create ProductFamilyAttribute": "Create Product Family Attribute",
+    "Create ClassificationAttribute": "Create Classification Attribute",
     "unlinkRelatedAttribute": "Delete here and retain for products",
     "cascadeUnlinkRelatedAttribute": "Delete here and from products"
   },
