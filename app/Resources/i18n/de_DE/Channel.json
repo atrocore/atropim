@@ -7,7 +7,7 @@
     "assetRelations": "Asset Relationen",
     "productAttributeValues": "Produktattrubitwerte",
     "productCategories": "Produktkategorien",
-    "productFamilyAttributes": "Produktfamilieattribute",
+    "classificationAttributes": "Klassifikationattribute",
     "categories": "Kategorien",
     "code": "Code",
     "productChannels": "Kanalprodukte",
@@ -19,7 +19,7 @@
     "assetRelations": "Asset Relationen",
     "productAttributeValues": "Produktattributwerte",
     "productCategories": "Produktkategorien",
-    "productFamilyAttributes": "Produktfamilieattribute",
+    "classificationAttributes": "Klassifikationattribute",
     "productChannels": "Kanalprodukte",
     "products": "Kanalprodukte"
   },
