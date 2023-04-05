@@ -26,10 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family/record/list', 'pim:views/record/list',
+Espo.define('pim:views/classification/record/row-actions/classification-attribute', 'views/record/row-actions/relationship-view-and-edit',
     Dep => Dep.extend({
 
-        rowActionsView: 'pim:views/product-family/record/row-actions/optioned-remove',
+        getActionList: function () {
+            let list = Dep.prototype.getActionList.call(this);
+
+            if (this.options.acl.delete) {
+                list.push({
+                    action: 'unlinkRelatedAttribute',
+                    label: this.translate('unlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
+                    data: {
+                        id: this.model.id
+                    }
+                });
+
+                list.push({
+                    action: 'removeRelatedAttribute',
+                    label: this.translate('cascadeUnlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+
+            return list;
+        },
 
     })
 );
+
+

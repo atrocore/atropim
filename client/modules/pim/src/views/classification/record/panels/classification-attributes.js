@@ -26,10 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family/record/panels/product-family-attributes', ['views/record/panels/relationship', 'views/record/panels/bottom', 'search-manager'],
+Espo.define('pim:views/classification/record/panels/classification-attributes', ['views/record/panels/relationship', 'views/record/panels/bottom', 'search-manager'],
     (Dep, BottomPanel, SearchManager) => Dep.extend({
 
-        template: 'pim:product-family/record/panels/product-family-attributes',
+        template: 'pim:classification/record/panels/classification-attributes',
 
         groupKey: 'attributeGroupId',
 

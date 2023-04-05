@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family/record/panels/products', 'views/record/panels/relationship',
+Espo.define('pim:views/classification/record/panels/products', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
         boolFilterData: {
