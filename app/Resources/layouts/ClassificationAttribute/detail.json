@@ -3,7 +3,7 @@
     "rows": [
       [
         {
-          "name": "productFamily"
+          "name": "classification"
         },
         false
       ],

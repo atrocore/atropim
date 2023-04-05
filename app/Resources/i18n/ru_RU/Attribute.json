@@ -35,12 +35,10 @@
     "attributeGroup": "Группа атрибутов",
     "attributeTab": "Вкладка атрибутов",
     "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов",
-    "productFamilies": "Продуктовые семьи"
+    "productAttributeValues": "Значения атрибутов"
   },
   "labels": {
     "Create Attribute": "Создать атрибут",
-    "productFamily": "Продуктовая семья",
     "addNewValue": "Добавить новое значение"
   },
   "messages": {
@@ -62,7 +60,6 @@
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
-    "youCanNotUnlinkProductFamilyAttribute": "Невозможно отменить связь атрибута продуктовой семьи.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
     "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
     "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи.",

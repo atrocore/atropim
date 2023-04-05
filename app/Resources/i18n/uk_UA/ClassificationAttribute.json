@@ -1,6 +1,6 @@
 {
   "fields": {
-    "productFamily": "Продуктова сім'я",
+    "classification": "Класифікація",
     "attribute": "Атрибут",
     "isRequired": "Обов'язково",
     "channel": "Канал",
@@ -10,12 +10,12 @@
     "maxLength": "Максимальна довжина"
   },
   "links": {
-    "productFamily": "Продуктова сім'я",
+    "classification": "Класифікація",
     "attribute": "Атрибут",
     "channel": "Канал"
   },
   "labels": {
-    "Create ProductFamilyAttribute": "Створити атрибут продукт. сім'ї",
+    "Create ClassificationAttribute": "Створити атрибут класифікації",
     "unlinkRelatedAttribute": "Видалити тут і зберегти для продуктів",
     "cascadeUnlinkRelatedAttribute": "Видалити тут і з продуктів"
   },
