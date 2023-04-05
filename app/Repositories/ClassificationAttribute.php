@@ -33,14 +33,14 @@ namespace Pim\Repositories;
 
 use Espo\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
-use Pim\Core\Exceptions\ProductFamilyAttributeAlreadyExists;
+use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
 
-class ProductFamilyAttribute extends Relationship
+class ClassificationAttribute extends Relationship
 {
     public function getInheritedPavsIds(string $id): array
     {
         $pfa = $this->get($id);
-        if (empty($pfa) || empty($pf = $this->getEntityManager()->getRepository('ProductFamily')->get($pfa->get('productFamilyId')))) {
+        if (empty($pfa) || empty($pf = $this->getEntityManager()->getRepository('Classification')->get($pfa->get('сlassificationId')))) {
             return [];
         }
 
@@ -98,7 +98,7 @@ class ProductFamilyAttribute extends Relationship
                     $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
                 }
 
-                throw new ProductFamilyAttributeAlreadyExists(
+                throw new ClassificationAttributeAlreadyExists(
                     sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, "'$channelName'")
                 );
             }
@@ -114,7 +114,7 @@ class ProductFamilyAttribute extends Relationship
         return $this
             ->where([
                 'id!='            => $entity->get('id'),
-                'productFamilyId' => $entity->get('productFamilyId'),
+                'classificationId' => $entity->get('classificationId'),
                 'attributeId'     => $entity->get('attributeId'),
                 'scope'           => $entity->get('scope'),
                 'channelId'       => $entity->get('channelId'),
@@ -142,19 +142,14 @@ class ProductFamilyAttribute extends Relationship
         return $result;
     }
 
-    /**
-     * @param string $productFamilyId
-     *
-     * @return array
-     */
-    public function getAvailableChannelsForPavs(string $productFamilyId): array
+    public function getAvailableChannelsForPavs(string $classificationId): array
     {
-        $productFamilyId = $this->getPDO()->quote($productFamilyId);
+        $classificationId = $this->getPDO()->quote($classificationId);
 
         $sql = "SELECT p.id, pc.channel_id 
                 FROM product p 
                     LEFT JOIN product_channel pc on p.id = pc.product_id AND pc.deleted = 0 
-                WHERE p.product_family_id = $productFamilyId AND p.deleted = 0";
+                WHERE p.classification_id = $classificationId AND p.deleted = 0";
 
         return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_GROUP | \PDO::FETCH_COLUMN);
     }
@@ -174,7 +169,7 @@ class ProductFamilyAttribute extends Relationship
      *
      * @return string
      */
-    protected function translate(string $key, string $label, string $scope = 'ProductFamilyAttribute'): string
+    protected function translate(string $key, string $label, string $scope = 'ClassificationAttribute'): string
     {
         return $this->getInjection('language')->translate($key, $label, $scope);
     }

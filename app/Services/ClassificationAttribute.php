@@ -36,10 +36,7 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-/**
- * Class ProductFamilyAttribute
- */
-class ProductFamilyAttribute extends AbstractProductAttributeService
+class ClassificationAttribute extends AbstractProductAttributeService
 {
     /**
      * @var array
@@ -133,7 +130,7 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
         foreach ($children as $child) {
             $aData = new \stdClass();
             $aData->attributeId = $child->get('id');
-            $aData->productFamilyId = $attachment->productFamilyId;
+            $aData->classificationId = $attachment->classificationId;
             if (property_exists($attachment, 'ownerUserId')) {
                 $aData->ownerUserId = $attachment->ownerUserId;
             }
@@ -172,18 +169,18 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data): void
     {
-        if (!property_exists($data, 'productFamilyId')) {
+        if (!property_exists($data, 'classificationId')) {
             return;
         }
 
-        $products = $this->getRepository()->getAvailableChannelsForPavs($data->productFamilyId);
+        $products = $this->getRepository()->getAvailableChannelsForPavs($data->classificationId);
 
         foreach ($products as $id => $channels) {
             $inputData = clone $data;
 
             if ($data->scope === 'Global' || in_array($data->channelId, $channels)) {
                 $inputData->productId = $id;
-                unset($inputData->productFamilyId);
+                unset($inputData->classificationId);
 
                 $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
             }
@@ -297,14 +294,7 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
         parent::prepareCollectionForOutput($collection);
     }
 
-    /**
-     * @param string $attributeGroupId
-     *
-     * @return bool
-     *
-     * @throws \Throwable
-     */
-    public function unlinkAttributeGroupHierarchy(string $attributeGroupId, string $productFamilyId): bool
+    public function unlinkAttributeGroupHierarchy(string $attributeGroupId, string $classificationId): bool
     {
         $attributes = $this
             ->getRepository()
@@ -312,7 +302,7 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
             ->join('attribute')
             ->where([
                 'attribute.attributeGroupId' => $attributeGroupId,
-                'productFamilyId'            => $productFamilyId
+                'classificationId'           => $classificationId
             ])
             ->find()
             ->toArray();
@@ -322,7 +312,7 @@ class ProductFamilyAttribute extends AbstractProductAttributeService
                 try {
                     $this->deleteEntity($attribute['id']);
                 } catch (\Throwable $e) {
-                    $GLOBALS['log']->error('AttributeGroup hierarchical removing from ProductFamily failed: ' . $e->getMessage());
+                    $GLOBALS['log']->error('AttributeGroup hierarchical removing from Classification failed: ' . $e->getMessage());
                 }
             }
         }

@@ -38,7 +38,7 @@ class ProductFamily extends AbstractSelectManager
 {
     protected function boolFilterNotParents(&$result): void
     {
-        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+        \Pim\Repositories\Classification::onlyForAdvancedClassification();
 
         $repository = $this->getEntityManager()->getRepository('ProductFamily');
         $result['whereClause'][] = [
@@ -48,7 +48,7 @@ class ProductFamily extends AbstractSelectManager
 
     protected function boolFilterNotChildren(&$result): void
     {
-        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+        \Pim\Repositories\Classification::onlyForAdvancedClassification();
 
         $repository = $this->getEntityManager()->getRepository('ProductFamily');
         $result['whereClause'][] = [

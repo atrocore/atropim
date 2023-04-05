@@ -29,40 +29,14 @@
 
 declare(strict_types=1);
 
-namespace Pim\Controllers;
+namespace Pim\Entities;
 
-use Espo\Core\Templates\Controllers\Relationship;
-use Slim\Http\Request;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Templates\Entities\Relationship;
 
-/**
- * Class ProductFamilyAttribute
- */
-class ProductFamilyAttribute extends Relationship
+class ClassificationAttribute extends Relationship
 {
     /**
-     * @param array $params
-     * @param \stdClass $data
-     * @param Request $request
-     *
-     * @return bool
-     *
-     * @throws BadRequest
-     * @throws Forbidden
+     * @var string
      */
-    public function actionUnlinkAttributeGroupHierarchy(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isDelete()) {
-            throw new BadRequest();
-        }
-        if (!property_exists($data, 'attributeGroupId') || !property_exists($data, 'productFamilyId')) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check('ProductFamilyAttribute', 'edit')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->productFamilyId);
-    }
+    protected $entityType = "ClassificationAttribute";
 }

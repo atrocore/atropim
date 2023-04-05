@@ -29,12 +29,8 @@
 
 declare(strict_types=1);
 
-namespace Pim\Core\Exceptions;
+namespace Pim\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-
-class ProductFamilyAttributeAlreadyExists extends BadRequest
+class Classification extends AbstractController
 {
 }
-
-

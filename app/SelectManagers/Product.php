@@ -545,7 +545,7 @@ class Product extends AbstractSelectManager
 
     protected function boolFilterLinkedWithProductFamily(array &$result)
     {
-        \Pim\Repositories\ProductFamily::onlyForAdvancedClassification();
+        \Pim\Repositories\Classification::onlyForAdvancedClassification();
 
         if (empty($id = $this->getSelectCondition('linkedWithProductFamily'))) {
             return;

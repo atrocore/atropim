@@ -36,15 +36,12 @@ use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-/**
- * Class ProductFamily
- */
-class ProductFamily extends AbstractRepository
+class Classification extends AbstractRepository
 {
     /**
      * @var string
      */
-    protected $ownership = 'fromProductFamily';
+    protected $ownership = 'fromClassification';
 
     /**
      * @var string
@@ -121,32 +118,26 @@ class ProductFamily extends AbstractRepository
     {
         $data = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->select(['attributeId'])
-            ->where(['productFamilyId' => $id, 'scope' => $scope])
+            ->where(['classificationId' => $id, 'scope' => $scope])
             ->find()
             ->toArray();
 
         return array_column($data, 'attributeId');
     }
 
-    /**
-     * @param array       $productFamiliesIds
-     * @param string|null $attributeGroupId
-     *
-     * @return array
-     */
-    public function getLinkedWithAttributeGroup(array $productFamiliesIds, ?string $attributeGroupId): array
+    public function getLinkedWithAttributeGroup(array $classificationsIds, ?string $attributeGroupId): array
     {
         $data = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->select(['id'])
             ->distinct()
             ->join('attribute')
             ->where(
                 [
-                    'productFamilyId'            => $productFamiliesIds,
+                    'classificationId'            => $classificationsIds,
                     'attribute.attributeGroupId' => ($attributeGroupId != '') ? $attributeGroupId : null
                 ]
             )
@@ -171,7 +162,7 @@ class ProductFamily extends AbstractRepository
 
         $query = "SELECT x.position
                   FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                        FROM `product_family` t
+                        FROM `classification` t
                             JOIN (SELECT @rownum:=0) r
                         WHERE t.deleted=0 $additionalWhere
                         ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
@@ -191,7 +182,7 @@ class ProductFamily extends AbstractRepository
 
         $select = 'c.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(pf1.id) FROM product_family pf1 WHERE pf1.parent_id=c.id AND pf1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(pf1.id) FROM classification pf1 WHERE pf1.parent_id=c.id AND pf1.deleted=0) as childrenCount";
         }
 
         if (empty($parentId)) {
@@ -201,7 +192,7 @@ class ProductFamily extends AbstractRepository
         }
 
         $query = "SELECT {$select} 
-                  FROM `product_family` c
+                  FROM `classification` c
                   WHERE c.deleted=0 $additionalWhere
                   ORDER BY c.sort_order ASC, c.$sortBy {$sortOrder}, c.id ASC";
 
@@ -221,11 +212,11 @@ class ProductFamily extends AbstractRepository
 
         if (empty($parentId)) {
             $query = "SELECT COUNT(id) as count
-                      FROM `product_family` pf
+                      FROM `classification` pf
                       WHERE pf.parent_id IS NULL AND pf.deleted=0";
         } else {
             $query = "SELECT COUNT(id) as count
-                      FROM `product_family` pf
+                      FROM `classification` pf
                       WHERE pf.parent_id = '$parentId' AND pf.deleted=0";
         }
 
@@ -252,8 +243,8 @@ class ProductFamily extends AbstractRepository
     {
         parent::afterRemove($entity, $options);
 
-        $this->getPDO()->exec("UPDATE `product` SET product_family_id=NULL WHERE product_family_id='{$entity->get('id')}'");
-        $this->getPDO()->exec("DELETE FROM `product_family_attribute` WHERE product_family_id='{$entity->get('id')}'");
+        $this->getPDO()->exec("UPDATE `product` SET classification_id=NULL WHERE classification_id='{$entity->get('id')}'");
+        $this->getPDO()->exec("DELETE FROM `classification_attribute` WHERE classification_id='{$entity->get('id')}'");
     }
 
     protected function init()

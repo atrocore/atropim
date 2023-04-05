@@ -34,7 +34,7 @@ namespace Pim\Services;
 use Espo\ORM\Entity;
 use Espo\Services\Record;
 
-class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
+class Classification extends \Espo\Core\Templates\Services\Hierarchy
 {
     public function createEntity($attachment)
     {
@@ -70,7 +70,7 @@ class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
     {
         $result = Record::findLinkedEntities($id, $link, $params);
 
-        if ($link === 'productFamilyAttributes') {
+        if ($link === 'classificationAttributes') {
             if (isset($result['collection'])) {
                 $result['list'] = $result['collection']->toArray();
                 unset($result['collection']);
@@ -89,7 +89,7 @@ class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
 
     protected function getOneToManyRelationData(string $link): ?array
     {
-        if ($link === 'productFamilyAttributes') {
+        if ($link === 'classificationAttributes') {
             return null;
         }
 
@@ -100,16 +100,16 @@ class ProductFamily extends \Espo\Core\Templates\Services\Hierarchy
      * @param Entity $entity
      * @param Entity $duplicatingEntity
      */
-    protected function duplicateProductFamilyAttributes(Entity $entity, Entity $duplicatingEntity)
+    protected function duplicateClassificationAttributes(Entity $entity, Entity $duplicatingEntity)
     {
-        if (!empty($productFamilyAttributes = $duplicatingEntity->get('productFamilyAttributes')->toArray())) {
+        if (!empty($classificationAttributes = $duplicatingEntity->get('classificationAttributes')->toArray())) {
             // get service
-            $service = $this->getInjection('serviceFactory')->create('ProductFamilyAttribute');
+            $service = $this->getInjection('serviceFactory')->create('ClassificationAttribute');
 
-            foreach ($productFamilyAttributes as $productFamilyAttribute) {
+            foreach ($classificationAttributes as $classificationAttribute) {
                 // prepare data
-                $data = $service->getDuplicateAttributes($productFamilyAttribute['id']);
-                $data->productFamilyId = $entity->get('id');
+                $data = $service->getDuplicateAttributes($classificationAttribute['id']);
+                $data->classificationId = $entity->get('id');
 
                 // create entity
                 $service->createEntity($data);

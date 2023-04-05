@@ -29,8 +29,30 @@
 
 declare(strict_types=1);
 
-namespace Pim\Controllers;
+namespace Pim\Entities;
 
-class ProductFamily extends AbstractController
+use Espo\Core\Templates\Entities\Base;
+
+class Classification extends Base
 {
+    /**
+     * @var string
+     */
+    protected $entityType = 'Classification';
+
+    /**
+     * @return array
+     */
+    public function _getProductsIds(): array
+    {
+        $data = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->select(['id'])
+            ->where(['classificationId' => $this->get('id')])
+            ->find()
+            ->toArray();
+
+        return array_column($data, 'id');
+    }
 }

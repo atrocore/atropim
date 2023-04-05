@@ -29,33 +29,12 @@
 
 declare(strict_types=1);
 
-namespace Pim\Entities;
+namespace Pim\Core\Exceptions;
 
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Exceptions\BadRequest;
 
-/**
- * Class ProductFamily
- */
-class ProductFamily extends Base
+class ClassificationAttributeAlreadyExists extends BadRequest
 {
-    /**
-     * @var string
-     */
-    protected $entityType = 'ProductFamily';
-
-    /**
-     * @return array
-     */
-    public function _getProductsIds(): array
-    {
-        $data = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->select(['id'])
-            ->where(['productFamilyId' => $this->get('id')])
-            ->find()
-            ->toArray();
-
-        return array_column($data, 'id');
-    }
 }
+
+
