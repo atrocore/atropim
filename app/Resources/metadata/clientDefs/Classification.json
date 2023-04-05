@@ -3,26 +3,14 @@
   "iconClass": "fas fa-sitemap",
   "boolFilterList": [
     "onlyMy",
-    "notEntity",
-    "notParents",
-    "notChildren"
+    "notEntity"
   ],
   "hiddenBoolFilterList": [
-    "notEntity",
-    "notParents",
-    "notChildren"
+    "notEntity"
   ],
   "disabledMassActions": [
     "merge"
   ],
-  "views": {
-    "detail": "pim:views/detail",
-    "list": "pim:views/list"
-  },
-  "recordViews": {
-    "detail": "pim:views/classification/record/detail",
-    "list": "pim:views/classification/record/list"
-  },
   "relationshipPanels": {
     "classificationAttributes": {
       "selectAction": "selectRelatedEntity",
