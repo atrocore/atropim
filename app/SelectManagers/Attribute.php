@@ -78,20 +78,20 @@ class Attribute extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotLinkedWithProductFamilyAttribute(array &$result)
+    protected function boolFilterNotLinkedWithClassificationAttribute(array &$result)
     {
         // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithProductFamilyAttribute');
+        $data = (array)$this->getSelectCondition('notLinkedWithClassificationAttribute');
 
-        if (isset($data['productFamilyId']) && isset($data['channelsIds'])) {
+        if (isset($data['classificationId']) && isset($data['channelsIds'])) {
             $attributesIds = $this
                 ->getEntityManager()
-                ->getRepository('ProductFamilyAttribute')
+                ->getRepository('ClassificationAttribute')
                 ->select(['attributeId'])
                 ->where(
                     [
                         'channelId' => $data['channelsIds'],
-                        'productFamilyId' => $data['productFamilyId'],
+                        'classificationId' => $data['classificationId'],
                         'scope' => 'Channel',
                     ]
                 )

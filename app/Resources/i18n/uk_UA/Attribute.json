@@ -37,7 +37,7 @@
     "attributeTab": "Вкладка атрибутів",
     "products": "Продукти",
     "productAttributeValues": "Значення атрибутів",
-    "productFamilies": "Продуктові сім'ї"
+    "classifications": "Класифікації"
   },
   "labels": {
     "Create Attribute": "Створити атрибут",
@@ -66,7 +66,7 @@
     "youCanNotUnlinkClassificationAttribute": "Неможливо скасувати зв'язок атрибута класифікації.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
-    "attributeIsUsedInProductFamilies": "Атрибут уже використовується в продуктових сім'ях. Будь ласка, спочатку оновіть продуктові сім'ї.",
+    "attributeIsUsedInClassifications": "Атрибут уже використовується в класифікаціях. Будь ласка, спочатку оновіть класифікації.",
     "attributeNotHaveUniqueValue": "Атрибут не має унікального значення.",
     "someAttributeDontMathToPattern": "Деякі атрибути не відповідають шаблону."
   }

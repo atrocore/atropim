@@ -34,9 +34,9 @@ namespace Pim\SelectManagers;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
- * Class ProductFamilyAttribute
+ * Class ClassificationAttribute
  */
-class ProductFamilyAttribute extends AbstractSelectManager
+class ClassificationAttribute extends AbstractSelectManager
 {
     /**
      * @inheritdoc
@@ -52,7 +52,7 @@ class ProductFamilyAttribute extends AbstractSelectManager
 
         // add filtering by attributes types
         $selectParams['customWhere'] .= " 
-            AND product_family_attribute.attribute_id IN (SELECT id 
+            AND classification_attribute.attribute_id IN (SELECT id 
                                                             FROM attribute 
                                                             WHERE type IN ('{$types}') AND deleted=0)";
 
@@ -65,13 +65,13 @@ class ProductFamilyAttribute extends AbstractSelectManager
     {
         $data = (array)$this->getSelectCondition('linkedWithAttributeGroup');
 
-        if (isset($data['productFamilyId'])) {
+        if (isset($data['classificationId'])) {
             // prepare data
-            $ids = [$data['productFamilyId']];
+            $ids = [$data['classificationId']];
             $attributeGroupId = ($data['attributeGroupId'] != '') ? $data['attributeGroupId'] : null;
 
             $result['whereClause'][] = [
-                'id' => $this->getEntityManager()->getRepository('ProductFamily')->getLinkedWithAttributeGroup($ids, $attributeGroupId)
+                'id' => $this->getEntityManager()->getRepository('Classification')->getLinkedWithAttributeGroup($ids, $attributeGroupId)
             ];
         }
     }

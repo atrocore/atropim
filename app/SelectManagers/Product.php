@@ -392,18 +392,18 @@ class Product extends AbstractSelectManager
     }
 
     /**
-     * NotLinkedWithProductFamily filter
+     * NotLinkedWithClassification filter
      *
      * @param array $result
      */
-    protected function boolFilterNotLinkedWithProductFamily(array &$result)
+    protected function boolFilterNotLinkedWithClassification(array &$result)
     {
         // prepare data
-        $productFamilyId = (string)$this->getSelectCondition('notLinkedWithProductFamily');
+        $classificationId = (string)$this->getSelectCondition('notLinkedWithClassification');
 
-        if (!empty($productFamilyId)) {
+        if (!empty($classificationId)) {
             // get Products linked with brand
-            $products = $this->getProductFamilyProducts($productFamilyId);
+            $products = $this->getClassificationProducts($classificationId);
             foreach ($products as $row) {
                 $result['whereClause'][] = [
                     'id!=' => $row['productId']
@@ -413,13 +413,13 @@ class Product extends AbstractSelectManager
     }
 
     /**
-     * Get productIds related with productFamily
+     * Get productIds related with classification
      *
-     * @param string $productFamilyId
+     * @param string $classificationId
      *
      * @return array
      */
-    protected function getProductFamilyProducts(string $productFamilyId): array
+    protected function getClassificationProducts(string $classificationId): array
     {
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -427,10 +427,10 @@ class Product extends AbstractSelectManager
             = 'SELECT id AS productId
                 FROM product
                 WHERE deleted = 0
-                      AND product_family_id = :productFamilyId';
+                      AND classification_id = :classificationId';
 
         $sth = $pdo->prepare($sql);
-        $sth->execute(['productFamilyId' => $productFamilyId]);
+        $sth->execute(['classificationId' => $classificationId]);
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -543,15 +543,15 @@ class Product extends AbstractSelectManager
         $result['customWhere'] .= " AND product.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=0 AND category_id IN ('$ids'))";
     }
 
-    protected function boolFilterLinkedWithProductFamily(array &$result)
+    protected function boolFilterLinkedWithClassification(array &$result)
     {
         \Pim\Repositories\Classification::onlyForAdvancedClassification();
 
-        if (empty($id = $this->getSelectCondition('linkedWithProductFamily'))) {
+        if (empty($id = $this->getSelectCondition('linkedWithClassification'))) {
             return;
         }
 
-        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        $repository = $this->getEntityManager()->getRepository('Classification');
         if (empty($pf = $repository->get($id))) {
             throw new BadRequest('No such Product Family');
         }
@@ -560,7 +560,7 @@ class Product extends AbstractSelectManager
         $ids[] = $pf->get('id');
 
         $result['whereClause'][] = [
-            'productFamilyId' => $ids
+            'classificationId' => $ids
         ];
     }
 

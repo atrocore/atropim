@@ -32,15 +32,15 @@ namespace Pim\SelectManagers;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
- * Class of ProductFamily
+ * Class of Classification
  */
-class ProductFamily extends AbstractSelectManager
+class Classification extends AbstractSelectManager
 {
     protected function boolFilterNotParents(&$result): void
     {
         \Pim\Repositories\Classification::onlyForAdvancedClassification();
 
-        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        $repository = $this->getEntityManager()->getRepository('Classification');
         $result['whereClause'][] = [
             'id!=' => $repository->getParentsIds($repository->get((string)$this->getSelectCondition('notParents')))
         ];
@@ -50,7 +50,7 @@ class ProductFamily extends AbstractSelectManager
     {
         \Pim\Repositories\Classification::onlyForAdvancedClassification();
 
-        $repository = $this->getEntityManager()->getRepository('ProductFamily');
+        $repository = $this->getEntityManager()->getRepository('Classification');
         $result['whereClause'][] = [
             'id!=' => $repository->getChildrenIds($repository->get((string)$this->getSelectCondition('notChildren')))
         ];
@@ -63,8 +63,8 @@ class ProductFamily extends AbstractSelectManager
      */
     protected function boolFilterNotLinkedWithAttribute(&$result)
     {
-        $productFamiliesIds = $this->getEntityManager()
-            ->getRepository('ProductFamily')
+        $classificationsIds = $this->getEntityManager()
+            ->getRepository('Classification')
             ->select(['id'])
             ->join(['attributes'])
             ->where([
@@ -74,7 +74,7 @@ class ProductFamily extends AbstractSelectManager
             ->toArray();
 
         $result['whereClause'][] = [
-            'id!=' => array_column($productFamiliesIds, 'id')
+            'id!=' => array_column($classificationsIds, 'id')
         ];
     }
 }

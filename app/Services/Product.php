@@ -563,9 +563,9 @@ class Product extends Hierarchy
             if ($product) {
                 $pfas = $this
                     ->getEntityManager()
-                    ->getRepository('ProductFamilyAttribute')
+                    ->getRepository('ClassificationAttribute')
                     ->where([
-                        'productFamilyId' => $product->get('productFamilyId'),
+                        'classificationId' => $product->get('classificationId'),
                         'scope'           => 'Channel',
                         'channelId'       => $foreignId
                     ])

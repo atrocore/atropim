@@ -290,11 +290,11 @@ class Product extends AbstractRepository
 
         $pfas = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->join('attribute')
             ->where([
                 'attribute.id !=' => null,
-                'productFamilyId' => $product->get('productFamilyId'),
+                'classificationId' => $product->get('classificationId'),
                 'channelId'       => $channelId
             ])
             ->find();
@@ -450,8 +450,8 @@ class Product extends AbstractRepository
             $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
         }
 
-        if ($entity->isAttributeChanged('productFamilyId')) {
-            $this->onProductFamilyChange($entity);
+        if ($entity->isAttributeChanged('classificationId')) {
+            $this->onClassificationChange($entity);
         }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
@@ -472,9 +472,9 @@ class Product extends AbstractRepository
         // save attributes
         $this->saveAttributes($entity);
 
-        if ($entity->isAttributeChanged('productFamilyId')) {
-            if (empty($entity->skipUpdateProductAttributesByProductFamily) && empty($entity->isDuplicate)) {
-                $this->updateProductAttributesByProductFamily($entity);
+        if ($entity->isAttributeChanged('classificationId')) {
+            if (empty($entity->skipUpdateProductAttributesByClassification) && empty($entity->isDuplicate)) {
+                $this->updateProductAttributesByClassification($entity);
             }
         }
 
@@ -551,29 +551,29 @@ class Product extends AbstractRepository
         return empty($result) ? [] : $result;
     }
 
-    protected function onProductFamilyChange(Entity $product): void
+    protected function onClassificationChange(Entity $product): void
     {
-        if (empty($product->getFetched('productFamilyId'))) {
+        if (empty($product->getFetched('classificationId'))) {
             return;
         }
 
-        $mode = $this->getConfig()->get('behaviorOnProductFamilyChange', 'retainAllInheritedAttributes');
+        $mode = $this->getConfig()->get('behaviorOnClassificationChange', 'retainAllInheritedAttributes');
 
         if ($mode == 'retainAllInheritedAttributes') {
             return;
         }
 
         $where = [
-            'productFamilyId' => $product->getFetched('productFamilyId')
+            'classificationId' => $product->getFetched('classificationId')
         ];
 
-        if (!empty($product->get('productFamilyId'))) {
-            $where['attributeId!='] = array_column($product->get('productFamily')->get('productFamilyAttributes')->toArray(), 'attributeId');
+        if (!empty($product->get('classificationId'))) {
+            $where['attributeId!='] = array_column($product->get('classification')->get('classificationAttributes')->toArray(), 'attributeId');
         }
 
         $pfas = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->where($where)
             ->find();
 
@@ -649,23 +649,23 @@ class Product extends AbstractRepository
 
         if ($config == 'fromCatalog') {
             $result = $entity->get('catalog');
-        } elseif ($config == 'fromProductFamily') {
-            $result = $entity->get('productFamily');
+        } elseif ($config == 'fromClassification') {
+            $result = $entity->get('classification');
         }
 
         return $result;
     }
 
-    protected function updateProductAttributesByProductFamily(Entity $product): bool
+    protected function updateProductAttributesByClassification(Entity $product): bool
     {
-        if (empty($product->get('productFamilyId'))) {
+        if (empty($product->get('classificationId'))) {
             return true;
         }
 
         $pfas = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
-            ->where(['productFamilyId' => $product->get('productFamilyId')])
+            ->getRepository('ClassificationAttribute')
+            ->where(['classificationId' => $product->get('classificationId')])
             ->find();
 
         $channels = array_column($product->get('productChannels')->toArray(), 'channelId');

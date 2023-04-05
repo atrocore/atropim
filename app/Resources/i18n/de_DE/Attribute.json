@@ -38,7 +38,7 @@
     "products": "Produkte",
     "productAttributeValues": "Attributwerte",
     "attributeGroup": "Attributgruppe",
-    "productFamilies": "Produktfamilien"
+    "classifications": "Klassifizierungen"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",
@@ -82,7 +82,7 @@
     "typeValueIsInconsistent": "Daten für Optionswerte sind inkonsistent.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
     "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
-    "attributeIsUsedInProductFamilies": "Das Attribut wird in den Produktfamilien verwendet. Bitte aktualisieren Sie zuerst die Produktfamilien.",
+    "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCanNotUnlinkClassificationAttribute": "Sie können die Verknüpfung mit dem Attribut nicht aufheben.",

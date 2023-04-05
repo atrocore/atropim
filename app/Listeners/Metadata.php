@@ -47,7 +47,7 @@ class Metadata extends AbstractListener
 
         $data = $this->enableExportDisabledParamForPav($data);
 
-        $data = $this->prepareProductFamilyAttributeMetadata($data);
+        $data = $this->prepareClassificationAttributeMetadata($data);
 
         if ($this->getConfig()->get('behaviorOnCatalogChange', 'cascade') == 'cascade') {
             $data['clientDefs']['Product']['confirm']['catalogId'] = 'Product.messages.productCatalogChangeConfirm';
@@ -325,7 +325,7 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    protected function prepareProductFamilyAttributeMetadata(array $data): array
+    protected function prepareClassificationAttributeMetadata(array $data): array
     {
         // is multi-lang activated
         if (empty($this->getConfig()->get('isMultilangActive'))) {
@@ -339,7 +339,7 @@ class Metadata extends AbstractListener
 
         foreach ($locales as $locale) {
             $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
-            $data['entityDefs']['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = [
+            $data['entityDefs']['ClassificationAttribute']['fields']["attributeName$camelCaseLocale"] = [
                 "type"                      => "varchar",
                 "notStorable"               => true,
                 "default"                   => null,

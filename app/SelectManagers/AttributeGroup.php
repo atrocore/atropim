@@ -64,29 +64,29 @@ class AttributeGroup extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterWithNotLinkedAttributesToProductFamily(array &$result)
+    protected function boolFilterWithNotLinkedAttributesToClassification(array &$result)
     {
         // get product family attributes
-        $productFamilyAttributes = $this
+        $classificationAttributes = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->select(['attributeId'])
             ->where([
-                'productFamilyId' => (string)$this->getSelectCondition('withNotLinkedAttributesToProductFamily'),
+                'classificationId' => (string)$this->getSelectCondition('withNotLinkedAttributesToClassification'),
                 'scope' => 'Global'
             ])
             ->find()
             ->toArray();
 
-        if (count($productFamilyAttributes) > 0) {
+        if (count($classificationAttributes) > 0) {
             $result['whereClause'][] = [
-                'id' => $this->getNotLinkedAttributeGroups($productFamilyAttributes)
+                'id' => $this->getNotLinkedAttributeGroups($classificationAttributes)
             ];
         }
     }
 
     /**
-     * Get attributeGroups with not linked all related attributes to product or productFamily
+     * Get attributeGroups with not linked all related attributes to product or classification
      *
      * @param array $attributes
      *

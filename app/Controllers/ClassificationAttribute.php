@@ -52,6 +52,6 @@ class ClassificationAttribute extends Relationship
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->productFamilyId);
+        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->classificationId);
     }
 }

@@ -267,8 +267,8 @@ class QueueManagerOwnership extends QueueManagerBase
             case 'fromCatalog':
                 $result = 'catalog';
                 break;
-            case 'fromProductFamily':
-                $result = 'product_family';
+            case 'fromClassification':
+                $result = 'classification';
                 break;
             case 'fromProduct':
                 $result = 'product';

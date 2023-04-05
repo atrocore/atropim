@@ -209,8 +209,8 @@ class Attribute extends AbstractRepository
             $attributeId = (string)$entity->get('id');
             $productId = (is_string($foreign)) ? $foreign : (string)$foreign->get('id');
 
-            if ($this->isProductFamilyAttribute($attributeId, $productId)) {
-                throw new Error($this->exception("youCanNotUnlinkProductFamilyAttribute"));
+            if ($this->isClassificationAttribute($attributeId, $productId)) {
+                throw new Error($this->exception("youCanNotUnlinkClassificationAttribute"));
             }
         }
     }
@@ -240,13 +240,13 @@ class Attribute extends AbstractRepository
      *
      * @return bool
      */
-    protected function isProductFamilyAttribute(string $attributeId, string $productId): bool
+    protected function isClassificationAttribute(string $attributeId, string $productId): bool
     {
         $value = $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
             ->select(['id'])
-            ->where(['attributeId' => $attributeId, 'productId' => $productId, 'productFamilyId !=' => null])
+            ->where(['attributeId' => $attributeId, 'productId' => $productId, 'classificationId !=' => null])
             ->findOne();
 
         return !empty($value);

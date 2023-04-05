@@ -62,7 +62,6 @@
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
     "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "attributeIsUsedInProductFamilies": "Атрибут уже используется в продуктовых семьях. Пожалуйста, сначала оновите продуктовые семьи.",
     "attributeNotHaveUniqueValue": "Атрибут не имеет уникального значения.",
     "someAttributeDontMathToPattern": "Некоторые атрибуты не соответствуют шаблону."
   }

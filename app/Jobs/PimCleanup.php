@@ -52,7 +52,7 @@ class PimCleanup extends Base
 
         // attribute
         $ids = $this->fetchIds("SELECT id FROM attribute WHERE deleted=1");
-        $this->execute("UPDATE product_family_attribute SET deleted=1 WHERE attribute_id IN ('$ids')");
+        $this->execute("UPDATE classification_attribute SET deleted=1 WHERE attribute_id IN ('$ids')");
         $this->execute("UPDATE product_attribute_value SET deleted=1 WHERE attribute_id IN ('$ids')");
         $this->execute("DELETE FROM attribute WHERE deleted=1");
 
@@ -90,13 +90,13 @@ class PimCleanup extends Base
         // product_category
         $this->execute("DELETE FROM product_category WHERE deleted=1");
 
-        // product_family
-        $ids = $this->fetchIds("SELECT id FROM product_family WHERE deleted=1");
-        $this->execute("UPDATE product_family_attribute SET deleted=1 WHERE product_family_id IN ('$ids')");
-        $this->execute("DELETE FROM product_family WHERE deleted=1");
+        // classification
+        $ids = $this->fetchIds("SELECT id FROM classification WHERE deleted=1");
+        $this->execute("UPDATE classification_attribute SET deleted=1 WHERE classification_id IN ('$ids')");
+        $this->execute("DELETE FROM classification WHERE deleted=1");
 
-        // product_family_attribute
-        $this->execute("DELETE FROM product_family_attribute WHERE deleted=1");
+        // classification_attribute
+        $this->execute("DELETE FROM classification_attribute WHERE deleted=1");
 
         // associated_product
         $this->execute("DELETE FROM associated_product WHERE deleted=1");
