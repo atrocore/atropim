@@ -33,10 +33,10 @@
     }
   },
   {
-    "route": "/ProductFamilyAttribute/action/unlinkAttributeGroupHierarchy",
+    "route": "/ClassificationAttribute/action/unlinkAttributeGroupHierarchy",
     "method": "delete",
     "params": {
-      "controller": "ProductFamilyAttribute",
+      "controller": "ClassificationAttribute",
       "action": "unlinkAttributeGroupHierarchy"
     }
   },

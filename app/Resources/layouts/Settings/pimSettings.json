@@ -29,7 +29,7 @@
     "rows": [
       [
         {
-          "name": "behaviorOnProductFamilyChange"
+          "name": "behaviorOnClassificationChange"
         },
         false
       ]
