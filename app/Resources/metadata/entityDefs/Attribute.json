@@ -157,7 +157,7 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -344,10 +344,10 @@
       "foreign": "attribute",
       "entity": "ProductAttributeValue"
     },
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "type": "hasMany",
       "foreign": "attribute",
-      "entity": "ProductFamilyAttribute",
+      "entity": "ClassificationAttribute",
       "layoutRelationshipsDisabled": true
     },
     "defaultChannel": {

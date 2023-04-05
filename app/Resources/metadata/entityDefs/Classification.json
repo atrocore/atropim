@@ -56,7 +56,7 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -77,13 +77,13 @@
     },
     "products": {
       "type": "hasMany",
-      "foreign": "productFamily",
+      "foreign": "classification",
       "entity": "Product"
     },
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "type": "hasMany",
-      "foreign": "productFamily",
-      "entity": "ProductFamilyAttribute"
+      "foreign": "classification",
+      "entity": "ClassificationAttribute"
     }
   },
   "collection": {

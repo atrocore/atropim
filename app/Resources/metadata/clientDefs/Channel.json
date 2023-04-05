@@ -12,10 +12,10 @@
     "linkedWithCategory",
     "notLinkedWithCategory",
     "notLinkedWithAttributesInProduct",
-    "notLinkedWithAttributesInProductFamily",
+    "notLinkedWithAttributesInClassification",
     "notLinkedWithCategoriesInProduct",
     "productChannels",
-    "notLinkedWithProductFamilyAttribute",
+    "notLinkedWithClassificationAttribute",
     "notLinkedWithProductAttributeValue"
   ],
   "hiddenBoolFilterList": [
@@ -25,10 +25,10 @@
     "linkedWithCategory",
     "notLinkedWithCategory",
     "notLinkedWithAttributesInProduct",
-    "notLinkedWithAttributesInProductFamily",
+    "notLinkedWithAttributesInClassification",
     "notLinkedWithCategoriesInProduct",
     "productChannels",
-    "notLinkedWithProductFamilyAttribute",
+    "notLinkedWithClassificationAttribute",
     "notLinkedWithProductAttributeValue"
   ],
   "disabledMassActions": [

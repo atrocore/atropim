@@ -46,7 +46,7 @@
       ],
       "default": "cascade"
     },
-    "behaviorOnProductFamilyChange": {
+    "behaviorOnClassificationChange": {
       "type": "enum",
       "tooltip": false,
       "required": true,

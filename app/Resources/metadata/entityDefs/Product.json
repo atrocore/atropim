@@ -15,7 +15,7 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "productFamily": {
+    "classification": {
       "type": "link",
       "filterDisabled": false,
       "required": false,
@@ -359,10 +359,10 @@
         "entityId"
       ]
     },
-    "productFamily": {
+    "classification": {
       "type": "belongsTo",
       "foreign": "products",
-      "entity": "ProductFamily"
+      "entity": "Classification"
     },
     "catalog": {
       "type": "belongsTo",

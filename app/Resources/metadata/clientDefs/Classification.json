@@ -24,36 +24,22 @@
     "list": "pim:views/product-family/record/list"
   },
   "relationshipPanels": {
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "selectAction": "selectRelatedEntity",
       "view": "pim:views/product-family/record/panels/product-family-attributes",
       "rowActionsView": "pim:views/product-family/record/row-actions/product-family-attribute",
       "aclScopesList": [
         "Attribute",
         "AttributeGroup",
-        "ProductFamilyAttribute"
+        "ClassificationAttribute"
       ]
     },
     "products": {
       "view": "pim:views/product-family/record/panels/products",
       "selectBoolFilterList": [
-        "notLinkedWithProductFamily"
+        "notLinkedWithClassification"
       ],
       "createAction": "createRelatedConfigured"
-    }
-  },
-  "dynamicLogic": {
-    "fields": {
-      "productFamilyTemplate": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
     }
   }
 }

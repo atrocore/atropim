@@ -1,6 +1,6 @@
 {
   "fields": {
-    "productFamily": {
+    "classification": {
       "type": "link",
       "required": true,
       "relationshipField": true
@@ -113,19 +113,19 @@
     }
   },
   "links": {
-    "productFamily": {
+    "classification": {
       "type": "belongsTo",
-      "foreign": "productFamilyAttributes",
-      "entity": "ProductFamily"
+      "foreign": "classificationAttributes",
+      "entity": "Classification"
     },
     "attribute": {
       "type": "belongsTo",
-      "foreign": "productFamilyAttributes",
+      "foreign": "classificationAttributes",
       "entity": "Attribute"
     },
     "channel": {
       "type": "belongsTo",
-      "foreign": "productFamilyAttributes",
+      "foreign": "classificationAttributes",
       "entity": "Channel"
     },
     "createdBy": {
@@ -141,7 +141,7 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "productFamily.name",
+      "classification.name",
       "attribute.name",
       "scope",
       "channel.name"
@@ -150,7 +150,7 @@
   "uniqueIndexes": {
     "unique_relationship": [
       "deleted",
-      "product_family_id",
+      "classification_id",
       "attribute_id",
       "language",
       "scope",
