@@ -19,7 +19,7 @@
       "type": "link",
       "filterDisabled": false,
       "required": false,
-      "view": "pim:views/product/fields/product-family"
+      "view": "pim:views/product/fields/classification"
     },
     "brand": {
       "type": "link",

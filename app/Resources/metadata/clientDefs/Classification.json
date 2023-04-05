@@ -20,14 +20,14 @@
     "list": "pim:views/list"
   },
   "recordViews": {
-    "detail": "pim:views/product-family/record/detail",
-    "list": "pim:views/product-family/record/list"
+    "detail": "pim:views/classification/record/detail",
+    "list": "pim:views/classification/record/list"
   },
   "relationshipPanels": {
     "classificationAttributes": {
       "selectAction": "selectRelatedEntity",
-      "view": "pim:views/product-family/record/panels/product-family-attributes",
-      "rowActionsView": "pim:views/product-family/record/row-actions/product-family-attribute",
+      "view": "pim:views/classification/record/panels/classification-attributes",
+      "rowActionsView": "pim:views/classification/record/row-actions/classification-attribute",
       "aclScopesList": [
         "Attribute",
         "AttributeGroup",
@@ -35,7 +35,7 @@
       ]
     },
     "products": {
-      "view": "pim:views/product-family/record/panels/products",
+      "view": "pim:views/classification/record/panels/products",
       "selectBoolFilterList": [
         "notLinkedWithClassification"
       ],

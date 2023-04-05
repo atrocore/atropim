@@ -9,19 +9,19 @@
       "type": "link",
       "required": true,
       "relationshipField": true,
-      "view": "pim:views/product-family-attribute/fields/attribute"
+      "view": "pim:views/classification-attribute/fields/attribute"
     },
     "language": {
       "type": "language",
       "relationshipField": true,
       "default": "main",
-      "view": "pim:views/product-family-attribute/fields/language",
+      "view": "pim:views/classification-attribute/fields/language",
       "prohibitedEmptyValue": true
     },
     "languages": {
       "type": "multiLanguage",
       "notStorable": true,
-      "view": "pim:views/product-family-attribute/fields/languages"
+      "view": "pim:views/classification-attribute/fields/languages"
     },
     "isRequired": {
       "type": "bool",
@@ -87,7 +87,7 @@
       "type": "link",
       "relationshipField": true,
       "required": false,
-      "view": "pim:views/product-family-attribute/fields/channel"
+      "view": "pim:views/classification-attribute/fields/channel"
     },
     "maxLength": {
       "type": "int",

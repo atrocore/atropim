@@ -25,7 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
-Espo.define('pim:views/attribute-tab/record/panels/attributes', 'pim:views/product-family/record/panels/product-family-attributes',
+Espo.define('pim:views/attribute-tab/record/panels/attributes', 'pim:views/classification/record/panels/classification-attributes',
     Dep => Dep.extend({
 
         prepareGroupCollection(group, collection) {

@@ -7,7 +7,7 @@
   "kanbanViewMode": false,
   "color": null,
   "modalViews": {
-    "edit": "pim:views/product-family-attribute/modals/edit"
+    "edit": "pim:views/classification-attribute/modals/edit"
   },
   "dynamicLogic": {
     "fields": {

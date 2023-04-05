@@ -26,20 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product-family-attribute/fields/channel', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/classification-attribute/modals/edit', 'views/modals/edit',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductFamilyAttribute'],
+        fullFormDisabled: true,
 
-        boolFilterData: {
-            notLinkedWithProductFamilyAttribute() {
-                return {productFamilyId: this.model.get('productFamilyId'), attributeId: this.model.get('attributeId')};
-            }
-        },
-        select: function (model) {
-            Dep.prototype.select.call(this, model);
-            this.model.trigger('change:channel', model);
-        },
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this, 'after:save', model => {
+                $('.action[data-action=refresh][data-panel=productFamilyAttributes]').click();
+                /**
+                 * Show another notify message if attribute '%s' was linked not for all chosen channels
+                 */
+                if (model.get('channelsNames') === true) {
+                    let message = this.getLanguage().translate('savedForNotAllChannels', 'messages', 'ProductFamilyAttribute');
+                    Espo.Ui.notify(message.replace('%s', model.get('attributeName')), 'success', 1000 * 60 * 60 * 2, true);
+                }
+            });
+        }
+
     })
 );
 
