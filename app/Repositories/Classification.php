@@ -61,6 +61,22 @@ class Classification extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
+    public function isCodeValid(Entity $entity): bool
+    {
+        if (!$entity->isAttributeChanged('code')) {
+            return true;
+        }
+
+        if (!empty($entity->get('code')) && preg_match(self::CODE_PATTERN, $entity->get('code'))) {
+            $exists = $this->where(['code' => $entity->get('code')])->findOne();
+            if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function getLinkedAttributesIds(string $id, string $scope = 'Global'): array
     {
         $data = $this
@@ -84,7 +100,7 @@ class Classification extends AbstractRepository
             ->join('attribute')
             ->where(
                 [
-                    'classificationId'            => $classificationsIds,
+                    'classificationId'           => $classificationsIds,
                     'attribute.attributeGroupId' => ($attributeGroupId != '') ? $attributeGroupId : null
                 ]
             )
@@ -123,21 +139,5 @@ class Classification extends AbstractRepository
         parent::init();
 
         $this->addDependency('language');
-    }
-
-    protected function isCodeValid(Entity $entity): bool
-    {
-        if (!$entity->isAttributeChanged('code')) {
-            return true;
-        }
-
-        if (!empty($entity->get('code')) && preg_match(self::CODE_PATTERN, $entity->get('code'))) {
-            $exists = $this->where(['code' => $entity->get('code')])->findOne();
-            if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
