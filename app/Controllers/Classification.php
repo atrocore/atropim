@@ -31,6 +31,8 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-class Classification extends AbstractController
+use Espo\Core\Templates\Controllers\Hierarchy;
+
+class Classification extends Hierarchy
 {
 }

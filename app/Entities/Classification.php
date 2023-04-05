@@ -31,9 +31,9 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Entities\Hierarchy;
 
-class Classification extends Base
+class Classification extends Hierarchy
 {
     /**
      * @var string

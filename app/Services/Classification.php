@@ -32,61 +32,10 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\ORM\Entity;
-use Espo\Services\Record;
+use Espo\Core\Templates\Services\Hierarchy;
 
-class Classification extends \Espo\Core\Templates\Services\Hierarchy
+class Classification extends Hierarchy
 {
-    public function createEntity($attachment)
-    {
-        return Record::createEntity($attachment);
-    }
-
-    public function updateEntity($id, $data)
-    {
-        return Record::updateEntity($id, $data);
-    }
-
-    public function linkEntity($id, $link, $foreignId)
-    {
-        return Record::linkEntity($id, $link, $foreignId);
-    }
-
-    public function deleteEntity($id)
-    {
-        return Record::deleteEntity($id);
-    }
-
-    public function unlinkEntity($id, $link, $foreignId)
-    {
-        return Record::unlinkEntity($id, $link, $foreignId);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        Record::prepareEntityForOutput($entity);
-    }
-
-    public function findLinkedEntities($id, $link, $params)
-    {
-        $result = Record::findLinkedEntities($id, $link, $params);
-
-        if ($link === 'classificationAttributes') {
-            if (isset($result['collection'])) {
-                $result['list'] = $result['collection']->toArray();
-                unset($result['collection']);
-            }
-
-            foreach ($result['list'] as $k => $record) {
-                if ($record['scope'] === 'Global') {
-                    $result['list'][$k]['channelId'] = null;
-                    $result['list'][$k]['channelName'] = 'Global';
-                }
-            }
-        }
-
-        return $result;
-    }
-
     protected function getOneToManyRelationData(string $link): ?array
     {
         if ($link === 'classificationAttributes') {

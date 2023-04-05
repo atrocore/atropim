@@ -32,8 +32,6 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\ORM\Repositories\RDB;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class Classification extends AbstractRepository
@@ -63,57 +61,6 @@ class Classification extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
-    public static function isAdvancedClassificationInstalled(): bool
-    {
-        return class_exists(\AdvancedClassification\Module::class);
-    }
-
-    public static function onlyForAdvancedClassification(): void
-    {
-        if (!self::isAdvancedClassificationInstalled()) {
-            throw new BadRequest("Advanced Classification module isn't installed.");
-        }
-    }
-
-    public function findRelated(Entity $entity, $relationName, array $params = [])
-    {
-        return RDB::findRelated($entity, $relationName, $params);
-    }
-
-    public function getParentsIds(Entity $entity, array $ids = []): array
-    {
-        self::onlyForAdvancedClassification();
-        $ids = [];
-        if (!empty($entity->get('parentId'))) {
-            $ids = array_unique(array_merge($ids, $this->getParentsIds($entity->get('parent'), $ids)));
-            $ids[] = $entity->get('parentId');
-        }
-
-        return $ids;
-    }
-
-    public function getChildrenIds(Entity $entity, array $ids = []): array
-    {
-        self::onlyForAdvancedClassification();
-        $ids = [];
-
-        $children = $entity->get('children');
-        if (!empty($children) && count($children) > 0) {
-            foreach ($children as $child) {
-                $ids = array_unique(array_merge($ids, $this->getChildrenIds($child, $ids)));
-                $ids[] = $child->get('id');
-            }
-        }
-
-        return $ids;
-    }
-
-    /**
-     * @param string $id
-     * @param string $scope
-     *
-     * @return array
-     */
     public function getLinkedAttributesIds(string $id, string $scope = 'Global'): array
     {
         $data = $this
@@ -145,82 +92,6 @@ class Classification extends AbstractRepository
             ->toArray();
 
         return array_column($data, 'id');
-    }
-
-    public function getEntityPosition(Entity $entity, string $parentId): ?int
-    {
-        self::onlyForAdvancedClassification();
-
-        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
-
-        if (empty($parentId)) {
-            $additionalWhere = ' AND t.parent_id IS NULL ';
-        } else {
-            $additionalWhere = ' AND t.parent_id=' . $this->getPDO()->quote($parentId);
-        }
-
-        $query = "SELECT x.position
-                  FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                        FROM `classification` t
-                            JOIN (SELECT @rownum:=0) r
-                        WHERE t.deleted=0 $additionalWhere
-                        ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-                  WHERE x.id=" . $this->getPDO()->quote($entity->get('id'));
-
-        $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
-
-        return (int)$position;
-    }
-
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
-    {
-        self::onlyForAdvancedClassification();
-
-        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
-
-        $select = 'c.*';
-        if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(pf1.id) FROM classification pf1 WHERE pf1.parent_id=c.id AND pf1.deleted=0) as childrenCount";
-        }
-
-        if (empty($parentId)) {
-            $additionalWhere = ' AND c.parent_id IS NULL ';
-        } else {
-            $additionalWhere = ' AND c.parent_id=' . $this->getPDO()->quote($parentId);
-        }
-
-        $query = "SELECT {$select} 
-                  FROM `classification` c
-                  WHERE c.deleted=0 $additionalWhere
-                  ORDER BY c.sort_order ASC, c.$sortBy {$sortOrder}, c.id ASC";
-
-        if (!is_null($offset) && !is_null($maxSize)) {
-            $query .= " LIMIT $maxSize OFFSET $offset";
-        }
-
-        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * @return int
-     */
-    public function getChildrenCount(string $parentId): int
-    {
-        self::onlyForAdvancedClassification();
-
-        if (empty($parentId)) {
-            $query = "SELECT COUNT(id) as count
-                      FROM `classification` pf
-                      WHERE pf.parent_id IS NULL AND pf.deleted=0";
-        } else {
-            $query = "SELECT COUNT(id) as count
-                      FROM `classification` pf
-                      WHERE pf.parent_id = '$parentId' AND pf.deleted=0";
-        }
-
-        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
