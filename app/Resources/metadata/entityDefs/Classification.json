@@ -51,9 +51,6 @@
     },
     "products": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
       "noLoad": true
     },
     "classificationAttributes": {
@@ -77,7 +74,8 @@
     },
     "products": {
       "type": "hasMany",
-      "foreign": "classification",
+      "foreign": "classifications",
+      "relationName": "ProductClassification",
       "entity": "Product"
     },
     "classificationAttributes": {

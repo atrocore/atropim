@@ -15,11 +15,9 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "classification": {
-      "type": "link",
-      "filterDisabled": false,
-      "required": false,
-      "view": "pim:views/product/fields/classification"
+    "classifications": {
+      "type": "linkMultiple",
+      "noLoad": false
     },
     "brand": {
       "type": "link",
@@ -359,9 +357,10 @@
         "entityId"
       ]
     },
-    "classification": {
-      "type": "belongsTo",
+    "classifications": {
+      "type": "hasMany",
       "foreign": "products",
+      "relationName": "ProductClassification",
       "entity": "Classification"
     },
     "catalog": {
