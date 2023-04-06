@@ -173,7 +173,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
             return;
         }
 
-        $products = $this->getRepository()->getAvailableChannelsForPavs($data->classificationId);
+        $products = $this->getRepository()->getProductChannelsViaClassificationId($data->classificationId);
 
         foreach ($products as $id => $channels) {
             $inputData = clone $data;
@@ -214,7 +214,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
     {
         foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
             $inputData = new \stdClass();
-            foreach (['scope', 'channelId', 'isRequired', 'language'] as $key) {
+            foreach (['scope', 'channelId', 'language'] as $key) {
                 if (property_exists($data, $key)) {
                     $inputData->$key = $data->$key;
                 }
