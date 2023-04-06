@@ -294,30 +294,36 @@ class ProductAttributeValue extends AbstractRepository
     public function findClassificationAttribute(Entity $pav): ?Entity
     {
         $product = $this->getProductById((string)$pav->get('productId'));
-        if (empty($product) || empty($product->get('classificationId'))) {
+        if (empty($product)) {
             return null;
         }
 
-        $classificationAttributes = $this->getClassificationAttributesByClassificationId((string)$product->get('classificationId'));
+        $classifications = $product->get('classifications');
+        if (empty($classifications[0])) {
+            return null;
+        }
 
-        foreach ($classificationAttributes as $pfa) {
-            if ($pfa->get('attributeId') !== $pav->get('attributeId')) {
-                continue;
+        foreach ($classifications as $classification) {
+            $classificationAttributes = $this->getClassificationAttributesByClassificationId($classification->get('id'));
+            foreach ($classificationAttributes as $pfa) {
+                if ($pfa->get('attributeId') !== $pav->get('attributeId')) {
+                    continue;
+                }
+
+                if ($pfa->get('scope') !== $pav->get('scope')) {
+                    continue;
+                }
+
+                if ($pfa->get('language') !== $pav->get('language')) {
+                    continue;
+                }
+
+                if ($pav->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
+                    continue;
+                }
+
+                return $pfa;
             }
-
-            if ($pfa->get('scope') !== $pav->get('scope')) {
-                continue;
-            }
-
-            if ($pfa->get('language') !== $pav->get('language')) {
-                continue;
-            }
-
-            if ($pav->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
-                continue;
-            }
-
-            return $pfa;
         }
 
         return null;
