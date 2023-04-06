@@ -35,12 +35,12 @@ Espo.define('pim:views/classification-attribute/modals/edit', 'views/modals/edit
             Dep.prototype.setup.call(this);
 
             this.listenTo(this, 'after:save', model => {
-                $('.action[data-action=refresh][data-panel=productFamilyAttributes]').click();
+                $('.action[data-action=refresh][data-panel=classificationAttributes]').click();
                 /**
                  * Show another notify message if attribute '%s' was linked not for all chosen channels
                  */
                 if (model.get('channelsNames') === true) {
-                    let message = this.getLanguage().translate('savedForNotAllChannels', 'messages', 'ProductFamilyAttribute');
+                    let message = this.getLanguage().translate('savedForNotAllChannels', 'messages', 'ClassificationAttribute');
                     Espo.Ui.notify(message.replace('%s', model.get('attributeName')), 'success', 1000 * 60 * 60 * 2, true);
                 }
             });

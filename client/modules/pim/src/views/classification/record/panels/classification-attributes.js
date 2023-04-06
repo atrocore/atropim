@@ -106,7 +106,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                 this.filter = this.getStoredFilter();
             }
 
-            if (this.defs.create && this.getAcl().check('ProductFamilyAttribute', 'create')) {
+            if (this.defs.create && this.getAcl().check('ClassificationAttribute', 'create')) {
                 this.buttonList.push({
                     title: 'Create',
                     action: this.defs.createAction || 'createRelated',
@@ -120,7 +120,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                 });
             }
 
-            if (this.defs.select && this.getAcl().check('ProductFamilyAttribute', 'create')) {
+            if (this.defs.select && this.getAcl().check('ClassificationAttribute', 'create')) {
                 var data = {link: this.link};
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
@@ -223,7 +223,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                     model.set({
                         scope: 'Global',
                         channelId: '',
-                        productFamilyId: this.model.get('id'),
+                        classificationId: this.model.get('id'),
                         attributeId: item.id,
                         assignedUserId: this.getUser().id,
                         assignedUserName: this.getUser().get('name')
@@ -241,7 +241,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: this.translate('unlinkRelatedAttribute', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 var model = this.collection.get(id);
@@ -269,7 +269,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 var model = this.collection.get(id);
@@ -294,8 +294,8 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                boolFilterList: ['withNotLinkedAttributesToProductFamily'],
-                boolFilterData: {withNotLinkedAttributesToProductFamily: this.model.id},
+                boolFilterList: ['withNotLinkedAttributesToClassification'],
+                boolFilterData: {withNotLinkedAttributesToClassification: this.model.id},
                 whereAdditional: [
                     {
                         type: 'isLinked',
@@ -508,14 +508,14 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                 collection.add(this.collection.get(id));
             });
 
-            collection.url = `ProductFamily/${this.model.id}/productFamilyAttributes`;
+            collection.url = `Classification/${this.model.id}/classificationAttributes`;
             collection.where = [
                 {
                     type: 'bool',
                     value: ['linkedWithAttributeGroup'],
                     data: {
                         linkedWithAttributeGroup: {
-                            productFamilyId: this.model.id,
+                            classificationId: this.model.id,
                             attributeGroupId: group.key !== 'no_group' ? group.key : null
                         }
                     }
@@ -581,7 +581,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             }
 
             this.confirm({
-                message: this.translate('removeRelatedAttributeGroup', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('removeRelatedAttributeGroup', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify('removing');
@@ -617,7 +617,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             }
 
             this.confirm({
-                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ProductFamilyAttribute'),
+                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify('removing');
@@ -625,7 +625,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                     url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
                     data: JSON.stringify({
                         attributeGroupId: id,
-                        productFamilyId: this.model.id
+                        classificationId: this.model.id
                     }),
                     type: 'DELETE',
                     contentType: 'application/json',

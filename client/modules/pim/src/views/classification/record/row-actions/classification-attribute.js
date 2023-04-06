@@ -35,7 +35,7 @@ Espo.define('pim:views/classification/record/row-actions/classification-attribut
             if (this.options.acl.delete) {
                 list.push({
                     action: 'unlinkRelatedAttribute',
-                    label: this.translate('unlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
+                    label: this.translate('unlinkRelatedAttribute', 'labels', 'ClassificationAttribute'),
                     data: {
                         id: this.model.id
                     }
@@ -43,7 +43,7 @@ Espo.define('pim:views/classification/record/row-actions/classification-attribut
 
                 list.push({
                     action: 'removeRelatedAttribute',
-                    label: this.translate('cascadeUnlinkRelatedAttribute', 'labels', 'ProductFamilyAttribute'),
+                    label: this.translate('cascadeUnlinkRelatedAttribute', 'labels', 'ClassificationAttribute'),
                     data: {
                         id: this.model.id
                     }

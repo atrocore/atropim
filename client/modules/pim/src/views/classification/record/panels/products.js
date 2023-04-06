@@ -30,7 +30,7 @@ Espo.define('pim:views/classification/record/panels/products', 'views/record/pan
     Dep => Dep.extend({
 
         boolFilterData: {
-            notLinkedWithProductFamily: function () {
+            notLinkedWithClassification: function () {
                 return this.model.id;
             }
         },

@@ -11,8 +11,8 @@
 	                <span class="caret"></span>
 	            </button>
 	            <ul class="dropdown-menu">
-	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroup" data-id="{{id}}">{{translate 'unlinkRelatedAttribute' category='labels' scope='ProductFamilyAttribute'}}</a></li>
-	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroupHierarchy" data-id="{{id}}">{{translate 'cascadeUnlinkRelatedAttribute' category='labels' scope='ProductFamilyAttribute'}}</a></li>
+	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroup" data-id="{{id}}">{{translate 'unlinkRelatedAttribute' category='labels' scope='ClassificationAttribute'}}</a></li>
+	                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroupHierarchy" data-id="{{id}}">{{translate 'cascadeUnlinkRelatedAttribute' category='labels' scope='ClassificationAttribute'}}</a></li>
 	            </ul>
 			</div>
 			{{/if}}

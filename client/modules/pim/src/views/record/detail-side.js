@@ -170,7 +170,7 @@ Espo.define('pim:views/record/detail-side', 'views/record/detail-side',
 
             switch (config) {
                 case 'fromCatalog': entity = 'Catalog'; break;
-                case 'fromProductFamily': entity = 'ProductFamily'; break;
+                case 'fromClassification': entity = 'Classification'; break;
                 case 'fromProduct': entity = 'Product'; break;
                 case 'fromAttribute': entity = 'Attribute'; break;
             }

@@ -58,9 +58,9 @@ Espo.define('pim:views/product/modals/edit', 'views/modals/edit',
                     this.clearModel(field);
                     this.setRelatedOwnershipInfo('Catalog', 'catalogId', field);
                     break;
-                case 'fromProductFamily':
+                case 'fromClassification':
                     this.clearModel(field);
-                    this.setRelatedOwnershipInfo('ProductFamily', 'productFamilyId', field);
+                    this.setRelatedOwnershipInfo('Classification', 'classificationId', field);
                     break;
                 case 'notInherit':
                     this.clearModel(field);

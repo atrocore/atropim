@@ -29,11 +29,11 @@
 Espo.define('pim:views/classification-attribute/fields/channel', 'treo-core:views/fields/filtered-link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductFamilyAttribute'],
+        selectBoolFilterList: ['notLinkedWithClassificationAttribute'],
 
         boolFilterData: {
-            notLinkedWithProductFamilyAttribute() {
-                return {productFamilyId: this.model.get('productFamilyId'), attributeId: this.model.get('attributeId')};
+            notLinkedWithClassificationAttribute() {
+                return {classificationId: this.model.get('classificationId'), attributeId: this.model.get('attributeId')};
             }
         },
         select: function (model) {
