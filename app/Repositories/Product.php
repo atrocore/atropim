@@ -569,12 +569,12 @@ class Product extends AbstractRepository
             $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
         }
 
-        if ($product instanceof Entity) {
+        if (!$product instanceof Entity) {
             $GLOBALS['log']->error('RelateClassification Failed: $product is not object');
             return;
         }
 
-        if ($classification instanceof Entity) {
+        if (!$classification instanceof Entity) {
             $GLOBALS['log']->error('RelateClassification Failed: $classification is not object');
             return;
         }
@@ -638,12 +638,12 @@ class Product extends AbstractRepository
             $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
         }
 
-        if ($product instanceof Entity) {
+        if (!$product instanceof Entity) {
             $GLOBALS['log']->error('UnRelateClassification Failed: $product is not object');
             return;
         }
 
-        if ($classification instanceof Entity) {
+        if (!$classification instanceof Entity) {
             $GLOBALS['log']->error('UnRelateClassification Failed: $classification is not object');
             return;
         }
@@ -652,14 +652,15 @@ class Product extends AbstractRepository
             'classificationId' => $classification->get('id')
         ];
 
-        $productClassifications = $product->get('classifications');
-        if (!empty($productClassifications[0])) {
-            $where['attributeId!='] = [];
-            foreach ($productClassifications as $productClassification) {
-                $pcas = $productClassification->get('classificationAttributes');
-                if (!empty($pcas[0])) {
-                    $where['attributeId!='] = array_merge($where['attributeId!='], array_column($pcas->toArray(), 'attributeId'));
+        foreach ($product->get('classifications') as $productClassification) {
+            if ($productClassification->get('id') === $classification->get('id')) {
+                continue;
+            }
+            foreach ($productClassification->get('classificationAttributes') as $pca) {
+                if (!isset($where['attributeId!='])) {
+                    $where['attributeId!='] = [];
                 }
+                $where['attributeId!='] = array_merge($where['attributeId!='], array_column($pca->toArray(), 'attributeId'));
             }
         }
 
