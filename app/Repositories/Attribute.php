@@ -200,22 +200,6 @@ class Attribute extends AbstractRepository
     }
 
     /**
-     * @inheritdoc
-     */
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName == 'products') {
-            // prepare data
-            $attributeId = (string)$entity->get('id');
-            $productId = (is_string($foreign)) ? $foreign : (string)$foreign->get('id');
-
-            if ($this->isProductFamilyAttribute($attributeId, $productId)) {
-                throw new Error($this->exception("youCanNotUnlinkProductFamilyAttribute"));
-            }
-        }
-    }
-
-    /**
      * @param $entity
      *
      * @return bool
@@ -232,24 +216,6 @@ class Attribute extends AbstractRepository
         }
 
         return true;
-    }
-
-    /**
-     * @param string $attributeId
-     * @param string $productId
-     *
-     * @return bool
-     */
-    protected function isProductFamilyAttribute(string $attributeId, string $productId): bool
-    {
-        $value = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select(['id'])
-            ->where(['attributeId' => $attributeId, 'productId' => $productId, 'productFamilyId !=' => null])
-            ->findOne();
-
-        return !empty($value);
     }
 
     /**

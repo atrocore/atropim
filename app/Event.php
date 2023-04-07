@@ -52,7 +52,7 @@ class Event extends AfterInstallAfterDelete
             'Catalog',
             'Channel',
             'Product',
-            'ProductFamily'
+            'Classification'
         ];
 
     /**
@@ -68,7 +68,7 @@ class Event extends AfterInstallAfterDelete
             'Catalog',
             'Channel',
             'Product',
-            'ProductFamily'
+            'Classification'
         ];
 
     /**

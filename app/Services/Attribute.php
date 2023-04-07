@@ -263,15 +263,15 @@ class Attribute extends Hierarchy
     {
         $sql
             = 'SELECT 
-                   pf.id        AS productFamilyId,
-                   pf.name      AS productFamilyName,
+                   pf.id        AS classificationId,
+                   pf.name      AS classificationName,
                    a.id         AS attributeId,
                    a.name       AS attributeName,
                    a.type       AS attributeType,
                    a.type_value AS attributeTypeValue
                 FROM attribute AS a
-                LEFT JOIN product_family_attribute AS pfa ON a.id = pfa.attribute_id AND pfa.deleted = 0
-                LEFT JOIN product_family AS pf ON pf.id = pfa.product_family_id  AND pf.deleted = 0
+                LEFT JOIN classification_attribute AS pfa ON a.id = pfa.attribute_id AND pfa.deleted = 0
+                LEFT JOIN classification AS pf ON pf.id = pfa.classification_id  AND pf.deleted = 0
                 WHERE a.deleted=0 
                   AND a.id IN (SELECT attribute_id FROM product_attribute_value WHERE deleted=0)';
 
@@ -309,7 +309,7 @@ class Attribute extends Hierarchy
     }
 
     /**
-     * Unlink attribute from ProductFamily and Product
+     * Unlink attribute from Classification and Product
      *
      * @param array $ids
      *
@@ -324,7 +324,7 @@ class Attribute extends Hierarchy
             // remove from product families
             $this
                 ->getEntityManager()
-                ->getRepository('ProductFamilyAttribute')
+                ->getRepository('ClassificationAttribute')
                 ->where([
                     'attributeId' => $ids
                 ])

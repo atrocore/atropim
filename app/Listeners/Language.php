@@ -83,7 +83,7 @@ class Language extends AbstractListener
                 $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createLanguagePrismBoolFilterName($language)] = $languageLabel . ': ' . $language;
                 $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($language)));
                 if (!empty($data[$l]['Attribute']['fields']["name"])) {
-                    $data[$l]['ProductFamilyAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;
+                    $data[$l]['ClassificationAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;
                 }
             }
 

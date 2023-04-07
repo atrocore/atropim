@@ -3,12 +3,12 @@
   "iconClass": "far fa-object-group",
   "boolFilterList": [
     "onlyMy",
-    "withNotLinkedAttributesToProductFamily",
+    "withNotLinkedAttributesToClassification",
     "withNotLinkedAttributesToProduct",
     "fromAttributesTab"
   ],
   "hiddenBoolFilterList": [
-    "withNotLinkedAttributesToProductFamily",
+    "withNotLinkedAttributesToClassification",
     "withNotLinkedAttributesToProduct",
     "fromAttributesTab"
   ],

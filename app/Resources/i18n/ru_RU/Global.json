@@ -13,7 +13,6 @@
     "Association": "Ассоциация",
     "AttributeGroup": "Группа атрибута",
     "Brand": "Бренд",
-    "ProductFamily": "Продуктовая семья",
     "ProductAttributeValue": "Значение атрибута",
     "ProductPrice": "Цена продукта",
     "Packaging": "Упаковка",
@@ -21,7 +20,6 @@
     "ProductSerie": "Серия продукта",
     "AssetCategory": "Ассет категория",
     "ChannelPricing": "Канал ценообразования",
-    "ProductFamilyAttribute": "Атрибут продуктовой семьи",
     "Content": "Контент",
     "ContentGroup": "Група контента"
   },
@@ -38,7 +36,6 @@
     "Association": "Ассоциации",
     "AttributeGroup": "Группы атрибутов",
     "Brand": "Бренды",
-    "ProductFamily": "Продуктовые семьи",
     "Packaging": "Упаковки",
     "AssetCategory": "Ассет категории",
     "Tax": "Налоги",
@@ -46,7 +43,6 @@
     "ProductAttributeValue": "Значения атрибутов",
     "ProductPrice": "Цены продукта",
     "ProductSerie": "Серии продукта",
-    "ProductFamilyAttribute": "Атрибуты продуктовой семьи",
     "Content": "Контент",
     "ContentGroup": "Группы контента"
   },
@@ -61,7 +57,6 @@
     }
   },
   "fields": {
-    "productFamily": "Продуктовая семья",
     "productStatus": "Статус продукта",
     "oneGeoType": "OneGeo Type",
     "priceCurrency": "Валюта цены",

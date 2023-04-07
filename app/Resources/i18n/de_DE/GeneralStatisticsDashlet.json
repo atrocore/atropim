@@ -3,7 +3,7 @@
         "generalStatistics": {
             "product": "Produkt",
             "category": "Kategorie",
-            "productFamily": "Produktfamilie",
+            "classification": "Klassifizierung",
             "attribute": "Attribute",
             "productWithoutAssociatedProduct": "Produkt ohne zugehöriges Produkt",
             "productWithoutCategory": "Produkt ohne Kategorie",

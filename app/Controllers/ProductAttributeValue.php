@@ -95,7 +95,7 @@ class ProductAttributeValue extends Relationship
         if (!property_exists($data, 'attributeGroupId') || !property_exists($data, 'productId')) {
             throw new BadRequest();
         }
-        if (!$this->getAcl()->check('ProductFamilyAttribute', 'edit')) {
+        if (!$this->getAcl()->check('ClassificationAttribute', 'edit')) {
             throw new Forbidden();
         }
 

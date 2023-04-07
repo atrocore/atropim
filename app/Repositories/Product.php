@@ -290,12 +290,12 @@ class Product extends AbstractRepository
 
         $pfas = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->join('attribute')
             ->where([
-                'attribute.id !=' => null,
-                'productFamilyId' => $product->get('productFamilyId'),
-                'channelId'       => $channelId
+                'attribute.id !='  => null,
+                'classificationId' => $product->get('classificationId'),
+                'channelId'        => $channelId
             ])
             ->find();
 
@@ -450,10 +450,6 @@ class Product extends AbstractRepository
             $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
         }
 
-        if ($entity->isAttributeChanged('productFamilyId')) {
-            $this->onProductFamilyChange($entity);
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
@@ -471,12 +467,6 @@ class Product extends AbstractRepository
     {
         // save attributes
         $this->saveAttributes($entity);
-
-        if ($entity->isAttributeChanged('productFamilyId')) {
-            if (empty($entity->skipUpdateProductAttributesByProductFamily) && empty($entity->isDuplicate)) {
-                $this->updateProductAttributesByProductFamily($entity);
-            }
-        }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('isInheritAssignedUser') && $entity->get('isInheritAssignedUser')) {
             $this->inheritOwnership($entity, 'assignedUser', $this->getConfig()->get('assignedUserProductOwnership', null));
@@ -502,6 +492,24 @@ class Product extends AbstractRepository
         $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
 
         parent::afterRemove($entity, $options);
+    }
+
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName === 'classifications') {
+            $this->relateClassification($entity, $foreign);
+        }
+
+        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName === 'classifications') {
+            $this->unRelateClassification($entity, $foreign);
+        }
+
+        parent::afterUnrelate($entity, $relationName, $foreign, $options);
     }
 
     public function relateCategories(Entity $product, $category, $data, $options)
@@ -551,50 +559,135 @@ class Product extends AbstractRepository
         return empty($result) ? [] : $result;
     }
 
-    protected function onProductFamilyChange(Entity $product): void
+    public function relateClassification($product, $classification): void
     {
-        if (empty($product->getFetched('productFamilyId'))) {
+        if (is_string($product)) {
+            $product = $this->get($product);
+        }
+
+        if (is_string($classification)) {
+            $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
+        }
+
+        if (!$product instanceof Entity) {
+            $GLOBALS['log']->error('RelateClassification Failed: $product is not object');
             return;
         }
 
-        $mode = $this->getConfig()->get('behaviorOnProductFamilyChange', 'retainAllInheritedAttributes');
+        if (!$classification instanceof Entity) {
+            $GLOBALS['log']->error('RelateClassification Failed: $classification is not object');
+            return;
+        }
 
+        $cas = $classification->get('classificationAttributes');
+        if (empty($cas[0])) {
+            return;
+        }
+
+        $channelsIds = array_column($product->get('productChannels')->toArray(), 'channelId');
+
+        foreach ($cas as $ca) {
+            if (!empty($ca->get('channelId')) && !in_array($ca->get('channelId'), $channelsIds)) {
+                continue;
+            }
+
+            $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
+            $productAttributeValue->set(
+                [
+                    'productId'   => $product->get('id'),
+                    'attributeId' => $ca->get('attributeId'),
+                    'language'    => $ca->get('language'),
+                    'scope'       => $ca->get('scope'),
+                    'channelId'   => $ca->get('channelId')
+                ]
+            );
+
+            if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
+                $productAttributeValue->set(
+                    [
+                        'assignedUserId' => $product->get('assignedUserId'),
+                        'ownerUserId'    => $product->get('ownerUserId'),
+                        'teamsIds'       => $product->get('teamsIds')
+                    ]
+                );
+            }
+
+            $productAttributeValue->skipVariantValidation = true;
+            $productAttributeValue->skipProductChannelValidation = true;
+            $productAttributeValue->clearCompletenessFields = true;
+
+            try {
+                $this->getEntityManager()->saveEntity($productAttributeValue);
+            } catch (BadRequest $e) {
+            }
+        }
+    }
+
+    public function unRelateClassification($product, $classification): void
+    {
+        $mode = $this->getConfig()->get('behaviorOnClassificationChange', 'retainAllInheritedAttributes');
         if ($mode == 'retainAllInheritedAttributes') {
             return;
         }
 
-        $where = [
-            'productFamilyId' => $product->getFetched('productFamilyId')
-        ];
-
-        if (!empty($product->get('productFamilyId'))) {
-            $where['attributeId!='] = array_column($product->get('productFamily')->get('productFamilyAttributes')->toArray(), 'attributeId');
+        if (is_string($product)) {
+            $product = $this->get($product);
         }
 
-        $pfas = $this
+        if (is_string($classification)) {
+            $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
+        }
+
+        if (!$product instanceof Entity) {
+            $GLOBALS['log']->error('UnRelateClassification Failed: $product is not object');
+            return;
+        }
+
+        if (!$classification instanceof Entity) {
+            $GLOBALS['log']->error('UnRelateClassification Failed: $classification is not object');
+            return;
+        }
+
+        $where = [
+            'classificationId' => $classification->get('id')
+        ];
+
+        foreach ($product->get('classifications') as $productClassification) {
+            if ($productClassification->get('id') === $classification->get('id')) {
+                continue;
+            }
+            foreach ($productClassification->get('classificationAttributes') as $pca) {
+                if (!isset($where['attributeId!='])) {
+                    $where['attributeId!='] = [];
+                }
+                $where['attributeId!='] = array_merge($where['attributeId!='], array_column($pca->toArray(), 'attributeId'));
+            }
+        }
+
+        $cas = $this
             ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
+            ->getRepository('ClassificationAttribute')
             ->where($where)
             ->find();
 
-        if (count($pfas) === 0) {
+        if (empty($cas[0])) {
             return;
         }
 
         $pavs = $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
-            ->where(['productId' => $product->get('id'), 'attributeId' => array_column($pfas->toArray(), 'attributeId')])
+            ->where(['productId' => $product->get('id'), 'attributeId' => array_column($cas->toArray(), 'attributeId')])
             ->find();
 
-        if (count($pavs) === 0) {
+        if (empty($pavs[0])) {
             return;
         }
 
-        foreach ($pfas as $pfa) {
+        foreach ($cas as $ca) {
             foreach ($pavs as $pav) {
-                if ($pav->get('attributeId') === $pfa->get('attributeId') && $pav->get('scope') === $pfa->get('scope')) {
-                    if ($pfa->get('scope') === 'Channel' && $pav->get('channelId') !== $pfa->get('channelId')) {
+                if ($pav->get('attributeId') === $ca->get('attributeId') && $pav->get('scope') === $ca->get('scope')) {
+                    if ($ca->get('scope') === 'Channel' && $pav->get('channelId') !== $ca->get('channelId')) {
                         continue 1;
                     }
                     if ($mode === 'removeOnlyInheritedAttributesWithNoValue') {
@@ -649,65 +742,11 @@ class Product extends AbstractRepository
 
         if ($config == 'fromCatalog') {
             $result = $entity->get('catalog');
-        } elseif ($config == 'fromProductFamily') {
-            $result = $entity->get('productFamily');
+        } elseif ($config == 'fromClassification') {
+            $result = $entity->get('classification');
         }
 
         return $result;
-    }
-
-    protected function updateProductAttributesByProductFamily(Entity $product): bool
-    {
-        if (empty($product->get('productFamilyId'))) {
-            return true;
-        }
-
-        $pfas = $this
-            ->getEntityManager()
-            ->getRepository('ProductFamilyAttribute')
-            ->where(['productFamilyId' => $product->get('productFamilyId')])
-            ->find();
-
-        $channels = array_column($product->get('productChannels')->toArray(), 'channelId');
-
-        foreach ($pfas as $pfa) {
-            if (!empty($pfa->get('channelId')) && !in_array($pfa->get('channelId'), $channels)) {
-                continue;
-            }
-
-            $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
-            $productAttributeValue->set(
-                [
-                    'productId'   => $product->get('id'),
-                    'attributeId' => $pfa->get('attributeId'),
-                    'isRequired'  => $pfa->get('isRequired'),
-                    'scope'       => $pfa->get('scope'),
-                    'channelId'   => $pfa->get('channelId')
-                ]
-            );
-
-            if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
-                $productAttributeValue->set(
-                    [
-                        'assignedUserId' => $product->get('assignedUserId'),
-                        'ownerUserId'    => $product->get('ownerUserId'),
-                        'teamsIds'       => $product->get('teamsIds')
-                    ]
-                );
-            }
-
-            $productAttributeValue->skipVariantValidation = true;
-            $productAttributeValue->skipProductChannelValidation = true;
-            $productAttributeValue->clearCompletenessFields = true;
-
-            try {
-                $this->getEntityManager()->saveEntity($productAttributeValue);
-            } catch (BadRequest $e) {
-                // ignore
-            }
-        }
-
-        return true;
     }
 
     /**

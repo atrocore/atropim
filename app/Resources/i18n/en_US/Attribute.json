@@ -28,7 +28,8 @@
     "sortOrderInProduct": "Sort Order for Product",
     "tooltip": "Tooltip",
     "maxLength": "Max Length",
-    "description": "Description"
+    "description": "Description",
+    "classifications": "Classifications"
   },
   "links": {
     "parents": "Associating Attributes",
@@ -37,11 +38,11 @@
     "attributeGroup": "Attribute Group",
     "products": "Products",
     "productAttributeValues": "Attribute Values",
-    "productFamilies": "Product families"
+    "classifications": "Classifications"
   },
   "labels": {
     "Create Attribute": "Create Attribute",
-    "productFamily": "Product Family",
+    "Classification": "Classification",
     "addNewValue": "Add new value"
   },
   "options": {
@@ -82,10 +83,9 @@
     "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",
     "attributeValueShouldBeUnique": "Attribute value should be unique.",
     "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",
-    "youCanNotUnlinkProductFamilyAttribute": "You cannot unlink product family attribute.",
     "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
     "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
-    "attributeIsUsedInProductFamilies": "Attribute is used in product families. Please, update product families first.",
+    "attributeIsUsedInClassifications": "Attribute is used in classifications. Please, update classifications first.",
     "attributeNotHaveUniqueValue": "Attribute have no unique value.",
     "someAttributeDontMathToPattern": "Some attribute don't match to pattern."
   }

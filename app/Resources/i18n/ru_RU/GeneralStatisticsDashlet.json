@@ -3,7 +3,6 @@
         "generalStatistics": {
             "product": "Продукты",
             "category": "Категории",
-            "productFamily": "Продуктовые семьи",
             "attribute": "Атрибуты",
             "productWithoutAssociatedProduct": "Продукты без связанных продуктов",
             "productWithoutCategory": "Продукты без категории",

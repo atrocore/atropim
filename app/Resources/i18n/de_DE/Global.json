@@ -9,7 +9,7 @@
     "AssetCategory": "Asset Kategorie",
     "Catalog": "Kataloge",
     "Product": "Produkt",
-    "ProductFamily": "Produktfamilie",
+    "Classification": "Klassifizierung",
     "ProductSerie": "Produktserie",
     "AttributeGroup": "Attributgruppe",
     "AssociatedProduct": "Assoziiertes Produkt",
@@ -23,7 +23,7 @@
     "Tax": "Tax",
     "Settings": "Administration",
     "Currency": "Währung",
-    "ProductFamilyAttribute": "Familienattribut",
+    "ClassificationAttribute": "Klassifizierungattribut",
     "Content": "Content",
     "ContentGroup": "Content Gruppe"
   },
@@ -36,7 +36,7 @@
     "AssetCategory": "Asset Kategorien",
     "Catalog": "Kataloge",
     "Product": "Produkte",
-    "ProductFamily": "Produktfamilien",
+    "Classification": "Klassifizierungen",
     "AssociatedProduct": "Assoziierte Produkte",
     "ProductSerie": "Produktserien",
     "Attribute": "Attribute",
@@ -53,13 +53,12 @@
     "Currency": "Währung",
     "Dashboard": "Instrumententafel",
     "EmailAddress": "E-Mail Addresse",
-    "ProductFamilyAttribute": "Familienattribute",
+    "ClassificationAttribute": "Klassifizierungattribute",
     "Content": "Contents",
     "ContentGroup": "Content Gruppen"
   },
   "fields": {
     "channels": "Kanäle",
-    "productFamily": "Artikel-Familien",
     "productSerie": "Product Serie",
     "scope": "Scope",
     "role": "Rolle"

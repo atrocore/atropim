@@ -44,7 +44,7 @@ class ProductAttributeValue extends AbstractRepository
 
     protected array $channelLanguages = [];
     protected array $products = [];
-    protected array $productFamilyAttributes = [];
+    protected array $classificationAttributes = [];
     protected array $productPavs = [];
 
     private array $pavsAttributes = [];
@@ -115,7 +115,7 @@ class ProductAttributeValue extends AbstractRepository
         if (empty($this->pavsAttributes[$entity->get('attributeId')])) {
             $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
             if (empty($attribute)) {
-                $this->getEntityManager()->getRepository('ProductFamilyAttribute')->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
+                $this->getEntityManager()->getRepository('ClassificationAttribute')->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
                 $this->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
                 throw new BadRequest("Attribute '{$entity->get('attributeId')}' does not exist.");
             }
@@ -291,33 +291,39 @@ class ProductAttributeValue extends AbstractRepository
         return $this->productPavs[$entity->get('productId')];
     }
 
-    public function findProductFamilyAttribute(Entity $pav): ?Entity
+    public function findClassificationAttribute(Entity $pav): ?Entity
     {
         $product = $this->getProductById((string)$pav->get('productId'));
-        if (empty($product) || empty($product->get('productFamilyId'))) {
+        if (empty($product)) {
             return null;
         }
 
-        $productFamilyAttributes = $this->getProductFamilyAttributesByProductFamilyId((string)$product->get('productFamilyId'));
+        $classifications = $product->get('classifications');
+        if (empty($classifications[0])) {
+            return null;
+        }
 
-        foreach ($productFamilyAttributes as $pfa) {
-            if ($pfa->get('attributeId') !== $pav->get('attributeId')) {
-                continue;
+        foreach ($classifications as $classification) {
+            $classificationAttributes = $this->getClassificationAttributesByClassificationId($classification->get('id'));
+            foreach ($classificationAttributes as $pfa) {
+                if ($pfa->get('attributeId') !== $pav->get('attributeId')) {
+                    continue;
+                }
+
+                if ($pfa->get('scope') !== $pav->get('scope')) {
+                    continue;
+                }
+
+                if ($pfa->get('language') !== $pav->get('language')) {
+                    continue;
+                }
+
+                if ($pav->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
+                    continue;
+                }
+
+                return $pfa;
             }
-
-            if ($pfa->get('scope') !== $pav->get('scope')) {
-                continue;
-            }
-
-            if ($pfa->get('language') !== $pav->get('language')) {
-                continue;
-            }
-
-            if ($pav->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
-                continue;
-            }
-
-            return $pfa;
         }
 
         return null;
@@ -986,16 +992,16 @@ class ProductAttributeValue extends AbstractRepository
         return $this->products[$productId];
     }
 
-    public function getProductFamilyAttributesByProductFamilyId(string $productFamilyId): EntityCollection
+    public function getClassificationAttributesByClassificationId(string $classificationId): EntityCollection
     {
-        if (!array_key_exists($productFamilyId, $this->productFamilyAttributes)) {
-            $this->productFamilyAttributes[$productFamilyId] = $this
+        if (!array_key_exists($classificationId, $this->classificationAttributes)) {
+            $this->classificationAttributes[$classificationId] = $this
                 ->getEntityManager()
-                ->getRepository('ProductFamilyAttribute')
-                ->where(['productFamilyId' => $productFamilyId])
+                ->getRepository('ClassificationAttribute')
+                ->where(['classificationId' => $classificationId])
                 ->find();
         }
 
-        return $this->productFamilyAttributes[$productFamilyId];
+        return $this->classificationAttributes[$classificationId];
     }
 }

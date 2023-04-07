@@ -1,0 +1,33 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-sitemap",
+  "boolFilterList": [
+    "onlyMy",
+    "notEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "relationshipPanels": {
+    "classificationAttributes": {
+      "selectAction": "selectRelatedEntity",
+      "view": "pim:views/classification/record/panels/classification-attributes",
+      "rowActionsView": "pim:views/classification/record/row-actions/classification-attribute",
+      "aclScopesList": [
+        "Attribute",
+        "AttributeGroup",
+        "ClassificationAttribute"
+      ]
+    },
+    "products": {
+      "view": "pim:views/classification/record/panels/products",
+      "selectBoolFilterList": [
+        "notLinkedWithClassification"
+      ],
+      "createAction": "createRelatedConfigured"
+    }
+  }
+}

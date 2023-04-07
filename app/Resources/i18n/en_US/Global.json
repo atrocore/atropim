@@ -13,7 +13,7 @@
     "AttributeGroup": "Attribute Group",
     "AttributeTab": "Attribute Tab",
     "Brand": "Brand",
-    "ProductFamily": "Product Family",
+    "Classification": "Classification",
     "ProductAttributeValue": "Attribute Value",
     "ProductPrice": "Product Price",
     "Packaging": "Packaging",
@@ -21,7 +21,7 @@
     "ProductSerie": "Product Serie",
     "AssetCategory": "Asset Category",
     "ChannelPricing": "Channel Pricing",
-    "ProductFamilyAttribute": "Family Attribute",
+    "ClassificationAttribute": "Classification Attribute",
     "Content": "Content",
     "ContentGroup": "Content Group"
   },
@@ -38,7 +38,7 @@
     "AttributeGroup": "Attribute Groups",
     "AttributeTab": "Attribute Tabs",
     "Brand": "Brands",
-    "ProductFamily": "Product Families",
+    "Classification": "Classifications",
     "Packaging": "Packagings",
     "AssetCategory": "Asset Categories",
     "Tax": "Taxes",
@@ -46,7 +46,7 @@
     "ProductAttributeValue": "Attribute Values",
     "ProductPrice": "Product Prices",
     "ProductSerie": "Product Series",
-    "ProductFamilyAttribute": "Family Attributes",
+    "ClassificationAttribute": "Classification Attributes",
     "Content": "Contents",
     "ContentGroup": "Content Groups"
   },
@@ -61,7 +61,7 @@
     }
   },
   "fields": {
-    "productFamily": "Product Family",
+    "Classification": "Classification",
     "productStatus": "Product Status",
     "oneGeoType": "OneGeo Type",
     "priceCurrency": "Price Currency",

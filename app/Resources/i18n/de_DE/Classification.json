@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "description": "Beschreibung",
+    "isActive": "Aktiv",
+    "classifications": "Klassifizierungen",
+    "classificationAttributes": "Klassifizierungattribute",
+    "products": "Produkte",
+    "code": "Code"
+  },
+  "links": {
+    "classifications": "Klassifizierungen",
+    "classificationAttributes": "Klassifizierungattribute",
+    "products": "Produkte",
+    "attributes": "Attribute"
+  },
+  "labels": {
+    "selectAttributeGroup": "Attributgruppe auswählen",
+    "Create Classification": "Klassifizierung erstellen"
+  }
+}

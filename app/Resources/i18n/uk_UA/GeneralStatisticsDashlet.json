@@ -3,7 +3,7 @@
     "generalStatistics": {
       "product": "Продукти",
       "category": "Категорії",
-      "productFamily": "Продуктові сім'ї",
+      "classification": "Класифікації",
       "attribute": "Атрибути",
       "productWithoutAssociatedProduct": "Продукти без пов'язаних продуктів",
       "productWithoutCategory": "Продукти без категорії",

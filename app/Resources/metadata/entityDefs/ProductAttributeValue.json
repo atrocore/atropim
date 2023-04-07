@@ -15,7 +15,7 @@
       "type": "language",
       "default": "main",
       "relationshipField": true,
-      "view": "pim:views/product-family-attribute/fields/language",
+      "view": "pim:views/classification-attribute/fields/language",
       "prohibitedEmptyValue": true
     },
     "scope": {

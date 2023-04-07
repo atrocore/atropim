@@ -47,9 +47,9 @@ class GeneralStatisticsDashlet extends AbstractDashletService
                 'amount' => $this->getAmountForScope('Category')
             ],
             [
-                'id'     => 'productFamily',
-                'name'   => 'productFamily',
-                'amount' => $this->getAmountForScope('ProductFamily')
+                'id'     => 'classification',
+                'name'   => 'classification',
+                'amount' => $this->getAmountForScope('Classification')
             ],
             [
                 'id'     => 'attribute',

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "classification"
+  },
+  {
+    "name": "attribute"
+  },
+  {
+    "name": "language"
+  },
+  {
+    "name": "isRequired"
+  },
+  {
+    "name": "scope"
+  },
+  {
+    "name": "channel"
+  }
+]

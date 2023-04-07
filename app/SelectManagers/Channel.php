@@ -81,20 +81,20 @@ class Channel extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotLinkedWithProductFamilyAttribute(array &$result)
+    protected function boolFilterNotLinkedWithClassificationAttribute(array &$result)
     {
         // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithProductFamilyAttribute');
+        $data = (array)$this->getSelectCondition('notLinkedWithClassificationAttribute');
 
-        if (isset($data['productFamilyId']) && isset($data['attributeId'])) {
+        if (isset($data['classificationId']) && isset($data['attributeId'])) {
             $channelsIds = $this
                 ->getEntityManager()
-                ->getRepository('ProductFamilyAttribute')
+                ->getRepository('ClassificationAttribute')
                 ->select(['channelId'])
                 ->where(
                     [
                         'attributeId'     => $data['attributeId'],
-                        'productFamilyId' => $data['productFamilyId'],
+                        'classificationId' => $data['classificationId'],
                         'scope'           => 'Channel',
                     ]
                 )
@@ -193,21 +193,21 @@ class Channel extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotLinkedWithAttributesInProductFamily(array &$result)
+    protected function boolFilterNotLinkedWithAttributesInClassification(array &$result)
     {
-        $data = (array)$this->getSelectCondition('notLinkedWithAttributesInProductFamily');
+        $data = (array)$this->getSelectCondition('notLinkedWithAttributesInClassification');
 
-        if (isset($data['productFamilyId']) && isset($data['attributeId'])) {
+        if (isset($data['classificationId']) && isset($data['attributeId'])) {
             $channels = $this
                 ->getEntityManager()
                 ->getRepository('Channel')
                 ->select(['id'])
                 ->distinct()
-                ->join(['productFamilyAttributes'])
+                ->join(['classificationAttributes'])
                 ->where(
                     [
-                        'productFamilyAttributes.attributeId'     => $data['attributeId'],
-                        'productFamilyAttributes.productFamilyId' => $data['productFamilyId']
+                        'classificationAttributes.attributeId'     => $data['attributeId'],
+                        'classificationAttributes.classificationId' => $data['classificationId']
                     ]
                 )
                 ->find()

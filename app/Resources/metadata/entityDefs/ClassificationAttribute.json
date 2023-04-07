@@ -1,0 +1,173 @@
+{
+  "fields": {
+    "classification": {
+      "type": "link",
+      "required": true,
+      "relationshipField": true
+    },
+    "attribute": {
+      "type": "link",
+      "required": true,
+      "relationshipField": true,
+      "view": "pim:views/classification-attribute/fields/attribute"
+    },
+    "language": {
+      "type": "language",
+      "relationshipField": true,
+      "default": "main",
+      "view": "pim:views/classification-attribute/fields/language",
+      "prohibitedEmptyValue": true
+    },
+    "languages": {
+      "type": "multiLanguage",
+      "notStorable": true,
+      "view": "pim:views/classification-attribute/fields/languages"
+    },
+    "isRequired": {
+      "type": "bool",
+      "default": true
+    },
+    "isInherited": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeGroupId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeGroupName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "scope": {
+      "type": "enum",
+      "relationshipField": true,
+      "required": true,
+      "prohibitedEmptyValue": true,
+      "layoutListSmallDisabled": true,
+      "fontSize": 1,
+      "options": [
+        "Global",
+        "Channel"
+      ],
+      "optionsIds": [
+        "Global",
+        "Channel"
+      ],
+      "default": "Global"
+    },
+    "channel": {
+      "type": "link",
+      "relationshipField": true,
+      "required": false,
+      "view": "pim:views/classification-attribute/fields/channel"
+    },
+    "maxLength": {
+      "type": "int",
+      "view": "pim:views/fields/max-length"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "classification": {
+      "type": "belongsTo",
+      "foreign": "classificationAttributes",
+      "entity": "Classification"
+    },
+    "attribute": {
+      "type": "belongsTo",
+      "foreign": "classificationAttributes",
+      "entity": "Attribute"
+    },
+    "channel": {
+      "type": "belongsTo",
+      "foreign": "classificationAttributes",
+      "entity": "Channel"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "classification.name",
+      "attribute.name",
+      "scope",
+      "channel.name"
+    ]
+  },
+  "uniqueIndexes": {
+    "unique_relationship": [
+      "deleted",
+      "classification_id",
+      "attribute_id",
+      "language",
+      "scope",
+      "channel_id"
+    ]
+  }
+}

@@ -41,20 +41,6 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "ownerUser": {
-      "type": "link",
-      "required": true,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": true,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
-    },
     "code": {
       "type": "varchar",
       "massUpdateDisabled": true,
@@ -106,7 +92,7 @@
       "importDisabled": true,
       "noLoad": true
     },
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -129,20 +115,6 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "ownerUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "assignedUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "teams": {
-      "type": "hasMany",
-      "entity": "Team",
-      "relationName": "EntityTeam",
-      "layoutRelationshipsDisabled": true
-    },
     "productChannels": {
       "type": "hasMany",
       "foreign": "channel",
@@ -157,10 +129,10 @@
       "foreign": "channel",
       "entity": "ProductAttributeValue"
     },
-    "productFamilyAttributes": {
+    "classificationAttributes": {
       "type": "hasMany",
       "foreign": "channel",
-      "entity": "ProductFamilyAttribute"
+      "entity": "ClassificationAttribute"
     },
     "categories": {
       "type": "hasMany",
@@ -186,18 +158,6 @@
     "name": {
       "columns": [
         "name",
-        "deleted"
-      ]
-    },
-    "ownerUser": {
-      "columns": [
-        "ownerUserId",
-        "deleted"
-      ]
-    },
-    "assignedUser": {
-      "columns": [
-        "assignedUserId",
         "deleted"
       ]
     }

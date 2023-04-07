@@ -1,0 +1,46 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "classification"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scope"
+        },
+        {
+          "name": "channel"
+        }
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "attribute"
+        },
+        false
+      ],
+      [
+        {
+          "name": "language"
+        },
+        false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

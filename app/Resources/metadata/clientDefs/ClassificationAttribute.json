@@ -1,0 +1,64 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-list-alt",
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "kanbanViewMode": false,
+  "color": null,
+  "modalViews": {
+    "edit": "pim:views/classification-attribute/modals/edit"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "channel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "scope",
+              "value": "Channel"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "scope",
+              "value": "Channel"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      },
+      "scope": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      },
+      "attribute": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

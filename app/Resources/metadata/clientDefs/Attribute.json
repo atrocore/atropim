@@ -6,7 +6,7 @@
     "notLinkedWithProduct",
     "fromAttributesTab",
     "unitTypeDisabled",
-    "notLinkedWithProductFamilyAttribute",
+    "notLinkedWithClassificationAttribute",
     "notLinkedWithProductAttributeValue",
     "notParents",
     "notChildren"
@@ -15,7 +15,7 @@
     "notLinkedWithProduct",
     "fromAttributesTab",
     "unitTypeDisabled",
-    "notLinkedWithProductFamilyAttribute",
+    "notLinkedWithClassificationAttribute",
     "notLinkedWithProductAttributeValue",
     "notParents",
     "notChildren"

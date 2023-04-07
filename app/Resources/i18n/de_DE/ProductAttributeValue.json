@@ -6,7 +6,6 @@
     "product": "Produkt",
     "productAttribute": "Produktattribut",
     "channel": "Kanal",
-    "productFamilyAttribute": "Produktfamilienattribut",
     "isRequired": "Erforderlich",
     "attribute": "Attribut",
     "language": "Sprache",
@@ -44,7 +43,6 @@
     "noSuchAttributeUnit": "Die Einheit für das Attribut '%s' ist ungültig.",
     "noSuchAttributeOptions": "Der Wert für das Attribut '%s' ist ungültig.",
     "youHaveNoAclRightsToReadAttributeValues": "Sie haben keine Rechte, Attributwerte zu lesen.",
-    "You can't change product in attribute from Product Family": "Sie können das Produkt im Attribut der Produktfamilie nicht ändern.",
     "attributeDontMatchToPattern": "Wert des Attributes \"{attribute}\" entspricht nicht dem Pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Das Attribut %s sollte einen eindeutigen Wert haben."
   },
