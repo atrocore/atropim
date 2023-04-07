@@ -402,7 +402,7 @@ class Product extends AbstractSelectManager
         $classificationId = (string)$this->getSelectCondition('notLinkedWithClassification');
 
         if (!empty($classificationId)) {
-            foreach ($this->getClassificationProducts($classificationId) as $productId) {
+            foreach ($this->getProductsIdsByClassificationIds([$classificationId]) as $productId) {
                 $result['whereClause'][] = [
                     'id!=' => $productId
                 ];
@@ -410,14 +410,14 @@ class Product extends AbstractSelectManager
         }
     }
 
-    protected function getClassificationProducts(string $classificationId): array
+    protected function getProductsIdsByClassificationIds(array $classificationIds): array
     {
         $products = $this
             ->getEntityManager()
             ->getRepository('Product')
             ->join('classifications')
             ->select(['id'])
-            ->where(['classifications.id' => $classificationId])
+            ->where(['classifications.id' => $classificationIds])
             ->find();
 
         return array_column($products->toArray(), 'id');
@@ -533,8 +533,6 @@ class Product extends AbstractSelectManager
 
     protected function boolFilterLinkedWithClassification(array &$result)
     {
-        \Pim\Repositories\Classification::onlyForAdvancedClassification();
-
         if (empty($id = $this->getSelectCondition('linkedWithClassification'))) {
             return;
         }
@@ -548,7 +546,7 @@ class Product extends AbstractSelectManager
         $ids[] = $pf->get('id');
 
         $result['whereClause'][] = [
-            'classificationId' => $ids
+            'id' => $this->getProductsIdsByClassificationIds($ids)
         ];
     }
 

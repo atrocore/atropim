@@ -38,8 +38,6 @@ class Classification extends AbstractSelectManager
 {
     protected function boolFilterNotParents(&$result): void
     {
-        \Pim\Repositories\Classification::onlyForAdvancedClassification();
-
         $repository = $this->getEntityManager()->getRepository('Classification');
         $result['whereClause'][] = [
             'id!=' => $repository->getParentsIds($repository->get((string)$this->getSelectCondition('notParents')))
@@ -48,8 +46,6 @@ class Classification extends AbstractSelectManager
 
     protected function boolFilterNotChildren(&$result): void
     {
-        \Pim\Repositories\Classification::onlyForAdvancedClassification();
-
         $repository = $this->getEntityManager()->getRepository('Classification');
         $result['whereClause'][] = [
             'id!=' => $repository->getChildrenIds($repository->get((string)$this->getSelectCondition('notChildren')))
