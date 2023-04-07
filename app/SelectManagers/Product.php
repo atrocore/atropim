@@ -402,37 +402,25 @@ class Product extends AbstractSelectManager
         $classificationId = (string)$this->getSelectCondition('notLinkedWithClassification');
 
         if (!empty($classificationId)) {
-            // get Products linked with brand
-            $products = $this->getClassificationProducts($classificationId);
-            foreach ($products as $row) {
+            foreach ($this->getClassificationProducts($classificationId) as $productId) {
                 $result['whereClause'][] = [
-                    'id!=' => $row['productId']
+                    'id!=' => $productId
                 ];
             }
         }
     }
 
-    /**
-     * Get productIds related with classification
-     *
-     * @param string $classificationId
-     *
-     * @return array
-     */
     protected function getClassificationProducts(string $classificationId): array
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $products = $this
+            ->getEntityManager()
+            ->getRepository('Product')
+            ->join('classifications')
+            ->select(['id'])
+            ->where(['classifications.id' => $classificationId])
+            ->find();
 
-        $sql
-            = 'SELECT id AS productId
-                FROM product
-                WHERE deleted = 0
-                      AND classification_id = :classificationId';
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute(['classificationId' => $classificationId]);
-
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
+        return array_column($products->toArray(), 'id');
     }
 
     /**
@@ -553,7 +541,7 @@ class Product extends AbstractSelectManager
 
         $repository = $this->getEntityManager()->getRepository('Classification');
         if (empty($pf = $repository->get($id))) {
-            throw new BadRequest('No such Product Family');
+            throw new BadRequest('No such Classification');
         }
 
         $ids = $repository->getChildrenIds($pf);

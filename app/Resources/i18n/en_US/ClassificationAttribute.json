@@ -27,9 +27,9 @@
   },
   "messages": {
     "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels.",
-    "unlinkRelatedAttribute": "Are you sure you want to delete the selected Attribute from the selected Product Family? All the Child Product Families and related Products will retain this Attribute.",
-    "cascadeUnlinkRelatedAttribute": "Are you sure you want to delete the selected attribute from the selected Product Family, its child Product Families and their related Products? All related Attribute Values will be also removed.",
-    "removeRelatedAttributeGroup": "Are you sure you want to delete all Attributes for the selected Attribute Group from the selected Product Family? All the Child Product Families and related Products will retain these Attributes.",
-    "removeRelatedAttributeGroupCascade": "Are you sure you want to delete all attributes for the selected Attribute Group from the selected Product Family, its child Product Families and their related Products? All related Attribute Values will be also removed."
+    "unlinkRelatedAttribute": "Are you sure you want to delete the selected Attribute from the selected Classification? All the Child Classifications and related Products will retain this Attribute.",
+    "cascadeUnlinkRelatedAttribute": "Are you sure you want to delete the selected attribute from the selected Classification, its child Classifications and their related Products? All related Attribute Values will be also removed.",
+    "removeRelatedAttributeGroup": "Are you sure you want to delete all Attributes for the selected Attribute Group from the selected Classification? All the Child Classifications and related Products will retain these Attributes.",
+    "removeRelatedAttributeGroupCascade": "Are you sure you want to delete all attributes for the selected Attribute Group from the selected Classification, its child Classifications and their related Products? All related Attribute Values will be also removed."
   }
 }
