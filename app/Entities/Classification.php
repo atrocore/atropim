@@ -40,16 +40,14 @@ class Classification extends Hierarchy
      */
     protected $entityType = 'Classification';
 
-    /**
-     * @return array
-     */
     public function _getProductsIds(): array
     {
         $data = $this
             ->getEntityManager()
             ->getRepository('Product')
             ->select(['id'])
-            ->where(['classificationId' => $this->get('id')])
+            ->join('classifications')
+            ->where(['classifications.id' => $this->get('id')])
             ->find()
             ->toArray();
 
