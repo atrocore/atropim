@@ -37,6 +37,9 @@ class V1Dot8Dot0 extends Base
 {
     public function up(): void
     {
+        $this->getPDO()->exec("DROP TABLE IF EXISTS classification");
+        $this->getPDO()->exec("DROP TABLE IF EXISTS classification_attribute");
+
         $this->getPDO()->exec("ALTER TABLE product_family RENAME classification");
         $this->getPDO()->exec("ALTER TABLE product_family_attribute RENAME classification_attribute");
 
