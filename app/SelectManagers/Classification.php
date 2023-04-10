@@ -31,46 +31,6 @@ namespace Pim\SelectManagers;
 
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class of Classification
- */
 class Classification extends AbstractSelectManager
 {
-    protected function boolFilterNotParents(&$result): void
-    {
-        $repository = $this->getEntityManager()->getRepository('Classification');
-        $result['whereClause'][] = [
-            'id!=' => $repository->getParentsIds($repository->get((string)$this->getSelectCondition('notParents')))
-        ];
-    }
-
-    protected function boolFilterNotChildren(&$result): void
-    {
-        $repository = $this->getEntityManager()->getRepository('Classification');
-        $result['whereClause'][] = [
-            'id!=' => $repository->getChildrenIds($repository->get((string)$this->getSelectCondition('notChildren')))
-        ];
-    }
-
-    /**
-     * NotLinkedWithAttribute filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithAttribute(&$result)
-    {
-        $classificationsIds = $this->getEntityManager()
-            ->getRepository('Classification')
-            ->select(['id'])
-            ->join(['attributes'])
-            ->where([
-                'attributes.Id' => (string)$this->getSelectCondition('notLinkedWithAttribute'),
-            ])
-            ->find()
-            ->toArray();
-
-        $result['whereClause'][] = [
-            'id!=' => array_column($classificationsIds, 'id')
-        ];
-    }
 }

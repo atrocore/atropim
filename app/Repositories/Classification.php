@@ -130,8 +130,9 @@ class Classification extends AbstractRepository
     {
         parent::afterRemove($entity, $options);
 
-        $this->getPDO()->exec("UPDATE `product` SET classification_id=NULL WHERE classification_id='{$entity->get('id')}'");
-        $this->getPDO()->exec("DELETE FROM `classification_attribute` WHERE classification_id='{$entity->get('id')}'");
+        $this->getEntityManager()->getRepository('ClassificationAttribute')
+            ->where(['classificationId' => $entity->get('id')])
+            ->removeCollection();
     }
 
     protected function init()
