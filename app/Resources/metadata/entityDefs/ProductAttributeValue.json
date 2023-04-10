@@ -252,6 +252,10 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "default": false
+    },
     "isValueReadOnly": {
       "type": "bool",
       "notStorable": true,
