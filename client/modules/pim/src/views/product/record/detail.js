@@ -405,7 +405,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
             this.beforeBeforeSave();
 
-            let data = this.fetch();
+            let data = this.getDataForSave();
 
             let self = this;
             let model = this.model;
@@ -413,8 +413,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             let initialAttributes = this.attributes;
 
             let beforeSaveAttributes = this.model.getClonedAttributes();
-
-            data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
 
             let gridInitPackages = false;
             let packageView = false;
@@ -531,77 +529,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             return true;
-        },
-
-        saveModel(model, callback, skipExit, attrs) {
-            this.notify('Saving...');
-
-            let self = this;
-            model.save(attrs, {
-                success: function () {
-                    self.afterSave();
-                    let isNew = self.isNew;
-                    if (self.isNew) {
-                        self.isNew = false;
-                    }
-                    self.trigger('after:save');
-                    model.trigger('after:save');
-
-                    if (!callback) {
-                        if (!skipExit) {
-                            if (isNew) {
-                                self.exit('create');
-                            } else {
-                                self.exit('save');
-                            }
-                        }
-                    } else {
-                        callback(self);
-                    }
-                },
-                error: function (e, xhr) {
-                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
-                    if (xhr.status === 409) {
-                        self.notify(false);
-                        self.enableButtons();
-                        self.trigger('cancel:save');
-                        Espo.Ui.confirm(statusReason, {
-                            confirmText: self.translate('Apply'),
-                            cancelText: self.translate('Cancel')
-                        }, function () {
-                            attrs['_prev'] = null;
-                            attrs['_ignoreConflict'] = true;
-                            attrs['_silentMode'] = false;
-                            model.save(attrs, {
-                                success: function () {
-                                    self.afterSave();
-                                    self.isNew = false;
-                                    self.trigger('after:save');
-                                    model.trigger('after:save');
-                                    if (!callback) {
-                                        if (!skipExit) {
-                                            self.exit('save');
-                                        }
-                                    } else {
-                                        callback(self);
-                                    }
-                                },
-                                patch: true
-                            });
-                        })
-                    } else {
-                        self.enableButtons();
-                        self.trigger('cancel:save');
-
-                        if (xhr.status === 304) {
-                            Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
-                        } else {
-                            Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
-                        }
-                    }
-                },
-                patch: !model.isNew()
-            });
         },
 
         hasCompleteness() {
