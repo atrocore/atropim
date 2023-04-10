@@ -663,7 +663,7 @@ class ProductAttributeValue extends AbstractRepository
          * Text length validation
          */
         if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
-            $length = mb_strlen((string)$entity->get('value'));
+            $length = $this->getEntityLenght($entity);
             $maxLength = (int)$entity->get('maxLength');
             if (!empty($maxLength) && $length > $maxLength) {
                 throw new BadRequest(
@@ -1004,4 +1004,16 @@ class ProductAttributeValue extends AbstractRepository
 
         return $this->classificationAttributes[$classificationId];
     }
+
+    protected function getEntityLenght(Entity $entity): int
+    {
+        $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
+
+        if($countBytesInsteadOfCharacters){
+            return strlen(mb_convert_encoding(((string)$entity->get('value')), 'ASCII', 'UTF-8'));
+        }else{
+            return mb_strlen((string)$entity->get('value'));
+        }
+    }
+
 }

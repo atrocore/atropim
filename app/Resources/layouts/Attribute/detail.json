@@ -101,7 +101,9 @@
         {
           "name": "maxLength"
         },
-        false
+        {
+          "name": "countBytesInsteadOfCharacters"
+        }
       ],
       [
         {

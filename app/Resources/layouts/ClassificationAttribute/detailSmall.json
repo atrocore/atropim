@@ -41,7 +41,9 @@
         {
           "name": "maxLength"
         },
-        false
+        {
+          "name": "countBytesInsteadOfCharacters"
+        }
       ]
     ],
     "style": "default",
