@@ -44,8 +44,8 @@ class V1Dot8Dot1 extends Base
 
     public function down(): void
     {
-        $this->getPDO()->exec("ALTER TABLE attribute DROP COLUMN count_bytes_instead_of_characters");
-        $this->getPDO()->exec("ALTER TABLE classification_attribute DROP COLUMN count_bytes_instead_of_characters");
-        $this->getPDO()->exec("ALTER TABLE product_attribute_value DROP COLUMN count_bytes_instead_of_characters");
+        $this->getPDO()->exec("ALTER TABLE attribute DROP count_bytes_instead_of_characters");
+        $this->getPDO()->exec("ALTER TABLE classification_attribute DROP count_bytes_instead_of_characters");
+        $this->getPDO()->exec("ALTER TABLE product_attribute_value DROP count_bytes_instead_of_characters");
     }
 }
