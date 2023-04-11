@@ -210,9 +210,9 @@ class Attribute extends Hierarchy
                     $typeValueIds[] = $id;
                     foreach ($typeValues as $field => $value) {
                         if (property_exists($data, $field) && is_array($data->$field) && array_key_exists($k, $data->$field)) {
-                            $typeValues[$field][] = $data->$field[$k];
+                            $typeValues[$field][] = $this->prepareUniqueTypeValue((string)$data->$field[$k], $typeValues[$field]);
                         } else {
-                            $typeValues[$field][] = '';
+                            $typeValues[$field][] = $this->prepareUniqueTypeValue('None', $typeValues[$field]);
                         }
                     }
                 }
@@ -226,6 +226,23 @@ class Attribute extends Hierarchy
         }
 
         parent::prepareInputForAddOnlyMode($id, $data);
+    }
+
+    protected function prepareUniqueTypeValue(string $value, array $values): string
+    {
+        if (!in_array($value, $values)) {
+            return $value;
+        }
+
+        $number = 0;
+        if (preg_match("/\(duplicate (\d+)\)/", $value, $matches)) {
+            $number = $matches[1];
+            $value = str_replace(" (duplicate $number)", '', $value);
+        }
+        $number++;
+        $value .= " (duplicate $number)";
+
+        return $this->prepareUniqueTypeValue($value, $values);
     }
 
     protected function init()
