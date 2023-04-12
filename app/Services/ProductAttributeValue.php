@@ -1043,6 +1043,43 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
     }
 
+    protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
+    {
+        $needToPrepareValue = property_exists($data, 'valueAddOnlyMode') && !empty($data->valueAddOnlyMode);
+        if ($needToPrepareValue) {
+            unset($data->valueAddOnlyMode);
+        }
+
+        parent::prepareInputForAddOnlyMode($id, $data);
+
+        if ($needToPrepareValue) {
+            $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($id);
+            if (empty($pav)) {
+                return;
+            }
+
+            switch ($pav->get('attributeType')) {
+                case 'array':
+                case 'multiEnum':
+                    $inputValue = is_string($data->value) ? @json_decode($data->value) : $data->value;
+                    if (!is_array($inputValue)) {
+                        $inputValue = [];
+                    }
+
+                    $was = @json_decode($pav->get('textValue'));
+                    if (!is_array($was)) {
+                        $was = [];
+                    }
+
+                    $preparedValue = array_merge($was, $inputValue);
+                    $preparedValue = array_unique($preparedValue);
+
+                    $data->value = json_encode($preparedValue);
+                    break;
+            }
+        }
+    }
+
     protected function prepareDefaultValues(\stdClass $data): void
     {
         if (property_exists($data, 'attributeId') && !empty($data->attributeId)) {
