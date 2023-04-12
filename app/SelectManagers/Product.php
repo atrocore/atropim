@@ -537,13 +537,14 @@ class Product extends AbstractSelectManager
             return;
         }
 
+        /** @var \Pim\Repositories\Classification $repository */
         $repository = $this->getEntityManager()->getRepository('Classification');
-        if (empty($pf = $repository->get($id))) {
+        if (empty($classification = $repository->get($id))) {
             throw new BadRequest('No such Classification');
         }
 
-        $ids = $repository->getChildrenIds($pf);
-        $ids[] = $pf->get('id');
+        $ids = $repository->getChildrenRecursivelyArray($classification->get('id'));
+        $ids[] = $classification->get('id');
 
         $result['whereClause'][] = [
             'id' => $this->getProductsIdsByClassificationIds($ids)
