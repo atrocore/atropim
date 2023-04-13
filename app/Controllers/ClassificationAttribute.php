@@ -38,6 +38,23 @@ use Espo\Core\Exceptions\Forbidden;
 
 class ClassificationAttribute extends Relationship
 {
+    public function actionDelete($params, $data, $request)
+    {
+        if (!$request->isDelete()) {
+            throw new BadRequest();
+        }
+
+        $id = $params['id'];
+
+        if (property_exists($data, 'deletePav') && !empty($data->deletePav)) {
+            $this->getRecordService()->deleteEntityAndPav($id);
+        } else {
+            $this->getRecordService()->deleteEntity($id);
+        }
+
+        return true;
+    }
+
     public function actionUnlinkAttributeGroupHierarchy(array $params, \stdClass $data, Request $request): bool
     {
         if (!$request->isDelete()) {

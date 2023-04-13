@@ -244,13 +244,14 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                 message: this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
-                var model = this.collection.get(id);
-                this.notify('removing');
+                let model = this.collection.get(id);
+                this.notify('Removing...');
                 $.ajax({
-                    url: this.collection.url,
+                    url: `${model.urlRoot}/${id}`,
                     type: 'DELETE',
                     data: JSON.stringify({
-                        id: id
+                        id: id,
+                        deletePav: false,
                     }),
                     contentType: 'application/json',
                     success: function () {
@@ -265,20 +266,30 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             }, this);
         },
 
-        actionRemoveRelatedAttribute(data) {
+        actionCascadeUnlinkRelatedAttribute(data) {
             var id = data.id;
 
             this.confirm({
                 message: this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
-                var model = this.collection.get(id);
+                let model = this.collection.get(id);
                 this.notify('Removing...');
-                model.destroy({
+                $.ajax({
+                    url: `${model.urlRoot}/${id}`,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        id: id,
+                        deletePav: true,
+                    }),
+                    contentType: 'application/json',
                     success: function () {
                         this.notify('Removed', 'success');
                         this.collection.fetch();
                         this.model.trigger('after:unrelate');
+                    }.bind(this),
+                    error: function () {
+                        this.notify('Error occurred', 'error');
                     }.bind(this),
                 });
             }, this);

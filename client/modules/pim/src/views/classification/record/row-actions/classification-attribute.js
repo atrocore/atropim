@@ -42,7 +42,7 @@ Espo.define('pim:views/classification/record/row-actions/classification-attribut
                 });
 
                 list.push({
-                    action: 'removeRelatedAttribute',
+                    action: 'cascadeUnlinkRelatedAttribute',
                     label: this.translate('cascadeUnlinkRelatedAttribute', 'labels', 'ClassificationAttribute'),
                     data: {
                         id: this.model.id

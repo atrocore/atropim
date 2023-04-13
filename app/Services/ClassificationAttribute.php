@@ -226,7 +226,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
     }
 
-    public function deleteEntity($id)
+    public function deleteEntityAndPav($id)
     {
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {

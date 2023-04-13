@@ -36,15 +36,6 @@ use Espo\Core\Templates\Services\Hierarchy;
 
 class Classification extends Hierarchy
 {
-    protected function getOneToManyRelationData(string $link): ?array
-    {
-        if ($link === 'classificationAttributes') {
-            return null;
-        }
-
-        return parent::getOneToManyRelationData($link);
-    }
-
     /**
      * @param Entity $entity
      * @param Entity $duplicatingEntity
