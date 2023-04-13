@@ -217,12 +217,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                     this.wait(false);
                 });
             });
-
-            this.listenTo(this.model, 'after:relate after:unrelate', link => {
-                if (link === 'productChannels') {
-                    this.actionRefresh();
-                }
-            });
         },
 
         createProductAttributeValue(selectObj) {
