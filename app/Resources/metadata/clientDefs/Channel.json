@@ -14,7 +14,6 @@
     "notLinkedWithAttributesInProduct",
     "notLinkedWithAttributesInClassification",
     "notLinkedWithCategoriesInProduct",
-    "productChannels",
     "notLinkedWithClassificationAttribute",
     "notLinkedWithProductAttributeValue"
   ],
@@ -27,7 +26,6 @@
     "notLinkedWithAttributesInProduct",
     "notLinkedWithAttributesInClassification",
     "notLinkedWithCategoriesInProduct",
-    "productChannels",
     "notLinkedWithClassificationAttribute",
     "notLinkedWithProductAttributeValue"
   ],

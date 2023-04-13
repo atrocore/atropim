@@ -12,8 +12,5 @@
   "links": {
     "product": "Продукт",
     "asset": "Ассет"
-  },
-  "exceptions": {
-    "noSuchChannelInProduct": "Канал '%s' для продукту '%s' не доступний."
   }
 }

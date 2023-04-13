@@ -486,30 +486,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->validateRequired($entity);
 
-        /**
-         * Validate channel
-         */
-        if (
-            !$this->isPseudoTransaction()
-            && property_exists($data, 'channelId')
-            && !empty($data->channelId)
-            && property_exists($data, 'productId')
-            && property_exists($data, 'attributeId')
-            && !empty($product = $this->getEntityManager()->getRepository('Product')->get($data->productId))
-        ) {
-            $productChannels = $product->get('productChannels');
-            if (!empty($productChannels) && count($productChannels) > 0 && !in_array($data->channelId, array_column($productChannels->toArray(), 'channelId'))) {
-                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
-                $attributeCode = empty($attribute) ? $data->attributeId : $attribute->get('code');
-
-                $channel = $this->getEntityManager()->getRepository('Channel')->get($data->channelId);
-                $channelCode = empty($channel) ? $data->channelId : $channel->get('code');
-
-                $message = $this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAttributeValue');
-                throw new BadRequest(sprintf($message, $attributeCode, $channelCode, $product->get('name')));
-            }
-        }
-
         $this->setInputValue($entity, $data);
     }
 

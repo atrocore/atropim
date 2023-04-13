@@ -38,7 +38,6 @@
     "cannotLinkDefaultChannel": "Канал за замовчуванням '{channel}' для обраного атрибута не пов'язаний із цим продуктом."
   },
   "exceptions": {
-    "noSuchChannelInProduct": "Атрибут '%s' для каналу '%s' для продукту '%s' недоступний.",
     "attributeUnitValueIsRequired": "Одиниця виміру для атрибута '%s' необхідна.",
     "noSuchAttributeUnit": "Одиниця виміру для атрибута '%s' не допустима.",
     "noSuchAttributeOptions": "Значення для атрибута '%s' не допустиме.",

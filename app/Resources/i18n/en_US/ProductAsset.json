@@ -18,8 +18,5 @@
       "Global": "Global",
       "Channel": "Channel"
     }
-  },
-  "exceptions": {
-    "noSuchChannelInProduct": "Channel '%s' for product '%s' is not available."
   }
 }
