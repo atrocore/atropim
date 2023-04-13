@@ -226,14 +226,22 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
     }
 
-    public function deleteEntityAndPav($id)
+    public function deleteEntityWithThemPavs($id)
     {
+        /**
+         * ID can be an array with one item. It is needs to execute this method from custom pseudo transaction in advanced classification module
+         */
+        if (is_array($id)) {
+            $id = array_shift($id);
+        }
+
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getEntityManager()->getPDO()->beginTransaction();
             $inTransaction = true;
         }
         try {
+            $this->withPavs = true;
             $this->createPseudoTransactionDeleteJobs($id);
             $result = parent::deleteEntity($id);
             if ($inTransaction) {

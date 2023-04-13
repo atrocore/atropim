@@ -47,7 +47,7 @@ class ClassificationAttribute extends Relationship
         $id = $params['id'];
 
         if (property_exists($data, 'deletePav') && !empty($data->deletePav)) {
-            $this->getRecordService()->deleteEntityAndPav($id);
+            $this->getRecordService()->deleteEntityWithThemPavs($id);
         } else {
             $this->getRecordService()->deleteEntity($id);
         }
