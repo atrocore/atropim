@@ -391,25 +391,6 @@ class Product extends AbstractSelectManager
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * NotLinkedWithClassification filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithClassification(array &$result)
-    {
-        // prepare data
-        $classificationId = (string)$this->getSelectCondition('notLinkedWithClassification');
-
-        if (!empty($classificationId)) {
-            foreach ($this->getProductsIdsByClassificationIds([$classificationId]) as $productId) {
-                $result['whereClause'][] = [
-                    'id!=' => $productId
-                ];
-            }
-        }
-    }
-
     protected function getProductsIdsByClassificationIds(array $classificationIds): array
     {
         $products = $this

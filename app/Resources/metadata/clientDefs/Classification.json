@@ -21,13 +21,6 @@
         "AttributeGroup",
         "ClassificationAttribute"
       ]
-    },
-    "products": {
-      "view": "pim:views/classification/record/panels/products",
-      "selectBoolFilterList": [
-        "notLinkedWithClassification"
-      ],
-      "createAction": "createRelatedConfigured"
     }
   }
 }
