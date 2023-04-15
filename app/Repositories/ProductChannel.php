@@ -86,19 +86,4 @@ class ProductChannel extends Relationship
 
         parent::afterSave($entity, $options);
     }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository('Product')->unrelatePfas($entity->get('product'), $entity->get('channel'));
-        $this
-            ->getEntityManager()
-            ->getRepository('ProductAsset')
-            ->where([
-                'channelId' => $entity->get('channelId'),
-                'productId' => $entity->get('productId')
-            ])
-            ->removeCollection();
-
-        parent::afterRemove($entity, $options);
-    }
 }

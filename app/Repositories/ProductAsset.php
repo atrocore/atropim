@@ -47,23 +47,6 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
             $entity->set('channelId', null);
         }
 
-        if ($entity->isAttributeChanged('channelId') && !empty($entity->get('channelId'))) {
-            $productChannel = $this
-                ->getEntityManager()
-                ->getRepository('ProductChannel')
-                ->where([
-                    'productId' => $entity->get('productId'),
-                    'channelId' => $entity->get('channelId')
-                ])
-                ->findOne();
-
-            if (empty($productChannel)) {
-                $channelName = empty($entity->get('channelName')) ? $entity->get('channelId') : $entity->get('channelName');
-                $productName = empty($entity->get('productName')) ? $entity->get('productId') : $entity->get('productName');
-                throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchChannelInProduct', 'exceptions', 'ProductAsset'), $channelName, $productName));
-            }
-        }
-
         parent::beforeSave($entity, $options);
     }
 

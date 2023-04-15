@@ -39,25 +39,30 @@ class ClassificationAttribute extends Relationship
 {
     public function getInheritedPavsIds(string $id): array
     {
-        $pfa = $this->get($id);
-        if (empty($pfa) || empty($pf = $this->getEntityManager()->getRepository('Classification')->get($pfa->get('сlassificationId')))) {
+        $classificationAttribute = $this->get($id);
+        if (empty($classificationAttribute)) {
             return [];
         }
 
-        $productsIds = $pf->getLinkMultipleIdList('products');
+        $classification = $this->getEntityManager()->getRepository('Classification')->get($classificationAttribute->get('classificationId'));
+        if (empty($classification)) {
+            return [];
+        }
+
+        $productsIds = $classification->getLinkMultipleIdList('products');
         if (empty($productsIds)) {
             return [];
         }
 
         $where = [
             'productId'   => $productsIds,
-            'attributeId' => $pfa->get('attributeId'),
-            'language'    => $pfa->get('language'),
-            'scope'       => $pfa->get('scope'),
+            'attributeId' => $classificationAttribute->get('attributeId'),
+            'language'    => $classificationAttribute->get('language'),
+            'scope'       => $classificationAttribute->get('scope'),
         ];
 
-        if ($pfa->get('scope') === 'Channel') {
-            $where['channelId'] = $pfa->get('channelId');
+        if ($classificationAttribute->get('scope') === 'Channel') {
+            $where['channelId'] = $classificationAttribute->get('channelId');
         }
 
         $result = $this
@@ -113,13 +118,13 @@ class ClassificationAttribute extends Relationship
     {
         return $this
             ->where([
-                'id!='            => $entity->get('id'),
+                'id!='             => $entity->get('id'),
                 'classificationId' => $entity->get('classificationId'),
-                'attributeId'     => $entity->get('attributeId'),
-                'scope'           => $entity->get('scope'),
-                'channelId'       => $entity->get('channelId'),
-                'language'        => $entity->get('language'),
-                'deleted'         => $deleted,
+                'attributeId'      => $entity->get('attributeId'),
+                'scope'            => $entity->get('scope'),
+                'channelId'        => $entity->get('channelId'),
+                'language'         => $entity->get('language'),
+                'deleted'          => $deleted,
             ])
             ->findOne(['withDeleted' => $deleted]);
     }

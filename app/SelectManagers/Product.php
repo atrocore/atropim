@@ -391,25 +391,6 @@ class Product extends AbstractSelectManager
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * NotLinkedWithClassification filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithClassification(array &$result)
-    {
-        // prepare data
-        $classificationId = (string)$this->getSelectCondition('notLinkedWithClassification');
-
-        if (!empty($classificationId)) {
-            foreach ($this->getProductsIdsByClassificationIds([$classificationId]) as $productId) {
-                $result['whereClause'][] = [
-                    'id!=' => $productId
-                ];
-            }
-        }
-    }
-
     protected function getProductsIdsByClassificationIds(array $classificationIds): array
     {
         $products = $this
@@ -537,13 +518,14 @@ class Product extends AbstractSelectManager
             return;
         }
 
+        /** @var \Pim\Repositories\Classification $repository */
         $repository = $this->getEntityManager()->getRepository('Classification');
-        if (empty($pf = $repository->get($id))) {
+        if (empty($classification = $repository->get($id))) {
             throw new BadRequest('No such Classification');
         }
 
-        $ids = $repository->getChildrenIds($pf);
-        $ids[] = $pf->get('id');
+        $ids = $repository->getChildrenRecursivelyArray($classification->get('id'));
+        $ids[] = $classification->get('id');
 
         $result['whereClause'][] = [
             'id' => $this->getProductsIdsByClassificationIds($ids)

@@ -43,26 +43,6 @@ class Channel extends AbstractSelectManager
      *
      * @throws \Espo\Core\Exceptions\Error
      */
-    protected function boolFilterProductChannels(&$result)
-    {
-        // get product id
-        $productId = (string)$this->getSelectCondition('productChannels');
-
-        if (!empty($productId)) {
-            $product = $this->getEntityManager()->getEntity('Product', $productId);
-            if (!empty($product)) {
-                $result['whereClause'][] = [
-                    'id' => array_column($product->get('productChannels')->toArray(), 'channelId')
-                ];
-            }
-        }
-    }
-
-    /**
-     * @param $result
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
     protected function boolFilterNotLinkedWithProduct(&$result)
     {
         // get product id
