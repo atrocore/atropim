@@ -79,6 +79,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
             if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');
+                $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
             }
         }
 
@@ -164,6 +165,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
         if (!property_exists($data, 'maxLength')) {
             $data->maxLength = $attribute->get('maxLength');
+            $data->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
         }
     }
 

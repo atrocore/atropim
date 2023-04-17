@@ -305,7 +305,8 @@
     },
     "countBytesInsteadOfCharacters": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "view": "pim:views/fields/count-bytes-instead-of-characters"
     }
   },
   "links": {

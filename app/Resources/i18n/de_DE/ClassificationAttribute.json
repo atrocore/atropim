@@ -8,7 +8,8 @@
     "scope": "Scope",
     "language": "Sprache",
     "languages": "Sprachen",
-    "maxLength": "Maximallänge"
+    "maxLength": "Maximallänge",
+    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen"
   },
   "links": {
     "classification": "Klassifizierung",

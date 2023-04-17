@@ -28,6 +28,7 @@
     "sortOrderInProduct": "Порядок сортування в продукті",
     "tooltip": "Текст підказки",
     "maxLength": "Максимальна довжина",
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
     "description": "Опис"
   },
   "links": {

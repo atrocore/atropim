@@ -29,6 +29,7 @@
     "sortOrderInProduct": "Sortierreihenfolge für Produkt",
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
+    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "description": "Beschreibung"
   },
   "links": {

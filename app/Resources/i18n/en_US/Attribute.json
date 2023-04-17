@@ -28,6 +28,7 @@
     "sortOrderInProduct": "Sort Order for Product",
     "tooltip": "Tooltip",
     "maxLength": "Max Length",
+    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "description": "Description",
     "classifications": "Classifications"
   },

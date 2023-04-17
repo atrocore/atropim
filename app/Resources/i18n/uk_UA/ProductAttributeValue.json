@@ -20,6 +20,7 @@
     "datetimeValue": "Value: DateTime",
     "boolValue": "Value: Boolean",
     "maxLength": "Максимальна довжина",
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
     "isVariantSpecificAttribute": "Варіантно-специфічний"
   },
   "links": {
