@@ -302,6 +302,11 @@
     "maxLength": {
       "type": "int",
       "view": "pim:views/fields/max-length"
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "default": false,
+      "view": "pim:views/fields/count-bytes-instead-of-characters"
     }
   },
   "links": {

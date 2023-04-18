@@ -7,7 +7,8 @@
     "scope": "Scope",
     "language": "Language",
     "languages": "Languages",
-    "maxLength": "Max Length"
+    "maxLength": "Max Length",
+    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters"
   },
   "links": {
     "classification": "Classification",

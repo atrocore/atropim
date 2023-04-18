@@ -20,6 +20,7 @@
     "datetimeValue": "Value: Date-time",
     "boolValue": "Value: Boolean",
     "maxLength": "Max Length",
+    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "isVariantSpecificAttribute": "Variant-specific"
   },
   "links": {

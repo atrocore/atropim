@@ -345,6 +345,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
             if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');
+                $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
             }
         }
 
@@ -939,9 +940,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $entity->set('isRequired', $attribute->get('isRequired'));
         $entity->set('maxLength', $attribute->get('maxLength'));
+        $entity->set('countBytesInsteadOfCharacters', $attribute->get('countBytesInsteadOfCharacters'));
         if (!empty($classificationAttribute)) {
             $entity->set('isRequired', $classificationAttribute->get('isRequired'));
             $entity->set('maxLength', $classificationAttribute->get('maxLength'));
+            $entity->set('countBytesInsteadOfCharacters', $classificationAttribute->get('countBytesInsteadOfCharacters'));
         }
 
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));

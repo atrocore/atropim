@@ -74,6 +74,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 if (this.model.get('maxLength')) {
                     params.maxLength = this.model.get('maxLength');
+                    params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
                 }
 
                 if (attributeType === 'unit') {
@@ -190,6 +191,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('typeValueIds', attr.typeValueIds || []);
                 this.model.set('typeValue', attr.typeValue || []);
                 this.model.set('maxLength', attr.maxLength);
+                this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                 this.reRender();
             });

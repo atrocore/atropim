@@ -663,7 +663,9 @@ class ProductAttributeValue extends AbstractRepository
          * Text length validation
          */
         if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
-            $length = mb_strlen((string)$entity->get('value'));
+            $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
+            $fieldValue = (string)$entity->get('value');
+            $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
             $maxLength = (int)$entity->get('maxLength');
             if (!empty($maxLength) && $length > $maxLength) {
                 throw new BadRequest(

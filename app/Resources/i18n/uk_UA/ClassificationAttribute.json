@@ -7,7 +7,8 @@
     "scope": "Область дії",
     "language": "Мова",
     "languages": "Мови",
-    "maxLength": "Максимальна довжина"
+    "maxLength": "Максимальна довжина",
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів"
   },
   "links": {
     "classification": "Класифікація",
