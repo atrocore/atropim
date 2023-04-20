@@ -4,8 +4,6 @@
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "attributeTab": "Вкладка атрибутов",
-    "typeValueIds": "Идентификаторы опций",
-    "typeValue": "Значения опций",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Название атрибута",
@@ -56,7 +54,6 @@
     "sortOrderInProduct": "Порядок сортировки значений атрибутов продукта.W"
   },
   "exceptions": {
-    "typeValueIsInconsistent": "Данные для значений опций противоречивы.",
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",

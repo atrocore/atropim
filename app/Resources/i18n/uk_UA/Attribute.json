@@ -4,8 +4,6 @@
     "children": "Пов'язані атрибути",
     "attributeGroup": "Група атрибутів",
     "attributeTab": "Вкладка атрибутів",
-    "typeValueIds": "Ідентифікатори опцій",
-    "typeValue": "Значення опцій",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Назва атрибута",
@@ -60,7 +58,6 @@
      "sortOrderInProduct": "Порядок сортування значень атрибутів продукту.W"
    },
   "exceptions": {
-    "typeValueIsInconsistent": "Дані для значень опцій суперечливі.",
     "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
     "attributeValueShouldBeUnique": "Значення атрибута має бути унікальним.",
     "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",

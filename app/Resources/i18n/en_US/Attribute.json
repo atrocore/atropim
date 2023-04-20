@@ -4,8 +4,6 @@
     "children": "Associated Attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
-    "typeValueIds": "Options IDs",
-    "typeValue": "Options Values",
     "type": "Attribute Type",
     "code": "Code",
     "name": "Attribute Name",
@@ -30,7 +28,8 @@
     "maxLength": "Max Length",
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "description": "Description",
-    "classifications": "Classifications"
+    "classifications": "Classifications",
+    "extensibleEnum": "List"
   },
   "links": {
     "parents": "Associating Attributes",
@@ -39,7 +38,8 @@
     "attributeGroup": "Attribute Group",
     "products": "Products",
     "productAttributeValues": "Attribute Values",
-    "classifications": "Classifications"
+    "classifications": "Classifications",
+    "extensibleEnum": "List"
   },
   "labels": {
     "Create Attribute": "Create Attribute",
@@ -80,7 +80,6 @@
     "sortOrderInProduct": "Sort order for attribute values for a product."
   },
   "exceptions": {
-    "typeValueIsInconsistent": "Data for option values is inconsistent.",
     "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",
     "attributeValueShouldBeUnique": "Attribute value should be unique.",
     "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",

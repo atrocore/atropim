@@ -5,8 +5,6 @@
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
     "productAttributeValues": "Attributwerte",
     "products": "Produkte",
-    "typeValueIds": "Options-IDs",
-    "typeValue": "Optionswerte",
     "type": "Typ",
     "sortOrderInAttributeGroup": "Sortierreihenfolge in Attributgruppe",
     "attributeGroup": "Attributgruppe",
@@ -80,7 +78,6 @@
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."
   },
   "exceptions": {
-    "typeValueIsInconsistent": "Daten für Optionswerte sind inkonsistent.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
     "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
     "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",

@@ -62,7 +62,7 @@
   },
   "dynamicLogic": {
     "fields": {
-      "typeValue": {
+      "extensibleEnum": {
         "visible": {
           "conditionGroup": [
             {

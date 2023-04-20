@@ -120,8 +120,6 @@ class Attribute extends AbstractRepository
             $entity->set('sortOrderInAttributeGroup', time());
         }
 
-        $this->prepareTypeValues($entity);
-
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
             $query = "SELECT COUNT(*) 
                       FROM product_attribute_value 
@@ -226,80 +224,6 @@ class Attribute extends AbstractRepository
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
-    }
-
-    protected function prepareTypeValues(Entity $entity): void
-    {
-        if (!in_array($entity->get('type'), ['enum', 'multiEnum'])) {
-            return;
-        }
-
-        if (empty($entity->get('typeValueIds'))) {
-            $entity->set('typeValueIds', []);
-            return;
-        }
-
-        foreach ($this->getMetadata()->get(['entityDefs', 'Attribute', 'fields']) as $field => $fieldDefs) {
-            if (empty($fieldDefs['isTypeValueField'])) {
-                continue;
-            }
-
-            if (count($entity->get($field)) !== count($entity->get('typeValueIds'))) {
-                throw new BadRequest($this->exception('typeValueIsInconsistent'));
-            }
-        }
-
-        if (!empty($entity->getFetched('typeValueIds')) && !Entity::areValuesEqual('jsonArray', $entity->getFetched('typeValueIds'), $entity->get('typeValueIds'))) {
-            foreach ($entity->getFetched('typeValueIds') as $optionId) {
-                if (empty($entity->get('typeValueIds')) || !in_array($optionId, $entity->get('typeValueIds'))) {
-                    if ($entity->get('type') === 'enum') {
-                        $pav = $this
-                            ->getEntityManager()
-                            ->getRepository('ProductAttributeValue')
-                            ->where([
-                                'varcharValue' => $optionId,
-                                'attributeId'  => $entity->get('id')
-                            ])
-                            ->findOne();
-
-                        if (!empty($pav)) {
-                            throw new BadRequest($this->exception('attributeValueIsInUse'));
-                        }
-                    } elseif ($entity->get('type') === 'multiEnum') {
-                        $pav = $this
-                            ->getEntityManager()
-                            ->getRepository('ProductAttributeValue')
-                            ->where([
-                                'textValue*'  => '%"' . $optionId . '"%',
-                                'attributeId' => $entity->get('id')
-                            ])
-                            ->findOne();
-
-                        if (!empty($pav)) {
-                            throw new BadRequest($this->exception('attributeValueIsInUse'));
-                        }
-                    }
-                }
-            }
-        }
-
-        /**
-         * Translate type values
-         */
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-            $languageField = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($language)));
-            if ($entity->getFetched($languageField) === $entity->get($languageField)) {
-                continue;
-            }
-            $languageTypeValue = $entity->get($languageField);
-            foreach ($entity->get('typeValue') as $k => $value) {
-                if (empty($languageTypeValue[$k])) {
-                    $event = new Event(['option' => $value, 'language' => $language]);
-                    $languageTypeValue[$k] = $this->getInjection('eventManager')->dispatch('AttributeRepository', 'generateEnumOption', $event)->getArgument('option');
-                }
-            }
-            $entity->set($languageField, $languageTypeValue);
-        }
     }
 
     protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string

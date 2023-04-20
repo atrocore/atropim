@@ -107,6 +107,12 @@
       ],
       [
         {
+          "name": "extensibleEnum"
+        },
+        false
+      ],
+      [
+        {
           "name": "description"
         },
         false

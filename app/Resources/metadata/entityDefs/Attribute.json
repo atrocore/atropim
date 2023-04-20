@@ -53,6 +53,9 @@
     "attributeTab": {
       "type": "link"
     },
+    "extensibleEnum": {
+      "type": "link"
+    },
     "code": {
       "type": "varchar",
       "massUpdateDisabled": true,
@@ -343,6 +346,11 @@
       "foreign": "attributes",
       "entity": "AttributeTab",
       "audited": false
+    },
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "ExtensibleEnum"
     },
     "productAttributeValues": {
       "type": "hasMany",

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "attributes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "extensibleEnum",
+      "entity": "Attribute"
+    }
+  }
+}

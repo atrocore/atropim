@@ -40,7 +40,7 @@ use Espo\ORM\Entity;
 
 class Attribute extends Hierarchy
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'data', 'typeValue', 'typeValueIds'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'data'];
 
     public function prepareEntityForOutput(Entity $entity)
     {

@@ -79,8 +79,6 @@ class LayoutController extends AbstractListener
             $result[0]['rows'][] = [$multilangField, false];
         }
 
-        $result[0]['rows'][] = [['name' => 'typeValue'], false];
-
         $event->setArgument('result', Json::encode($result));
     }
 
