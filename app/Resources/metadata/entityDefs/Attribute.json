@@ -123,16 +123,6 @@
       "hideMultilang": true,
       "layoutDetailDisabled": true
     },
-    "typeValueIds": {
-      "type": "array",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "isTypeValueField": true
-    },
     "typeValue": {
       "type": "array",
       "massUpdateDisabled": true,
