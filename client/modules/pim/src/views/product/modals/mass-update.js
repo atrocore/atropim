@@ -124,23 +124,22 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             this.$el.find('.fields-container').append(html);
 
             let type = model.get('attributeType') || 'base',
-                typeValue = model.get('typeValue'),
                 options = {
                     name: name,
                     model: model,
                     el: this.getSelector() + ' .field[data-name="' + name + '"]',
                     mode: 'edit',
-                    params: {
-                        options: typeValue
-                    }
-            };
+                    params: {}
+                };
 
             if (type === 'unit') {
-                options.params.measure = (typeValue || ['Length'])[0];
-            }
-
-            if (type === 'currency') {
-                options.params.currency = typeValue || 'EUR';
+                this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
+                    options.params.measure = attr.measure;
+                });
+            } else if (type === 'enum' || type === 'multiEnum') {
+                this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
+                    options.params.extensibleEnumId = attr.extensibleEnumId;
+                });
             }
 
             this.createView(name, this.getViewFieldType(type), options, view => {
@@ -159,11 +158,11 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
         getViewFieldType(type) {
             if (type === 'enum') {
-                return 'views/fields/enum';
+                return this.getFieldManager().getViewName('extensibleEnum');
             }
 
             if (type === 'multiEnum') {
-                return 'views/fields/multi-enum';
+                return this.getFieldManager().getViewName('extensibleMultiEnum');
             }
 
             return this.getFieldManager().getViewName(type);
