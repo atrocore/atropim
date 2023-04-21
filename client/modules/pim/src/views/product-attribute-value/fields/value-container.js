@@ -183,7 +183,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         fetchAttributeData() {
             this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                 this.model.set('attributeType', attr.type);
-                this.model.set('extensibleEnumId', attr.extensibleEnumId);
+                this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
                 this.model.set('maxLength', attr.maxLength);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
