@@ -75,6 +75,7 @@ class V1Dot8Dot3 extends Base
                         // migrate pavs for enum
                         if ($record['type'] === 'enum') {
                             $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value='{$optionId}' WHERE attribute_id='{$record['id']}' AND  varchar_value='{$id}'");
+                            $this->getPDO()->exec("UPDATE attribute SET enum_default='{$optionId}' WHERE enum_default='{$id}'");
                         }
                     }
 
