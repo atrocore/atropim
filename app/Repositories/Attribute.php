@@ -198,25 +198,6 @@ class Attribute extends AbstractRepository
     }
 
     /**
-     * @param $entity
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    protected function isEnumTypeValueValid($entity): bool
-    {
-        if (!empty($entity->get('typeValue'))) {
-            foreach (array_count_values($entity->get('typeValue')) as $count) {
-                if ($count > 1) {
-                    throw new BadRequest($this->exception('attributeValueShouldBeUnique'));
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @param string $key
      *
      * @return string
@@ -229,9 +210,9 @@ class Attribute extends AbstractRepository
     protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string
     {
         if ($fieldName === 'unitDefault') {
-            $typeValue = $entity->get('typeValue');
+            $measure = $entity->getDataField('measure');
 
-            return empty($typeValue) ? '' : array_shift($typeValue);
+            return empty($measure) ? '' : $measure;
         }
 
         return parent::getUnitFieldMeasure($fieldName, $entity);

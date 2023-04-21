@@ -59,7 +59,6 @@
    },
   "exceptions": {
     "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
-    "attributeValueShouldBeUnique": "Значення атрибута має бути унікальним.",
     "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",

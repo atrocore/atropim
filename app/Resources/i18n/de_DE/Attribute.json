@@ -79,7 +79,6 @@
   },
   "exceptions": {
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
-    "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
     "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
