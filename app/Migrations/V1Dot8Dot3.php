@@ -37,11 +37,8 @@ class V1Dot8Dot3 extends Base
 {
     public function up(): void
     {
-//        $this->execute("ALTER TABLE attribute ADD extensible_enum_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-//        $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_ID ON attribute (extensible_enum_id)");
-
-        $this->getPDO()->exec("DELETE FROM extensible_enum WHERE deleted=1");
-        $this->getPDO()->exec("DELETE FROM extensible_enum_option WHERE deleted=1");
+        $this->execute("ALTER TABLE attribute ADD extensible_enum_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_ID ON attribute (extensible_enum_id)");
 
         $records = $this->getPDO()->query("SELECT a.* FROM attribute a WHERE a.type IN ('enum','multiEnum') AND a.deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
         foreach ($records as $record) {
@@ -49,14 +46,57 @@ class V1Dot8Dot3 extends Base
             if (!empty($ids)) {
                 $values = @json_decode((string)$record['type_value'], true);
                 if (!empty($values)) {
-                    $this->execute("INSERT INTO extensible_enum (id,name) VALUES ('{$record['id']}','{$record['name']}')");
+                    $this->execute("DELETE FROM extensible_enum WHERE id='{$record['id']}';INSERT INTO extensible_enum (id,name) VALUES ('{$record['id']}','{$record['name']}')");
+
                     foreach ($ids as $k => $id) {
                         $value = isset($values[$k]) ? "'" . $values[$k] . "'" : 'NULL';
                         $sortOrder = $k * 10;
 
                         $optionId = $this->generateOptionId((string)$record['id'], (string)$id);
+                        $optionsIds["{$record['id']}_{$id}"] = $optionId;
 
-                        $this->execute("INSERT INTO extensible_enum_option (id,extensible_enum_id,name,sort_order) VALUES ('$optionId','{$record['id']}',$value, $sortOrder)");
+                        $this->execute(
+                            "DELETE FROM extensible_enum_option WHERE id='{$optionId}';INSERT INTO extensible_enum_option (id,extensible_enum_id,name,sort_order) VALUES ('$optionId','{$record['id']}',$value, $sortOrder)"
+                        );
+
+                        // migrate pavs for enum
+                        if ($record['type'] === 'enum') {
+                            $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value='{$optionId}' WHERE attribute_id='{$record['id']}' AND  varchar_value='{$id}'");
+                        }
+                    }
+
+                    // migrate pavs for multiEnum
+                    if ($record['type'] === 'multiEnum') {
+                        $limit = 2000;
+                        $offset = 0;
+
+                        while (true) {
+                            $pavs = $this->getPDO()
+                                ->query("SELECT * FROM product_attribute_value WHERE attribute_id='{$record['id']}' AND deleted=0 ORDER BY id LIMIT $limit OFFSET $offset")
+                                ->fetchAll(\PDO::FETCH_ASSOC);
+
+                            $offset = $offset + $limit;
+
+                            if (empty($pavs)) {
+                                break;
+                            }
+
+                            foreach ($pavs as $pav) {
+                                $pavValues = @json_decode((string)$pav['text_value'], true);
+                                if (!empty($pavValues)) {
+                                    $newPavValues = [];
+                                    foreach ($pavValues as $pavValue) {
+                                        if (!isset($optionsIds["{$record['id']}_{$pavValue}"])) {
+                                            continue 2;
+                                        }
+                                        $newPavValues[] = $optionsIds["{$record['id']}_{$pavValue}"];
+                                    }
+
+                                    $newTextValue = json_encode($newPavValues);
+                                    $this->getPDO()->exec("UPDATE product_attribute_value SET text_value='{$newTextValue}' WHERE id='{$pav['id']}'");
+                                }
+                            }
+                        }
                     }
 
                     if (!empty($this->getConfig()->get('isMultilangActive'))) {
