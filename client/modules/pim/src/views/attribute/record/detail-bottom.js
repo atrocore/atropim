@@ -37,6 +37,7 @@ Espo.define('pim:views/attribute/record/detail-bottom', 'views/record/detail-bot
                         model.attributeModel = this.model;
                         p = _.extend(p, this.getMetadata().get(['clientDefs', 'ExtensibleEnum', 'relationshipPanels', 'extensibleEnumOptions']));
                         p.model = model;
+                        p.label = this.translate('extensibleEnumOptions', 'fields', 'ExtensibleEnum');
                         this.createPanelView(p);
                     });
                 } else {

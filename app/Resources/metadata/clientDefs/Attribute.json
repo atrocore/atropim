@@ -39,7 +39,6 @@
     "detail": [
       {
         "name": "extensibleEnumOptions",
-        "label": "extensibleEnumOptions",
         "view": "pim:views/attribute/record/panels/extensible-enum-options"
       }
     ]

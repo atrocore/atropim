@@ -29,8 +29,7 @@
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "description": "Description",
     "classifications": "Classifications",
-    "extensibleEnum": "List",
-    "extensibleEnumOptions": "List Options"
+    "extensibleEnum": "List"
   },
   "links": {
     "parents": "Associating Attributes",
@@ -40,8 +39,7 @@
     "products": "Products",
     "productAttributeValues": "Attribute Values",
     "classifications": "Classifications",
-    "extensibleEnum": "List",
-    "extensibleEnumOptions": "List Options"
+    "extensibleEnum": "List"
   },
   "labels": {
     "Create Attribute": "Create Attribute",
