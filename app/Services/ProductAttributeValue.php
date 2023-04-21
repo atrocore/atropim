@@ -253,11 +253,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
-            $entity->clear('typeValueIds');
-            $entity->clear('typeValue');
-        }
-
         if (empty($entity->setHasParent)) {
             $variantPavs = $this->getParentsVariantAttributes([$entity->get('productId')]);
             $this->setHasParent($entity, $variantPavs);
@@ -987,38 +982,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = json_encode($data->value);
-        }
-
-        /**
-         * Prepare via attribute type
-         */
-        if (property_exists($data, 'value') && !empty($attribute)) {
-            $typeValueKey = 'typeValue';
-            if (!empty($language = $this->getHeaderLanguage())) {
-                $typeValueKey .= ucfirst(Util::toCamelCase(strtolower($language)));
-            }
-
-            switch ($attribute->get('type')) {
-                case 'enum':
-                    $key = array_search((string)$data->value, $attribute->get($typeValueKey));
-                    if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
-                        $data->value = $attribute->get('typeValueIds')[$key];
-                    }
-                    break;
-                case 'multiEnum':
-                    $values = [];
-                    $options = @json_decode((string)$data->value, true);
-                    if (!empty($options)) {
-                        foreach ($options as $option) {
-                            $key = array_search($option, $attribute->get($typeValueKey));
-                            if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
-                                $values[] = $attribute->get('typeValueIds')[$key];
-                            }
-                        }
-                    }
-                    $data->value = json_encode($values);
-                    break;
-            }
         }
     }
 
