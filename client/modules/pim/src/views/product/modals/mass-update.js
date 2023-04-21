@@ -157,14 +157,6 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
         },
 
         getViewFieldType(type) {
-            if (type === 'enum') {
-                return this.getFieldManager().getViewName('extensibleEnum');
-            }
-
-            if (type === 'multiEnum') {
-                return this.getFieldManager().getViewName('extensibleMultiEnum');
-            }
-
             return this.getFieldManager().getViewName(type);
         },
 

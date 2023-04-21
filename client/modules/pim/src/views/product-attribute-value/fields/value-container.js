@@ -81,12 +81,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.measure = this.model.get('attributeMeasure');
                 }
 
-                if (attributeType === 'enum') {
-                    fieldView = this.getFieldManager().getViewName('extensibleEnum');
-                    params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
-                    params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
-                } else if (attributeType === 'multiEnum') {
-                    fieldView = this.getFieldManager().getViewName('extensibleMultiEnum');
+                if (attributeType === 'enum' || attributeType === 'multiEnum') {
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
                 }
