@@ -32,7 +32,17 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Templates\Controllers\Hierarchy;
+use Espo\Core\Exceptions\BadRequest;
 
 class Attribute extends Hierarchy
 {
+    public function actionGetAttribute($params, \stdClass $data, $request)
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+        
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $data->id);
+        return $attribute->toArray();
+    }
 }

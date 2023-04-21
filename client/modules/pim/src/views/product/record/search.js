@@ -48,18 +48,22 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                         dialog.render();
                         this.notify(false);
                         dialog.once('select', attribute => {
-                            let fieldParams = {
-                                filterView: 'pim:views/product/search/filter',
-                                isAttribute: true,
-                                label: attribute.get('name'),
-                                type: attribute.get('type')
-                            };
-                            if (['enum', 'multiEnum'].includes(attribute.get('type'))) {
-                                fieldParams.isTypeValue = true;
-                                fieldParams.options = attribute.get('typeValue') || [];
-                            }
-
-                            this.addFilter(attribute.id, {fieldParams: fieldParams});
+                            //make request to get type and typeValue
+                            this.ajaxPostRequest('Attribute/action/getAttribute', { id: attribute.id })
+                                .then(fullAttribute => {
+                                    let fieldParams = {
+                                        filterView: 'pim:views/product/search/filter',
+                                        isAttribute: true,
+                                        label: attribute.get('name'),
+                                        type: fullAttribute['type']
+                                    };
+                                    if (['enum', 'multiEnum'].includes(fullAttribute['type'])) {
+                                        fieldParams.isTypeValue = true;
+                                        fieldParams.options = fullAttribute['typeValue'] || [];
+                                    }
+                                    this.getMetadata().get(['entityDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
+                                    this.addFilter(attribute.id, { fieldParams: fieldParams });
+                                });
                         });
                     });
                 }
