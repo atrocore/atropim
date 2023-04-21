@@ -335,6 +335,10 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
+        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+            $entity->set('attributeExtensibleEnumId', $this->getPavAttribute($entity)->get('extensibleEnumId'));
+        }
+
         switch ($entity->get('attributeType')) {
             case 'array':
             case 'multiEnum':

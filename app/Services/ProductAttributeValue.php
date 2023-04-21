@@ -912,7 +912,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('attributeAssetType', $attribute->get('assetType'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
-        $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
