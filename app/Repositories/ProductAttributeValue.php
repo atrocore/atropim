@@ -832,54 +832,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         parent::validateFieldsByType($entity);
 
-        $this->validateEnumAttribute($entity);
         $this->validateUnitAttribute($entity);
-    }
-
-
-    protected function validateEnumAttribute(Entity $entity): void
-    {
-        if (empty($attribute = $entity->get('attribute'))) {
-            return;
-        }
-
-        $type = $attribute->get('type');
-
-        if (!in_array($type, ['enum', 'multiEnum'])) {
-            return;
-        }
-
-        if ($entity->isAttributeChanged('value') && !empty($entity->get('value'))) {
-            $fieldOptions = $this->getAttributeOptionsIds($attribute);
-
-            if (empty($fieldOptions) && $type === 'multiEnum') {
-                $entity->set('value', null);
-                $entity->set('textValue', null);
-                return;
-            }
-
-            $value = $entity->get('value');
-
-            if ($type == 'enum') {
-                $value = [$value];
-            }
-
-            if ($type == 'multiEnum' && is_string($value)) {
-                $value = @json_decode($value, true);
-            }
-
-            $errorMessage = sprintf($this->getInjection('language')->translate('noSuchAttributeOptions', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'));
-
-            if (!is_array($value)) {
-                throw new BadRequest($errorMessage);
-            }
-
-            foreach ($value as $v) {
-                if (!in_array($v, $fieldOptions)) {
-                    throw new BadRequest($errorMessage);
-                }
-            }
-        }
     }
 
     protected function validateUnitAttribute(Entity $entity): void

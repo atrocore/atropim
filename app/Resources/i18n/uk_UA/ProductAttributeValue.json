@@ -41,7 +41,6 @@
   "exceptions": {
     "attributeUnitValueIsRequired": "Одиниця виміру для атрибута '%s' необхідна.",
     "noSuchAttributeUnit": "Одиниця виміру для атрибута '%s' не допустима.",
-    "noSuchAttributeOptions": "Значення для атрибута '%s' не допустиме.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас немає прав на читання значень атрибутів.",
     "attributeDontMatchToPattern": "Значення атрибута \"{attribute}\" не відповідає патерну \"{pattern}\".",
     "attributeShouldHaveBeUnique": "Атрибут %s повинен мати унікальне значення."

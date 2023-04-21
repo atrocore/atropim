@@ -54,10 +54,6 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                                 label: attribute.get('name'),
                                 type: attribute.get('type')
                             };
-                            if (['enum', 'multiEnum'].includes(attribute.get('type'))) {
-                                fieldParams.isTypeValue = true;
-                                fieldParams.options = attribute.get('typeValue') || [];
-                            }
 
                             this.addFilter(attribute.id, {fieldParams: fieldParams});
                         });
