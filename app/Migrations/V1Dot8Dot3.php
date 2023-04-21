@@ -53,7 +53,10 @@ class V1Dot8Dot3 extends Base
                     foreach ($ids as $k => $id) {
                         $value = isset($values[$k]) ? "'" . $values[$k] . "'" : 'NULL';
                         $sortOrder = $k * 10;
-                        $this->execute("INSERT INTO extensible_enum_option (id,extensible_enum_id,name,sort_order) VALUES ('{$record['id']}_{$id}','{$record['id']}',$value, $sortOrder)");
+
+                        $optionId = $this->generateOptionId((string)$record['id'], (string)$id);
+
+                        $this->execute("INSERT INTO extensible_enum_option (id,extensible_enum_id,name,sort_order) VALUES ('$optionId','{$record['id']}',$value, $sortOrder)");
                     }
 
                     if (!empty($this->getConfig()->get('isMultilangActive'))) {
@@ -62,8 +65,9 @@ class V1Dot8Dot3 extends Base
                             $languageValues = @json_decode((string)$record['type_value_' . $locale], true);
                             if (!empty($languageValues)) {
                                 foreach ($ids as $k => $id) {
+                                    $optionId = $this->generateOptionId((string)$record['id'], (string)$id);
                                     $languageValue = isset($languageValues[$k]) ? "'" . $languageValues[$k] . "'" : 'NULL';
-                                    $this->execute("UPDATE extensible_enum_option SET name_{$locale}={$languageValue} WHERE id='{$record['id']}_{$id}'");
+                                    $this->execute("UPDATE extensible_enum_option SET name_{$locale}={$languageValue} WHERE id='{$optionId}'");
                                 }
                             }
                         }
@@ -85,5 +89,10 @@ class V1Dot8Dot3 extends Base
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
         }
+    }
+
+    protected function generateOptionId(string $attributeId, string $typeValueId): string
+    {
+        return substr(md5("{$attributeId}_{$typeValueId}"), 0, 17);
     }
 }
