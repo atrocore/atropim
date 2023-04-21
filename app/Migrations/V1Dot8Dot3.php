@@ -37,6 +37,19 @@ class V1Dot8Dot3 extends Base
 {
     public function up(): void
     {
+        $records = $this->getPDO()
+            ->query("SELECT a.* FROM attribute a WHERE a.type IN ('unit') AND a.deleted=0")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($records as $record) {
+            $data = @json_decode((string)$record['data'], true);
+            $typeValue = @json_decode((string)$record['type_value'], true);
+            if (!empty($typeValue[0]) && empty($data['field']['measure'])) {
+                $data['field']['measure'] = $typeValue[0];
+                $this->getPDO()->exec("UPDATE attribute set attribute.data='" . json_encode($data) . "' WHERE id='{$record['id']}'");
+            }
+        }
+
         $this->execute("ALTER TABLE attribute ADD extensible_enum_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
         $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_ID ON attribute (extensible_enum_id)");
 
