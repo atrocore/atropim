@@ -158,102 +158,12 @@ class Attribute extends Hierarchy
         }
     }
 
-    protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
-    {
-        if (property_exists($data, 'typeValueIds') && property_exists($data, 'typeValueIdsAddOnlyMode')) {
-            $entity = $this->getEntity($id);
-            if (empty($entity)) {
-                return;
-            }
-
-            unset($data->typeValueIdsAddOnlyMode);
-
-            foreach ($this->getMetadata()->get(['entityDefs', 'Attribute', 'fields']) as $field => $fieldDefs) {
-                if (empty($fieldDefs['isTypeValueField']) || $field === 'typeValueIds') {
-                    continue;
-                }
-                $typeValues[$field] = empty($entity->get($field)) ? [] : $entity->get($field);
-                if (empty($typeValues[$field]) && !empty($entity->get('typeValue'))) {
-                    $typeValues[$field] = $entity->get('typeValue');
-                }
-
-                $addModeKey = $field . 'AddOnlyMode';
-                if (property_exists($data, $addModeKey)) {
-                    unset($data->$addModeKey);
-                }
-            }
-            if (empty($typeValues)) {
-                return;
-            }
-
-            $typeValueIds = empty($entity->get('typeValueIds')) ? [] : $entity->get('typeValueIds');
-
-            foreach ($data->typeValueIds as $k => $id) {
-                if (!in_array($id, $typeValueIds)) {
-                    $typeValueIds[] = $id;
-                    foreach ($typeValues as $field => $value) {
-                        if (property_exists($data, $field) && is_array($data->$field) && array_key_exists($k, $data->$field)) {
-                            $typeValues[$field][] = $this->prepareUniqueTypeValue((string)$data->$field[$k], $typeValues[$field]);
-                        } else {
-                            $typeValues[$field][] = $this->prepareUniqueTypeValue('None', $typeValues[$field]);
-                        }
-                    }
-                }
-            }
-
-
-            $data->typeValueIds = $typeValueIds;
-            foreach ($typeValues as $field => $value) {
-                $data->$field = $value;
-            }
-        }
-
-        parent::prepareInputForAddOnlyMode($id, $data);
-    }
-
-    protected function prepareUniqueTypeValue(string $value, array $values): string
-    {
-        if (!in_array($value, $values)) {
-            return $value;
-        }
-
-        $number = 0;
-        if (preg_match("/\(duplicate (\d+)\)/", $value, $matches)) {
-            $number = $matches[1];
-            $value = str_replace(" (duplicate $number)", '', $value);
-        }
-        $number++;
-        $value .= " (duplicate $number)";
-
-        return $this->prepareUniqueTypeValue($value, $values);
-    }
-
     protected function init()
     {
         parent::init();
 
         // add dependencies
         $this->addDependency('language');
-    }
-
-    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
-    {
-        $result = parent::getFieldsThatConflict($entity, $data);
-
-        $fields = ['typeValue', 'typeValueIds'];
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                $fields[] = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($language)));
-            }
-        }
-
-        foreach ($fields as $field) {
-            if (array_key_exists($field, $result)) {
-                unset($result[$field]);
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -267,8 +177,7 @@ class Attribute extends Hierarchy
                    pf.name      AS classificationName,
                    a.id         AS attributeId,
                    a.name       AS attributeName,
-                   a.type       AS attributeType,
-                   a.type_value AS attributeTypeValue
+                   a.type       AS attributeType
                 FROM attribute AS a
                 LEFT JOIN classification_attribute AS pfa ON a.id = pfa.attribute_id AND pfa.deleted = 0
                 LEFT JOIN classification AS pf ON pf.id = pfa.classification_id  AND pf.deleted = 0
