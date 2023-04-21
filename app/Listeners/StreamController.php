@@ -108,14 +108,6 @@ class StreamController extends AbstractListener
                                 $result["list"][$key]["data"]->attributes->was->{$field . 'Id'} = $wasValue;
                                 unset ($result["list"][$key]["data"]->attributes->was->{$field});
                             }
-                        } elseif (in_array($type, ['enum', 'multiEnum'])) {
-                            $result["list"][$key]["data"]->typeValue = new \stdClass();
-                            $result["list"][$key]["data"]->typeValueIds = new \stdClass();
-
-                            foreach ($result['list'][$key]['data']->fields as $field) {
-                                $result["list"][$key]["data"]->typeValue->{$field} = $attributes[$item['attributeId']]['typeValue'];
-                                $result["list"][$key]["data"]->typeValueIds->{$field} = $attributes[$item['attributeId']]['typeValueIds'];
-                            }
                         }
                     }
                 }
@@ -183,8 +175,6 @@ class StreamController extends AbstractListener
             foreach ($attributes as $attribute) {
                 if (!empty($attribute->get('attribute'))) {
                     $result[$attribute->get('id')]['type'] = $attribute->get('attribute')->get('type');
-                    $result[$attribute->get('id')]['typeValue'] = $attribute->get('attribute')->get('typeValue');
-                    $result[$attribute->get('id')]['typeValueIds'] = $attribute->get('attribute')->get('typeValueIds');
                 }
             }
         }

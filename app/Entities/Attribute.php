@@ -43,9 +43,6 @@ class Attribute extends Hierarchy
     public function _setMeasure($value)
     {
         $this->setDataField('measure', $value);
-
-        // for backward compatibility
-        $this->set('typeValue', [$value]);
     }
 
     public function _getMeasure()
@@ -98,14 +95,7 @@ class Attribute extends Hierarchy
     {
         $data = $this->getData();
 
-        $result = isset($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
-
-        // for backward compatibility
-        if ($this->get('type') === 'unit' && empty($result['measure']) && !empty($this->get('typeValue')) && isset($this->get('typeValue')[0])) {
-            $result['measure'] = $this->get('typeValue')[0];
-        }
-
-        return $result;
+        return isset($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
     }
 
     public function getData(): array

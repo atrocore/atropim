@@ -52,24 +52,6 @@ class Attribute extends Hierarchy
         }
     }
 
-    public function getSelectAttributeList($params)
-    {
-        $attributeList = parent::getSelectAttributeList($params);
-
-        if (!empty($attributeList) && is_array($attributeList)) {
-            /**
-             * Add multilingual typeValue fields
-             */
-            if ($this->getConfig()->get('isMultilangActive', false)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                    $attributeList[] = 'typeValue' . ucfirst(Util::toCamelCase(strtolower($locale)));
-                }
-            }
-        }
-
-        return $attributeList;
-    }
-
     /**
      * @inheritDoc
      */
