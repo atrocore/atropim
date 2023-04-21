@@ -123,19 +123,6 @@
       "hideMultilang": true,
       "layoutDetailDisabled": true
     },
-    "typeValue": {
-      "type": "array",
-      "massUpdateDisabled": true,
-      "required": false,
-      "noEmptyString": false,
-      "audited": false,
-      "readOnly": false,
-      "tooltip": false,
-      "isMultilang": true,
-      "isTypeValueField": true,
-      "layoutDetailDisabled": true,
-      "view": "pim:views/fields/array-extended"
-    },
     "isSorted": {
       "type": "bool",
       "tooltip": true

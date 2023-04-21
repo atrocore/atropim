@@ -117,6 +117,15 @@ class V1Dot8Dot3 extends Base
                 }
             }
         }
+
+        $this->execute("ALTER TABLE attribute DROP type_value_ids,");
+        $this->execute("ALTER TABLE attribute DROP type_value");
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+                $locale = strtolower($v);
+                $this->execute("ALTER TABLE attribute DROP type_value_{$locale}");
+            }
+        }
     }
 
     public function down(): void
