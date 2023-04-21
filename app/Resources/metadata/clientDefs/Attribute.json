@@ -35,6 +35,15 @@
   "modalViews": {
     "select": "pim:views/attribute/modals/select-records"
   },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "extensibleEnumOptions",
+        "label": "extensibleEnumOptions",
+        "view": "views/record/panels/relationship"
+      }
+    ]
+  },
   "relationshipPanels": {
     "parents": {
       "selectAction": "selectRelatedEntity",

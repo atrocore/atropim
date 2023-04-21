@@ -31,6 +31,8 @@ Espo.define('pim:views/attribute/record/detail', 'views/record/detail-tree',
 
         sideView: "pim:views/attribute/record/detail-side",
 
+        bottomView: 'pim:views/attribute/record/detail-bottom',
+
         setup() {
             Dep.prototype.setup.call(this);
 
