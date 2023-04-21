@@ -40,7 +40,7 @@
       {
         "name": "extensibleEnumOptions",
         "label": "extensibleEnumOptions",
-        "view": "views/record/panels/relationship"
+        "view": "pim:views/attribute/record/panels/extensible-enum-options"
       }
     ]
   },

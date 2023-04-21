@@ -26,23 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/attribute/record/detail-bottom', 'views/record/detail-bottom',
+Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
-        createPanelViews() {
-            this.panelList.forEach(p => {
-                if (p.name === 'extensibleEnumOptions') {
-                    this.getModelFactory().create('ExtensibleEnum', model => {
-                        model.set('id', this.model.get('extensibleEnumId') || 'no-such-id');
-                        model.attributeModel = this.model;
-                        p = _.extend(p, this.getMetadata().get(['clientDefs', 'ExtensibleEnum', 'relationshipPanels', 'extensibleEnumOptions']));
-                        p.model = model;
-                        this.createPanelView(p);
-                    });
-                } else {
-                    this.createPanelView(p);
-                }
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model.attributeModel, 'after:save', () => {
+                this.actionRefresh();
             });
+        },
+
+        actionRefresh: function () {
+            let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
+
+            this.collection.url = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
+            this.collection.urlRoot = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
+
+            this.collection.fetch();
         },
 
     })

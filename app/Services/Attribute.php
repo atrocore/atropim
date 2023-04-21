@@ -37,10 +37,11 @@ use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class Attribute extends Hierarchy
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'data'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'extensibleEnumId', 'data'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
