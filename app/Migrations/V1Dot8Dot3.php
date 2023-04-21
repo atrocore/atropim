@@ -144,6 +144,7 @@ class V1Dot8Dot3 extends Base
 
     public function down(): void
     {
+        throw new \Error('Downgrade is prohibited!');
     }
 
     protected function execute(string $query): void
