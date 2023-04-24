@@ -26,7 +26,8 @@
     "tooltip": "Текст підказки",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
-    "description": "Опис"
+    "description": "Опис",
+    "extensibleEnum": "Список"
   },
   "links": {
     "parents": "Пов'язуючі атрибути",
@@ -35,7 +36,8 @@
     "attributeTab": "Вкладка атрибутів",
     "products": "Продукти",
     "productAttributeValues": "Значення атрибутів",
-    "classifications": "Класифікації"
+    "classifications": "Класифікації",
+    "extensibleEnum": "Список"
   },
   "labels": {
     "Create Attribute": "Створити атрибут",

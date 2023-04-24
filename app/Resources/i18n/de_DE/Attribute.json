@@ -27,7 +27,8 @@
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "extensibleEnum": "Liste"
   },
   "links": {
     "parents": "Assoziierende Attribute",
@@ -36,7 +37,8 @@
     "products": "Produkte",
     "productAttributeValues": "Attributwerte",
     "attributeGroup": "Attributgruppe",
-    "classifications": "Klassifizierungen"
+    "classifications": "Klassifizierungen",
+    "extensibleEnum": "Liste"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",
