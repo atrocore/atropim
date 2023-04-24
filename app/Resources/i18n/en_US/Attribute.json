@@ -14,7 +14,6 @@
     "assetType": "Asset Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Is Sorted (alphabetically)",
     "prohibitedEmptyValue": "Disable empty value",
     "enumDefault": "Default(List)",
     "measure": "Measure",
@@ -53,10 +52,10 @@
       "currency": "Currency",
       "date": "Date",
       "datetime": "Date-time",
-      "enum": "List",
+      "extensibleEnum": "List",
       "float": "Float",
       "int": "Integer",
-      "multiEnum": "Multi-value list",
+      "extensibleMultiEnum": "Multi-value list",
       "text": "Text",
       "unit": "Unit",
       "url": "Url",
@@ -75,7 +74,6 @@
   },
   "tooltips": {
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
-    "isSorted": "Options will be sorted after saving.",
     "virtualProductField": "Values for this attribute will be added as a virtual field via product list layout.",
     "sortOrderInProduct": "Sort order for attribute values for a product."
   },

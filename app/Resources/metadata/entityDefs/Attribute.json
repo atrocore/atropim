@@ -66,16 +66,16 @@
     "type": {
       "type": "enum",
       "required": true,
-      "options": [
+      "optionsIds": [
         "array",
         "bool",
         "currency",
         "date",
         "datetime",
-        "enum",
+        "extensibleEnum",
         "float",
         "int",
-        "multiEnum",
+        "extensibleMultiEnum",
         "text",
         "unit",
         "url",
@@ -83,7 +83,7 @@
         "wysiwyg",
         "asset"
       ],
-      "optionsIds": [
+      "options": [
         "array",
         "bool",
         "currency",
@@ -122,10 +122,6 @@
       "type": "bool",
       "hideMultilang": true,
       "layoutDetailDisabled": true
-    },
-    "isSorted": {
-      "type": "bool",
-      "tooltip": true
     },
     "productAttributeValues": {
       "type": "linkMultiple",

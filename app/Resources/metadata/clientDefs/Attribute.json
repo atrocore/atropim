@@ -77,8 +77,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "enum",
-                "multiEnum"
+                "extensibleEnum",
+                "extensibleMultiEnum"
               ]
             }
           ]
@@ -173,20 +173,6 @@
           ]
         }
       },
-      "isSorted": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "enum",
-                "multiEnum"
-              ]
-            }
-          ]
-        }
-      },
       "prohibitedEmptyValue": {
         "visible": {
           "conditionGroup": [
@@ -208,7 +194,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "enum"
+                "extensibleEnum"
               ]
             }
           ]

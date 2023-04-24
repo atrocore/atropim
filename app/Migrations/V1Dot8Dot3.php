@@ -140,6 +140,10 @@ class V1Dot8Dot3 extends Base
                 $this->execute("ALTER TABLE attribute DROP type_value_{$locale}");
             }
         }
+
+        $this->getPDO()->exec("UPDATE attribute SET type='extensibleEnum' WHERE type='enum' AND deleted=0");
+        $this->getPDO()->exec("UPDATE attribute SET type='extensibleMultiEnum' WHERE type='multiEnum' AND deleted=0");
+        $this->getPDO()->exec("ALTER TABLE attribute DROP is_sorted");
     }
 
     public function down(): void

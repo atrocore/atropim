@@ -47,12 +47,6 @@
       ],
       [
         {
-          "name": "isSorted"
-        },
-        false
-      ],
-      [
-        {
           "name": "prohibitedEmptyValue"
         },
         false
