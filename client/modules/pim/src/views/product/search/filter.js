@@ -60,7 +60,7 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
 
             if (type) {
                 let params = {};
-                if (type === 'enum' || type === 'multiEnum') {
+                if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
                     this.ajaxGetRequest(`Attribute/${name}`, null, {async: false}).success(attr => {
                         params.extensibleEnumId = attr.extensibleEnumId;
                     });

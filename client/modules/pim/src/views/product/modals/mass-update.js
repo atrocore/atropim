@@ -136,7 +136,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                 this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
                     options.params.measure = attr.measure;
                 });
-            } else if (type === 'enum' || type === 'multiEnum') {
+            } else if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
                 this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
                     options.params.extensibleEnumId = attr.extensibleEnumId;
                 });

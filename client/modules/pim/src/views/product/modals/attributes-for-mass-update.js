@@ -98,7 +98,7 @@ Espo.define('pim:views/product/modals/attributes-for-mass-update', 'views/modal'
                     }
 
                     if (language) {
-                        if (model.get('attributeId') && model.get('attributeIsMultilang') && !['enum', 'multiEnum'].includes(model.get('attributeType'))) {
+                        if (model.get('attributeId') && model.get('attributeIsMultilang') && !['extensibleEnum', 'extensibleMultiEnum'].includes(model.get('attributeType'))) {
                             language.setNotReadOnly();
                             language.show();
 

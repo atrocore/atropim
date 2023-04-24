@@ -109,7 +109,7 @@ class Product extends AbstractSelectManager
             ->getRepository('ProductAttributeValue')
             ->select(['productId', 'scope', 'channelId'])
             ->where([
-                'attributeType' => ['varchar', 'text', 'wysiwyg', 'enum'],
+                'attributeType' => ['varchar', 'text', 'wysiwyg', 'extensibleEnum'],
                 ['OR' => [['varcharValue*' => $textFilter], ['textValue*' => $textFilter]]],
             ])
             ->find()
@@ -688,7 +688,7 @@ class Product extends AbstractSelectManager
                 $row['attribute'] = 'datetimeValue';
                 $where['value'][] = $row;
                 break;
-            case 'enum':
+            case 'extensibleEnum':
                 $row['attribute'] = 'varcharValue';
                 $where['value'][] = $row;
                 $where['value'][] = [

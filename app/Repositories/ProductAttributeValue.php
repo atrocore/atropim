@@ -335,7 +335,7 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
-        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
+        if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
             $entity->set('attributeExtensibleEnumId', $this->getPavAttribute($entity)->get('extensibleEnumId'));
         }
 
@@ -545,7 +545,7 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('language', 'main');
         }
 
-        if ($attribute->get('type') === 'enum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
+        if ($attribute->get('type') === 'extensibleEnum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
             $entity->set('varcharValue', $attribute->get('enumDefault'));
         }
 

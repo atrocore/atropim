@@ -226,11 +226,6 @@ class Metadata extends AbstractListener
                     $languageFieldName = Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute';
                     $languageDefs['multilangLocale'] = $language;
                     switch ($defs['type']) {
-                        case 'enum':
-                        case 'multiEnum':
-                            $languageDefs['optionsOriginal'] = $defs['options'];
-                            $languageDefs['options'] = $languageDefs[Util::toCamelCase('options_' . strtolower($language))];
-                            break;
                         case 'asset':
                             $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Id"] = array_merge($defs, [
                                 'type'            => 'varchar',

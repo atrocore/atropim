@@ -48,7 +48,7 @@ Espo.define('pim:views/product-attribute-value/fields/icons', 'views/fields/varc
         inheritedIcon() {
             let html = '';
 
-            if (['enum', 'multiEnum'].includes(this.model.get('attributeType')) && this.model.get('language') !== 'main') {
+            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('attributeType')) && this.model.get('language') !== 'main') {
                 return html;
             }
 
