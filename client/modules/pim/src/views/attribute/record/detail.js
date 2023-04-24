@@ -31,20 +31,7 @@ Espo.define('pim:views/attribute/record/detail', 'views/record/detail-tree',
 
         sideView: "pim:views/attribute/record/detail-side",
 
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'before:save', attrs => {
-                if (this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum') {
-                    if (this.model.get('isSorted')) {
-                        const sortedData = this.getFieldView('typeValue').sortOptions();
-                        $.each(sortedData, (k, v) => {
-                            attrs[k] = v
-                        });
-                    }
-                }
-            });
-        },
+        bottomView: 'pim:views/attribute/record/detail-bottom',
 
         delete: function () {
             Espo.TreoUi.confirmWithBody('', {

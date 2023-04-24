@@ -88,32 +88,8 @@ class RevisionField extends MultilangRevisionField
                                 $became['valueId'] = $data['attributes']['became'][$field];
                             }
 
-                            if ($attr->get('type') == 'multiEnum') {
-                                $was['value'] = [];
-                                foreach ($data['attributes']['was'][$field] as $v) {
-                                    if (!empty($option = $this->getOptionValue($attr, $v))) {
-                                        $was['value'][] = $option;
-                                    }
-                                }
-
-                                $became['value'] = [];
-                                foreach ($data['attributes']['became'][$field] as $v) {
-                                    if (!empty($option = $this->getOptionValue($attr, $v))) {
-                                        $became['value'][] = $option;
-                                    }
-                                }
-                            } elseif ($attr->get('type') == 'enum') {
-                                if (!empty($option = $this->getOptionValue($attr, $data['attributes']['was'][$field]))) {
-                                    $was['value'] = $option;
-                                }
-
-                                if (!empty($option = $this->getOptionValue($attr, $data['attributes']['became'][$field]))) {
-                                    $became['value'] = $option;
-                                }
-                            } else {
-                                $was['value'] = $data['attributes']['was'][$field];
-                                $became['value'] = $data['attributes']['became'][$field];
-                            }
+                            $was['value'] = $data['attributes']['was'][$field];
+                            $became['value'] = $data['attributes']['became'][$field];
 
                             // for unit
                             if (isset($data['attributes']['was'][$field . 'Unit'])) {
@@ -162,25 +138,6 @@ class RevisionField extends MultilangRevisionField
             }
         } else {
             $result = parent::prepareData($params, $notes, $request);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Entity $entity
-     * @param string $id
-     *
-     * @return string|null
-     */
-    protected function getOptionValue(Entity $entity, string $id): ?string
-    {
-        $result = null;
-
-        $key = array_search($id, $entity->get('typeValueIds'));
-
-        if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
-            $result = $entity->get('typeValue')[$key];
         }
 
         return $result;

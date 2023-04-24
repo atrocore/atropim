@@ -4,8 +4,6 @@
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "attributeTab": "Вкладка атрибутов",
-    "typeValueIds": "Идентификаторы опций",
-    "typeValue": "Значения опций",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Название атрибута",
@@ -16,7 +14,6 @@
     "assetType": "Тип ассета",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Сортировать (по алфавиту)",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "enumDefault": "По умолчанию",
     "measure": "Мера",
@@ -51,14 +48,11 @@
   },
   "tooltips": {
     "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"\/^[A-Z]{1,10}$\/\"",
-    "isSorted": "Опции будут отсортированы после сохранения.",
     "virtualProductField": "Значения этого атрибута будут добавлены в виде виртуального поля через лейаут списка товаров.",
     "sortOrderInProduct": "Порядок сортировки значений атрибутов продукта.W"
   },
   "exceptions": {
-    "typeValueIsInconsistent": "Данные для значений опций противоречивы.",
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
-    "attributeValueShouldBeUnique": "Значение атрибута должно быть уникальным.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
     "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",

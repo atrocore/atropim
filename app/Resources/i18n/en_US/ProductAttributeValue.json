@@ -41,7 +41,6 @@
   "exceptions": {
     "attributeUnitValueIsRequired": "Unit for the attribute '%s' is required.",
     "noSuchAttributeUnit": "Unit for the attribute '%s' is not valid.",
-    "noSuchAttributeOptions": "Value for the attribute '%s' is not valid.",
     "youHaveNoAclRightsToReadAttributeValues": "You have no rights to read attribute values.",
     "attributeDontMatchToPattern": "The value of the attribute \"{attribute}\" does not correspond to the pattern \"{pattern}\".",
     "attributeShouldHaveBeUnique": "%s attribute should have unique value."

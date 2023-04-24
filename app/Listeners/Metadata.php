@@ -192,39 +192,9 @@ class Metadata extends AbstractListener
                     if (!empty($data['field']['measure'])) {
                         $defs['measure'] = $data['field']['measure'];
                     }
-
-                    if (empty($defs['measure']) && !empty($attribute['type_value'])) {
-                        $typeValue = @json_decode($attribute['type_value'], true);
-                        if (!empty($typeValue[0])) {
-                            $defs['measure'] = $typeValue[0];
-                        }
-                    }
                     break;
                 case 'asset':
                     $defs['assetType'] = $attribute['asset_type'];
-                    break;
-                case 'enum':
-                case 'multiEnum':
-                    $defs['optionsIds'] = @json_decode((string)$attribute['type_value_ids'], true);
-                    if (empty($defs['optionsIds'])) {
-                        $defs['optionsIds'] = [];
-                    }
-                    $defs['options'] = [];
-                    if (!empty($attribute['type_value'])) {
-                        $typeValue = @json_decode($attribute['type_value'], true);
-                        if (!empty($typeValue)) {
-                            $defs['options'] = $typeValue;
-                        }
-                        foreach ($languages as $language) {
-                            $defs[Util::toCamelCase('options_' . strtolower($language))] = $defs['options'];
-                            if (!empty($attribute['type_value_' . strtolower($language)])) {
-                                $languageTypeValue = @json_decode($attribute['type_value_' . strtolower($language)], true);
-                                if (!empty($typeValue)) {
-                                    $defs[Util::toCamelCase('options_' . strtolower($language))] = $languageTypeValue;
-                                }
-                            }
-                        }
-                    }
                     break;
             }
 
@@ -256,11 +226,6 @@ class Metadata extends AbstractListener
                     $languageFieldName = Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute';
                     $languageDefs['multilangLocale'] = $language;
                     switch ($defs['type']) {
-                        case 'enum':
-                        case 'multiEnum':
-                            $languageDefs['optionsOriginal'] = $defs['options'];
-                            $languageDefs['options'] = $languageDefs[Util::toCamelCase('options_' . strtolower($language))];
-                            break;
                         case 'asset':
                             $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Id"] = array_merge($defs, [
                                 'type'            => 'varchar',

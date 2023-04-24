@@ -53,15 +53,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
         createDisabled: true,
 
         setup() {
-            this.mandatorySelectAttributeList = ['type', 'typeValue', 'isMultilang', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
-            let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
-            if (this.getConfig().get('isMultilangActive') && inputLanguageList.length) {
-                this.typeValueFields = inputLanguageList.map(lang => {
-                    return lang.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), 'typeValue');
-                });
-                this.mandatorySelectAttributeList = this.mandatorySelectAttributeList.concat(this.typeValueFields);
-            }
-
+            this.mandatorySelectAttributeList = ['type', 'isMultilang', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
             if (this.model.get('attributeTooltip')) {
                 var $a;
                 this.once('after:render', function () {
@@ -102,14 +94,12 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
         setAttributeFieldsToModel(model) {
             let attributes = {
                 attributeType: model.get('type'),
-                typeValue: model.get('typeValue'),
                 attributeIsMultilang: model.get('isMultilang'),
                 defaultScope: model.get('defaultScope'),
                 defaultChannelId: model.get('defaultChannelId'),
                 defaultChannelName: model.get('defaultChannelName'),
                 isRequired: model.get('isRequired')
             };
-            (this.typeValueFields || []).forEach(item => attributes[item] = model.get(item));
             this.model.set(attributes);
         },
 
@@ -133,8 +123,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
         },
 
         unsetAttributeFieldsInModel() {
-            ['attributeType', 'typeValue', 'attributeIsMultilang', ...(this.typeValueFields || [])]
-                .forEach(field => this.model.unset(field));
+            ['attributeType', 'attributeIsMultilang'].forEach(field => this.model.unset(field));
         }
 
     })

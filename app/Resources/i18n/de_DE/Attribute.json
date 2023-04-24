@@ -5,8 +5,6 @@
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
     "productAttributeValues": "Attributwerte",
     "products": "Produkte",
-    "typeValueIds": "Options-IDs",
-    "typeValue": "Optionswerte",
     "type": "Typ",
     "sortOrderInAttributeGroup": "Sortierreihenfolge in Attributgruppe",
     "attributeGroup": "Attributgruppe",
@@ -17,7 +15,6 @@
     "name": "Attributname",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Sortiert (alphabetisch)",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "enumDefault": "Standard(Liste)",
     "measure": "Maß",
@@ -30,7 +27,8 @@
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "extensibleEnum": "Liste"
   },
   "links": {
     "parents": "Assoziierende Attribute",
@@ -39,7 +37,8 @@
     "products": "Produkte",
     "productAttributeValues": "Attributwerte",
     "attributeGroup": "Attributgruppe",
-    "classifications": "Klassifizierungen"
+    "classifications": "Klassifizierungen",
+    "extensibleEnum": "Liste"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",
@@ -53,10 +52,10 @@
       "currency": "Währung",
       "date": "Datum",
       "datetime": "Datum-Uhrzeit",
-      "enum": "Liste",
+      "extensibleEnum": "Liste",
       "float": "Kommazahl",
       "int": "Ganzzahl",
-      "multiEnum": "Liste mit Mehrfachauswahl",
+      "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
       "text": "Text",
       "unit": "Einheit",
       "url": "Url",
@@ -75,14 +74,11 @@
   },
   "tooltips": {
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
-    "isSorted": "Optionen werden nach dem Speichern der Seite sortiert.",
     "virtualProductField": "Werte für dieses Attribut werden als virtuelles Feld über das Produktlistenlayout hinzugefügt werden.",
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."
   },
   "exceptions": {
-    "typeValueIsInconsistent": "Daten für Optionswerte sind inkonsistent.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
-    "attributeValueShouldBeUnique": "Attributwert sollte eindeutig sein.",
     "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",

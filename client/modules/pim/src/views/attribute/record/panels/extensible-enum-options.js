@@ -26,10 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/attribute/modals/select-records', 'views/modals/select-records',
+Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
-        mandatorySelectAttributeList: ['defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'],
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model.attributeModel, 'after:save', () => {
+                this.actionRefresh();
+            });
+        },
+
+        actionRefresh: function () {
+            let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
+
+            this.collection.url = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
+            this.collection.urlRoot = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
+
+            this.collection.fetch();
+        },
+
+        afterRender() {
+            Dep.prototype.setup.call(this);
+
+            this.$el.parent().hide();
+            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.attributeModel.get('type'))) {
+                this.$el.parent().show();
+            }
+        },
 
     })
 );

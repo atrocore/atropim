@@ -35,6 +35,14 @@
   "modalViews": {
     "select": "pim:views/attribute/modals/select-records"
   },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "extensibleEnumOptions",
+        "view": "pim:views/attribute/record/panels/extensible-enum-options"
+      }
+    ]
+  },
   "relationshipPanels": {
     "parents": {
       "selectAction": "selectRelatedEntity",
@@ -62,15 +70,15 @@
   },
   "dynamicLogic": {
     "fields": {
-      "typeValue": {
+      "extensibleEnum": {
         "visible": {
           "conditionGroup": [
             {
               "type": "in",
               "attribute": "type",
               "value": [
-                "enum",
-                "multiEnum"
+                "extensibleEnum",
+                "extensibleMultiEnum"
               ]
             }
           ]
@@ -165,20 +173,6 @@
           ]
         }
       },
-      "isSorted": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "enum",
-                "multiEnum"
-              ]
-            }
-          ]
-        }
-      },
       "prohibitedEmptyValue": {
         "visible": {
           "conditionGroup": [
@@ -186,7 +180,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "enum",
+                "extensibleEnum",
                 "unit"
               ]
             }
@@ -200,7 +194,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "enum"
+                "extensibleEnum"
               ]
             }
           ]

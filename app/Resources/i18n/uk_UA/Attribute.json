@@ -4,8 +4,6 @@
     "children": "Пов'язані атрибути",
     "attributeGroup": "Група атрибутів",
     "attributeTab": "Вкладка атрибутів",
-    "typeValueIds": "Ідентифікатори опцій",
-    "typeValue": "Значення опцій",
     "type": "Тип атрибута",
     "code": "Код",
     "name": "Назва атрибута",
@@ -16,7 +14,6 @@
     "assetType": "Тип асета",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "isSorted": "Сортувати (за алфавітом)",
     "prohibitedEmptyValue": "Заборонити порожні значення",
     "enumDefault": "За замовчуванням(Список)",
     "measure": "Міра",
@@ -29,7 +26,8 @@
     "tooltip": "Текст підказки",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
-    "description": "Опис"
+    "description": "Опис",
+    "extensibleEnum": "Список"
   },
   "links": {
     "parents": "Пов'язуючі атрибути",
@@ -38,7 +36,8 @@
     "attributeTab": "Вкладка атрибутів",
     "products": "Продукти",
     "productAttributeValues": "Значення атрибутів",
-    "classifications": "Класифікації"
+    "classifications": "Класифікації",
+    "extensibleEnum": "Список"
   },
   "labels": {
     "Create Attribute": "Створити атрибут",
@@ -55,14 +54,11 @@
    },
    "tooltips": {
      "pattern": "Щоб дозволити лише великі літери довжиною 10 символів використовуйте \"\/^[A-Z]{1,10}$\/\"",
-     "isSorted": "Опції будуть відсортовані після збереження.",
      "virtualProductField": "Значення цього атрибуту будуть додані у вигляді віртуального поля через лейаут списку товарів.",
      "sortOrderInProduct": "Порядок сортування значень атрибутів продукту.W"
    },
   "exceptions": {
-    "typeValueIsInconsistent": "Дані для значень опцій суперечливі.",
     "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
-    "attributeValueShouldBeUnique": "Значення атрибута має бути унікальним.",
     "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",

@@ -109,7 +109,7 @@ class Product extends AbstractSelectManager
             ->getRepository('ProductAttributeValue')
             ->select(['productId', 'scope', 'channelId'])
             ->where([
-                'attributeType' => ['varchar', 'text', 'wysiwyg', 'enum'],
+                'attributeType' => ['varchar', 'text', 'wysiwyg', 'extensibleEnum'],
                 ['OR' => [['varcharValue*' => $textFilter], ['textValue*' => $textFilter]]],
             ])
             ->find()
@@ -588,7 +588,7 @@ class Product extends AbstractSelectManager
         }
 
         if (!isset($row['type']) || (empty($row['value']) && !in_array($row['type'], ['isTrue', 'isFalse', 'isNull', 'isNotNull']))) {
-            $row['type'] = in_array($attribute->get('type'), ['array', 'multiEnum']) ? 'arrayIsEmpty' : 'isNull';
+            $row['type'] = in_array($attribute->get('type'), ['array', 'extensibleMultiEnum']) ? 'arrayIsEmpty' : 'isNull';
         }
 
         $where = [
@@ -604,8 +604,7 @@ class Product extends AbstractSelectManager
 
         switch ($attribute->get('type')) {
             case 'array':
-            case 'multiEnum':
-                $this->prepareEnumValue($attribute, $row);
+            case 'extensibleMultiEnum':
                 if ($row['type'] === 'arrayIsEmpty') {
                     $where['value'][] = [
                         'type'  => 'or',
@@ -689,8 +688,7 @@ class Product extends AbstractSelectManager
                 $row['attribute'] = 'datetimeValue';
                 $where['value'][] = $row;
                 break;
-            case 'enum':
-                $this->prepareEnumValue($attribute, $row);
+            case 'extensibleEnum':
                 $row['attribute'] = 'varcharValue';
                 $where['value'][] = $row;
                 $where['value'][] = [
@@ -705,7 +703,7 @@ class Product extends AbstractSelectManager
                 break;
         }
 
-        if ($attribute->get('type') === 'multiEnum') {
+        if ($attribute->get('type') === 'extensibleMultiEnum') {
             $where['value'][] = [
                 'type'      => 'equals',
                 'attribute' => 'language',
@@ -714,22 +712,6 @@ class Product extends AbstractSelectManager
         }
 
         return $where;
-    }
-
-    protected function prepareEnumValue(Attribute $attribute, array &$row): void
-    {
-        if (!empty($row['value']) && !empty($attribute->get('typeValue'))) {
-            $values = [];
-            foreach ($attribute->get('typeValue') as $k => $typeValue) {
-                foreach ($row['value'] as $val) {
-                    if ($val === $typeValue) {
-                        $values[] = $attribute->get('typeValueIds')[$k];
-                    }
-                }
-            }
-
-            $row['value'] = $values;
-        }
     }
 
     protected function addProductAttributesFilter(array &$selectParams, array $attributes): void

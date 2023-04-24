@@ -78,17 +78,12 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 }
 
                 if (attributeType === 'unit') {
-                    params.measure = (this.model.get('typeValue') || ['Length'])[0];
+                    params.measure = this.model.get('attributeMeasure');
                 }
 
-                if (attributeType === 'enum' || attributeType === 'multiEnum') {
-                    if (this.mode === 'edit' && !this.model.get('typeValue') && !this.model.get('typeValueIds')) {
-                        this.fetchAttributeData();
-                    }
-
-                    params.optionsIds = this.model.get('typeValueIds') || [];
-                    params.options = this.model.get('typeValue') || [];
+                if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
+                    params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
                 }
 
                 let options = {
@@ -113,7 +108,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     });
                 });
 
-                if (this.mode === 'edit' && 'multiEnum' === attributeType) {
+                if (this.mode === 'edit' && 'extensibleMultiEnum' === attributeType) {
                     this.$el.addClass('over-visible');
                 }
             }
@@ -188,8 +183,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         fetchAttributeData() {
             this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                 this.model.set('attributeType', attr.type);
-                this.model.set('typeValueIds', attr.typeValueIds || []);
-                this.model.set('typeValue', attr.typeValue || []);
+                this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
                 this.model.set('maxLength', attr.maxLength);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);

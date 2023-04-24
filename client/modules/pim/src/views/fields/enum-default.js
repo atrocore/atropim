@@ -44,10 +44,19 @@ Espo.define('pim:views/fields/enum-default', 'views/fields/enum', function (Dep)
             this.params.options = ['']
             this.translatedOptions = {'': ''};
 
-            if (this.model.get('typeValueIds')) {
-                Espo.Utils.clone(this.model.get('typeValueIds') || []).forEach((id, k) => {
-                    this.params.options.push(id);
-                    this.translatedOptions[id] = this.model.get('typeValue') && this.model.get('typeValue')[k] ? this.model.get('typeValue')[k] : id;
+            if (this.model.get('extensibleEnumId')) {
+                let params = {
+                    sortBy: "sortOrder",
+                    asc: true
+                };
+
+                this.ajaxGetRequest(`ExtensibleEnum/${this.model.get('extensibleEnumId')}/extensibleEnumOptions`, params, {async: false}).success(res => {
+                    if (res.list) {
+                        res.list.forEach(option => {
+                            this.params.options.push(option.id);
+                            this.translatedOptions[option.id] = option.name;
+                        });
+                    }
                 });
             }
         },

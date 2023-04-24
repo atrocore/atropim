@@ -253,11 +253,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
-            $entity->clear('typeValueIds');
-            $entity->clear('typeValue');
-        }
-
         if (empty($entity->setHasParent)) {
             $variantPavs = $this->getParentsVariantAttributes([$entity->get('productId')]);
             $this->setHasParent($entity, $variantPavs);
@@ -558,7 +553,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
 
             if (!empty((array)$inputData)) {
-                if (in_array($pav1->get('attributeType'), ['multiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
+                if (in_array($pav1->get('attributeType'), ['extensibleMultiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
                     $inputData->value = @json_decode($inputData->value, true);
                 }
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
@@ -730,7 +725,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             switch ($entity->get('attributeType')) {
                 case 'array':
-                case 'multiEnum':
+                case 'extensibleMultiEnum':
                 case 'text':
                 case 'wysiwyg':
                     $entity->set('textValue', $data->value);
@@ -872,7 +867,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum', 'unit'])) {
+        if (in_array($entity->get('attributeType'), ['unit'])) {
             return [];
         }
 
@@ -959,6 +954,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->getRepository()->convertValue($entity);
 
         if ($entity->get('attributeType') === 'unit') {
+            $entity->set('attributeMeasure', $attribute->getDataField('measure'));
             $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
         }
 
@@ -988,38 +984,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (property_exists($data, 'value') && is_array($data->value)) {
             $data->value = json_encode($data->value);
         }
-
-        /**
-         * Prepare via attribute type
-         */
-        if (property_exists($data, 'value') && !empty($attribute)) {
-            $typeValueKey = 'typeValue';
-            if (!empty($language = $this->getHeaderLanguage())) {
-                $typeValueKey .= ucfirst(Util::toCamelCase(strtolower($language)));
-            }
-
-            switch ($attribute->get('type')) {
-                case 'enum':
-                    $key = array_search((string)$data->value, $attribute->get($typeValueKey));
-                    if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
-                        $data->value = $attribute->get('typeValueIds')[$key];
-                    }
-                    break;
-                case 'multiEnum':
-                    $values = [];
-                    $options = @json_decode((string)$data->value, true);
-                    if (!empty($options)) {
-                        foreach ($options as $option) {
-                            $key = array_search($option, $attribute->get($typeValueKey));
-                            if ($key !== false && !empty($attribute->get('typeValueIds')) && array_key_exists($key, $attribute->get('typeValueIds'))) {
-                                $values[] = $attribute->get('typeValueIds')[$key];
-                            }
-                        }
-                    }
-                    $data->value = json_encode($values);
-                    break;
-            }
-        }
     }
 
     protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
@@ -1039,7 +1003,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             switch ($pav->get('attributeType')) {
                 case 'array':
-                case 'multiEnum':
+                case 'extensibleMultiEnum':
                     $inputValue = is_string($data->value) ? @json_decode($data->value) : $data->value;
                     if (!is_array($inputValue)) {
                         $inputValue = [];
@@ -1107,16 +1071,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (in_array($field, array_merge(['value'], array_values($this->getInputLanguageList())))) {
             $type = $entity->get('attributeType');
             $type = $this->getMetadata()->get(['fields', $type, 'fieldDefs', 'type'], $type);
-
-            // compare with original value
-            switch ($entity->get('attributeType')) {
-                case 'enum':
-                    $value2 = $entity->_varcharValue;
-                    break;
-                case 'multiEnum':
-                    $value2 = $entity->_textValue;
-                    break;
-            }
         } else {
             $type = isset($entity->getFields()[$field]['type']) ? $entity->getFields()[$field]['type'] : 'varchar';
         }

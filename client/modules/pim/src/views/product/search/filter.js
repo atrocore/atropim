@@ -59,15 +59,15 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
             this.pinned = this.options.pinned;
 
             if (type) {
+                let params = {};
+                if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
+                    this.ajaxGetRequest(`Attribute/${name}`, null, {async: false}).success(attr => {
+                        params.extensibleEnumId = attr.extensibleEnumId;
+                    });
+                }
+
                 let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
-                let params = {};
-                if (this.options.params.isTypeValue) {
-                    params = {
-                        options: this.options.params.options,
-                        translatedOptions: this.options.params.translatedOptions
-                    }
-                }
                 this.createView('field', viewName, {
                     mode: 'search',
                     model: this.model,
@@ -83,7 +83,7 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
             let isPinEnabled = true;
 
             if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView()) {
-                const parent =  this.getParentView().getParentView();
+                const parent = this.getParentView().getParentView();
 
                 if (('layoutName' in parent) && parent.layoutName === 'listSmall') {
                     isPinEnabled = false;

@@ -238,7 +238,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         switch ($pav1->get('attributeType')) {
             case 'array':
-            case 'multiEnum':
+            case 'extensibleMultiEnum':
             case 'text':
             case 'wysiwyg':
                 $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
@@ -335,36 +335,14 @@ class ProductAttributeValue extends AbstractRepository
             return;
         }
 
-        if (in_array($entity->get('attributeType'), ['enum', 'multiEnum'])) {
-            $attribute = $this->getPavAttribute($entity);
-
-            $language = $entity->get('language');
-            if (!empty($headerLanguage = \Pim\Services\ProductAttributeValue::getLanguagePrism())) {
-                $language = $headerLanguage;
-            }
-
-            $entity->set('typeValue', $this->getAttributeOptions($attribute, $language));
-            $entity->set('typeValueIds', $this->getAttributeOptionsIds($attribute));
+        if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
+            $entity->set('attributeExtensibleEnumId', $this->getPavAttribute($entity)->get('extensibleEnumId'));
         }
 
         switch ($entity->get('attributeType')) {
             case 'array':
+            case 'extensibleMultiEnum':
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                break;
-            case 'multiEnum':
-                if ($entity->get('textValue') !== null && !empty($entity->get('typeValueIds'))) {
-                    $values = [];
-                    $options = @json_decode((string)$entity->get('textValue'), true);
-                    if (!empty($options)) {
-                        foreach ($options as $option) {
-                            $key = array_search($option, $entity->get('typeValueIds'));
-                            if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
-                                $values[] = $entity->get('typeValue')[$key];
-                            }
-                        }
-                    }
-                    $entity->set('value', $values);
-                }
                 break;
             case 'text':
             case 'wysiwyg':
@@ -400,14 +378,6 @@ class ProductAttributeValue extends AbstractRepository
                     if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
                         $entity->set('valueName', $attachment->get('name'));
                         $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-                    }
-                }
-                break;
-            case 'enum':
-                if ($entity->get('varcharValue') !== null && !empty($entity->get('typeValueIds'))) {
-                    $key = array_search((string)$entity->get('varcharValue'), $entity->get('typeValueIds'));
-                    if ($key !== false && !empty($entity->get('typeValue')) && array_key_exists($key, $entity->get('typeValue'))) {
-                        $entity->set('value', $entity->get('typeValue')[$key]);
                     }
                 }
                 break;
@@ -559,35 +529,6 @@ class ProductAttributeValue extends AbstractRepository
         return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 
-    protected function getAttributeOptions(Entity $attribute, string $language): ?array
-    {
-        if ($language !== 'main') {
-            $language = ucfirst(Util::toCamelCase(strtolower($language)));
-        } else {
-            $language = '';
-        }
-
-        $result = $attribute->get("typeValue$language");
-        if (empty($result)) {
-            $result = empty($attribute->get('typeValue')) ? [] : $attribute->get('typeValue');
-        }
-        if ($attribute->get('type') === 'enum' && !$attribute->get('prohibitedEmptyValue')) {
-            array_unshift($result, '');
-        }
-
-        return $result;
-    }
-
-    protected function getAttributeOptionsIds(Entity $attribute): ?array
-    {
-        $result = !empty($attribute->get('typeValueIds')) ? $attribute->get('typeValueIds') : [];
-        if ($attribute->get('type') === 'enum' && !$attribute->get('prohibitedEmptyValue')) {
-            array_unshift($result, '');
-        }
-
-        return $result;
-    }
-
     protected function populateDefault(Entity $entity, ?Entity $attribute): void
     {
         if (empty($attribute)) {
@@ -604,7 +545,7 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('language', 'main');
         }
 
-        if ($attribute->get('type') === 'enum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
+        if ($attribute->get('type') === 'extensibleEnum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
             $entity->set('varcharValue', $attribute->get('enumDefault'));
         }
 
@@ -692,7 +633,7 @@ class ProductAttributeValue extends AbstractRepository
 
             switch ($entity->get('attributeType')) {
                 case 'array':
-                case 'multiEnum':
+                case 'extensibleMultiEnum':
                     $where['textValue'] = @json_encode($entity->get('textValue'));
                     break;
                 case 'text':
@@ -871,7 +812,7 @@ class ProductAttributeValue extends AbstractRepository
         ];
 
         $result['attributes']['was'][$fieldName] = self::$beforeSaveData['value'];
-        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'multiEnum']) ? json_decode($entity->get('value'), true)
+        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'extensibleMultiEnum']) ? json_decode($entity->get('value'), true)
             : $entity->get('value');
 
         if ($result['attributes']['was'][$fieldName] === null && ($result['attributes']['became'][$fieldName] === null || $result['attributes']['became'][$fieldName] === '')) {
@@ -895,54 +836,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         parent::validateFieldsByType($entity);
 
-        $this->validateEnumAttribute($entity);
         $this->validateUnitAttribute($entity);
-    }
-
-
-    protected function validateEnumAttribute(Entity $entity): void
-    {
-        if (empty($attribute = $entity->get('attribute'))) {
-            return;
-        }
-
-        $type = $attribute->get('type');
-
-        if (!in_array($type, ['enum', 'multiEnum'])) {
-            return;
-        }
-
-        if ($entity->isAttributeChanged('value') && !empty($entity->get('value'))) {
-            $fieldOptions = $this->getAttributeOptionsIds($attribute);
-
-            if (empty($fieldOptions) && $type === 'multiEnum') {
-                $entity->set('value', null);
-                $entity->set('textValue', null);
-                return;
-            }
-
-            $value = $entity->get('value');
-
-            if ($type == 'enum') {
-                $value = [$value];
-            }
-
-            if ($type == 'multiEnum' && is_string($value)) {
-                $value = @json_decode($value, true);
-            }
-
-            $errorMessage = sprintf($this->getInjection('language')->translate('noSuchAttributeOptions', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'));
-
-            if (!is_array($value)) {
-                throw new BadRequest($errorMessage);
-            }
-
-            foreach ($value as $v) {
-                if (!in_array($v, $fieldOptions)) {
-                    throw new BadRequest($errorMessage);
-                }
-            }
-        }
     }
 
     protected function validateUnitAttribute(Entity $entity): void
@@ -971,7 +865,7 @@ class ProductAttributeValue extends AbstractRepository
             throw new BadRequest(sprintf($language->translate('attributeUnitValueIsRequired', 'exceptions', 'ProductAttributeValue'), $label));
         }
 
-        $measure = empty($attribute->get('typeValue') || !is_array($attribute->get('typeValue'))) ? '' : $attribute->get('typeValue')[0];
+        $measure = empty($attribute->getDataField('measure')) ? '' : $attribute->getDataField('measure');
 
         if (!empty($unit)) {
             $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];

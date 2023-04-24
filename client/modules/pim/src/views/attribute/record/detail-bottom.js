@@ -26,23 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/fields/array-extended', 'views/fields/array-extended',
+Espo.define('pim:views/attribute/record/detail-bottom', 'views/record/detail-bottom',
     Dep => Dep.extend({
 
-        isAttribute: true,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'after:save', () => {
-                this.reRender();
+        createPanelViews() {
+            this.panelList.forEach(p => {
+                if (p.name === 'extensibleEnumOptions') {
+                    this.getModelFactory().create('ExtensibleEnum', model => {
+                        model.set('id', this.model.get('extensibleEnumId') || 'no-such-id');
+                        model.attributeModel = this.model;
+                        p = _.extend(p, this.getMetadata().get(['clientDefs', 'ExtensibleEnum', 'relationshipPanels', 'extensibleEnumOptions']));
+                        p.model = model;
+                        p.label = this.translate('extensibleEnumOptions', 'fields', 'ExtensibleEnum');
+                        this.createPanelView(p);
+                    });
+                } else {
+                    this.createPanelView(p);
+                }
             });
-        },
-
-        hasMultilingualOptions() {
-            return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
         },
 
     })
 );
-

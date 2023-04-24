@@ -53,6 +53,9 @@
     "attributeTab": {
       "type": "link"
     },
+    "extensibleEnum": {
+      "type": "link"
+    },
     "code": {
       "type": "varchar",
       "massUpdateDisabled": true,
@@ -63,16 +66,16 @@
     "type": {
       "type": "enum",
       "required": true,
-      "options": [
+      "optionsIds": [
         "array",
         "bool",
         "currency",
         "date",
         "datetime",
-        "enum",
+        "extensibleEnum",
         "float",
         "int",
-        "multiEnum",
+        "extensibleMultiEnum",
         "text",
         "unit",
         "url",
@@ -80,16 +83,16 @@
         "wysiwyg",
         "asset"
       ],
-      "optionsIds": [
+      "options": [
         "array",
         "bool",
         "currency",
         "date",
         "datetime",
-        "enum",
+        "extensibleEnum",
         "float",
         "int",
-        "multiEnum",
+        "extensibleMultiEnum",
         "text",
         "unit",
         "url",
@@ -119,33 +122,6 @@
       "type": "bool",
       "hideMultilang": true,
       "layoutDetailDisabled": true
-    },
-    "typeValueIds": {
-      "type": "array",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "isTypeValueField": true
-    },
-    "typeValue": {
-      "type": "array",
-      "massUpdateDisabled": true,
-      "required": false,
-      "noEmptyString": false,
-      "audited": false,
-      "readOnly": false,
-      "tooltip": false,
-      "isMultilang": true,
-      "isTypeValueField": true,
-      "layoutDetailDisabled": true,
-      "view": "pim:views/fields/array-extended"
-    },
-    "isSorted": {
-      "type": "bool",
-      "tooltip": true
     },
     "productAttributeValues": {
       "type": "linkMultiple",
@@ -343,6 +319,11 @@
       "foreign": "attributes",
       "entity": "AttributeTab",
       "audited": false
+    },
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "ExtensibleEnum"
     },
     "productAttributeValues": {
       "type": "hasMany",
