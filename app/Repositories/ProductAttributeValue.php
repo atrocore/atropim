@@ -238,7 +238,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         switch ($pav1->get('attributeType')) {
             case 'array':
-            case 'multiEnum':
+            case 'extensibleMultiEnum':
             case 'text':
             case 'wysiwyg':
                 $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
@@ -341,7 +341,7 @@ class ProductAttributeValue extends AbstractRepository
 
         switch ($entity->get('attributeType')) {
             case 'array':
-            case 'multiEnum':
+            case 'extensibleMultiEnum':
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 break;
             case 'text':
@@ -633,7 +633,7 @@ class ProductAttributeValue extends AbstractRepository
 
             switch ($entity->get('attributeType')) {
                 case 'array':
-                case 'multiEnum':
+                case 'extensibleMultiEnum':
                     $where['textValue'] = @json_encode($entity->get('textValue'));
                     break;
                 case 'text':
@@ -812,7 +812,7 @@ class ProductAttributeValue extends AbstractRepository
         ];
 
         $result['attributes']['was'][$fieldName] = self::$beforeSaveData['value'];
-        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'multiEnum']) ? json_decode($entity->get('value'), true)
+        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'extensibleMultiEnum']) ? json_decode($entity->get('value'), true)
             : $entity->get('value');
 
         if ($result['attributes']['was'][$fieldName] === null && ($result['attributes']['became'][$fieldName] === null || $result['attributes']['became'][$fieldName] === '')) {

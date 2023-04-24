@@ -588,7 +588,7 @@ class Product extends AbstractSelectManager
         }
 
         if (!isset($row['type']) || (empty($row['value']) && !in_array($row['type'], ['isTrue', 'isFalse', 'isNull', 'isNotNull']))) {
-            $row['type'] = in_array($attribute->get('type'), ['array', 'multiEnum']) ? 'arrayIsEmpty' : 'isNull';
+            $row['type'] = in_array($attribute->get('type'), ['array', 'extensibleMultiEnum']) ? 'arrayIsEmpty' : 'isNull';
         }
 
         $where = [
@@ -604,7 +604,7 @@ class Product extends AbstractSelectManager
 
         switch ($attribute->get('type')) {
             case 'array':
-            case 'multiEnum':
+            case 'extensibleMultiEnum':
                 if ($row['type'] === 'arrayIsEmpty') {
                     $where['value'][] = [
                         'type'  => 'or',
@@ -703,7 +703,7 @@ class Product extends AbstractSelectManager
                 break;
         }
 
-        if ($attribute->get('type') === 'multiEnum') {
+        if ($attribute->get('type') === 'extensibleMultiEnum') {
             $where['value'][] = [
                 'type'      => 'equals',
                 'attribute' => 'language',

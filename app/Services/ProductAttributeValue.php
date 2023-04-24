@@ -553,7 +553,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
 
             if (!empty((array)$inputData)) {
-                if (in_array($pav1->get('attributeType'), ['multiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
+                if (in_array($pav1->get('attributeType'), ['extensibleMultiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
                     $inputData->value = @json_decode($inputData->value, true);
                 }
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
@@ -725,7 +725,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             switch ($entity->get('attributeType')) {
                 case 'array':
-                case 'multiEnum':
+                case 'extensibleMultiEnum':
                 case 'text':
                 case 'wysiwyg':
                     $entity->set('textValue', $data->value);
@@ -1003,7 +1003,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             switch ($pav->get('attributeType')) {
                 case 'array':
-                case 'multiEnum':
+                case 'extensibleMultiEnum':
                     $inputValue = is_string($data->value) ? @json_decode($data->value) : $data->value;
                     if (!is_array($inputValue)) {
                         $inputValue = [];

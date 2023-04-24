@@ -50,7 +50,7 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
             Dep.prototype.setup.call(this);
 
             this.$el.parent().hide();
-            if (['enum', 'multiEnum'].includes(this.model.attributeModel.get('type'))) {
+            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.attributeModel.get('type'))) {
                 this.$el.parent().show();
             }
         },

@@ -108,7 +108,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     });
                 });
 
-                if (this.mode === 'edit' && 'multiEnum' === attributeType) {
+                if (this.mode === 'edit' && 'extensibleMultiEnum' === attributeType) {
                     this.$el.addClass('over-visible');
                 }
             }
