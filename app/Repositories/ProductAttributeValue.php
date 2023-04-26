@@ -619,19 +619,8 @@ class ProductAttributeValue extends AbstractRepository
          * Float amountOfDigitsAfterComma validation
          */
         if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
-            && ($amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma'))) {
-            $amountOfDigitsAfterComma = (int)$amountOfDigitsAfterComma;
-            $floatParts = explode('.', (string)$entity->get('value'));
-
-            if(count($floatParts) === 2){
-                $decimalPart = (int)strlen($floatParts[1]);
-                if($amountOfDigitsAfterComma <  $decimalPart){
-                    throw new BadRequest(sprintf(
-                        $this->getInjection('language')->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
-                        $amountOfDigitsAfterComma
-                    ));
-                }
-            }
+            && $entity->get('amountOfDigitsAfterComma') !== null) {
+            $this->checkAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
         }
 
         /**

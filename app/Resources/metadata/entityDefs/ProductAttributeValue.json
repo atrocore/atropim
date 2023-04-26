@@ -258,7 +258,8 @@
     },
     "amountOfDigitsAfterComma": {
       "type": "int",
-      "min": 0
+      "min": 0,
+      "notStorable": true
     },
     "isValueReadOnly": {
       "type": "bool",
