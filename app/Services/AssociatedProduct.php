@@ -222,12 +222,12 @@ class AssociatedProduct extends Relationship
      */
     protected function getMainImage(\Pim\Entities\Product $product): ?Attachment
     {
-        if ($product->hasRelation('assets')) {
-            $assets = $product->get('assets');
-
-            foreach ($assets as $asset) {
-                if ($asset->get('isMainImage')) {
-                    return $asset->get('file');
+        if ($product->hasRelation('productAssets')) {
+            foreach ($product->get('productAssets') as $productAsset) {
+                if ($productAsset->get('isMainImage')) {
+                    if (!empty($asset = $productAsset->get('asset'))) {
+                        return $asset->get('file');
+                    }
                 }
             }
         }
