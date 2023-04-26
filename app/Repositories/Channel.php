@@ -45,7 +45,9 @@ class Channel extends Base
     {
         $locales = [];
         foreach ($this->select(['locales'])->find()->toArray() as $item) {
-            $locales = array_merge($locales, $item['locales']);
+            if (!empty($item['locales'])) {
+                $locales = array_merge($locales, $item['locales']);
+            }
         }
 
         return array_values(array_unique($locales));
