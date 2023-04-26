@@ -618,9 +618,6 @@ class ProductAttributeValue extends AbstractRepository
         /**
          * Float amountOfDigitsAfterComma validation
          */
-        $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
-        //throw new BadRequest($amountOfDigitsAfterComma);
-        $val = $entity->get('value');
         if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
             && ($amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma'))) {
             $amountOfDigitsAfterComma = (int)$amountOfDigitsAfterComma;
