@@ -616,6 +616,28 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         /**
+         * Float amountOfDigitsAfterComma validation
+         */
+        $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
+        //throw new BadRequest($amountOfDigitsAfterComma);
+        $val = $entity->get('value');
+        if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
+            && ($amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma'))) {
+            $amountOfDigitsAfterComma = (int)$amountOfDigitsAfterComma;
+            $floatParts = explode('.', (string)$entity->get('value'));
+
+            if(count($floatParts) === 2){
+                $decimalPart = (int)strlen($floatParts[1]);
+                if($amountOfDigitsAfterComma <  $decimalPart){
+                    throw new BadRequest(sprintf(
+                        $this->getInjection('language')->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
+                        $amountOfDigitsAfterComma
+                    ));
+                }
+            }
+        }
+
+        /**
          * Check if UNIQUE enabled
          */
         if (!$entity->isNew() && $attribute->get('unique') && $entity->isAttributeChanged('value')) {

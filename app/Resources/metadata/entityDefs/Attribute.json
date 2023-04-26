@@ -283,6 +283,10 @@
       "type": "bool",
       "default": false,
       "view": "pim:views/fields/count-bytes-instead-of-characters"
+    },
+    "amountOfDigitsAfterComma": {
+      "type": "int",
+      "min": 0
     }
   },
   "links": {

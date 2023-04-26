@@ -21,6 +21,7 @@
     "boolValue": "Value: Boolean",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
+    "amountOfDigitsAfterComma": "Кількість цифр після коми",
     "isVariantSpecificAttribute": "Варіантно-специфічний"
   },
   "links": {
