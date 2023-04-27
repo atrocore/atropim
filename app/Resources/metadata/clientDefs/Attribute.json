@@ -96,39 +96,12 @@
           ]
         }
       },
-      "isMultilang": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "bool",
-                "varchar",
-                "text",
-                "wysiwyg",
-                "asset"
-              ]
-            }
-          ]
-        }
-      },
       "sortOrder": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isTrue",
               "attribute": "isRoot"
-            }
-          ]
-        }
-      },
-      "type": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
             }
           ]
         }

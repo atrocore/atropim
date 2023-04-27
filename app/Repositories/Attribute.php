@@ -92,13 +92,14 @@ class Attribute extends AbstractRepository
 
     public function getMultilingualAttributeTypes(): array
     {
-        foreach ($this->getMetadata()->get(['clientDefs', 'Attribute', 'dynamicLogic', 'fields', 'isMultilang', 'visible', 'conditionGroup'], []) as $item) {
-            if (!empty($item['type']) && !empty($item['attribute']) && !empty($item['value']) && $item['type'] === 'in' && $item['attribute'] === 'type') {
-                return $item['value'];
+        $attributes = [];
+        foreach ($this->getMetadata()->get(['attributes'], []) as $attribute => $attributeDefs) {
+            if (!empty($attributeDefs['multilingual'])) {
+                $attributes[] = $attribute;
             }
         }
 
-        return [];
+        return $attributes;
     }
 
     /**

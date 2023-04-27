@@ -64,50 +64,15 @@
       "pattern": "/^[a-z_0-9{}]+$/"
     },
     "type": {
-      "type": "enum",
+      "type": "varchar",
       "required": true,
-      "optionsIds": [
-        "array",
-        "bool",
-        "currency",
-        "date",
-        "datetime",
-        "extensibleEnum",
-        "float",
-        "int",
-        "extensibleMultiEnum",
-        "text",
-        "unit",
-        "url",
-        "varchar",
-        "wysiwyg",
-        "asset"
-      ],
-      "options": [
-        "array",
-        "bool",
-        "currency",
-        "date",
-        "datetime",
-        "extensibleEnum",
-        "float",
-        "int",
-        "extensibleMultiEnum",
-        "text",
-        "unit",
-        "url",
-        "varchar",
-        "wysiwyg",
-        "asset"
-      ],
       "default": "text",
       "massUpdateDisabled": true,
       "isSorted": false,
       "audited": false,
       "readOnly": false,
       "tooltip": false,
-      "view": "pim:views/attribute/fields/type",
-      "prohibitedEmptyValue": true
+      "view": "pim:views/attribute/fields/type"
     },
     "assetType": {
       "type": "enum",
