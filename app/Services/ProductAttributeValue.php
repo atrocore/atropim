@@ -333,16 +333,25 @@ class ProductAttributeValue extends AbstractProductAttributeService
         /**
          * Prepare maxLength
          */
-        if (!property_exists($attachment, 'maxLength')) {
+        if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')) {
+            
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
             if (empty($attribute)) {
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
             }
-            if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
+
+            if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) 
+                && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');
                 $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
             }
+
+           if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'unit', 'currency']) 
+                && $attribute->get('amountOfDigitsAfterComma') !== null) {
+                $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
+            }
         }
+
 
         /**
          * For multiple creation via languages
@@ -936,6 +945,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('isRequired', $attribute->get('isRequired'));
         $entity->set('maxLength', $attribute->get('maxLength'));
         $entity->set('countBytesInsteadOfCharacters', $attribute->get('countBytesInsteadOfCharacters'));
+        $entity->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
         if (!empty($classificationAttribute)) {
             $entity->set('isRequired', $classificationAttribute->get('isRequired'));
             $entity->set('maxLength', $classificationAttribute->get('maxLength'));

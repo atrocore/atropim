@@ -256,6 +256,11 @@
       "type": "bool",
       "default": false
     },
+    "amountOfDigitsAfterComma": {
+      "type": "int",
+      "min": 0,
+      "notStorable": true
+    },
     "isValueReadOnly": {
       "type": "bool",
       "notStorable": true,

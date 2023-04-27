@@ -27,6 +27,7 @@
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
+    "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "description": "Beschreibung",
     "extensibleEnum": "Liste"
   },

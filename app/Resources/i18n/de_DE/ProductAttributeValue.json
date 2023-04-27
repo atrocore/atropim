@@ -21,6 +21,7 @@
     "boolValue": "Wert: Boolesch",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
+    "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "isVariantSpecificAttribute": "Variantenspezifisch"
   },
   "links": {

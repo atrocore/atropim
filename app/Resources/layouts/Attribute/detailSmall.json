@@ -72,6 +72,12 @@
         {
           "name": "countBytesInsteadOfCharacters"
         }
+      ],
+      [
+        {
+          "name": "amountOfDigitsAfterComma"
+        },
+        false
       ]
     ]
   }

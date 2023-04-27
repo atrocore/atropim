@@ -101,6 +101,12 @@
       ],
       [
         {
+          "name": "amountOfDigitsAfterComma"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnum"
         },
         false

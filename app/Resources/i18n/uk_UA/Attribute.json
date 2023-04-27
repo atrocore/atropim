@@ -26,6 +26,7 @@
     "tooltip": "Текст підказки",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
+    "amountOfDigitsAfterComma": "Кількість цифр після коми",
     "description": "Опис",
     "extensibleEnum": "Список"
   },

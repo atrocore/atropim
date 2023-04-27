@@ -21,6 +21,7 @@
     "boolValue": "Value: Boolean",
     "maxLength": "Max Length",
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
+    "amountOfDigitsAfterComma": "Amount of digits after comma",
     "isVariantSpecificAttribute": "Variant-specific"
   },
   "links": {
