@@ -34,28 +34,13 @@ namespace Pim\Listeners;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 
-/**
- * Class AttributeEntity
- */
 class AttributeEntity extends AbstractEntityListener
 {
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Event $event)
+    public function beforeSave(Event $event): void
     {
-        // get entity
         $entity = $event->getArgument('entity');
-
         if (!$this->isCodeValid($entity)) {
             throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            throw new BadRequest(
-                $this->translate('You can\'t change field of Type in Attribute', 'exceptions', 'Attribute'));
         }
     }
 }
