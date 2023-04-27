@@ -59,6 +59,7 @@
      "sortOrderInProduct": "Порядок сортування значень атрибутів продукту.W"
    },
   "exceptions": {
+    "noAttributeConverterFound": "Конвертація атрибуту '%s' в '%s' неможлива.",
     "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
     "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",

@@ -29,18 +29,11 @@
 
 declare(strict_types=1);
 
-namespace Pim\Listeners;
+namespace Pim\AttributeConverters;
 
-use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
 
-class AttributeEntity extends AbstractEntityListener
+interface AttributeConverterInterface
 {
-    public function beforeSave(Event $event): void
-    {
-        $entity = $event->getArgument('entity');
-        if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
-        }
-    }
+    public function convert(Entity $attribute): void;
 }

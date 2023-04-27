@@ -37,6 +37,7 @@ use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
+use Pim\AttributeConverters\AttributeConverterInterface;
 
 /**
  * Class Attribute
@@ -74,6 +75,7 @@ class Attribute extends AbstractRepository
 
         $this->addDependency('language');
         $this->addDependency('dataManager');
+        $this->addDependency('container');
     }
 
     public function clearCache(): void
@@ -92,13 +94,14 @@ class Attribute extends AbstractRepository
 
     public function getMultilingualAttributeTypes(): array
     {
-        foreach ($this->getMetadata()->get(['clientDefs', 'Attribute', 'dynamicLogic', 'fields', 'isMultilang', 'visible', 'conditionGroup'], []) as $item) {
-            if (!empty($item['type']) && !empty($item['attribute']) && !empty($item['value']) && $item['type'] === 'in' && $item['attribute'] === 'type') {
-                return $item['value'];
+        $attributes = [];
+        foreach ($this->getMetadata()->get(['attributes'], []) as $attribute => $attributeDefs) {
+            if (!empty($attributeDefs['multilingual'])) {
+                $attributes[] = $attribute;
             }
         }
 
-        return [];
+        return $attributes;
     }
 
     /**
@@ -172,6 +175,36 @@ class Attribute extends AbstractRepository
 
         // call parent action
         parent::beforeSave($entity, $options);
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
+        try {
+            if ($entity->isAttributeChanged('type')) {
+                $converterName = $this->getMetadata()->get(['attributes', $entity->getFetched('type'), 'convert', 'alias']);
+                if (empty($converterName)) {
+                    $message = $this->getInjection('language')->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
+                    throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
+                }
+                $this->getInjection('container')->get($converterName)->convert($entity);
+            }
+            $result = parent::save($entity, $options);
+            if (!empty($inTransaction)) {
+                $this->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if (!empty($inTransaction)) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
     }
 
     /**

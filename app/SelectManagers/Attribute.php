@@ -42,7 +42,7 @@ class Attribute extends AbstractSelectManager
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
-        $types = implode("','", $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []));
+        $types = implode("','", array_keys($this->getMetadata()->get('attributes')));
 
         if (!isset($selectParams['customWhere'])) {
             $selectParams['customWhere'] = '';

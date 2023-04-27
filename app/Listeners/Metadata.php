@@ -42,6 +42,22 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
+        // find multilingual attributes
+        $multilingualAttributes = [];
+        foreach ($data['attributes'] as $attribute => $attributeDefs) {
+            if (!empty($attributeDefs['multilingual'])) {
+                $multilingualAttributes[] = $attribute;
+            }
+        }
+
+        $data['clientDefs']['Attribute']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'] = [
+            [
+                "type"      => "in",
+                "attribute" => "type",
+                "value"     => $multilingualAttributes
+            ]
+        ];
+
         // set type Hierarchy to Product entity
         $data['scopes']['Product']['type'] = 'Hierarchy';
 
