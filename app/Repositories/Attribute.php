@@ -37,6 +37,7 @@ use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
+use Pim\AttributeConverters\AttributeConverterInterface;
 
 /**
  * Class Attribute
