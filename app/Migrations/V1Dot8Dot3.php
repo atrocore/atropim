@@ -55,7 +55,10 @@ class V1Dot8Dot3 extends Base
 
         $records = $this->getPDO()->query("SELECT a.* FROM attribute a WHERE a.type IN ('enum','multiEnum') AND a.deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
         foreach ($records as $record) {
-            $ids = @json_decode($record['type_value_ids'], true);
+            if (empty($record['type_value_ids'])) {
+                continue;
+            }
+            $ids = @json_decode((string)$record['type_value_ids'], true);
             if (!empty($ids)) {
                 $values = @json_decode((string)$record['type_value'], true);
                 if (!empty($values)) {
