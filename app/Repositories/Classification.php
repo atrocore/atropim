@@ -61,22 +61,6 @@ class Classification extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
-    public function isCodeValid(Entity $entity): bool
-    {
-        if (!$entity->isAttributeChanged('code')) {
-            return true;
-        }
-
-        if (!empty($entity->get('code')) && preg_match(self::CODE_PATTERN, $entity->get('code'))) {
-            $exists = $this->where(['code' => $entity->get('code')])->findOne();
-            if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function getLinkedAttributesIds(string $id, string $scope = 'Global'): array
     {
         $data = $this
@@ -108,15 +92,6 @@ class Classification extends AbstractRepository
             ->toArray();
 
         return array_column($data, 'id');
-    }
-
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
-        }
-
-        parent::beforeSave($entity, $options);
     }
 
     protected function afterSave(Entity $entity, array $options = array())

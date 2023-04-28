@@ -15,8 +15,14 @@
         {
           "name": "name"
         },
+        false
+      ],
+      [
         {
           "name": "code"
+        },
+        {
+          "name": "release"
         }
       ],
       [

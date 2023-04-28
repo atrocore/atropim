@@ -16,12 +16,14 @@
       "tooltip": false,
       "isMultilang": true
     },
+    "release": {
+      "type": "enum",
+      "view": "pim:views/classification/fields/release",
+      "optionsIds": [],
+      "options": []
+    },
     "code": {
-      "type": "varchar",
-      "massUpdateDisabled": true,
-      "trim": true,
-      "view": "pim:views/fields/code-from-name",
-      "pattern": "/^[a-z_0-9{}]+$/"
+      "type": "varchar"
     },
     "isActive": {
       "notNull": true,
@@ -89,6 +91,13 @@
     "asc": false,
     "textFilterFields": [
       "name",
+      "code"
+    ]
+  },
+  "uniqueIndexes": {
+    "unique_classification": [
+      "deleted",
+      "release",
       "code"
     ]
   },
