@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,20 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/classification/fields/release', 'views/fields/enum',
+    Dep => Dep.extend({
 
-namespace Pim\Listeners;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
+            if (this.mode === 'edit' || this.mode === 'detail') {
+                if (!this.params.options || this.params.options.length === 0) {
+                    this.$el.parent().hide();
+                } else {
+                    this.$el.parent().show();
+                }
+            }
+        },
 
-class AttributeEntity extends AbstractEntityListener
-{
-    public function beforeSave(Event $event): void
-    {
-        $entity = $event->getArgument('entity');
-        if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
-        }
-    }
-}
+    })
+);
+

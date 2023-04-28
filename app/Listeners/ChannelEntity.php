@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions;
 use Espo\Core\Exceptions\BadRequest;
 use Pim\Entities\Channel;
 
@@ -41,28 +40,7 @@ use Pim\Entities\Channel;
  */
 class ChannelEntity extends AbstractEntityListener
 {
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Event $event)
-    {
-        /** @var Channel $entity */
-        $entity = $event->getArgument('entity');
-
-        if (!$this->isCodeValid($entity)) {
-            throw new Exceptions\BadRequest(
-                $this->translate(
-                    'codeIsInvalid',
-                    'exceptions',
-                    'Global'
-                )
-            );
-        }
-    }
-
-    /**
+   /**
      * @param Event $event
      *
      * @throws BadRequest

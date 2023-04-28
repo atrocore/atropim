@@ -61,22 +61,6 @@ class Classification extends AbstractRepository
      */
     protected $teamsOwnership = 'teamsProductOwnership';
 
-    public function isCodeValid(Entity $entity): bool
-    {
-        if (!$entity->isAttributeChanged('code')) {
-            return true;
-        }
-
-        if (!empty($entity->get('code')) && preg_match(self::CODE_PATTERN, $entity->get('code'))) {
-            $exists = $this->where(['code' => $entity->get('code')])->findOne();
-            if (!empty($exists) && $exists->get('id') !== $entity->get('id')) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function getLinkedAttributesIds(string $id, string $scope = 'Global'): array
     {
         $data = $this
@@ -110,13 +94,18 @@ class Classification extends AbstractRepository
         return array_column($data, 'id');
     }
 
-    protected function beforeSave(Entity $entity, array $options = [])
+    public function save(Entity $entity, array $options = [])
     {
-        if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
+        try {
+            $result = parent::save($entity, $options);
+        } catch (\PDOException $e) {
+            if (strpos($e->getMessage(), '1062') === false) {
+                throw $e;
+            }
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('fieldShouldMustBeUnique', 'exceptions', 'Global'), 'code'));
         }
 
-        parent::beforeSave($entity, $options);
+        return $result;
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -124,6 +113,30 @@ class Classification extends AbstractRepository
         parent::afterSave($entity, $options);
 
         $this->setInheritedOwnership($entity);
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        try {
+            $result = parent::remove($entity, $options);
+        } catch (\PDOException $e) {
+            if (strpos($e->getMessage(), '1062') === false) {
+                throw $e;
+            }
+            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                $this->deleteFromDb($toDelete->get('id'), true);
+            }
+            return parent::remove($entity, $options);
+        }
+
+        return $result;
+    }
+
+    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
+    {
+        return $this
+            ->where(['id!=' => $entity->get('id'), 'release' => $entity->get('release'), 'code' => $entity->get('code'), 'deleted' => $deleted])
+            ->findOne(['withDeleted' => $deleted]);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

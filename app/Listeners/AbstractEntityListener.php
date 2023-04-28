@@ -42,11 +42,6 @@ use Pim\Repositories\AbstractRepository;
 abstract class AbstractEntityListener extends AbstractListener
 {
     /**
-     * @var string
-     */
-    public static $codePattern = AbstractRepository::CODE_PATTERN;
-
-    /**
      * Create service
      *
      * @param string $serviceName
@@ -57,26 +52,6 @@ abstract class AbstractEntityListener extends AbstractListener
     protected function createService(string $serviceName)
     {
         return $this->getServiceFactory()->create($serviceName);
-    }
-
-    /**
-     * Is code unique
-     *
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    protected function isCodeValid(Entity $entity): bool
-    {
-        if (!$entity->isAttributeChanged('code')) {
-            return true;
-        }
-
-        if (!empty($entity->get('code')) && preg_match(self::$codePattern, $entity->get('code'))) {
-            return $this->isUnique($entity, 'code');
-        }
-
-        return true;
     }
 
     /**

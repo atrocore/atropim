@@ -2,6 +2,7 @@
   "fields": {
     "products": "Продукти",
     "description": "Опис",
+    "release": "Реліз",
     "code": "Код",
     "isActive": "Активний",
     "classifications": "Класифікації",
