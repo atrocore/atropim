@@ -39,12 +39,16 @@ class V1Dot8Dot9 extends Base
     {
         $this->getPDO()->exec("DELETE FROM classification WHERE deleted=1");
         $this->exec("ALTER TABLE classification ADD `release` VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-
         while (!empty($id = $this->getDuplicateClassification())) {
             $this->getPDO()->exec("UPDATE classification SET code=NULL WHERE id='$id'");
         }
-
         $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_456BD231EB3B4E339E47031D77153098 ON classification (deleted, `release`, code)");
+
+        $this->getPDO()->exec("DELETE FROM attribute WHERE deleted=1");
+        while (!empty($id = $this->getDuplicateAttributes())) {
+            $this->getPDO()->exec("UPDATE attribute SET code=NULL WHERE id='$id'");
+        }
+        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_FA7AEFFB77153098EB3B4E33 ON attribute (code, deleted)");
     }
 
     public function down(): void
@@ -69,6 +73,20 @@ class V1Dot8Dot9 extends Base
                     AND c2.deleted=0
                     AND c1.id!=c2.id
                   ORDER BY c1.id
+                  LIMIT 0,1";
+
+        return $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+    }
+
+    protected function getDuplicateAttributes()
+    {
+        $query = "SELECT a1.id
+                  FROM attribute a1
+                  JOIN attribute a2 ON a1.code=a2.code
+                  WHERE a1.deleted=0
+                    AND a2.deleted=0
+                    AND a1.id!=a2.id
+                  ORDER BY a1.id
                   LIMIT 0,1";
 
         return $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
