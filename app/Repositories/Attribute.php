@@ -185,8 +185,8 @@ class Attribute extends AbstractRepository
         }
 
         try {
-            if ($entity->isAttributeChanged('type')) {
-                $converterName = $this->getMetadata()->get(['attributes', $entity->getFetched('type'), 'convert', 'alias']);
+            if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
+                $converterName = $this->getMetadata()->get(['attributes', $entity->getFetched('type'), 'convert', $entity->get('type')]);
                 if (empty($converterName)) {
                     $message = $this->getInjection('language')->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
                     throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
