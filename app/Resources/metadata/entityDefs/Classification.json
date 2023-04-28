@@ -17,10 +17,8 @@
       "isMultilang": true
     },
     "release": {
-      "type": "enum",
-      "view": "pim:views/classification/fields/release",
-      "optionsIds": [],
-      "options": []
+      "type": "varchar",
+      "view": "pim:views/classification/fields/release"
     },
     "code": {
       "type": "varchar",
