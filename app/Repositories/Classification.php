@@ -94,11 +94,49 @@ class Classification extends AbstractRepository
         return array_column($data, 'id');
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        try {
+            $result = parent::save($entity, $options);
+        } catch (\PDOException $e) {
+            if (strpos($e->getMessage(), '1062') === false) {
+                throw $e;
+            }
+            throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
+        }
+
+        return $result;
+    }
+
     protected function afterSave(Entity $entity, array $options = array())
     {
         parent::afterSave($entity, $options);
 
         $this->setInheritedOwnership($entity);
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        try {
+            $result = parent::remove($entity, $options);
+        } catch (\PDOException $e) {
+            if (strpos($e->getMessage(), '1062') === false) {
+                throw $e;
+            }
+            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                $this->deleteFromDb($toDelete->get('id'), true);
+            }
+            return parent::remove($entity, $options);
+        }
+
+        return $result;
+    }
+
+    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
+    {
+        return $this
+            ->where(['id!=' => $entity->get('id'), 'release' => $entity->get('release'), 'code' => $entity->get('code'), 'deleted' => $deleted])
+            ->findOne(['withDeleted' => $deleted]);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
