@@ -18,7 +18,8 @@
     },
     "release": {
       "type": "varchar",
-      "view": "pim:views/classification/fields/release"
+      "view": "pim:views/classification/fields/release",
+      "emHidden": true
     },
     "code": {
       "type": "varchar",
