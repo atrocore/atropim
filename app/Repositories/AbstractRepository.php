@@ -40,8 +40,6 @@ use Espo\Core\Utils\Util;
  */
 abstract class AbstractRepository extends Hierarchy
 {
-    public const CODE_PATTERN = '/^[\p{Ll}0-9_]*$/u';
-
     /**
      * @var string
      */

@@ -23,7 +23,8 @@
       "options": []
     },
     "code": {
-      "type": "varchar"
+      "type": "varchar",
+      "trim": true
     },
     "isActive": {
       "notNull": true,

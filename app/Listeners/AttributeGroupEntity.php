@@ -40,26 +40,6 @@ use Espo\Core\Exceptions\BadRequest;
 class AttributeGroupEntity extends AbstractEntityListener
 {
     /**
-     * Before save action
-     *
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Event $event)
-    {
-        if (!$this->isCodeValid($event->getArgument('entity'))) {
-            throw new BadRequest(
-                $this->translate(
-                    'codeIsInvalid',
-                    'exceptions',
-                    'Global'
-                )
-            );
-        }
-    }
-
-    /**
      * Before remove action
      *
      * @param Event $event

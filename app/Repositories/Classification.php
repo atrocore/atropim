@@ -102,7 +102,7 @@ class Classification extends AbstractRepository
             if (strpos($e->getMessage(), '1062') === false) {
                 throw $e;
             }
-            throw new BadRequest($this->getInjection('language')->translate('codeIsInvalid', 'exceptions', 'Global'));
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('fieldShouldMustBeUnique', 'exceptions', 'Global'), 'code'));
         }
 
         return $result;

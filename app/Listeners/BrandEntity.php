@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Pim\Services\Product;
 
@@ -41,26 +40,6 @@ use Pim\Services\Product;
  */
 class BrandEntity extends AbstractEntityListener
 {
-    /**
-     * Before save action
-     *
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
-    public function beforeSave(Event $event)
-    {
-        if (!$this->isCodeValid($event->getArgument('entity'))) {
-            throw new BadRequest(
-                $this->translate(
-                    'codeIsInvalid',
-                    'exceptions',
-                    'Global'
-                )
-            );
-        }
-    }
-
     /**
      * After save action
      *

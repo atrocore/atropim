@@ -112,7 +112,6 @@
     "massRelateBlocked": "Mass relating of this kind is blocked.",
     "massUnRelateBlocked": "Mass unrelating of this kind is blocked.",
     "onlyForceDeletingAvailable": "Only force deleting available",
-    "codeIsInvalid": "Code is invalid. Code should be unique.",
     "notValid": "Data is not valid"
   },
   "messages": {

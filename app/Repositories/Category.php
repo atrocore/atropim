@@ -440,11 +440,6 @@ class Category extends AbstractRepository
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        // is code valid
-        if (!$this->isCodeValid($entity)) {
-            throw new BadRequest($this->translate('codeIsInvalid', 'exceptions', 'Global'));
-        }
-
         if ($entity->isAttributeChanged('categoryParentId')) {
             $childrenIds = array_column($entity->getChildren()->toArray(), 'id');
             if ($entity->get('categoryParentId') === $entity->get('id') || in_array($entity->get('categoryParentId'), $childrenIds)) {
@@ -620,23 +615,6 @@ class Category extends AbstractRepository
     protected function getProductRepository(): Product
     {
         return $this->getEntityManager()->getRepository('Product');
-    }
-
-    protected function isCodeValid(Entity $entity): bool
-    {
-        if (!$entity->isAttributeChanged('code')) {
-            return true;
-        }
-
-        if (empty($entity->get('code'))) {
-            return true;
-        }
-
-        if (!preg_match(AbstractEntityListener::$codePattern, $entity->get('code'))) {
-            return false;
-        }
-
-        return empty($this->where(['id!=' => $entity->get('id'), 'code' => $entity->get('code')])->findOne());
     }
 
     protected function activateParents(Entity $entity): void

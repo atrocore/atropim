@@ -8,10 +8,8 @@
         },
         "code": {
             "type": "varchar",
-            "massUpdateDisabled": true,
             "trim": true,
-            "view": "pim:views/fields/code-from-name",
-            "pattern": "/^[a-z_0-9{}]+$/"
+            "unique": true
         },
         "description": {
             "type": "text",
