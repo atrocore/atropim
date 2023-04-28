@@ -29,6 +29,8 @@
 Espo.define('pim:views/classification/fields/release', 'views/fields/enum',
     Dep => Dep.extend({
 
+        prohibitedEmptyValue: true,
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
