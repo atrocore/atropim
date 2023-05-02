@@ -94,6 +94,15 @@ class Classification extends AbstractRepository
         return array_column($data, 'id');
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     public function save(Entity $entity, array $options = [])
     {
         try {

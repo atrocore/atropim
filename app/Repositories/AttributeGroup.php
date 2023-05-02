@@ -29,6 +29,16 @@
 
 namespace Pim\Repositories;
 
+use Espo\ORM\Entity;
+
 class AttributeGroup extends \Espo\Core\Templates\Repositories\Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
 }

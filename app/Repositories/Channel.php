@@ -100,6 +100,10 @@ class Channel extends Base
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
         if (empty($entity->get('locales'))) {
             $entity->set('locales', ['main']);
         }

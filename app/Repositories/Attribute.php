@@ -111,6 +111,10 @@ class Attribute extends AbstractRepository
      */
     public function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
             $entity->set('isMultilang', false);
         }

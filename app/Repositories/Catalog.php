@@ -138,6 +138,15 @@ class Catalog extends AbstractRepository
         $this->getEntityManager()->nativeQuery("UPDATE product SET deleted=1 WHERE catalog_id='$id'");
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     /**
      * @inheritDoc
      */

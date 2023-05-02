@@ -440,6 +440,10 @@ class Category extends AbstractRepository
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
         if ($entity->isAttributeChanged('categoryParentId')) {
             $childrenIds = array_column($entity->getChildren()->toArray(), 'id');
             if ($entity->get('categoryParentId') === $entity->get('id') || in_array($entity->get('categoryParentId'), $childrenIds)) {
