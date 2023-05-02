@@ -2,6 +2,7 @@
   "fields": {
     "products": "Продукти",
     "description": "Опис",
+    "synonyms": "Синоніми",
     "release": "Реліз",
     "code": "Код",
     "isActive": "Активний",

@@ -30,6 +30,12 @@
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "synonyms"
+        },
+        false
       ]
     ]
   }

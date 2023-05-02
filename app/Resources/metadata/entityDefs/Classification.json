@@ -21,6 +21,9 @@
       "view": "pim:views/classification/fields/release",
       "emHidden": true
     },
+    "synonyms": {
+      "type": "array"
+    },
     "code": {
       "type": "varchar",
       "trim": true
