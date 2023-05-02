@@ -38,11 +38,23 @@ class V1Dot8Dot10 extends Base
     public function up(): void
     {
         $this->exec("ALTER TABLE classification ADD synonyms LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'");
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+                $locale = strtolower($v);
+                $this->exec("ALTER TABLE classification ADD synonyms_{$locale} LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'");
+            }
+        }
     }
 
     public function down(): void
     {
         $this->exec("ALTER TABLE classification DROP synonyms");
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+                $locale = strtolower($v);
+                $this->exec("ALTER TABLE classification DROP synonyms_{$locale}");
+            }
+        }
     }
 
     protected function exec(string $query): void

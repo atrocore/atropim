@@ -29,7 +29,8 @@
       "emHidden": true
     },
     "synonyms": {
-      "type": "array"
+      "type": "array",
+      "isMultilang": true
     },
     "code": {
       "type": "varchar",
