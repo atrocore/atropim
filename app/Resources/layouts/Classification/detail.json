@@ -21,15 +21,19 @@
         {
           "name": "code"
         },
-        {
-          "name": "release"
-        }
+        false
       ],
       [
         {
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "synonyms"
+        },
+        false
       ]
     ]
   }

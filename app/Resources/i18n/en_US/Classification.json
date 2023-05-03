@@ -3,6 +3,7 @@
     "products": "Products",
     "description": "Description",
     "release": "Release",
+    "synonyms": "Synonyms",
     "code": "Code",
     "isActive": "Active",
     "classifications": "Classifications",

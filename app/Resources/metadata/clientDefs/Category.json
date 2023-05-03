@@ -61,6 +61,11 @@
         "notEntity",
         "onlyCategoryCatalogsProducts"
       ],
+      "dragDrop": {
+        "isActive": true,
+        "maxSize": 20,
+        "sortField": "sorting"
+      },
       "sortBy": "sorting",
       "asc": true,
       "view": "pim:views/category/record/panels/products"

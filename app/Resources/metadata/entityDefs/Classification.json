@@ -18,8 +18,19 @@
     },
     "release": {
       "type": "varchar",
-      "view": "pim:views/classification/fields/release",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
       "emHidden": true
+    },
+    "synonyms": {
+      "type": "array",
+      "isMultilang": true
     },
     "code": {
       "type": "varchar",
