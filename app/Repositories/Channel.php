@@ -104,10 +104,6 @@ class Channel extends Base
             $entity->set('code', null);
         }
 
-        if (empty($entity->get('locales'))) {
-            $entity->set('locales', ['main']);
-        }
-
         parent::beforeSave($entity, $options);
     }
 
