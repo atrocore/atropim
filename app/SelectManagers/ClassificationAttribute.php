@@ -44,7 +44,8 @@ class ClassificationAttribute extends AbstractSelectManager
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
-        $types = implode("','", $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []));
+        $types = array_keys($this->getMetadata()->get(['attributes'], []));
+        $types = implode("','", $types);
 
         if (!isset($selectParams['customWhere'])) {
             $selectParams['customWhere'] = '';

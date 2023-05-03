@@ -45,13 +45,13 @@ class AttributeGroup extends \Espo\Core\Templates\Services\Base
      */
     public function findLinkedEntitiesAttributes(string $attributeGroupId): array
     {
-        $attributesTypes = $this->getMetadata()->get('entityDefs.Attribute.fields.type.options', []);
+        $attributesTypesDefs = array_keys($this->getMetadata()->get(['attributes'], []));
 
         $result = $this->getEntityManager()
             ->getRepository('Attribute')
             ->distinct()
             ->join('attributeGroup')
-            ->where(['attributeGroupId' => $attributeGroupId, 'type' => $attributesTypes])
+            ->where(['attributeGroupId' => $attributeGroupId, 'type' => $attributesTypesDefs])
             ->order('sortOrderInAttributeGroup', 'ASC')
             ->find()
             ->toArray();
