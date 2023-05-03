@@ -803,7 +803,9 @@ class Product extends Hierarchy
                 if (empty($pav->get('attributeIsMultilang'))) {
                     $records[$pav->get('id')] = $pav;
                 } else {
-                    if (in_array($pav->get('language'), $pav->getChannelLanguages())) {
+                    $channelLanguages = $pav->getChannelLanguages();
+
+                    if (empty($channelLanguages) || in_array($pav->get('language'), $channelLanguages)) {
                         $records[$pav->get('id')] = $pav;
                     }
                 }
