@@ -2,7 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "required": true,
+      "required": false,
       "trim": true,
       "isMultilang": true
     },
@@ -74,6 +74,12 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "ownerUser": {
+      "required": false
+    },
+    "assignedUser": {
+      "required": false
     }
   },
   "links": {
