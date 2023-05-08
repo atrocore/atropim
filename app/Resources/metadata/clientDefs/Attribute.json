@@ -222,6 +222,22 @@
           ]
         }
       },
+      "amountOfDigitsAfterComma": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "float",
+                "unit",
+                "currency",
+                "rangeFloat"
+              ]
+            }
+          ]
+        }
+      },
       "defaultChannel": {
         "visible": {
           "conditionGroup": [

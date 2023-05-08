@@ -62,6 +62,8 @@
       "url": "Url",
       "varchar": "String",
       "wysiwyg": "HTML",
+      "rangeInt": "Integer Range",
+      "rangeFloat": "Float Range",
       "asset": "Asset"
     }
   },

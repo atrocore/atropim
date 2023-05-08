@@ -38,6 +38,12 @@ Espo.define('pim:views/fields/count-bytes-instead-of-characters', 'views/fields/
                     this.reRender();
                 });
             }
+
+            if (this.model.urlRoot === 'Attribute') {
+                this.listenTo(this.model, 'change:type', () => {
+                    this.reRender();
+                });
+            }
         },
 
         afterRender() {
