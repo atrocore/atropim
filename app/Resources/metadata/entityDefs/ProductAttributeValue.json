@@ -207,7 +207,31 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "intValue1": {
+      "type": "int",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "floatValue": {
+      "type": "float",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "floatValue1": {
       "type": "float",
       "aclFieldDisabled": true,
       "layoutListDisabled": true,
@@ -641,7 +665,19 @@
         "deleted"
       ]
     },
+    "intValue1": {
+      "columns": [
+        "intValue1",
+        "deleted"
+      ]
+    },
     "floatValue": {
+      "columns": [
+        "floatValue",
+        "deleted"
+      ]
+    },
+    "floatValue1": {
       "columns": [
         "floatValue",
         "deleted"
