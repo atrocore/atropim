@@ -747,20 +747,20 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 break;
             case 'int':
                 if (property_exists($data, 'value')) {
-                    $entity->set('intValue', $data->value);
+                    $entity->set('intValue', (int)$data->value);
                 }
                 break;
             case 'rangeInt':
                 if (property_exists($data, 'valueFrom')) {
-                    $entity->set('intValue', $data->valueFrom);
+                    $entity->set('intValue', (int)$data->valueFrom);
                 }
                 if (property_exists($data, 'valueTo')) {
-                    $entity->set('intValue1', $data->valueTo);
+                    $entity->set('intValue1', (int)$data->valueTo);
                 }
                 break;
             case 'currency':
                 if (property_exists($data, 'value')) {
-                    $entity->set('floatValue', $data->value);
+                    $entity->set('floatValue', (float)$data->value);
                 }
                 if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
                     $entity->set('varcharValue', $data->data->currency);
@@ -771,7 +771,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 break;
             case 'unit':
                 if (property_exists($data, 'value')) {
-                    $entity->set('floatValue', $data->value);
+                    $entity->set('floatValue', (float)$data->value);
                 }
                 if (property_exists($data, 'data') && property_exists($data->data, 'unit')) {
                     $entity->set('varcharValue', $data->data->unit);
@@ -782,15 +782,15 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 break;
             case 'float':
                 if (property_exists($data, 'value')) {
-                    $entity->set('floatValue', $data->value);
+                    $entity->set('floatValue', (float)$data->value);
                 }
                 break;
             case 'rangeFloat':
                 if (property_exists($data, 'valueFrom')) {
-                    $entity->set('floatValue', $data->valueFrom);
+                    $entity->set('floatValue', (float)$data->valueFrom);
                 }
                 if (property_exists($data, 'valueTo')) {
-                    $entity->set('floatValue1', $data->valueTo);
+                    $entity->set('floatValue1', (float)$data->valueTo);
                 }
                 break;
             case 'date':
