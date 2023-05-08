@@ -309,6 +309,34 @@
       "view": "pim:views/product-attribute-value/fields/value-container",
       "hasCompleteValidation": true
     },
+    "valueFrom": {
+      "type": "float",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueTo": {
+      "type": "float",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "valueCurrency": {
       "type": "varchar",
       "notStorable": true,

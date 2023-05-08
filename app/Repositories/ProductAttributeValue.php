@@ -340,6 +340,14 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         switch ($entity->get('attributeType')) {
+            case 'rangeInt':
+                $entity->set('valueFrom', $entity->get('intValue'));
+                $entity->set('valueTo', $entity->get('intValue1'));
+                break;
+            case 'rangeFloat':
+                $entity->set('valueFrom', $entity->get('floatValue'));
+                $entity->set('valueTo', $entity->get('floatValue1'));
+                break;
             case 'array':
             case 'extensibleMultiEnum':
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
