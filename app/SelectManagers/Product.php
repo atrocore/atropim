@@ -671,11 +671,13 @@ class Product extends AbstractSelectManager
                 $where['value'][] = $row;
                 break;
             case 'int':
+            case 'rangeInt':
                 $row['attribute'] = 'intValue';
                 $where['value'][] = $row;
                 break;
             case 'currency':
             case 'unit':
+            case 'rangeFloat':
             case 'float':
                 $row['attribute'] = 'floatValue';
                 $where['value'][] = $row;
