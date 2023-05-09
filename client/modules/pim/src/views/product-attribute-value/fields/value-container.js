@@ -77,6 +77,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
                 }
 
+                if (this.model.get('amountOfDigitsAfterComma')) {
+                    params.amountOfDigitsAfterComma = this.model.get('amountOfDigitsAfterComma');
+                }
+
                 if (attributeType === 'unit') {
                     params.measure = this.model.get('attributeMeasure');
                 }

@@ -52,10 +52,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'attributeType',
             'attributeTooltip',
             'intValue',
+            'intValue1',
             'boolValue',
             'dateValue',
             'datetimeValue',
             'floatValue',
+            'floatValue1',
             'varcharValue',
             'textValue'
         ];
@@ -182,6 +184,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
         switch ($parentPav->get('attributeType')) {
             case 'currency':
                 $input->valueCurrency = $parentPav->get('valueCurrency');
+                break;
+            case 'rangeInt':
+            case 'rangeFloat':
+                $input->valueFrom = $parentPav->get('valueFrom');
+                $input->valueTo = $parentPav->get('valueTo');
                 break;
             case 'unit':
                 $input->valueUnit = $parentPav->get('valueUnit');
@@ -334,19 +341,19 @@ class ProductAttributeValue extends AbstractProductAttributeService
          * Prepare maxLength
          */
         if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')) {
-            
+
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
             if (empty($attribute)) {
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
             }
 
-            if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) 
+            if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])
                 && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');
                 $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
             }
 
-           if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'unit', 'currency']) 
+            if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'unit', 'currency'])
                 && $attribute->get('amountOfDigitsAfterComma') !== null) {
                 $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
             }
@@ -416,7 +423,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
         /**
          * Inherit value from parent
          */
-        if (!property_exists($data, 'value') && !property_exists($data, 'valueId') && !property_exists($data, 'valueUnit') && !property_exists($data, 'valueCurrency')) {
+        if (
+            !property_exists($data, 'value')
+            && !property_exists($data, 'valueId')
+            && !property_exists($data, 'valueUnit')
+            && !property_exists($data, 'valueCurrency')
+            && !property_exists($data, 'valueFrom')
+            && !property_exists($data, 'valueTo')
+        ) {
             try {
                 $this->inheritPav($entity);
             } catch (\Throwable $e) {
@@ -551,7 +565,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $inputData = new \stdClass();
             if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
-                foreach (['value', 'valueUnit', 'valueCurrency', 'valueId'] as $key) {
+                foreach (['value', 'valueUnit', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId'] as $key) {
                     if (property_exists($data, $key)) {
                         $inputData->$key = $data->$key;
                     }
@@ -705,62 +719,98 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
-        if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
-            $entity->set('varcharValue', $data->data->currency);
-        }
-        if (property_exists($data, 'valueCurrency')) {
-            $entity->set('varcharValue', $data->valueCurrency);
-        }
-
-        if (property_exists($data, 'data') && property_exists($data->data, 'unit')) {
-            $entity->set('varcharValue', $data->data->unit);
-        }
-        if (property_exists($data, 'valueUnit')) {
-            $entity->set('varcharValue', $data->valueUnit);
-        }
-
-        if (property_exists($data, 'value')) {
-            // set attribute type if it needs
-            if (empty($entity->get('attributeType')) && !empty($entity->get('attributeId'))) {
-                $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-                if (!empty($attribute)) {
-                    $entity->set('attributeType', $attribute->get('type'));
-                }
+        // set attribute type if it needs
+        if (empty($entity->get('attributeType')) && !empty($entity->get('attributeId'))) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+            if (!empty($attribute)) {
+                $entity->set('attributeType', $attribute->get('type'));
             }
+        }
 
-            if (empty($entity->get('attributeType'))) {
-                throw new BadRequest('No such attribute.');
-            }
+        if (empty($entity->get('attributeType'))) {
+            throw new BadRequest('No such attribute.');
+        }
 
-            switch ($entity->get('attributeType')) {
-                case 'array':
-                case 'extensibleMultiEnum':
-                case 'text':
-                case 'wysiwyg':
+        switch ($entity->get('attributeType')) {
+            case 'array':
+            case 'extensibleMultiEnum':
+            case 'text':
+            case 'wysiwyg':
+                if (property_exists($data, 'value')) {
                     $entity->set('textValue', $data->value);
-                    break;
-                case 'bool':
+                }
+                break;
+            case 'bool':
+                if (property_exists($data, 'value')) {
                     $entity->set('boolValue', !empty($data->value));
-                    break;
-                case 'int':
+                }
+                break;
+            case 'int':
+                if (property_exists($data, 'value')) {
                     $entity->set('intValue', $data->value);
-                    break;
-                case 'currency':
-                case 'unit':
-                case 'float':
+                }
+                break;
+            case 'rangeInt':
+                if (property_exists($data, 'valueFrom')) {
+                    $entity->set('intValue', $data->valueFrom);
+                }
+                if (property_exists($data, 'valueTo')) {
+                    $entity->set('intValue1', $data->valueTo);
+                }
+                break;
+            case 'currency':
+                if (property_exists($data, 'value')) {
                     $entity->set('floatValue', $data->value);
-                    break;
-                case 'date':
+                }
+                if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
+                    $entity->set('varcharValue', $data->data->currency);
+                }
+                if (property_exists($data, 'valueCurrency')) {
+                    $entity->set('varcharValue', $data->valueCurrency);
+                }
+                break;
+            case 'unit':
+                if (property_exists($data, 'value')) {
+                    $entity->set('floatValue', $data->value);
+                }
+                if (property_exists($data, 'data') && property_exists($data->data, 'unit')) {
+                    $entity->set('varcharValue', $data->data->unit);
+                }
+                if (property_exists($data, 'valueUnit')) {
+                    $entity->set('varcharValue', $data->valueUnit);
+                }
+                break;
+            case 'float':
+                if (property_exists($data, 'value')) {
+                    $entity->set('floatValue', $data->value);
+                }
+                break;
+            case 'rangeFloat':
+                if (property_exists($data, 'valueFrom')) {
+                    $entity->set('floatValue', $data->valueFrom);
+                }
+                if (property_exists($data, 'valueTo')) {
+                    $entity->set('floatValue1', $data->valueTo);
+                }
+                break;
+            case 'date':
+                if (property_exists($data, 'value')) {
                     $entity->set('dateValue', $data->value);
-                    break;
-                case 'datetime':
+                }
+                break;
+            case 'datetime':
+                if (property_exists($data, 'value')) {
                     $entity->set('datetimeValue', $data->value);
-                    break;
-                default:
+                }
+                break;
+            default:
+                if (property_exists($data, 'value')) {
                     $entity->set('varcharValue', $data->value);
-                    break;
-            }
+                }
+                break;
         }
+
+
     }
 
     public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool

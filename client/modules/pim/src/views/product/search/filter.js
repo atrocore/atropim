@@ -66,6 +66,14 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
                     });
                 }
 
+                if (type === 'rangeInt'){
+                    type = 'int';
+                }
+
+                if (type === 'rangeFloat'){
+                    type = 'float';
+                }
+
                 let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
                 this.createView('field', viewName, {

@@ -38,6 +38,12 @@ Espo.define('pim:views/fields/max-length', 'views/fields/int', Dep => {
                     this.reRender();
                 });
             }
+
+            if (this.model.urlRoot === 'Attribute') {
+                this.listenTo(this.model, 'change:type', () => {
+                    this.reRender();
+                });
+            }
         },
 
         afterRender() {

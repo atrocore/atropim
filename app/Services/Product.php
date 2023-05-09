@@ -566,8 +566,8 @@ class Product extends Hierarchy
                     ->getRepository('ClassificationAttribute')
                     ->where([
                         'classificationId' => $product->get('classificationId'),
-                        'scope'           => 'Channel',
-                        'channelId'       => $foreignId
+                        'scope'            => 'Channel',
+                        'channelId'        => $foreignId
                     ])
                     ->find();
 
@@ -616,7 +616,7 @@ class Product extends Hierarchy
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
             ->where([
-                'productId' => $parentId,
+                'productId'                  => $parentId,
                 'isVariantSpecificAttribute' => true
             ])
             ->find();
@@ -1201,6 +1201,11 @@ class Product extends Hierarchy
                             break;
                         case 'currency':
                             $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
+                            break;
+                        case 'rangeInt':
+                        case 'rangeFloat':
+                            $product->set($fieldName . 'From', $pav->get('From'));
+                            $product->set($fieldName . 'To', $pav->get('To'));
                             break;
                         case 'asset':
                             if (!empty($attributeField['assetFieldName'])) {

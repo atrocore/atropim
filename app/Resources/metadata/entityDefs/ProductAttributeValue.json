@@ -207,7 +207,31 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "intValue1": {
+      "type": "int",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "floatValue": {
+      "type": "float",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "floatValue1": {
       "type": "float",
       "aclFieldDisabled": true,
       "layoutListDisabled": true,
@@ -284,6 +308,34 @@
       "lengthOfCut": 400,
       "view": "pim:views/product-attribute-value/fields/value-container",
       "hasCompleteValidation": true
+    },
+    "valueFrom": {
+      "type": "float",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueTo": {
+      "type": "float",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "valueCurrency": {
       "type": "varchar",
@@ -641,7 +693,19 @@
         "deleted"
       ]
     },
+    "intValue1": {
+      "columns": [
+        "intValue1",
+        "deleted"
+      ]
+    },
     "floatValue": {
+      "columns": [
+        "floatValue",
+        "deleted"
+      ]
+    },
+    "floatValue1": {
       "columns": [
         "floatValue",
         "deleted"
