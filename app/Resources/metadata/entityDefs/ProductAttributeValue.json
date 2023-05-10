@@ -307,7 +307,8 @@
       "rows": 4,
       "lengthOfCut": 400,
       "view": "pim:views/product-attribute-value/fields/value-container",
-      "hasCompleteValidation": true
+      "hasCompleteValidation": true,
+      "massUpdateDisabled": true
     },
     "valueFrom": {
       "type": "float",
