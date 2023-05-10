@@ -855,15 +855,27 @@ class ProductAttributeValue extends AbstractRepository
         $this->validateUnitAttribute($entity);
     }
 
-    protected function validateUnitAttribute(Entity $entity): void
+    protected function validateFloat(Entity $entity, string $fieldName, array $fieldData): void
     {
-        if (empty($attribute = $entity->get('attribute'))) {
+        $attribute = $entity->get('attribute');
+        if (empty($attribute)) {
             return;
         }
 
-        $type = $attribute->get('type');
+        if ($attribute->get('type') === 'rangeInt') {
+            if (method_exists($this, 'validateInt')) {
+                $this->validateInt($entity, $fieldName, $fieldData);
+            }
+            return;
+        }
 
-        if ($type !== 'unit') {
+        parent::validateFloat($entity, $fieldName, $fieldData);
+    }
+
+    protected function validateUnitAttribute(Entity $entity): void
+    {
+        $attribute = $entity->get('attribute');
+        if (empty($attribute) || $attribute->get('type') !== 'unit') {
             return;
         }
 
