@@ -743,6 +743,14 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['views/
                 return _.isEqual(fetchedData.valueUnit, initialData.valueUnit) && _.isEqual(fetchedData.value, initialData.value);
             }
 
+            if (typeof fetchedData.valueFrom !== 'undefined') {
+                return _.isEqual(fetchedData.valueFrom, initialData.valueFrom);
+            }
+
+            if (typeof fetchedData.valueTo !== 'undefined') {
+                return _.isEqual(fetchedData.valueTo, initialData.valueTo);
+            }
+
             if (typeof fetchedData.valueTranslateAutomatically !== 'undefined') {
                 if (_.isEqual(fetchedData.valueTranslateAutomatically, initialData.valueTranslateAutomatically) === false) {
                     return false
