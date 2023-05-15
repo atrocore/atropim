@@ -7,7 +7,8 @@
     "atrocore/core": "~1.5.64"
   },
   "conflict": {
-    "atrocore/product-variants": "*"
+    "atrocore/product-variants": "*",
+    "atrocore/pdf-generator": "<1.4.23"
   },
   "autoload": {
     "psr-4": {
