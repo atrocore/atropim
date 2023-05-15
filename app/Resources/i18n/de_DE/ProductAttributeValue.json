@@ -11,6 +11,8 @@
     "language": "Sprache",
     "languages": "Sprachen",
     "value": "Wert",
+    "valueFrom": "Wert von",
+    "valueTo": "Wert auf",
     "scope": "Scope",
     "varcharValue": "Wert: Einzeiliger Text",
     "textValue": "Wert: Text",

@@ -10,6 +10,8 @@
     "languages": "Languages",
     "isRequired": "Required",
     "value": "Value",
+    "valueFrom": "Value From",
+    "valueTo": "Value To",
     "scope": "Scope",
     "channel": "Channel",
     "varcharValue": "Value: String",

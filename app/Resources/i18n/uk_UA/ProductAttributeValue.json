@@ -10,6 +10,8 @@
     "languages": "Мови",
     "isRequired": "Обов'язково",
     "value": "Значення",
+    "valueFrom": "Значення від",
+    "valueTo": "Значення до",
     "scope": "Область дії",
     "channel": "Канал",
     "varcharValue": "Value: Varchar",
