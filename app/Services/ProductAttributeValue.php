@@ -1013,10 +1013,15 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getRepository()->convertValue($entity);
 
-        if ($entity->get('attributeType') === 'unit') {
-            $entity->set('attributeMeasure', $attribute->getDataField('measure'));
-            $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
-        }
+//        if ($entity->get('attributeType') === 'unit') {
+//            $entity->set('attributeMeasure', $attribute->getDataField('measure'));
+//            $this->prepareUnitFieldValue($entity, 'value', [
+//                'type'                     => $attribute->get('type'),
+//                'amountOfDigitsAfterComma' => $attribute->get('amountOfDigitsAfterComma'),
+//                'measureId'                => $attribute->get('measure'),
+//                'mainField'                => 'value'
+//            ]);
+//        }
 
         $entity->clear('boolValue');
         $entity->clear('dateValue');
