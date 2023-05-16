@@ -156,7 +156,7 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
         return !!Object.keys(this.advanced).find(k => k.startsWith(name + '-'))
     },
 
-    addFilter(name, params) {
+    addFilter(name, params, callback) {
         if (params.fieldParams && ['rangeFloat', 'rangeInt'].indexOf(params.fieldParams.type) >= 0) {
             const fieldType = params.fieldParams.type;
             const newType = fieldType === 'rangeFloat' ? 'float' : 'int';
@@ -165,15 +165,18 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
             const paramsFrom = {fieldParams: {...params.fieldParams, type: newType, label: params.fieldParams.label + ' From'}}
             const paramsTo = {fieldParams: {...params.fieldParams, type: newType, label: params.fieldParams.label + ' To'}}
             if (!this.filterAdded(from)) {
-                this.addFilter(from, paramsFrom)
-            }
-            if (!this.filterAdded(to)) {
-                this.addFilter(to, paramsTo)
+                this.addFilter(from, paramsFrom, function () {
+                    if (!this.filterAdded(to)) {
+                        this.addFilter(to, paramsTo)
+                    }
+                }.bind(this))
+            } else if (!this.filterAdded(to)) {
+                this.addFilter(from, paramsTo)
             }
             return
         }
 
-        return Dep.prototype.addFilter.call(this, name, params);
+        return Dep.prototype.addFilter.call(this, name, params, callback);
     },
 
     fetch: function () {
