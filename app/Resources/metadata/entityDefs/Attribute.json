@@ -148,7 +148,7 @@
       "view": "pim:views/attribute/fields/measure"
     },
     "unitDefault": {
-      "type": "unit",
+      "type": "varchar",
       "notStorable": true,
       "view": "pim:views/attribute/fields/unit-default"
     },
