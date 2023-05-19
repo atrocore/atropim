@@ -196,6 +196,11 @@ class Attribute extends AbstractRepository
                 }
                 $this->getInjection('container')->get($converterName)->convert($entity);
             }
+
+            if ($entity->isAttributeChanged('measureId') && empty($entity->get('measureId'))) {
+                $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=NULL WHERE attribute_id='{$entity->get('id')}'");
+            }
+
             $result = parent::save($entity, $options);
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
