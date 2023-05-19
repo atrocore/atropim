@@ -722,16 +722,31 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
-        // set attribute type if it needs
-        if (empty($entity->get('attributeType')) && !empty($entity->get('attributeId'))) {
-            $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-            if (!empty($attribute)) {
-                $entity->set('attributeType', $attribute->get('type'));
-            }
+        if (empty($entity->get('attributeId'))) {
+            throw new BadRequest('Attribute ID is required.');
         }
 
-        if (empty($entity->get('attributeType'))) {
-            throw new BadRequest('No such attribute.');
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        if (empty($attribute)) {
+            throw new BadRequest('Attribute is required.');
+        }
+
+        if (!empty($attribute->get('type'))) {
+            $entity->set('attributeType', $attribute->get('type'));
+        }
+
+        /**
+         * Convert unit to unitId for backward compatibility
+         */
+        if (property_exists($data, 'valueUnit') && !property_exists($data, 'valueUnitId')) {
+            $units = $this->getMeasureUnits($attribute->get('measureId'));
+            foreach ($units as $unit) {
+                if ($unit->get('name') === $data->valueUnit) {
+                    $data->valueUnitId = $unit->get('id');
+                    break;
+                }
+            }
+            unset($data->valueUnit);
         }
 
         switch ($entity->get('attributeType')) {
