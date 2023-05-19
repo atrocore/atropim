@@ -59,7 +59,6 @@
       "int": "Ganzzahl",
       "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
       "text": "Text",
-      "unit": "Einheit",
       "url": "Url",
       "varchar": "Einzeiliger Text",
       "wysiwyg": "HTML",

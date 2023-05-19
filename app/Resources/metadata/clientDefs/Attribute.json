@@ -96,6 +96,22 @@
           ]
         }
       },
+      "measure": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float",
+                "rangeInt",
+                "rangeFloat"
+              ]
+            }
+          ]
+        }
+      },
       "sortOrder": {
         "visible": {
           "conditionGroup": [

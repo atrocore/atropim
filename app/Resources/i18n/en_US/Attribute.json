@@ -59,7 +59,6 @@
       "int": "Integer",
       "extensibleMultiEnum": "Multi-value list",
       "text": "Text",
-      "unit": "Unit",
       "url": "Url",
       "varchar": "String",
       "wysiwyg": "HTML",
