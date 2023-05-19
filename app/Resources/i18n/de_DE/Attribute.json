@@ -18,7 +18,7 @@
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "enumDefault": "Standard(Liste)",
     "measure": "Maß",
-    "unitDefault": "Standard(Einheit)",
+    "defaultUnit": "Standard Maßeinheit",
     "virtualProductField": "Virtuelles Produktfeld",
     "defaultScope": "Scope",
     "defaultChannel": "Kanal",
@@ -32,6 +32,7 @@
     "extensibleEnum": "Liste"
   },
   "links": {
+    "measure": "Maß",
     "parents": "Assoziierende Attribute",
     "children": "Assoziierte Attribute",
     "attributeTab": "Attributtab",

@@ -39,10 +39,10 @@ class V1Dot9Dot0 extends Base
     {
         $this->getPDO()->exec("UPDATE attribute SET type='float' WHERE type='unit'");
         $this->getPDO()->exec("UPDATE product_attribute_value SET attribute_type='float' WHERE attribute_type='unit'");
-//        $this->getPDO()->exec("CREATE INDEX IDX_INT_VALUE1 ON product_attribute_value (int_value1, deleted)");
-//
-//        $this->getPDO()->exec("ALTER TABLE product_attribute_value ADD float_value1 DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-//        $this->getPDO()->exec("CREATE INDEX IDX_FLOAT_VALUE1 ON product_attribute_value (float_value, deleted)");
+
+        $this->getPDO()->exec("ALTER TABLE attribute ADD default_unit VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec("ALTER TABLE attribute ADD measure_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec("CREATE INDEX IDX_MEASURE_ID ON attribute (measure_id)");
     }
 
     public function down(): void

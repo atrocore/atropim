@@ -185,43 +185,6 @@
           ]
         }
       },
-      "measure": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "unit"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "unit"
-              ]
-            }
-          ]
-        }
-      },
-      "unitDefault": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "unit"
-              ]
-            }
-          ]
-        }
-      },
       "amountOfDigitsAfterComma": {
         "visible": {
           "conditionGroup": [
@@ -230,7 +193,6 @@
               "attribute": "type",
               "value": [
                 "float",
-                "unit",
                 "currency",
                 "rangeFloat"
               ]
