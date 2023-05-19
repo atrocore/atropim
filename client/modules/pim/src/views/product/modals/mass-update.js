@@ -134,7 +134,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                 params: {}
             };
 
-            if (['int', 'float', 'rangeInt', 'rangeFloat'].includes(type)) {
+            if (['int', 'float', 'rangeInt', 'rangeFloat', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
                 this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
                     if (attr.measureId) {
                         options.params.measureId = attr.measureId;
@@ -142,10 +142,9 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                             viewName = "views/fields/unit-" + type;
                         }
                     }
-                });
-            } else if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
-                this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
-                    options.params.extensibleEnumId = attr.extensibleEnumId;
+                    if (attr.extensibleEnumId) {
+                        options.params.extensibleEnumId = attr.extensibleEnumId;
+                    }
                 });
             }
 
@@ -197,8 +196,8 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         attribute.channelName = item.channelName;
                     }
 
-                    if (view.fieldType === 'unit') {
-                        attribute['valueUnit'] = data[name + 'Unit'];
+                    if (data[name + 'UnitId']) {
+                        attribute['valueUnitId'] = data[name + 'UnitId'];
                     }
 
                     if (view.fieldType === 'currency') {
