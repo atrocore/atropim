@@ -91,16 +91,15 @@ class RevisionField extends MultilangRevisionField
                             $was['value'] = $data['attributes']['was'][$field];
                             $became['value'] = $data['attributes']['became'][$field];
 
-                            // for unit
-                            if (isset($data['attributes']['was'][$field . 'Unit'])) {
-                                $was['valueUnit'] = $data['attributes']['was'][$field . 'Unit'];
-                                $became['valueUnit'] = null;
+                            if (isset($data['attributes']['was'][$field . 'UnitId'])) {
+                                $was['valueUnitId'] = $data['attributes']['was'][$field . 'Unit'];
+                                $became['valueUnitId'] = null;
                             }
-                            if (isset($data['attributes']['became'][$field . 'Unit'])) {
-                                if (!isset($was['valueUnit'])) {
-                                    $was['valueUnit'] = null;
+                            if (isset($data['attributes']['became'][$field . 'UnitId'])) {
+                                if (!isset($was['valueUnitId'])) {
+                                    $was['valueUnitId'] = null;
                                 }
-                                $became['valueUnit'] = $data['attributes']['became'][$field . 'Unit'];
+                                $became['valueUnitId'] = $data['attributes']['became'][$field . 'UnitId'];
                             }
 
                             // for currency

@@ -580,14 +580,8 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('varcharValue', $attribute->get('enumDefault'));
         }
 
-        if ($attribute->get('type') === 'unit') {
-            if (!$entity->has('floatValue')) {
-                $entity->set('floatValue', $attribute->get('unitDefault'));
-            }
-
-            if (!$entity->has('varcharValue')) {
-                $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
-            }
+        if (!empty($attribute->get('defaultUnit'))) {
+            $entity->set('varcharValue', $attribute->get('defaultUnit'));
         }
     }
 
@@ -649,7 +643,7 @@ class ProductAttributeValue extends AbstractRepository
         /**
          * Float amountOfDigitsAfterComma validation
          */
-        if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
+        if (in_array($attribute->get('type'), ['float', 'currency']) && $entity->get('value') !== null
             && $entity->get('amountOfDigitsAfterComma') !== null) {
             $this->checkAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
         }
@@ -683,15 +677,16 @@ class ProductAttributeValue extends AbstractRepository
                     $where['boolValue'] = $entity->get('boolValue');
                     break;
                 case 'currency':
-                case 'unit':
                     $where['floatValue'] = $entity->get('floatValue');
                     $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'int':
                     $where['intValue'] = $entity->get('intValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'float':
                     $where['floatValue'] = $entity->get('floatValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'date':
                     $where['dateValue'] = $entity->get('dateValue');
@@ -856,11 +851,6 @@ class ProductAttributeValue extends AbstractRepository
 
         if ($result['attributes']['was'][$fieldName] === null && ($result['attributes']['became'][$fieldName] === null || $result['attributes']['became'][$fieldName] === '')) {
             return [];
-        }
-
-        if ($entity->get('attributeType') === 'unit') {
-            $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['varcharValue'];
-            $result['attributes']['became'][$fieldName . 'Unit'] = $entity->get('varcharValue');
         }
 
         if ($entity->get('attributeType') === 'currency') {
