@@ -66,6 +66,13 @@ class V1Dot9Dot0 extends Base
             if (!empty($data['field']['unitDefaultUnit']) && !empty($measure['units'][$data['field']['unitDefaultUnit']])) {
                 $this->getPDO()->exec("UPDATE attribute SET default_unit='{$measure['units'][$data['field']['unitDefaultUnit']]}' WHERE id='{$record['id']}'");
             }
+
+            if (!empty($measure['units'])) {
+                foreach ($measure['units'] as $name => $id) {
+                    $preparedName = $this->getPDO()->quote($name);
+                    $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value='{$id}' WHERE varchar_value=$preparedName AND attribute_id='{$record['id']}'");
+                }
+            }
         }
     }
 
