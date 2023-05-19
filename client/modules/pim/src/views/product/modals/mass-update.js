@@ -123,18 +123,25 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + model.get('attributeName') + '</label><div class="field" data-name="' + name + '" /></div>';
             this.$el.find('.fields-container').append(html);
 
-            let type = model.get('attributeType') || 'base',
-                options = {
-                    name: name,
-                    model: model,
-                    el: this.getSelector() + ' .field[data-name="' + name + '"]',
-                    mode: 'edit',
-                    params: {}
-                };
+            let type = model.get('attributeType') || 'base';
+            let viewName = this.getViewFieldType(type);
 
-            if (type === 'unit') {
+            let options = {
+                name: name,
+                model: model,
+                el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                mode: 'edit',
+                params: {}
+            };
+
+            if (['int', 'float', 'rangeInt', 'rangeFloat'].includes(type)) {
                 this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
-                    options.params.measure = attr.measure;
+                    if (attr.measureId) {
+                        options.params.measureId = attr.measureId;
+                        if (['int', 'float'].includes(type)) {
+                            viewName = "views/fields/unit-" + type;
+                        }
+                    }
                 });
             } else if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
                 this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
@@ -142,7 +149,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                 });
             }
 
-            this.createView(name, this.getViewFieldType(type), options, view => {
+            this.createView(name, viewName, options, view => {
                 view.listenTo(view, 'after:render', () => {
                     let name = data.channelName ? data.channelName : 'Global';
                     name += ', ' + this.getLanguage().translateOption(data.language, 'language', 'ProductAttributeValue');
