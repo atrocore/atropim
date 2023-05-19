@@ -247,7 +247,6 @@ class ProductAttributeValue extends AbstractRepository
                 $result = Entity::areValuesEqual(Entity::BOOL, $pav1->get('boolValue'), $pav2->get('boolValue'));
                 break;
             case 'currency':
-            case 'unit':
                 $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
                 if ($result) {
                     $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
@@ -255,9 +254,33 @@ class ProductAttributeValue extends AbstractRepository
                 break;
             case 'int':
                 $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
+                break;
+            case 'rangeInt':
+                $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue1'), $pav2->get('intValue1'));
+                }
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
                 break;
             case 'float':
                 $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
+                break;
+            case 'rangeFloat':
+                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue1'), $pav2->get('floatValue1'));
+                }
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
                 break;
             case 'date':
                 $result = Entity::areValuesEqual(Entity::DATE, $pav1->get('dateValue'), $pav2->get('dateValue'));
@@ -343,10 +366,12 @@ class ProductAttributeValue extends AbstractRepository
             case 'rangeInt':
                 $entity->set('valueFrom', $entity->get('intValue'));
                 $entity->set('valueTo', $entity->get('intValue1'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'rangeFloat':
                 $entity->set('valueFrom', $entity->get('floatValue'));
                 $entity->set('valueTo', $entity->get('floatValue1'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'array':
             case 'extensibleMultiEnum':
@@ -363,15 +388,13 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('value', $entity->get('floatValue'));
                 $entity->set('valueCurrency', $entity->get('varcharValue'));
                 break;
-            case 'unit':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueUnit', $entity->get('varcharValue'));
-                break;
             case 'int':
                 $entity->set('value', $entity->get('intValue'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'float':
                 $entity->set('value', $entity->get('floatValue'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'date':
                 $entity->set('value', $entity->get('dateValue'));
@@ -846,44 +869,6 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return $result;
-    }
-
-    protected function validateFieldsByType(Entity $entity): void
-    {
-        parent::validateFieldsByType($entity);
-
-        $this->validateUnitAttribute($entity);
-    }
-
-    protected function validateUnitAttribute(Entity $entity): void
-    {
-        $attribute = $entity->get('attribute');
-        if (empty($attribute) || $attribute->get('type') !== 'unit') {
-            return;
-        }
-
-        $language = $this->getInjection('container')->get('language');
-
-        $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
-        $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
-
-        $value = $entity->get('value');
-        $unit = $entity->get('valueUnit');
-
-        $label = $attribute->get('name');
-
-        if ($value !== null && $value !== '' && empty($unit)) {
-            throw new BadRequest(sprintf($language->translate('attributeUnitValueIsRequired', 'exceptions', 'ProductAttributeValue'), $label));
-        }
-
-        $measure = empty($attribute->getDataField('measure')) ? '' : $attribute->getDataField('measure');
-
-        if (!empty($unit)) {
-            $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
-            if (!in_array($unit, $units)) {
-                throw new BadRequest(sprintf($language->translate('noSuchAttributeUnit', 'exceptions', 'ProductAttributeValue'), $label));
-            }
-        }
     }
 
     public function getProductById(string $productId): ?Entity
