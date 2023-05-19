@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -26,38 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/attribute/fields/unit-default', 'views/fields/unit',
-    Dep => {
+declare(strict_types=1);
 
-        return Dep.extend({
+namespace Pim\Migrations;
 
-            localedOptions: false,
+use Treo\Core\Migration\Base;
 
-            setup: function () {
-                this.setMeasure();
+class V1Dot9Dot0 extends Base
+{
+    public function up(): void
+    {
+        $this->getPDO()->exec("UPDATE attribute SET type='float' WHERE type='unit'");
+        $this->getPDO()->exec("UPDATE product_attribute_value SET attribute_type='float' WHERE attribute_type='unit'");
+//        $this->getPDO()->exec("CREATE INDEX IDX_INT_VALUE1 ON product_attribute_value (int_value1, deleted)");
+//
+//        $this->getPDO()->exec("ALTER TABLE product_attribute_value ADD float_value1 DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+//        $this->getPDO()->exec("CREATE INDEX IDX_FLOAT_VALUE1 ON product_attribute_value (float_value, deleted)");
+    }
 
-                Dep.prototype.setup.call(this);
-
-                this.listenTo(this.model, 'change:measure', () => {
-                    this.setMeasure();
-                    this.loadUnitList();
-                    this.reRender();
-                });
-            },
-
-            validate() {
-                if (this.model.get('prohibitedEmptyValue') && this.model.get('unitDefaultUnit') === '') {
-                    this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                    return true;
-                }
-
-                return Dep.prototype.validate.call(this);
-            },
-
-            setMeasure() {
-                const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-                this.params.measure = this.model.get('measure') || measures.shift();
-            },
-
-        });
-    });
+    public function down(): void
+    {
+        throw new \Error('Downgrade is prohibited.');
+    }
+}

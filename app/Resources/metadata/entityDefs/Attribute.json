@@ -150,7 +150,7 @@
     "unitDefault": {
       "type": "varchar",
       "notStorable": true,
-      "view": "pim:views/attribute/fields/unit-default"
+      "view": "views/admin/field-manager/fields/default-unit"
     },
     "defaultScope": {
       "type": "enum",
