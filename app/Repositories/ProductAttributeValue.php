@@ -889,7 +889,7 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'asset':
-                $result['fields'][] = 'valueId';
+                $result['fields'][] = 'value';
                 $result['attributes']['was']['valueId'] = self::$beforeSaveData['valueId'];
                 $result['attributes']['became']['valueId'] = $entity->get('valueId');
                 break;
