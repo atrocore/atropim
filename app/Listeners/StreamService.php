@@ -57,18 +57,19 @@ class StreamService extends AbstractEntityListener
             return;
         }
 
-        $field = $event->getArgument('field');
+        $fieldDefs = [
+            'type'  => $attribute->get('type'),
+            'label' => $attribute->get('name'),
+        ];
 
-        $fieldDefs = [];
-
-        switch ($field) {
+        switch ($event->getArgument('field')) {
             case 'valueFrom':
                 $fieldDefs['type'] = 'float';
-                $fieldDefs['label'] = $attribute->get('name') . ' ' . $this->getLanguage()->translate('From');
+                $fieldDefs['label'] .= ' ' . $this->getLanguage()->translate('From');
                 break;
             case 'valueTo':
                 $fieldDefs['type'] = 'float';
-                $fieldDefs['label'] = $attribute->get('name') . ' ' . $this->getLanguage()->translate('To');
+                $fieldDefs['label'] .= ' ' . $this->getLanguage()->translate('To');
                 break;
             case 'valueId':
                 $fieldDefs['type'] = 'link';
@@ -77,11 +78,8 @@ class StreamService extends AbstractEntityListener
             case 'valueUnit':
                 $fieldDefs['type'] = 'link';
                 $fieldDefs['entity'] = 'Unit';
-                $fieldDefs['label'] = $attribute->get('name') . ' ' . $this->getLanguage()->translate('unitPart');
+                $fieldDefs['label'] .= ' ' . $this->getLanguage()->translate('unitPart');
                 break;
-            default:
-                $fieldDefs['type'] = $attribute->get('type');
-                $fieldDefs['label'] = $attribute->get('name');
         }
 
         $event->setArgument('fieldDefs', $fieldDefs);
