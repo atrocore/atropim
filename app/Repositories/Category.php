@@ -417,7 +417,7 @@ class Category extends AbstractRepository
     /**
      * @return int
      */
-    public function getChildrenCount(string $parentId): int
+    public function getChildrenCount(string $parentId, $selectParams = null): int
     {
         if (empty($parentId)) {
             $query = "SELECT COUNT(id) as count
