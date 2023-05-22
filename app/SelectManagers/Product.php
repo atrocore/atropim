@@ -562,6 +562,12 @@ class Product extends AbstractSelectManager
             if (substr($id, -2) === 'Id') {
                 $id = substr($id, 0, -2);
             }
+            if (substr($id, -2) === 'To') {
+                $id = substr($id, 0, -2);
+            }
+            if (substr($id, -4) === 'From') {
+                $id = substr($id, 0, -4);
+            }
             $attribute = $this->getEntityManager()->getEntity('Attribute', $id);
             if (empty($attribute)) {
                 throw new NotFound();
@@ -601,7 +607,6 @@ class Product extends AbstractSelectManager
                 ],
             ]
         ];
-
         switch ($attribute->get('type')) {
             case 'array':
             case 'extensibleMultiEnum':
@@ -672,11 +677,22 @@ class Product extends AbstractSelectManager
                 break;
             case 'int':
             case 'rangeInt':
-                $row['attribute'] = 'intValue';
+                if(substr($row['attribute'], -2)=='To'){
+                    $row['attribute'] = 'intValue1';
+                }else{
+                    $row['attribute'] = 'intValue';
+                }
                 $where['value'][] = $row;
                 break;
             case 'currency':
             case 'rangeFloat':
+                if(substr($row['attribute'], -2)=='To'){
+                    $row['attribute'] = 'floatValue1';
+                }else{
+                    $row['attribute'] = 'floatValue';
+                }
+                $where['value'][] = $row;
+                break;
             case 'float':
                 $row['attribute'] = 'floatValue';
                 $where['value'][] = $row;
@@ -748,6 +764,7 @@ class Product extends AbstractSelectManager
             // prepare custom where
             $selectParams['customWhere'] .= " AND product.id IN ('" . implode("','", $productsIds) . "')";
         }
+
     }
 
     protected function filteringByCategories(array &$params): void
