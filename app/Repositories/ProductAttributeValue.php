@@ -858,13 +858,13 @@ class ProductAttributeValue extends AbstractRepository
         switch ($entity->get('attributeType')) {
             case 'rangeInt':
             case 'rangeFloat':
-                if ($entity->isAttributeChanged('valueFrom')) {
+                if ($entity->isAttributeChanged('valueFrom') && self::$beforeSaveData['valueFrom'] !== $entity->get('valueFrom')) {
                     $result['fields'][] = 'valueFrom';
                     $result['attributes']['was']['valueFrom'] = self::$beforeSaveData['valueFrom'];
                     $result['attributes']['became']['valueFrom'] = $entity->get('valueFrom');
                 }
 
-                if ($entity->isAttributeChanged('valueTo')) {
+                if ($entity->isAttributeChanged('valueTo') && self::$beforeSaveData['valueTo'] !== $entity->get('valueTo')) {
                     $result['fields'][] = 'valueTo';
                     $result['attributes']['was']['valueTo'] = self::$beforeSaveData['valueTo'];
                     $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
@@ -877,12 +877,12 @@ class ProductAttributeValue extends AbstractRepository
                 $result['attributes']['became']['value'] = json_decode($entity->get('value'), true);
                 break;
             case 'currency':
-                if ($entity->isAttributeChanged('value')) {
+                if ($entity->isAttributeChanged('value') && self::$beforeSaveData['value'] !== $entity->get('value')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-                if ($entity->isAttributeChanged('valueCurrency')) {
+                if ($entity->isAttributeChanged('valueCurrency') && self::$beforeSaveData['valueCurrency'] !== $entity->get('valueCurrency')) {
                     $result['fields'][] = 'valueCurrency';
                     $result['attributes']['was']['valueCurrency'] = self::$beforeSaveData['valueCurrency'];
                     $result['attributes']['became']['valueCurrency'] = $entity->get('valueCurrency');
@@ -899,7 +899,7 @@ class ProductAttributeValue extends AbstractRepository
                 $result['attributes']['became']['value'] = $entity->get('value');
         }
 
-        if ($entity->isAttributeChanged('valueUnitId')) {
+        if ($entity->isAttributeChanged('valueUnitId') && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
             $result['fields'][] = 'valueUnit';
             $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
             $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');

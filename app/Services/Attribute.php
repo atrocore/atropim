@@ -63,7 +63,7 @@ class Attribute extends Hierarchy
 
         $entity = $this->getRepository()->get($id);
 
-        if ($this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
+        if (!empty($entity) && $this->getConfig()->get('isMultilangActive', false) && $entity->get('isMultilang')) {
             foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                 $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
                 if (!empty($ownerUserId = $entity->get("ownerUser{$camelCaseLocale}Id"))) {
