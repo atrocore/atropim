@@ -48,9 +48,9 @@ class StreamController extends AbstractListener
         $result = $event->getArgument('result');
         $params = $event->getArgument('params');
 
-        $result = $this->prepareDataForUserStream($result, $params);
-        $result = $this->injectAttributeType($result);
-        $result = $this->injectDiffForTextAttributes($result);
+//        $result = $this->prepareDataForUserStream($result, $params);
+//        $result = $this->injectAttributeType($result);
+//        $result = $this->injectDiffForTextAttributes($result);
 
         $event->setArgument('result', $result);
     }
