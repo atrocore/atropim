@@ -17,7 +17,6 @@
     "prohibitedEmptyValue": "Запретить пустые значения",
     "enumDefault": "По умолчанию",
     "measure": "Мера",
-    "unitDefault": "По умолчанию",
     "virtualProductField": "Виртуальное поле продукта",
     "defaultScope": "Область действия",
     "defaultChannel": "Канал",
@@ -27,6 +26,7 @@
     "maxLength": "Максимальная длина"
   },
   "links": {
+    "measure": "Мера",
     "parents": "Связывающие атрибуты",
     "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",

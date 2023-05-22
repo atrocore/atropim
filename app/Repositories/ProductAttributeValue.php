@@ -247,7 +247,6 @@ class ProductAttributeValue extends AbstractRepository
                 $result = Entity::areValuesEqual(Entity::BOOL, $pav1->get('boolValue'), $pav2->get('boolValue'));
                 break;
             case 'currency':
-            case 'unit':
                 $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
                 if ($result) {
                     $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
@@ -255,9 +254,33 @@ class ProductAttributeValue extends AbstractRepository
                 break;
             case 'int':
                 $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
+                break;
+            case 'rangeInt':
+                $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue1'), $pav2->get('intValue1'));
+                }
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
                 break;
             case 'float':
                 $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
+                break;
+            case 'rangeFloat':
+                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue1'), $pav2->get('floatValue1'));
+                }
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                }
                 break;
             case 'date':
                 $result = Entity::areValuesEqual(Entity::DATE, $pav1->get('dateValue'), $pav2->get('dateValue'));
@@ -343,10 +366,12 @@ class ProductAttributeValue extends AbstractRepository
             case 'rangeInt':
                 $entity->set('valueFrom', $entity->get('intValue'));
                 $entity->set('valueTo', $entity->get('intValue1'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'rangeFloat':
                 $entity->set('valueFrom', $entity->get('floatValue'));
                 $entity->set('valueTo', $entity->get('floatValue1'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'array':
             case 'extensibleMultiEnum':
@@ -363,15 +388,13 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('value', $entity->get('floatValue'));
                 $entity->set('valueCurrency', $entity->get('varcharValue'));
                 break;
-            case 'unit':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueUnit', $entity->get('varcharValue'));
-                break;
             case 'int':
                 $entity->set('value', $entity->get('intValue'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'float':
                 $entity->set('value', $entity->get('floatValue'));
+                $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'date':
                 $entity->set('value', $entity->get('dateValue'));
@@ -557,14 +580,8 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('varcharValue', $attribute->get('enumDefault'));
         }
 
-        if ($attribute->get('type') === 'unit') {
-            if (!$entity->has('floatValue')) {
-                $entity->set('floatValue', $attribute->get('unitDefault'));
-            }
-
-            if (!$entity->has('varcharValue')) {
-                $entity->set('varcharValue', $attribute->get('unitDefaultUnit'));
-            }
+        if (!empty($attribute->get('defaultUnit'))) {
+            $entity->set('varcharValue', $attribute->get('defaultUnit'));
         }
     }
 
@@ -626,7 +643,7 @@ class ProductAttributeValue extends AbstractRepository
         /**
          * Float amountOfDigitsAfterComma validation
          */
-        if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
+        if (in_array($attribute->get('type'), ['float', 'currency']) && $entity->get('value') !== null
             && $entity->get('amountOfDigitsAfterComma') !== null) {
             $this->checkAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
         }
@@ -660,15 +677,16 @@ class ProductAttributeValue extends AbstractRepository
                     $where['boolValue'] = $entity->get('boolValue');
                     break;
                 case 'currency':
-                case 'unit':
                     $where['floatValue'] = $entity->get('floatValue');
                     $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'int':
                     $where['intValue'] = $entity->get('intValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'float':
                     $where['floatValue'] = $entity->get('floatValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'date':
                     $where['dateValue'] = $entity->get('dateValue');
@@ -687,7 +705,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // create note
-        if (!$entity->isNew() && $entity->isAttributeChanged('value')) {
+        if (!$entity->isNew()) {
             $this->createNote($entity);
         }
 
@@ -804,7 +822,19 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function createNote(Entity $entity): void
     {
-        if (empty($data = $this->getNoteData($entity))) {
+        if (
+            !$entity->isAttributeChanged('value')
+            && !$entity->isAttributeChanged('valueId')
+            && !$entity->isAttributeChanged('valueFrom')
+            && !$entity->isAttributeChanged('valueTo')
+            && !$entity->isAttributeChanged('valueCurrency')
+            && !$entity->isAttributeChanged('valueUnitId')
+        ) {
+            return;
+        }
+
+        $data = $this->getNoteData($entity);
+        if (empty($data)) {
             return;
         }
 
@@ -813,77 +843,73 @@ class ProductAttributeValue extends AbstractRepository
         $note->set('parentId', $entity->get('productId'));
         $note->set('parentType', 'Product');
         $note->set('data', $data);
-        $note->set('attributeId', $entity->get('id'));
+        $note->set('attributeId', $entity->get('attributeId'));
 
         $this->getEntityManager()->saveEntity($note);
     }
 
     protected function getNoteData(Entity $entity): array
     {
-        $fieldName = $this->getInjection('language')->translate('Attribute', 'custom', 'ProductAttributeValue') . ' ' . $entity->get('attributeName');
-
         $result = [
             'locale' => $entity->get('language') !== 'main' ? $entity->get('language') : '',
-            'fields' => [$fieldName]
+            'fields' => []
         ];
 
-        $result['attributes']['was'][$fieldName] = self::$beforeSaveData['value'];
-        $result['attributes']['became'][$fieldName] = in_array($entity->get('attribute')->get('type'), ['array', 'extensibleMultiEnum']) ? json_decode($entity->get('value'), true)
-            : $entity->get('value');
+        switch ($entity->get('attributeType')) {
+            case 'rangeInt':
+            case 'rangeFloat':
+                if ($entity->isAttributeChanged('valueFrom') && self::$beforeSaveData['valueFrom'] !== $entity->get('valueFrom')) {
+                    $result['fields'][] = 'valueFrom';
+                    $result['attributes']['was']['valueFrom'] = self::$beforeSaveData['valueFrom'];
+                    $result['attributes']['became']['valueFrom'] = $entity->get('valueFrom');
+                }
 
-        if ($result['attributes']['was'][$fieldName] === null && ($result['attributes']['became'][$fieldName] === null || $result['attributes']['became'][$fieldName] === '')) {
+                if ($entity->isAttributeChanged('valueTo') && self::$beforeSaveData['valueTo'] !== $entity->get('valueTo')) {
+                    $result['fields'][] = 'valueTo';
+                    $result['attributes']['was']['valueTo'] = self::$beforeSaveData['valueTo'];
+                    $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
+                }
+                break;
+            case 'array':
+            case 'extensibleMultiEnum':
+                $result['fields'][] = 'value';
+                $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                $result['attributes']['became']['value'] = json_decode($entity->get('value'), true);
+                break;
+            case 'currency':
+                if ($entity->isAttributeChanged('value') && self::$beforeSaveData['value'] !== $entity->get('value')) {
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['became']['value'] = $entity->get('value');
+                }
+                if ($entity->isAttributeChanged('valueCurrency') && self::$beforeSaveData['valueCurrency'] !== $entity->get('valueCurrency')) {
+                    $result['fields'][] = 'valueCurrency';
+                    $result['attributes']['was']['valueCurrency'] = self::$beforeSaveData['valueCurrency'];
+                    $result['attributes']['became']['valueCurrency'] = $entity->get('valueCurrency');
+                }
+                break;
+            case 'asset':
+                $result['fields'][] = 'value';
+                $result['attributes']['was']['valueId'] = self::$beforeSaveData['valueId'];
+                $result['attributes']['became']['valueId'] = $entity->get('valueId');
+                break;
+            default:
+                $result['fields'][] = 'value';
+                $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                $result['attributes']['became']['value'] = $entity->get('value');
+        }
+
+        if ($entity->isAttributeChanged('valueUnitId') && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+            $result['fields'][] = 'valueUnit';
+            $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+            $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
+        }
+
+        if (empty($result['fields'])) {
             return [];
         }
 
-        if ($entity->get('attributeType') === 'unit') {
-            $result['attributes']['was'][$fieldName . 'Unit'] = self::$beforeSaveData['varcharValue'];
-            $result['attributes']['became'][$fieldName . 'Unit'] = $entity->get('varcharValue');
-        }
-
-        if ($entity->get('attributeType') === 'currency') {
-            $result['attributes']['was'][$fieldName . 'Currency'] = self::$beforeSaveData['varcharValue'];
-            $result['attributes']['became'][$fieldName . 'Currency'] = $entity->get('varcharValue');
-        }
-
         return $result;
-    }
-
-    protected function validateFieldsByType(Entity $entity): void
-    {
-        parent::validateFieldsByType($entity);
-
-        $this->validateUnitAttribute($entity);
-    }
-
-    protected function validateUnitAttribute(Entity $entity): void
-    {
-        $attribute = $entity->get('attribute');
-        if (empty($attribute) || $attribute->get('type') !== 'unit') {
-            return;
-        }
-
-        $language = $this->getInjection('container')->get('language');
-
-        $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
-        $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
-
-        $value = $entity->get('value');
-        $unit = $entity->get('valueUnit');
-
-        $label = $attribute->get('name');
-
-        if ($value !== null && $value !== '' && empty($unit)) {
-            throw new BadRequest(sprintf($language->translate('attributeUnitValueIsRequired', 'exceptions', 'ProductAttributeValue'), $label));
-        }
-
-        $measure = empty($attribute->getDataField('measure')) ? '' : $attribute->getDataField('measure');
-
-        if (!empty($unit)) {
-            $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
-            if (!in_array($unit, $units)) {
-                throw new BadRequest(sprintf($language->translate('noSuchAttributeUnit', 'exceptions', 'ProductAttributeValue'), $label));
-            }
-        }
     }
 
     public function getProductById(string $productId): ?Entity

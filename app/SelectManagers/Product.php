@@ -685,7 +685,6 @@ class Product extends AbstractSelectManager
                 $where['value'][] = $row;
                 break;
             case 'currency':
-            case 'unit':
             case 'rangeFloat':
                 if(substr($row['attribute'], -2)=='To'){
                     $row['attribute'] = 'floatValue1';

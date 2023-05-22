@@ -40,36 +40,6 @@ class Attribute extends Hierarchy
 
     protected $entityType = "Attribute";
 
-    public function _setMeasure($value)
-    {
-        $this->setDataField('measure', $value);
-    }
-
-    public function _getMeasure()
-    {
-        return $this->getDataField('measure');
-    }
-
-    public function _setUnitDefault($value)
-    {
-        $this->setDataField('unitDefault', $value);
-    }
-
-    public function _getUnitDefault()
-    {
-        return $this->getDataField('unitDefault');
-    }
-
-    public function _setUnitDefaultUnit($value)
-    {
-        $this->setDataField('unitDefaultUnit', $value);
-    }
-
-    public function _getUnitDefaultUnit()
-    {
-        return $this->getDataField('unitDefaultUnit');
-    }
-
     public function setData(array $data): void
     {
         $this->set('data', $data);

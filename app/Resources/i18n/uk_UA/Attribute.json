@@ -17,7 +17,7 @@
     "prohibitedEmptyValue": "Заборонити порожні значення",
     "enumDefault": "За замовчуванням(Список)",
     "measure": "Міра",
-    "unitDefault": "За замовчуванням(Одиниця виміру)",
+    "defaultUnit": "Одиниця виміру за замовченням",
     "virtualProductField": "Віртуальне поле продукту",
     "defaultScope": "Область дії",
     "defaultChannel": "Канал",
@@ -31,6 +31,7 @@
     "extensibleEnum": "Список"
   },
   "links": {
+    "measure": "Міра",
     "parents": "Пов'язуючі атрибути",
     "children": "Пов'язані атрибути",
     "attributeGroup": "Група атрибутів",

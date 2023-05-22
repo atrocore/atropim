@@ -165,30 +165,6 @@ class Attribute extends AbstractSelectManager
         }
     }
 
-    /**
-     * @param array $result
-     */
-    protected function boolFilterUnitTypeDisabled(array &$result)
-    {
-        $unitAttributes = $this
-            ->getEntityManager()
-            ->getRepository('Attribute')
-            ->select(['id'])
-            ->where(
-                [
-                    'type' => 'unit'
-                ]
-            )
-            ->find()
-            ->toArray();
-
-        if (count($unitAttributes) > 0) {
-            $result['whereClause'][] = [
-                'id!=' => array_column($unitAttributes, 'id')
-            ];
-        }
-    }
-
     protected function boolFilterFromAttributesTab(array &$result): void
     {
         $data = (array)$this->getSelectCondition('fromAttributesTab');

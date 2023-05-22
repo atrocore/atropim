@@ -134,7 +134,6 @@ class Attribute extends AbstractRepository
                         AND deleted=0 %s 
                       GROUP BY %s, `language`, scope, channel_id HAVING COUNT(*) > 1";
             switch ($entity->get('type')) {
-                case 'unit':
                 case 'currency':
                     $query = sprintf($query, 'AND float_value IS NOT NULL AND varchar_value IS NOT NULL', 'float_value, varchar_value');
                     break;
@@ -197,6 +196,11 @@ class Attribute extends AbstractRepository
                 }
                 $this->getInjection('container')->get($converterName)->convert($entity);
             }
+
+            if ($entity->isAttributeChanged('measureId') && empty($entity->get('measureId'))) {
+                $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=NULL WHERE attribute_id='{$entity->get('id')}'");
+            }
+
             $result = parent::save($entity, $options);
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
@@ -242,16 +246,5 @@ class Attribute extends AbstractRepository
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
-    }
-
-    protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string
-    {
-        if ($fieldName === 'unitDefault') {
-            $measure = $entity->getDataField('measure');
-
-            return empty($measure) ? '' : $measure;
-        }
-
-        return parent::getUnitFieldMeasure($fieldName, $entity);
     }
 }
