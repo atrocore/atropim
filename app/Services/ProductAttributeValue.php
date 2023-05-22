@@ -39,6 +39,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
+use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 
 class ProductAttributeValue extends AbstractProductAttributeService
 {
@@ -523,7 +524,25 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->prepareInputValue($data);
 
         if ($this->isPseudoTransaction()) {
-            return parent::updateEntity($id, $data);
+            try {
+                return parent::updateEntity($id, $data);
+            } catch (\Throwable $e) {
+                if ($e instanceof ProductAttributeAlreadyExists) {
+                    $pdo = $this->getEntityManager()->getPDO();
+                    $sql = "DELETE FROM `product_attribute_value` WHERE `id` = " . $pdo->quote($id) . " AND deleted = 0 
+                        AND datetime_value IS NULL 
+                        AND date_value IS NULL 
+                        AND int_value IS NULL 
+                        AND float_value IS NULL 
+                        AND (text_value IS NULL OR text_value = '') 
+                        AND (varchar_value IS NULL OR varchar_value = '')";
+                    $pdo->query($sql);
+
+                    return null;
+                }
+
+                throw $e;
+            }
         }
 
         if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
