@@ -843,7 +843,7 @@ class ProductAttributeValue extends AbstractRepository
         $note->set('parentId', $entity->get('productId'));
         $note->set('parentType', 'Product');
         $note->set('data', $data);
-        $note->set('attributeId', $entity->get('id'));
+        $note->set('attributeId', $entity->get('attributeId'));
 
         $this->getEntityManager()->saveEntity($note);
     }
@@ -900,7 +900,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isAttributeChanged('valueUnitId')) {
-            $result['fields'][] = 'valueUnitId';
+            $result['fields'][] = 'valueUnit';
             $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
             $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
         }
