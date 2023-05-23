@@ -155,11 +155,18 @@ class ClassificationAttribute extends AbstractProductAttributeService
             return;
         }
 
-        if (!property_exists($data, 'isRequired') && !property_exists($data, 'scope')) {
-            $data->isRequired = $attribute->get('isRequired');
-            $data->scope = $attribute->get('defaultScope');
+        if (!property_exists($data, 'isRequired')) {
+            $data->isRequired = !empty($attribute->get('isRequired'));
+        }
+
+        if (!property_exists($data, 'scope')) {
+            $data->scope = $attribute->get('defaultScope') ?? 'Global';
             if ($data->scope === 'Channel') {
-                $data->channelId = $attribute->get('defaultChannelId');
+                if (!empty($attribute->get('defaultChannelId'))) {
+                    $data->channelId = $attribute->get('defaultChannelId');
+                } else {
+                    $data->scope = 'Global';
+                }
             }
         }
 

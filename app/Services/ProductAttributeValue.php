@@ -471,12 +471,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $aData = new \stdClass();
             $aData->attributeId = $child->get('id');
             $aData->productId = $attachment->productId;
-            if (property_exists($attachment, 'scope')) {
-                $aData->scope = $attachment->scope;
-            }
-            if (property_exists($attachment, 'channelId')) {
-                $aData->channelId = $attachment->channelId;
-            }
             if (property_exists($attachment, 'ownerUserId')) {
                 $aData->ownerUserId = $attachment->ownerUserId;
             }
@@ -1118,17 +1112,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         if (!property_exists($data, 'scope')) {
-            $data->scope = $attribute->get('defaultScope');
+            $data->scope = $attribute->get('defaultScope') ?? 'Global';
             if ($data->scope === 'Channel') {
-                $productChannels = $this
-                    ->getEntityManager()
-                    ->getRepository('ProductChannel')
-                    ->select(['channelId'])
-                    ->where(['productId' => $data->productId])
-                    ->find()
-                    ->toArray();
-
-                if (in_array($attribute->get('defaultChannelId'), array_column($productChannels, 'channelId'))) {
+                if (!empty($attribute->get('defaultChannelId'))) {
                     $data->channelId = $attribute->get('defaultChannelId');
                 } else {
                     $data->scope = 'Global';
