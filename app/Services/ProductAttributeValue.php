@@ -471,6 +471,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $aData = new \stdClass();
             $aData->attributeId = $child->get('id');
             $aData->productId = $attachment->productId;
+            if (property_exists($attachment, 'scope')) {
+                $aData->scope = $attachment->scope;
+            }
+            if (property_exists($attachment, 'channelId')) {
+                $aData->channelId = $attachment->channelId;
+            }
             if (property_exists($attachment, 'ownerUserId')) {
                 $aData->ownerUserId = $attachment->ownerUserId;
             }
