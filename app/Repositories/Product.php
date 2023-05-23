@@ -584,13 +584,7 @@ class Product extends AbstractRepository
             return;
         }
 
-        $channelsIds = array_column($product->get('productChannels')->toArray(), 'channelId');
-
         foreach ($cas as $ca) {
-            if (!empty($ca->get('channelId')) && !in_array($ca->get('channelId'), $channelsIds)) {
-                continue;
-            }
-
             $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
             $productAttributeValue->set(
                 [

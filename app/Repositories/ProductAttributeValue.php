@@ -421,7 +421,10 @@ class ProductAttributeValue extends AbstractRepository
     public function get($id = null)
     {
         $entity = parent::get($id);
-        $this->convertValue($entity);
+
+        if (!empty($entity)) {
+            $this->convertValue($entity);
+        }
 
         return $entity;
     }

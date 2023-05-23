@@ -1013,9 +1013,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getRepository()->convertValue($entity);
 
-        if ($entity->get('attributeType') === 'unit') {
-            $entity->set('attributeMeasure', $attribute->getDataField('measure'));
-            $this->prepareUnitFieldValue($entity, 'value', $attribute->get('measure'));
+        if ($entity->get('attributeType') === 'unit' && !empty($measure = $attribute->getDataField('measure'))) {
+            $entity->set('attributeMeasure', $measure);
+            $this->prepareUnitFieldValue($entity, 'value', $measure);
         }
 
         $entity->clear('boolValue');
