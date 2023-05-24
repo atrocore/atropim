@@ -32,13 +32,13 @@
         "Global",
         "Channel"
       ],
-      "default": "Global"
+      "default": "Global",
+      "view": "pim:views/fields/scope"
     },
     "channel": {
       "type": "link",
       "relationshipField": true,
-      "required": false,
-      "view": "pim:views/product-attribute-value/fields/channel"
+      "required": false
     },
     "isRequired": {
       "type": "bool",
