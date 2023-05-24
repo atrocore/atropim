@@ -79,11 +79,4 @@ class ProductChannel extends Relationship
             $this->where(['productId' => $product->get('id'), 'channelId' => $channel->get('id')])->removeCollection();
         }
     }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository('Product')->relatePfas($entity->get('product'), $entity->get('channel'));
-
-        parent::afterSave($entity, $options);
-    }
 }
