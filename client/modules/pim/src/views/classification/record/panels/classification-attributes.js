@@ -221,8 +221,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             selectObj.forEach(item => {
                 this.getModelFactory().create(this.scope, model => {
                     model.set({
-                        scope: 'Global',
-                        channelId: '',
                         classificationId: this.model.get('id'),
                         attributeId: item.id,
                         assignedUserId: this.getUser().id,
