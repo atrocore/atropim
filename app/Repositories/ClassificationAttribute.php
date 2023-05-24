@@ -151,13 +151,12 @@ class ClassificationAttribute extends Relationship
     {
         $classificationId = $this->getPDO()->quote($classificationId);
 
-        $sql = "SELECT p.id, pc.channel_id 
+        $sql = "SELECT p.id
                 FROM product p 
-                    LEFT JOIN product_channel pc on p.id = pc.product_id AND pc.deleted = 0
-                    LEFT JOIN product_classification pcl on p.id = pcl.product_id AND pcl.deleted = 0 
+                LEFT JOIN product_classification pcl on p.id = pcl.product_id AND pcl.deleted = 0 
                 WHERE pcl.classification_id=$classificationId AND p.deleted = 0";
 
-        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_GROUP | \PDO::FETCH_COLUMN);
+        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**

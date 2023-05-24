@@ -182,17 +182,11 @@ class ClassificationAttribute extends AbstractProductAttributeService
             return;
         }
 
-        $products = $this->getRepository()->getProductChannelsViaClassificationId($data->classificationId);
-
-        foreach ($products as $id => $channels) {
+        foreach ($this->getRepository()->getProductChannelsViaClassificationId($data->classificationId) as $id) {
             $inputData = clone $data;
-
-            if ($data->scope === 'Global' || in_array($data->channelId, $channels)) {
-                $inputData->productId = $id;
-                unset($inputData->classificationId);
-
-                $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
-            }
+            $inputData->productId = $id;
+            unset($inputData->classificationId);
+            $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
         }
     }
 

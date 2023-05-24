@@ -217,19 +217,12 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
         },
 
         relateAttributes(selectObj) {
-            let promises = [];
-            selectObj.forEach(item => {
-                this.getModelFactory().create(this.scope, model => {
-                    model.set({
-                        classificationId: this.model.get('id'),
-                        attributeId: item.id,
-                        assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name')
-                    });
-                    promises.push(model.save());
-                });
-            });
-            Promise.all(promises).then(() => {
+            this.ajaxPostRequest('ClassificationAttribute', {
+                classificationId: this.model.get('id'),
+                attributesIds: selectObj.map(item => item.id),
+                assignedUserId: this.getUser().id,
+                assignedUserName: this.getUser().get('name')
+            }).then(res => {
                 this.notify('Linked', 'success');
                 this.actionRefresh();
             });
