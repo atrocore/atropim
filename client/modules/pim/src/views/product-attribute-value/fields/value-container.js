@@ -72,6 +72,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     readOnly: !!this.model.get('isValueReadOnly')
                 };
 
+                if (this.getMetadata().get(['attributes', this.model.get('attributeType'), 'isValueReadOnly'])) {
+                    params.readOnly = true;
+                }
+
                 if (this.model.get('maxLength')) {
                     params.maxLength = this.model.get('maxLength');
                     params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
