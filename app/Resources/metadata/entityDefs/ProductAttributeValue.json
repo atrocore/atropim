@@ -321,7 +321,7 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": true,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueTo": {
@@ -335,7 +335,7 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": true,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueCurrency": {
