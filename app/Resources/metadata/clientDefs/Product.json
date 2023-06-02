@@ -23,6 +23,7 @@
     "withoutAssociatedProducts",
     "withoutAnyCategory",
     "withoutProductAttributes",
+    "withoutMainImage",
     "notLinkedWithProductSerie",
     "onlyCatalogProducts",
     "linkedWithCategory",

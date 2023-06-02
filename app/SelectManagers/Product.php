@@ -532,6 +532,17 @@ class Product extends AbstractSelectManager
         ];
     }
 
+    protected function boolFilterWithoutMainImage(&$result)
+    {
+        $query = "SELECT id FROM product WHERE id NOT IN ( SELECT DISTINCT product_id FROM product_asset WHERE is_main_image = 1 )";
+        $stmt = $this->getEntityManager()->getPDO()->query($query);
+        $arrayIds = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        $result['whereClause'][] = [
+            'id' => $arrayIds
+        ];
+    }
+
     /**
      * @param array $params
      *
