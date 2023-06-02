@@ -620,6 +620,8 @@ class ProductAttributeValue extends AbstractRepository
 
         $attribute = $this->getPavAttribute($entity);
 
+        $this->validateValue($attribute, $entity);
+
         if ($entity->isNew()) {
             $this->populateDefault($entity, $attribute);
         }
@@ -768,6 +770,65 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         return null;
+    }
+
+    protected function validateValue(Entity $attribute, Entity $pav): void
+    {
+        switch ($attribute->get('type')) {
+            case 'extensibleEnum':
+                $id = $pav->get('value');
+                if (!empty($id)) {
+                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->select(['id'])
+                        ->where([
+                            'id'               => $id,
+                            'extensibleEnumId' => $attribute->get('extensibleEnumId') ?? 'no-such-measure'
+                        ])
+                        ->findOne();
+                    if (empty($option)) {
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                    }
+                }
+                break;
+            case 'extensibleMultiEnum':
+                $ids = @json_decode($pav->get('value'), true);
+                if (!empty($ids)) {
+                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->select(['id'])
+                        ->where([
+                            'id'               => $ids,
+                            'extensibleEnumId' => $attribute->get('extensibleEnumId') ?? 'no-such-measure'
+                        ])
+                        ->find();
+                    $diff = array_diff($ids, array_column($options->toArray(), 'id'));
+                    foreach ($diff as $id) {
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                    }
+                }
+                break;
+            case 'rangeInt':
+            case 'rangeFloat':
+                if ($pav->get('valueTo') !== null && $pav->get('valueFrom') !== null && $pav->get('valueFrom') > $pav->get('valueTo')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('valueFrom')], $message));
+                }
+                break;
+        }
+
+        if (!empty($pav->get('valueUnitId'))) {
+            $unit = $this->getEntityManager()->getRepository('Unit')
+                ->select(['id'])
+                ->where([
+                    'id'        => $pav->get('valueUnitId'),
+                    'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
+                ])
+                ->findOne();
+
+            if (empty($unit)) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('valueUnitId'), $attribute->get('name')));
+            }
+        }
     }
 
     /**
