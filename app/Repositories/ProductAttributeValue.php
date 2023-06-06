@@ -776,7 +776,7 @@ class ProductAttributeValue extends AbstractRepository
     {
         switch ($attribute->get('type')) {
             case 'extensibleEnum':
-                $id = $pav->get('value');
+                $id = $pav->get('varcharValue');
                 if (!empty($id)) {
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
@@ -791,7 +791,7 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'extensibleMultiEnum':
-                $ids = @json_decode($pav->get('value'), true);
+                $ids = @json_decode($pav->get('textValue'), true);
                 if (!empty($ids)) {
                     $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
