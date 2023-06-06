@@ -574,12 +574,8 @@ class ProductAttributeValue extends AbstractRepository
         return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 
-    protected function populateDefault(Entity $entity, ?Entity $attribute): void
+    protected function populateDefault(Entity $entity, Entity $attribute): void
     {
-        if (empty($attribute)) {
-            return;
-        }
-
         $entity->set('attributeType', $attribute->get('type'));
 
         if (empty($entity->get('channelId'))) {
@@ -590,12 +586,16 @@ class ProductAttributeValue extends AbstractRepository
             $entity->set('language', 'main');
         }
 
-        if ($attribute->get('type') === 'extensibleEnum' && !$entity->has('varcharValue') && !empty($attribute->get('enumDefault'))) {
-            $entity->set('varcharValue', $attribute->get('enumDefault'));
-        }
+        if ($entity->isNew()) {
+            if ($attribute->get('type') === 'extensibleEnum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
+                $entity->set('value', $attribute->get('enumDefault'));
+                $entity->set('varcharValue', $attribute->get('value'));
+            }
 
-        if (!empty($attribute->get('defaultUnit'))) {
-            $entity->set('varcharValue', $attribute->get('defaultUnit'));
+            if (!empty($attribute->get('measureId')) && empty($entity->get('valueUnitId')) && !empty($attribute->get('defaultUnit'))) {
+                $entity->set('valueUnitId', $attribute->get('defaultUnit'));
+                $entity->set('varcharValue', $entity->get('valueUnitId'));
+            }
         }
     }
 
@@ -619,10 +619,8 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         $attribute = $this->getPavAttribute($entity);
-
-        $this->validateValue($attribute, $entity);
-
-        if ($entity->isNew()) {
+        if (!empty($attribute)) {
+            $this->validateValue($attribute, $entity);
             $this->populateDefault($entity, $attribute);
         }
 
@@ -827,19 +825,6 @@ class ProductAttributeValue extends AbstractRepository
 
             if (empty($unit)) {
                 throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('valueUnitId'), $attribute->get('name')));
-            }
-        }
-
-        // If there are only one unit in measure than we should select it
-        if (!empty($attribute->get('measureId')) && empty($pav->get('valueUnitId'))) {
-            $units = $this->getEntityManager()->getRepository('Unit')
-                ->select(['id'])
-                ->where(['measureId' => $attribute->get('measureId')])
-                ->order('createdAt', 'ASC')
-                ->find();
-            if (count($units) === 1) {
-                $pav->set('valueUnitId', $units[0]->get('id'));
-                $pav->set('varcharValue', $pav->get('valueUnitId'));
             }
         }
     }
