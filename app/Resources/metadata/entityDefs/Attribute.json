@@ -122,7 +122,10 @@
     },
     "enumDefault": {
       "type": "enum",
-      "view": "pim:views/fields/enum-default"
+      "view": "pim:views/fields/enum-default",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "virtualProductField": {
       "type": "bool",
@@ -146,7 +149,10 @@
     },
     "defaultUnit": {
       "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "view": "views/admin/field-manager/fields/default-unit",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "defaultScope": {
       "type": "enum",
