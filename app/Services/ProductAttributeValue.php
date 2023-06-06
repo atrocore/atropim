@@ -753,29 +753,30 @@ class ProductAttributeValue extends AbstractProductAttributeService
             case 'extensibleEnum':
                 if (property_exists($data, 'value')) {
                     $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $data->value);
+                    $data->value = '';
                     if (!empty($option)) {
-                        $entity->set('varcharValue', $option->get('id'));
                         $data->value = $option->get('id');
                     }
+                    $entity->set('varcharValue', $data->value);
                 }
                 break;
             case 'extensibleMultiEnum':
                 if (property_exists($data, 'value')) {
+                    $values = [];
                     $inputValue = $data->value;
                     if (!is_array($inputValue)) {
                         $inputValue = @json_decode($inputValue, true);
                     }
                     if (!empty($inputValue)) {
-                        $values = [];
                         foreach ($inputValue as $val) {
                             $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $val);
                             if (!empty($option)) {
                                 $values[] = $option->get('id');
                             }
                         }
-                        $entity->set('textValue', json_encode($values));
-                        $data->value = json_encode($values);
                     }
+                    $data->value = json_encode($values);
+                    $entity->set('textValue', $data->value);
                 }
                 break;
             case 'array':
@@ -855,8 +856,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 }
                 break;
         }
-
-
     }
 
     public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool
