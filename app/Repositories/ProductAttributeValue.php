@@ -829,6 +829,19 @@ class ProductAttributeValue extends AbstractRepository
                 throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('valueUnitId'), $attribute->get('name')));
             }
         }
+
+        // If there are only one unit in measure than we should select it
+        if (!empty($attribute->get('measureId')) && empty($pav->get('valueUnitId'))) {
+            $units = $this->getEntityManager()->getRepository('Unit')
+                ->select(['id'])
+                ->where(['measureId' => $attribute->get('measureId')])
+                ->order('createdAt', 'ASC')
+                ->find();
+            if (count($units) === 1) {
+                $pav->set('valueUnitId', $units[0]->get('id'));
+                $pav->set('varcharValue', $pav->get('valueUnitId'));
+            }
+        }
     }
 
     /**
