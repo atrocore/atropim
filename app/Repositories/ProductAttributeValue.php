@@ -631,7 +631,8 @@ class ProductAttributeValue extends AbstractRepository
          */
         if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
             && $entity->get('amountOfDigitsAfterComma') !== null) {
-            $this->checkAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
+            $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
+            $entity->set('value', $roundValue);
         }
 
         /**
