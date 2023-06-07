@@ -449,6 +449,17 @@ class ProductAttributeValue extends AbstractRepository
         return $collection;
     }
 
+    public function removeCollection(array $options = [])
+    {
+        $collection = parent::find();
+
+        if (count($collection) > 0) {
+            foreach ($collection as $item) {
+                $this->remove($item, $options);
+            }
+        }
+    }
+
     public function findOne(array $params = [])
     {
         $entity = parent::findOne($params);
