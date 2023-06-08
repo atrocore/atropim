@@ -72,7 +72,6 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
                     params.measureId = this.options.params.measureId
                     viewName = 'views/fields/unit-link'
                 }
-                console.log(viewName, params)
                 this.createView('field', viewName, {
                     mode: 'search',
                     model: this.model,
