@@ -66,16 +66,13 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
                     });
                 }
 
-                if (type === 'rangeInt'){
-                    type = 'int';
-                }
-
-                if (type === 'rangeFloat'){
-                    type = 'float';
-                }
-
                 let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
+                if (type === 'unit') {
+                    params.measureId = this.options.params.measureId
+                    viewName = 'views/fields/unit-link'
+                }
+                console.log(viewName, params)
                 this.createView('field', viewName, {
                     mode: 'search',
                     model: this.model,
