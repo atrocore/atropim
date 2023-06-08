@@ -60,6 +60,21 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
             }
         },
 
+
+        afterRender() {
+            setTimeout(() => {
+                this.hidePanelHeaderForNonListOption();
+            }, 2000);
+        },
+
+
+        hidePanelHeaderForNonListOption() {
+            var typeForPanelOptions = ["array", "extensibleEnum", "extensibleMultiEnum"];
+            if (!typeForPanelOptions.includes(this.model.attributes.type)) {
+                $('a[data-name="extensibleEnumOptions"]').closest('li').hide();
+            }
+        }
+
     })
 );
 
