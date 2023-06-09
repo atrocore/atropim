@@ -198,6 +198,10 @@ class Metadata extends AbstractListener
                 $defs[Util::toCamelCase('attribute_name_' . strtolower($language))] = $languageName;
             }
 
+            if (!empty($attribute['extensible_enum_id'])) {
+                $defs['extensibleEnumId'] = $attribute['extensible_enum_id'];
+            }
+
             if (!empty($attribute['measure_id'])) {
                 $defs['measureId'] = $attribute['measure_id'];
                 $metadata['entityDefs']['Product']['fields']["{$fieldName}UnitId"] = $additionalFieldDefs;
