@@ -85,8 +85,11 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.amountOfDigitsAfterComma = this.model.get('amountOfDigitsAfterComma');
                 }
 
-                if (attributeType === 'unit') {
-                    params.measure = this.model.get('attributeMeasure');
+                if (this.model.get('attributeMeasureId')) {
+                    params.measureId = this.model.get('attributeMeasureId');
+                    if (['int', 'float'].includes(attributeType)) {
+                        fieldView = "views/fields/unit-" + attributeType;
+                    }
                 }
 
                 if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
@@ -134,19 +137,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         extendValueData(view, data) {
             data = data || {};
-            const additionalData = {};
-            if (view.type === 'unit') {
-                let actualFieldDefs = this.getMetadata().get(['fields', view.type, 'actualFields']) || [];
-                let actualFieldValues = this.getFieldManager().getActualAttributes(view.type, view.name) || [];
-                actualFieldDefs.forEach((field, i) => {
-                    if (field) {
-                        additionalData[field] = data[actualFieldValues[i]];
-                    }
-                });
-                if (additionalData) {
-                    _.extend(data, {data: additionalData});
-                }
-            }
             if (['asset', 'image'].includes(view.type)) {
                 _.extend(data, {
                     [this.name]: data[`${this.name}Id`]

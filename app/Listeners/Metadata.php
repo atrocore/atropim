@@ -198,15 +198,12 @@ class Metadata extends AbstractListener
                 $defs[Util::toCamelCase('attribute_name_' . strtolower($language))] = $languageName;
             }
 
+            if (!empty($attribute['measure_id'])) {
+                $defs['measureId'] = $attribute['measure_id'];
+                $metadata['entityDefs']['Product']['fields']["{$fieldName}UnitId"] = $additionalFieldDefs;
+            }
+
             switch ($attribute['type']) {
-                case 'unit':
-                    if (!empty($attribute['data'])) {
-                        $data = @json_decode($attribute['data'], true);
-                    }
-                    if (!empty($data['field']['measure'])) {
-                        $defs['measure'] = $data['field']['measure'];
-                    }
-                    break;
                 case 'asset':
                     $defs['assetType'] = $attribute['asset_type'];
                     break;
@@ -216,9 +213,6 @@ class Metadata extends AbstractListener
             switch ($attribute['type']) {
                 case 'currency':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Currency"] = $additionalFieldDefs;
-                    break;
-                case 'unit':
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Unit"] = $additionalFieldDefs;
                     break;
                 case 'asset':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [

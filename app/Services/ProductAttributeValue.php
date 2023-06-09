@@ -185,13 +185,16 @@ class ProductAttributeValue extends AbstractProductAttributeService
             case 'currency':
                 $input->valueCurrency = $parentPav->get('valueCurrency');
                 break;
+            case 'int':
+            case 'float':
+                $input->value = $parentPav->get('value');
+                $input->valueUnitId = $parentPav->get('valueUnitId');
+                break;
             case 'rangeInt':
             case 'rangeFloat':
                 $input->valueFrom = $parentPav->get('valueFrom');
                 $input->valueTo = $parentPav->get('valueTo');
-                break;
-            case 'unit':
-                $input->valueUnit = $parentPav->get('valueUnit');
+                $input->valueUnitId = $parentPav->get('valueUnitId');
                 break;
             case 'asset':
                 $input->valueId = $parentPav->get('valueId');
@@ -353,7 +356,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
             }
 
-            if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'unit', 'currency'])
+            if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'currency'])
                 && $attribute->get('amountOfDigitsAfterComma') !== null) {
                 $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
             }
@@ -426,7 +429,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (
             !property_exists($data, 'value')
             && !property_exists($data, 'valueId')
-            && !property_exists($data, 'valueUnit')
+            && !property_exists($data, 'valueUnitId')
             && !property_exists($data, 'valueCurrency')
             && !property_exists($data, 'valueFrom')
             && !property_exists($data, 'valueTo')
@@ -565,7 +568,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $inputData = new \stdClass();
             if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
-                foreach (['value', 'valueUnit', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId'] as $key) {
+                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId'] as $key) {
                     if (property_exists($data, $key)) {
                         $inputData->$key = $data->$key;
                     }
@@ -719,21 +722,64 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function setInputValue(Entity $entity, \stdClass $data): void
     {
-        // set attribute type if it needs
-        if (empty($entity->get('attributeType')) && !empty($entity->get('attributeId'))) {
-            $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-            if (!empty($attribute)) {
-                $entity->set('attributeType', $attribute->get('type'));
+        if (empty($entity->get('attributeId'))) {
+            throw new BadRequest('Attribute ID is required.');
+        }
+
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        if (empty($attribute)) {
+            throw new BadRequest('Attribute is required.');
+        }
+
+        if (!empty($attribute->get('type'))) {
+            $entity->set('attributeType', $attribute->get('type'));
+        }
+
+        /**
+         * Convert unit to unitId for backward compatibility
+         */
+        if (property_exists($data, 'valueUnit') && !property_exists($data, 'valueUnitId')) {
+            $units = $this->getMeasureUnits($attribute->get('measureId'));
+            foreach ($units as $unit) {
+                if ($unit->get('name') === $data->valueUnit) {
+                    $data->valueUnitId = $unit->get('id');
+                    break;
+                }
             }
+            unset($data->valueUnit);
         }
 
-        if (empty($entity->get('attributeType'))) {
-            throw new BadRequest('No such attribute.');
-        }
-
-        switch ($entity->get('attributeType')) {
-            case 'array':
+        switch ($attribute->get('type')) {
+            case 'extensibleEnum':
+                if (property_exists($data, 'value')) {
+                    $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $data->value);
+                    $data->value = '';
+                    if (!empty($option)) {
+                        $data->value = $option->get('id');
+                    }
+                    $entity->set('varcharValue', $data->value);
+                }
+                break;
             case 'extensibleMultiEnum':
+                if (property_exists($data, 'value')) {
+                    $values = [];
+                    $inputValue = $data->value;
+                    if (!is_array($inputValue)) {
+                        $inputValue = @json_decode($inputValue, true);
+                    }
+                    if (!empty($inputValue)) {
+                        foreach ($inputValue as $val) {
+                            $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $val);
+                            if (!empty($option)) {
+                                $values[] = $option->get('id');
+                            }
+                        }
+                    }
+                    $data->value = json_encode($values);
+                    $entity->set('textValue', $data->value);
+                }
+                break;
+            case 'array':
             case 'text':
             case 'wysiwyg':
                 if (property_exists($data, 'value')) {
@@ -749,6 +795,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 if (property_exists($data, 'value')) {
                     $entity->set('intValue', $data->value);
                 }
+                if (property_exists($data, 'valueUnitId')) {
+                    $entity->set('varcharValue', $data->valueUnitId);
+                }
                 break;
             case 'rangeInt':
                 if (property_exists($data, 'valueFrom')) {
@@ -756,6 +805,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 }
                 if (property_exists($data, 'valueTo')) {
                     $entity->set('intValue1', $data->valueTo);
+                }
+                if (property_exists($data, 'valueUnitId')) {
+                    $entity->set('varcharValue', $data->valueUnitId);
                 }
                 break;
             case 'currency':
@@ -769,20 +821,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     $entity->set('varcharValue', $data->valueCurrency);
                 }
                 break;
-            case 'unit':
-                if (property_exists($data, 'value')) {
-                    $entity->set('floatValue', $data->value);
-                }
-                if (property_exists($data, 'data') && property_exists($data->data, 'unit')) {
-                    $entity->set('varcharValue', $data->data->unit);
-                }
-                if (property_exists($data, 'valueUnit')) {
-                    $entity->set('varcharValue', $data->valueUnit);
-                }
-                break;
             case 'float':
                 if (property_exists($data, 'value')) {
                     $entity->set('floatValue', $data->value);
+                }
+                if (property_exists($data, 'valueUnitId')) {
+                    $entity->set('varcharValue', $data->valueUnitId);
                 }
                 break;
             case 'rangeFloat':
@@ -791,6 +835,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 }
                 if (property_exists($data, 'valueTo')) {
                     $entity->set('floatValue1', $data->valueTo);
+                }
+                if (property_exists($data, 'valueUnitId')) {
+                    $entity->set('varcharValue', $data->valueUnitId);
                 }
                 break;
             case 'date':
@@ -809,8 +856,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 }
                 break;
         }
-
-
     }
 
     public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool
@@ -926,17 +971,13 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        if (in_array($entity->get('attributeType'), ['unit'])) {
-            return [];
-        }
-
         $fields = parent::getFieldsThatConflict($entity, $data);
 
         if (!empty($fields) && property_exists($data, 'isProductUpdate') && !empty($data->isProductUpdate)) {
             $fields = [$entity->get('id') => $entity->get('attributeName')];
         }
 
-        foreach (['id', 'unit', 'currency'] as $item) {
+        foreach (['id', 'unit', 'unitId', 'currency'] as $item) {
             if (isset($fields['value' . ucfirst($item)])) {
                 unset($fields['value' . ucfirst($item)]);
             }
@@ -1013,9 +1054,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getRepository()->convertValue($entity);
 
-        if ($entity->get('attributeType') === 'unit' && !empty($measure = $attribute->getDataField('measure'))) {
-            $entity->set('attributeMeasure', $measure);
-            $this->prepareUnitFieldValue($entity, 'value', $measure);
+        if ($attribute->get('measureId')) {
+            $entity->set('attributeMeasureId', $attribute->get('measureId'));
+            $this->prepareUnitFieldValue($entity, 'value', [
+                'measureId' => $attribute->get('measureId'),
+                'mainField' => 'value'
+            ]);
         }
 
         $entity->clear('boolValue');
@@ -1150,5 +1194,18 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         return $fields;
+    }
+
+    protected function findExtensibleEnumOption(string $extensibleEnumId, $value)
+    {
+        return $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+            ->where([
+                'extensibleEnumId' => $extensibleEnumId,
+                'OR'               => [
+                    ['id' => $value],
+                    ['code' => $value],
+                ]
+            ])
+            ->findOne();
     }
 }

@@ -321,7 +321,7 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": true,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueTo": {
@@ -335,10 +335,24 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": true,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueCurrency": {
+      "type": "varchar",
+      "notStorable": true,
+      "default": null,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueUnitId": {
       "type": "varchar",
       "notStorable": true,
       "default": null,
@@ -485,7 +499,7 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "attributeMeasure": {
+    "attributeMeasureId": {
       "type": "varchar",
       "notStorable": true,
       "layoutListDisabled": true,

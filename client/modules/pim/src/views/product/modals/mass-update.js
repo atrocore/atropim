@@ -123,8 +123,11 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + model.get('attributeName') + '</label><div class="field" data-name="' + name + '" /></div>';
             this.$el.find('.fields-container').append(html);
 
-            let type = model.get('attributeType') || 'base',
-                options = {
+            this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
+                let type = attr.type || 'base';
+                let viewName = this.getViewFieldType(type);
+
+                let options = {
                     name: name,
                     model: model,
                     el: this.getSelector() + ' .field[data-name="' + name + '"]',
@@ -132,27 +135,29 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                     params: {}
                 };
 
-            if (type === 'unit') {
-                this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
-                    options.params.measure = attr.measure;
-                });
-            } else if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
-                this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
+                if (attr.measureId) {
+                    options.params.measureId = attr.measureId;
+                    if (['int', 'float'].includes(type)) {
+                        viewName = "views/fields/unit-" + type;
+                    }
+                }
+
+                if (attr.extensibleEnumId) {
                     options.params.extensibleEnumId = attr.extensibleEnumId;
+                }
+
+                this.createView(name, viewName, options, view => {
+                    view.listenTo(view, 'after:render', () => {
+                        let name = data.channelName ? data.channelName : 'Global';
+                        name += ', ' + this.getLanguage().translateOption(data.language, 'language', 'ProductAttributeValue');
+
+                        view.$el.append('<div class="text-muted small">' + name + '</div>');
+                    });
+
+                    view.render();
+
+                    this.notify(false);
                 });
-            }
-
-            this.createView(name, this.getViewFieldType(type), options, view => {
-                view.listenTo(view, 'after:render', () => {
-                    let name = data.channelName ? data.channelName : 'Global';
-                    name += ', ' + this.getLanguage().translateOption(data.language, 'language', 'ProductAttributeValue');
-
-                    view.$el.append('<div class="text-muted small">' + name + '</div>');
-                });
-
-                view.render();
-
-                this.notify(false);
             });
         },
 
@@ -190,8 +195,8 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         attribute.channelName = item.channelName;
                     }
 
-                    if (view.fieldType === 'unit') {
-                        attribute['valueUnit'] = data[name + 'Unit'];
+                    if (data[name + 'UnitId']) {
+                        attribute['valueUnitId'] = data[name + 'UnitId'];
                     }
 
                     if (view.fieldType === 'currency') {

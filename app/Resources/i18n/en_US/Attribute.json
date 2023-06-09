@@ -17,7 +17,7 @@
     "prohibitedEmptyValue": "Disable empty value",
     "enumDefault": "Default(List)",
     "measure": "Measure",
-    "unitDefault": "Default(Unit)",
+    "defaultUnit": "Default Unit",
     "virtualProductField": "Virtual product field",
     "defaultScope": "Scope",
     "defaultChannel": "Channel",
@@ -32,6 +32,7 @@
     "extensibleEnum": "List"
   },
   "links": {
+    "measure": "Measure",
     "parents": "Associating Attributes",
     "children": "Associated Attributes",
     "attributeTab": "Attribute Tab",
@@ -58,7 +59,6 @@
       "int": "Integer",
       "extensibleMultiEnum": "Multi-value list",
       "text": "Text",
-      "unit": "Unit",
       "url": "Url",
       "varchar": "String",
       "wysiwyg": "HTML",

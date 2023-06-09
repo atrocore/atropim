@@ -570,15 +570,17 @@ class Product extends AbstractSelectManager
     protected function getAttribute(string $id): Attribute
     {
         if (!isset($this->attributes[$id])) {
-            if (substr($id, -2) === 'Id') {
-                $id = substr($id, 0, -2);
-            }
-            if (substr($id, -2) === 'To') {
-                $id = substr($id, 0, -2);
-            }
-            if (substr($id, -4) === 'From') {
+            if (substr($id, -6) === 'UnitId') {
+                $id = substr($id, 0, -6);
+            } else if (substr($id, -4) === 'From') {
                 $id = substr($id, 0, -4);
+            } else if (substr($id, -2) === 'Id') {
+                $id = substr($id, 0, -2);
+            } else if (substr($id, -2) === 'To') {
+                $id = substr($id, 0, -2);
             }
+
+
             $attribute = $this->getEntityManager()->getEntity('Attribute', $id);
             if (empty($attribute)) {
                 throw new NotFound();
@@ -609,12 +611,12 @@ class Product extends AbstractSelectManager
         }
 
         $where = [
-            'type'  => 'and',
+            'type' => 'and',
             'value' => [
                 [
-                    'type'      => 'equals',
+                    'type' => 'equals',
                     'attribute' => 'attributeId',
-                    'value'     => $attribute->get('id')
+                    'value' => $attribute->get('id')
                 ],
             ]
         ];
@@ -623,56 +625,56 @@ class Product extends AbstractSelectManager
             case 'extensibleMultiEnum':
                 if ($row['type'] === 'arrayIsEmpty') {
                     $where['value'][] = [
-                        'type'  => 'or',
+                        'type' => 'or',
                         'value' => [
                             [
-                                'type'      => 'isNull',
+                                'type' => 'isNull',
                                 'attribute' => 'textValue'
                             ],
                             [
-                                'type'      => 'equals',
+                                'type' => 'equals',
                                 'attribute' => 'textValue',
-                                'value'     => ''
+                                'value' => ''
                             ],
                             [
-                                'type'      => 'equals',
+                                'type' => 'equals',
                                 'attribute' => 'textValue',
-                                'value'     => '[]'
+                                'value' => '[]'
                             ]
                         ]
                     ];
                 } elseif ($row['type'] === 'arrayIsNotEmpty') {
                     $where['value'][] = [
-                        'type'  => 'or',
+                        'type' => 'or',
                         'value' => [
                             [
-                                'type'      => 'isNotNull',
+                                'type' => 'isNotNull',
                                 'attribute' => 'textValue'
                             ],
                             [
-                                'type'      => 'notEquals',
+                                'type' => 'notEquals',
                                 'attribute' => 'textValue',
-                                'value'     => ''
+                                'value' => ''
                             ],
                             [
-                                'type'      => 'notEquals',
+                                'type' => 'notEquals',
                                 'attribute' => 'textValue',
-                                'value'     => '[]'
+                                'value' => '[]'
                             ]
                         ]
                     ];
                 } else {
                     $where['value'][] = [
-                        'type'  => 'or',
+                        'type' => 'or',
                         'value' => []
                     ];
 
                     $values = (empty($row['value'])) ? [md5('no-such-value-' . time())] : $row['value'];
                     foreach ($values as $value) {
                         $where['value'][1]['value'][] = [
-                            'type'      => 'like',
+                            'type' => 'like',
                             'attribute' => 'textValue',
-                            'value'     => "%\"$value\"%"
+                            'value' => "%\"$value\"%"
                         ];
                     }
                 }
@@ -688,25 +690,26 @@ class Product extends AbstractSelectManager
                 break;
             case 'int':
             case 'rangeInt':
-                if(substr($row['attribute'], -2)=='To'){
+                if (substr($row['attribute'], -6) == 'UnitId') {
+                    $row['attribute'] = 'varchar_value';
+                } elseif (substr($row['attribute'], -2) == 'To') {
                     $row['attribute'] = 'intValue1';
-                }else{
+                } else {
                     $row['attribute'] = 'intValue';
                 }
                 $where['value'][] = $row;
                 break;
             case 'currency':
-            case 'unit':
+            case 'float':
             case 'rangeFloat':
-                if(substr($row['attribute'], -2)=='To'){
+                if (substr($row['attribute'], -6) == 'UnitId') {
+                    $row['attribute'] = 'varchar_value';
+                }
+                if (substr($row['attribute'], -2) == 'To') {
                     $row['attribute'] = 'floatValue1';
-                }else{
+                } else {
                     $row['attribute'] = 'floatValue';
                 }
-                $where['value'][] = $row;
-                break;
-            case 'float':
-                $row['attribute'] = 'floatValue';
                 $where['value'][] = $row;
                 break;
             case 'date':
@@ -721,9 +724,9 @@ class Product extends AbstractSelectManager
                 $row['attribute'] = 'varcharValue';
                 $where['value'][] = $row;
                 $where['value'][] = [
-                    'type'      => 'equals',
+                    'type' => 'equals',
                     'attribute' => 'language',
-                    'value'     => 'main',
+                    'value' => 'main',
                 ];
                 break;
             default:
@@ -734,9 +737,9 @@ class Product extends AbstractSelectManager
 
         if ($attribute->get('type') === 'extensibleMultiEnum') {
             $where['value'][] = [
-                'type'      => 'equals',
+                'type' => 'equals',
                 'attribute' => 'language',
-                'value'     => 'main',
+                'value' => 'main',
             ];
         }
 

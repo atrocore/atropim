@@ -122,7 +122,10 @@
     },
     "enumDefault": {
       "type": "enum",
-      "view": "pim:views/fields/enum-default"
+      "view": "pim:views/fields/enum-default",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "virtualProductField": {
       "type": "bool",
@@ -142,15 +145,14 @@
       "emHidden": true
     },
     "measure": {
-      "type": "enum",
-      "notStorable": true,
-      "prohibitedEmptyValue": true,
-      "view": "pim:views/attribute/fields/measure"
+      "type": "link"
     },
-    "unitDefault": {
-      "type": "unit",
-      "notStorable": true,
-      "view": "pim:views/attribute/fields/unit-default"
+    "defaultUnit": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "defaultScope": {
       "type": "enum",
@@ -290,6 +292,11 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "ExtensibleEnum"
+    },
+    "measure": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "Measure"
     },
     "productAttributeValues": {
       "type": "hasMany",

@@ -34,7 +34,7 @@ use Espo\Core\Services\Base as BaseService;
 /**
  * Class of AbstractSelectManager
  */
-abstract class AbstractSelectManager extends \Treo\Core\SelectManagers\Base
+abstract class AbstractSelectManager extends \Espo\Core\SelectManagers\Base
 {
 
     /**
