@@ -329,6 +329,24 @@ class ProductAttributeValue extends AbstractRepository
         return null;
     }
 
+    public function setRangeFloatValue(Entity $entity): void
+    {
+        $floatValue = $entity->get('floatValue');
+        $floatValue1 = $entity->get('floatValue1');
+        $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
+
+        if($amountOfDigitsAfterComma !== null){
+            $floatValue = $this->roundValueUsingAmountOfDigitsAfterComma(
+                (string)$floatValue, (int)$amountOfDigitsAfterComma
+            );
+            $floatValue1 = $this->roundValueUsingAmountOfDigitsAfterComma(
+                (string)$floatValue1, (int)$amountOfDigitsAfterComma
+            );
+        }
+        $entity->set('valueFrom', $floatValue);
+        $entity->set('valueTo', $floatValue1);
+    }
+
     public function convertValue(Entity $entity): void
     {
         if (empty($entity->get('attributeType'))) {
@@ -345,8 +363,7 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('valueTo', $entity->get('intValue1'));
                 break;
             case 'rangeFloat':
-                $entity->set('valueFrom', $entity->get('floatValue'));
-                $entity->set('valueTo', $entity->get('floatValue1'));
+                $this->setRangeFloatValue($entity);
                 break;
             case 'array':
             case 'extensibleMultiEnum':
@@ -632,6 +649,7 @@ class ProductAttributeValue extends AbstractRepository
         if (in_array($attribute->get('type'), ['float', 'unit', 'currency']) && $entity->get('value') !== null
             && $entity->get('amountOfDigitsAfterComma') !== null) {
             $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
+            $entity->set('value', $roundValue);
             $entity->set('floatValue', $roundValue);
         }
 
