@@ -52,7 +52,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         clearValue() {
             this.model.set('value', undefined);
             this.model.set('valueCurrency', undefined);
-            this.model.set('valueUnit', undefined);
+            this.model.set('valueUnitId', undefined);
             this.model.set('valueAllUnits', undefined);
             this.model.set('valueId', undefined);
             this.model.set('valueName', undefined);
