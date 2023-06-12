@@ -639,10 +639,12 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
+        $type = $attribute->get('type');
+
         /**
          * Text length validation
          */
-        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
+        if (in_array($type, ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
             $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
             $fieldValue = (string)$entity->get('value');
             $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
@@ -655,14 +657,29 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         /**
-         * Float amountOfDigitsAfterComma validation
+         * Rounding float Values using amountOfDigitsAfterComma
          */
-        if (in_array($attribute->get('type'), ['float', 'currency']) && $entity->get('value') !== null
-            && $entity->get('amountOfDigitsAfterComma') !== null) {
-            $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
-            
-            $entity->set('value', $roundValue);
-            $entity->set('floatValue', $roundValue);
+        $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
+        if ($amountOfDigitsAfterComma !== null) {
+            switch ($type) {
+                case 'float':
+                case 'currency':
+                    if ($entity->get('value') !== null) {
+                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('value', $entity->get('floatValue'));
+                    }
+                    break;
+                case 'rangeFloat':
+                    if ($entity->get('floatValue') !== null) {
+                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('valueFrom', $entity->get('floatValue'));
+                    }
+                    if ($entity->get('floatValue1') !== null) {
+                        $entity->set('floatValue1', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue1'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('valueTo', $entity->get('floatValue1'));
+                    }
+                    break;
+            }
         }
 
         /**
