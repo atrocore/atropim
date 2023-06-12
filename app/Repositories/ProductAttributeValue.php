@@ -662,10 +662,12 @@ class ProductAttributeValue extends AbstractRepository
 
                     if ($floatValue !== null) {
                         $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$floatValue, (int)$amountOfDigitsAfterComma));
+                        $entity->set('valueFrom', $entity->get('floatValue'));
                     }
 
                     if ($floatValue1 !== null) {
                         $entity->set('floatValue1', $this->roundValueUsingAmountOfDigitsAfterComma((string)$floatValue1, (int)$amountOfDigitsAfterComma));
+                        $entity->set('valueTo', $entity->get('floatValue1'));
                     }
                     break;
             }
