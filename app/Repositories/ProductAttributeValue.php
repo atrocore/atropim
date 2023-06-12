@@ -664,19 +664,24 @@ class ProductAttributeValue extends AbstractRepository
             switch ($type) {
                 case 'float':
                 case 'currency':
-                    if ($entity->get('value') !== null) {
-                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$amountOfDigitsAfterComma));
-                        $entity->set('value', $entity->get('floatValue'));
+                    $value = $entity->get('value');
+
+                    if ($value !== null) {
+                        $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma((string)$value, (int)$amountOfDigitsAfterComma);
+                        $entity->set('floatValue', $roundValue);
+                        $entity->set('value', $roundValue);
                     }
                     break;
                 case 'rangeFloat':
-                    if ($entity->get('floatValue') !== null) {
-                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
-                        $entity->set('valueFrom', $entity->get('floatValue'));
+                    $floatValue = $entity->get('floatValue');
+                    $floatValue1 = $entity->get('floatValue1');
+
+                    if ($floatValue !== null) {
+                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$floatValue, (int)$amountOfDigitsAfterComma));
                     }
-                    if ($entity->get('floatValue1') !== null) {
-                        $entity->set('floatValue1', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue1'), (int)$amountOfDigitsAfterComma));
-                        $entity->set('valueTo', $entity->get('floatValue1'));
+
+                    if ($floatValue1 !== null) {
+                        $entity->set('floatValue1', $this->roundValueUsingAmountOfDigitsAfterComma((string)$floatValue1, (int)$amountOfDigitsAfterComma));
                     }
                     break;
             }
