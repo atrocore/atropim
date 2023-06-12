@@ -648,21 +648,20 @@ class ProductAttributeValue extends AbstractRepository
             if ($type === 'rangeFloat') {
                 $floatValue = $entity->get('floatValue');
                 $floatValue1 = $entity->get('floatValue1');
-
                 if ($floatValue !== null) {
                     $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$floatValue, (int)$amountOfDigitsAfterComma));
+                    $entity->set('valueFrom', $entity->get('floatValue'));
                 }
-
                 if ($floatValue1 !== null) {
                     $entity->set('floatValue1', $this->roundValueUsingAmountOfDigitsAfterComma((string)$floatValue1, (int)$amountOfDigitsAfterComma));
+                    $entity->set('valueTo', $entity->get('floatValue1'));
                 }
             } else {
                 $value = $entity->get('value');
-
                 if ($value !== null) {
                     $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma((string)$value, (int)$amountOfDigitsAfterComma);
-                    $entity->set('value', $roundValue);
                     $entity->set('floatValue', $roundValue);
+                    $entity->set('value', $entity->get('floatValue'));
                 }
             }
         }
