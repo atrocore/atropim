@@ -26,8 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/record/panels/associated-main-products', 'views/record/panels/for-relationship-type',
-    Dep => Dep.extend({
+Espo.define('pim:views/product/record/panels/associated-main-products', ['views/record/panels/for-relationship-type', 'views/record/panels/bottom', 'search-manager'],
+    (Dep, BottomPanel, SearchManager) => Dep.extend({
+        groups: [],
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -46,6 +47,25 @@ Espo.define('pim:views/product/record/panels/associated-main-products', 'views/r
                     }
                 });
             }
-        }
+            this.fetchAssociations()
+        },
+        fetchAssociations(callback) {
+            this.ajaxGetRequest('AssociatedProduct', {
+                select: 'associationId,associationName',
+                tabId: this.defs.tabId,
+                where: [
+                    {attribute: 'mainProductId', type: 'equals', value: this.model.get('id')}
+                ],
+            }).then(data => {
+                this.groups = data.list.filter((e, idx, array) => {
+                    return array.findIndex(el => el.associationId === e.associationId) === idx;
+                }).map(e => ({
+                    associationId: e.associationId,
+                    associationName: e.associationName
+                }));
+                console.log('groups', this.groups)
+                callback();
+            });
+        },
     })
 );
