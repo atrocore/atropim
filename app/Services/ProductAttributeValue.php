@@ -179,6 +179,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->getRepository()->convertValue($parentPav);
 
         $input = new \stdClass();
+        $input->isVariantSpecificAttribute = $parentPav->get('isVariantSpecificAttribute');
         $input->value = $parentPav->get('value');
 
         switch ($parentPav->get('attributeType')) {
@@ -477,7 +478,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $inputData = new \stdClass();
             if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
-                foreach (['value', 'valueUnit', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId'] as $key) {
+                foreach (['value', 'valueUnit', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'isVariantSpecificAttribute'] as $key) {
                     if (property_exists($data, $key)) {
                         $inputData->$key = $data->$key;
                     }
