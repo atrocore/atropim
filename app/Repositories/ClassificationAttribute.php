@@ -33,11 +33,12 @@ namespace Pim\Repositories;
 
 use Espo\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
 
 class ClassificationAttribute extends Relationship
 {
-    public function getInheritedPavsIds(string $id): array
+    public function getInheritedPavs(string $id): EntityCollection
     {
         $classificationAttribute = $this->get($id);
         if (empty($classificationAttribute)) {
@@ -65,14 +66,11 @@ class ClassificationAttribute extends Relationship
             $where['channelId'] = $classificationAttribute->get('channelId');
         }
 
-        $result = $this
+        return $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
-            ->select(['id'])
             ->where($where)
             ->find();
-
-        return array_column($result->toArray(), 'id');
     }
 
     public function beforeSave(Entity $entity, array $options = [])
