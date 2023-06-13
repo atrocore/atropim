@@ -55,7 +55,7 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                 ]);
             }
 
-            if (this.options.acl.delete && (!this.model.get('isVariantSpecificAttribute') || !this.model.get('hasParent'))) {
+            if (this.options.acl.delete) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',

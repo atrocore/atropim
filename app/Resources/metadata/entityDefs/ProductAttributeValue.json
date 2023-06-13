@@ -78,20 +78,7 @@
     "isVariantSpecificAttribute": {
       "type": "bool",
       "default": false,
-      "tooltip": true,
-      "view": "pim:views/product-attribute-value/fields/is-variant-specific-attribute"
-    },
-    "hasParent": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+      "tooltip": true
     },
     "icons": {
       "type": "varchar",

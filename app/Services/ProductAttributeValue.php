@@ -207,13 +207,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));
 
-        $parentVariantPavs = [];
-        if (count($collection) > 0) {
-            $productIds = array_unique(array_column($collection->toArray(), 'productId'));
-
-            $parentVariantPavs = $this->getParentsVariantAttributes($productIds);
-        }
-
         /**
          * Sort attribute values
          */
@@ -234,9 +227,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
 
             $pavs[$k] = $row;
-
-            $this->setHasParent($entity, $parentVariantPavs);
-            $entity->setHasParent = true;
         }
 
         array_multisort(
@@ -260,72 +250,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        if (empty($entity->setHasParent)) {
-            $variantPavs = $this->getParentsVariantAttributes([$entity->get('productId')]);
-            $this->setHasParent($entity, $variantPavs);
-        }
-
         parent::prepareEntityForOutput($entity);
-    }
-
-    /**
-     * @param array $productIds
-     *
-     * @return array
-     */
-    protected function getParentsVariantAttributes(array $productIds): array
-    {
-        $result = [];
-
-        if (!empty($productIds)) {
-            $productHierarchyMap = $this->getEntityManager()->getRepository('Product')->getProductsHierarchyMap($productIds);
-
-            if (!empty($productHierarchyMap)) {
-                $parentsVariantPavs = $this
-                    ->getRepository()
-                    ->select(['productId', 'attributeId', 'channelId'])
-                    ->where(['isVariantSpecificAttribute' => true, 'productId' => array_unique(array_column($productHierarchyMap, 'parentId'))])
-                    ->find()
-                    ->toArray();
-
-
-                foreach ($parentsVariantPavs as $pav) {
-                    foreach ($productHierarchyMap as $item) {
-                        if ($pav['productId'] == $item['parentId']) {
-                            if (!isset($result[$item['childId']])) {
-                                $result[$item['childId']] = [];
-                            }
-
-                            $result[$item['childId']][] = $pav;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @param array  $parentVariantPavs
-     *
-     * @return void
-     */
-    protected function setHasParent(Entity $entity, array $parentProductVariants): void
-    {
-        $entity->set('hasParent', false);
-
-        $productId = $entity->get('productId');
-        if (isset($parentProductVariants[$productId])) {
-            foreach ($parentProductVariants[$productId] as $variantPav) {
-                if ($variantPav['attributeId'] == $entity->get('attributeId')
-                    && $variantPav['channelId'] == $entity->get('channelId')) {
-                    $entity->set('hasParent', true);
-                }
-            }
-        }
     }
 
     /**
@@ -436,19 +361,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error('Inheriting of ProductAttributeValue failed: ' . $e->getMessage());
             }
-        }
-
-        if (property_exists($data, 'isVariantSpecificAttribute') && $data->isVariantSpecificAttribute == true) {
-            $this->getServiceFactory()->create('Product')->proceedVariantsAttributes($entity->get('productId'));
-        }
-    }
-
-    protected function afterUpdateEntity(Entity $entity, $data)
-    {
-        parent::afterUpdateEntity($entity, $data);
-
-        if (property_exists($data, 'isVariantSpecificAttribute') && $data->isVariantSpecificAttribute == true) {
-            $this->getServiceFactory()->create('Product')->proceedVariantsAttributes($entity->get('productId'));
         }
     }
 
@@ -570,9 +482,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                         $inputData->$key = $data->$key;
                     }
                 }
-            }
-            if (property_exists($data, 'isVariantSpecificAttribute')) {
-                $inputData->isVariantSpecificAttribute = $data->isVariantSpecificAttribute;
             }
 
             if (!empty((array)$inputData)) {
