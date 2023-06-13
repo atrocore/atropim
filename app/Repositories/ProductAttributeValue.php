@@ -139,12 +139,13 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         $query = "SELECT *
-                  FROM `product_attribute_value`
+                  FROM product_attribute_value
                   WHERE deleted=0
                     AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
                     AND attribute_id='{$pav->get('attributeId')}'
-                    AND `language`='{$pav->get('language')}'
-                    AND scope='{$pav->get('scope')}'";
+                    AND product_attribute_value.language='{$pav->get('language')}'
+                    AND scope='{$pav->get('scope')}'
+                    AND is_variant_specific_attribute='{$pav->get('isVariantSpecificAttribute')}'";
 
         if ($pav->get('scope') === 'Channel') {
             $query .= " AND channel_id='{$pav->get('channelId')}'";
@@ -193,10 +194,11 @@ class ProductAttributeValue extends AbstractRepository
     public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
     {
         $where = [
-            'productId'   => $childProduct->get('id'),
-            'attributeId' => $parentPav->get('attributeId'),
-            'language'    => $parentPav->get('language'),
-            'scope'       => $parentPav->get('scope'),
+            'productId'                  => $childProduct->get('id'),
+            'attributeId'                => $parentPav->get('attributeId'),
+            'language'                   => $parentPav->get('language'),
+            'scope'                      => $parentPav->get('scope'),
+            'isVariantSpecificAttribute' => $parentPav->get('isVariantSpecificAttribute'),
         ];
 
         if ($parentPav->get('scope') === 'Channel') {
@@ -223,11 +225,10 @@ class ProductAttributeValue extends AbstractRepository
                 $pav->get('attributeId') === $entity->get('attributeId')
                 && $pav->get('scope') === $entity->get('scope')
                 && $pav->get('language') === $entity->get('language')
+                && $pav->get('isVariantSpecificAttribute') === $entity->get('isVariantSpecificAttribute')
+                && $this->arePavsValuesEqual($pav, $entity)
             ) {
-                if ($this->arePavsValuesEqual($pav, $entity)) {
-                    return true;
-                }
-
+                return true;
             }
         }
 

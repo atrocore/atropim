@@ -42,6 +42,10 @@ Espo.define('pim:views/product-attribute-value/fields/icons', 'views/fields/varc
 
             html += this.inheritedIcon();
 
+            if (this.model.get('isVariantSpecificAttribute')) {
+                html += `<a href="javascript:" class="action unlock-link" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"><span class="fas fa-star fa-sm"></span></a>`;
+            }
+
             return html;
         },
 
