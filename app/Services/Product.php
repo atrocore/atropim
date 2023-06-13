@@ -592,52 +592,7 @@ class Product extends Hierarchy
             }
         }
 
-        if (in_array($link, ['parents', 'children'])) {
-            $parentId = $link == 'children' ? $id : $foreignId;
-
-            $this->proceedVariantsAttributes($parentId);
-        }
-
         return $result;
-    }
-
-    /**
-     * @param string $parentId
-     * @param string $childId
-     *
-     * @return void
-     *
-     * @throws BadRequest
-     * @throws \Throwable
-     */
-    public function proceedVariantsAttributes(string $parentId): void
-    {
-        $variantPavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->where([
-                'productId'                  => $parentId,
-                'isVariantSpecificAttribute' => true
-            ])
-            ->find();
-
-        if (count($variantPavs) > 0) {
-            foreach ($variantPavs as $pav) {
-                $attachment = new \stdClass();
-                $attachment->attributeId = $pav->get('attributeId');
-                $attachment->productId = $pav->get('productId');
-                $attachment->scope = $pav->get('scope');
-                $attachment->channelId = $pav->get('channelId');
-                $attachment->channelName = $pav->get('channelName');
-                $attachment->language = $pav->get('language');
-                $attachment->isVariantSpecificAttribute = $pav->get('isVariantSpecificAttribute');
-
-                $clonedAttachment = clone $attachment;
-
-                $this->createPseudoTransactionCreateJobs($attachment);
-                $this->createPseudoTransactionUpdateJobs($clonedAttachment);
-            }
-        }
     }
 
     public function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
@@ -917,14 +872,6 @@ class Product extends Hierarchy
 
         $this->saveMainImage($entity, $data);
         $this->createProductAssets($entity, $data);
-
-        if (property_exists($data, 'parentsIds') || property_exists($data, 'childrenIds')) {
-            $parentId = property_exists($data, 'parentsIds') ? $data->parentsIds[0] : $entity->id;
-
-            if (!empty($parentId)) {
-                $this->proceedVariantsAttributes($parentId);
-            }
-        }
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
@@ -933,14 +880,6 @@ class Product extends Hierarchy
 
         $this->saveMainImage($entity, $data);
         $this->createProductAssets($entity, $data);
-
-        if (property_exists($data, 'parentsIds') || property_exists($data, 'childrenIds')) {
-            $parentId = property_exists($data, 'parentsIds') ? $data->parentsIds[0] : $entity->id;
-
-            if (!empty($parentId)) {
-                $this->proceedVariantsAttributes($parentId);
-            }
-        }
     }
 
     protected function saveMainImage(Entity $entity, $data): void
