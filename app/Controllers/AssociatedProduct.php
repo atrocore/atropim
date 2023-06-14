@@ -29,9 +29,25 @@
 
 namespace Pim\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+
 /**
  * AssociatedProduct controller
  */
 class AssociatedProduct extends \Espo\Core\Templates\Controllers\Relationship
 {
+    public function actionGroupsAssociations($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getGroupsAssociations((string)$request->get('productId'));
+    }
+
 }

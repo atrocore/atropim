@@ -94,4 +94,28 @@ class AssociatedProduct extends Relationship
 
         $this->addDependency('language');
     }
+
+    public function getAssociationsGroupsData(string $productId, string $language): array
+    {
+        // prepare suffix
+        $languageSuffix = '';
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            if (in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+                $languageSuffix = '_' . strtolower($language);
+            }
+        }
+
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb->select('a.id, a.name' . $languageSuffix . ' as association_name')
+            ->from('associated_product', 'ap')
+            ->leftJoin('ap', 'association', 'a', 'ap.association_id=a.id AND a.deleted=0')
+            ->where('ap.deleted=0')
+            ->andWhere('ap.main_product_id=:productId')->setParameter('productId', $productId)
+            ->groupBy('a.id, association_name');
+
+        $groups = $qb->fetchAllAssociative();
+
+        return $groups;
+    }
+
 }

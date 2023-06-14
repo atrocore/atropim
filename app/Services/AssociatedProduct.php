@@ -33,13 +33,22 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Relationship;
+use Espo\Core\Utils\Language;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
 class AssociatedProduct extends Relationship
 {
     protected $mandatorySelectAttributeList = ['backwardAssociatedProductId'];
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
+    }
 
     public function createEntity($attachment)
     {
@@ -252,5 +261,32 @@ class AssociatedProduct extends Relationship
         if (property_exists($data, 'backwardAssociation') && !empty($data->backwardAssociation)) {
             $data->backwardAssociationId = $data->backwardAssociation;
         }
+    }
+
+    public function getGroupsAssociations(string $productId): array
+    {
+        if (empty($productId)) {
+            throw new NotFound();
+        }
+
+            $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
+
+        $data = $this->getRepository()->getAssociationsGroupsData($productId, $language);
+
+        /**
+         * Prepare attributes groups
+         */
+        $groups = [];
+        foreach ($data as $record) {
+            if (!empty($record)) {
+                $groups[] = [
+                    'id'    => $record['id'],
+                    'key'   => $record['id'],
+                    'label' => $record['association_name'],
+                ];
+            }
+        }
+
+        return $groups;
     }
 }

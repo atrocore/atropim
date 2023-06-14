@@ -18,5 +18,8 @@
   },
   "labels": {
     "Create AssociatedProduct": "Assoziiertes Produkt erstellen"
+  },
+  "messages": {
+    "removeRelatedProducts": "Sind Sie sicher, dass Sie alle Produkte für die ausgewählte Zuordnung aus dem aktuellen Produkt entfernen möchten? Alle zugehörigen Produkte bleiben erhalten."
   }
 }

@@ -26,11 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/record/panels/associated-main-products', ['views/record/panels/for-relationship-type', 'views/record/panels/bottom', 'search-manager'],
-    (Dep, BottomPanel, SearchManager) => Dep.extend({
+Espo.define('pim:views/product/record/panels/associated-main-products', ['views/record/panels/relationship', 'views/record/panels/bottom'],
+    (Dep, BottomPanel) => Dep.extend({
         groups: [],
+        groupScope: 'Associate',
+        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
+        template: 'pim:product/record/panels/associated-main-products',
+        data() {
+            return _.extend({
+                groups: this.groups,
+                groupScope: this.groupScope
+            }, Dep.prototype.data.call(this));
+        },
         setup() {
-            Dep.prototype.setup.call(this);
+            // Dep.prototype.setup.call(this);
+            let bottomPanel = new BottomPanel();
+            bottomPanel.setup.call(this);
+
+            this.link = this.link || this.defs.link || this.panelName;
+
+            if (!this.scope && !(this.link in this.model.defs.links)) {
+                throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
+            }
+            this.title = this.title || this.translate(this.link, 'links', this.model.name);
+            this.scope = this.scope || this.model.defs.links[this.link].entity;
+
+            this.setupActions();
+
+            var layoutName = 'listSmall';
+            this.setupListLayout();
+
+            if (this.listLayoutName) {
+                layoutName = this.listLayoutName;
+            }
+
+            var listLayout = null;
+            var layout = this.defs.layout || null;
+            if (layout) {
+                if (typeof layout == 'string') {
+                    layoutName = layout;
+                } else {
+                    layoutName = 'listRelationshipCustom';
+                    listLayout = layout;
+                }
+            }
+
+            this.layoutName = layoutName;
+            this.listLayout = listLayout;
 
             let create = this.buttonList.find(item => item.action === (this.defs.createAction || 'createRelated'));
 
@@ -47,25 +89,185 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
                     }
                 });
             }
-            this.fetchAssociations()
+            this.actionList.push({
+                label: 'deleteAll',
+                action: 'deleteAllRelationshipEntities',
+                data: {
+                    "relationshipScope": this.scope
+                },
+                acl: 'delete',
+                aclScope: this.scope
+            });
+            this.wait(true);
+            this.getCollectionFactory().create(this.scope, collection => {
+                this.collection = collection;
+
+                this.setFilter(this.filter);
+
+                this.listenTo(this.model, 'updateAssociations change:classificationId update-all after:relate after:unrelate', link => {
+                    if (!link || link === 'associatedMainProducts') {
+                        this.getCollectionFactory().create(this.scope, collection => {
+                            this.collection = collection;
+                            this.actionRefresh();
+                        });
+                    }
+                });
+
+                // this.listenTo(this.model, 'overview-filters-changed', () => {
+                //     this.applyOverviewFilters();
+                // });
+
+                this.fetchCollectionGroups(() => {
+                    this.wait(false);
+                });
+            });
         },
-        fetchAssociations(callback) {
-            this.ajaxGetRequest('AssociatedProduct', {
-                select: 'associationId,associationName',
-                tabId: this.defs.tabId,
-                where: [
-                    {attribute: 'mainProductId', type: 'equals', value: this.model.get('id')}
-                ],
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.buildGroups();
+        },
+        buildGroups() {
+            if (!this.groups || this.groups.length < 1) {
+                return;
+            }
+
+            let count = 0;
+            this.groups.forEach(group => {
+                this.getCollectionFactory().create(this.scope, groupCollection => {
+                    groupCollection.url = 'AssociatedProduct';
+                    groupCollection.data.select = 'association_id';
+                    groupCollection.data.tabId = this.defs.tabId;
+                    groupCollection.where = [
+                        {
+                            type: 'equals',
+                            attribute: 'mainProductId',
+                            value: this.model.id
+                        },
+                        {
+                            type: 'equals',
+                            attribute: 'associationId',
+                            value: group.key
+                        }
+                    ];
+                    groupCollection.maxSize = 9999;
+                    groupCollection.fetch().success(() => {
+                        groupCollection.forEach(item => {
+                            if (this.collection.get(item.get('id'))) {
+                                this.collection.remove(item.get('id'));
+                            }
+                            this.collection.add(item);
+                        });
+
+                        let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
+
+                        let options = {
+                            collection: groupCollection,
+                            layoutName: this.layoutName,
+                            listLayout: this.listLayout,
+                            checkboxes: false,
+                            rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                            buttonsDisabled: true,
+                            el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
+                            showMore: false,
+                            groupId: group.id,
+                            groupName: group.label
+                        };
+
+                        this.createView(group.key, viewName, options, view => {
+                            // view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
+                            view.listenTo(view, 'remove-association', (data) => this.unlinkAssociation(data));
+
+                            view.render(() => {
+                                count++;
+                                if (count === this.groups.length) {
+                                    this.trigger('groups-rendered');
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+        },
+        fetchCollectionGroups(callback) {
+            this.ajaxGetRequest('AssociatedProduct/action/GroupsAssociations', {
+                productId: this.model.get('id')
             }).then(data => {
-                this.groups = data.list.filter((e, idx, array) => {
-                    return array.findIndex(el => el.associationId === e.associationId) === idx;
-                }).map(e => ({
-                    associationId: e.associationId,
-                    associationName: e.associationName
-                }));
-                console.log('groups', this.groups)
+                this.groups = data;
                 callback();
             });
+        },
+        actionRefresh() {
+            this.fetchCollectionGroups(() => {
+                this.reRender();
+            });
+        },
+        deleteEntities(groupId) {
+            const params = {
+                select: 'id',
+                maxSize: 9999,
+                offset: 0
+            }
+            if (groupId) {
+                params.where = [
+                    {
+                        type: 'equals',
+                        attribute: 'associationId',
+                        value: groupId
+                    }
+                ]
+            }
+            this.ajaxGetRequest(`${this.model.name}/${this.model.id}/${this.panelName}?${$.param(params)}`).then(response => {
+                if (response.total > 0) {
+                    let promises = [];
+                    response.list.forEach(item => {
+                        promises.push(new Promise(resolve => {
+                            $.ajax({
+                                url: `${this.scope}/${item.id}`,
+                                type: 'DELETE',
+                            }).done(response => {
+                                resolve();
+                            });
+                        }));
+                    });
+                    Promise.all(promises).then(() => {
+                        this.notify(false);
+                        this.notify('Removed', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate');
+                    });
+                } else {
+                    this.notify(false);
+                    this.notify('Removed', 'success');
+                    this.collection.fetch();
+                }
+            });
+        },
+        actionDeleteAllRelationshipEntities(data) {
+            this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {
+                this.notify('Please wait...');
+                this.deleteEntities()
+            });
+        },
+
+        unlinkAssociation(data) {
+            let id = data.id;
+            if (!id) {
+                return;
+            }
+
+            let group = this.groups.find(group => group.id === id);
+            if (!group) {
+                return;
+            }
+
+            this.confirm({
+                message: this.translate('removeRelatedProducts', 'messages', 'AssociatedProduct'),
+                confirmText: this.translate('Remove')
+            }, function () {
+                this.notify('removing');
+                this.deleteEntities(group.id)
+            }, this);
         },
     })
 );
