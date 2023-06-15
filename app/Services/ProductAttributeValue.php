@@ -247,6 +247,13 @@ class ProductAttributeValue extends AbstractProductAttributeService
         parent::prepareCollectionForOutput($collection);
     }
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        $this->prepareEntity($entity);
+
+        parent::prepareEntityForOutput($entity);
+    }
+
     /**
      * @inheritDoc
      */
