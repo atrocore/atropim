@@ -42,9 +42,9 @@ class AttributeTab extends Base
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        $this->clearCache();
-
         parent::afterSave($entity, $options);
+
+        $this->clearCache();
     }
 
     /**
@@ -52,13 +52,13 @@ class AttributeTab extends Base
      */
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this->clearCache();
-
         $this
             ->getEntityManager()
             ->nativeQuery("UPDATE attribute SET attribute_tab_id=NULL WHERE attribute_tab_id='{$entity->get('id')}'");
 
         parent::afterRemove($entity, $options);
+
+        $this->clearCache();
     }
 
     /**
@@ -71,11 +71,8 @@ class AttributeTab extends Base
         $this->addDependency('dataManager');
     }
 
-    /**
-     * Clearing cache
-     */
     protected function clearCache(): void
     {
-        $this->getInjection('dataManager')->setCacheData('attribute_tabs', null);
+        $this->getInjection('dataManager')->clearCache();
     }
 }
