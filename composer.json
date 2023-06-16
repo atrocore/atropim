@@ -8,7 +8,8 @@
   },
   "conflict": {
     "atrocore/product-variants": "*",
-    "atrocore/pdf-generator": "<1.4.23"
+    "atrocore/pdf-generator": "<1.4.23",
+    "atrocore/atrodam": "<1.5.12"
   },
   "autoload": {
     "psr-4": {
