@@ -3,10 +3,12 @@
     "iconClass": "fas fa-exchange-alt",
     "boolFilterList": [
         "onlyMy",
-        "notUsedAssociations"
+        "notUsedAssociations",
+        "usedAssociations"
     ],
     "hiddenBoolFilterList": [
-        "notUsedAssociations"
+        "notUsedAssociations",
+        "usedAssociations"
     ],
     "disabledMassActions": [
         "merge"

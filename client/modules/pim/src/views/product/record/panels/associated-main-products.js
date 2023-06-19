@@ -170,7 +170,6 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
                         };
 
                         this.createView(group.key, viewName, options, view => {
-                            // view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
                             view.listenTo(view, 'remove-association', (data) => this.unlinkAssociation(data));
 
                             view.render(() => {
@@ -185,10 +184,21 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
             });
         },
         fetchCollectionGroups(callback) {
-            this.ajaxGetRequest('AssociatedProduct/action/GroupsAssociations', {
-                productId: this.model.get('id')
-            }).then(data => {
-                this.groups = data;
+            const data = {
+                where: [
+                    {
+                        type: 'bool',
+                        value: ['usedAssociations'],
+                        data: {
+                            usedAssociations: {
+                                mainProductId: this.model.id
+                            }
+                        }
+                    }
+                ]
+            }
+            this.ajaxGetRequest('Association', data).then(data => {
+                this.groups = data.list.map(row => ({id: row.id, key: row.id, label: row.name}));
                 callback();
             });
         },
@@ -200,7 +210,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
         deleteEntities(groupId) {
             const data = {productId: this.model.id}
             if (groupId) data.associationId = groupId
-            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct`,data)
+            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct`, data)
                 .done(response => {
                     this.notify(false);
                     this.notify('Removed', 'success');

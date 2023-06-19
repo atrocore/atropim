@@ -263,33 +263,6 @@ class AssociatedProduct extends Relationship
         }
     }
 
-    public function getGroupsAssociations(string $productId): array
-    {
-        if (empty($productId)) {
-            throw new NotFound();
-        }
-
-        $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
-
-        $data = $this->getRepository()->getAssociationsGroupsData($productId, $language);
-
-        /**
-         * Prepare attributes groups
-         */
-        $groups = [];
-        foreach ($data as $record) {
-            if (!empty($record)) {
-                $groups[] = [
-                    'id'    => $record['id'],
-                    'key'   => $record['id'],
-                    'label' => $record['association_name'],
-                ];
-            }
-        }
-
-        return $groups;
-    }
-
     public function removeAssociations($productId, $associationId)
     {
         if (empty($productId)) {
