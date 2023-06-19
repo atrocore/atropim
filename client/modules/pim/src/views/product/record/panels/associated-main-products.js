@@ -39,7 +39,6 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
             }, Dep.prototype.data.call(this));
         },
         setup() {
-            // Dep.prototype.setup.call(this);
             let bottomPanel = new BottomPanel();
             bottomPanel.setup.call(this);
 
@@ -112,10 +111,6 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
                         });
                     }
                 });
-
-                // this.listenTo(this.model, 'overview-filters-changed', () => {
-                //     this.applyOverviewFilters();
-                // });
 
                 this.fetchCollectionGroups(() => {
                     this.wait(false);
@@ -203,45 +198,15 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
             });
         },
         deleteEntities(groupId) {
-            const params = {
-                select: 'id',
-                maxSize: 9999,
-                offset: 0
-            }
-            if (groupId) {
-                params.where = [
-                    {
-                        type: 'equals',
-                        attribute: 'associationId',
-                        value: groupId
-                    }
-                ]
-            }
-            this.ajaxGetRequest(`${this.model.name}/${this.model.id}/${this.panelName}?${$.param(params)}`).then(response => {
-                if (response.total > 0) {
-                    let promises = [];
-                    response.list.forEach(item => {
-                        promises.push(new Promise(resolve => {
-                            $.ajax({
-                                url: `${this.scope}/${item.id}`,
-                                type: 'DELETE',
-                            }).done(response => {
-                                resolve();
-                            });
-                        }));
-                    });
-                    Promise.all(promises).then(() => {
-                        this.notify(false);
-                        this.notify('Removed', 'success');
-                        this.collection.fetch();
-                        this.model.trigger('after:unrelate');
-                    });
-                } else {
+            const data = {productId: this.model.id}
+            if (groupId) data.associationId = groupId
+            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct/${item.id}`,)
+                .done(response => {
                     this.notify(false);
                     this.notify('Removed', 'success');
                     this.collection.fetch();
-                }
-            });
+                    this.model.trigger('after:unrelate');
+                });
         },
         actionDeleteAllRelationshipEntities(data) {
             this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {

@@ -269,7 +269,7 @@ class AssociatedProduct extends Relationship
             throw new NotFound();
         }
 
-            $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
+        $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
 
         $data = $this->getRepository()->getAssociationsGroupsData($productId, $language);
 
@@ -288,5 +288,20 @@ class AssociatedProduct extends Relationship
         }
 
         return $groups;
+    }
+
+    public function removeAssociations($productId, $associationId)
+    {
+        if (empty($productId)) {
+            throw new NotFound();
+        }
+
+        $repository = $this->getRepository();
+        $where = ['mainProductId' => $productId];
+        if (!empty($associationId)) {
+            $where['associationId'] = $associationId;
+        }
+        $repository->where($where)->removeCollection();
+        return true;
     }
 }
