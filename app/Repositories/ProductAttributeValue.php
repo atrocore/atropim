@@ -375,8 +375,23 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'array':
+                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                break;
             case 'extensibleMultiEnum':
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                if (isset($options[0])) {
+                    $entity->set('valueNames', array_column($options, 'name', 'id'));
+                    $entity->set('valueOptionsData', $options);
+                }
+                break;
+            case 'extensibleEnum':
+                $entity->set('value', $entity->get('varcharValue'));
+                $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                if (!empty($option)) {
+                    $entity->set('valueName', $option['name']);
+                    $entity->set('valueOptionData', $option);
+                }
                 break;
             case 'text':
             case 'wysiwyg':
