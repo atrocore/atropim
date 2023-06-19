@@ -139,12 +139,13 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         $query = "SELECT *
-                  FROM `product_attribute_value`
+                  FROM product_attribute_value
                   WHERE deleted=0
                     AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
                     AND attribute_id='{$pav->get('attributeId')}'
-                    AND `language`='{$pav->get('language')}'
-                    AND scope='{$pav->get('scope')}'";
+                    AND product_attribute_value.language='{$pav->get('language')}'
+                    AND scope='{$pav->get('scope')}'
+                    AND is_variant_specific_attribute='{$pav->get('isVariantSpecificAttribute')}'";
 
         if ($pav->get('scope') === 'Channel') {
             $query .= " AND channel_id='{$pav->get('channelId')}'";
@@ -193,10 +194,11 @@ class ProductAttributeValue extends AbstractRepository
     public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
     {
         $where = [
-            'productId'   => $childProduct->get('id'),
-            'attributeId' => $parentPav->get('attributeId'),
-            'language'    => $parentPav->get('language'),
-            'scope'       => $parentPav->get('scope'),
+            'productId'                  => $childProduct->get('id'),
+            'attributeId'                => $parentPav->get('attributeId'),
+            'language'                   => $parentPav->get('language'),
+            'scope'                      => $parentPav->get('scope'),
+            'isVariantSpecificAttribute' => $parentPav->get('isVariantSpecificAttribute'),
         ];
 
         if ($parentPav->get('scope') === 'Channel') {
@@ -223,11 +225,10 @@ class ProductAttributeValue extends AbstractRepository
                 $pav->get('attributeId') === $entity->get('attributeId')
                 && $pav->get('scope') === $entity->get('scope')
                 && $pav->get('language') === $entity->get('language')
+                && $pav->get('isVariantSpecificAttribute') === $entity->get('isVariantSpecificAttribute')
+                && $this->arePavsValuesEqual($pav, $entity)
             ) {
-                if ($this->arePavsValuesEqual($pav, $entity)) {
-                    return true;
-                }
-
+                return true;
             }
         }
 
@@ -374,8 +375,23 @@ class ProductAttributeValue extends AbstractRepository
                 $entity->set('valueUnitId', $entity->get('varcharValue'));
                 break;
             case 'array':
+                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                break;
             case 'extensibleMultiEnum':
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                if (isset($options[0])) {
+                    $entity->set('valueNames', array_column($options, 'name', 'id'));
+                    $entity->set('valueOptionsData', $options);
+                }
+                break;
+            case 'extensibleEnum':
+                $entity->set('value', $entity->get('varcharValue'));
+                $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                if (!empty($option)) {
+                    $entity->set('valueName', $option['name']);
+                    $entity->set('valueOptionData', $option);
+                }
                 break;
             case 'text':
             case 'wysiwyg':
@@ -639,10 +655,12 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
+        $type = $attribute->get('type');
+
         /**
          * Text length validation
          */
-        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
+        if (in_array($type, ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
             $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
             $fieldValue = (string)$entity->get('value');
             $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
@@ -655,11 +673,29 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         /**
-         * Float amountOfDigitsAfterComma validation
+         * Rounding float Values using amountOfDigitsAfterComma
          */
-        if (in_array($attribute->get('type'), ['float', 'currency']) && $entity->get('value') !== null
-            && $entity->get('amountOfDigitsAfterComma') !== null) {
-            $this->checkAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$entity->get('amountOfDigitsAfterComma'));
+        $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
+        if ($amountOfDigitsAfterComma !== null) {
+            switch ($type) {
+                case 'float':
+                case 'currency':
+                    if ($entity->get('value') !== null) {
+                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('value', $entity->get('floatValue'));
+                    }
+                    break;
+                case 'rangeFloat':
+                    if ($entity->get('floatValue') !== null) {
+                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('valueFrom', $entity->get('floatValue'));
+                    }
+                    if ($entity->get('floatValue1') !== null) {
+                        $entity->set('floatValue1', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue1'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('valueTo', $entity->get('floatValue1'));
+                    }
+                    break;
+            }
         }
 
         /**

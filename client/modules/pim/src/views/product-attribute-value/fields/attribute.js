@@ -94,6 +94,9 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'treo-core:vie
         setAttributeFieldsToModel(model) {
             let attributes = {
                 attributeType: model.get('type'),
+                attributeExtensibleEnumId: model.get('extensibleEnumId'),
+                attributeMeasureId: model.get('measureId'),
+                amountOfDigitsAfterComma: model.get('amountOfDigitsAfterComma'),
                 attributeIsMultilang: model.get('isMultilang'),
                 defaultScope: model.get('defaultScope'),
                 defaultChannelId: model.get('defaultChannelId'),

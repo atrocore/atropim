@@ -186,7 +186,9 @@ class ClassificationAttribute extends AbstractProductAttributeService
             $inputData = clone $data;
             $inputData->productId = $id;
             unset($inputData->classificationId);
-            $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
+
+            $parentId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $parentId);
         }
     }
 
@@ -215,7 +217,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data): void
     {
-        foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
+        foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $inputData = new \stdClass();
             foreach (['scope', 'channelId', 'language'] as $key) {
                 if (property_exists($data, $key)) {
@@ -224,7 +226,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
 
             if (!empty((array)$inputData)) {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pavId, $inputData);
+                $parentId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->get('id'), $inputData);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
             }
         }
     }
@@ -333,8 +336,9 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionDeleteJobs(string $id): void
     {
-        foreach ($this->getRepository()->getInheritedPavsIds($id) as $pavId) {
-            $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pavId);
+        foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
+            $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
         }
     }
 }
