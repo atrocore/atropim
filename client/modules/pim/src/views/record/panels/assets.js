@@ -48,9 +48,9 @@ Espo.define('pim:views/record/panels/assets', 'views/record/panels/for-relations
             this.createView('massCreate', 'dam:views/asset/modals/edit', {
                 name: 'massCreate',
                 scope: 'Asset',
-                attributes: {},
+                attributes: {massCreate: true},
                 fullFormDisabled: true,
-                layoutName: 'massCreateDetailSmall'
+                layoutName: 'detailSmall'
             }, view => {
                 view.render();
                 view.notify(false);
