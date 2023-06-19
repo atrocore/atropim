@@ -200,11 +200,10 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
         deleteEntities(groupId) {
             const data = {productId: this.model.id}
             if (groupId) data.associationId = groupId
-            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct/${item.id}`,)
+            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct`,data)
                 .done(response => {
                     this.notify(false);
                     this.notify('Removed', 'success');
-                    this.collection.fetch();
                     this.model.trigger('after:unrelate');
                 });
         },

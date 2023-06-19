@@ -61,6 +61,6 @@ class AssociatedProduct extends \Espo\Core\Templates\Controllers\Relationship
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->removeAssociations((string)$request->get('productId'), (string)$request->get('associationId'));
+        return $this->getRecordService()->removeAssociations((string)$data->productId, (string)$data->associationId);
     }
 }
