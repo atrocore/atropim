@@ -433,8 +433,13 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
         },
 
         fetchCollectionPart(callback) {
-            this.collection.fetch({remove: false, more: true}).then((response) => {
-                if (this.collection.total > this.collection.length) {
+            this.collection.fetch({remove: false, more: true}).then(response => {
+                if (!response.list) {
+                    callback();
+                    return;
+                }
+                let length = this.collection.length + response.list.length;
+                if (this.collection.total > length) {
                     this.fetchCollectionPart(callback);
                 } else if (callback) {
                     callback();
