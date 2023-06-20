@@ -104,7 +104,6 @@
       "tabId": null,
       "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
       "view": "pim:views/product/record/panels/product-attribute-values",
-      "recordListView": "pim:views/product-attribute-value/record/list-in-product",
       "aclScopesList": [
         "Attribute",
         "AttributeGroup",
@@ -126,8 +125,7 @@
     "associatedMainProducts": {
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
-      "view": "pim:views/product/record/panels/associated-main-products",
-      "recordListView": "pim:views/associated-product/record/list-in-product"
+      "view": "pim:views/product/record/panels/associated-main-products"
     },
     "productChannels": {
       "view": "views/record/panels/for-relationship-type"

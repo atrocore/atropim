@@ -26,23 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/associated-product/record/list-in-product', 'views/record/list',
+Espo.define('pim:views/record/list-in-groups', 'views/record/list',
     Dep => Dep.extend({
 
         hiddenInEditColumns: ['isRequired'],
 
-        template: 'pim:associated-product/record/list-in-product',
-
-        groupScope: 'Association',
+        template: 'pim:record/list-in-groups',
 
         events: _.extend({
-            'click [data-action="unlinkAssociation"]': function (e) {
-                this.trigger('remove-association', $(e.currentTarget).data())
+            'click [data-action="unlinkGroup"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.trigger('remove-group', $(e.currentTarget).data())
+            },
+            'click [data-action="unlinkGroupHierarchy"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.trigger('remove-group-hierarchically', $(e.currentTarget).data());
             }
         }, Dep.prototype.events),
 
         setup() {
             Dep.prototype.setup.call(this);
+            this.groupScope = this.groupScope || this.options.groupScope;
+            this.scope = this.scope || this.options.scope;
+            this.pipelines = {
+                actionShowRevisionAttribute: ['clientDefs', this.scope, 'actionShowRevisionAttribute']
+            }
 
             this.listenTo(this, 'after:save', model => {
                 let panelView = this.getParentView();
@@ -52,11 +62,12 @@ Espo.define('pim:views/associated-product/record/list-in-product', 'views/record
                 }
 
                 if (panelView && panelView.model) {
-                    panelView.model.trigger('after:associatedProductsSave');
+                    panelView.model.trigger('after:attributesSave');
                     panelView.actionRefresh();
                 }
             });
 
+            this.runPipeline('actionShowRevisionAttribute');
         },
 
         afterSave: function () {
@@ -70,8 +81,8 @@ Espo.define('pim:views/associated-product/record/list-in-product', 'views/record
             result.groupId = this.options.groupId;
             result.headerDefs = this.updateHeaderDefs(result.headerDefs);
             result.rowActionsColumnWidth = this.rowActionsColumnWidth;
-            result.editable = !!this.options.groupId && this.getAcl().check('AssociatedProduct', 'delete');
-
+            result.editable = !!this.options.groupId && this.getAcl().check(this.scope, 'delete');
+            result.hierarchyEnabled = this.options.hierarchyEnabled
             return result;
         },
 
@@ -84,13 +95,11 @@ Espo.define('pim:views/associated-product/record/list-in-product', 'views/record
         },
 
         updateHeaderDefs(defs) {
-            let index = defs.findIndex(item => item.name === 'relatedProductImage');
-
-            if (index !== -1) {
-                defs[index].name = this.options.groupName;
+            if (defs[0]) {
+                defs[0].name = this.options.groupName;
 
                 if (this.options.groupId) {
-                    defs[index].id = this.options.groupId;
+                    defs[0].id = this.options.groupId;
                 }
             }
 

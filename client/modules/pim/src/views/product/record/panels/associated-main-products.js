@@ -26,163 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/record/panels/associated-main-products', ['views/record/panels/relationship', 'views/record/panels/bottom'],
-    (Dep, BottomPanel) => Dep.extend({
+Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:views/record/panels/records-in-groups'],
+    (Dep) => Dep.extend({
         groups: [],
-        groupScope: 'Associate',
+        selectScope: 'Associate',
+        groupScope: 'Association',
+        disableSelect: true,
         rowActionsView: 'views/record/row-actions/relationship-no-unlink',
-        template: 'pim:product/record/panels/associated-main-products',
-        data() {
-            return _.extend({
-                groups: this.groups,
-                groupScope: this.groupScope
-            }, Dep.prototype.data.call(this));
-        },
-        setup() {
-            let bottomPanel = new BottomPanel();
-            bottomPanel.setup.call(this);
 
-            this.link = this.link || this.defs.link || this.panelName;
-
-            if (!this.scope && !(this.link in this.model.defs.links)) {
-                throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
-            }
-            this.title = this.title || this.translate(this.link, 'links', this.model.name);
-            this.scope = this.scope || this.model.defs.links[this.link].entity;
-
-            this.setupActions();
-
-            var layoutName = 'listSmall';
-            this.setupListLayout();
-
-            if (this.listLayoutName) {
-                layoutName = this.listLayoutName;
-            }
-
-            var listLayout = null;
-            var layout = this.defs.layout || null;
-            if (layout) {
-                if (typeof layout == 'string') {
-                    layoutName = layout;
-                } else {
-                    layoutName = 'listRelationshipCustom';
-                    listLayout = layout;
-                }
-            }
-
-            this.layoutName = layoutName;
-            this.listLayout = listLayout;
-
-            let create = this.buttonList.find(item => item.action === (this.defs.createAction || 'createRelated'));
-
-            if (this.getAcl().check('AssociatedProducts', 'create') && !create) {
-                this.buttonList.push({
-                    title: 'Create',
-                    action: this.defs.actionCreate || 'createRelated',
-                    link: this.link,
-                    acl: 'create',
-                    aclScope: this.scope,
-                    html: '<span class="fas fa-plus"></span>',
-                    data: {
-                        link: this.link,
-                    }
-                });
-            }
-            this.actionList.push({
-                label: 'deleteAll',
-                action: 'deleteAllRelationshipEntities',
-                data: {
-                    "relationshipScope": this.scope
+        initGroupCollection(group, groupCollection) {
+            groupCollection.url = 'AssociatedProduct';
+            groupCollection.data.select = 'association_id';
+            groupCollection.data.tabId = this.defs.tabId;
+            groupCollection.where = [
+                {
+                    type: 'equals',
+                    attribute: 'mainProductId',
+                    value: this.model.id
                 },
-                acl: 'delete',
-                aclScope: this.scope
-            });
-            this.wait(true);
-            this.getCollectionFactory().create(this.scope, collection => {
-                this.collection = collection;
-
-                this.setFilter(this.filter);
-
-                this.listenTo(this.model, 'updateAssociations change:classificationId update-all after:relate after:unrelate', link => {
-                    if (!link || link === 'associatedMainProducts') {
-                        this.getCollectionFactory().create(this.scope, collection => {
-                            this.collection = collection;
-                            this.actionRefresh();
-                        });
-                    }
-                });
-
-                this.fetchCollectionGroups(() => {
-                    this.wait(false);
-                });
-            });
+                {
+                    type: 'equals',
+                    attribute: 'associationId',
+                    value: group.key
+                }
+            ];
+            groupCollection.maxSize = 9999;
         },
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
 
-            this.buildGroups();
-        },
-        buildGroups() {
-            if (!this.groups || this.groups.length < 1) {
-                return;
-            }
-
-            let count = 0;
-            this.groups.forEach(group => {
-                this.getCollectionFactory().create(this.scope, groupCollection => {
-                    groupCollection.url = 'AssociatedProduct';
-                    groupCollection.data.select = 'association_id';
-                    groupCollection.data.tabId = this.defs.tabId;
-                    groupCollection.where = [
-                        {
-                            type: 'equals',
-                            attribute: 'mainProductId',
-                            value: this.model.id
-                        },
-                        {
-                            type: 'equals',
-                            attribute: 'associationId',
-                            value: group.key
-                        }
-                    ];
-                    groupCollection.maxSize = 9999;
-                    groupCollection.fetch().success(() => {
-                        groupCollection.forEach(item => {
-                            if (this.collection.get(item.get('id'))) {
-                                this.collection.remove(item.get('id'));
-                            }
-                            this.collection.add(item);
-                        });
-
-                        let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-
-                        let options = {
-                            collection: groupCollection,
-                            layoutName: this.layoutName,
-                            listLayout: this.listLayout,
-                            checkboxes: false,
-                            rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
-                            buttonsDisabled: true,
-                            el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                            showMore: false,
-                            groupId: group.id,
-                            groupName: group.label
-                        };
-
-                        this.createView(group.key, viewName, options, view => {
-                            view.listenTo(view, 'remove-association', (data) => this.unlinkAssociation(data));
-
-                            view.render(() => {
-                                count++;
-                                if (count === this.groups.length) {
-                                    this.trigger('groups-rendered');
-                                }
-                            });
-                        });
-                    });
-                });
-            });
-        },
         fetchCollectionGroups(callback) {
             const data = {
                 where: [
@@ -202,11 +72,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
                 callback();
             });
         },
-        actionRefresh() {
-            this.fetchCollectionGroups(() => {
-                this.reRender();
-            });
-        },
+
         deleteEntities(groupId) {
             const data = {productId: this.model.id}
             if (groupId) data.associationId = groupId
@@ -224,7 +90,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
             });
         },
 
-        unlinkAssociation(data) {
+        unlinkEntity(data) {
             let id = data.id;
             if (!id) {
                 return;

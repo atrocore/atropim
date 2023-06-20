@@ -1,6 +1,6 @@
 {{#if collection.models.length}}
 
-<div class="list associated-products-list">
+<div class="list group-records-list">
     <table class="table full-table">
         {{#if header}}
         <thead>
@@ -32,7 +32,10 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:" class="action" data-action="unlinkAssociation" data-id="{{groupId}}">{{translate 'Remove'}}</a></li>
+                                <li><a href="javascript:" class="action" data-action="unlinkGroup" data-id="{{groupId}}">{{translate 'Remove'}}</a></li>
+                                {{#if hierarchyEnabled }}
+                                <li><a href="javascript:" class="action" data-action="unlinkGroupHierarchy" data-id="{{groupId}}">{{translate 'removeHierarchically'}}</a></li>
+                                {{/if}}
                             </ul>
                         </div>
                     </th>
@@ -65,18 +68,18 @@
 {{/if}}
 
 <style>
-    .associated-products-list table th:first-child > div,
-     .associated-products-list table th:first-child > div > a {
+    .group-records-list table th:first-child > div,
+     .group-records-list table th:first-child > div > a {
         font-weight: bold;
         color: #000000;
     }
 
-    .associated-products-list .btn-group .btn {
+    .group-records-list .btn-group .btn {
         background: transparent !important;
         border: 0
     }
 
-    .associated-products-list .context-menu {
+    .group-records-list .context-menu {
         padding: 0;
         vertical-align: middle
     }
