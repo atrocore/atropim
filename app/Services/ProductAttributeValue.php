@@ -266,7 +266,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
         /**
          * Prepare maxLength
          */
-        if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')) {
+        if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')
+            || !property_exists($attachment, 'useDisabledTextareaInViewMode')) {
 
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
             if (empty($attribute)) {
@@ -282,6 +283,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
             if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'currency'])
                 && $attribute->get('amountOfDigitsAfterComma') !== null) {
                 $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
+            }
+
+            if (!property_exists($attachment, 'useDisabledTextareaInViewMode') && in_array($attribute->get('type'), ['text', 'varchar', 'wysiwyg'])
+                && $attribute->get('useDisabledTextareaInViewMode') !== null) {
+                $attachment->useDisabledTextareaInViewMode = $attribute->get('useDisabledTextareaInViewMode');
             }
         }
 

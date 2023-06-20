@@ -251,6 +251,10 @@
     "amountOfDigitsAfterComma": {
       "type": "int",
       "min": 0
+    },
+    "useDisabledTextareaInViewMode": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

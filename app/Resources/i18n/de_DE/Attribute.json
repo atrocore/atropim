@@ -28,6 +28,7 @@
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
+    "useDisabledTextareaInViewMode": "useDisabledTextareaInViewMode",
     "description": "Beschreibung",
     "extensibleEnum": "Liste"
   },

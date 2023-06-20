@@ -36,6 +36,15 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         editTemplate: 'pim:product-attribute-value/fields/base',
 
         setup() {
+            this.useTextarea = false;
+            if (this.model.attributes.attributeType === 'text') {
+                this.useTextarea = true;
+                //this.listTemplate = 'pim:product-attribute-value/fields/text-type-disable';
+                //this.detailTemplate = 'pim:product-attribute-value/fields/text-type-disable';
+
+                console.log('doug test atropim valueContainer');
+                console.log(this.model);
+            }
             this.name = this.options.name || this.defs.name;
 
             this.listenTo(this.model, 'change:attributeId', () => {
@@ -80,6 +89,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.maxLength = this.model.get('maxLength');
                     params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
                 }
+                params.useDisabledTextareaInViewMode = this.model.get('useDisabledTextareaInViewMode');
 
                 if (this.model.get('amountOfDigitsAfterComma')) {
                     params.amountOfDigitsAfterComma = this.model.get('amountOfDigitsAfterComma');
@@ -97,8 +107,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
                 }
 
+                var tagElement = '> .field[data-name="valueField"] textarea';
+                console.log('tagEleement: ' + tagElement);
                 let options = {
-                    el: `${this.options.el} > .field[data-name="valueField"]`,
+                    el: `${this.options.el} ${tagElement}`,
                     name: this.name,
                     model: this.model,
                     collection: this.model.collection || null,
@@ -184,6 +196,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
                 this.model.set('maxLength', attr.maxLength);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
+                this.model.set('useDisabledTextareaInViewMode', attr.useDisabledTextareaInViewMode);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                 this.reRender();
             });

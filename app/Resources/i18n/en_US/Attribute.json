@@ -26,6 +26,7 @@
     "tooltip": "Tooltip",
     "maxLength": "Max Length",
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
+    "useDisabledTextareaInViewMode": "useDisabledTextareaInViewModers",
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "description": "Description",
     "classifications": "Classifications",

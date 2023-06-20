@@ -32,6 +32,8 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
         inlineEditDisabled: true,
 
         setup: function () {
+            console.log('doug test type');
+            console.log(this.model);
             Dep.prototype.setup.call(this);
 
             this.updateOptions();

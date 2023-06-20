@@ -272,6 +272,10 @@
       "min": 0,
       "notStorable": true
     },
+    "useDisabledTextareaInViewMode": {
+      "type": "bool",
+      "default": false
+    },
     "isValueReadOnly": {
       "type": "bool",
       "notStorable": true,

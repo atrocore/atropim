@@ -212,6 +212,21 @@
           ]
         }
       },
+      "useDisabledTextareaInViewMode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "text",
+                "varchar",
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      },
       "defaultChannel": {
         "visible": {
           "conditionGroup": [
