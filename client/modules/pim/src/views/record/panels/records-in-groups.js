@@ -26,22 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/relationship', 'views/record/panels/bottom', 'search-manager'],
-    (Dep, BottomPanel, SearchManager) => Dep.extend({
+Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/relationship', 'views/record/panels/bottom'],
+    (Dep, BottomPanel) => Dep.extend({
 
         template: 'pim:record/panels/records-in-groups',
-
-
-        groupsWithoutId: ['no_group'],
-        groupsWithoutId: ['no_group'],
-
-        noGroup: {
-            key: 'no_group',
-            label: 'noGroup'
-        },
-
-        initialAttributes: null,
-
 
         data() {
             return _.extend({
@@ -118,7 +106,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 if (this.getAcl().check(this.groupScope, 'read')) {
                     this.actionList.push({
                         label: 'selectAttributeGroup',
-                        action: 'selectAttributeGroup'
+                        action: 'selectGroup'
                     });
                 }
             }
@@ -195,106 +183,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 });
             });
         },
-
-        createProductAttributeValue(selectObj) {
-            let promises = [];
-            selectObj.forEach(item => {
-                this.getModelFactory().create(this.scope, model => {
-                    let attributes = {
-                        productId: this.model.get('id'),
-                        attributeId: item.id,
-                        assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name')
-                    };
-
-                    model.set(attributes);
-                    promises.push(model.save());
-                });
-            });
-            Promise.all(promises).then(() => {
-                this.notify('Linked', 'success');
-                this.model.trigger('after:relate', this.link, this.defs);
-                this.actionRefresh();
-            });
-        },
-
-        actionSelectAttributeGroup() {
-            const scope = 'AttributeGroup';
-            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
-
-            this.notify('Loading...');
-            this.createView('dialog', viewName, {
-                scope: scope,
-                multiple: true,
-                createButton: false,
-                massRelateEnabled: false,
-                boolFilterList: ['withNotLinkedAttributesToProduct', 'fromAttributesTab'],
-                boolFilterData: {
-                    withNotLinkedAttributesToProduct: this.model.id,
-                    fromAttributesTab: {tabId: this.defs.tabId}
-                },
-                whereAdditional: [
-                    {
-                        type: 'isLinked',
-                        attribute: 'attributes'
-                    }
-                ]
-            }, dialog => {
-                dialog.render();
-                this.notify(false);
-                dialog.once('select', selectObj => {
-                    this.notify('Loading...');
-                    if (!Array.isArray(selectObj)) {
-                        return;
-                    }
-                    let boolFilterList = this.getSelectBoolFilterList() || [];
-                    this.getFullEntityList('Attribute', {
-                        where: [
-                            {
-                                type: 'bool',
-                                value: boolFilterList,
-                                data: this.getSelectBoolFilterData(boolFilterList)
-                            },
-                            {
-                                attribute: 'attributeGroupId',
-                                type: 'in',
-                                value: selectObj.map(model => model.id)
-                            }
-                        ]
-                    }, list => {
-                        let models = [];
-                        list.forEach(attributes => {
-                            this.getModelFactory().create('Attribute', model => {
-                                model.set(attributes);
-                                models.push(model);
-                            });
-                        });
-                        this.createProductAttributeValue(models);
-                    });
-                });
-            });
-        },
-
-        getFullEntityList(url, params, callback, container) {
-            if (url) {
-                container = container || [];
-
-                let options = params || {};
-                options.maxSize = options.maxSize || 200;
-                options.offset = options.offset || 0;
-
-                this.ajaxGetRequest(url, options).then(response => {
-                    container = container.concat(response.list || []);
-                    options.offset = container.length;
-                    if (response.total > container.length || response.total === -1) {
-                        this.getFullEntity(url, options, callback, container);
-                    } else {
-                        callback(container);
-                    }
-                });
-            }
-        },
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
@@ -306,13 +194,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
 
         fetchCollectionGroups(callback) {
-            this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', {
-                tabId: this.defs.tabId,
-                productId: this.model.get('id')
-            }).then(data => {
-                this.groups = data;
-                callback();
-            });
+            this.groups = []
+            callback()
         },
 
         getSelectFields() {
@@ -331,14 +214,12 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.getCollectionFactory().create(this.scope, groupCollection => {
                     this.initGroupCollection(group, groupCollection)
                     groupCollection.fetch().success(() => {
-                        if (group.rowList) {
-                            group.rowList.forEach(id => {
-                                if (this.collection.get(id)) {
-                                    this.collection.remove(id);
-                                }
-                                this.collection.add(groupCollection.get(id));
-                            });
-                        }
+                        groupCollection.forEach(item => {
+                            if (this.collection.get(item.get('id'))) {
+                                this.collection.remove(item.get('id'));
+                            }
+                            this.collection.add(item);
+                        })
 
                         let viewName = this.defs.recordListView || 'pim:views/record/list-in-groups';
 
@@ -359,13 +240,13 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
                         this.createView(group.key, viewName, options, view => {
                             view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
-                            view.listenTo(view, 'remove-attribute-group', (data) => this.unlinkAttributeGroup(data));
-                            view.listenTo(view, 'remove-attribute-group-hierarchically', (data) => this.unlinkAttributeGroupHierarchy(data));
+                            view.listenTo(view, 'remove-group', (data) => this.unlinkGroup(data));
+                            view.listenTo(view, 'remove-group-hierarchically', (data) => this.unlinkGroupHierarchy(data));
 
                             view.render(() => {
                                 count++;
                                 if (count === this.groups.length) {
-                                    this.initialAttributes = this.getInitialAttributes();
+                                    this.afterGroupRender()
                                     this.applyOverviewFilters();
                                     this.trigger('groups-rendered');
                                 }
@@ -374,6 +255,10 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                     });
                 });
             });
+        },
+
+        afterGroupRender() {
+
         },
 
         applyOverviewFilters() {
@@ -417,8 +302,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 // for languages
                 if (!languageFilter.includes('allLanguages')) {
                     if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                        let attributeLanguage = fieldView.model.get('language') || 'main';
-                        if (!languageFilter.includes(attributeLanguage)) {
+                        let language = fieldView.model.get('language') || 'main';
+                        if (!languageFilter.includes(language)) {
                             hide = true;
                         }
                     }
@@ -436,33 +321,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
             return view.model.get('isRequired') || false
         },
 
-        isScopeValid(view, channels) {
-            const scope = view.model.get('scope');
-
-            let channelId = view.model.get('channelId') || 'Global';
-
-            if (scope === 'Global') {
-                if (!channels.includes(channelId)) {
-                    let hasChannelAttr = false;
-
-                    $.each(this.getValueFields(), (n, f) => {
-                        if (f.model.get('attributeId') === view.model.get('attributeId') && f.model.get('scope') === 'Channel' && channels.includes(f.model.get('channelId'))) {
-                            hasChannelAttr = true;
-                        }
-                    });
-
-                    if (hasChannelAttr) {
-                        return false;
-                    }
-                }
-            } else if (scope === 'Channel') {
-                if (!channels.includes(channelId)) {
-                    return false;
-                }
-            }
-
-            return true
-        },
 
         getValueFields() {
             let fields = {};
@@ -527,79 +385,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.reRender();
             });
         },
-
-        unlinkAttributeGroup(data) {
-            let id = data.id;
-            if (!id) {
-                return;
-            }
-
-            let group = this.groups.find(group => group.id === id);
-            if (!group || !group.rowList) {
-                return;
-            }
-
-            this.confirm({
-                message: this.translate('removeRelatedAttributeGroup', 'messages', 'ProductAttributeValue'),
-                confirmText: this.translate('Remove')
-            }, function () {
-                this.notify('removing');
-                $.ajax({
-                    url: `${this.model.name}/${this.link}/relation`,
-                    data: JSON.stringify({
-                        ids: [this.model.id],
-                        foreignIds: group.rowList
-                    }),
-                    type: 'DELETE',
-                    contentType: 'application/json',
-                    success: function () {
-                        this.notify('Removed', 'success');
-                        this.model.trigger('after:unrelate', this.link, this.defs);
-                        this.actionRefresh();
-                    }.bind(this),
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                });
-            }, this);
-        },
-
-        unlinkAttributeGroupHierarchy(data) {
-            let id = data.id;
-            if (!id) {
-                return;
-            }
-
-            let group = this.groups.find(group => group.id === id);
-            if (!group || !group.rowList) {
-                return;
-            }
-
-            this.confirm({
-                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ProductAttributeValue'),
-                confirmText: this.translate('Remove')
-            }, function () {
-                this.notify('removing');
-                $.ajax({
-                    url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
-                    data: JSON.stringify({
-                        attributeGroupId: id,
-                        productId: this.model.id
-                    }),
-                    type: 'DELETE',
-                    contentType: 'application/json',
-                    success: function () {
-                        this.notify('Removed', 'success');
-                        this.model.trigger('after:unrelate', this.link, this.defs);
-                        this.actionRefresh();
-                    }.bind(this),
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                });
-            }, this);
-        },
-
         setListMode() {
             this.mode = 'list';
 
@@ -612,198 +397,5 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.reRender();
         },
-
-        setEditMode() {
-            this.initialAttributes = this.getInitialAttributes();
-
-            const groupsRendered = this.groups.every(group => {
-                const groupView = this.getView(group.key);
-                return groupView && groupView.isRendered();
-            });
-
-            const updateMode = () => {
-                this.mode = 'edit';
-                this.groups.forEach(group => {
-                    let groupView = this.getView(group.key);
-                    if (groupView) {
-                        groupView.setEditMode();
-                    }
-                });
-            };
-
-            if (groupsRendered) {
-                updateMode();
-            } else {
-                this.listenToOnce(this, 'groups-rendered', () => updateMode());
-            }
-        },
-
-        cancelEdit() {
-            this.actionRefresh();
-        },
-
-        getInitialAttributes() {
-            const data = {};
-            this.collection.forEach(model => {
-                const modelData = {
-                    value: model.get('value')
-                };
-                const actualFields = this.getFieldManager().getActualAttributeList(model.get('attributeType'), 'value');
-                actualFields.forEach(field => {
-                    if (model.has(field)) {
-                        _.extend(modelData, {[field]: model.get(field)});
-                    }
-                });
-                const additionalData = model.get('data');
-                if (additionalData) {
-                    modelData.data = additionalData;
-                }
-
-                if (model.has('valueTranslateAutomatically')) {
-                    modelData['valueTranslateAutomatically'] = model.get('valueTranslateAutomatically');
-                }
-
-                if (model.has('valueTranslated')) {
-                    modelData['valueTranslated'] = model.get('valueTranslated');
-                }
-
-                data[model.id] = Espo.Utils.cloneDeep(modelData);
-            });
-            return data;
-        },
-
-        panelFetch() {
-            let data = false;
-            this.groups.forEach(group => {
-                const groupView = this.getView(group.key);
-                if (groupView) {
-                    (groupView.rowList || []).forEach(id => {
-                        const row = groupView.getView(id);
-                        const value = row.getView('valueField');
-                        if (value.mode === 'edit') {
-                            const fetchedData = value.fetch();
-                            const initialData = this.initialAttributes[id];
-                            value.model.set(fetchedData);
-
-                            if (!this.equalityValueCheck(fetchedData, initialData)) {
-                                fetchedData['_prev'] = initialData;
-                                data = _.extend(data || {}, {[id]: fetchedData});
-                            }
-                        }
-                    });
-                }
-            });
-            return data;
-        },
-
-        equalityValueCheck(fetchedData, initialData) {
-            if (typeof fetchedData.valueId !== 'undefined') {
-                return _.isEqual(fetchedData.valueId, initialData.valueId);
-            }
-
-            if (typeof fetchedData.valueCurrency !== 'undefined') {
-                fetchedData.data = {currency: fetchedData.valueCurrency};
-                return _.isEqual(fetchedData.valueCurrency, initialData.valueCurrency) && _.isEqual(fetchedData.value, initialData.value);
-            }
-
-            if (typeof fetchedData.valueUnitId !== 'undefined') {
-                return _.isEqual(fetchedData.valueUnitId, initialData.valueUnitId) && _.isEqual(fetchedData.value, initialData.value);
-            }
-
-            if (typeof fetchedData.valueFrom !== 'undefined') {
-                return _.isEqual(fetchedData.valueFrom, initialData.valueFrom);
-            }
-
-            if (typeof fetchedData.valueTo !== 'undefined') {
-                return _.isEqual(fetchedData.valueTo, initialData.valueTo);
-            }
-
-            if (typeof fetchedData.valueTranslateAutomatically !== 'undefined') {
-                if (_.isEqual(fetchedData.valueTranslateAutomatically, initialData.valueTranslateAutomatically) === false) {
-                    return false
-                }
-            }
-
-            if (typeof fetchedData.valueTranslated !== 'undefined') {
-                if (_.isEqual(fetchedData.valueTranslated, initialData.valueTranslated) === false) {
-                    return false
-                }
-            }
-
-            return _.isEqual(fetchedData.value, initialData.value);
-        },
-
-        save() {
-            const data = this.panelFetch();
-            if (data) {
-                const promises = [];
-                $.each(data, (id, attrs) => {
-                    this.collection.get(id).set(attrs, {silent: true});
-                    promises.push(this.ajaxPutRequest(`${this.collection.name}/${id}`, attrs))
-                });
-                this.notify('Saving...');
-                Promise.all(promises)
-                    .then(response => {
-                        this.notify('Saved', 'success');
-                        this.model.trigger('after:attributesSave');
-                    }, error => {
-                        this.actionRefresh();
-                    });
-            }
-        },
-
-        validate() {
-            this.trigger('collapsePanel', 'show');
-
-            let notValid = false;
-            this.groups.forEach(group => {
-                const groupView = this.getView(group.key);
-                if (groupView) {
-                    (groupView.rowList || []).forEach(id => {
-                        const row = groupView.getView(id);
-                        const value = row.getView('valueField');
-
-                        if (value.mode === 'edit' && !value.disabled && !value.readOnly) {
-                            notValid = value.validate() || notValid;
-                        }
-                    });
-                }
-            });
-            return notValid;
-        },
-
-        hasCompleteness() {
-            return this.getMetadata().get(['scopes', 'Product', 'hasCompleteness'])
-                && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
-        },
-
-        actionRemoveRelatedHierarchically: function (data) {
-            let id = data.id;
-            this.confirm({
-                message: this.translate('removeRecordConfirmationHierarchically', 'messages'),
-                confirmText: this.translate('Remove')
-            }, () => {
-                let model = this.collection.get(id);
-                this.notify('Removing...');
-                $.ajax({
-                    url: `ProductAttributeValue/${id}`,
-                    type: 'DELETE',
-                    data: JSON.stringify({
-                        id: id,
-                        hierarchically: true
-                    }),
-                    contentType: 'application/json',
-                    success: () => {
-                        this.notify('Removed', 'success');
-                        this.collection.fetch();
-                        this.model.trigger('after:unrelate', this.link, this.defs);
-                    },
-                    error: () => {
-                        this.collection.push(model);
-                    },
-                });
-            });
-        },
-
     })
 );

@@ -98,8 +98,26 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 this.actionRefresh();
             });
         },
+        getFullEntityList(url, params, callback, container) {
+            if (url) {
+                container = container || [];
 
-        actionSelectAttributeGroup() {
+                let options = params || {};
+                options.maxSize = options.maxSize || 200;
+                options.offset = options.offset || 0;
+
+                this.ajaxGetRequest(url, options).then(response => {
+                    container = container.concat(response.list || []);
+                    options.offset = container.length;
+                    if (response.total > container.length || response.total === -1) {
+                        this.getFullEntity(url, options, callback, container);
+                    } else {
+                        callback(container);
+                    }
+                });
+            }
+        },
+        actionSelectGroup() {
             const scope = 'AttributeGroup';
             const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
 
@@ -212,6 +230,30 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             return true
         },
 
+        panelFetch() {
+            let data = false;
+            this.groups.forEach(group => {
+                const groupView = this.getView(group.key);
+                if (groupView) {
+                    (groupView.rowList || []).forEach(id => {
+                        const row = groupView.getView(id);
+                        const value = row.getView('valueField');
+                        if (value && value.mode === 'edit') {
+                            const fetchedData = value.fetch();
+                            const initialData = this.initialAttributes[id];
+                            value.model.set(fetchedData);
+
+                            if (!this.equalityValueCheck(fetchedData, initialData)) {
+                                fetchedData['_prev'] = initialData;
+                                data = _.extend(data || {}, {[id]: fetchedData});
+                            }
+                        }
+                    });
+                }
+            });
+            return data;
+        },
+
         getValueFields() {
             let fields = {};
             this.groups.forEach(group => {
@@ -235,7 +277,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             return fields;
         },
 
-        unlinkAttributeGroup(data) {
+        unlinkGroup(data) {
             let id = data.id;
             if (!id) {
                 return;
@@ -271,7 +313,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             }, this);
         },
 
-        unlinkAttributeGroupHierarchy(data) {
+        unlinkGroupHierarchy(data) {
             let id = data.id;
             if (!id) {
                 return;
@@ -337,30 +379,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             return data;
         },
 
-        panelFetch() {
-            let data = false;
-            this.groups.forEach(group => {
-                const groupView = this.getView(group.key);
-                if (groupView) {
-                    (groupView.rowList || []).forEach(id => {
-                        const row = groupView.getView(id);
-                        const value = row.getView('valueField');
-                        if (value.mode === 'edit') {
-                            const fetchedData = value.fetch();
-                            const initialData = this.initialAttributes[id];
-                            value.model.set(fetchedData);
-
-                            if (!this.equalityValueCheck(fetchedData, initialData)) {
-                                fetchedData['_prev'] = initialData;
-                                data = _.extend(data || {}, {[id]: fetchedData});
-                            }
-                        }
-                    });
-                }
-            });
-            return data;
-        },
-
         equalityValueCheck(fetchedData, initialData) {
             if (typeof fetchedData.valueId !== 'undefined') {
                 return _.isEqual(fetchedData.valueId, initialData.valueId);
@@ -415,6 +433,38 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                         this.actionRefresh();
                     });
             }
+        },
+
+        afterGroupRender() {
+            this.initialAttributes = this.getInitialAttributes();
+        },
+        setEditMode() {
+            this.initialAttributes = this.getInitialAttributes();
+
+            const groupsRendered = this.groups.every(group => {
+                const groupView = this.getView(group.key);
+                return groupView && groupView.isRendered();
+            });
+
+            const updateMode = () => {
+                this.mode = 'edit';
+                this.groups.forEach(group => {
+                    let groupView = this.getView(group.key);
+                    if (groupView) {
+                        groupView.setEditMode();
+                    }
+                });
+            };
+
+            if (groupsRendered) {
+                updateMode();
+            } else {
+                this.listenToOnce(this, 'groups-rendered', () => updateMode());
+            }
+        },
+
+        cancelEdit() {
+            this.actionRefresh();
         },
 
         validate() {

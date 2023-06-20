@@ -90,7 +90,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:vi
             });
         },
 
-        unlinkEntity(data) {
+        unlinkGroup(data) {
             let id = data.id;
             if (!id) {
                 return;
@@ -109,5 +109,6 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:vi
                 this.deleteEntities(group.id)
             }, this);
         },
+
     })
 );
