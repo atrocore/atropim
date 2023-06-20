@@ -94,5 +94,4 @@ class AssociatedProduct extends Relationship
 
         $this->addDependency('language');
     }
-
 }

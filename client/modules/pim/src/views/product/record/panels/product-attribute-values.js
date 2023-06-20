@@ -56,6 +56,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         disableDeleteAll: true,
         groupsWithoutId: ['no_group'],
         hierarchyEnabled: true,
+        afterSelectCallback: 'createProductAttributeValue',
+        selectLabel: 'selectAttributeGroup',
 
         noGroup: {
             key: 'no_group',
@@ -75,6 +77,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                     productId: this.model.id
                 }
             }
+        },
+
+        actionSelectRelated(selectObj) {
+            console.log(selectObj)
         },
 
         createProductAttributeValue(selectObj) {

@@ -92,7 +92,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 }
                 data.boolFilterListCallback = 'getSelectBoolFilterList';
                 data.boolFilterDataCallback = 'getSelectBoolFilterData';
-                data.afterSelectCallback = 'createProductAttributeValue';
+                data.afterSelectCallback = this.afterSelectCallback;
                 data.scope = this.selectScope;
 
                 this.actionList.unshift({
@@ -105,7 +105,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
                 if (this.getAcl().check(this.groupScope, 'read')) {
                     this.actionList.push({
-                        label: 'selectAttributeGroup',
+                        label: this.selectLabel || 'selectGroup',
                         action: 'selectGroup'
                     });
                 }
