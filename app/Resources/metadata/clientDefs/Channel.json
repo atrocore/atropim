@@ -44,7 +44,6 @@
     "productChannels": {
       "select": false,
       "view": "views/record/panels/for-relationship-type",
-      "massRelateEnabled": true,
       "relationshipScope": "ProductChannel",
       "relationshipEntities": [
         "Product",

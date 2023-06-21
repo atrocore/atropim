@@ -165,7 +165,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
                 this.setFilter(this.filter);
 
-                this.listenTo(this.model, 'updateAttributes change:classificationId update-all after:relate after:unrelate', link => {
+                this.listenTo(this.model, 'change:classificationId update-all after:relate after:unrelate', link => {
                     if (!link || link === this.link) {
                         this.getCollectionFactory().create(this.scope, collection => {
                             this.collection = collection;
