@@ -586,8 +586,10 @@ class ProductAttributeValue extends AbstractRepository
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
         }
-
-        return $this->where($where)->findOne(['withDeleted' => $deleted]);
+        // Do not use find method from this class, it can cause infinite loop
+        $this->limit(0, 1)->where($where);
+        $collection = parent::find(['withDeleted' => $deleted]);
+        return count($collection) > 0 ? $collection[0] : null;
     }
 
     protected function populateDefault(Entity $entity, Entity $attribute): void
@@ -764,7 +766,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
