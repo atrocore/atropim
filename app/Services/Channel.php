@@ -64,10 +64,10 @@ class Channel extends Base
                 }
 
                 $result[$product['productId']] = [
-                    'productId' => (string)$product['productId'],
+                    'productId'   => (string)$product['productId'],
                     'productName' => (string)$product['productName'],
-                    'isActive' => (bool)$product['isActive'],
-                    'categories' => $categories
+                    'isActive'    => (bool)$product['isActive'],
+                    'categories'  => $categories
                 ];
             }
 
