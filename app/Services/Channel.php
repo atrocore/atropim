@@ -208,17 +208,19 @@ class Channel extends Base
 
     public function massUnrelateProductChannels($ids, $foreignIds)
     {
-        $scope = 'ProductChannel';
-        if (!$this->getAcl()->check($scope, 'delete')) {
-            throw new Forbidden();
-        }
-        $repository = $this->getEntityManager()->getRepository($scope);
+        $service = $this->getRecordService('ProductChannel');
+        $repository = $service->getRepository();
+
         $where = [
-            "channelId=" => $ids,
-            "productId=" => $foreignIds,
+            "channelId" => $ids,
+            "productId" => $foreignIds,
         ];
 
-        $repository->where($where)->removeCollection();
+        $records = $repository->where($where)->find();
+        foreach ($records as $record) {
+            $service->deleteEntity($record->id);
+        }
+
         return ['message' => "Deleted"];
     }
 
