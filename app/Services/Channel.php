@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
@@ -63,10 +64,10 @@ class Channel extends Base
                 }
 
                 $result[$product['productId']] = [
-                    'productId'   => (string)$product['productId'],
+                    'productId' => (string)$product['productId'],
                     'productName' => (string)$product['productName'],
-                    'isActive'    => (bool)$product['isActive'],
-                    'categories'  => $categories
+                    'isActive' => (bool)$product['isActive'],
+                    'categories' => $categories
                 ];
             }
 
@@ -202,5 +203,40 @@ class Channel extends Base
         }
 
         return array_column($category->getChildren()->toArray(), 'id');
+    }
+
+
+    public function massUnrelateProductChannels($ids, $foreignIds)
+    {
+        $scope = 'ProductChannel';
+        if (!$this->getAcl()->check($scope, 'delete')) {
+            throw new Forbidden();
+        }
+        $repository = $this->getEntityManager()->getRepository($scope);
+        $where = [
+            "channelId=" => $ids,
+            "productId=" => $foreignIds,
+        ];
+
+        $repository->where($where)->removeCollection();
+        return ['message' => "Deleted"];
+    }
+
+    public function massRelateProductChannels($ids, $foreignIds)
+    {
+        $service = $this->getRecordService('ProductChannel');
+        $repository = $service->getRepository();
+        foreach ($ids as $id) {
+            foreach ($foreignIds as $foreignId) {
+                if (!empty($repository->where('productId', $id)->where('channelId', $foreignId)->findOne())) {
+                    continue;
+                }
+                $data = new \stdClass();
+                $data->channelId = $id;
+                $data->productId = $foreignId;
+                $service->createEntity($data);
+            }
+        }
+        return ['message' => "Created"];
     }
 }

@@ -43,7 +43,7 @@
   "relationshipPanels": {
     "productChannels": {
       "select": false,
-      "view": "views/record/panels/for-relationship-type",
+      "view": "pim:views/channel/record/panels/channel-products",
       "relationshipScope": "ProductChannel",
       "relationshipEntities": [
         "Product",
