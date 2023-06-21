@@ -43,13 +43,6 @@ class AssociatedProduct extends Relationship
 {
     protected $mandatorySelectAttributeList = ['backwardAssociatedProductId'];
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     public function createEntity($attachment)
     {
         $pdo = $this->getEntityManager()->getPDO();
