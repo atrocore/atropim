@@ -397,5 +397,15 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.reRender();
         },
+
+        unlinkGroup(data) {
+
+        },
+
+        actionDeleteAllRelationshipEntities(data){
+
+        },
+
+
     })
 );

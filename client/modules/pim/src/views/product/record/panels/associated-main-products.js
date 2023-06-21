@@ -28,8 +28,6 @@
 
 Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:views/record/panels/records-in-groups'],
     (Dep) => Dep.extend({
-        groups: [],
-        selectScope: 'Associate',
         groupScope: 'Association',
         disableSelect: true,
         rowActionsView: 'views/record/row-actions/relationship-no-unlink',
