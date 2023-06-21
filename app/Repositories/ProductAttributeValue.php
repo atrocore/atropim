@@ -825,7 +825,7 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'extensibleMultiEnum':
-                $ids = @json_decode($pav->get('textValue'), true);
+                $ids = @json_decode((string)$pav->get('textValue'), true);
                 if (!empty($ids)) {
                     $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
