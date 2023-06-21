@@ -302,8 +302,20 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 $.ajax({
                     url: `${this.model.name}/${this.link}/relation`,
                     data: JSON.stringify({
-                        ids: [this.model.id],
-                        foreignIds: group.rowList
+                        where: [
+                            {
+                                type: "equals",
+                                attribute: "id",
+                                value: this.model.id
+                            }
+                        ],
+                        foreignWhere: [
+                            {
+                                type: "equals",
+                                attribute: "id",
+                                value: group.rowList
+                            }
+                        ],
                     }),
                     type: 'DELETE',
                     contentType: 'application/json',
