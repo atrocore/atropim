@@ -1,1 +1,0 @@
-<div class="field" data-name="valueField1">{{{valueField}}}</div>

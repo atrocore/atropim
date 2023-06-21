@@ -36,15 +36,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         editTemplate: 'pim:product-attribute-value/fields/base',
 
         setup() {
-            this.useTextarea = false;
-            if (this.model.attributes.attributeType === 'text') {
-                this.useTextarea = true;
-                //this.listTemplate = 'pim:product-attribute-value/fields/text-type-disable';
-                //this.detailTemplate = 'pim:product-attribute-value/fields/text-type-disable';
-
-                console.log('doug test atropim valueContainer');
-                console.log(this.model);
-            }
             this.name = this.options.name || this.defs.name;
 
             this.listenTo(this.model, 'change:attributeId', () => {
@@ -107,8 +98,11 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
                 }
 
-                var tagElement = '> .field[data-name="valueField"] textarea';
-                console.log('tagEleement: ' + tagElement);
+                var tagElement = '> .field[data-name="valueField"]';
+                if (this.checkIfWeuseTextArea()) {
+                    tagElement = '> .field[data-name="valueField"] textarea';
+                }
+
                 let options = {
                     el: `${this.options.el} ${tagElement}`,
                     name: this.name,
@@ -145,6 +139,23 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.extendValueData(view, data);
             }
             return data;
+        },
+
+        data: function () {
+            var data = Dep.prototype.data.call(this);
+            data.useTextarea = this.checkIfWeuseTextArea();
+            
+            return data;
+        },
+
+        checkIfWeuseTextArea: function () {
+            if (this.model.get('useDisabledTextareaInViewMode')) {
+                const typeToChangeDisplaying = ['text', 'varchar', 'wisywig'];
+                if (typeToChangeDisplaying.includes(this.model.attributes.attributeType)) {
+                    return true;
+                }
+            }
+            return false;
         },
 
         extendValueData(view, data) {
