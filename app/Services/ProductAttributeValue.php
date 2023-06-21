@@ -664,7 +664,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             case 'extensibleEnum':
                 if (property_exists($data, 'value')) {
                     $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $data->value);
-                    $data->value = '';
                     if (!empty($option)) {
                         $data->value = $option->get('id');
                     }
@@ -681,9 +680,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     if (!empty($inputValue)) {
                         foreach ($inputValue as $val) {
                             $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $val);
-                            if (!empty($option)) {
-                                $values[] = $option->get('id');
-                            }
+                            $values[] = !empty($option) ? $option->get('id') : $val;
                         }
                     }
                     $data->value = json_encode($values);
