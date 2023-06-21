@@ -36,12 +36,10 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
         events: _.extend({
             'click [data-action="unlinkGroup"]': function (e) {
                 e.preventDefault();
-                // e.stopPropagation();
                 this.trigger('remove-group', $(e.currentTarget).data())
             },
             'click [data-action="unlinkGroupHierarchy"]': function (e) {
                 e.preventDefault();
-                // e.stopPropagation();
                 this.trigger('remove-group-hierarchically', $(e.currentTarget).data());
             }
         }, Dep.prototype.events),
