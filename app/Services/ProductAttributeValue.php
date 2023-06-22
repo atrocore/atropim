@@ -406,6 +406,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $inputData->productId = $child['id'];
             $inputData->productName = $child['name'];
             $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $transactionId);
             if ($child['childrenCount'] > 0) {
                 $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
             }
@@ -494,6 +495,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     $inputData->value = @json_decode($inputData->value, true);
                 }
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav2->get('productId'), null, $transactionId);
                 if ($child['childrenCount'] > 0) {
                     $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
                 }
@@ -617,6 +619,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $children = $this->getRepository()->getChildrenArray($id);
         foreach ($children as $child) {
             $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
+            if (!empty($childPav = $this->getRepository()->get($child['id']))) {
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $childPav->get('productId'), null, $transactionId);
+            }
             if ($child['childrenCount'] > 0) {
                 $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
             }
