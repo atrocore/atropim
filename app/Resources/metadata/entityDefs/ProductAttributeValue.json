@@ -274,6 +274,7 @@
     },
     "useDisabledTextareaInViewMode": {
       "type": "bool",
+      "notStorable": true,
       "default": false
     },
     "isValueReadOnly": {

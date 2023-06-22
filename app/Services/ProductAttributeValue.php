@@ -223,6 +223,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ];
 
             $attribute = $this->getRepository()->getPavAttribute($entity);
+            $this->setUseDisabledTextareaInViewMode($entity, $attribute->get('useDisabledTextareaInViewMode'));
 
             if (!empty($attribute->get('attributeGroupId'))) {
                 $row['sortOrder'] = empty($attribute->get('sortOrderInAttributeGroup')) ? 0 : (int)$attribute->get('sortOrderInAttributeGroup');
@@ -254,6 +255,13 @@ class ProductAttributeValue extends AbstractProductAttributeService
         parent::prepareEntityForOutput($entity);
     }
 
+    public function setUseDisabledTextareaInViewMode(Entity $entity, bool $value){
+        $typeForSpecialRendering = ['text', 'varchar', 'wisywig'];
+        if(in_array($entity->get('attributeType'), $typeForSpecialRendering)){
+            $entity->set('useDisabledTextareaInViewMode', $value);
+        }
+    }
+
     /**
      * @inheritDoc
      */
@@ -266,9 +274,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         /**
          * Prepare maxLength
          */
-        if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')
-            || !property_exists($attachment, 'useDisabledTextareaInViewMode')) {
-
+        if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
             if (empty($attribute)) {
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
@@ -283,11 +289,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'currency'])
                 && $attribute->get('amountOfDigitsAfterComma') !== null) {
                 $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
-            }
-
-            if (!property_exists($attachment, 'useDisabledTextareaInViewMode') && in_array($attribute->get('type'), ['text', 'varchar', 'wysiwyg'])
-                && $attribute->get('useDisabledTextareaInViewMode') !== null) {
-                $attachment->useDisabledTextareaInViewMode = $attribute->get('useDisabledTextareaInViewMode');
             }
         }
 
@@ -932,6 +933,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+        $this->setUseDisabledTextareaInViewMode($entity, $attribute->get('useDisabledTextareaInViewMode'));
+
         if (!empty($attribute->get('attributeGroup'))) {
             $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
         } else {

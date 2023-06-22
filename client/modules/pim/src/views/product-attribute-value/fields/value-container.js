@@ -37,6 +37,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         setup() {
             this.name = this.options.name || this.defs.name;
+            if (this.model.attributes.attributeType === 'text') {
+                console.log('in the setup, test doug');
+                console.log(this);
+            }
 
             this.listenTo(this.model, 'change:attributeId', () => {
                 if (this.mode === 'detail' || this.mode === 'edit') {
