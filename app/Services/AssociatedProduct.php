@@ -256,14 +256,14 @@ class AssociatedProduct extends Relationship
         }
     }
 
-    public function removeAssociations($productId, $associationId)
+    public function removeAssociations($mainProductId, $associationId)
     {
         if (empty($productId)) {
             throw new NotFound();
         }
 
         $repository = $this->getRepository();
-        $where = ['mainProductId' => $productId];
+        $where = ['mainProductId' => $mainProductId];
         if (!empty($associationId)) {
             $where['associationId'] = $associationId;
         }
