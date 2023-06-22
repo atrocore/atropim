@@ -103,9 +103,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 }
 
                 var tagElement = '> .field[data-name="valueField"]';
-                if (this.checkIfWeuseTextArea()) {
-                    tagElement = '> .field[data-name="valueField"] textarea';
-                }
 
                 let options = {
                     el: `${this.options.el} ${tagElement}`,
@@ -154,7 +151,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         checkIfWeuseTextArea: function () {
             if (this.model.get('useDisabledTextareaInViewMode')) {
-                const typeToChangeDisplaying = ['text', 'varchar', 'wisywig'];
+                const typeToChangeDisplaying = ['text', 'varchar', 'wysiwyg'];
                 if (typeToChangeDisplaying.includes(this.model.attributes.attributeType)) {
                     return true;
                 }

@@ -256,7 +256,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     }
 
     public function setUseDisabledTextareaInViewMode(Entity $entity, bool $value){
-        $typeForSpecialRendering = ['text', 'varchar', 'wisywig'];
+        $typeForSpecialRendering = ['text', 'varchar', 'wysiwyg'];
         if(in_array($entity->get('attributeType'), $typeForSpecialRendering)){
             $entity->set('useDisabledTextareaInViewMode', $value);
         }
