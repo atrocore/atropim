@@ -267,7 +267,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
          * Prepare maxLength
          */
         if (!property_exists($attachment, 'maxLength') || !property_exists($attachment, 'amountOfDigitsAfterComma')) {
-
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
             if (empty($attribute)) {
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
@@ -926,6 +925,11 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+
+        if(!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])){
+            $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
+        }
+
         if (!empty($attribute->get('attributeGroup'))) {
             $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
         } else {

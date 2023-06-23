@@ -107,6 +107,12 @@
       ],
       [
         {
+          "name": "useDisabledTextareaInViewMode"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnum"
         },
         false
