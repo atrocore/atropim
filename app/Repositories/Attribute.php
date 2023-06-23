@@ -226,6 +226,25 @@ class Attribute extends AbstractRepository
 
         parent::afterSave($entity, $options);
 
+        /**
+         * Delete all lingual product attribute values
+         */
+        if ($entity->isAttributeChanged('isMultilang') && empty($entity->get('isMultilang'))) {
+            while (true) {
+                $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')
+                    ->where(['attributeId' => $entity->get('id'), 'language!=' => 'main'])
+                    ->limit(0, 2000)
+                    ->order('createdAt', 'ASC')
+                    ->find();
+                if (empty($pavs[0])) {
+                    break;
+                }
+                foreach ($pavs as $pav) {
+                    $this->getEntityManager()->removeEntity($pav);
+                }
+            }
+        }
+
         $this->setInheritedOwnership($entity);
     }
 

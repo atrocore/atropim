@@ -66,6 +66,7 @@
     }
   },
   "messages": {
+    "allLingualAttrsWillDeleted": "Wenn das mehrsprachige Attribut als einsprachig festgelegt ist, werden alle Attributwerte für zusätzliche Sprachen gelöscht. Möchten Sie fortfahren?",
     "sameNumberOptions": "Die gleiche Anzahl von Optionen",
     "productsCountWithAttribute": "Anzahl der Produkte, für die dieses Attribut festgelegt ist: <strong>{count}</strong>",
     "removeAttribute(s)": "Alle Werte für dieses (diese) Attribut(e) werden ebenfalls gelöscht. Möchten Sie diese(n) Attribut(e) wirklich löschen?"

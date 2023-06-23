@@ -68,6 +68,7 @@
     }
   },
   "messages": {
+    "allLingualAttrsWillDeleted": "If the multilingual attribute is set as a not lingual all the attribute values for additional languages will be deleted. Do you want to proceed?",
     "sameNumberOptions": "You must set the same number of options",
     "productsCountWithAttribute": "Count of products where this attribute is set: <strong>{count}</strong>",
     "removeAttribute(s)": "All values for this(these) attribute(s) are also deleted. Do you really want to delete this(these) attribute(s)?"
