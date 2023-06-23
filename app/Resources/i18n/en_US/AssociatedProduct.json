@@ -17,5 +17,8 @@
   },
   "labels": {
     "Create AssociatedProduct": "Create Associated Product"
+  },
+  "messages": {
+    "removeRelatedProducts": "Are you sure you want to remove all the products for the selected Association from the current product? All related products will be retained."
   }
 }

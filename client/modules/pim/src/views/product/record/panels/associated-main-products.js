@@ -26,26 +26,87 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/record/panels/associated-main-products', 'views/record/panels/for-relationship-type',
-    Dep => Dep.extend({
-        setup() {
-            Dep.prototype.setup.call(this);
+Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:views/record/panels/records-in-groups'],
+    (Dep) => Dep.extend({
+        groupScope: 'Association',
+        disableSelect: true,
+        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
 
-            let create = this.buttonList.find(item => item.action === (this.defs.createAction || 'createRelated'));
+        initGroupCollection(group, groupCollection) {
+            groupCollection.url = 'AssociatedProduct';
+            groupCollection.data.select = 'association_id';
+            groupCollection.data.tabId = this.defs.tabId;
+            groupCollection.where = [
+                {
+                    type: 'equals',
+                    attribute: 'mainProductId',
+                    value: this.model.id
+                },
+                {
+                    type: 'equals',
+                    attribute: 'associationId',
+                    value: group.key
+                }
+            ];
+            groupCollection.maxSize = 9999;
+        },
 
-            if (this.getAcl().check('AssociatedProducts', 'create') && !create) {
-                this.buttonList.push({
-                    title: 'Create',
-                    action: this.defs.actionCreate || 'createRelated',
-                    link: this.link,
-                    acl: 'create',
-                    aclScope: this.scope,
-                    html: '<span class="fas fa-plus"></span>',
-                    data: {
-                        link: this.link,
+        fetchCollectionGroups(callback) {
+            const data = {
+                where: [
+                    {
+                        type: 'bool',
+                        value: ['usedAssociations'],
+                        data: {
+                            usedAssociations: {
+                                mainProductId: this.model.id
+                            }
+                        }
                     }
-                });
+                ]
             }
-        }
+            this.ajaxGetRequest('Association', data).then(data => {
+                this.groups = data.list.map(row => ({id: row.id, key: row.id, label: row.name}));
+                callback();
+            });
+        },
+
+        deleteEntities(groupId) {
+            const data = {productId: this.model.id}
+            if (groupId) data.associationId = groupId
+            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct`, data)
+                .done(response => {
+                    this.notify(false);
+                    this.notify('Removed', 'success');
+                    this.model.trigger('after:unrelate');
+                });
+        },
+        actionDeleteAllRelationshipEntities(data) {
+            this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {
+                this.notify('Please wait...');
+                this.deleteEntities()
+            });
+        },
+
+        unlinkGroup(data) {
+            let id = data.id;
+            if (!id) {
+                return;
+            }
+
+            let group = this.groups.find(group => group.id === id);
+            if (!group) {
+                return;
+            }
+
+            this.confirm({
+                message: this.translate('removeRelatedProducts', 'messages', 'AssociatedProduct'),
+                confirmText: this.translate('Remove')
+            }, function () {
+                this.notify('removing');
+                this.deleteEntities(group.id)
+            }, this);
+        },
+
     })
 );

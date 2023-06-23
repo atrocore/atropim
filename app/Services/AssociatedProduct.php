@@ -33,7 +33,9 @@ namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Relationship;
+use Espo\Core\Utils\Language;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
@@ -252,5 +254,20 @@ class AssociatedProduct extends Relationship
         if (property_exists($data, 'backwardAssociation') && !empty($data->backwardAssociation)) {
             $data->backwardAssociationId = $data->backwardAssociation;
         }
+    }
+
+    public function removeAssociations($mainProductId, $associationId)
+    {
+        if (empty($productId)) {
+            throw new NotFound();
+        }
+
+        $repository = $this->getRepository();
+        $where = ['mainProductId' => $mainProductId];
+        if (!empty($associationId)) {
+            $where['associationId'] = $associationId;
+        }
+        $repository->where($where)->removeCollection();
+        return true;
     }
 }

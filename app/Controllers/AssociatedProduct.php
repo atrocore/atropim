@@ -29,9 +29,25 @@
 
 namespace Pim\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+
 /**
  * AssociatedProduct controller
  */
 class AssociatedProduct extends \Espo\Core\Templates\Controllers\Relationship
 {
+
+    public function actionRemoveFromProduct($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'delete')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->removeAssociations((string)$data->productId, (string)$data->associationId);
+    }
 }

@@ -44,7 +44,7 @@ class Association extends AbstractSelectManager
      *
      * @return array
      */
-    public function getAssociatedProductAssociations($mainProductId, $relatedProductId)
+    public function getAssociatedProductAssociations($mainProductId, $relatedProductId = null)
     {
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -53,8 +53,8 @@ class Association extends AbstractSelectManager
         FROM
           associated_product
         WHERE
-          main_product_id =' . $pdo->quote($mainProductId) . '
-          AND related_product_id = ' . $pdo->quote($relatedProductId) . '
+          main_product_id =' . $pdo->quote($mainProductId) . ' ' .
+            (empty($relatedProductId) ? '' : ('AND related_product_id = ' . $pdo->quote($relatedProductId))) . '
           AND deleted = 0';
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -80,6 +80,22 @@ class Association extends AbstractSelectManager
                     'id!=' => (string)$row['association_id']
                 ];
             }
+        }
+    }
+
+    protected function boolFilterUsedAssociations(&$result)
+    {
+        // prepare data
+        $data = (array)$this->getSelectCondition('usedAssociations');
+
+        if (!empty($data['mainProductId'])) {
+            $associations = $this
+                ->getAssociatedProductAssociations($data['mainProductId']);
+            $result['whereClause'][] = [
+                'id' => array_map(function ($item) {
+                    return (string)$item['association_id'];
+                }, $associations)
+            ];
         }
     }
 }

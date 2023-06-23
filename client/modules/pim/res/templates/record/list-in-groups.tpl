@@ -1,6 +1,6 @@
 {{#if collection.models.length}}
 
-<div class="list attribute-values-list">
+<div class="list group-records-list">
     <table class="table full-table">
         {{#if header}}
         <thead>
@@ -32,8 +32,10 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroup" data-id="{{groupId}}">{{translate 'Remove'}}</a></li>
-                                <li><a href="javascript:" class="action" data-action="unlinkAttributeGroupHierarchy" data-id="{{groupId}}">{{translate 'removeHierarchically'}}</a></li>
+                                <li><a href="javascript:" class="action" data-action="unlinkGroup" data-id="{{groupId}}">{{translate 'Remove'}}</a></li>
+                                {{#if hierarchyEnabled }}
+                                <li><a href="javascript:" class="action" data-action="unlinkGroupHierarchy" data-id="{{groupId}}">{{translate 'removeHierarchically'}}</a></li>
+                                {{/if}}
                             </ul>
                         </div>
                     </th>
@@ -66,18 +68,18 @@
 {{/if}}
 
 <style>
-    .attribute-values-list table th:first-child > div,
-     .attribute-values-list table th:first-child > div > a {
+    .group-records-list table th:first-child > div,
+     .group-records-list table th:first-child > div > a {
         font-weight: bold;
         color: #000000;
     }
 
-    .attribute-values-list .btn-group .btn {
+    .group-records-list .btn-group .btn {
         background: transparent !important;
         border: 0
     }
 
-    .attribute-values-list .context-menu {
+    .group-records-list .context-menu {
         padding: 0;
         vertical-align: middle
     }
