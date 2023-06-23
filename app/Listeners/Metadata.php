@@ -87,19 +87,7 @@ class Metadata extends AbstractListener
         $this->addLanguageBoolFiltersForPav($data);
         $this->addScopeBoolFiltersForPav($data);
 
-        $this->addLanguagesToPavLanguageField($data);
-
         $event->setArgument('data', $data);
-    }
-
-    protected function addLanguagesToPavLanguageField(array &$metadata): void
-    {
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                $metadata['entityDefs']['ProductAttributeValue']['fields']['language']['options'][] = $language;
-                $metadata['entityDefs']['ProductAttributeValue']['fields']['language']['optionsIds'][] = strtolower($language);
-            }
-        }
     }
 
     protected function addLanguageBoolFiltersForPav(array &$metadata): void
