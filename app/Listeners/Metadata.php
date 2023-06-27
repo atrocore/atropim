@@ -288,7 +288,7 @@ class Metadata extends AbstractListener
                 'tabId'                => $tab['id'],
                 'view'                 => 'pim:views/product/record/panels/product-attribute-values',
                 "rowActionsView"       => "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
-                "recordListView"       => "pim:views/product-attribute-value/record/list-in-product",
+                "recordListView"       => "pim:views/record/list-in-groups",
                 "aclScopesList"        => [
                     "Attribute",
                     "AttributeGroup",
