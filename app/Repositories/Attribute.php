@@ -229,7 +229,7 @@ class Attribute extends AbstractRepository
         /**
          * Delete all lingual product attribute values
          */
-        if ($entity->isAttributeChanged('isMultilang') && empty($entity->get('isMultilang'))) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('isMultilang') && empty($entity->get('isMultilang'))) {
             while (true) {
                 $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')
                     ->where(['attributeId' => $entity->get('id'), 'language!=' => 'main'])
