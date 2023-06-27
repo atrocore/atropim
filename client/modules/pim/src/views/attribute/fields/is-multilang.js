@@ -33,7 +33,12 @@ Espo.define('pim:views/attribute/fields/is-multilang', 'views/fields/bool',
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:isMultilang', () => {
-                if (!this.model.get('isMultilang') && this.getMetadata().get(['attributes', this.model.get('type'), 'multilingual']) && !this.model.isNew()) {
+                if (
+                    this.mode === 'edit'
+                    && !this.model.get('isMultilang')
+                    && this.getMetadata().get(['attributes', this.model.get('type'), 'multilingual'])
+                    && !this.model.isNew()
+                ) {
                     let model = this.model;
                     Espo.Ui.confirm(this.translate('allLingualAttrsWillDeleted', 'messages', 'Attribute'), {
                         confirmText: this.translate('Apply'),
@@ -42,6 +47,7 @@ Espo.define('pim:views/attribute/fields/is-multilang', 'views/fields/bool',
                             model.set('isMultilang', true);
                         }
                     }, () => {
+                        // do nothing
                     });
                 }
             });
