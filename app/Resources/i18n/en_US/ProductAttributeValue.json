@@ -24,6 +24,7 @@
     "maxLength": "Max Length",
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "amountOfDigitsAfterComma": "Amount of digits after comma",
+    "useDisabledTextareaInViewMode": "Use disabled text area in view mode",
     "isVariantSpecificAttribute": "Variant-specific"
   },
   "links": {
