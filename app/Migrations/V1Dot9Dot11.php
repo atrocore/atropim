@@ -33,10 +33,8 @@ namespace Pim\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot9Dot10 extends Base
+class V1Dot9Dot11 extends Base
 {
-    protected array $measures = [];
-
     public function up(): void
     {
         $this->execute("ALTER TABLE attribute DROP use_disabled_textarea_in_view_mode");
@@ -56,5 +54,4 @@ class V1Dot9Dot10 extends Base
         } catch (\Throwable $e) {
         }
     }
-
 }
