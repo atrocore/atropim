@@ -80,7 +80,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.maxLength = this.model.get('maxLength');
                     params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
                 }
-                params.useDisabledTextareaInViewMode = this.model.get('useDisabledTextareaInViewMode');
+                
+                if (this.model.get('useDisabledTextareaInViewMode')) {
+                    params.useDisabledTextareaInViewMode = this.model.get('useDisabledTextareaInViewMode');
+                }
 
                 if (this.model.get('amountOfDigitsAfterComma')) {
                     params.amountOfDigitsAfterComma = this.model.get('amountOfDigitsAfterComma');
