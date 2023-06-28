@@ -35,6 +35,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         editTemplate: 'pim:product-attribute-value/fields/base',
 
+        fieldActions: false,
+
         setup() {
             this.name = this.options.name || this.defs.name;
 
