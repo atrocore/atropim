@@ -41,11 +41,11 @@
     }
   },
   {
-    "route": "/ProductAttributeValue/action/unlinkAttributeGroupHierarchy",
+    "route": "/ProductAttributeValue/action/unlinkAttributeGroup",
     "method": "delete",
     "params": {
       "controller": "ProductAttributeValue",
-      "action": "unlinkAttributeGroupHierarchy"
+      "action": "unlinkAttributeGroup"
     }
   }
 ]
