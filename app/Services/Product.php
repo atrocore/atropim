@@ -367,11 +367,10 @@ class Product extends Hierarchy
         $success = 0;
         $error = [];
         foreach ($associatedProducts as $associatedProduct) {
-            $success++;
             try {
                 $this->getEntityManager()->removeEntity($associatedProduct);
+                $success++;
             } catch (BadRequest $e) {
-                $success--;
                 $error[] = [
                     'id'          => $associatedProduct->get('mainProductId'),
                     'name'        => $associatedProduct->get('mainProduct')->get('name'),
