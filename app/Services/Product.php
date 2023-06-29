@@ -344,7 +344,6 @@ class Product extends Hierarchy
         $products = $this->getRepository()->select(['id'])->find($selectParams);
         $ids = array_column($products->toArray(), 'id');
 
-
         $foreignSelectParams = $this->getSelectManager()->getSelectParams(['where' => Json::decode(Json::encode($data->foreignWhere), true)], true);
         $foreignProducts = $this->getRepository()->select(['id'])->find($foreignSelectParams);
         $foreignIds = array_column($foreignProducts->toArray(), 'id');
