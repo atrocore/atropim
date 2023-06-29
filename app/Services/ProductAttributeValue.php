@@ -587,7 +587,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
      *
      * @throws \Throwable
      */
-    public function unlinkAttributeGroupHierarchy(string $attributeGroupId, string $productId): bool
+    public function unlinkAttributeGroup(string $attributeGroupId, string $productId, bool $hierarchically = false): bool
     {
         $attributes = $this
             ->getRepository()
@@ -599,6 +599,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ])
             ->find()
             ->toArray();
+
+        if (!$hierarchically) {
+            $this->simpleRemove = true;
+        }
 
         if (!empty($attributes)) {
             foreach ($attributes as $attribute) {
@@ -814,7 +818,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array  $defs
+     * @param array $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
@@ -928,7 +932,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
 
-        if(!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])){
+        if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
         }
 

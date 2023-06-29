@@ -335,9 +335,7 @@ class Product extends Hierarchy
     public function removeAssociateProducts(\stdClass $data): array
     {
         // input data validation
-        if (!property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)
-            || !property_exists($data, 'associationId')
-            || empty($data->associationId)) {
+        if (!property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)) {
             throw new BadRequest($this->exception('wrongInputData'));
         }
 
@@ -347,49 +345,38 @@ class Product extends Hierarchy
         $ids = array_column($products->toArray(), 'id');
 
         $foreignSelectParams = $this->getSelectManager()->getSelectParams(['where' => Json::decode(Json::encode($data->foreignWhere), true)], true);
-
         $foreignProducts = $this->getRepository()->select(['id'])->find($foreignSelectParams);
         $foreignIds = array_column($foreignProducts->toArray(), 'id');
+
+        $where = [
+            'mainProductId'    => $ids,
+            'relatedProductId' => $foreignIds
+        ];
+
+        if (property_exists($data, 'associationId') && !empty($data->associationId)) {
+            $where['associationId'] = $data->associationId;
+        }
 
         $associatedProducts = $this
             ->getEntityManager()
             ->getRepository('AssociatedProduct')
-            ->where(
-                [
-                    'associationId'    => $data->associationId,
-                    'mainProductId'    => $ids,
-                    'relatedProductId' => $foreignIds
-                ]
-            )
+            ->where($where)
             ->find();
-
-        $exists = [];
-        if ($associatedProducts->count() > 0) {
-            foreach ($associatedProducts as $item) {
-                $exists[$item->get('mainProductId') . '_' . $item->get('relatedProductId')] = $item;
-            }
-        }
 
         $success = 0;
         $error = [];
-        foreach ($ids as $id) {
-            foreach ($foreignIds as $foreignId) {
+        foreach ($associatedProducts as $associatedProduct) {
+            try {
+                $this->getEntityManager()->removeEntity($associatedProduct);
                 $success++;
-                if (isset($exists["{$id}_{$foreignId}"])) {
-                    $associatedProduct = $exists["{$id}_{$foreignId}"];
-                    try {
-                        $this->getEntityManager()->removeEntity($associatedProduct);
-                    } catch (BadRequest $e) {
-                        $success--;
-                        $error[] = [
-                            'id'          => $associatedProduct->get('mainProductId'),
-                            'name'        => $associatedProduct->get('mainProduct')->get('name'),
-                            'foreignId'   => $associatedProduct->get('relatedProductId'),
-                            'foreignName' => $associatedProduct->get('relatedProduct')->get('name'),
-                            'message'     => utf8_encode($e->getMessage())
-                        ];
-                    }
-                }
+            } catch (BadRequest $e) {
+                $error[] = [
+                    'id'          => $associatedProduct->get('mainProductId'),
+                    'name'        => $associatedProduct->get('mainProduct')->get('name'),
+                    'foreignId'   => $associatedProduct->get('relatedProductId'),
+                    'foreignName' => $associatedProduct->get('relatedProduct')->get('name'),
+                    'message'     => utf8_encode($e->getMessage())
+                ];
             }
         }
 
@@ -642,7 +629,7 @@ class Product extends Hierarchy
 
     /**
      * @param string $id
-     * @param array  $params
+     * @param array $params
      *
      * @return array
      * @throws Forbidden

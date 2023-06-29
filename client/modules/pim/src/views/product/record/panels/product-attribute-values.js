@@ -283,7 +283,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             return fields;
         },
 
-        unlinkGroup(data) {
+        unlinkGroup(data, hierarchically = false) {
             let id = data.id;
             if (!id) {
                 return;
@@ -295,28 +295,18 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             }
 
             this.confirm({
-                message: this.translate('removeRelatedAttributeGroup', 'messages', 'ProductAttributeValue'),
+                message: this.translate(hierarchically ? 'removeRelatedAttributeGroupCascade' : 'removeRelatedAttributeGroup', 'messages', 'ProductAttributeValue'),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify('removing');
+                const data = {
+                    attributeGroupId: id,
+                    productId: this.model.id
+                }
+                if (hierarchically) data.hierarchically = true
                 $.ajax({
-                    url: `${this.model.name}/${this.link}/relation`,
-                    data: JSON.stringify({
-                        where: [
-                            {
-                                type: "equals",
-                                attribute: "id",
-                                value: this.model.id
-                            }
-                        ],
-                        foreignWhere: [
-                            {
-                                type: "equals",
-                                attribute: "id",
-                                value: group.rowList
-                            }
-                        ],
-                    }),
+                    url: `${this.scope}/action/unlinkAttributeGroup`,
+                    data: JSON.stringify(data),
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: function () {
@@ -332,39 +322,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         unlinkGroupHierarchy(data) {
-            let id = data.id;
-            if (!id) {
-                return;
-            }
-
-            let group = this.groups.find(group => group.id === id);
-            if (!group || !group.rowList) {
-                return;
-            }
-
-            this.confirm({
-                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ProductAttributeValue'),
-                confirmText: this.translate('Remove')
-            }, function () {
-                this.notify('removing');
-                $.ajax({
-                    url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
-                    data: JSON.stringify({
-                        attributeGroupId: id,
-                        productId: this.model.id
-                    }),
-                    type: 'DELETE',
-                    contentType: 'application/json',
-                    success: function () {
-                        this.notify('Removed', 'success');
-                        this.model.trigger('after:unrelate', this.link, this.defs);
-                        this.actionRefresh();
-                    }.bind(this),
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                });
-            }, this);
+            this.unlinkGroup(data, true)
         },
 
         getInitialAttributes() {

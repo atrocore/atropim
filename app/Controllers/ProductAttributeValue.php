@@ -78,16 +78,16 @@ class ProductAttributeValue extends Relationship
     }
 
     /**
-     * @param array     $params
+     * @param array $params
      * @param \stdClass $data
-     * @param Request   $request
+     * @param Request $request
      *
      * @return bool
      *
      * @throws BadRequest
      * @throws Forbidden
      */
-    public function actionUnlinkAttributeGroupHierarchy(array $params, \stdClass $data, Request $request): bool
+    public function actionUnlinkAttributeGroup(array $params, \stdClass $data, Request $request): bool
     {
         if (!$request->isDelete()) {
             throw new BadRequest();
@@ -99,6 +99,6 @@ class ProductAttributeValue extends Relationship
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->productId);
+        return $this->getRecordService()->unlinkAttributeGroup($data->attributeGroupId, $data->productId, property_exists($data, 'hierarchically'));
     }
 }

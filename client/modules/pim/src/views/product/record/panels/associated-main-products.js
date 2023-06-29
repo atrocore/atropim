@@ -72,14 +72,33 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:vi
         },
 
         deleteEntities(groupId) {
-            const data = {productId: this.model.id}
-            if (groupId) data.associationId = groupId
-            this.ajaxPostRequest(`${this.scope}/action/RemoveFromProduct`, data)
-                .done(response => {
+            const data = {
+                where: [
+                    {
+                        type: "equals",
+                        attribute: "id",
+                        value: this.model.id
+                    }
+                ],
+                foreignWhere: [],
+            }
+            if (groupId) {
+                data.associationId = groupId
+            }
+            $.ajax({
+                url: `${this.model.name}/${this.link}/relation`,
+                data: JSON.stringify(data),
+                type: 'DELETE',
+                contentType: 'application/json',
+                success: function () {
                     this.notify(false);
                     this.notify('Removed', 'success');
                     this.model.trigger('after:unrelate');
-                });
+                }.bind(this),
+                error: function () {
+                    this.notify('Error occurred', 'error');
+                }.bind(this),
+            })
         },
         actionDeleteAllRelationshipEntities(data) {
             this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {
