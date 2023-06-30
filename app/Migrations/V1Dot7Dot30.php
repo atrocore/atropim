@@ -37,12 +37,20 @@ class V1Dot7Dot30 extends Base
 {
     public function up(): void
     {
-        $this->getPDO()->exec("ALTER TABLE product_attribute_value DROP is_required, DROP max_length");
-        $this->getPDO()->exec("ALTER TABLE attribute CHANGE default_is_required is_required TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE product_attribute_value DROP is_required, DROP max_length");
+        $this->exec("ALTER TABLE attribute CHANGE default_is_required is_required TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
     public function down(): void
     {
         throw new \Exception('Downgrade is prohibited.');
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
