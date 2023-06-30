@@ -186,6 +186,9 @@ class AssociatedProduct extends Relationship
                 $backwardAttachment->associationId = $data->backwardAssociationId;
             }
         }
+        if (empty($entity->get('backwardAssociatedProductId'))) {
+            return;
+        }
 
         if (property_exists($data, 'mainProductId')) {
             $backwardAttachment->relatedProductId = $data->mainProductId;
