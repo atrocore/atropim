@@ -37,7 +37,11 @@ class V1Dot7Dot12 extends Base
 {
     public function up(): void
     {
-        $this->getPDO()->exec("ALTER TABLE associated_product ADD sorting INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        try {
+            $this->getPDO()->exec("ALTER TABLE associated_product ADD sorting INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        } catch (\Throwable $e) {
+            // ignore all
+        }
 
         $limit = 5000;
         $offset = 0;
