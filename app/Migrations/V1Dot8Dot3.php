@@ -148,7 +148,7 @@ class V1Dot8Dot3 extends Base
         $this->getPDO()->exec("UPDATE product_attribute_value SET attribute_type='extensibleEnum' WHERE attribute_type='enum' AND deleted=0");
         $this->getPDO()->exec("UPDATE attribute SET type='extensibleMultiEnum' WHERE type='multiEnum' AND deleted=0");
         $this->getPDO()->exec("UPDATE product_attribute_value SET attribute_type='extensibleMultiEnum' WHERE attribute_type='multiEnum' AND deleted=0");
-        $this->getPDO()->exec("ALTER TABLE attribute DROP is_sorted");
+        $this->execute("ALTER TABLE attribute DROP is_sorted");
     }
 
     public function down(): void
