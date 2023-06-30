@@ -42,9 +42,9 @@ class V1Dot9Dot0 extends Base
         $this->getPDO()->exec("UPDATE attribute SET type='float' WHERE type='unit'");
         $this->getPDO()->exec("UPDATE product_attribute_value SET attribute_type='float' WHERE attribute_type='unit'");
 
-        $this->getPDO()->exec("ALTER TABLE attribute ADD default_unit VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->getPDO()->exec("ALTER TABLE attribute ADD measure_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->getPDO()->exec("CREATE INDEX IDX_MEASURE_ID ON attribute (measure_id)");
+        $this->exec("ALTER TABLE attribute ADD default_unit VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE attribute ADD measure_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE INDEX IDX_MEASURE_ID ON attribute (measure_id)");
 
         $records = $this->getPDO()
             ->query("SELECT * FROM attribute WHERE data LIKE '%\"measure\"%'")
@@ -99,5 +99,13 @@ class V1Dot9Dot0 extends Base
         }
 
         return $this->measures[$name];
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
