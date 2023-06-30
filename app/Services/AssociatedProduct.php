@@ -195,7 +195,7 @@ class AssociatedProduct extends Relationship
             $backwardAttachment->mainProductId = $data->relatedProductId;
         }
 
-        if (!empty((array)$backwardAttachment)) {
+        if (!empty((array)$backwardAttachment) && !empty($entity->get('backwardAssociatedProductId'))) {
             parent::updateEntity($entity->get('backwardAssociatedProductId'), $backwardAttachment);
         }
     }
