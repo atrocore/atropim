@@ -186,6 +186,9 @@ class AssociatedProduct extends Relationship
                 $backwardAttachment->associationId = $data->backwardAssociationId;
             }
         }
+        if (empty($entity->get('backwardAssociatedProductId'))) {
+            return;
+        }
 
         if (property_exists($data, 'mainProductId')) {
             $backwardAttachment->relatedProductId = $data->mainProductId;
@@ -195,7 +198,7 @@ class AssociatedProduct extends Relationship
             $backwardAttachment->mainProductId = $data->relatedProductId;
         }
 
-        if (!empty((array)$backwardAttachment) && !empty($entity->get('backwardAssociatedProductId'))) {
+        if (!empty((array)$backwardAttachment)) {
             parent::updateEntity($entity->get('backwardAssociatedProductId'), $backwardAttachment);
         }
     }
