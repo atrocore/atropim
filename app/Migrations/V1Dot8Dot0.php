@@ -37,35 +37,35 @@ class V1Dot8Dot0 extends Base
 {
     public function up(): void
     {
-        $this->getPDO()->exec("DROP TABLE IF EXISTS classification");
-        $this->getPDO()->exec("ALTER TABLE product_family RENAME classification");
+        $this->exec("DROP TABLE IF EXISTS classification");
+        $this->exec("ALTER TABLE product_family RENAME classification");
 
-        $this->getPDO()->exec("DROP TABLE IF EXISTS classification_attribute");
-        $this->getPDO()->exec("ALTER TABLE product_family_attribute RENAME classification_attribute");
+        $this->exec("DROP TABLE IF EXISTS classification_attribute");
+        $this->exec("ALTER TABLE product_family_attribute RENAME classification_attribute");
 
-        $this->getPDO()->exec("DROP INDEX IDX_PRODUCT_FAMILY_ID ON classification_attribute");
-        $this->getPDO()->exec("DROP INDEX UNIQ_BD38116AEB3B4E33ADFEE0E7B6E62EFAD4DB71B5AF55D372F5A1AA ON classification_attribute");
+        $this->exec("DROP INDEX IDX_PRODUCT_FAMILY_ID ON classification_attribute");
+        $this->exec("DROP INDEX UNIQ_BD38116AEB3B4E33ADFEE0E7B6E62EFAD4DB71B5AF55D372F5A1AA ON classification_attribute");
 
-        $this->getPDO()->exec("ALTER TABLE classification_attribute CHANGE product_family_id classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->getPDO()->exec("CREATE INDEX IDX_CLASSIFICATION_ID ON classification_attribute (classification_id)");
-        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_9194286CEB3B4E332A86559FB6E62EFAD4DB71B5AF55D372F5A1AA ON classification_attribute (deleted, classification_id, attribute_id, language, scope, channel_id)");
+        $this->exec("ALTER TABLE classification_attribute CHANGE product_family_id classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE INDEX IDX_CLASSIFICATION_ID ON classification_attribute (classification_id)");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_9194286CEB3B4E332A86559FB6E62EFAD4DB71B5AF55D372F5A1AA ON classification_attribute (deleted, classification_id, attribute_id, language, scope, channel_id)");
 
-        $this->getPDO()->exec("DROP INDEX IDX_PRODUCT_FAMILY_ID ON product");
-        $this->getPDO()->exec("ALTER TABLE product CHANGE product_family_id classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->getPDO()->exec("CREATE INDEX IDX_CLASSIFICATION_ID ON product (classification_id)");
+        $this->exec("DROP INDEX IDX_PRODUCT_FAMILY_ID ON product");
+        $this->exec("ALTER TABLE product CHANGE product_family_id classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE INDEX IDX_CLASSIFICATION_ID ON product (classification_id)");
 
-        $this->getPDO()->exec("DROP TABLE IF EXISTS product_classification");
-        $this->getPDO()->exec("CREATE TABLE product_classification (id INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`, classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, product_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, deleted TINYINT(1) DEFAULT '0' COLLATE `utf8mb4_unicode_ci`, INDEX IDX_1602AC1D2A86559F (classification_id), INDEX IDX_1602AC1D4584665A (product_id), UNIQUE INDEX UNIQ_1602AC1D2A86559F4584665A (classification_id, product_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+        $this->exec("DROP TABLE IF EXISTS product_classification");
+        $this->exec("CREATE TABLE product_classification (id INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`, classification_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, product_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, deleted TINYINT(1) DEFAULT '0' COLLATE `utf8mb4_unicode_ci`, INDEX IDX_1602AC1D2A86559F (classification_id), INDEX IDX_1602AC1D4584665A (product_id), UNIQUE INDEX UNIQ_1602AC1D2A86559F4584665A (classification_id, product_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
 
-        $this->getPDO()->exec("DROP INDEX id ON product_classification");
+        $this->exec("DROP INDEX id ON product_classification");
 
         $products = $this->getPDO()->query("SELECT * FROM product WHERE classification_id Is NOT NULL AND deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
         foreach ($products as $product){
-            $this->getPDO()->exec("INSERT INTO product_classification (product_id, classification_id) VALUES ('{$product['id']}', '{$product['classification_id']}')");
+            $this->exec("INSERT INTO product_classification (product_id, classification_id) VALUES ('{$product['id']}', '{$product['classification_id']}')");
         }
 
-        $this->getPDO()->exec("DROP INDEX IDX_CLASSIFICATION_ID ON product");
-        $this->getPDO()->exec("ALTER TABLE product DROP classification_id");
+        $this->exec("DROP INDEX IDX_CLASSIFICATION_ID ON product");
+        $this->exec("ALTER TABLE product DROP classification_id");
 
         $this->updateLayout('Product', 'detail', 'productFamily', 'classifications');
         $this->updateConfig();
@@ -102,5 +102,13 @@ class V1Dot8Dot0 extends Base
         $contents = str_replace("'behaviorOnProductFamilyChange'", "'behaviorOnClassificationChange'", $contents);
 
         file_put_contents($path, $contents);
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
