@@ -61,6 +61,9 @@ class StreamService extends AbstractEntityListener
             'type'  => $attribute->get('type'),
             'label' => $attribute->get('name'),
         ];
+        if (!empty($attribute->get('extensibleEnumId'))) {
+            $fieldDefs['extensibleEnumId'] = $attribute->get('extensibleEnumId');
+        }
 
         switch ($event->getArgument('field')) {
             case 'valueFrom':
