@@ -76,6 +76,7 @@
     "All": "Alle"
   },
   "tooltips": {
+    "isRequired": "Dies ist ein Standardwert, der beim Hinzufügen dieses Attributs zum Produkt oder zur Klassifikation verwendet wird.",
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "virtualProductField": "Werte für dieses Attribut werden als virtuelles Feld über das Produktlistenlayout hinzugefügt werden.",
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."

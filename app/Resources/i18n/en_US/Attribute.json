@@ -78,6 +78,7 @@
     "All": "All"
   },
   "tooltips": {
+    "isRequired": "This is a default value, which will be applied for adding this attribute to a product or to a classification.",
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "virtualProductField": "Values for this attribute will be added as a virtual field via product list layout.",
     "sortOrderInProduct": "Sort order for attribute values for a product."

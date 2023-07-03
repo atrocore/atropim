@@ -25,7 +25,7 @@
     },
     "isRequired": {
       "type": "bool",
-      "default": true
+      "default": false
     },
     "isInherited": {
       "type": "bool",
