@@ -62,10 +62,4 @@ class AttributeGroup extends \Espo\Core\Templates\Services\Base
         ];
     }
 
-    protected function duplicateAttributes(Entity $entity, Entity $duplicatingEntity): void
-    {
-        foreach ($duplicatingEntity->get('attributes') as $attribute) {
-            $this->getRepository()->relate($entity, 'attributes', $attribute);
-        }
-    }
 }
