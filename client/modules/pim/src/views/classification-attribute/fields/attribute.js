@@ -42,6 +42,7 @@ Espo.define('pim:views/classification-attribute/fields/attribute', 'treo-core:vi
         select: function (model) {
             Dep.prototype.select.call(this, model);
             this.model.trigger('change:attribute', model);
+            this.model.set('isRequired', model.get('isRequired'))
         },
     })
 );

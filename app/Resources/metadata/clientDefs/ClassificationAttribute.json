@@ -49,6 +49,16 @@
           ]
         }
       },
+      "isRequired": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      },
       "attribute": {
         "readOnly": {
           "conditionGroup": [

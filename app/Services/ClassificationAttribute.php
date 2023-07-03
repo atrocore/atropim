@@ -70,12 +70,15 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
 
         /**
-         * Prepare maxLength
+         * Prepare maxLength and isRequired
          */
         if (!property_exists($attachment, 'maxLength')) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
             if (empty($attribute)) {
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
+            }
+            if (!isset($attachment->isRequired)) {
+                $attachment->isRequired = $attribute->get('isRequired');
             }
             if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');

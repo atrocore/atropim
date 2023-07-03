@@ -174,7 +174,8 @@
     },
     "isRequired": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "tooltip": true
     },
     "children": {
       "type": "linkMultiple",
