@@ -215,6 +215,14 @@ class Metadata extends AbstractListener
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
                     break;
+                case 'extensibleEnum':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}OptionData"] = array_merge($additionalFieldDefs, ['type' => 'jsonArray']);
+                    break;
+                case 'extensibleMultiEnum':
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Names"] = array_merge($additionalFieldDefs, ['type' => 'jsonArray']);
+                    $metadata['entityDefs']['Product']['fields']["{$fieldName}OptionsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonArray']);
+                    break;
             }
 
             if (!empty($attribute['is_multilang'])) {
