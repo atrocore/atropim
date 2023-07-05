@@ -116,7 +116,7 @@ class V1Dot8Dot0 extends Base
     protected function exec(string $query): void
     {
         try {
-            $this->exec($query);
+            $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
         }
     }
