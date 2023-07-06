@@ -733,25 +733,15 @@ class Product extends Hierarchy
 
         $records = [];
 
-        // filtering pavs by scope and channel languages
+        // filtering pavs by scope and channel
         foreach ($collection as $pav) {
             if (!isset($scopeData[$pav->get('id')])) {
                 continue 1;
             }
-
-            if ($scopeData[$pav->get('id')]->get('scope') === 'Global') {
-                $records[$pav->get('id')] = $pav;
-            } elseif ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && !empty($scopeData[$pav->get('id')]->get('channelId'))) {
-                if (empty($pav->get('attributeIsMultilang'))) {
-                    $records[$pav->get('id')] = $pav;
-                } else {
-                    $channelLanguages = $pav->getChannelLanguages();
-
-                    if (empty($channelLanguages) || in_array($pav->get('language'), $channelLanguages)) {
-                        $records[$pav->get('id')] = $pav;
-                    }
-                }
+            if ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && empty($scopeData[$pav->get('id')]->get('channelId'))) {
+                continue;
             }
+            $records[$pav->get('id')] = $pav;
         }
 
         // clear hided records
