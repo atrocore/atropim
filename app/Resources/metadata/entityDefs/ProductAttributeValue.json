@@ -321,7 +321,7 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
+      "exportDisabled": false,
       "importDisabled": false,
       "emHidden": true
     },
@@ -335,7 +335,7 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
+      "exportDisabled": false,
       "importDisabled": false,
       "emHidden": true
     },
@@ -349,8 +349,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueUnitId": {
@@ -363,8 +363,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueUnit": {
@@ -377,8 +377,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueAllUnits": {
@@ -405,8 +405,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueName": {
@@ -419,8 +419,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
       "emHidden": true
     },
     "valueOptionData": {
