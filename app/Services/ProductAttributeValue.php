@@ -683,7 +683,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     $values = [];
                     $inputValue = $data->value;
                     if (!is_array($inputValue)) {
-                        $inputValue = @json_decode($inputValue, true);
+                        $inputValue = @json_decode((string)$inputValue, true);
                     }
                     if (!empty($inputValue)) {
                         foreach ($inputValue as $val) {
@@ -1029,12 +1029,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
             switch ($pav->get('attributeType')) {
                 case 'array':
                 case 'extensibleMultiEnum':
-                    $inputValue = is_string($data->value) ? @json_decode($data->value) : $data->value;
+                    $inputValue = is_string($data->value) ? @json_decode((string)$data->value) : $data->value;
                     if (!is_array($inputValue)) {
                         $inputValue = [];
                     }
 
-                    $was = @json_decode($pav->get('textValue'));
+                    $was = @json_decode((string)$pav->get('textValue'));
                     if (!is_array($was)) {
                         $was = [];
                     }
