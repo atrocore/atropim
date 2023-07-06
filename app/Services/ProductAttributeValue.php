@@ -1119,6 +1119,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function findExtensibleEnumOption(string $extensibleEnumId, $value)
     {
+        if (empty($value)) {
+            return null;
+        }
+
         return $this->getEntityManager()->getRepository('ExtensibleEnumOption')
             ->where([
                 'extensibleEnumId' => $extensibleEnumId,
