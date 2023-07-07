@@ -67,6 +67,32 @@
       ],
       [
         {
+          "name": "defaultScope"
+        },
+        {
+          "name": "defaultChannel"
+        }
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "sortOrderInProduct"
+        },
+        false
+      ],
+      [
+        {
+          "name": "tooltip"
+        },
+        false
+      ],
+      [
+        {
           "name": "maxLength"
         },
         {
@@ -82,6 +108,18 @@
       [
         {
           "name": "useDisabledTextareaInViewMode"
+        },
+        false
+      ],
+      [
+        {
+          "name": "extensibleEnum"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description"
         },
         false
       ]
