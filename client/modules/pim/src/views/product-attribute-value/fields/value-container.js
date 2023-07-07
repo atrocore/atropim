@@ -49,6 +49,12 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     }
                 }
             });
+
+            this.listenTo(this.model, 'change:language', () => {
+                if (this.mode === 'detail' || this.mode === 'edit') {
+                    this.reRender();
+                }
+            });
         },
 
         clearValue() {
