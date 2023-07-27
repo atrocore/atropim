@@ -44,7 +44,7 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
         }
 
         if ($entity->get('scope') === 'Global') {
-            $entity->set('channelId', null);
+            $entity->set('channelId', '');
         }
 
         parent::beforeSave($entity, $options);
