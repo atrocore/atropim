@@ -37,6 +37,8 @@ class V1Dot9Dot19 extends Base
 {
     public function up(): void
     {
+        $this->getPDO()->exec("DELETE FROM product_asset WHERE deleted=1");
+        $this->getPDO()->exec("DELETE FROM product_asset WHERE scope='Channel' AND (channel_id IS NULL OR channel_id='')");
         $this->exec("DROP INDEX IDX_UNIQUE_RELATIONSHIP ON product_asset");
         $this->getPDO()->exec("UPDATE product_asset SET channel_id='' WHERE channel_id IS NULL");
         $this->exec("CREATE UNIQUE INDEX IDX_UNIQUE_RELATIONSHIP ON product_asset (deleted, product_id, asset_id, scope, channel_id)");
