@@ -381,12 +381,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 return _.isEqual(fetchedData.valueTo, initialData.valueTo);
             }
 
-            if (typeof fetchedData.valueTranslated !== 'undefined') {
-                if (_.isEqual(fetchedData.valueTranslated, initialData.valueTranslated) === false) {
-                    return false
-                }
-            }
-
             if (typeof fetchedData.valueApproved !== 'undefined') {
                 if (_.isEqual(fetchedData.valueApproved, initialData.valueApproved) === false) {
                     return false
