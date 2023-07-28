@@ -248,7 +248,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                             const fetchedData = value.fetch();
                             const initialData = this.initialAttributes[id];
                             value.model.set(fetchedData);
-
+                            console.log(fetchedData, initialData)
                             if (!this.equalityValueCheck(fetchedData, initialData)) {
                                 fetchedData['_prev'] = initialData;
                                 data = _.extend(data || {}, {[id]: fetchedData});
@@ -342,12 +342,16 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                     modelData.data = additionalData;
                 }
 
-                if (model.has('valueTranslateAutomatically')) {
-                    modelData['valueTranslateAutomatically'] = model.get('valueTranslateAutomatically');
+                if (model.has('valueApproved')) {
+                    modelData['valueApproved'] = model.get('valueApproved');
                 }
 
-                if (model.has('valueTranslated')) {
-                    modelData['valueTranslated'] = model.get('valueTranslated');
+                if (model.has('valueNotTranslateFrom')) {
+                    modelData['valueNotTranslateFrom'] = model.get('valueNotTranslateFrom');
+                }
+
+                if (model.has('valueNotTranslateTo')) {
+                    modelData['valueNotTranslateTo'] = model.get('valueNotTranslateTo');
                 }
 
                 data[model.id] = Espo.Utils.cloneDeep(modelData);
@@ -377,14 +381,26 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 return _.isEqual(fetchedData.valueTo, initialData.valueTo);
             }
 
-            if (typeof fetchedData.valueTranslateAutomatically !== 'undefined') {
-                if (_.isEqual(fetchedData.valueTranslateAutomatically, initialData.valueTranslateAutomatically) === false) {
+            if (typeof fetchedData.valueTranslated !== 'undefined') {
+                if (_.isEqual(fetchedData.valueTranslated, initialData.valueTranslated) === false) {
                     return false
                 }
             }
 
-            if (typeof fetchedData.valueTranslated !== 'undefined') {
-                if (_.isEqual(fetchedData.valueTranslated, initialData.valueTranslated) === false) {
+            if (typeof fetchedData.valueApproved !== 'undefined') {
+                if (_.isEqual(fetchedData.valueApproved, initialData.valueApproved) === false) {
+                    return false
+                }
+            }
+
+            if (typeof fetchedData.valueNotTranslateFrom !== 'undefined') {
+                if (_.isEqual(fetchedData.valueNotTranslateFrom, initialData.valueNotTranslateFrom) === false) {
+                    return false
+                }
+            }
+
+            if (typeof fetchedData.valueNotTranslateTo !== 'undefined') {
+                if (_.isEqual(fetchedData.valueNotTranslateTo, initialData.valueNotTranslateTo) === false) {
                     return false
                 }
             }
