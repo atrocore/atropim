@@ -87,9 +87,12 @@ class Language extends AbstractListener
                 }
             }
 
-            $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createScopePrismBoolFilterName('global')] = $channelLabel . ': Global';
-            foreach ($this->getMetadata()->get(['clientDefs', 'ProductAttributeValue', 'channels'], []) as $channel) {
-                $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createScopePrismBoolFilterName($channel['id'])] = $channelLabel . ': ' . $channel['name'];
+            foreach (['ProductAttributeValue', 'ProductAsset'] as $entityType) {
+                $callback = '\\Pim\\SelectManagers\\' . $entityType . '::createScopePrismBoolFilterName';
+                $data[$l][$entityType]['boolFilters'][call_user_func($callback, 'global')] = $channelLabel . ': Global';
+                foreach ($this->getMetadata()->get(['clientDefs', $entityType, 'channels'], []) as $channel) {
+                    $data[$l][$entityType]['boolFilters'][call_user_func($callback, $channel['id'])] = $channelLabel . ': ' . $channel['name'];
+                }
             }
 
             foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields'], []) as $fields => $fieldDefs) {

@@ -230,23 +230,8 @@ class ProductAttributeValue extends AbstractSelectManager
         }
         $channelsIds[] = '';
 
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->where(['channelId' => $channelsIds])
-            ->order('channelId', true)
-            ->find();
+        $subQuery = "SELECT id FROM product_attribute_value WHERE channel_id IN ('" . implode("','", $channelsIds) . "') AND deleted=0";
 
-        $data = [];
-        foreach ($pavs as $pav) {
-            $hash = "{$pav->get('productId')}_{$pav->get('attributeId')}_{$pav->get('language')}";
-            if (!isset($data[$hash])) {
-                $data[$hash] = $pav->get('id');
-            }
-        }
-
-        $ids = implode("','", array_values($data));
-
-        $selectParams['customWhere'] .= " AND product_attribute_value.id IN ('$ids')";
+        $selectParams['customWhere'] .= " AND product_attribute_value.id IN ($subQuery)";
     }
 }
