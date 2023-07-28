@@ -248,7 +248,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                             const fetchedData = value.fetch();
                             const initialData = this.initialAttributes[id];
                             value.model.set(fetchedData);
-                            console.log(fetchedData, initialData)
                             if (!this.equalityValueCheck(fetchedData, initialData)) {
                                 fetchedData['_prev'] = initialData;
                                 data = _.extend(data || {}, {[id]: fetchedData});
