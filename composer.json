@@ -9,7 +9,7 @@
   "conflict": {
     "atrocore/product-variants": "*",
     "atrocore/pdf-generator": "<1.4.23",
-    "atrocore/atrodam": "<1.5.12"
+    "atrocore/atrodam": "<1.5.18"
   },
   "autoload": {
     "psr-4": {
