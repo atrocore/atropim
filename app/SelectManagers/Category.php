@@ -118,13 +118,23 @@ class Category extends AbstractSelectManager
             return;
         }
 
-        $result['whereClause'][] = [
-            'id' => $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0 AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId))
-                ->fetchAll(\PDO::FETCH_COLUMN)
-        ];
+        if($catalogId === true){
+            $result['whereClause'][] = [
+                'id' => $this
+                    ->getEntityManager()
+                    ->getPDO()
+                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0")
+                    ->fetchAll(\PDO::FETCH_COLUMN)
+            ];
+        }else{
+            $result['whereClause'][] = [
+                'id' => $this
+                    ->getEntityManager()
+                    ->getPDO()
+                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0 AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId))
+                    ->fetchAll(\PDO::FETCH_COLUMN)
+            ];
+        }
     }
 
     /**
