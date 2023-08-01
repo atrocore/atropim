@@ -70,12 +70,5 @@
     "asc": false,
     "textFilterFields": [],
     "fullTextSearch": false
-  },
-  "uniqueIndexes": {
-    "unique_relationship": [
-      "deleted",
-      "product_id",
-      "channel_id"
-    ]
   }
 }
