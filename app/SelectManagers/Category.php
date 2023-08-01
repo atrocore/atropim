@@ -107,7 +107,7 @@ class Category extends AbstractSelectManager
     {
         $catalogId = $this->getSelectCondition('onlyCatalogCategories');
 
-        if (empty($catalogId)) {
+        if ($catalogId === false) {
             $result['whereClause'][] = [
                 'id!=' => $this
                     ->getEntityManager()
@@ -118,23 +118,19 @@ class Category extends AbstractSelectManager
             return;
         }
 
-        if($catalogId === true){
-            $result['whereClause'][] = [
-                'id' => $this
-                    ->getEntityManager()
-                    ->getPDO()
-                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0")
-                    ->fetchAll(\PDO::FETCH_COLUMN)
-            ];
-        }else{
-            $result['whereClause'][] = [
-                'id' => $this
-                    ->getEntityManager()
-                    ->getPDO()
-                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0 AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId))
-                    ->fetchAll(\PDO::FETCH_COLUMN)
-            ];
+        $query = "SELECT category_id FROM `catalog_category` WHERE deleted=0";
+
+        if(!is_null($catalogId)){
+            $query .= " AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId);
         }
+
+        $result['whereClause'][] = [
+            'id' => $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query($query)
+                ->fetchAll(\PDO::FETCH_COLUMN)
+        ];
     }
 
     /**

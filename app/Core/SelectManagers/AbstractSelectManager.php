@@ -137,16 +137,14 @@ abstract class AbstractSelectManager extends \Espo\Core\SelectManagers\Base
     protected function getSelectCondition(string $filterName)
     {
         foreach ($this->getSelectData('where') as $key => $row) {
-            if ($row['type'] == 'bool') {
-                if(!empty($row['data'][$filterName])){
-                    $condition = $row['data'][$filterName];
-                }else if(in_array($filterName, $row['value'])){
-                    $condition = true;
-                }
+            if ($row['type'] == 'bool' && !empty($row['data'][$filterName])) {
+                $condition = $row['data'][$filterName];
+            }else{
+                $condition = null;
             }
         }
 
-        return $condition ?? false;
+        return $condition;
     }
 
     /**
