@@ -38,7 +38,7 @@
     "mpn"
   ],
   "relationInheritance": true,
-  "inheritedRelations": ["productAttributeValues"],
+  "inheritedRelations": ["productAttributeValues", "productAssets"],
   "mandatoryUnInheritedRelations": [],
   "unInheritedRelations": [],
   "importTypeSimple": {

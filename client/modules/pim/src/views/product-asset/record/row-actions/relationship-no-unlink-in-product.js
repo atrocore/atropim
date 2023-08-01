@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,22 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Controllers;
+Espo.define('pim:views/product-asset/record/row-actions/relationship-no-unlink-in-product', 'pim:views/record/row-actions/relationship-asset',
+    Dep => Dep.extend({
+        getActionList() {
+            let list = Dep.prototype.getActionList.call(this);
 
-use Espo\Core\Exceptions\BadRequest;
+            if (this.options.acl.delete) {
+                if (
+                    this.getMetadata().get('scopes.Product.relationInheritance') === true
+                    && !(this.getMetadata().get('scopes.Product.unInheritedRelations') || []).includes('productAssets')
+                ) {
+                    list.push({
+                        action: 'removeRelatedHierarchically',
+                        label: 'removeHierarchically',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
+            }
 
-class ProductAsset extends \Espo\Core\Templates\Controllers\Relationship
-{
-    public function actionDelete($params, $data, $request)
-    {
-        if (!$request->isDelete() || empty($params['id'])) {
-            throw new BadRequest();
+            return list;
         }
-
-        $service = $this->getRecordService();
-        $service->simpleRemove = !property_exists($data, 'hierarchically');
-        $service->deleteEntity($params['id']);
-
-        return true;
-    }
-}
+    })
+);

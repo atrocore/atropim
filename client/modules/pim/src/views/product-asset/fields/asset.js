@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of AtroPIM.
  *
@@ -27,22 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-namespace Pim\Controllers;
+Espo.define('pim:views/product-asset/fields/asset', 'views/fields/link',
+    Dep => Dep.extend({
 
-use Espo\Core\Exceptions\BadRequest;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-class ProductAsset extends \Espo\Core\Templates\Controllers\Relationship
-{
-    public function actionDelete($params, $data, $request)
-    {
-        if (!$request->isDelete() || empty($params['id'])) {
-            throw new BadRequest();
-        }
+            const $a = this.$el.find('a');
 
-        $service = $this->getRecordService();
-        $service->simpleRemove = !property_exists($data, 'hierarchically');
-        $service->deleteEntity($params['id']);
+            if (this.model.get('isInherited')) {
+                $a.addClass('inherited-relation');
+            }
+        },
 
-        return true;
-    }
-}
+    })
+);
+
