@@ -107,6 +107,10 @@ class Category extends AbstractSelectManager
     {
         $catalogId = $this->getSelectCondition('onlyCatalogCategories');
 
+        if ($catalogId === false) {
+            return;
+        }
+
         if (empty($catalogId)) {
             $result['whereClause'][] = [
                 'id!=' => $this
