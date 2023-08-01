@@ -39,16 +39,5 @@
   "recordViews": {
     "detail": "pim:views/channel/record/detail",
     "list": "pim:views/record/list"
-  },
-  "relationshipPanels": {
-    "productChannels": {
-      "select": false,
-      "view": "views/record/panels/for-relationship-type",
-      "relationshipScope": "ProductChannel",
-      "relationshipEntities": [
-        "Product",
-        "Channel"
-      ]
-    }
   }
 }

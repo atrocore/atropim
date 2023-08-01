@@ -126,9 +126,6 @@
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
       "view": "pim:views/product/record/panels/associated-main-products"
-    },
-    "productChannels": {
-      "view": "views/record/panels/for-relationship-type"
     }
   },
   "dynamicLogic": {

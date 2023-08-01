@@ -2,7 +2,6 @@
   "fields": {
     "attachments": "Вкладення",
     "mainImage": "Основне зображення",
-    "assets": "Асети",
     "productAssets": "Асети продукту",
     "data": "Дані",
     "categories": "Категорії продукту",
@@ -46,7 +45,6 @@
     "image": "Зображення",
     "calls": "Дзвінки",
     "attachments": "Вкладення",
-    "assets": "Асети",
     "productAssets": "Асети продукту",
     "categories": "Категорії продукту",
     "products": "Продукти",

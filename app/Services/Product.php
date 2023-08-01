@@ -489,54 +489,6 @@ class Product extends Hierarchy
         }
     }
 
-    public function findLinkedEntities($id, $link, $params)
-    {
-        /**
-         * For old export feeds. In old export feeds relations to assets is still existing, so we have to returns it.
-         */
-        if ($link === 'assets') {
-            if (empty($params['where'])) {
-                $params['where'] = [];
-            }
-
-            $productAssets = $this
-                ->getEntityManager()
-                ->getRepository('ProductAsset')
-                ->select(['assetId'])
-                ->where(['productId' => $id])
-                ->find();
-
-            $assetsIds = array_column($productAssets->toArray(), 'assetId');
-            $assetsIds[] = 'no-such-id';
-
-            $params['where'][] = [
-                'type'      => 'equals',
-                'attribute' => 'id',
-                'value'     => $assetsIds
-            ];
-
-            return $this->getServiceFactory()->create('Asset')->findEntities($params);
-        }
-
-        $result = parent::findLinkedEntities($id, $link, $params);
-
-        /**
-         * Mark channels as inherited from categories
-         */
-        if ($link === 'productChannels' && $result['total'] > 0) {
-            $channelsIds = $this->getEntityManager()->getRepository('Product')->getCategoriesChannelsIds($id);
-            if (!empty($channelsIds)) {
-                foreach ($result['collection'] as $record) {
-                    $record->set('isInherited', in_array($record->get('channelId'), $channelsIds));
-                }
-            }
-
-            return $result;
-        }
-
-        return $result;
-    }
-
     /**
      * @inheritDoc
      */

@@ -13,7 +13,6 @@
     },
     "language": {
       "type": "language",
-      "relationshipField": true,
       "default": "main",
       "view": "pim:views/classification-attribute/fields/language",
       "prohibitedEmptyValue": true
@@ -81,7 +80,6 @@
     },
     "scope": {
       "type": "enum",
-      "relationshipField": true,
       "required": true,
       "prohibitedEmptyValue": true,
       "layoutListSmallDisabled": true,
@@ -99,7 +97,6 @@
     },
     "channel": {
       "type": "link",
-      "relationshipField": true,
       "required": false,
       "view": "pim:views/classification-attribute/fields/channel"
     },
