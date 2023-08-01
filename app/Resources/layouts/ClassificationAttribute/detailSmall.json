@@ -27,6 +27,12 @@
       ],
       [
         {
+          "name": "default"
+        },
+        false
+      ],
+      [
+        {
           "name": "language"
         },
         false
