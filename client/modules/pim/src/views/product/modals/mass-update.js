@@ -129,7 +129,10 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
                 let options = {
                     name: name,
-                    model: model,
+                    defs: {
+                        isMassUpdate: true,
+                    },
+                    model: model.clone(),
                     el: this.getSelector() + ' .field[data-name="' + name + '"]',
                     mode: 'edit',
                     params: {}
@@ -201,6 +204,10 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
                     if (view.fieldType === 'currency') {
                         attribute['valueCurrency'] = data[name + 'Currency'];
+                    }
+
+                    if (data[name + 'Translate']) {
+                        attribute['valueTranslate'] = data[name + 'Translate']
                     }
 
                     result.panelsData.productAttributeValues.push(attribute);

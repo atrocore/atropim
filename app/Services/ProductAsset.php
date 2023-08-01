@@ -31,10 +31,10 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Templates\Services\Relationship;
 use Espo\ORM\Entity;
 
-class ProductAsset extends \Espo\Core\Templates\Services\Relationship
+class ProductAsset extends Relationship
 {
     protected $mandatorySelectAttributeList = ['isMainImage', 'scope', 'channelId'];
 
@@ -243,5 +243,13 @@ class ProductAsset extends \Espo\Core\Templates\Services\Relationship
                 $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
             }
         }
+    }
+
+    protected function getRelationshipEntities(): array
+    {
+        return [
+            'product' => 'Product',
+            'asset'   => 'Asset'
+        ];
     }
 }

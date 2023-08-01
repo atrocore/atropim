@@ -20,6 +20,7 @@
     "scope": {
       "type": "enum",
       "required": true,
+      "relationshipField": true,
       "prohibitedEmptyValue": true,
       "options": [
         "Global",
@@ -33,6 +34,8 @@
     },
     "channel": {
       "type": "link",
+      "relationshipField": true,
+      "required": false,
       "view": "pim:views/product-asset/fields/channel"
     },
     "tags": {
@@ -164,7 +167,9 @@
     "unique_relationship": [
       "deleted",
       "product_id",
-      "asset_id"
+      "asset_id",
+      "scope",
+      "channel_id"
     ]
   }
 }

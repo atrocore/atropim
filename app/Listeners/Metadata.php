@@ -85,7 +85,7 @@ class Metadata extends AbstractListener
         $data = $this->addVirtualProductFields($data);
 
         $this->addLanguageBoolFiltersForPav($data);
-        $this->addScopeBoolFiltersForPav($data);
+        $this->addScopeBoolFilters($data);
 
         $event->setArgument('data', $data);
     }
@@ -100,7 +100,7 @@ class Metadata extends AbstractListener
         }
     }
 
-    protected function addScopeBoolFiltersForPav(array &$metadata): void
+    protected function addScopeBoolFilters(array &$metadata): void
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
             return;
@@ -119,10 +119,14 @@ class Metadata extends AbstractListener
                 $dataManager->setCacheData('channels', $channels);
             }
         }
-        $metadata['clientDefs']['ProductAttributeValue']['channels'] = $channels;
-        $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createScopePrismBoolFilterName('global');
-        foreach ($channels as $channel) {
-            $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createScopePrismBoolFilterName($channel['id']);
+
+        foreach (['ProductAttributeValue', 'ProductAsset'] as $entityType) {
+            $metadata['clientDefs'][$entityType]['channels'] = $channels;
+            $callback = '\\Pim\\SelectManagers\\' . $entityType . '::createScopePrismBoolFilterName';
+            $metadata['clientDefs'][$entityType]['boolFilterList'][] = call_user_func($callback, 'global');
+            foreach ($channels as $channel) {
+                $metadata['clientDefs'][$entityType]['boolFilterList'][] = call_user_func($callback, $channel['id']);
+            }
         }
     }
 

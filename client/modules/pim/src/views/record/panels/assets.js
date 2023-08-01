@@ -33,7 +33,7 @@ Espo.define('pim:views/record/panels/assets', 'views/record/panels/for-relations
             Dep.prototype.setup.call(this);
 
             this.actionList.unshift({
-                label: this.translate('massUpload', 'labels', 'Asset'),
+                label: this.translate('upload', 'labels', 'Asset'),
                 action: 'massAssetCreate',
                 data: {
                     link: this.link
@@ -41,6 +41,10 @@ Espo.define('pim:views/record/panels/assets', 'views/record/panels/for-relations
                 acl: 'create',
                 aclScope: 'Asset'
             });
+        },
+
+        getRelationshipEntities() {
+            return ['Product', 'Asset'];
         },
 
         actionMassAssetCreate(data) {
