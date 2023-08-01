@@ -43,10 +43,6 @@ Espo.define('pim:views/record/panels/assets', 'views/record/panels/for-relations
             });
         },
 
-        getRelationshipEntities() {
-            return ['Product', 'Asset'];
-        },
-
         actionMassAssetCreate(data) {
             this.notify('Loading...');
             this.createView('massCreate', 'dam:views/asset/modals/edit', {

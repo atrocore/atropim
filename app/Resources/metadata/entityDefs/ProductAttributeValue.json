@@ -14,14 +14,12 @@
     "language": {
       "type": "language",
       "default": "main",
-      "relationshipField": true,
       "view": "pim:views/classification-attribute/fields/language",
       "prohibitedEmptyValue": true
     },
     "scope": {
       "type": "enum",
       "required": true,
-      "relationshipField": true,
       "prohibitedEmptyValue": true,
       "layoutListSmallDisabled": true,
       "options": [
@@ -37,7 +35,6 @@
     },
     "channel": {
       "type": "link",
-      "relationshipField": true,
       "required": false
     },
     "isRequired": {

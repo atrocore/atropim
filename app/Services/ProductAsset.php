@@ -243,12 +243,4 @@ class ProductAsset extends Relationship
             }
         }
     }
-
-    protected function getRelationshipEntities(): array
-    {
-        return [
-            'product' => 'Product',
-            'asset'   => 'Asset'
-        ];
-    }
 }
