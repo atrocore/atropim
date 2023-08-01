@@ -130,7 +130,6 @@ class ProductAsset extends Relationship
             $inTransaction = true;
         }
         try {
-            $GLOBALS['log']->error('1');
             $result = parent::createEntity($attachment);
             $this->createPseudoTransactionCreateJobs(clone $attachment);
             if ($inTransaction) {
