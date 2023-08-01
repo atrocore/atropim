@@ -81,6 +81,44 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
         }
     }
 
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
+    {
+        $entity = $this->get($parentId);
+        if (empty($entity) || empty($entity->get('productId'))) {
+            return [];
+        }
+
+        $products = $this->getEntityManager()->getRepository('Product')->getChildrenArray($entity->get('productId'));
+
+        if (empty($products)) {
+            return [];
+        }
+
+        $query = "SELECT *
+                  FROM product_asset
+                  WHERE deleted=0
+                    AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
+                    AND asset_id='{$entity->get('assetId')}'
+                    AND scope='{$entity->get('scope')}'";
+
+        if ($entity->get('scope') === 'Channel') {
+            $query .= " AND channel_id='{$entity->get('channelId')}'";
+        }
+
+        $result = [];
+        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+            foreach ($products as $product) {
+                if ($product['id'] === $record['product_id']) {
+                    $record['childrenCount'] = $product['childrenCount'];
+                    break 1;
+                }
+            }
+            $result[] = $record;
+        }
+
+        return $result;
+    }
+
     protected function init()
     {
         parent::init();
