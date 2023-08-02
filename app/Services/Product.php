@@ -183,6 +183,11 @@ class Product extends Hierarchy
             $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
 
             $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id])->find();
+            foreach($pavs AS $pav) {
+                if($pav->get('attributeType') === 'alias') {
+                    unset($data->panelsData->productAttributeValues->{$pav->get('id')});
+                }
+            }
 
             foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
                 $existPavId = $this->getProductAttributeIdForUpdating($pavs, $pavData, (string)$pavId);
@@ -201,7 +206,6 @@ class Product extends Hierarchy
                         unset($copy->channelId);
                         unset($copy->channelName);
                         unset($copy->language);
-
                         $service->updateEntity($existPavId, $copy);
                     } else {
                         $isValidChannel = true;
