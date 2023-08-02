@@ -185,12 +185,12 @@ class Product extends Hierarchy
             $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id])->find();
 
             foreach ($data->panelsData->productAttributeValues as $pavId => $pavData) {
-                $existPavId = $this->getProductAttributeIdForUpdating($pavs, $pavData, (string)$pavId);
+                $existPav = $this->getProductAttributeForUpdating($pavs, $pavData, (string)$pavId);
 
                 try {
                     $copy = clone $pavData;
 
-                    if (!is_null($existPavId)) {
+                    if (!is_null($existPav)) {
                         if (!empty($data->_ignoreConflict)) {
                             $copy->_prev = null;
                         }
@@ -202,7 +202,9 @@ class Product extends Hierarchy
                         unset($copy->channelName);
                         unset($copy->language);
 
-                        $service->updateEntity($existPavId, $copy);
+                        if (empty($this->getMetadata()->get(['attributes', $existPav->get('attributeType'), 'isValueReadOnly']))) {
+                            $service->updateEntity($existPav->get('id'), $copy);
+                        }
                     } else {
                         $isValidChannel = true;
 
@@ -967,19 +969,19 @@ class Product extends Hierarchy
         return !empty($data->panelsData->productAttributeValues);
     }
 
-    protected function getProductAttributeIdForUpdating(EntityCollection $pavs, \stdClass $data, string $id): ?string
+    protected function getProductAttributeForUpdating(EntityCollection $pavs, \stdClass $data, string $id): ?Entity
     {
         if (!property_exists($data, 'attributeId') || !property_exists($data, 'scope') || !property_exists($data, 'language')) {
-            $pavsIds = array_column($pavs->toArray(), 'id');
-
-            if (in_array($id, $pavsIds)) {
-                return $id;
+            foreach ($pavs as $pav) {
+                if ($id === $pav->get('id')) {
+                    return $pav;
+                }
             }
         } else {
             foreach ($pavs as $pav) {
                 if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope && $pav->get('language') == $data->language) {
                     if ($data->scope == 'Global' || ($data->scope === 'Channel' && property_exists($data, 'channelId') && $pav->get('channelId') == $data->channelId)) {
-                        return $pav->id;
+                        return $pav;
                     }
                 }
             }
@@ -987,7 +989,6 @@ class Product extends Hierarchy
 
         return null;
     }
-
 
     /**
      * @inheritDoc
