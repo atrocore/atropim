@@ -456,9 +456,6 @@ class ProductAttributeValue extends AbstractRepository
             case 'array':
             case 'extensibleMultiEnum':
                 if(empty($entity->get('textValue'))){
-                    /*if(is_string($sourceValue)){
-                        $sourceValue = json_decode($sourceValue);
-                    }*/
                     $entity->set('textValue', $arraySourceValue[0]);
                     $isChange = true;
                 }
@@ -907,8 +904,6 @@ class ProductAttributeValue extends AbstractRepository
                     $this->setSpecificValue($entity, [$classificationAttributes[$keyForCorrectClassificationAttribute]->get('defaultFrom'),
                     $classificationAttributes[$keyForCorrectClassificationAttribute]->get('defaultTo')]);
                 }
-            } elseif(in_array($type, ['array', 'extensibleMultiEnum'])) {
-
             }else {
                 $classificationAttributes = $this->getEntityManager()->getRepository('ClassificationAttribute')
                     ->where([
@@ -921,7 +916,10 @@ class ProductAttributeValue extends AbstractRepository
                 if(count($classificationAttributes) === 1) {
                     if($type === 'currency'){
                         $this->setSpecificValue($entity, [$classificationAttributes[0]->get('default'), $classificationAttributes[0]->get('defaultCurrency')]);
-                    }else{
+                    }elseif(in_array($type, ['extensibleMultiEnum', 'array'])){
+                        $this->setSpecificValue($entity, [$classificationAttributes[0]->get('default')]);
+                    }
+                    else{
                         $this->setSpecificValue($entity, [$classificationAttributes[0]->get('default')]);
                     }
                 }

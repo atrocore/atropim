@@ -60,6 +60,20 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
                 }
             }
+
+            if($attribute->get('type') === 'extensibleMultiEnum') {
+                if(!empty($entity->get('default'))){
+                    $entity->set('default', json_decode($entity->get('default')));
+                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->where(['id' => $entity->get('default')])->find();
+                    $entity->set('defaultNames', array_column($options->toArray(), 'name'));
+                    $entity->set('default', $entity->get('defaultNames'));
+                }
+            }else if($attribute->get('type') === 'array'){
+                if(!empty($entity->get('default'))){
+                    $entity->set('default', json_decode($entity->get('default')));
+                }
+            }
         }
     }
 
@@ -255,6 +269,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
             return [$data->defaultFrom, $data->defaultTo];
         }else if($type === 'currency'){
             return [$data->default, $data->defaultCurrency];
+        }else if(in_array($type, ['extensibleMultiEnum', 'array'])){
+            return [json_encode($data->default)];
         }
         else{
             return [$data->default];
