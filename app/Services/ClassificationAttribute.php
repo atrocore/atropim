@@ -198,6 +198,10 @@ class ClassificationAttribute extends AbstractProductAttributeService
     public function updateEntity($id, $data)
     {
         $inTransaction = false;
+        if (property_exists($data, 'default') && is_array($data->default) && !empty($data->default)) {
+            $data->default = json_encode($data->default);
+        }
+
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getEntityManager()->getPDO()->beginTransaction();
             $inTransaction = true;
@@ -220,6 +224,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data): void
     {
+        $pavs = $this->getRepository()->getInheritedPavs($id);
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $inputData = new \stdClass();
             foreach (['scope', 'channelId', 'language'] as $key) {
@@ -232,6 +237,27 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 $parentId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->get('id'), $inputData);
                 $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
             }
+
+            $isChange = $this->getEntityManager()->getRepository('ProductAttributeValue')->setSpecificValue($pav, $this->getDefaultValueToSet($pav, $data));
+            if($isChange){
+                $this->getEntityManager()->saveEntity($pav);
+            }
+        }
+    }
+
+    public function getDefaultValueToSet($pav, $data)
+    {
+        $type = $pav->get('attributeType');
+
+        if($type === 'asset'){
+            return [$data->defaultId];
+        }else if(in_array($type, ['rangeInt', 'rangeFloat'])){
+            return [$data->defaultFrom, $data->defaultTo];
+        }else if($type === 'currency'){
+            return [$data->default, $data->defaultCurrency];
+        }
+        else{
+            return [$data->default];
         }
     }
 

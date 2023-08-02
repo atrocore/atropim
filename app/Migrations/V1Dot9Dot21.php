@@ -33,18 +33,18 @@ namespace Pim\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot9Dot10 extends Base
+class V1Dot9Dot21 extends Base
 {
     public function up(): void
     {
         $this->execute("ALTER TABLE classification_attribute DROP `default`");
 
-        $this->getPDO()->exec("ALTER TABLE classification_attribute ADD `default` LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec("ALTER TABLE classification_attribute ADD `default` LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_from DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_to DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_currency VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_unit_id VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_unit VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_all_units LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonObject)', ADD default_value_id VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_name VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, ADD default_value_option_data LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)', ADD default_value_paths_data LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonObject)', ADD default_value_names LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)', ADD default_value_options_data LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonArray)'");
     }
 
     public function down(): void
     {
-        $this->getPDO()->exec("ALTER TABLE classification_attribute DROP `default`");
+        $this->getPDO()->exec("ALTER TABLE classification_attribute DROP `default`, DROP default_value_from, DROP default_value_to, DROP default_value_currency, DROP default_value_unit_id, DROP default_value_unit, DROP default_value_all_units, DROP default_value_id, DROP default_value_name, DROP default_value_option_data, DROP default_value_paths_data, DROP default_value_names, DROP default_value_options_data");
     }
 
     protected function execute(string $query): void

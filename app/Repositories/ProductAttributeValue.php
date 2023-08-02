@@ -434,6 +434,102 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
+    public function setSpecificValue(Entity $entity, $arraySourceValue): bool
+    {
+        $isChange = false;
+        $attribute = $this->getPavAttribute($entity);
+        switch ($attribute->get('type')) {
+            case 'rangeInt':
+                if(empty($entity->get('intValue')) && empty($entity->get('intValue1'))){
+                    $entity->set('intValue', (int)$arraySourceValue[0]);
+                    $entity->set('intValue1', (int)$arraySourceValue[1]);
+                    $isChange = true;
+                }
+                break;
+            case 'rangeFloat':
+                if(empty($entity->get('floatValue')) && empty($entity->get('floatValue1'))){
+                    $entity->set('floatValue', (float)$arraySourceValue[0]);
+                    $entity->set('floatValue1', (float)$arraySourceValue[1]);
+                    $isChange = true;
+                }
+                break;
+            case 'array':
+            case 'extensibleMultiEnum':
+                if(empty($entity->get('textValue'))){
+                    /*if(is_string($sourceValue)){
+                        $sourceValue = json_decode($sourceValue);
+                    }*/
+                    $entity->set('textValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'extensibleEnum':
+                if(empty($entity->get('varcharValue'))){
+                    $entity->set('varcharValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'text':
+            case 'wysiwyg':
+                if(empty($entity->get('textValue'))){
+                    $entity->set('textValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'bool':
+                if(empty($entity->get('boolValue'))){
+                    $entity->set('boolValue', !empty($arraySourceValue[0]));
+                    $isChange = true;
+                }
+                break;
+            case 'currency':
+                if(empty($entity->get('floatValue'))){
+                    $entity->set('floatValue', (float)$arraySourceValue[0]);
+                    $entity->set('varcharValue', $arraySourceValue[1]);
+                    $isChange = true;
+                }
+                break;
+            case 'int':
+                if(empty($entity->get('intValue'))){
+                    $entity->set('intValue', (int)$arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'float':
+                if(empty($entity->get('floatValue'))){
+                    $entity->set('floatValue', (float)$arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'date':
+                if(empty($entity->get('dateValue'))){
+                    $entity->set('dateValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'datetime':
+                if(empty($entity->get('datetimeValue'))){
+                    $entity->set('datetimeValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            case 'asset':
+                if(empty($entity->get('varcharValue'))){
+                    $entity->set('varcharValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+            default:
+                if(empty($entity->get('varcharValue'))){
+                    $entity->set('varcharValue', $arraySourceValue[0]);
+                    $isChange = true;
+                }
+                break;
+        }
+
+        return $isChange;
+    }
+
     public function getChannelLanguages(string $channelId): array
     {
         if (empty($channelId)) {
@@ -761,7 +857,76 @@ class ProductAttributeValue extends AbstractRepository
             $this->createNote($entity);
         }
 
+        //we set default value from the corresponding classification attribute
+        if($entity->isNew()){
+            $productEntity = $entity->get('product');
+            $this->setDefaultValues($entity,$productEntity);
+        }
+
         parent::beforeSave($entity, $options);
+    }
+
+    public function setDefaultValues(Entity $entity, Entity $productEntity): void
+    {
+        $classifications = $productEntity->get('classifications');
+        $classificationIds = array_column($classifications->toArray(), 'id');
+
+        if(!empty($classificationIds)) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+            $type = $attribute->get('type');
+
+            if($type === 'asset') {
+                $classificationAttributes = $this->getEntityManager()->getRepository('ClassificationAttribute')
+                    ->where([
+                        'attributeId' => $entity->get('attributeId'),
+                        'classificationId' => $classificationIds,
+                        'defaultId!=' => null
+                    ])
+                    ->find();
+
+                if(count($classificationAttributes) === 1) {
+                    $this->setSpecificValue($entity, [$classificationAttributes[0]->get('defaultId')]);
+                }
+            } elseif(in_array($type, ['rangeInt', 'rangeFloat'])) {
+                $classificationAttributes = $this->getEntityManager()->getRepository('ClassificationAttribute')
+                    ->where([
+                        'attributeId' => $entity->get('attributeId'),
+                        'classificationId' => $classificationIds
+                    ])
+                    ->find();
+                $countClassificationAttributeWithDefaultValue = 0;
+                $keyForCorrectClassificationAttribute = null;
+                foreach($classificationAttributes as $key => $classificationAttribute) {
+                    if(!empty($classificationAttribute->get('defaultFrom')) || !empty($classificationAttribute->get('defaultTo'))) {
+                        $countClassificationAttributeWithDefaultValue++;
+                        $keyForCorrectClassificationAttribute = $key;
+                    }
+                }
+
+                if($countClassificationAttributeWithDefaultValue === 1) {
+                    $this->setSpecificValue($entity, [$classificationAttributes[$keyForCorrectClassificationAttribute]->get('defaultFrom'),
+                    $classificationAttributes[$keyForCorrectClassificationAttribute]->get('defaultTo')]);
+                }
+            } elseif(in_array($type, ['array', 'extensibleMultiEnum'])) {
+
+            }else {
+                $classificationAttributes = $this->getEntityManager()->getRepository('ClassificationAttribute')
+                    ->where([
+                        'attributeId' => $entity->get('attributeId'),
+                        'classificationId' => $classificationIds,
+                        'default!=' => null
+                    ])
+                    ->find();
+
+                if(count($classificationAttributes) === 1) {
+                    if($type === 'currency'){
+                        $this->setSpecificValue($entity, [$classificationAttributes[0]->get('default'), $classificationAttributes[0]->get('defaultCurrency')]);
+                    }else{
+                        $this->setSpecificValue($entity, [$classificationAttributes[0]->get('default')]);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -985,7 +1150,7 @@ class ProductAttributeValue extends AbstractRepository
             case 'extensibleMultiEnum':
                 $result['fields'][] = 'value';
                 $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
-                $result['attributes']['became']['value'] = json_decode($entity->get('value'), true);
+                $result['attributes']['became']['value'] = !empty($entity->get('value')) ? json_decode($entity->get('value'), true) : $entity->get('value');
                 break;
             case 'currency':
                 if ($entity->isAttributeChanged('value') && self::$beforeSaveData['value'] !== $entity->get('value')) {

@@ -39,6 +39,8 @@ Espo.define('pim:views/classification-attribute/fields/default-container', 'view
 
         setup() {
             this.name = this.options.name || this.defs.name;
+            let attributeType = this.model.attributes.attribute_type;
+            console.log(this.model.get('default'));
         },
 
         afterRender() {

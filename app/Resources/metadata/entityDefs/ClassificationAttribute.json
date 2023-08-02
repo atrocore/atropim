@@ -135,11 +135,19 @@
       "rows": 4,
       "lengthOfCut": 400,
       "view": "pim:views/classification-attribute/fields/default-container",
-      "hasCompleteValidation": true
+      "hasCompleteValidation": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
     },
-    "defaultValueFrom": {
+    "defaultFrom": {
       "type": "float",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -151,9 +159,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueTo": {
+    "defaultTo": {
       "type": "float",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -165,9 +172,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueCurrency": {
+    "defaultCurrency": {
       "type": "varchar",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -179,9 +185,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueUnitId": {
+    "defaultUnitId": {
       "type": "varchar",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -193,9 +198,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueUnit": {
+    "defaultUnit": {
       "type": "varchar",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -207,9 +211,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueAllUnits": {
+    "defaultAllUnits": {
       "type": "jsonObject",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -221,9 +224,8 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "defaultValueId": {
+    "defaultId": {
       "type": "varchar",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -235,9 +237,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueName": {
+    "defaultName": {
       "type": "varchar",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -249,9 +250,8 @@
       "importDisabled": false,
       "emHidden": true
     },
-    "defaultValueOptionData": {
+    "defaultOptionData": {
       "type": "jsonArray",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -263,9 +263,8 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "defaultValuePathsData": {
+    "defaultPathsData": {
       "type": "jsonObject",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -277,9 +276,8 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "defaultValueNames": {
+    "defaultNames": {
       "type": "jsonArray",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -291,9 +289,8 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "defaultValueOptionsData": {
+    "defaultOptionsData": {
       "type": "jsonArray",
-      "notStorable": true,
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,

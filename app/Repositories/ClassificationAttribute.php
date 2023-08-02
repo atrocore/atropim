@@ -42,17 +42,17 @@ class ClassificationAttribute extends Relationship
     {
         $classificationAttribute = $this->get($id);
         if (empty($classificationAttribute)) {
-            return [];
+            return new EntityCollection();
         }
 
         $classification = $this->getEntityManager()->getRepository('Classification')->get($classificationAttribute->get('classificationId'));
         if (empty($classification)) {
-            return [];
+            return new EntityCollection();
         }
 
         $productsIds = $classification->getLinkMultipleIdList('products');
         if (empty($productsIds)) {
-            return [];
+            return new EntityCollection();
         }
 
         $where = [
@@ -78,6 +78,8 @@ class ClassificationAttribute extends Relationship
         if ($entity->get('scope') === 'Global') {
             $entity->set('channelId', '');
         }
+
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         parent::beforeSave($entity, $options);
     }

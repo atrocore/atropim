@@ -8,6 +8,9 @@
     "name": "language"
   },
   {
+    "name": "default"
+  },
+  {
     "name": "isRequired"
   },
   {

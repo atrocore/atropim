@@ -527,6 +527,8 @@ class Product extends AbstractRepository
                 ]
             );
 
+            $this->getEntityManager()->getRepository('ProductAttributeValue')->setDefaultValues($productAttributeValue, $product);
+
             if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
                 $productAttributeValue->set(
                     [
