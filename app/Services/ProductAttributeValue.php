@@ -998,10 +998,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
-        if (property_exists($data, 'attributeId')) {
-            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
-        }
-
         if (property_exists($data, 'valueId') && !empty($data->valueId)) {
             $data->value = $data->valueId;
         }
