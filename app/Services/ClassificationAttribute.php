@@ -35,13 +35,29 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Pim\Core\ValueConverter;
 
 class ClassificationAttribute extends AbstractProductAttributeService
 {
-    /**
-     * @var array
-     */
-    protected $mandatorySelectAttributeList = ['scope', 'isRequired'];
+    protected $mandatorySelectAttributeList
+        = [
+            'scope',
+            'isRequired',
+            'productName',
+            'attributeId',
+            'attributeName',
+            'attributeType',
+            'attributeTooltip',
+            'intValue',
+            'intValue1',
+            'boolValue',
+            'dateValue',
+            'datetimeValue',
+            'floatValue',
+            'floatValue1',
+            'varcharValue',
+            'textValue'
+        ];
 
     /**
      * @inheritDoc
@@ -50,7 +66,9 @@ class ClassificationAttribute extends AbstractProductAttributeService
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($attribute = $entity->get('attribute'))) {
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+
+        if (!empty($attribute)) {
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));
@@ -60,7 +78,25 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
                 }
             }
+            $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
         }
+    }
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        parent::handleInput($data, $id);
+
+        if (property_exists($data, 'attributeId')) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
+        } elseif (!empty($id) && !empty($entity = $this->getRepository()->get($id))) {
+            $attribute = $entity->get('attribute');
+        }
+
+        if (empty($attribute)) {
+            throw new BadRequest('Attribute is required.');
+        }
+
+        $this->getInjection(ValueConverter::class)->convertTo($data, $attribute);
     }
 
     public function createEntity($attachment)
@@ -302,6 +338,13 @@ class ClassificationAttribute extends AbstractProductAttributeService
         foreach ($records as $k => $record) {
             $collection->offsetSet($k, $record['entity']);
         }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency(ValueConverter::class);
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
