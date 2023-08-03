@@ -762,7 +762,7 @@
     },
     "floatValue1": {
       "columns": [
-        "floatValue",
+        "floatValue1",
         "deleted"
       ]
     },

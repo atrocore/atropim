@@ -109,6 +109,114 @@
       "default": false,
       "view": "pim:views/fields/count-bytes-instead-of-characters"
     },
+    "boolValue": {
+      "type": "bool",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "dateValue": {
+      "type": "date",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "datetimeValue": {
+      "type": "datetime",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "intValue": {
+      "type": "int",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "intValue1": {
+      "type": "int",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "floatValue": {
+      "type": "float",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "floatValue1": {
+      "type": "float",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "varcharValue": {
+      "type": "varchar",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "textValue": {
+      "type": "text",
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -160,7 +268,14 @@
       "classification.name",
       "attribute.name",
       "scope",
-      "channel.name"
+      "channel.name",
+      "varcharValue",
+      "textValue",
+      "intValue",
+      "floatValue",
+      "dateValue",
+      "datetimeValue",
+      "boolValue"
     ]
   },
   "uniqueIndexes": {
@@ -172,5 +287,73 @@
       "scope",
       "channel_id"
     ]
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
+    "boolValue": {
+      "columns": [
+        "boolValue",
+        "deleted"
+      ]
+    },
+    "dateValue": {
+      "columns": [
+        "dateValue",
+        "deleted"
+      ]
+    },
+    "datetimeValue": {
+      "columns": [
+        "datetimeValue",
+        "deleted"
+      ]
+    },
+    "intValue": {
+      "columns": [
+        "intValue",
+        "deleted"
+      ]
+    },
+    "intValue1": {
+      "columns": [
+        "intValue1",
+        "deleted"
+      ]
+    },
+    "floatValue": {
+      "columns": [
+        "floatValue",
+        "deleted"
+      ]
+    },
+    "floatValue1": {
+      "columns": [
+        "floatValue1",
+        "deleted"
+      ]
+    },
+    "varcharValue": {
+      "columns": [
+        "varcharValue",
+        "deleted"
+      ]
+    },
+    "textValue": {
+      "columns": [
+        "textValue",
+        "deleted"
+      ]
+    }
   }
 }
