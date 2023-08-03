@@ -82,6 +82,18 @@ class ProductAttributeValue extends Relationship
 
     public function getChannelLanguages(): array
     {
-        return $this->entityManager->getRepository('ProductAttributeValue')->getChannelLanguages((string)$this->get('channelId'));
+        return $this->getRepository()->getChannelLanguages((string)$this->get('channelId'));
+    }
+
+    public function __get($name)
+    {
+        $this->getRepository()->getValueConverter()->convertFrom($this, $this->get('attribute'));
+
+        return parent::__get($name);
+    }
+
+    protected function getRepository(): \Pim\Repositories\ProductAttributeValue
+    {
+        return $this->entityManager->getRepository('ProductAttributeValue');
     }
 }

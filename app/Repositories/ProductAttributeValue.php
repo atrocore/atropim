@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
+use Pim\Core\ValueConverter;
 
 class ProductAttributeValue extends AbstractRepository
 {
@@ -755,6 +756,11 @@ class ProductAttributeValue extends AbstractRepository
         return $result;
     }
 
+    public function getValueConverter(): ValueConverter
+    {
+        return $this->getInjection(ValueConverter::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -764,6 +770,7 @@ class ProductAttributeValue extends AbstractRepository
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
+        $this->addDependency(ValueConverter::class);
     }
 
     /**
