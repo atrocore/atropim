@@ -10,16 +10,10 @@
     "languages": "Языки",
     "isRequired": "Обязательно",
     "value": "Значение",
+    "valueFrom": "Значение от",
+    "valueTo": "Значение до",
     "scope": "Область действия",
-    "channel": "Канал",
-    "varcharValue": "Value: Varchar",
-    "textValue": "Value: Text",
-    "intValue": "Value: Integer",
-    "floatValue": "Value: Float",
-    "dateValue": "Value: Date",
-    "datetimeValue": "Value: DateTime",
-    "boolValue": "Value: Boolean",
-    "maxLength": "Максимальная длина"
+    "channel": "Канал"
   },
   "links": {
     "productAttribute": "Атрибут продукта",

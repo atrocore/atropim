@@ -9,7 +9,17 @@
     "language": "Sprache",
     "languages": "Sprachen",
     "maxLength": "Maximallänge",
-    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen"
+    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
+    "value": "Standardwert",
+    "valueFrom": "Standardwert von",
+    "valueTo": "Standardwert auf",
+    "varcharValue": "Standardwert: Einzeiliger Text",
+    "textValue": "Standardwert: Text",
+    "intValue": "Standardwert: Ganzzahl",
+    "floatValue": "Standardwert: Float",
+    "dateValue": "Standardwert: Datum",
+    "datetimeValue": "Standardwert: Datum-Uhrzeit",
+    "boolValue": "Standardwert: Boolesch"
   },
   "links": {
     "classification": "Klassifizierung",

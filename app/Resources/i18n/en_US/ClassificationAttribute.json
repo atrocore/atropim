@@ -8,7 +8,17 @@
     "language": "Language",
     "languages": "Languages",
     "maxLength": "Max Length",
-    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters"
+    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
+    "value": "Default Value",
+    "valueFrom": "Default Value From",
+    "valueTo": "Default Value To",
+    "varcharValue": "Default Value: String",
+    "textValue": "Default Value: Text",
+    "intValue": "Default Value: Integer",
+    "floatValue": "Default Value: Float",
+    "dateValue": "Default Value: Date",
+    "datetimeValue": "Default Value: Date-time",
+    "boolValue": "Default Value: Boolean"
   },
   "links": {
     "classification": "Classification",

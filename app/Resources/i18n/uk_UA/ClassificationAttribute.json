@@ -8,7 +8,10 @@
     "language": "Мова",
     "languages": "Мови",
     "maxLength": "Максимальна довжина",
-    "countBytesInsteadOfCharacters": "Рахувати байти замість символів"
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
+    "value": "Значення за замовчуванням",
+    "valueFrom": "Значення за замовчуванням від",
+    "valueTo": "Значення за замовчуванням до"
   },
   "links": {
     "classification": "Класифікація",
