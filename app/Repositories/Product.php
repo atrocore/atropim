@@ -519,11 +519,20 @@ class Product extends AbstractRepository
             $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
             $productAttributeValue->set(
                 [
-                    'productId'   => $product->get('id'),
-                    'attributeId' => $ca->get('attributeId'),
-                    'language'    => $ca->get('language'),
-                    'scope'       => $ca->get('scope'),
-                    'channelId'   => $ca->get('channelId')
+                    'productId'     => $product->get('id'),
+                    'attributeId'   => $ca->get('attributeId'),
+                    'language'      => $ca->get('language'),
+                    'scope'         => $ca->get('scope'),
+                    'channelId'     => $ca->get('channelId'),
+                    'boolValue'     => $ca->get('boolValue'),
+                    'dateValue'     => $ca->get('dateValue'),
+                    'datetimeValue' => $ca->get('datetimeValue'),
+                    'intValue'      => $ca->get('intValue'),
+                    'intValue1'     => $ca->get('intValue1'),
+                    'floatValue'    => $ca->get('floatValue'),
+                    'floatValue1'   => $ca->get('floatValue1'),
+                    'varcharValue'  => $ca->get('varcharValue'),
+                    'textValue'     => $ca->get('textValue'),
                 ]
             );
 
@@ -537,8 +546,6 @@ class Product extends AbstractRepository
                 );
             }
 
-            $productAttributeValue->skipVariantValidation = true;
-            $productAttributeValue->skipProductChannelValidation = true;
             $productAttributeValue->clearCompletenessFields = true;
 
             try {
