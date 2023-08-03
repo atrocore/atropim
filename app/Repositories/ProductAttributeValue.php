@@ -32,11 +32,10 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
-use Espo\Core\Utils\Util;
+use Pim\Core\ValueConverter;
 
 class ProductAttributeValue extends AbstractRepository
 {
@@ -353,87 +352,6 @@ class ProductAttributeValue extends AbstractRepository
         return null;
     }
 
-    public function convertValue(Entity $entity): void
-    {
-        if (empty($entity->get('attributeType'))) {
-            return;
-        }
-
-        if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
-            $entity->set('attributeExtensibleEnumId', $this->getPavAttribute($entity)->get('extensibleEnumId'));
-        }
-
-        switch ($entity->get('attributeType')) {
-            case 'rangeInt':
-                $entity->set('valueFrom', $entity->get('intValue'));
-                $entity->set('valueTo', $entity->get('intValue1'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'rangeFloat':
-                $entity->set('valueFrom', $entity->get('floatValue'));
-                $entity->set('valueTo', $entity->get('floatValue1'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'array':
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                break;
-            case 'extensibleMultiEnum':
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                if (isset($options[0])) {
-                    $entity->set('valueNames', array_column($options, 'name', 'id'));
-                    $entity->set('valueOptionsData', $options);
-                }
-                break;
-            case 'extensibleEnum':
-                $entity->set('value', $entity->get('varcharValue'));
-                $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                if (!empty($option)) {
-                    $entity->set('valueName', $option['name']);
-                    $entity->set('valueOptionData', $option);
-                }
-                break;
-            case 'text':
-            case 'wysiwyg':
-                $entity->set('value', $entity->get('textValue'));
-                break;
-            case 'bool':
-                $entity->set('value', !empty($entity->get('boolValue')));
-                break;
-            case 'currency':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueCurrency', $entity->get('varcharValue'));
-                break;
-            case 'int':
-                $entity->set('value', $entity->get('intValue'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'float':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'date':
-                $entity->set('value', $entity->get('dateValue'));
-                break;
-            case 'datetime':
-                $entity->set('value', $entity->get('datetimeValue'));
-                break;
-            case 'asset':
-                $entity->set('value', $entity->get('varcharValue'));
-                $entity->set('valueId', $entity->get('varcharValue'));
-                if (!empty($entity->get('valueId'))) {
-                    if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
-                        $entity->set('valueName', $attachment->get('name'));
-                        $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-                    }
-                }
-                break;
-            default:
-                $entity->set('value', $entity->get('varcharValue'));
-                break;
-        }
-    }
-
     public function getChannelLanguages(string $channelId): array
     {
         if (empty($channelId)) {
@@ -457,56 +375,11 @@ class ProductAttributeValue extends AbstractRepository
         );
     }
 
-    public function get($id = null)
-    {
-        $entity = parent::get($id);
-
-        if (!empty($entity)) {
-            $this->convertValue($entity);
-        }
-
-        return $entity;
-    }
-
     public function loadAttributes(array $ids): void
     {
         foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => $ids])->find() as $attribute) {
             $this->pavsAttributes[$attribute->get('id')] = $attribute;
         }
-    }
-
-    public function find(array $params = [])
-    {
-        $collection = parent::find($params);
-
-        $this->loadAttributes(array_column($collection->toArray(), 'attributeId'));
-
-        foreach ($collection as $entity) {
-            $this->convertValue($entity);
-        }
-
-        return $collection;
-    }
-
-    public function removeCollection(array $options = [])
-    {
-        $collection = parent::find();
-
-        if (count($collection) > 0) {
-            foreach ($collection as $item) {
-                $this->remove($item, $options);
-            }
-        }
-    }
-
-    public function findOne(array $params = [])
-    {
-        $entity = parent::findOne($params);
-        if (!empty($entity)) {
-            $this->convertValue($entity);
-        }
-
-        return $entity;
     }
 
     public function save(Entity $entity, array $options = [])
@@ -605,14 +478,8 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isNew()) {
-            if ($attribute->get('type') === 'extensibleEnum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
-                $entity->set('value', $attribute->get('enumDefault'));
-                $entity->set('varcharValue', $attribute->get('value'));
-            }
-
-            if (!empty($attribute->get('measureId')) && empty($entity->get('valueUnitId')) && !empty($attribute->get('defaultUnit'))) {
-                $entity->set('valueUnitId', $attribute->get('defaultUnit'));
-                $entity->set('varcharValue', $entity->get('valueUnitId'));
+            if (!empty($attribute->get('measureId')) && empty($entity->get('varcharValue')) && !empty($attribute->get('defaultUnit'))) {
+                $entity->set('varcharValue', $attribute->get('defaultUnit'));
             }
         }
     }
@@ -766,7 +633,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
@@ -843,26 +710,32 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'rangeInt':
-            case 'rangeFloat':
-                if ($pav->get('valueTo') !== null && $pav->get('valueFrom') !== null && $pav->get('valueFrom') > $pav->get('valueTo')) {
+                if ($pav->get('intValue1') !== null && $pav->get('intValue') !== null && $pav->get('intValue') > $pav->get('intValue1')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
                     $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
-                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('valueFrom')], $message));
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('intValue')], $message));
+                }
+                break;
+            case 'rangeFloat':
+                if ($pav->get('floatValue1') !== null && $pav->get('floatValue') !== null && $pav->get('floatValue') > $pav->get('floatValue1')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('floatValue')], $message));
                 }
                 break;
         }
 
-        if (!empty($pav->get('valueUnitId'))) {
+        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($pav->get('varcharValue'))) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->select(['id'])
                 ->where([
-                    'id'        => $pav->get('valueUnitId'),
+                    'id'        => $pav->get('varcharValue'),
                     'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
                 ])
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('valueUnitId'), $attribute->get('name')));
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('varcharValue'), $attribute->get('name')));
             }
         }
     }
@@ -883,6 +756,11 @@ class ProductAttributeValue extends AbstractRepository
         return $result;
     }
 
+    public function getValueConverter(): ValueConverter
+    {
+        return $this->getInjection(ValueConverter::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -892,6 +770,7 @@ class ProductAttributeValue extends AbstractRepository
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
+        $this->addDependency(ValueConverter::class);
     }
 
     /**

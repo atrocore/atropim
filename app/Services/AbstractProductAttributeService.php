@@ -31,6 +31,9 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
+
 class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Relationship
 {
     protected function prepareDefaultLanguages(\stdClass $attachment): void
@@ -72,5 +75,20 @@ class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Rela
         }
 
         return $result;
+    }
+
+    protected function getAttributeViaInputData(\stdClass $data, ?string $id = null): Entity
+    {
+        if (property_exists($data, 'attributeId')) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
+        } elseif (!empty($id) && !empty($entity = $this->getRepository()->get($id))) {
+            $attribute = $entity->get('attribute');
+        }
+
+        if (empty($attribute)) {
+            throw new BadRequest('Attribute is required.');
+        }
+
+        return $attribute;
     }
 }

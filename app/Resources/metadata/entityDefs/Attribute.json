@@ -121,13 +121,6 @@
       "type": "bool",
       "default": false
     },
-    "enumDefault": {
-      "type": "enum",
-      "view": "pim:views/fields/enum-default",
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true
-    },
     "virtualProductField": {
       "type": "bool",
       "default": false,

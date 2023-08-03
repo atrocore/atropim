@@ -16,5 +16,8 @@
   },
   {
     "name": "channel"
+  },
+  {
+    "name": "value"
   }
 ]

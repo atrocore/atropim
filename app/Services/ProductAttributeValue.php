@@ -39,6 +39,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
+use Pim\Core\ValueConverter;
 
 class ProductAttributeValue extends AbstractProductAttributeService
 {
@@ -176,30 +177,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return false;
         }
 
-        $this->getRepository()->convertValue($parentPav);
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($parentPav, $parentPav->get('attribute'));
 
         $input = new \stdClass();
         $input->isVariantSpecificAttribute = $parentPav->get('isVariantSpecificAttribute');
-        $input->value = $parentPav->get('value');
-
-        switch ($parentPav->get('attributeType')) {
-            case 'currency':
-                $input->valueCurrency = $parentPav->get('valueCurrency');
-                break;
-            case 'int':
-            case 'float':
-                $input->value = $parentPav->get('value');
-                $input->valueUnitId = $parentPav->get('valueUnitId');
-                break;
-            case 'rangeInt':
-            case 'rangeFloat':
-                $input->valueFrom = $parentPav->get('valueFrom');
-                $input->valueTo = $parentPav->get('valueTo');
-                $input->valueUnitId = $parentPav->get('valueUnitId');
-                break;
-            case 'asset':
-                $input->valueId = $parentPav->get('valueId');
-                break;
+        foreach ($parentPav->toArray() as $name => $v) {
+            if (substr($name, 0, 5) === 'value') {
+                $input->$name = $v;
+            }
         }
 
         $this->updateEntity($pav->get('id'), $input);
@@ -293,7 +278,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return $this->multipleCreateViaLanguages($attachment);
         }
 
-        $this->prepareInputValue($attachment);
         $this->prepareDefaultValues($attachment);
 
         if ($this->isPseudoTransaction()) {
@@ -417,8 +401,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         parent::beforeCreateEntity($entity, $data);
 
         $this->validateRequired($entity);
-
-        $this->setInputValue($entity, $data);
     }
 
     /**
@@ -432,8 +414,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $data->attributeId = $entity->get('attributeId');
             }
         }
-
-        $this->prepareInputValue($data);
 
         if ($this->isPseudoTransaction()) {
             return parent::updateEntity($id, $data);
@@ -502,13 +482,18 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
     }
 
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        parent::handleInput($data, $id);
+
+        $this->getInjection('container')->get(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
+    }
+
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         parent::beforeUpdateEntity($entity, $data);
 
         $this->validateRequired($entity);
-
-        $this->setInputValue($entity, $data);
     }
 
     protected function hasCompleteness(Entity $entity): bool
@@ -639,141 +624,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->addDependency('container');
     }
 
-    protected function setInputValue(Entity $entity, \stdClass $data): void
-    {
-        if (empty($entity->get('attributeId'))) {
-            throw new BadRequest('Attribute ID is required.');
-        }
-
-        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-        if (empty($attribute)) {
-            throw new BadRequest('Attribute is required.');
-        }
-
-        if (!empty($attribute->get('type'))) {
-            $entity->set('attributeType', $attribute->get('type'));
-        }
-
-        /**
-         * Convert unit to unitId for backward compatibility
-         */
-        if (property_exists($data, 'valueUnit') && !property_exists($data, 'valueUnitId')) {
-            $units = $this->getMeasureUnits($attribute->get('measureId'));
-            foreach ($units as $unit) {
-                if ($unit->get('name') === $data->valueUnit) {
-                    $data->valueUnitId = $unit->get('id');
-                    break;
-                }
-            }
-            unset($data->valueUnit);
-        }
-
-        switch ($attribute->get('type')) {
-            case 'extensibleEnum':
-                if (property_exists($data, 'value')) {
-                    $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $data->value);
-                    if (!empty($option)) {
-                        $data->value = $option->get('id');
-                    }
-                    $entity->set('varcharValue', $data->value);
-                }
-                break;
-            case 'extensibleMultiEnum':
-                if (property_exists($data, 'value')) {
-                    $values = [];
-                    $inputValue = $data->value;
-                    if (!is_array($inputValue)) {
-                        $inputValue = @json_decode((string)$inputValue, true);
-                    }
-                    if (!empty($inputValue)) {
-                        foreach ($inputValue as $val) {
-                            $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $val);
-                            $values[] = !empty($option) ? $option->get('id') : $val;
-                        }
-                    }
-                    $data->value = json_encode($values);
-                    $entity->set('textValue', $data->value);
-                }
-                break;
-            case 'array':
-            case 'text':
-            case 'wysiwyg':
-                if (property_exists($data, 'value')) {
-                    $entity->set('textValue', $data->value);
-                }
-                break;
-            case 'bool':
-                if (property_exists($data, 'value')) {
-                    $entity->set('boolValue', !empty($data->value));
-                }
-                break;
-            case 'int':
-                if (property_exists($data, 'value')) {
-                    $entity->set('intValue', $data->value);
-                }
-                if (property_exists($data, 'valueUnitId')) {
-                    $entity->set('varcharValue', $data->valueUnitId);
-                }
-                break;
-            case 'rangeInt':
-                if (property_exists($data, 'valueFrom')) {
-                    $entity->set('intValue', $data->valueFrom);
-                }
-                if (property_exists($data, 'valueTo')) {
-                    $entity->set('intValue1', $data->valueTo);
-                }
-                if (property_exists($data, 'valueUnitId')) {
-                    $entity->set('varcharValue', $data->valueUnitId);
-                }
-                break;
-            case 'currency':
-                if (property_exists($data, 'value')) {
-                    $entity->set('floatValue', $data->value);
-                }
-                if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
-                    $entity->set('varcharValue', $data->data->currency);
-                }
-                if (property_exists($data, 'valueCurrency')) {
-                    $entity->set('varcharValue', $data->valueCurrency);
-                }
-                break;
-            case 'float':
-                if (property_exists($data, 'value')) {
-                    $entity->set('floatValue', $data->value);
-                }
-                if (property_exists($data, 'valueUnitId')) {
-                    $entity->set('varcharValue', $data->valueUnitId);
-                }
-                break;
-            case 'rangeFloat':
-                if (property_exists($data, 'valueFrom')) {
-                    $entity->set('floatValue', $data->valueFrom);
-                }
-                if (property_exists($data, 'valueTo')) {
-                    $entity->set('floatValue1', $data->valueTo);
-                }
-                if (property_exists($data, 'valueUnitId')) {
-                    $entity->set('varcharValue', $data->valueUnitId);
-                }
-                break;
-            case 'date':
-                if (property_exists($data, 'value')) {
-                    $entity->set('dateValue', $data->value);
-                }
-                break;
-            case 'datetime':
-                if (property_exists($data, 'value')) {
-                    $entity->set('datetimeValue', $data->value);
-                }
-                break;
-            default:
-                if (property_exists($data, 'value')) {
-                    $entity->set('varcharValue', $data->value);
-                }
-                break;
-        }
-    }
-
     public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool
     {
         // check acl
@@ -818,7 +668,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array $defs
+     * @param array  $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
@@ -973,7 +823,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
         }
 
-        $this->getRepository()->convertValue($entity);
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($entity, $attribute);
 
         if ($attribute->get('measureId')) {
             $entity->set('attributeMeasureId', $attribute->get('measureId'));
@@ -981,29 +831,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 'measureId' => $attribute->get('measureId'),
                 'mainField' => 'value'
             ]);
-        }
-
-        $entity->clear('boolValue');
-        $entity->clear('dateValue');
-        $entity->clear('datetimeValue');
-        $entity->clear('intValue');
-        $entity->clear('floatValue');
-        $entity->clear('varcharValue');
-        $entity->clear('textValue');
-    }
-
-    private function prepareInputValue($data): void
-    {
-        if (!is_object($data)) {
-            return;
-        }
-
-        if (property_exists($data, 'valueId') && !empty($data->valueId)) {
-            $data->value = $data->valueId;
-        }
-
-        if (property_exists($data, 'value') && is_array($data->value)) {
-            $data->value = json_encode($data->value);
         }
     }
 
@@ -1098,35 +925,5 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         return Entity::areValuesEqual($type, $value1, $value2);
-    }
-
-    protected function getValueDataFields(): array
-    {
-        $fields = ['valueDataId'];
-
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                $fields[] = 'valueData' . ucfirst(Util::toCamelCase(strtolower($language))) . 'Id';
-            }
-        }
-
-        return $fields;
-    }
-
-    protected function findExtensibleEnumOption(string $extensibleEnumId, $value)
-    {
-        if (empty($value)) {
-            return null;
-        }
-
-        return $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-            ->where([
-                'extensibleEnumId' => $extensibleEnumId,
-                'OR'               => [
-                    ['id' => $value],
-                    ['code' => $value],
-                ]
-            ])
-            ->findOne();
     }
 }

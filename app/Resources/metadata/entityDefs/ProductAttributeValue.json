@@ -311,7 +311,6 @@
     "valueFrom": {
       "type": "float",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -325,7 +324,6 @@
     "valueTo": {
       "type": "float",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -339,7 +337,6 @@
     "valueCurrency": {
       "type": "varchar",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -353,7 +350,6 @@
     "valueUnitId": {
       "type": "varchar",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -367,7 +363,6 @@
     "valueUnit": {
       "type": "varchar",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -381,7 +376,6 @@
     "valueAllUnits": {
       "type": "jsonObject",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -395,7 +389,6 @@
     "valueId": {
       "type": "varchar",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -409,7 +402,6 @@
     "valueName": {
       "type": "varchar",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -423,7 +415,6 @@
     "valueOptionData": {
       "type": "jsonArray",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -437,7 +428,6 @@
     "valuePathsData": {
       "type": "jsonObject",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -451,7 +441,6 @@
     "valueNames": {
       "type": "jsonArray",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -465,7 +454,6 @@
     "valueOptionsData": {
       "type": "jsonArray",
       "notStorable": true,
-      "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
@@ -762,7 +750,7 @@
     },
     "floatValue1": {
       "columns": [
-        "floatValue",
+        "floatValue1",
         "deleted"
       ]
     },

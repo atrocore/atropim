@@ -44,6 +44,12 @@
         {
           "name": "countBytesInsteadOfCharacters"
         }
+      ],
+      [
+        {
+          "name": "value"
+        },
+        false
       ]
     ],
     "style": "default",
