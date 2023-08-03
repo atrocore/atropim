@@ -236,6 +236,16 @@ class ValueConverter extends Injectable
                 $entity->set('value', $entity->get('varcharValue'));
                 break;
         }
+
+        $entity->clear('boolValue');
+        $entity->clear('dateValue');
+        $entity->clear('datetimeValue');
+        $entity->clear('intValue');
+        $entity->clear('intValue1');
+        $entity->clear('floatValue');
+        $entity->clear('floatValue1');
+        $entity->clear('varcharValue');
+        $entity->clear('textValue');
     }
 
     protected function getEntityManager(): EntityManager
