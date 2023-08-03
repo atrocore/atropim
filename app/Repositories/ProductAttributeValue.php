@@ -32,11 +32,9 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
-use Espo\Core\Utils\Util;
 
 class ProductAttributeValue extends AbstractRepository
 {
@@ -353,87 +351,6 @@ class ProductAttributeValue extends AbstractRepository
         return null;
     }
 
-    public function convertValue(Entity $entity): void
-    {
-        if (empty($entity->get('attributeType'))) {
-            return;
-        }
-
-        if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
-            $entity->set('attributeExtensibleEnumId', $this->getPavAttribute($entity)->get('extensibleEnumId'));
-        }
-
-        switch ($entity->get('attributeType')) {
-            case 'rangeInt':
-                $entity->set('valueFrom', $entity->get('intValue'));
-                $entity->set('valueTo', $entity->get('intValue1'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'rangeFloat':
-                $entity->set('valueFrom', $entity->get('floatValue'));
-                $entity->set('valueTo', $entity->get('floatValue1'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'array':
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                break;
-            case 'extensibleMultiEnum':
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                if (isset($options[0])) {
-                    $entity->set('valueNames', array_column($options, 'name', 'id'));
-                    $entity->set('valueOptionsData', $options);
-                }
-                break;
-            case 'extensibleEnum':
-                $entity->set('value', $entity->get('varcharValue'));
-                $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                if (!empty($option)) {
-                    $entity->set('valueName', $option['name']);
-                    $entity->set('valueOptionData', $option);
-                }
-                break;
-            case 'text':
-            case 'wysiwyg':
-                $entity->set('value', $entity->get('textValue'));
-                break;
-            case 'bool':
-                $entity->set('value', !empty($entity->get('boolValue')));
-                break;
-            case 'currency':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueCurrency', $entity->get('varcharValue'));
-                break;
-            case 'int':
-                $entity->set('value', $entity->get('intValue'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'float':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
-                break;
-            case 'date':
-                $entity->set('value', $entity->get('dateValue'));
-                break;
-            case 'datetime':
-                $entity->set('value', $entity->get('datetimeValue'));
-                break;
-            case 'asset':
-                $entity->set('value', $entity->get('varcharValue'));
-                $entity->set('valueId', $entity->get('varcharValue'));
-                if (!empty($entity->get('valueId'))) {
-                    if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
-                        $entity->set('valueName', $attachment->get('name'));
-                        $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
-                    }
-                }
-                break;
-            default:
-                $entity->set('value', $entity->get('varcharValue'));
-                break;
-        }
-    }
-
     public function getChannelLanguages(string $channelId): array
     {
         if (empty($channelId)) {
@@ -457,56 +374,11 @@ class ProductAttributeValue extends AbstractRepository
         );
     }
 
-    public function get($id = null)
-    {
-        $entity = parent::get($id);
-
-        if (!empty($entity)) {
-            $this->convertValue($entity);
-        }
-
-        return $entity;
-    }
-
     public function loadAttributes(array $ids): void
     {
         foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => $ids])->find() as $attribute) {
             $this->pavsAttributes[$attribute->get('id')] = $attribute;
         }
-    }
-
-    public function find(array $params = [])
-    {
-        $collection = parent::find($params);
-
-        $this->loadAttributes(array_column($collection->toArray(), 'attributeId'));
-
-        foreach ($collection as $entity) {
-            $this->convertValue($entity);
-        }
-
-        return $collection;
-    }
-
-    public function removeCollection(array $options = [])
-    {
-        $collection = parent::find();
-
-        if (count($collection) > 0) {
-            foreach ($collection as $item) {
-                $this->remove($item, $options);
-            }
-        }
-    }
-
-    public function findOne(array $params = [])
-    {
-        $entity = parent::findOne($params);
-        if (!empty($entity)) {
-            $this->convertValue($entity);
-        }
-
-        return $entity;
     }
 
     public function save(Entity $entity, array $options = [])

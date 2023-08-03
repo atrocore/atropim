@@ -926,34 +926,4 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         return Entity::areValuesEqual($type, $value1, $value2);
     }
-
-    protected function getValueDataFields(): array
-    {
-        $fields = ['valueDataId'];
-
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                $fields[] = 'valueData' . ucfirst(Util::toCamelCase(strtolower($language))) . 'Id';
-            }
-        }
-
-        return $fields;
-    }
-
-    protected function findExtensibleEnumOption(string $extensibleEnumId, $value)
-    {
-        if (empty($value)) {
-            return null;
-        }
-
-        return $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-            ->where([
-                'extensibleEnumId' => $extensibleEnumId,
-                'OR'               => [
-                    ['id' => $value],
-                    ['code' => $value],
-                ]
-            ])
-            ->findOne();
-    }
 }
