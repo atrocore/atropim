@@ -37,6 +37,8 @@ class V1Dot9Dot22 extends Base
 {
     public function up(): void
     {
+        $this->exec("ALTER TABLE attribute DROP enum_default");
+
         $this->exec("DROP INDEX IDX_FLOAT_VALUE1 ON product_attribute_value");
         $this->exec("CREATE INDEX IDX_FLOAT_VALUE1 ON product_attribute_value (float_value1, deleted)");
 
