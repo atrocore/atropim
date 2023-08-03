@@ -169,6 +169,12 @@ class ValueConverter extends Injectable
                 }
                 break;
         }
+
+        foreach (['valueName', 'valueNames', 'valueOptionData', 'valueOptionsData', 'valueAllUnits', 'valuePathsData'] as $name) {
+            if (property_exists($data, $name)) {
+                unset($data->$name);
+            }
+        }
     }
 
     public function convertFrom(Entity $entity, Entity $attribute): void

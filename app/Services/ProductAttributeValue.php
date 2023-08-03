@@ -177,30 +177,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return false;
         }
 
-        $this->getRepository()->convertValue($parentPav);
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($parentPav, $parentPav->get('attribute'));
 
         $input = new \stdClass();
         $input->isVariantSpecificAttribute = $parentPav->get('isVariantSpecificAttribute');
-        $input->value = $parentPav->get('value');
-
-        switch ($parentPav->get('attributeType')) {
-            case 'currency':
-                $input->valueCurrency = $parentPav->get('valueCurrency');
-                break;
-            case 'int':
-            case 'float':
-                $input->value = $parentPav->get('value');
-                $input->valueUnitId = $parentPav->get('valueUnitId');
-                break;
-            case 'rangeInt':
-            case 'rangeFloat':
-                $input->valueFrom = $parentPav->get('valueFrom');
-                $input->valueTo = $parentPav->get('valueTo');
-                $input->valueUnitId = $parentPav->get('valueUnitId');
-                break;
-            case 'asset':
-                $input->valueId = $parentPav->get('valueId');
-                break;
+        foreach ($parentPav->toArray() as $name => $v) {
+            if (substr($name, 0, 5) === 'value') {
+                $input->$name = $v;
+            }
         }
 
         $this->updateEntity($pav->get('id'), $input);
@@ -684,7 +668,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array $defs
+     * @param array  $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
@@ -839,7 +823,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
         }
 
-        $this->getRepository()->convertValue($entity);
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($entity, $attribute);
 
         if ($attribute->get('measureId')) {
             $entity->set('attributeMeasureId', $attribute->get('measureId'));
@@ -848,14 +832,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 'mainField' => 'value'
             ]);
         }
-
-        $entity->clear('boolValue');
-        $entity->clear('dateValue');
-        $entity->clear('datetimeValue');
-        $entity->clear('intValue');
-        $entity->clear('floatValue');
-        $entity->clear('varcharValue');
-        $entity->clear('textValue');
     }
 
     protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
