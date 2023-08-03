@@ -152,6 +152,16 @@ class ValueConverter extends Injectable
                     unset($data->value);
                 }
                 break;
+            case 'asset':
+                if (property_exists($data, 'value')) {
+                    $data->varcharValue = $data->value;
+                    unset($data->value);
+                }
+                if (property_exists($data, 'valueId')) {
+                    $data->varcharValue = $data->valueId;
+                    unset($data->value);
+                }
+                break;
             default:
                 if (property_exists($data, 'value')) {
                     $data->varcharValue = $data->value;

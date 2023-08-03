@@ -86,17 +86,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
     {
         parent::handleInput($data, $id);
 
-        if (property_exists($data, 'attributeId')) {
-            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
-        } elseif (!empty($id) && !empty($entity = $this->getRepository()->get($id))) {
-            $attribute = $entity->get('attribute');
-        }
-
-        if (empty($attribute)) {
-            throw new BadRequest('Attribute is required.');
-        }
-
-        $this->getInjection(ValueConverter::class)->convertTo($data, $attribute);
+        $this->getInjection(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
     }
 
     public function createEntity($attachment)
