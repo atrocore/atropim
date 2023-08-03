@@ -40,19 +40,21 @@ class ClassificationAttribute extends Relationship
 {
     public function getInheritedPavs(string $id): EntityCollection
     {
+        $result = new EntityCollection([], 'ProductAttributeValue');
+
         $classificationAttribute = $this->get($id);
         if (empty($classificationAttribute)) {
-            return [];
+            return $result;
         }
 
         $classification = $this->getEntityManager()->getRepository('Classification')->get($classificationAttribute->get('classificationId'));
         if (empty($classification)) {
-            return [];
+            return $result;
         }
 
         $productsIds = $classification->getLinkMultipleIdList('products');
         if (empty($productsIds)) {
-            return [];
+            return $result;
         }
 
         $where = [
@@ -66,11 +68,13 @@ class ClassificationAttribute extends Relationship
             $where['channelId'] = $classificationAttribute->get('channelId');
         }
 
-        return $this
+        $result = $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
             ->where($where)
             ->find();
+
+        return $result;
     }
 
     public function beforeSave(Entity $entity, array $options = [])
