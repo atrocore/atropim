@@ -15,7 +15,6 @@
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Заборонити порожні значення",
-    "enumDefault": "За замовчуванням(Список)",
     "measure": "Міра",
     "defaultUnit": "Одиниця виміру за замовченням",
     "virtualProductField": "Віртуальне поле продукту",

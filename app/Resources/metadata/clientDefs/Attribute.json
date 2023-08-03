@@ -184,19 +184,6 @@
           ]
         }
       },
-      "enumDefault": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "extensibleEnum"
-              ]
-            }
-          ]
-        }
-      },
       "amountOfDigitsAfterComma": {
         "visible": {
           "conditionGroup": [

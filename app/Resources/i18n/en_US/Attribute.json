@@ -15,7 +15,6 @@
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Disable empty value",
-    "enumDefault": "Default(List)",
     "measure": "Measure",
     "defaultUnit": "Default Unit",
     "virtualProductField": "Virtual product field",

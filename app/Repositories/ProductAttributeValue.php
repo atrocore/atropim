@@ -477,10 +477,6 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isNew()) {
-            if ($attribute->get('type') === 'extensibleEnum' && empty($entity->get('varcharValue')) && !empty($attribute->get('enumDefault'))) {
-                $entity->set('varcharValue', $attribute->get('enumDefault'));
-            }
-
             if (!empty($attribute->get('measureId')) && empty($entity->get('varcharValue')) && !empty($attribute->get('defaultUnit'))) {
                 $entity->set('varcharValue', $attribute->get('defaultUnit'));
             }
