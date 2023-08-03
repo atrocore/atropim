@@ -477,14 +477,12 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if ($entity->isNew()) {
-            if ($attribute->get('type') === 'extensibleEnum' && empty($entity->get('value')) && !empty($attribute->get('enumDefault'))) {
-                $entity->set('value', $attribute->get('enumDefault'));
-                $entity->set('varcharValue', $attribute->get('value'));
+            if ($attribute->get('type') === 'extensibleEnum' && empty($entity->get('varcharValue')) && !empty($attribute->get('enumDefault'))) {
+                $entity->set('varcharValue', $attribute->get('enumDefault'));
             }
 
-            if (!empty($attribute->get('measureId')) && empty($entity->get('valueUnitId')) && !empty($attribute->get('defaultUnit'))) {
-                $entity->set('valueUnitId', $attribute->get('defaultUnit'));
-                $entity->set('varcharValue', $entity->get('valueUnitId'));
+            if (!empty($attribute->get('measureId')) && empty($entity->get('varcharValue')) && !empty($attribute->get('defaultUnit'))) {
+                $entity->set('varcharValue', $attribute->get('defaultUnit'));
             }
         }
     }
@@ -638,7 +636,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
@@ -715,26 +713,32 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'rangeInt':
-            case 'rangeFloat':
-                if ($pav->get('valueTo') !== null && $pav->get('valueFrom') !== null && $pav->get('valueFrom') > $pav->get('valueTo')) {
+                if ($pav->get('intValue1') !== null && $pav->get('intValue') !== null && $pav->get('intValue') > $pav->get('intValue1')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
                     $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
-                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('valueFrom')], $message));
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('intValue')], $message));
+                }
+                break;
+            case 'rangeFloat':
+                if ($pav->get('floatValue1') !== null && $pav->get('floatValue') !== null && $pav->get('floatValue') > $pav->get('floatValue1')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('floatValue')], $message));
                 }
                 break;
         }
 
-        if (!empty($pav->get('valueUnitId'))) {
+        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($pav->get('varcharValue'))) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->select(['id'])
                 ->where([
-                    'id'        => $pav->get('valueUnitId'),
+                    'id'        => $pav->get('varcharValue'),
                     'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
                 ])
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('valueUnitId'), $attribute->get('name')));
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('varcharValue'), $attribute->get('name')));
             }
         }
     }
