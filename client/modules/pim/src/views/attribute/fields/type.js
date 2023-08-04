@@ -47,8 +47,10 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
 
             if (this.model.isNew()) {
                 $.each(this.getMetadata().get(['attributes']), (attributeType, attributeDefs) => {
-                    this.params.options.push(attributeType);
-                    this.translatedOptions[attributeType] = this.getLanguage().translateOption(attributeType, 'type', 'Attribute');
+                    if (attributeDefs.hasOwnProperty('type') && attributeDefs.type !== null && attributeDefs.type !== '') {
+                        this.params.options.push(attributeType);
+                        this.translatedOptions[attributeType] = this.getLanguage().translateOption(attributeType, 'type', 'Attribute');
+                    }
                 });
             } else {
                 this.params.options.push(this.model.get(this.name));
