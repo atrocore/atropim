@@ -48,7 +48,7 @@ Espo.define('pim:views/classification-attribute/fields/languages', 'views/fields
                     this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                         if (attr.isMultilang) {
                             this.show();
-                            this.model.set('languages', this.params.options);
+                            this.model.set('languages', ['main']);
                         }
                     });
                 }
