@@ -34,6 +34,8 @@
     "channel": {
       "type": "link",
       "required": false,
+      "notNull": true,
+      "default": "",
       "view": "pim:views/product-asset/fields/channel"
     },
     "tags": {

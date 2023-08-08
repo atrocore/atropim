@@ -40,6 +40,11 @@ class V1Dot9Dot23 extends Base
         $this->getPDO()->exec("DELETE FROM classification_attribute WHERE channel_id IS NULL");
         $this->getPDO()->exec("DELETE FROM product_attribute_value WHERE channel_id IS NULL");
 
+        $this->getPDO()->exec("ALTER TABLE product_attribute_value CHANGE channel_id channel_id VARCHAR(24) DEFAULT '' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec("ALTER TABLE classification_attribute CHANGE channel_id channel_id VARCHAR(24) DEFAULT '' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+
+        $this->exec("ALTER TABLE product_asset CHANGE channel_id channel_id VARCHAR(24) DEFAULT '' NOT NULL COLLATE `utf8mb4_unicode_ci`");
+
         $this->updateComposer('atrocore/pim', '^1.9.23');
     }
 

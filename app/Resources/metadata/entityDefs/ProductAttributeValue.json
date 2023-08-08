@@ -35,6 +35,8 @@
     },
     "channel": {
       "type": "link",
+      "notNull": true,
+      "default": "",
       "required": false
     },
     "isRequired": {
