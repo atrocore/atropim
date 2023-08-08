@@ -79,7 +79,7 @@ class ClassificationAttribute extends Relationship
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('scope') === 'Global') {
+        if (empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
         }
 

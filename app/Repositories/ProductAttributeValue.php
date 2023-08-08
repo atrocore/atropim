@@ -495,7 +495,7 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         // for unique index
-        if ($entity->get('channelId') === null) {
+        if (empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
         }
 
