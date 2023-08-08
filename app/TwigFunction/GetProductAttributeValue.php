@@ -56,6 +56,9 @@ class GetProductAttributeValue extends AbstractTwigFunction
         }
 
         $currentPav = $this->getTemplateData('entity');
+        if (empty($currentPav) || $currentPav->getEntityType() !== 'ProductAttributeValue') {
+            return null;
+        }
 
         $attributeId = $input[0];
         $channelId = empty($input[1]) ? '' : $input[1];
