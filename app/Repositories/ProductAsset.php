@@ -43,7 +43,8 @@ class ProductAsset extends \Espo\Core\Templates\Repositories\Relationship
             $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
         }
 
-        if ($entity->get('scope') === 'Global') {
+        // for unique index
+        if (empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
         }
 
