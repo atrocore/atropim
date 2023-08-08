@@ -87,6 +87,14 @@
       ],
       [
         {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
           "name": "maxLength"
         },
         {

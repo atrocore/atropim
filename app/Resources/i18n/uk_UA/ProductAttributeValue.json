@@ -40,7 +40,9 @@
     "noSuchAttributeUnit": "Одиниця виміру для атрибута '%s' не допустима.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас немає прав на читання значень атрибутів.",
     "attributeDontMatchToPattern": "Значення атрибута \"{attribute}\" не відповідає патерну \"{pattern}\".",
-    "attributeShouldHaveBeUnique": "Атрибут %s повинен мати унікальне значення."
+    "attributeShouldHaveBeUnique": "Атрибут %s повинен мати унікальне значення.",
+    "valueShouldBeLessThanMax": "Значення для атрибута '%s' має бути менше ніж '%s'.",
+    "valueShouldBeGreaterThanMin": "Значення для атрибута '%s' має бути більше, ніж '%s'."
   },
   "messages": {
     "removeRelatedAttributeGroup": "Ви впевнені, що хочете видалити всі атрибути з їхніми значеннями для обраної групи атрибутів з поточного продукту? Усі атрибути та їхні значення для дочірніх продуктів будуть збережені.",

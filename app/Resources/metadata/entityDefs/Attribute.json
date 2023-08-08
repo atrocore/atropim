@@ -250,6 +250,14 @@
     "useDisabledTextareaInViewMode": {
       "type": "bool",
       "default": false
+    },
+    "min": {
+      "type": "int",
+      "tooltip": true
+    },
+    "max": {
+      "type": "int",
+      "tooltip": true
     }
   },
   "links": {

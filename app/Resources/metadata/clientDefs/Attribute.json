@@ -199,6 +199,34 @@
           ]
         }
       },
+      "min": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "rangeInt",
+                "rangeFloat"
+              ]
+            }
+          ]
+        }
+      },
+      "max": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "rangeInt",
+                "rangeFloat"
+              ]
+            }
+          ]
+        }
+      },
       "useDisabledTextareaInViewMode": {
         "visible": {
           "conditionGroup": [

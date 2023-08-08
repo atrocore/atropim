@@ -47,7 +47,9 @@
     "noSuchAttributeUnit": "Die Einheit für das Attribut '%s' ist ungültig.",
     "youHaveNoAclRightsToReadAttributeValues": "Sie haben keine Rechte, Attributwerte zu lesen.",
     "attributeDontMatchToPattern": "Wert des Attributes \"{attribute}\" entspricht nicht dem Pattern \"{pattern}\".",
-    "attributeShouldHaveBeUnique": "Das Attribut %s sollte einen eindeutigen Wert haben."
+    "attributeShouldHaveBeUnique": "Das Attribut %s sollte einen eindeutigen Wert haben.",
+    "valueShouldBeLessThanMax": "Der Wert für das Attribut '%s' sollte kleiner als '%s' sein.",
+    "valueShouldBeGreaterThanMin": "Der Wert für das Attribut '%s' sollte größer als '%s' sein."
   },
   "messages": {
     "removeRelatedAttributeGroup": "Möchten Sie wirklich alle Attribute mit ihren Werten für die ausgewählte Attributgruppe aus dem aktuellen Produkt löschen? Alle Attribute und ihre Werte für die untergeordneten Produkte werden beibehalten.",
