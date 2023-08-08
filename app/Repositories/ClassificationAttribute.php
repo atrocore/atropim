@@ -79,6 +79,7 @@ class ClassificationAttribute extends Relationship
 
     public function beforeSave(Entity $entity, array $options = [])
     {
+        // for unique index
         if (empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
         }
