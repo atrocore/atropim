@@ -101,6 +101,17 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "type": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "general"
+      ],
+      "optionsIds": [
+        "general"
+      ],
+      "default": "general"
     }
   },
   "links": {

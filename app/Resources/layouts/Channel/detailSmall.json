@@ -21,7 +21,9 @@
         {
           "name": "locales"
         },
-        false
+        {
+          "name": "type"
+        }
       ],
       [
         {
