@@ -25,7 +25,9 @@
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "useDisabledTextareaInViewMode": "Use disabled text area in view mode",
-    "isVariantSpecificAttribute": "Variant-specific"
+    "isVariantSpecificAttribute": "Variant-specific",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "productAttribute": "Product attribute",

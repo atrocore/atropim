@@ -257,15 +257,19 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
             }
 
-            if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])
-                && $attribute->get('maxLength') !== null) {
-                $attachment->maxLength = $attribute->get('maxLength');
-                $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
-            }
+            $propertiesToAddAndCorrespondingTypes = [
+                'maxLength' => ['varchar', 'text', 'wysiwyg'], 
+                'countBytesInsteadOfCharacters' => ['varchar', 'text', 'wysiwyg'],
+                'amountOfDigitsAfterComma' => ['float', 'currency'],
+                'max' => ['rangeInt', 'rangeFloat'],
+                'min' => ['rangeInt', 'rangeFloat']
+            ];
 
-            if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'currency'])
-                && $attribute->get('amountOfDigitsAfterComma') !== null) {
-                $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
+            foreach ($propertiesToAddAndCorrespondingTypes as $property => $types) {
+                if (!property_exists($attachment, $property) && in_array($attribute->get('type'), $types)
+                    && $attribute->get($property) !== null) {
+                    $attachment->$property = $attribute->get($property);
+                }
             }
         }
 
@@ -804,14 +808,20 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $classificationAttribute = $this->getRepository()->findClassificationAttribute($entity);
 
-        $entity->set('isRequired', $attribute->get('isRequired'));
-        $entity->set('maxLength', $attribute->get('maxLength'));
-        $entity->set('countBytesInsteadOfCharacters', $attribute->get('countBytesInsteadOfCharacters'));
-        $entity->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
+        $attributeFieldsToAdd = ['isRequired', 'maxLenght', 'countBytesInsteadOfCharacters', 'amountOfDigitsAfterComma', 'max', 'min'];
+        
+        foreach ($attributeFieldsToAdd as $field) {
+            $entity->set($field, $attribute->get($field));
+        }
+
         if (!empty($classificationAttribute)) {
-            $entity->set('isRequired', $classificationAttribute->get('isRequired'));
-            $entity->set('maxLength', $classificationAttribute->get('maxLength'));
-            $entity->set('countBytesInsteadOfCharacters', $classificationAttribute->get('countBytesInsteadOfCharacters'));
+            $classificationFieldsToAdd = ['isRequired', 'maxLenght', 'countBytesInsteadOfCharacters', 'max', 'min'];
+
+            foreach ($classificationFieldsToAdd as $field) {
+                if($classificationAttribute->get($field) !== null){
+                    $entity->set($field, $classificationAttribute->get($field));
+                }
+            }
         }
 
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));

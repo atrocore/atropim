@@ -427,6 +427,16 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "min": {
+      "type": "int",
+      "tooltip": true,
+      "view": "pim:views/fields/min"
+    },
+    "max": {
+      "type": "int",
+      "tooltip": true,
+      "view": "pim:views/fields/max"
     }
   },
   "links": {

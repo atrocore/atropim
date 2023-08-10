@@ -39,12 +39,16 @@ class V1Dot9Dot23 extends Base
     {
         $this->exec("ALTER TABLE attribute ADD min INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
         $this->exec("ALTER TABLE attribute ADD max INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE classification_attribute ADD max INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE classification_attribute ADD max INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
     public function down(): void
     {
         $this->exec("ALTER TABLE attribute DROP COLUMN min");
         $this->exec("ALTER TABLE attribute DROP COLUMN max");
+        $this->exec("ALTER TABLE classification_attribute DROP COLUMN max");
+        $this->exec("ALTER TABLE classification_attribute DROP COLUMN max");
     }
 
     protected function exec(string $query): void

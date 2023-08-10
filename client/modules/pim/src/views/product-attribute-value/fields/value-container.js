@@ -84,18 +84,13 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.readOnly = true;
                 }
 
-                if (this.model.get('maxLength')) {
-                    params.maxLength = this.model.get('maxLength');
-                    params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
-                }
-                
-                if (this.model.get('useDisabledTextareaInViewMode')) {
-                    params.useDisabledTextareaInViewMode = this.model.get('useDisabledTextareaInViewMode');
-                }
+                const paramsToAdd = ['maxLength', 'countBytesInsteadOfCharacters', 'useDisabledTextareaInViewMode', 'amountOfDigitsAfterComma', 'max', 'min'];
 
-                if (this.model.get('amountOfDigitsAfterComma')) {
-                    params.amountOfDigitsAfterComma = this.model.get('amountOfDigitsAfterComma');
-                }
+                paramsToAdd.forEach(param => {
+                    if (this.model.get(param)) {
+                        params[param] = this.model.get(param);
+                    }
+                });
 
                 if (this.model.get('attributeMeasureId')) {
                     params.measureId = this.model.get('attributeMeasureId');
@@ -197,6 +192,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('maxLength', attr.maxLength);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('useDisabledTextareaInViewMode', attr.useDisabledTextareaInViewMode);
+                this.model.set('max', attr.max);
+                this.model.set('min', attr.min);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                 this.reRender();
             });

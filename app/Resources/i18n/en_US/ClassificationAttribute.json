@@ -18,7 +18,9 @@
     "floatValue": "Default Value: Float",
     "dateValue": "Default Value: Date",
     "datetimeValue": "Default Value: Date-time",
-    "boolValue": "Default Value: Boolean"
+    "boolValue": "Default Value: Boolean",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "classification": "Classification",
@@ -35,6 +37,10 @@
       "Global": "Global",
       "Channel": "Channel"
     }
+  },
+  "tooltips": {
+    "min": "Minimum value",
+    "max": "Maximum value"
   },
   "messages": {
     "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels.",

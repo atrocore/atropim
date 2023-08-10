@@ -19,7 +19,9 @@
     "floatValue": "Standardwert: Float",
     "dateValue": "Standardwert: Datum",
     "datetimeValue": "Standardwert: Datum-Uhrzeit",
-    "boolValue": "Standardwert: Boolesch"
+    "boolValue": "Standardwert: Boolesch",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "classification": "Klassifizierung",
@@ -36,6 +38,10 @@
       "Global": "Global",
       "Channel": "Kanal"
     }
+  },
+  "tooltips": {
+    "min": "Minimaler Wert",
+    "max": "Maximaler Wert"
   },
   "messages": {
     "savedForNotAllChannels": "Attribut '%s' wurde nicht für alle ausgewählten Kanäle verknüpft.",

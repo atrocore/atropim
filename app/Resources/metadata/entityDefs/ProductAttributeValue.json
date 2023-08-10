@@ -662,6 +662,14 @@
       "importDisabled": true,
       "exportDisabled": true,
       "requiredForMultilang": false
+    },
+    "min": {
+      "type": "int",
+      "tooltip": true
+    },
+    "max": {
+      "type": "int",
+      "tooltip": true
     }
   },
   "links": {

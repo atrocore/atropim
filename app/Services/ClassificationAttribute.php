@@ -96,7 +96,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
 
         /**
-         * Prepare maxLength and isRequired
+         * Prepare maxLength , isRequired and min and max value
          */
         if (!property_exists($attachment, 'maxLength')) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
@@ -109,6 +109,15 @@ class ClassificationAttribute extends AbstractProductAttributeService
             if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');
                 $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
+            }
+            if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat'])) {
+                if($attribute->get('max') !== null){
+                    $attachment->max = $attribute->get('max');
+                }
+
+                if($attribute->get('min') !== null){
+                    $attachment->min = $attribute->get('min');
+                }
             }
         }
 
@@ -184,10 +193,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
             return;
         }
 
-        if (!property_exists($data, 'isRequired')) {
-            $data->isRequired = !empty($attribute->get('isRequired'));
-        }
-
         if (!property_exists($data, 'scope')) {
             $data->scope = $attribute->get('defaultScope') ?? 'Global';
             if ($data->scope === 'Channel') {
@@ -199,9 +204,12 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
         }
 
-        if (!property_exists($data, 'maxLength')) {
-            $data->maxLength = $attribute->get('maxLength');
-            $data->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
+        $propertiesToAdd = ['isRequired', 'maxLenght', 'countBytesInsteadOfCharacters', 'max', 'min'];
+
+        foreach ($propertiesToAdd as $property) {
+            if (!property_exists($data, $property) && !empty($attribute->get($property))) {
+                $data->$property = $attribute->get($property);
+            }
         }
     }
 

@@ -571,8 +571,8 @@ class ProductAttributeValue extends AbstractRepository
          * Check if value is in the min and max range
          */
         if(in_array($type, ['rangeInt', 'rangeFloat'])){
-            $max = $entity->get('attribute')->get('max');
-            $min = $entity->get('attribute')->get('min');
+            $max = $entity->get('max');
+            $min = $entity->get('min');
             if(!empty($max) && ((!empty($entity->get('floatValue1')) && $entity->get('floatValue1') > $max)
                 || (!empty($entity->get('floatValue')) && $entity->get('floatValue') > $max))){
                 throw new BadRequest(

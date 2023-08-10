@@ -253,11 +253,13 @@
     },
     "min": {
       "type": "int",
-      "tooltip": true
+      "tooltip": true,
+      "view": "pim:views/fields/min"
     },
     "max": {
       "type": "int",
-      "tooltip": true
+      "tooltip": true,
+      "view": "pim:views/fields/max"
     }
   },
   "links": {

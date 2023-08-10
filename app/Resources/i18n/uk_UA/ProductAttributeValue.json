@@ -18,7 +18,9 @@
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
     "amountOfDigitsAfterComma": "Кількість цифр після коми",
     "useDisabledTextareaInViewMode": "Використовуйте відключену текстову область у режимі перегляду",
-    "isVariantSpecificAttribute": "Варіантно-специфічний"
+    "isVariantSpecificAttribute": "Варіантно-специфічний",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "productAttribute": "Атрибут продукту",
