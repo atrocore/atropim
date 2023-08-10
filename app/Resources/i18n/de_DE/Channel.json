@@ -11,7 +11,8 @@
     "categories": "Kategorien",
     "code": "Code",
     "productChannels": "Kanalprodukte",
-    "products": "Kanalprodukte"
+    "products": "Kanalprodukte",
+    "type": "Typ"
   },
   "links": {
     "categories": "Kategorien",
@@ -33,6 +34,9 @@
   "options": {
     "template": {
       "default": "Standard"
+    },
+    "type": {
+      "general": "Allgemein"
     }
   },
   "messages": {

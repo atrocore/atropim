@@ -6,7 +6,8 @@
     "locales": "Languages",
     "code": "Code",
     "productChannels": "Channel Products",
-    "products": "Channel Products"
+    "products": "Channel Products",
+    "type": "Type"
   },
   "links": {
     "categories": "Categories",
@@ -23,6 +24,9 @@
   "options": {
     "template": {
       "default": "Default"
+    },
+    "type": {
+      "general": "General"
     }
   },
   "messages": {

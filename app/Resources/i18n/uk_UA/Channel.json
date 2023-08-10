@@ -6,7 +6,8 @@
     "locales": "Мови",
     "code": "Код",
     "productChannels": "Продукти каналу",
-    "products": "Продукти каналу"
+    "products": "Продукти каналу",
+    "type": "Тип"
   },
   "links": {
     "categories": "Категорії",
@@ -23,6 +24,9 @@
   "options": {
     "template": {
       "default": "За замовчуванням"
+    },
+    "type": {
+      "general": "Загальний"
     }
   },
   "messages": {
