@@ -94,6 +94,7 @@
     "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
     "attributeIsUsedInClassifications": "Attribute is used in classifications. Please, update classifications first.",
     "attributeNotHaveUniqueValue": "Attribute have no unique value.",
-    "someAttributeDontMathToPattern": "Some attribute don't match to pattern."
+    "someAttributeDontMathToPattern": "Some attribute don't match to pattern.",
+    "minOrMaxMustBeInt": "%s value should be of type int"
   }
 }

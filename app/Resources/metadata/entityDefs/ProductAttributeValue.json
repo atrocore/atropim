@@ -664,11 +664,11 @@
       "requiredForMultilang": false
     },
     "min": {
-      "type": "int",
+      "type": "float",
       "tooltip": true
     },
     "max": {
-      "type": "int",
+      "type": "float",
       "tooltip": true
     }
   },

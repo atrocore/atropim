@@ -429,12 +429,12 @@
       "view": "views/fields/user"
     },
     "min": {
-      "type": "int",
+      "type": "float",
       "tooltip": true,
       "view": "pim:views/fields/min"
     },
     "max": {
-      "type": "int",
+      "type": "float",
       "tooltip": true,
       "view": "pim:views/fields/max"
     }

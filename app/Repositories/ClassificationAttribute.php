@@ -83,6 +83,13 @@ class ClassificationAttribute extends Relationship
             $entity->set('channelId', '');
         }
 
+        $type = $entity->get('attribute')->get('type');
+
+        if($type === 'rangeInt'){
+            $this->getEntityManager()->getRepository('Attribute')
+                ->checkMinMaxIntValue($type, $entity->get('min'), $entity->get('max'));
+        }
+
         parent::beforeSave($entity, $options);
     }
 

@@ -573,16 +573,31 @@ class ProductAttributeValue extends AbstractRepository
         if(in_array($type, ['rangeInt', 'rangeFloat'])){
             $max = $entity->get('max');
             $min = $entity->get('min');
-            if(!empty($max) && ((!empty($entity->get('floatValue1')) && $entity->get('floatValue1') > $max)
-                || (!empty($entity->get('floatValue')) && $entity->get('floatValue') > $max))){
-                throw new BadRequest(
-                    sprintf($this->getInjection('language')->translate('valueShouldBeLessThanMax', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'), $max)
-                );
-            }else if(!empty($min) && ((!empty($entity->get('floatValue1')) && $entity->get('floatValue1') < $min)
-                || (!empty($entity->get('floatValue')) && $entity->get('floatValue') < $min))){
-                throw new BadRequest(
-                    sprintf($this->getInjection('language')->translate('valueShouldBeGreaterThanMin', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'), $min)
-                );
+
+            if($type === 'rangeInt'){
+                if(!empty($max) && ((!empty($entity->get('intValue1')) && $entity->get('intValue1') > $max)
+                    || (!empty($entity->get('intValue')) && $entity->get('intValue') > $max))){
+                    throw new BadRequest(
+                        sprintf($this->getInjection('language')->translate('valueShouldBeLessThanMax', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'), $max)
+                    );
+                }else if(!empty($min) && ((!empty($entity->get('intValue1')) && $entity->get('intValue1') < $min)
+                    || (!empty($entity->get('intValue')) && $entity->get('intValue') < $min))){
+                    throw new BadRequest(
+                        sprintf($this->getInjection('language')->translate('valueShouldBeGreaterThanMin', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'), $min)
+                    );
+                }
+            }elseif($type === 'rangeFloat'){
+                if(!empty($max) && ((!empty($entity->get('floatValue1')) && $entity->get('floatValue1') > $max)
+                    || (!empty($entity->get('floatValue')) && $entity->get('floatValue') > $max))){
+                    throw new BadRequest(
+                        sprintf($this->getInjection('language')->translate('valueShouldBeLessThanMax', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'), $max)
+                    );
+                }else if(!empty($min) && ((!empty($entity->get('floatValue1')) && $entity->get('floatValue1') < $min)
+                    || (!empty($entity->get('floatValue')) && $entity->get('floatValue') < $min))){
+                    throw new BadRequest(
+                        sprintf($this->getInjection('language')->translate('valueShouldBeGreaterThanMin', 'exceptions', 'ProductAttributeValue'), $attribute->get('name'), $min)
+                    );
+                }
             }
         }
 

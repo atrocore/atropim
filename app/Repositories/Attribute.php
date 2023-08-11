@@ -176,8 +176,25 @@ class Attribute extends AbstractRepository
             }
         }
 
+        $this->checkMinMaxIntValue($entity->get('type'), $entity->get('min'), $entity->get('max'));
+
         // call parent action
         parent::beforeSave($entity, $options);
+    }
+
+    public function checkMinMaxIntValue(string $type, $min, $max)
+    {
+        if($type !== 'rangeInt'){
+            return;
+        }
+
+        if ($min !== null && intval($min)!= $min) {
+            throw new BadRequest(sprintf($this->exception('minOrMaxMustBeInt'), 'min'));
+        }
+
+        if ($max !== null && intval($max)!= $max) {
+            throw new BadRequest(sprintf($this->exception('minOrMaxMustBeInt'), 'max'));
+        }
     }
 
     public function save(Entity $entity, array $options = [])

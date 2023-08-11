@@ -37,10 +37,12 @@ class V1Dot9Dot23 extends Base
 {
     public function up(): void
     {
-        $this->exec("ALTER TABLE attribute ADD min INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->exec("ALTER TABLE attribute ADD max INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->exec("ALTER TABLE classification_attribute ADD max INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->exec("ALTER TABLE classification_attribute ADD max INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE attribute ADD min DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE attribute ADD max DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE classification_attribute ADD max DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE classification_attribute ADD max DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE product_attribute_value ADD min DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE product_attribute_value ADD max DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
     public function down(): void
@@ -49,6 +51,8 @@ class V1Dot9Dot23 extends Base
         $this->exec("ALTER TABLE attribute DROP COLUMN max");
         $this->exec("ALTER TABLE classification_attribute DROP COLUMN max");
         $this->exec("ALTER TABLE classification_attribute DROP COLUMN max");
+        $this->exec("ALTER TABLE product_attribute_value DROP COLUMN min");
+        $this->exec("ALTER TABLE product_attribute_value DROP COLUMN max");
     }
 
     protected function exec(string $query): void
