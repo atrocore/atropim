@@ -500,7 +500,9 @@ class ProductAttributeValue extends AbstractRepository
         }
 
         if (!$entity->isNew()) {
-            self::$beforeSaveData = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'))->toArray();
+            $fetched = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'));
+            $this->getValueConverter()->convertFrom($fetched, $fetched->get('attribute'));
+            self::$beforeSaveData = $fetched->toArray();
         }
 
         $attribute = $this->getPavAttribute($entity);
@@ -812,18 +814,10 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function createNote(Entity $entity): void
     {
-        if (
-            !$entity->isAttributeChanged('value')
-            && !$entity->isAttributeChanged('valueId')
-            && !$entity->isAttributeChanged('valueFrom')
-            && !$entity->isAttributeChanged('valueTo')
-            && !$entity->isAttributeChanged('valueCurrency')
-            && !$entity->isAttributeChanged('valueUnitId')
-        ) {
-            return;
-        }
+        $pav = clone $entity;
+        $this->getValueConverter()->convertFrom($pav, $pav->get('attribute'));
 
-        $data = $this->getNoteData($entity);
+        $data = $this->getNoteData($pav);
         if (empty($data)) {
             return;
         }
@@ -848,13 +842,12 @@ class ProductAttributeValue extends AbstractRepository
         switch ($entity->get('attributeType')) {
             case 'rangeInt':
             case 'rangeFloat':
-                if ($entity->isAttributeChanged('valueFrom') && self::$beforeSaveData['valueFrom'] !== $entity->get('valueFrom')) {
+                if (self::$beforeSaveData['valueFrom'] !== $entity->get('valueFrom')) {
                     $result['fields'][] = 'valueFrom';
                     $result['attributes']['was']['valueFrom'] = self::$beforeSaveData['valueFrom'];
                     $result['attributes']['became']['valueFrom'] = $entity->get('valueFrom');
                 }
-
-                if ($entity->isAttributeChanged('valueTo') && self::$beforeSaveData['valueTo'] !== $entity->get('valueTo')) {
+                if (self::$beforeSaveData['valueTo'] !== $entity->get('valueTo')) {
                     $result['fields'][] = 'valueTo';
                     $result['attributes']['was']['valueTo'] = self::$beforeSaveData['valueTo'];
                     $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
@@ -862,34 +855,40 @@ class ProductAttributeValue extends AbstractRepository
                 break;
             case 'array':
             case 'extensibleMultiEnum':
-                $result['fields'][] = 'value';
-                $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
-                $result['attributes']['became']['value'] = json_decode($entity->get('value'), true);
+                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['became']['value'] = json_decode((string)$entity->get('value'), true);
+                }
                 break;
             case 'currency':
-                if ($entity->isAttributeChanged('value') && self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-                if ($entity->isAttributeChanged('valueCurrency') && self::$beforeSaveData['valueCurrency'] !== $entity->get('valueCurrency')) {
+                if (self::$beforeSaveData['valueCurrency'] !== $entity->get('valueCurrency')) {
                     $result['fields'][] = 'valueCurrency';
                     $result['attributes']['was']['valueCurrency'] = self::$beforeSaveData['valueCurrency'];
                     $result['attributes']['became']['valueCurrency'] = $entity->get('valueCurrency');
                 }
                 break;
             case 'asset':
-                $result['fields'][] = 'value';
-                $result['attributes']['was']['valueId'] = self::$beforeSaveData['valueId'];
-                $result['attributes']['became']['valueId'] = $entity->get('valueId');
+                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['valueId'] = self::$beforeSaveData['valueId'];
+                    $result['attributes']['became']['valueId'] = $entity->get('valueId');
+                }
                 break;
             default:
-                $result['fields'][] = 'value';
-                $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
-                $result['attributes']['became']['value'] = $entity->get('value');
+                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['became']['value'] = $entity->get('value');
+                }
         }
 
-        if ($entity->isAttributeChanged('valueUnitId') && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+        if (self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
             $result['fields'][] = 'valueUnit';
             $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
             $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
