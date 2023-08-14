@@ -852,6 +852,24 @@ class ProductAttributeValue extends AbstractRepository
                     $result['attributes']['was']['valueTo'] = self::$beforeSaveData['valueTo'];
                     $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
                 }
+                if (isset(self::$beforeSaveData['valueUnitId']) && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+                    $result['fields'][] = 'valueUnit';
+                    $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+                    $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
+                }
+                break;
+            case 'int':
+            case 'float':
+                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['became']['value'] = $entity->get('value');
+                }
+                if (isset(self::$beforeSaveData['valueUnitId']) && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+                    $result['fields'][] = 'valueUnit';
+                    $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+                    $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
+                }
                 break;
             case 'array':
             case 'extensibleMultiEnum':
@@ -886,12 +904,6 @@ class ProductAttributeValue extends AbstractRepository
                     $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-        }
-
-        if (self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
-            $result['fields'][] = 'valueUnit';
-            $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
-            $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
         }
 
         if (empty($result['fields'])) {
