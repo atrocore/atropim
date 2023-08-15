@@ -87,7 +87,7 @@ class ProductAttributeValue extends Relationship
 
     public function __get($name)
     {
-        $this->getRepository()->getValueConverter()->convertFrom($this, $this->get('attribute'));
+        $this->getRepository()->getValueConverter()->convertFrom($this, $this->get('attribute'), false);
 
         return parent::__get($name);
     }
