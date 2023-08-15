@@ -895,35 +895,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $entity = $this->getRepository()->get($entity->get('id'));
+        $fetchedEntity = $this->getRepository()->get($entity->get('id'));
 
-        // keep original value
-        $entity->_varcharValue = $entity->get('varcharValue');
-        $entity->_textValue = $entity->get('textValue');
-
-        $this->prepareEntity($entity);
-
-        return parent::isEntityUpdated($entity, $data);
-    }
-
-    protected function areValuesEqual(Entity $entity, string $field, $value1, $value2): bool
-    {
-        if (in_array($field, array_merge(['value'], array_values($this->getInputLanguageList())))) {
-            $type = $entity->get('attributeType');
-            $type = $this->getMetadata()->get(['fields', $type, 'fieldDefs', 'type'], $type);
-        } else {
-            $type = isset($entity->getFields()[$field]['type']) ? $entity->getFields()[$field]['type'] : 'varchar';
-        }
-
-        if (in_array($type, [Entity::JSON_ARRAY, Entity::JSON_OBJECT])) {
-            if (is_string($value1)) {
-                $value1 = Json::decode($value1, true);
-            }
-            if (is_string($value2)) {
-                $value2 = Json::decode($value2, true);
-            }
-        }
-
-        return Entity::areValuesEqual($type, $value1, $value2);
+        return parent::isEntityUpdated($fetchedEntity, $data);
     }
 }
