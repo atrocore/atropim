@@ -752,7 +752,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         return $fields;
     }
 
-    protected function prepareEntity(Entity $entity): void
+    public function prepareEntity(Entity $entity, bool $clear = true): void
     {
         $attribute = $this->getRepository()->getPavAttribute($entity);
 
@@ -823,7 +823,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
         }
 
-        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($entity, $attribute);
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($entity, $attribute, $clear);
 
         if ($attribute->get('measureId')) {
             $entity->set('attributeMeasureId', $attribute->get('measureId'));
