@@ -737,9 +737,17 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $this->prepareEntity($entity);
 
-        $fields = parent::getFieldsThatConflict($entity, $data);
+        $input = clone $data;
 
-        if (!empty($fields) && property_exists($data, 'isProductUpdate') && !empty($data->isProductUpdate)) {
+        if (property_exists($input, '_virtualValue')) {
+            foreach ($input->_virtualValue as $name => $value) {
+                $input->$name = $value;
+            }
+        }
+
+        $fields = parent::getFieldsThatConflict($entity, $input);
+
+        if (!empty($fields) && property_exists($input, 'isProductUpdate') && !empty($input->isProductUpdate)) {
             $fields = [$entity->get('id') => $entity->get('attributeName')];
         }
 
@@ -895,8 +903,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $fetchedEntity = $this->getRepository()->get($entity->get('id'));
-
-        return parent::isEntityUpdated($fetchedEntity, $data);
+        return parent::isEntityUpdated($this->getRepository()->get($entity->get('id')), $data);
     }
 }

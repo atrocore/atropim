@@ -35,6 +35,15 @@ class ValueConverter extends Injectable
             unset($data->valueUnit);
         }
 
+        /**
+         * Keep virtual values for conditions and validation
+         */
+        foreach (['value', 'valueUnitId', 'valueId', 'valueFrom', 'valueTo', 'valueCurrency'] as $name) {
+            if (property_exists($data, $name)) {
+                $data->_virtualValue[$name] = $data->$name;
+            }
+        }
+
         switch ($attribute->get('type')) {
             case 'extensibleEnum':
                 if (property_exists($data, 'value')) {
