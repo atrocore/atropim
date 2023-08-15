@@ -501,7 +501,7 @@ class ProductAttributeValue extends AbstractRepository
 
         if (!$entity->isNew()) {
             $fetched = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'));
-            $this->getValueConverter()->convertFrom($fetched, $fetched->get('attribute'));
+            $this->getValueConverter()->convertFrom($fetched, $fetched->get('attribute'), false);
             self::$beforeSaveData = $fetched->toArray();
         }
 
@@ -625,11 +625,6 @@ class ProductAttributeValue extends AbstractRepository
             }
         }
 
-        // create note
-        if (!$entity->isNew()) {
-            $this->createNote($entity);
-        }
-
         parent::beforeSave($entity, $options);
     }
 
@@ -659,6 +654,8 @@ class ProductAttributeValue extends AbstractRepository
         $this->moveImageFromTmp($entity);
 
         parent::afterSave($entity, $options);
+
+        $this->createNote($entity);
     }
 
     /**
@@ -814,10 +811,9 @@ class ProductAttributeValue extends AbstractRepository
 
     protected function createNote(Entity $entity): void
     {
-        $pav = clone $entity;
-        $this->getValueConverter()->convertFrom($pav, $pav->get('attribute'));
+        $this->getValueConverter()->convertFrom($entity, $entity->get('attribute'), false);
 
-        $data = $this->getNoteData($pav);
+        $data = $this->getNoteData($entity);
         if (empty($data)) {
             return;
         }
@@ -876,7 +872,7 @@ class ProductAttributeValue extends AbstractRepository
                 if (self::$beforeSaveData['value'] !== $entity->get('value')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
-                    $result['attributes']['became']['value'] = json_decode((string)$entity->get('value'), true);
+                    $result['attributes']['became']['value'] = $entity->get('value');
                 }
                 break;
             case 'currency':
