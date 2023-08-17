@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/product/fields/catalog', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/product/fields/catalog', 'views/fields/link',
     Dep => Dep.extend({
 
         setup() {

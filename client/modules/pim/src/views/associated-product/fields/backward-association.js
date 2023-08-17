@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/associated-product/fields/backward-association', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/associated-product/fields/backward-association', 'views/fields/link',
     Dep => Dep.extend({
-
-        foreignScope: "Association",
 
         selectBoolFilterList:  ['onlyActive', 'notUsedAssociations'],
 

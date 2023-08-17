@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "AtroPIM" word.
  */
 
-Espo.define('pim:views/category/fields/category-parent', 'treo-core:views/fields/filtered-link',
+Espo.define('pim:views/category/fields/category-parent', 'views/fields/link',
     Dep => Dep.extend({
 
         selectBoolFilterList: ['notEntity', 'notChildren'],

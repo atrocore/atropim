@@ -20,41 +20,10 @@
       "noLoad": false
     },
     "backwardAssociation": {
-      "type": "varchar",
+      "type": "link",
       "notStorable": true,
       "view": "pim:views/associated-product/fields/backward-association",
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "backwardAssociationId": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "backwardAssociationName": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+      "filterDisabled": true
     },
     "backwardAssociatedProduct": {
       "type": "link",
@@ -109,6 +78,10 @@
       "foreign": "associatedRelatedProduct",
       "entity": "Product",
       "audited": false
+    },
+    "backwardAssociation": {
+      "type": "belongsTo",
+      "entity": "Association"
     },
     "backwardAssociatedProduct": {
       "type": "belongsTo",
