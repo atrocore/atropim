@@ -572,14 +572,13 @@ class Product extends AbstractSelectManager
         if (!isset($this->attributes[$id])) {
             if (substr($id, -6) === 'UnitId') {
                 $id = substr($id, 0, -6);
-            } else if (substr($id, -4) === 'From') {
+            } elseif (substr($id, -4) === 'From') {
                 $id = substr($id, 0, -4);
-            } else if (substr($id, -2) === 'Id') {
+            } elseif (substr($id, -2) === 'Id') {
                 $id = substr($id, 0, -2);
-            } else if (substr($id, -2) === 'To') {
+            } elseif (substr($id, -2) === 'To') {
                 $id = substr($id, 0, -2);
             }
-
 
             $attribute = $this->getEntityManager()->getEntity('Attribute', $id);
             if (empty($attribute)) {
@@ -690,9 +689,9 @@ class Product extends AbstractSelectManager
                 break;
             case 'int':
             case 'rangeInt':
-                if (substr($row['attribute'], -6) == 'UnitId') {
-                    $row['attribute'] = 'varchar_value';
-                } elseif (substr($row['attribute'], -2) == 'To') {
+                if (substr($row['attribute'], -6) === 'UnitId') {
+                    $row['attribute'] = 'varcharValue';
+                } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'intValue1';
                 } else {
                     $row['attribute'] = 'intValue';
@@ -702,10 +701,9 @@ class Product extends AbstractSelectManager
             case 'currency':
             case 'float':
             case 'rangeFloat':
-                if (substr($row['attribute'], -6) == 'UnitId') {
-                    $row['attribute'] = 'varchar_value';
-                }
-                if (substr($row['attribute'], -2) == 'To') {
+                if (substr($row['attribute'], -6) === 'UnitId') {
+                    $row['attribute'] = 'varcharValue';
+                }elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'floatValue1';
                 } else {
                     $row['attribute'] = 'floatValue';
