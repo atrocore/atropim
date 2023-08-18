@@ -22,6 +22,7 @@
     "backwardAssociation": {
       "type": "link",
       "notStorable": true,
+      "entity": "Association",
       "view": "pim:views/associated-product/fields/backward-association",
       "filterDisabled": true
     },
@@ -78,10 +79,6 @@
       "foreign": "associatedRelatedProduct",
       "entity": "Product",
       "audited": false
-    },
-    "backwardAssociation": {
-      "type": "belongsTo",
-      "entity": "Association"
     },
     "backwardAssociatedProduct": {
       "type": "belongsTo",
