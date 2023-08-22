@@ -127,6 +127,7 @@ class Attribute extends AbstractRepository
             $entity->set('sortOrderInAttributeGroup', time());
         }
 
+
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
             $query = "SELECT COUNT(*) 
                       FROM product_attribute_value 
@@ -178,6 +179,16 @@ class Attribute extends AbstractRepository
 
         // call parent action
         parent::beforeSave($entity, $options);
+
+        // validate min and max
+        if (
+            ($entity->isAttributeChanged('max') || $entity->isAttributeChanged('min'))
+            && $entity->get('min') !== null
+            && $entity->get('max') !== null
+            && $entity->get('max') < $entity->get('min')
+        ) {
+            throw new BadRequest($this->getInjection('language')->translate('maxLessThanMin', 'exceptions', 'Attribute'));
+        }
     }
 
     public function save(Entity $entity, array $options = [])

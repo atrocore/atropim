@@ -76,11 +76,11 @@ class Attribute extends Hierarchy
         return isset($data[$key]) ? $data[$key] : null;
     }
 
-    public function getDataFields()
+    public function getDataFields(): array
     {
         $data = $this->getData();
 
-        return isset($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
+        return isset($data[self::DATA_FIELD]) && is_array($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
     }
 
     public function getData(): array
@@ -93,5 +93,15 @@ class Attribute extends Hierarchy
     public function setData(array $data): void
     {
         $this->set('data', $data);
+    }
+
+    public function toArray()
+    {
+        $res = parent::toArray();
+        foreach ($this->getDataFields() as $name => $value) {
+            $res[$name] = $value;
+        }
+
+        return $res;
     }
 }

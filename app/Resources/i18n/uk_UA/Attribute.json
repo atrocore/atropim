@@ -64,6 +64,7 @@
      "sortOrderInProduct": "Порядок сортування значень атрибутів продукту.W"
    },
   "exceptions": {
+    "maxLessThanMin": "Мінімальне значення повинно бути менше за максимальне значення.",
     "noAttributeConverterFound": "Конвертація атрибуту '%s' в '%s' неможлива.",
     "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
     "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",

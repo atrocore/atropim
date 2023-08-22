@@ -85,6 +85,7 @@
     "sortOrderInProduct": "Sort order for attribute values for a product."
   },
   "exceptions": {
+    "maxLessThanMin": "Min should be less than Max.",
     "noAttributeConverterFound": "Attribute converting from type '%s' to '%s' is impossible.",
     "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",
     "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",

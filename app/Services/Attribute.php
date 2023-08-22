@@ -43,15 +43,6 @@ class Attribute extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
 
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        foreach ($entity->getDataFields() as $name => $value) {
-            $entity->set($name, $value);
-        }
-    }
-
     /**
      * @inheritDoc
      */
