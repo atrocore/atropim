@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -85,6 +86,16 @@ class ClassificationAttribute extends Relationship
         }
 
         parent::beforeSave($entity, $options);
+
+        // validate min and max
+        if (
+            ($entity->isAttributeChanged('max') || $entity->isAttributeChanged('min'))
+            && $entity->get('min') !== null
+            && $entity->get('max') !== null
+            && $entity->get('max') < $entity->get('min')
+        ) {
+            throw new BadRequest($this->getInjection('language')->translate('maxLessThanMin', 'exceptions', 'Attribute'));
+        }
     }
 
     public function save(Entity $entity, array $options = [])
