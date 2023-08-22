@@ -56,7 +56,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
             'floatValue',
             'floatValue1',
             'varcharValue',
-            'textValue'
+            'textValue',
+            'data'
         ];
 
     /**

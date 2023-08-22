@@ -859,69 +859,75 @@ class ProductAttributeValue extends AbstractRepository
             'fields' => []
         ];
 
+        $wasValue = self::$beforeSaveData['value'] ?? null;
+        $wasValueUnitId = self::$beforeSaveData['valueUnitId'] ?? null;
+
         switch ($entity->get('attributeType')) {
             case 'rangeInt':
             case 'rangeFloat':
-                if (self::$beforeSaveData['valueFrom'] !== $entity->get('valueFrom')) {
+                $wasValueFrom = self::$beforeSaveData['valueFrom'] ?? null;
+                $wasValueTo = self::$beforeSaveData['valueTo'] ?? null;
+                if ($wasValueFrom !== $entity->get('valueFrom')) {
                     $result['fields'][] = 'valueFrom';
-                    $result['attributes']['was']['valueFrom'] = self::$beforeSaveData['valueFrom'];
+                    $result['attributes']['was']['valueFrom'] = $wasValueFrom;
                     $result['attributes']['became']['valueFrom'] = $entity->get('valueFrom');
                 }
-                if (self::$beforeSaveData['valueTo'] !== $entity->get('valueTo')) {
+                if ($wasValueTo !== $entity->get('valueTo')) {
                     $result['fields'][] = 'valueTo';
-                    $result['attributes']['was']['valueTo'] = self::$beforeSaveData['valueTo'];
+                    $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
                 }
-                if (isset(self::$beforeSaveData['valueUnitId']) && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+                if ($wasValueUnitId !== $entity->get('valueUnitId')) {
                     $result['fields'][] = 'valueUnit';
-                    $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+                    $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
                 }
                 break;
             case 'int':
             case 'float':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-                if (isset(self::$beforeSaveData['valueUnitId']) && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+                if ($wasValueUnitId !== $entity->get('valueUnitId')) {
                     $result['fields'][] = 'valueUnit';
-                    $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+                    $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
                 }
                 break;
             case 'array':
             case 'extensibleMultiEnum':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
                 break;
             case 'currency':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-                if (self::$beforeSaveData['valueCurrency'] !== $entity->get('valueCurrency')) {
+                $wasValueCurrency = self::$beforeSaveData['valueCurrency'] ?? null;
+                if ($wasValueCurrency !== $entity->get('valueCurrency')) {
                     $result['fields'][] = 'valueCurrency';
-                    $result['attributes']['was']['valueCurrency'] = self::$beforeSaveData['valueCurrency'];
+                    $result['attributes']['was']['valueCurrency'] = $wasValueCurrency;
                     $result['attributes']['became']['valueCurrency'] = $entity->get('valueCurrency');
                 }
                 break;
             case 'asset':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['valueId'] = self::$beforeSaveData['valueId'];
+                    $result['attributes']['was']['valueId'] = $wasValue;
                     $result['attributes']['became']['valueId'] = $entity->get('valueId');
                 }
                 break;
             default:
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
         }
