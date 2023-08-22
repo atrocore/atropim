@@ -40,7 +40,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
         setup() {
             this.name = this.options.name || this.defs.name;
 
-            this.listenTo(this.model, 'change:attributeId', () => {
+            this.listenTo(this.model, 'change:attributeId change:min change:max', () => {
                 if (this.mode === 'detail' || this.mode === 'edit') {
                     this.clearValue();
 
@@ -65,6 +65,9 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.model.set('valueId', undefined);
             this.model.set('valueName', undefined);
             this.model.set('valuePathsData', undefined);
+
+            this.model.defs['fields']['value']['min'] = undefined;
+            this.model.defs['fields']['value']['max'] = undefined;
         },
 
         afterRender() {

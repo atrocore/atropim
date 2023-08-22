@@ -97,23 +97,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
 
         /**
-         * Prepare maxLength and isRequired
-         */
-        if (!property_exists($attachment, 'maxLength')) {
-            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attachment->attributeId);
-            if (empty($attribute)) {
-                throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
-            }
-            if (!isset($attachment->isRequired)) {
-                $attachment->isRequired = $attribute->get('isRequired');
-            }
-            if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg']) && $attribute->get('maxLength') !== null) {
-                $attachment->maxLength = $attribute->get('maxLength');
-                $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
-            }
-        }
-
-        /**
          * For multiple creation via languages
          */
         $this->prepareDefaultLanguages($attachment);
@@ -185,8 +168,10 @@ class ClassificationAttribute extends AbstractProductAttributeService
             return;
         }
 
-        if (!property_exists($data, 'isRequired')) {
-            $data->isRequired = !empty($attribute->get('isRequired'));
+        foreach (['maxLength', 'isRequired', 'countBytesInsteadOfCharacters', 'min', 'max'] as $field) {
+            if (!property_exists($data, $field)) {
+                $data->$field = $attribute->get($field);
+            }
         }
 
         if (!property_exists($data, 'scope')) {

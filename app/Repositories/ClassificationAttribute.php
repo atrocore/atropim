@@ -70,8 +70,7 @@ class ClassificationAttribute extends Relationship
         }
 
         $result = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
+            ->getProductAttributeValueRepository()
             ->where($where)
             ->find();
 
@@ -87,15 +86,18 @@ class ClassificationAttribute extends Relationship
 
         parent::beforeSave($entity, $options);
 
-        // validate min and max
-        if (
-            ($entity->isAttributeChanged('max') || $entity->isAttributeChanged('min'))
-            && $entity->get('min') !== null
-            && $entity->get('max') !== null
-            && $entity->get('max') < $entity->get('min')
-        ) {
-            throw new BadRequest($this->getInjection('language')->translate('maxLessThanMin', 'exceptions', 'Attribute'));
+        $this->validateClassificationAttribute($entity);
+    }
+
+    public function validateClassificationAttribute(Entity $entity): void
+    {
+        $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
+        if (empty($attribute)) {
+            throw new BadRequest("No Attribute '{$entity->get('attributeId')}' has been found.");
         }
+
+        $this->getAttributeRepository()->validateMinMax($entity);
+        $this->getProductAttributeValueRepository()->validateValue($attribute, $entity);
     }
 
     public function save(Entity $entity, array $options = [])
@@ -108,7 +110,7 @@ class ClassificationAttribute extends Relationship
                 if ($entity->isNew()) {
                     return $this->getDuplicateEntity($entity);
                 }
-                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+                $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
                 $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
 
                 $channelName = $entity->get('scope');
@@ -201,5 +203,15 @@ class ClassificationAttribute extends Relationship
     protected function exception(string $key): string
     {
         return $this->translate($key, 'exceptions');
+    }
+
+    protected function getAttributeRepository(): Attribute
+    {
+        return $this->getEntityManager()->getRepository('Attribute');
+    }
+
+    protected function getProductAttributeValueRepository(): ProductAttributeValue
+    {
+        return $this->getEntityManager()->getRepository('ProductAttributeValue');
     }
 }

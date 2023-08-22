@@ -177,10 +177,13 @@ class Attribute extends AbstractRepository
             }
         }
 
-        // call parent action
         parent::beforeSave($entity, $options);
 
-        // validate min and max
+        $this->validateMinMax($entity);
+    }
+
+    public function validateMinMax(Entity $entity): void
+    {
         if (
             ($entity->isAttributeChanged('max') || $entity->isAttributeChanged('min'))
             && $entity->get('min') !== null
