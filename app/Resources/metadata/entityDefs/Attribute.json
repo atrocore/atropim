@@ -246,6 +246,7 @@
     },
     "maxLength": {
       "type": "int",
+      "notStorable": true,
       "view": "pim:views/fields/max-length"
     },
     "countBytesInsteadOfCharacters": {

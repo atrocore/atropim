@@ -60,6 +60,16 @@ class Attribute extends Hierarchy
         $this->setDataField('max', $max);
     }
 
+    public function _getMaxLength(): ?int
+    {
+        return $this->getDataField('maxLength');
+    }
+
+    public function _setMaxLength(?int $maxLength): void
+    {
+        $this->setDataField('maxLength', $maxLength);
+    }
+
     public function setDataField(string $key, $value): void
     {
         $data = $this->getData();
