@@ -40,9 +40,24 @@ class Attribute extends Hierarchy
 
     protected $entityType = "Attribute";
 
-    public function setData(array $data): void
+    public function _getMin(): ?float
     {
-        $this->set('data', $data);
+        return $this->getDataField('min');
+    }
+
+    public function _setMin(?float $min): void
+    {
+        $this->setDataField('min', $min);
+    }
+
+    public function _getMax(): ?float
+    {
+        return $this->getDataField('max');
+    }
+
+    public function _setMax(?float $max): void
+    {
+        $this->setDataField('max', $max);
     }
 
     public function setDataField(string $key, $value): void
@@ -73,5 +88,10 @@ class Attribute extends Hierarchy
         $data = $this->get('data');
 
         return empty($data) ? [] : Json::decode(Json::encode($data), true);
+    }
+
+    public function setData(array $data): void
+    {
+        $this->set('data', $data);
     }
 }

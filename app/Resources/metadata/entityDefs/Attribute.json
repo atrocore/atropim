@@ -126,6 +126,16 @@
       "default": false,
       "tooltip": true
     },
+    "min": {
+      "type": "float",
+      "notStorable": true,
+      "emHidden": true
+    },
+    "max": {
+      "type": "float",
+      "notStorable": true,
+      "emHidden": true
+    },
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,

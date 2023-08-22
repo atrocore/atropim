@@ -28,7 +28,9 @@
     "amountOfDigitsAfterComma": "Кількість цифр після коми",
     "useDisabledTextareaInViewMode": "Використовуйте відключену текстову область у режимі перегляду",
     "description": "Опис",
-    "extensibleEnum": "Список"
+    "extensibleEnum": "Список",
+    "min": "Мінімальне значення",
+    "max": "Максимальне значення"
   },
   "links": {
     "measure": "Міра",

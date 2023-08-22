@@ -29,7 +29,9 @@
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "useDisabledTextareaInViewMode": "Deaktivierte Textarea im Ansichtsmodus verwenden",
     "description": "Beschreibung",
-    "extensibleEnum": "Liste"
+    "extensibleEnum": "Liste",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "measure": "Maß",

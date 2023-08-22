@@ -29,7 +29,9 @@
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "description": "Description",
     "classifications": "Classifications",
-    "extensibleEnum": "List"
+    "extensibleEnum": "List",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "measure": "Measure",

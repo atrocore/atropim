@@ -95,6 +95,14 @@
       ],
       [
         {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
           "name": "amountOfDigitsAfterComma"
         },
         false
