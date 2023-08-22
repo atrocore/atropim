@@ -677,6 +677,30 @@ class ProductAttributeValue extends AbstractRepository
     protected function validateValue(Entity $attribute, Entity $pav): void
     {
         switch ($attribute->get('type')) {
+            case 'int':
+                if ($pav->get('min') !== null && $pav->get('intValue') < $pav->get('min')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $pav->get('min')], $message));
+                }
+                if ($pav->get('max') !== null && $pav->get('intValue') > $pav->get('max')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $pav->get('max')], $message));
+                }
+                break;
+            case 'float':
+                if ($pav->get('min') !== null && $pav->get('floatValue') < $pav->get('min')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $pav->get('min')], $message));
+                }
+                if ($pav->get('max') !== null && $pav->get('floatValue') > $pav->get('max')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $pav->get('max')], $message));
+                }
+                break;
             case 'extensibleEnum':
                 $id = $pav->get('varcharValue');
                 if (!empty($id)) {

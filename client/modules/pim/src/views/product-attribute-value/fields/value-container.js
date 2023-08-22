@@ -88,7 +88,17 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.maxLength = this.model.get('maxLength');
                     params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
                 }
-                
+
+                if (this.model.get('min')) {
+                    params.min = this.model.get('min');
+                    this.model.defs['fields']['value']['min'] = this.model.get('min');
+                }
+
+                if (this.model.get('max')) {
+                    params.max = this.model.get('max');
+                    this.model.defs['fields']['value']['max'] = this.model.get('max');
+                }
+
                 if (this.model.get('useDisabledTextareaInViewMode')) {
                     params.useDisabledTextareaInViewMode = this.model.get('useDisabledTextareaInViewMode');
                 }
@@ -108,6 +118,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
                 }
+
+                console.log(params);
 
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,

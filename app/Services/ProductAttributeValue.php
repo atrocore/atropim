@@ -814,6 +814,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $entity->set('isRequired', $attribute->get('isRequired'));
         $entity->set('maxLength', $attribute->get('maxLength'));
+        $entity->set('min', $attribute->get('min'));
+        $entity->set('max', $attribute->get('max'));
         $entity->set('countBytesInsteadOfCharacters', $attribute->get('countBytesInsteadOfCharacters'));
         $entity->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
         if (!empty($classificationAttribute)) {
