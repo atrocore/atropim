@@ -35,8 +35,7 @@ use Espo\Core\Templates\Entities\Relationship;
 
 class ClassificationAttribute extends Relationship
 {
-    /**
-     * @var string
-     */
     protected $entityType = "ClassificationAttribute";
+
+    protected array $virtualFields = ['min', 'max', 'maxLength', 'countBytesInsteadOfCharacters'];
 }

@@ -32,46 +32,10 @@ declare(strict_types=1);
 namespace Pim\Entities;
 
 use Espo\Core\Templates\Entities\Hierarchy;
-use Espo\Core\Utils\Json;
 
 class Attribute extends Hierarchy
 {
-    protected const DATA_FIELD = 'field';
-
     protected $entityType = "Attribute";
 
-    public function setData(array $data): void
-    {
-        $this->set('data', $data);
-    }
-
-    public function setDataField(string $key, $value): void
-    {
-        $data = $this->getData();
-        $data[self::DATA_FIELD][$key] = $value;
-
-        $this->set('data', $data);
-        $this->valuesContainer[$key] = $value;
-    }
-
-    public function getDataField(string $key)
-    {
-        $data = $this->getDataFields();
-
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    public function getDataFields()
-    {
-        $data = $this->getData();
-
-        return isset($data[self::DATA_FIELD]) ? $data[self::DATA_FIELD] : [];
-    }
-
-    public function getData(): array
-    {
-        $data = $this->get('data');
-
-        return empty($data) ? [] : Json::decode(Json::encode($data), true);
-    }
+    protected array $virtualFields = ['min', 'max', 'maxLength', 'countBytesInsteadOfCharacters'];
 }

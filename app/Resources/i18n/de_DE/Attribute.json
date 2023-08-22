@@ -29,7 +29,9 @@
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "useDisabledTextareaInViewMode": "Deaktivierte Textarea im Ansichtsmodus verwenden",
     "description": "Beschreibung",
-    "extensibleEnum": "Liste"
+    "extensibleEnum": "Liste",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "measure": "Maß",
@@ -81,6 +83,7 @@
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt."
   },
   "exceptions": {
+    "maxLessThanMin": "Min sollte kleiner als Max sein.",
     "noAttributeConverterFound": "Attributkonvertierung vom Typ '%s' in '%s' ist nicht möglich.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
     "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",

@@ -674,11 +674,35 @@ class ProductAttributeValue extends AbstractRepository
         return null;
     }
 
-    protected function validateValue(Entity $attribute, Entity $pav): void
+    public function validateValue(Entity $attribute, Entity $entity): void
     {
         switch ($attribute->get('type')) {
+            case 'int':
+                if ($entity->get('min') !== null && $entity->get('intValue') < $entity->get('min')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('min')], $message));
+                }
+                if ($entity->get('max') !== null && $entity->get('intValue') > $entity->get('max')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
+                }
+                break;
+            case 'float':
+                if ($entity->get('min') !== null && $entity->get('floatValue') < $entity->get('min')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('min')], $message));
+                }
+                if ($entity->get('max') !== null && $entity->get('floatValue') > $entity->get('max')) {
+                    $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
+                    $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
+                }
+                break;
             case 'extensibleEnum':
-                $id = $pav->get('varcharValue');
+                $id = $entity->get('varcharValue');
                 if (!empty($id)) {
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
@@ -693,7 +717,7 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'extensibleMultiEnum':
-                $ids = @json_decode((string)$pav->get('textValue'), true);
+                $ids = @json_decode((string)$entity->get('textValue'), true);
                 if (!empty($ids)) {
                     $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
@@ -709,32 +733,32 @@ class ProductAttributeValue extends AbstractRepository
                 }
                 break;
             case 'rangeInt':
-                if ($pav->get('intValue1') !== null && $pav->get('intValue') !== null && $pav->get('intValue') > $pav->get('intValue1')) {
+                if ($entity->get('intValue1') !== null && $entity->get('intValue') !== null && $entity->get('intValue') > $entity->get('intValue1')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
                     $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
-                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('intValue')], $message));
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $entity->get('intValue')], $message));
                 }
                 break;
             case 'rangeFloat':
-                if ($pav->get('floatValue1') !== null && $pav->get('floatValue') !== null && $pav->get('floatValue') > $pav->get('floatValue1')) {
+                if ($entity->get('floatValue1') !== null && $entity->get('floatValue') !== null && $entity->get('floatValue') > $entity->get('floatValue1')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
                     $fromLabel = $this->getLanguage()->translate('valueTo', 'fields', 'ProductAttributeValue');
-                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $pav->get('floatValue')], $message));
+                    throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $entity->get('floatValue')], $message));
                 }
                 break;
         }
 
-        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($pav->get('varcharValue'))) {
+        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($entity->get('varcharValue'))) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->select(['id'])
                 ->where([
-                    'id'        => $pav->get('varcharValue'),
+                    'id'        => $entity->get('varcharValue'),
                     'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
                 ])
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $pav->get('varcharValue'), $attribute->get('name')));
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get('varcharValue'), $attribute->get('name')));
             }
         }
     }
@@ -835,69 +859,75 @@ class ProductAttributeValue extends AbstractRepository
             'fields' => []
         ];
 
+        $wasValue = self::$beforeSaveData['value'] ?? null;
+        $wasValueUnitId = self::$beforeSaveData['valueUnitId'] ?? null;
+
         switch ($entity->get('attributeType')) {
             case 'rangeInt':
             case 'rangeFloat':
-                if (self::$beforeSaveData['valueFrom'] !== $entity->get('valueFrom')) {
+                $wasValueFrom = self::$beforeSaveData['valueFrom'] ?? null;
+                $wasValueTo = self::$beforeSaveData['valueTo'] ?? null;
+                if ($wasValueFrom !== $entity->get('valueFrom')) {
                     $result['fields'][] = 'valueFrom';
-                    $result['attributes']['was']['valueFrom'] = self::$beforeSaveData['valueFrom'];
+                    $result['attributes']['was']['valueFrom'] = $wasValueFrom;
                     $result['attributes']['became']['valueFrom'] = $entity->get('valueFrom');
                 }
-                if (self::$beforeSaveData['valueTo'] !== $entity->get('valueTo')) {
+                if ($wasValueTo !== $entity->get('valueTo')) {
                     $result['fields'][] = 'valueTo';
-                    $result['attributes']['was']['valueTo'] = self::$beforeSaveData['valueTo'];
+                    $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
                 }
-                if (isset(self::$beforeSaveData['valueUnitId']) && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+                if ($wasValueUnitId !== $entity->get('valueUnitId')) {
                     $result['fields'][] = 'valueUnit';
-                    $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+                    $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
                 }
                 break;
             case 'int':
             case 'float':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-                if (isset(self::$beforeSaveData['valueUnitId']) && self::$beforeSaveData['valueUnitId'] !== $entity->get('valueUnitId')) {
+                if ($wasValueUnitId !== $entity->get('valueUnitId')) {
                     $result['fields'][] = 'valueUnit';
-                    $result['attributes']['was']['valueUnitId'] = self::$beforeSaveData['valueUnitId'];
+                    $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
                 }
                 break;
             case 'array':
             case 'extensibleMultiEnum':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
                 break;
             case 'currency':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
-                if (self::$beforeSaveData['valueCurrency'] !== $entity->get('valueCurrency')) {
+                $wasValueCurrency = self::$beforeSaveData['valueCurrency'] ?? null;
+                if ($wasValueCurrency !== $entity->get('valueCurrency')) {
                     $result['fields'][] = 'valueCurrency';
-                    $result['attributes']['was']['valueCurrency'] = self::$beforeSaveData['valueCurrency'];
+                    $result['attributes']['was']['valueCurrency'] = $wasValueCurrency;
                     $result['attributes']['became']['valueCurrency'] = $entity->get('valueCurrency');
                 }
                 break;
             case 'asset':
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['valueId'] = self::$beforeSaveData['valueId'];
+                    $result['attributes']['was']['valueId'] = $wasValue;
                     $result['attributes']['became']['valueId'] = $entity->get('valueId');
                 }
                 break;
             default:
-                if (self::$beforeSaveData['value'] !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = self::$beforeSaveData['value'];
+                    $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
         }

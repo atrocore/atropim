@@ -126,6 +126,31 @@
       "default": false,
       "tooltip": true
     },
+    "min": {
+      "type": "float",
+      "notStorable": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "max": {
+      "type": "float",
+      "notStorable": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "maxLength": {
+      "type": "int",
+      "notStorable": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "notStorable": true,
+      "filterDisabled": true,
+      "default": false,
+      "emHidden": true
+    },
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,
@@ -233,15 +258,6 @@
       "rows": 4,
       "lengthOfCut": 400,
       "isMultilang": true
-    },
-    "maxLength": {
-      "type": "int",
-      "view": "pim:views/fields/max-length"
-    },
-    "countBytesInsteadOfCharacters": {
-      "type": "bool",
-      "default": false,
-      "view": "pim:views/fields/count-bytes-instead-of-characters"
     },
     "amountOfDigitsAfterComma": {
       "type": "int",
