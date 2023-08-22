@@ -129,11 +129,28 @@
     "min": {
       "type": "float",
       "notStorable": true,
+      "filterDisabled": true,
       "emHidden": true
     },
     "max": {
       "type": "float",
       "notStorable": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "maxLength": {
+      "type": "int",
+      "view": "pim:views/fields/max-length",
+      "notStorable": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "view": "pim:views/fields/count-bytes-instead-of-characters",
+      "notStorable": true,
+      "filterDisabled": true,
+      "default": false,
       "emHidden": true
     },
     "data": {
@@ -243,17 +260,6 @@
       "rows": 4,
       "lengthOfCut": 400,
       "isMultilang": true
-    },
-    "maxLength": {
-      "type": "int",
-      "notStorable": true,
-      "view": "pim:views/fields/max-length"
-    },
-    "countBytesInsteadOfCharacters": {
-      "type": "bool",
-      "notStorable": true,
-      "default": false,
-      "view": "pim:views/fields/count-bytes-instead-of-characters"
     },
     "amountOfDigitsAfterComma": {
       "type": "int",

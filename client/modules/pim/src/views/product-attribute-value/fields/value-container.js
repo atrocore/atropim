@@ -119,8 +119,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
                 }
 
-                console.log(params);
-
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,
                     name: this.name,

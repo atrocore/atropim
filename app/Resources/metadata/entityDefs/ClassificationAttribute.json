@@ -406,24 +406,28 @@
     "min": {
       "type": "float",
       "notStorable": true,
+      "filterDisabled": true,
       "emHidden": true
     },
     "max": {
       "type": "float",
       "notStorable": true,
+      "filterDisabled": true,
       "emHidden": true
     },
     "maxLength": {
       "type": "int",
       "view": "pim:views/fields/max-length",
       "notStorable": true,
+      "filterDisabled": true,
       "emHidden": true
     },
     "countBytesInsteadOfCharacters": {
       "type": "bool",
-      "default": false,
       "view": "pim:views/fields/count-bytes-instead-of-characters",
+      "default": false,
       "notStorable": true,
+      "filterDisabled": true,
       "emHidden": true
     },
     "data": {
