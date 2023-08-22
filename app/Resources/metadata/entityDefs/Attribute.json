@@ -251,6 +251,7 @@
     },
     "countBytesInsteadOfCharacters": {
       "type": "bool",
+      "notStorable": true,
       "default": false,
       "view": "pim:views/fields/count-bytes-instead-of-characters"
     },

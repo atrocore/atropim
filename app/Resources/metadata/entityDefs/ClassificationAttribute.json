@@ -102,15 +102,6 @@
       "default": "",
       "view": "pim:views/classification-attribute/fields/channel"
     },
-    "maxLength": {
-      "type": "int",
-      "view": "pim:views/fields/max-length"
-    },
-    "countBytesInsteadOfCharacters": {
-      "type": "bool",
-      "default": false,
-      "view": "pim:views/fields/count-bytes-instead-of-characters"
-    },
     "boolValue": {
       "type": "bool",
       "aclFieldDisabled": true,
@@ -407,6 +398,41 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "min": {
+      "type": "float",
+      "notStorable": true,
+      "emHidden": true
+    },
+    "max": {
+      "type": "float",
+      "notStorable": true,
+      "emHidden": true
+    },
+    "maxLength": {
+      "type": "int",
+      "view": "pim:views/fields/max-length",
+      "notStorable": true,
+      "emHidden": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "default": false,
+      "view": "pim:views/fields/count-bytes-instead-of-characters",
+      "notStorable": true,
+      "emHidden": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,

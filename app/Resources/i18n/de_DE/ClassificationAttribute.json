@@ -19,7 +19,9 @@
     "floatValue": "Standardwert: Float",
     "dateValue": "Standardwert: Datum",
     "datetimeValue": "Standardwert: Datum-Uhrzeit",
-    "boolValue": "Standardwert: Boolesch"
+    "boolValue": "Standardwert: Boolesch",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "classification": "Klassifizierung",
