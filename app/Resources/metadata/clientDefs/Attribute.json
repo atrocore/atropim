@@ -94,6 +94,36 @@
           ]
         }
       },
+      "maxLength": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "text",
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      },
+      "countBytesInsteadOfCharacters": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "text",
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      },
       "min": {
         "visible": {
           "conditionGroup": [
