@@ -35,14 +35,19 @@ class V1Dot9Dot35 extends Base
 {
     public function up(): void
     {
-        $attributes = $this->getPDO()->query("SELECT * FROM `attribute` WHERE max_length IS NOT NULL AND deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+        try {
+            $attributes = $this->getPDO()->query("SELECT * FROM `attribute` WHERE max_length IS NOT NULL AND deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            $attributes = [];
+        }
+
         foreach ($attributes as $attribute) {
             $data = @json_decode((string)$attribute['data'], true);
-            if (!is_array($data)){
+            if (!is_array($data)) {
                 $data = [];
             }
             $data['field']['maxLength'] = $attribute['max_length'];
-            $this->getPDO()->exec("UPDATE `attribute` SET data='" . json_encode($data) . "' WHERE id='{$attribute['id']}'");
+            $this->exec("UPDATE `attribute` SET data='" . json_encode($data) . "' WHERE id='{$attribute['id']}'");
         }
 
         $this->exec("ALTER TABLE attribute DROP max_length");
