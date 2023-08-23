@@ -484,6 +484,24 @@ class ProductAttributeValue extends AbstractRepository
         }
     }
 
+    public function prepareAttributeData(Entity $attribute, Entity $pav, ?Entity $classificationAttribute = null): void
+    {
+        $pav->set('isRequired', $attribute->get('isRequired'));
+        $pav->set('maxLength', $attribute->get('maxLength'));
+        $pav->set('min', $attribute->get('min'));
+        $pav->set('max', $attribute->get('max'));
+        $pav->set('countBytesInsteadOfCharacters', $attribute->get('countBytesInsteadOfCharacters'));
+        $pav->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
+
+        if ($classificationAttribute !== null) {
+            $pav->set('isRequired', $classificationAttribute->get('isRequired'));
+            $pav->set('maxLength', $classificationAttribute->get('maxLength'));
+            $pav->set('countBytesInsteadOfCharacters', $classificationAttribute->get('countBytesInsteadOfCharacters'));
+            $pav->set('min', $classificationAttribute->get('min'));
+            $pav->set('max', $classificationAttribute->get('max'));
+        }
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (empty($entity->get('productId'))) {
@@ -507,6 +525,7 @@ class ProductAttributeValue extends AbstractRepository
 
         $attribute = $this->getPavAttribute($entity);
         if (!empty($attribute)) {
+            $this->prepareAttributeData($attribute, $entity, $this->findClassificationAttribute($entity));
             $this->validateValue($attribute, $entity);
             $this->populateDefault($entity, $attribute);
         }

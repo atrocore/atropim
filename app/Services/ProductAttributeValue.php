@@ -812,19 +812,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $classificationAttribute = $this->getRepository()->findClassificationAttribute($entity);
 
-        $entity->set('isRequired', $attribute->get('isRequired'));
-        $entity->set('maxLength', $attribute->get('maxLength'));
-        $entity->set('min', $attribute->get('min'));
-        $entity->set('max', $attribute->get('max'));
-        $entity->set('countBytesInsteadOfCharacters', $attribute->get('countBytesInsteadOfCharacters'));
-        $entity->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
-        if (!empty($classificationAttribute)) {
-            $entity->set('isRequired', $classificationAttribute->get('isRequired'));
-            $entity->set('maxLength', $classificationAttribute->get('maxLength'));
-            $entity->set('countBytesInsteadOfCharacters', $classificationAttribute->get('countBytesInsteadOfCharacters'));
-            $entity->set('min', $classificationAttribute->get('min'));
-            $entity->set('max', $classificationAttribute->get('max'));
-        }
+        $this->getRepository()->prepareAttributeData($attribute, $entity, $classificationAttribute);
 
         $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
         if (!$entity->get('isPavRelationInherited')) {
