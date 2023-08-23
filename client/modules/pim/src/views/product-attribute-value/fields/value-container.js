@@ -65,9 +65,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.model.set('valueId', undefined);
             this.model.set('valueName', undefined);
             this.model.set('valuePathsData', undefined);
-
-            this.model.defs['fields']['value']['min'] = undefined;
-            this.model.defs['fields']['value']['max'] = undefined;
         },
 
         afterRender() {
@@ -92,12 +89,14 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.countBytesInsteadOfCharacters = this.model.get('countBytesInsteadOfCharacters');
                 }
 
-                if (this.model.get('min')) {
+                this.model.defs['fields']['value']['min'] = undefined;
+                if (this.model.get('min') !== null) {
                     params.min = this.model.get('min');
                     this.model.defs['fields']['value']['min'] = this.model.get('min');
                 }
 
-                if (this.model.get('max')) {
+                this.model.defs['fields']['value']['max'] = undefined;
+                if (this.model.get('max') !== null) {
                     params.max = this.model.get('max');
                     this.model.defs['fields']['value']['max'] = this.model.get('max');
                 }
