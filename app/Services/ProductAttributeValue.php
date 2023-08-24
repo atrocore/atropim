@@ -806,7 +806,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         if ($entity->get('scope') === 'Global') {
-            $entity->set('channelId', null);
+            $entity->set('channelId', '');
             $entity->set('channelName', 'Global');
         }
 
