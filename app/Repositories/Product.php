@@ -36,8 +36,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
-use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
+use Pim\Core\ValueConverter;
 
 /**
  * Class Product
@@ -354,6 +353,7 @@ class Product extends AbstractRepository
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
         $this->addDependency('queueManager');
+        $this->addDependency(ValueConverter::class);
     }
 
     /**
@@ -622,6 +622,9 @@ class Product extends AbstractRepository
                     if ($ca->get('scope') === 'Channel' && $pav->get('channelId') !== $ca->get('channelId')) {
                         continue 1;
                     }
+
+                    $this->getValueConverter()->convertFrom($pav, $pav->get('attribute'));
+
                     if ($mode === 'removeOnlyInheritedAttributesWithNoValue') {
                         if ($pav->get('value') !== null && $pav->get('value') !== '') {
                             continue 1;
@@ -758,5 +761,10 @@ class Product extends AbstractRepository
     protected function dispatch(string $target, string $action, Event $event): Event
     {
         return $this->getInjection('eventManager')->dispatch($target, $action, $event);
+    }
+
+    public function getValueConverter(): ValueConverter
+    {
+        return $this->getInjection(ValueConverter::class);
     }
 }
