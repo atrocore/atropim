@@ -697,24 +697,24 @@ class ProductAttributeValue extends AbstractRepository
     {
         switch ($attribute->get('type')) {
             case 'int':
-                if ($entity->get('min') !== null && $entity->get('intValue') < $entity->get('min')) {
+                if ($entity->get('min') !== null && $entity->get('intValue') !== null && $entity->get('intValue') < $entity->get('min')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('min')], $message));
                 }
-                if ($entity->get('max') !== null && $entity->get('intValue') > $entity->get('max')) {
+                if ($entity->get('max') !== null && $entity->get('intValue') !== null && $entity->get('intValue') > $entity->get('max')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
                 }
                 break;
             case 'float':
-                if ($entity->get('min') !== null && $entity->get('floatValue') < $entity->get('min')) {
+                if ($entity->get('min') !== null && $entity->get('floatValue') !== null && $entity->get('floatValue') < $entity->get('min')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('min')], $message));
                 }
-                if ($entity->get('max') !== null && $entity->get('floatValue') > $entity->get('max')) {
+                if ($entity->get('max') !== null && $entity->get('floatValue') !== null && $entity->get('floatValue') > $entity->get('max')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
