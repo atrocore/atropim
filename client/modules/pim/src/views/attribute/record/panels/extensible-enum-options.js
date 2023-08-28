@@ -30,20 +30,38 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
     Dep => Dep.extend({
 
         setup() {
+            let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
+
+            this.defs.create = false;
+            this.url = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
+
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model.attributeModel, 'after:save', () => {
-                this.actionRefresh();
+            this.actionList = [];
+
+            this.buttonList.push({
+                title: 'Create',
+                action: 'createExtensibleEnumOption',
+                html: '<span class="fas fa-plus"></span>'
             });
         },
 
-        actionRefresh: function () {
-            let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
-
-            this.collection.url = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
-            this.collection.urlRoot = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
-
-            this.collection.fetch();
+        actionCreateExtensibleEnumOption() {
+            this.notify('Loading...');
+            this.createView('quickCreate', 'views/modals/edit', {
+                scope: 'ExtensibleEnumOption',
+                fullFormDisabled: true,
+                attributes: {
+                    extensibleEnumId: this.model.attributeModel.get('extensibleEnumId'),
+                    extensibleEnumName: this.model.attributeModel.get('extensibleEnumName')
+                },
+            }, view => {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', () => {
+                    this.actionRefresh();
+                });
+            });
         },
 
         afterRender() {
