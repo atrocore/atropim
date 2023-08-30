@@ -254,7 +254,6 @@
     "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
       "noLoad": true,
       "columns": {
         "sorting": "sorting"
