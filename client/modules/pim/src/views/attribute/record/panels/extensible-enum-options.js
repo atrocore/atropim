@@ -30,12 +30,12 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
     Dep => Dep.extend({
 
         setup() {
-            let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
-
             this.defs.create = false;
-            this.url = `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
 
             Dep.prototype.setup.call(this);
+
+            this.collection.url = this.getCollectionUrl();
+            this.collection.urlRoot = this.getCollectionUrl();
 
             this.actionList = [];
 
@@ -69,8 +69,16 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
         },
 
         actionRefresh: function () {
+            this.collection.url = this.getCollectionUrl();
+            this.collection.urlRoot = this.getCollectionUrl();
+
             this.collection.fetch();
-            this.reRender();
+        },
+
+        getCollectionUrl(){
+            let extensibleEnumId = this.model.attributeModel.get('extensibleEnumId') || 'no-such-id';
+            
+            return `ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`;
         },
 
         afterRender() {
