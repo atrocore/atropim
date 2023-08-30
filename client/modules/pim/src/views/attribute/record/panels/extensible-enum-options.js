@@ -64,6 +64,11 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
             });
         },
 
+        actionRefresh: function () {
+            this.collection.fetch();
+            this.reRender();
+        },
+
         afterRender() {
             Dep.prototype.setup.call(this);
 
