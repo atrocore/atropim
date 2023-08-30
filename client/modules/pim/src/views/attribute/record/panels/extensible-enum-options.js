@@ -44,6 +44,10 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
                 action: 'createExtensibleEnumOption',
                 html: '<span class="fas fa-plus"></span>'
             });
+
+            this.listenTo(this.model.attributeModel, 'after:save', () => {
+                this.actionRefresh();
+            });
         },
 
         actionCreateExtensibleEnumOption() {
