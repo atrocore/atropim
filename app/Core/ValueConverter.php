@@ -5,6 +5,7 @@ namespace Pim\Core;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Injectable;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -12,6 +13,7 @@ class ValueConverter extends Injectable
 {
     public function __construct()
     {
+        $this->addDependency('config');
         $this->addDependency('entityManager');
     }
 
@@ -209,7 +211,7 @@ class ValueConverter extends Injectable
                 $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
                 $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
                 if (isset($options[0])) {
-                    $entity->set('valueNames', array_column($options, 'name', 'id'));
+                    $entity->set('valueNames', array_column($options, $this->getOptionName(), 'id'));
                     $entity->set('valueOptionsData', $options);
                 }
                 break;
@@ -218,7 +220,7 @@ class ValueConverter extends Injectable
                 $entity->set('value', $entity->get('varcharValue'));
                 $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
                 if (!empty($option)) {
-                    $entity->set('valueName', $option['name']);
+                    $entity->set('valueName', $option[$this->getOptionName()]);
                     $entity->set('valueOptionData', $option);
                 }
                 break;
@@ -300,5 +302,17 @@ class ValueConverter extends Injectable
                 ]
             ])
             ->findOne();
+    }
+
+    protected function getOptionName(): string
+    {
+        $language = \Pim\Services\ProductAttributeValue::getLanguagePrism();
+        if (!empty($language) && $language !== 'main') {
+            if ($this->getInjection('config')->get('isMultilangActive') && in_array($language, $this->getInjection('config')->get('inputLanguageList', []))) {
+                return Util::toCamelCase('name_' . strtolower($language));
+            }
+        }
+
+        return 'name';
     }
 }
