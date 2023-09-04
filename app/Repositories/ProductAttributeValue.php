@@ -752,7 +752,6 @@ class ProductAttributeValue extends AbstractRepository
                 break;
         }
 
-
         /**
          * Text length validation
          */
