@@ -548,21 +548,6 @@ class ProductAttributeValue extends AbstractRepository
         $type = $attribute->get('type');
 
         /**
-         * Text length validation
-         */
-        if (in_array($type, ['varchar', 'text', 'wysiwyg']) && $entity->get('value') !== null) {
-            $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
-            $fieldValue = (string)$entity->get('value');
-            $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
-            $maxLength = (int)$entity->get('maxLength');
-            if (!empty($maxLength) && $length > $maxLength) {
-                throw new BadRequest(
-                    sprintf($this->getInjection('language')->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $attribute->get('name'), $maxLength, $length)
-                );
-            }
-        }
-
-        /**
          * Rounding float Values using amountOfDigitsAfterComma
          */
         $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
@@ -570,7 +555,7 @@ class ProductAttributeValue extends AbstractRepository
             switch ($type) {
                 case 'float':
                 case 'currency':
-                    if ($entity->get('value') !== null) {
+                    if ($entity->get('floatValue') !== null) {
                         $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$amountOfDigitsAfterComma));
                         $entity->set('value', $entity->get('floatValue'));
                     }
@@ -765,6 +750,25 @@ class ProductAttributeValue extends AbstractRepository
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$attribute->get('name') . ' ' . $fromLabel, $entity->get('floatValue')], $message));
                 }
                 break;
+        }
+
+
+        /**
+         * Text length validation
+         */
+        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])) {
+            $fieldValue = $attribute->get('type') === 'varchar' ? $entity->get('varcharValue') : $entity->get('textValue');
+            if ($fieldValue !== null) {
+                $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
+                $fieldValue = (string)$fieldValue;
+                $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
+                $maxLength = (int)$entity->get('maxLength');
+                if (!empty($maxLength) && $length > $maxLength) {
+                    throw new BadRequest(
+                        sprintf($this->getInjection('language')->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $attribute->get('name'), $maxLength, $length)
+                    );
+                }
+            }
         }
 
         if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($entity->get('varcharValue'))) {
