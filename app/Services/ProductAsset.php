@@ -31,18 +31,21 @@ class ProductAsset extends Relationship
             $entity->set('icon', $asset->get('icon'));
         }
 
-        $parents = $entity->get('product')->get('parents');
-
         $entity->set('isInherited', false);
-        if (!empty($parents[0])) {
-            foreach ($parents as $parent) {
-                $productAssets = $parent->get('productAssets');
-                foreach ($productAssets as $productAsset) {
-                    if ($productAsset->get('assetId') == $entity->get('assetId')
-                        && $productAsset->get('scope') == $entity->get('scope')
-                        && $productAsset->get('channelId') == $entity->get('channelId')) {
-                        $entity->set('isInherited', true);
-                        break 2;
+
+        $product = $entity->get('product');
+        if (!empty($product)) {
+            $parents = $product->get('parents');
+            if (!empty($parents[0])) {
+                foreach ($parents as $parent) {
+                    $productAssets = $parent->get('productAssets');
+                    foreach ($productAssets as $productAsset) {
+                        if ($productAsset->get('assetId') == $entity->get('assetId')
+                            && $productAsset->get('scope') == $entity->get('scope')
+                            && $productAsset->get('channelId') == $entity->get('channelId')) {
+                            $entity->set('isInherited', true);
+                            break 2;
+                        }
                     }
                 }
             }
