@@ -17,9 +17,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 use Pim\Services\GeneralStatisticsDashlet;
 use Pim\Entities\Attribute;
 
-/**
- * Product select manager
- */
 class Product extends AbstractSelectManager
 {
     /**
@@ -43,31 +40,23 @@ class Product extends AbstractSelectManager
                 if (!empty($row['isAttribute']) || !empty($row['value'][0]['isAttribute'])) {
                     $productAttributes[] = $row;
                 } elseif (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
+                    $productIds = [];
+                    foreach (['ProductAsset', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
+                        $sp = $this->createSelectManager($entityType)->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
+                        $sp['select'] = ['productId'];
+                        $query = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $sp, true);
+                        $productIds = array_merge($productIds, $this->getEntityManager()->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN));
+                    }
+
                     $where[] = [
                         'type'  => 'or',
                         'value' => [
                             array_merge($row, ['attribute' => 'modifiedAt']),
                             [
-                                'type'      => 'linkedWith',
-                                'attribute' => 'productAssets',
-                                'subQuery'  => [
-                                    array_merge($row, ['attribute' => 'modifiedAt']),
-                                ]
-                            ],
-                            [
-                                'type'      => 'linkedWith',
-                                'attribute' => 'productAttributeValues',
-                                'subQuery'  => [
-                                    array_merge($row, ['attribute' => 'modifiedAt']),
-                                ]
-                            ],
-                            [
-                                'type'      => 'linkedWith',
-                                'attribute' => 'productChannels',
-                                'subQuery'  => [
-                                    array_merge($row, ['attribute' => 'modifiedAt']),
-                                ]
-                            ],
+                                'type'      => 'in',
+                                'attribute' => 'id',
+                                'value'     => array_values(array_unique($productIds))
+                            ]
                         ]
                     ];
                 } else {
