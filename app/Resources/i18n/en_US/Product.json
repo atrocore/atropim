@@ -1,5 +1,6 @@
 {
   "fields": {
+    "modifiedAtExpanded": "Modified at (expanded)",
     "attachments": "Attachments",
     "mainImage": "Main Image",
     "productAssets": "Product Assets",

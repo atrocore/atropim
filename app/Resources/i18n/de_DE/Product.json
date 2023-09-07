@@ -1,5 +1,6 @@
 {
   "fields": {
+    "modifiedAtExpanded": "Geändert um (erweitert)",
     "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
     "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",

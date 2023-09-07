@@ -227,6 +227,18 @@
       "type": "datetime",
       "readOnly": true
     },
+    "modifiedAtExpanded": {
+      "type": "datetime",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "createdBy": {
       "type": "link",
       "readOnly": true,

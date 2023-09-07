@@ -37,8 +37,46 @@ class Product extends AbstractSelectManager
         // filtering by categories
         $this->filteringByCategories($params);
 
-        // get product attributes filter
-        $productAttributes = $this->getProductAttributeFilter($params);
+        if (!empty($params['where']) && is_array($params['where'])) {
+            $where = [];
+            foreach ($params['where'] as $row) {
+                if (!empty($row['isAttribute']) || !empty($row['value'][0]['isAttribute'])) {
+                    $productAttributes[] = $row;
+                } elseif (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
+                    $where[] = [
+                        'type'  => 'or',
+                        'value' => [
+                            array_merge($row, ['attribute' => 'modifiedAt']),
+                            [
+                                'type'      => 'linkedWith',
+                                'attribute' => 'productAssets',
+                                'subQuery'  => [
+                                    array_merge($row, ['attribute' => 'modifiedAt']),
+                                ]
+                            ],
+                            [
+                                'type'      => 'linkedWith',
+                                'attribute' => 'productAttributeValues',
+                                'subQuery'  => [
+                                    array_merge($row, ['attribute' => 'modifiedAt']),
+                                ]
+                            ],
+                            [
+                                'type'      => 'linkedWith',
+                                'attribute' => 'productChannels',
+                                'subQuery'  => [
+                                    array_merge($row, ['attribute' => 'modifiedAt']),
+                                ]
+                            ],
+                        ]
+                    ];
+                } else {
+                    $where[] = $row;
+                }
+            }
+
+            $params['where'] = $where;
+        }
 
         // get select params
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
@@ -525,30 +563,6 @@ class Product extends AbstractSelectManager
         ];
     }
 
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    protected function getProductAttributeFilter(array &$params): array
-    {
-        $result = [];
-
-        if (!empty($params['where']) && is_array($params['where'])) {
-            $where = [];
-            foreach ($params['where'] as $row) {
-                if (!empty($row['isAttribute']) || !empty($row['value'][0]['isAttribute'])) {
-                    $result[] = $row;
-                } else {
-                    $where[] = $row;
-                }
-            }
-            $params['where'] = $where;
-        }
-
-        return $result;
-    }
-
     protected function getAttribute(string $id): Attribute
     {
         if (!isset($this->attributes[$id])) {
@@ -592,12 +606,12 @@ class Product extends AbstractSelectManager
         }
 
         $where = [
-            'type' => 'and',
+            'type'  => 'and',
             'value' => [
                 [
-                    'type' => 'equals',
+                    'type'      => 'equals',
                     'attribute' => 'attributeId',
-                    'value' => $attribute->get('id')
+                    'value'     => $attribute->get('id')
                 ],
             ]
         ];
@@ -606,56 +620,56 @@ class Product extends AbstractSelectManager
             case 'extensibleMultiEnum':
                 if ($row['type'] === 'arrayIsEmpty') {
                     $where['value'][] = [
-                        'type' => 'or',
+                        'type'  => 'or',
                         'value' => [
                             [
-                                'type' => 'isNull',
+                                'type'      => 'isNull',
                                 'attribute' => 'textValue'
                             ],
                             [
-                                'type' => 'equals',
+                                'type'      => 'equals',
                                 'attribute' => 'textValue',
-                                'value' => ''
+                                'value'     => ''
                             ],
                             [
-                                'type' => 'equals',
+                                'type'      => 'equals',
                                 'attribute' => 'textValue',
-                                'value' => '[]'
+                                'value'     => '[]'
                             ]
                         ]
                     ];
                 } elseif ($row['type'] === 'arrayIsNotEmpty') {
                     $where['value'][] = [
-                        'type' => 'or',
+                        'type'  => 'or',
                         'value' => [
                             [
-                                'type' => 'isNotNull',
+                                'type'      => 'isNotNull',
                                 'attribute' => 'textValue'
                             ],
                             [
-                                'type' => 'notEquals',
+                                'type'      => 'notEquals',
                                 'attribute' => 'textValue',
-                                'value' => ''
+                                'value'     => ''
                             ],
                             [
-                                'type' => 'notEquals',
+                                'type'      => 'notEquals',
                                 'attribute' => 'textValue',
-                                'value' => '[]'
+                                'value'     => '[]'
                             ]
                         ]
                     ];
                 } else {
                     $where['value'][] = [
-                        'type' => 'or',
+                        'type'  => 'or',
                         'value' => []
                     ];
 
                     $values = (empty($row['value'])) ? [md5('no-such-value-' . time())] : $row['value'];
                     foreach ($values as $value) {
                         $where['value'][1]['value'][] = [
-                            'type' => 'like',
+                            'type'      => 'like',
                             'attribute' => 'textValue',
-                            'value' => "%\"$value\"%"
+                            'value'     => "%\"$value\"%"
                         ];
                     }
                 }
@@ -685,7 +699,7 @@ class Product extends AbstractSelectManager
             case 'rangeFloat':
                 if (substr($row['attribute'], -6) === 'UnitId') {
                     $row['attribute'] = 'varcharValue';
-                }elseif (substr($row['attribute'], -2) === 'To') {
+                } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'floatValue1';
                 } else {
                     $row['attribute'] = 'floatValue';
@@ -704,9 +718,9 @@ class Product extends AbstractSelectManager
                 $row['attribute'] = 'varcharValue';
                 $where['value'][] = $row;
                 $where['value'][] = [
-                    'type' => 'equals',
+                    'type'      => 'equals',
                     'attribute' => 'language',
-                    'value' => 'main',
+                    'value'     => 'main',
                 ];
                 break;
             default:
@@ -717,9 +731,9 @@ class Product extends AbstractSelectManager
 
         if ($attribute->get('type') === 'extensibleMultiEnum') {
             $where['value'][] = [
-                'type' => 'equals',
+                'type'      => 'equals',
                 'attribute' => 'language',
-                'value' => 'main',
+                'value'     => 'main',
             ];
         }
 
