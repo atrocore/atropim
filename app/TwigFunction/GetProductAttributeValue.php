@@ -14,13 +14,16 @@ declare(strict_types=1);
 namespace Pim\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
+use Espo\Core\ORM\EntityManager;
 use Espo\ORM\Entity;
 
 class GetProductAttributeValue extends AbstractTwigFunction
 {
-    public function __construct()
+    protected EntityManager $entityManager;
+
+    public function __construct(EntityManager $entityManager)
     {
-        $this->addDependency('entityManager');
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -52,6 +55,6 @@ class GetProductAttributeValue extends AbstractTwigFunction
             'channelId'   => $channelId
         ];
 
-        return $this->getInjection('entityManager')->getRepository('ProductAttributeValue')->where($where)->findOne();
+        return $this->entityManager->getRepository('ProductAttributeValue')->where($where)->findOne();
     }
 }
