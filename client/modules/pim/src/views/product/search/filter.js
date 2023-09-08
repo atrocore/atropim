@@ -41,27 +41,32 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
             this.pinned = this.options.pinned;
 
             if (type) {
-                let params = {};
-                if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
-                    this.ajaxGetRequest(`Attribute/${name}`, null, {async: false}).success(attr => {
-                        params.extensibleEnumId = attr.extensibleEnumId;
-                    });
-                }
-
                 let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+                let params = {};
 
                 if (type === 'unit') {
                     params.measureId = this.options.params.measureId
                     viewName = 'views/fields/unit-link'
                 }
-                this.createView('field', viewName, {
+
+                if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
+                    params.extensibleEnumId = this.options.params.extensibleEnumId;
+                }
+
+                let options = {
                     mode: 'search',
                     model: this.model,
                     el: this.options.el + ' .field',
                     name: name,
                     params: params,
                     searchParams: this.options.searchParams,
-                });
+                };
+
+                if (type === 'link') {
+                    options.foreignScope = this.options.params.foreignScope;
+                }
+
+                this.createView('field', viewName, options);
             }
         },
 

@@ -37,6 +37,14 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                                 type: attribute.get('type')
                             };
 
+                            if (attribute.get('type') === 'link') {
+                                fieldParams.foreignScope = attribute.get('entityType');
+                            }
+
+                            if (attribute.get('type') === 'extensibleEnum' || attribute.get('type') === 'extensibleMultiEnum') {
+                                fieldParams.extensibleEnumId = attribute.get('extensibleEnumId');
+                            }
+
                             this.addFilter(attribute.id, {fieldParams: fieldParams});
                         });
                     });
@@ -234,9 +242,9 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
 
             for (let field in this.advanced) {
                 let filterView = this.getView('filter-' + field);
-                if (filterView){
+                if (filterView) {
                     let view = filterView.getView('field');
-                    if (view){
+                    if (view) {
                         this.advanced[field] = view.fetchSearch();
                         let fieldParams = view.options.searchParams.fieldParams || {};
                         if (fieldParams.isAttribute) {
