@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Treo\Core\Migration\Base;
+use Atro\Core\Migration\Base;
 
 class V1Dot7Dot30 extends Base
 {

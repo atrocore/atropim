@@ -406,18 +406,21 @@
     "min": {
       "type": "float",
       "notStorable": true,
+      "virtualField": true,
       "filterDisabled": true,
       "emHidden": true
     },
     "max": {
       "type": "float",
       "notStorable": true,
+      "virtualField": true,
       "filterDisabled": true,
       "emHidden": true
     },
     "maxLength": {
       "type": "int",
       "notStorable": true,
+      "virtualField": true,
       "filterDisabled": true,
       "emHidden": true
     },
@@ -425,6 +428,7 @@
       "type": "bool",
       "default": false,
       "notStorable": true,
+      "virtualField": true,
       "filterDisabled": true,
       "emHidden": true
     },

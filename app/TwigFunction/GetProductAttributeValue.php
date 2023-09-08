@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\TwigFunction;
 
-use Espo\Core\Twig\AbstractTwigFunction;
+use Atro\Core\Twig\AbstractTwigFunction;
 use Espo\ORM\Entity;
 
 class GetProductAttributeValue extends AbstractTwigFunction

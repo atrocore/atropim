@@ -18,6 +18,4 @@ use Espo\Core\Templates\Entities\Relationship;
 class ClassificationAttribute extends Relationship
 {
     protected $entityType = "ClassificationAttribute";
-
-    protected array $virtualFields = ['min', 'max', 'maxLength', 'countBytesInsteadOfCharacters'];
 }

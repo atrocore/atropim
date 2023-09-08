@@ -11,7 +11,7 @@
 
 namespace Pim\Migrations;
 
-use Treo\Core\Migration\Base;
+use Atro\Core\Migration\Base;
 
 class V1Dot9Dot35 extends Base
 {

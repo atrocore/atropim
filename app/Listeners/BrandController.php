@@ -11,9 +11,9 @@
 
 namespace Pim\Listeners;
 
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Listeners\AbstractListener;
+use Atro\Listeners\AbstractListener;
 
 /**
  * Class BrandController

@@ -11,10 +11,10 @@
 
 namespace Pim\Listeners;
 
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Espo\Listeners\AbstractListener;
+use Atro\Listeners\AbstractListener;
 
 /**
  * Class LayoutController

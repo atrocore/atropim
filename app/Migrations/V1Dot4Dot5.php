@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Espo\Core\Exceptions\Error;
-use Treo\Core\Migration\Base;
+use Atro\Core\Migration\Base;
 
 class V1Dot4Dot5 extends Base
 {

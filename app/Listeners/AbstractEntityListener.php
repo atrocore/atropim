@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Espo\Core\ServiceFactory;
-use Espo\Listeners\AbstractListener;
+use Atro\Listeners\AbstractListener;
 use Espo\ORM\Entity;
-use Pim\Repositories\AbstractRepository;
 
 /**
  * Class AbstractListener

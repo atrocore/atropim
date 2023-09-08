@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-class V1Dot3Dot6 extends V1Dot2Dot19
+use Atro\Core\Migration\Base;
+
+class V1Dot3Dot6 extends Base
 {
 }

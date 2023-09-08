@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim;
 
 use Espo\Core\Utils\Json;
-use Treo\Core\ModuleManager\AbstractModule;
+use Atro\Core\ModuleManager\AbstractModule;
 
 class Module extends AbstractModule
 {

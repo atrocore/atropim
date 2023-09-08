@@ -18,6 +18,4 @@ use Espo\Core\Templates\Entities\Hierarchy;
 class Attribute extends Hierarchy
 {
     protected $entityType = "Attribute";
-
-    protected array $virtualFields = ['min', 'max', 'maxLength', 'countBytesInsteadOfCharacters'];
 }

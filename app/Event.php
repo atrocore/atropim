@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim;
 
 use Espo\Core\Utils\Config;
-use Treo\Core\ModuleManager\AfterInstallAfterDelete;
+use Atro\Core\ModuleManager\AfterInstallAfterDelete;
 
 /**
  * Class Event

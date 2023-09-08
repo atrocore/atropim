@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-class V1Dot3Dot0 extends V1Dot2Dot11
+use Atro\Core\Migration\Base;
+
+class V1Dot3Dot0 extends Base
 {
     public function up(): void
     {
@@ -23,5 +25,14 @@ class V1Dot3Dot0 extends V1Dot2Dot11
 
     public function down(): void
     {
+    }
+
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+            // ignore
+        }
     }
 }

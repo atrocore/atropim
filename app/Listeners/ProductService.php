@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Espo\Core\EventManager\Event;
-use Espo\Listeners\AbstractListener;
+use Atro\Core\EventManager\Event;
+use Atro\Listeners\AbstractListener;
 
 class ProductService extends AbstractListener
 {
