@@ -162,6 +162,7 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'asset':
+            case 'link':
                 if (property_exists($data, 'value')) {
                     $data->varcharValue = $data->value;
                     unset($data->value);
@@ -246,6 +247,15 @@ class ValueConverter extends Injectable
                 break;
             case 'datetime':
                 $entity->set('value', $entity->get('datetimeValue'));
+                break;
+            case 'link':
+                $entity->set('valueId', $entity->get('varcharValue'));
+                if (!empty($entity->get('valueId'))) {
+                    $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
+                    if (!empty($foreign)) {
+                        $entity->set('valueName', $foreign->get('name'));
+                    }
+                }
                 break;
             case 'asset':
                 $entity->set('value', $entity->get('varcharValue'));
