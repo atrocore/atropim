@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
 class GetProductAttributeValue extends AbstractTwigFunction
