@@ -26,32 +26,17 @@ class GetProductAttributeValue extends AbstractTwigFunction
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param string $attributeId
-     * @param string $channelId
-     * @param string $language
-     *
-     * @return Entity|null
-     */
-    public function run(...$input)
+    public function run(string $attributeId, string $channelId = '', string $language = 'main'): ?Entity
     {
-        if (empty($input[0])) {
-            return null;
-        }
-
         $currentPav = $this->getTemplateData('entity');
         if (empty($currentPav) || $currentPav->getEntityType() !== 'ProductAttributeValue') {
             return null;
         }
 
-        $attributeId = $input[0];
-        $channelId = empty($input[1]) ? '' : $input[1];
-        $language = empty($input[2]) ? 'main' : $input[2];
-
         $where = [
-            'attributeId' => (string)$attributeId,
+            'attributeId' => $attributeId,
             'productId'   => (string)$currentPav->get('productId'),
-            'language'    => (string)$language,
+            'language'    => $language,
             'channelId'   => $channelId
         ];
 
