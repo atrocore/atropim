@@ -49,19 +49,19 @@ class RevisionField extends MultilangRevisionField
             if (empty($max)) {
                 $max = $this->maxSize;
             }
-            $attribute = $this->getEntityManager()->getEntity('ProductAttributeValue', $params['field']);
-            if (empty($attribute)) {
+            $pav = $this->getEntityManager()->getEntity('ProductAttributeValue', $params['field']);
+            if (empty($pav)) {
                 throw new Error('Such Attribute Value is not found');
             }
 
             foreach ($notes as $note) {
-                if (!empty($note->get('attributeId')) && $note->get('attributeId') == $attribute->id) {
+                if (!empty($note->get('attributeId')) && $note->get('attributeId') == $pav->get('attributeId')) {
                     // prepare data
                     $data = $this->prepareNoteData($note->get('data'));
 
                     foreach ($data['fields'] as $field) {
                         if ($max > count($result['list']) && $result['total'] >= $offset) {
-                            $attr = $attribute->get('attribute');
+                            $attr = $pav->get('attribute');
 
                             // prepare data
                             $was = $became = [];
