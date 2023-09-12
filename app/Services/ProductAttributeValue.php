@@ -496,14 +496,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     protected function validateRequired(Entity $entity): void
     {
-        if ($this->hasCompleteness($entity)) {
+        if ($this->hasCompleteness($entity) || empty($entity->get('isRequired'))) {
             return;
         }
 
         $checkEntity = clone $entity;
         $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $entity->get('attribute'), false);
 
-        if ($entity->get('isRequired') && ($checkEntity->get('value') === null || $checkEntity->get('value') === '')) {
+        if ($checkEntity->get('value') === null || $checkEntity->get('value') === '') {
             $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
             $message = $this->getInjection('language')->translate('fieldIsRequired', 'exceptions', $entity->getEntityType());
 
