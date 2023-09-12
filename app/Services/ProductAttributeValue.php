@@ -500,7 +500,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
-        if ($entity->get('isRequired') && ($entity->get('value') === null || $entity->get('value') === '')) {
+        $checkEntity = clone $entity;
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $entity->get('attribute'), false);
+
+        if ($entity->get('isRequired') && ($checkEntity->get('value') === null || $checkEntity->get('value') === '')) {
             $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
             $message = $this->getInjection('language')->translate('fieldIsRequired', 'exceptions', $entity->getEntityType());
 
