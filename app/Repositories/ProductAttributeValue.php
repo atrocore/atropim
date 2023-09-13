@@ -616,7 +616,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
@@ -859,6 +859,7 @@ class ProductAttributeValue extends AbstractRepository
     protected function getNoteData(Entity $entity): array
     {
         $result = [
+            'id'     => $entity->get('id'),
             'locale' => $entity->get('language') !== 'main' ? $entity->get('language') : '',
             'fields' => []
         ];
