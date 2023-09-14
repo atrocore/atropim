@@ -857,8 +857,12 @@ class ProductAttributeValue extends AbstractRepository
         $this->getEntityManager()->saveEntity($note);
     }
 
-    protected function getNoteData(Entity $entity): array
+    protected function getNoteData(Entity $entity): ?array
     {
+        if (!property_exists($entity, '_input')) {
+            return null;
+        }
+
         $result = [
             'id'     => $entity->get('id'),
             'locale' => $entity->get('language') !== 'main' ? $entity->get('language') : '',
@@ -867,39 +871,71 @@ class ProductAttributeValue extends AbstractRepository
 
         $wasValue = self::$beforeSaveData['value'] ?? null;
         $wasValueUnitId = self::$beforeSaveData['valueUnitId'] ?? null;
+        $input = $entity->_input;
 
         switch ($entity->get('attributeType')) {
             case 'rangeInt':
+                $wasValueFrom = self::$beforeSaveData['valueFrom'] ?? null;
+                $wasValueTo = self::$beforeSaveData['valueTo'] ?? null;
+                if (property_exists($input, 'intValue') && $wasValue !== $input->intValue) {
+                    $result['fields'][] = 'valueFrom';
+                    $result['attributes']['was']['valueFrom'] = $wasValueFrom;
+                    $result['attributes']['became']['valueFrom'] = $input->intValue;
+                }
+                if (property_exists($input, 'intValue1') && $wasValue !== $input->intValue1) {
+                    $result['fields'][] = 'valueTo';
+                    $result['attributes']['was']['valueTo'] = $wasValueTo;
+                    $result['attributes']['became']['valueTo'] = $input->intValue1;
+                }
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
+                    $result['fields'][] = 'valueUnit';
+                    $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
+                }
+                break;
             case 'rangeFloat':
                 $wasValueFrom = self::$beforeSaveData['valueFrom'] ?? null;
                 $wasValueTo = self::$beforeSaveData['valueTo'] ?? null;
-                if ($wasValueFrom !== $entity->get('valueFrom')) {
+                if (property_exists($input, 'floatValue') && $wasValue !== $input->floatValue) {
                     $result['fields'][] = 'valueFrom';
                     $result['attributes']['was']['valueFrom'] = $wasValueFrom;
-                    $result['attributes']['became']['valueFrom'] = $entity->get('valueFrom');
+                    $result['attributes']['became']['valueFrom'] = $input->floatValue;
                 }
-                if ($wasValueTo !== $entity->get('valueTo')) {
+                if (property_exists($input, 'floatValue1') && $wasValue !== $input->floatValue1) {
                     $result['fields'][] = 'valueTo';
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
-                    $result['attributes']['became']['valueTo'] = $entity->get('valueTo');
+                    $result['attributes']['became']['valueTo'] = $input->floatValue1;
                 }
-                if ($wasValueUnitId !== $entity->get('valueUnitId')) {
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
                 }
                 break;
             case 'int':
-            case 'float':
-                if ($wasValue !== $entity->get('value')) {
+                if (property_exists($input, 'intValue') && $wasValue !== $input->intValue) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
-                    $result['attributes']['became']['value'] = $entity->get('value');
+                    $result['attributes']['became']['value'] = $input->intValue;
                 }
-                if ($wasValueUnitId !== $entity->get('valueUnitId')) {
+
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $entity->get('valueUnitId');
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
+                }
+                break;
+            case 'float':
+                if (property_exists($input, 'floatValue') && $wasValue !== $input->floatValue) {
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['value'] = $wasValue;
+                    $result['attributes']['became']['value'] = $input->floatValue;
+                }
+
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
+                    $result['fields'][] = 'valueUnit';
+                    $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
                 }
                 break;
             case 'array':
@@ -917,10 +953,11 @@ class ProductAttributeValue extends AbstractRepository
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
                 $wasValueCurrency = self::$beforeSaveData['valueCurrency'] ?? null;
-                if ($wasValueCurrency !== $entity->get('valueCurrency')) {
+
+                if (property_exists($input, 'varcharValue') && $wasValueCurrency !== $input->varcharValue) {
                     $result['fields'][] = 'valueCurrency';
                     $result['attributes']['was']['valueCurrency'] = $wasValueCurrency;
-                    $result['attributes']['became']['valueCurrency'] = $entity->get('valueCurrency');
+                    $result['attributes']['became']['valueCurrency'] = $input->varcharValue;
                 }
                 break;
             case 'asset':
