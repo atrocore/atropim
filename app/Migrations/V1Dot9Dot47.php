@@ -13,7 +13,7 @@ namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot9Dot46 extends Base
+class V1Dot9Dot47 extends Base
 {
     public function up(): void
     {
