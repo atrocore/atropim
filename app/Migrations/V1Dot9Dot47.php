@@ -18,6 +18,7 @@ class V1Dot9Dot47 extends Base
     public function up(): void
     {
         $this->exec("ALTER TABLE note ADD pav_id VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("DELETE FROM note WHERE attribute_id IS NOT NULL AND pav_id IS NULL");
     }
 
     public function down(): void
