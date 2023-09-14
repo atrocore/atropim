@@ -1,7 +1,10 @@
 {
-    "fields": {
-        "attributeId": {
-            "type": "varchar"
-        }
+  "fields": {
+    "attributeId": {
+      "type": "varchar"
+    },
+    "pavId": {
+      "type": "varchar"
     }
+  }
 }

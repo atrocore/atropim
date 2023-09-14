@@ -14,26 +14,12 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\Entity;
-use Espo\Core\Utils\Util;
-use Revisions\Services\RevisionField as MultilangRevisionField;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Slim\Http\Request;
 
-/**
- * RevisionField service
- */
-class RevisionField extends MultilangRevisionField
+class RevisionField extends \Revisions\Services\RevisionField
 {
-    /**
-     * Prepare data
-     *
-     * @param array            $params
-     * @param EntityCollection $notes
-     * @param Request          $request
-     *
-     * @return array
-     */
     protected function prepareData(array $params, EntityCollection $notes, Request $request): array
     {
         if (!empty($request->get('isAttribute'))) {
@@ -55,7 +41,7 @@ class RevisionField extends MultilangRevisionField
             }
 
             foreach ($notes as $note) {
-                if (!empty($note->get('attributeId')) && $note->get('attributeId') == $pav->get('attributeId')) {
+                if (!empty($note->get('pavId')) && $note->get('pavId') == $pav->get('id')) {
                     // prepare data
                     $data = $this->prepareNoteData($note->get('data'));
 
@@ -99,7 +85,7 @@ class RevisionField extends MultilangRevisionField
                             if (is_bool($became)) {
                                 $was = (bool)$was;
                             }
-                            
+
                             $createdBy = $this->getEntityManager()->getRepository('User')->get($note->get('createdById'));
 
                             $result['list'][] = [
@@ -122,5 +108,14 @@ class RevisionField extends MultilangRevisionField
         }
 
         return $result;
+    }
+
+    protected function getEntity(Entity $note): ?Entity
+    {
+        if (!empty($note->get('pavId'))) {
+            return $this->getEntityManager()->getEntity('ProductAttributeValue', $note->get('pavId'));
+        }
+
+        return parent::getEntity($note);
     }
 }

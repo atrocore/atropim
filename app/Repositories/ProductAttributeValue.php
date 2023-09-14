@@ -616,7 +616,7 @@ class ProductAttributeValue extends AbstractRepository
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
@@ -852,6 +852,7 @@ class ProductAttributeValue extends AbstractRepository
         $note->set('parentType', 'Product');
         $note->set('data', $data);
         $note->set('attributeId', $entity->get('attributeId'));
+        $note->set('pavId', $entity->get('id'));
 
         $this->getEntityManager()->saveEntity($note);
     }
