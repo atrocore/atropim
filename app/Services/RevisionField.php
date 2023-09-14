@@ -88,6 +88,11 @@ class RevisionField extends \Revisions\Services\RevisionField
 
                             $createdBy = $this->getEntityManager()->getRepository('User')->get($note->get('createdById'));
 
+                            // skip similar
+                            if ($was === $became) {
+                                continue;
+                            }
+
                             $result['list'][] = [
                                 "id"       => $note->get('id'),
                                 "date"     => $note->get('createdAt'),
