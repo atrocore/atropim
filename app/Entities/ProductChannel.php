@@ -11,7 +11,7 @@
 
 namespace Pim\Entities;
 
-use Espo\Core\Templates\Entities\Relationship;
+use Atro\Core\Templates\Entities\Relationship;
 
 class ProductChannel extends Relationship
 {

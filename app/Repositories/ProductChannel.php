@@ -11,7 +11,7 @@
 
 namespace Pim\Repositories;
 
-use Espo\Core\Templates\Repositories\Relationship;
+use Atro\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
 
 class ProductChannel extends Relationship

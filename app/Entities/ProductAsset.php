@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-class ProductAsset extends \Espo\Core\Templates\Entities\Relationship
+class ProductAsset extends \Atro\Core\Templates\Entities\Relationship
 {
     protected $entityType = "ProductAsset";
 }

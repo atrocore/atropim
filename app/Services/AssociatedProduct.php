@@ -16,7 +16,7 @@ namespace Pim\Services;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Services\Relationship;
+use Atro\Core\Templates\Services\Relationship;
 use Espo\Core\Utils\Language;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;

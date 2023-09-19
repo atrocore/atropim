@@ -11,6 +11,6 @@
 
 namespace Pim\Controllers;
 
-class CategoryAsset extends \Espo\Core\Templates\Controllers\Relationship
+class CategoryAsset extends \Atro\Core\Templates\Controllers\Relationship
 {
 }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Relationship;
+use Atro\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
