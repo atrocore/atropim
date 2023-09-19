@@ -407,7 +407,8 @@
     },
     "packaging": {
       "type": "belongsTo",
-      "entity": "Packaging"
+      "entity": "Packaging",
+      "foreign": "products"
     },
     "calls": {
       "type": "hasChildren",
