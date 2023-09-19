@@ -22,8 +22,7 @@
   },
   "relationshipPanels": {
     "productAssets": {
-      "view": "pim:views/product/record/panels/product-assets",
-      "rowActionsView": "pim:views/product-asset/record/row-actions/relationship-no-unlink-in-product",
+      "view": "pim:views/record/panels/assets",
       "dragDrop": {
         "isActive": true,
         "sortField": "sorting"

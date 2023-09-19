@@ -3,7 +3,8 @@
     "product": {
       "type": "link",
       "required": true,
-      "relationshipField": true
+      "relationshipField": true,
+      "mainRelationshipEntity": true
     },
     "asset": {
       "type": "link",
