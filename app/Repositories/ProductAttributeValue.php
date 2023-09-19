@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Relationship;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\ValueConverter;
 
-class ProductAttributeValue extends AbstractRepository
+class ProductAttributeValue extends Relationship
 {
     protected static $beforeSaveData = [];
 
@@ -29,6 +30,11 @@ class ProductAttributeValue extends AbstractRepository
     protected array $productPavs = [];
 
     private array $pavsAttributes = [];
+
+    public function isInherited(Entity $entity): bool
+    {
+        return false;
+    }
 
     public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language): array
     {

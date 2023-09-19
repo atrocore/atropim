@@ -13,10 +13,11 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\Templates\Services\Relationship;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class AbstractProductAttributeService extends \Espo\Core\Templates\Services\Relationship
+class AbstractProductAttributeService extends Relationship
 {
     protected function prepareDefaultLanguages(\stdClass $attachment): void
     {
