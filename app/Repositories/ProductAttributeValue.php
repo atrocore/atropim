@@ -626,18 +626,6 @@ class ProductAttributeValue extends Relationship
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
-        if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'assignedUser', 'isInheritAssignedUser'))) {
-            $this->inheritOwnership($entity, $field, $this->getConfig()->get('assignedUserAttributeOwnership', null));
-        }
-
-        if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'ownerUser', 'isInheritOwnerUser'))) {
-            $this->inheritOwnership($entity, $field, $this->getConfig()->get('ownerUserAttributeOwnership', null));
-        }
-
-        if (!$entity->isNew() && !empty($field = $this->getPreparedInheritedField($entity, 'teams', 'isInheritTeams'))) {
-            $this->inheritOwnership($entity, $field, $this->getConfig()->get('teamsAttributeOwnership', null));
-        }
-
         $this->getPDO()->exec(
             "UPDATE product SET modified_at='{$entity->get('modifiedAt')}', modified_by_id='{$this->getEntityManager()->getUser()->get('id')}' WHERE id='{$entity->get('productId')}'"
         );
