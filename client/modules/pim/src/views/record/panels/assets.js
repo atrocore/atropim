@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/panels/assets', 'views/record/panels/for-relationship-type',
+Espo.define('pim:views/record/panels/assets', 'treo-core:views/record/panels/for-relationship-type',
     Dep => Dep.extend({
 
         setup() {

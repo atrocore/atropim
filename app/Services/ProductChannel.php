@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Templates\Services\Relationship;
+use Atro\Core\Templates\Services\Relationship;
 use Espo\ORM\Entity;
 
 class ProductChannel extends Relationship

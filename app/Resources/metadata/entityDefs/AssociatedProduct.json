@@ -10,6 +10,7 @@
       "required": true,
       "type": "link",
       "relationshipField": true,
+      "mainRelationshipEntity": true,
       "view": "pim:views/associated-product/fields/main-product"
     },
     "relatedProduct": {

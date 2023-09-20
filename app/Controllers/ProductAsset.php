@@ -11,20 +11,8 @@
 
 namespace Pim\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Templates\Controllers\Relationship;
 
-class ProductAsset extends \Espo\Core\Templates\Controllers\Relationship
+class ProductAsset extends Relationship
 {
-    public function actionDelete($params, $data, $request)
-    {
-        if (!$request->isDelete() || empty($params['id'])) {
-            throw new BadRequest();
-        }
-
-        $service = $this->getRecordService();
-        $service->simpleRemove = !property_exists($data, 'hierarchically');
-        $service->deleteEntity($params['id']);
-
-        return true;
-    }
 }

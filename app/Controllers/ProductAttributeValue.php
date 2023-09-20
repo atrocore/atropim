@@ -15,7 +15,7 @@ namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Templates\Controllers\Relationship;
+use Atro\Core\Templates\Controllers\Relationship;
 use Slim\Http\Request;
 
 class ProductAttributeValue extends Relationship

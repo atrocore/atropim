@@ -17,7 +17,7 @@ use Espo\Core\Exceptions\Forbidden;
 /**
  * AssociatedProduct controller
  */
-class AssociatedProduct extends \Espo\Core\Templates\Controllers\Relationship
+class AssociatedProduct extends \Atro\Core\Templates\Controllers\Relationship
 {
 
     public function actionRemoveFromProduct($params, $data, $request)

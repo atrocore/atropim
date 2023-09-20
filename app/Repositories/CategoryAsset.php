@@ -15,7 +15,7 @@ namespace Pim\Repositories;
 
 use Espo\ORM\Entity;
 
-class CategoryAsset extends \Espo\Core\Templates\Repositories\Relationship
+class CategoryAsset extends \Atro\Core\Templates\Repositories\Relationship
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {

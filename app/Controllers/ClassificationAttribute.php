@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Templates\Controllers\Relationship;
+use Atro\Core\Templates\Controllers\Relationship;
 use Slim\Http\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;

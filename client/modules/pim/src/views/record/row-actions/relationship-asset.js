@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/row-actions/relationship-asset', 'views/record/row-actions/relationship-no-unlink',
+Espo.define('pim:views/record/row-actions/relationship-asset', 'treo-core:views/record/row-actions/for-relationship-type',
     Dep => Dep.extend({
 
         getActionList: function () {

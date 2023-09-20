@@ -15,7 +15,7 @@ namespace Pim\Services;
 
 use Espo\ORM\Entity;
 
-class CategoryAsset extends \Espo\Core\Templates\Services\Relationship
+class CategoryAsset extends \Atro\Core\Templates\Services\Relationship
 {
     protected $mandatorySelectAttributeList = ['isMainImage'];
 

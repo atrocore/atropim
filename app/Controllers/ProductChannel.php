@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-use Espo\Core\Templates\Controllers\Relationship;
+use Atro\Core\Templates\Controllers\Relationship;
 
 class ProductChannel extends Relationship
 {
