@@ -632,18 +632,9 @@ class ProductAttributeValue extends AbstractRepository
             $this->inheritOwnership($entity, $field, $this->getConfig()->get('teamsAttributeOwnership', null));
         }
 
-        // update Product
-        $this->getConnection()->createQueryBuilder()
-            ->update('product', 'p')
-            ->set('p.modified_at', ':modifiedAt')
-            ->set('p.modified_by_id', ':modifiedById')
-            ->where('p.id = :productId')
-            ->setParameters([
-                'modifiedAt'   => $entity->get('modifiedAt'),
-                'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
-                'productId'    => $entity->get('productId')
-            ])
-            ->executeQuery();
+        $this->getPDO()->exec(
+            "UPDATE product SET modified_at='{$entity->get('modifiedAt')}', modified_by_id='{$this->getEntityManager()->getUser()->get('id')}' WHERE id='{$entity->get('productId')}'"
+        );
 
         $this->moveImageFromTmp($entity);
 
