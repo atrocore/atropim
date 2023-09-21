@@ -13,36 +13,12 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class Classification extends AbstractRepository
+class Classification extends Hierarchy
 {
-    /**
-     * @var string
-     */
-    protected $ownership = 'fromClassification';
-
-    /**
-     * @var string
-     */
-    protected $ownershipRelation = 'Product';
-
-    /**
-     * @var string
-     */
-    protected $assignedUserOwnership = 'assignedUserProductOwnership';
-
-    /**
-     * @var string
-     */
-    protected $ownerUserOwnership = 'ownerUserProductOwnership';
-
-    /**
-     * @var string
-     */
-    protected $teamsOwnership = 'teamsProductOwnership';
-
     public function getLinkedAttributesIds(string $id, string $scope = 'Global'): array
     {
         $data = $this
@@ -97,13 +73,6 @@ class Classification extends AbstractRepository
         }
 
         return $result;
-    }
-
-    protected function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        $this->setInheritedOwnership($entity);
     }
 
     public function remove(Entity $entity, array $options = [])

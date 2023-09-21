@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
@@ -23,33 +24,8 @@ use Pim\Core\ValueConverter;
 /**
  * Class Product
  */
-class Product extends AbstractRepository
+class Product extends Hierarchy
 {
-    /**
-     * @var string
-     */
-    protected $ownership = 'fromProduct';
-
-    /**
-     * @var string
-     */
-    protected $ownershipRelation = 'ProductAttributeValue';
-
-    /**
-     * @var string
-     */
-    protected $assignedUserOwnership = 'assignedUserAttributeOwnership';
-
-    /**
-     * @var string
-     */
-    protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
-
-    /**
-     * @var string
-     */
-    protected $teamsOwnership = 'teamsAttributeOwnership';
-
     public function getProductsIdsViaAccountId(string $accountId): array
     {
         $accountId = $this->getPDO()->quote($accountId);
@@ -370,35 +346,6 @@ class Product extends AbstractRepository
         parent::beforeSave($entity, $options);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @throws Error
-     */
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        // save attributes
-        $this->saveAttributes($entity);
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritAssignedUser') && $entity->get('isInheritAssignedUser')) {
-            $this->inheritOwnership($entity, 'assignedUser', $this->getConfig()->get('assignedUserProductOwnership', null));
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritOwnerUser') && $entity->get('isInheritOwnerUser')) {
-            $this->inheritOwnership($entity, 'ownerUser', $this->getConfig()->get('ownerUserProductOwnership', null));
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('isInheritTeams') && $entity->get('isInheritTeams')) {
-            $this->inheritOwnership($entity, 'teams', $this->getConfig()->get('teamsProductOwnership', null));
-        }
-
-        // parent action
-        parent::afterSave($entity, $options);
-
-        $this->setInheritedOwnership($entity);
-    }
-
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByProductId($entity->get('id'));
@@ -645,22 +592,6 @@ class Product extends AbstractRepository
             if ($products > 0) {
                 $result = false;
             }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getInheritedEntity(Entity $entity, string $config): ?Entity
-    {
-        $result = null;
-
-        if ($config == 'fromCatalog') {
-            $result = $entity->get('catalog');
-        } elseif ($config == 'fromClassification') {
-            $result = $entity->get('classification');
         }
 
         return $result;

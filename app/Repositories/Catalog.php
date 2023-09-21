@@ -13,39 +13,15 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 /**
  * Catalog repository
  */
-class Catalog extends AbstractRepository
+class Catalog extends Hierarchy
 {
-    /**
-     * @var string
-     */
-    protected $ownership = 'fromCatalog';
-
-    /**
-     * @var string
-     */
-    protected $ownershipRelation = 'Product';
-
-    /**
-     * @var string
-     */
-    protected $assignedUserOwnership = 'assignedUserProductOwnership';
-
-    /**
-     * @var string
-     */
-    protected $ownerUserOwnership = 'ownerUserProductOwnership';
-
-    /**
-     * @var string
-     */
-    protected $teamsOwnership = 'teamsProductOwnership';
-
     public function getProductsCount(Entity $catalog): int
     {
         return $this
@@ -127,16 +103,6 @@ class Catalog extends AbstractRepository
         }
 
         parent::beforeSave($entity, $options);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function afterSave(Entity $entity, array $options = array())
-    {
-        parent::afterSave($entity, $options);
-
-        $this->setInheritedOwnership($entity);
     }
 
     /**

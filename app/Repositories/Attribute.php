@@ -13,44 +13,16 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Util;
-use Pim\AttributeConverters\AttributeConverterInterface;
 
 /**
  * Class Attribute
  */
-class Attribute extends AbstractRepository
+class Attribute extends Hierarchy
 {
-    /**
-     * @var string
-     */
-    protected $ownership = 'fromAttribute';
-
-    /**
-     * @var string
-     */
-    protected $ownershipRelation = 'ProductAttributeValue';
-
-    /**
-     * @var string
-     */
-    protected $assignedUserOwnership = 'assignedUserAttributeOwnership';
-
-    /**
-     * @var string
-     */
-    protected $ownerUserOwnership = 'ownerUserAttributeOwnership';
-
-    /**
-     * @var string
-     */
-    protected $teamsOwnership = 'teamsAttributeOwnership';
-
     protected function init()
     {
         parent::init();
@@ -240,8 +212,6 @@ class Attribute extends AbstractRepository
                 }
             }
         }
-
-        $this->setInheritedOwnership($entity);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

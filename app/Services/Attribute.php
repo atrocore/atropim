@@ -81,27 +81,6 @@ class Attribute extends Hierarchy
             return $this->getEntity($id);
         }
 
-        $entity = $this->getEntityManager()->getRepository('Attribute')->get($id);
-
-        if (!empty($entity)) {
-            if ($this->getConfig()->get('isMultilangActive', false)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
-
-                    $teamsField = "teams{$camelCaseLocale}Ids";
-                    if (isset($data->$teamsField)) {
-                        $multiLangId = $id . '~' . strtolower($locale);
-                        $this->getRepository()->changeMultilangTeams($multiLangId, 'Attribute', $data->$teamsField);
-
-                        $this
-                            ->getEntityManager()
-                            ->getRepository('Attribute')
-                            ->setInheritedOwnershipTeams($entity, $data->$teamsField, $locale);
-                    }
-                }
-            }
-        }
-
         return parent::updateEntity($id, $data);
     }
 

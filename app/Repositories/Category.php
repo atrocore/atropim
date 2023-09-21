@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Pim\Listeners\AbstractEntityListener;
 
-class Category extends AbstractRepository
+class Category extends Hierarchy
 {
     public static function getCategoryRoute(Entity $entity, bool $isName = false): string
     {
