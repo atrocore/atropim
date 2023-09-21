@@ -15,6 +15,7 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relationship;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\DateTime;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
@@ -622,23 +623,34 @@ class ProductAttributeValue extends Relationship
 
     protected function afterSave(Entity $entity, array $options = array())
     {
-        // update Product
-        $this->getConnection()->createQueryBuilder()
-            ->update('product', 'p')
-            ->set('p.modified_at', ':modifiedAt')
-            ->set('p.modified_by_id', ':modifiedById')
-            ->where('p.id = :productId')->setParameters([
-                'modifiedAt'   => $entity->get('modifiedAt'),
-                'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
-                'productId'    => $entity->get('productId')
-            ])
-            ->executeQuery();
+        $this->updateProductModifiedData($entity);
 
         $this->moveImageFromTmp($entity);
 
         parent::afterSave($entity, $options);
 
         $this->createNote($entity);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->updateProductModifiedData($entity);
+
+        parent::afterRemove($entity, $options);
+    }
+
+    public function updateProductModifiedData(Entity $entity): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('product', 'p')
+            ->set('p.modified_at', ':modifiedAt')
+            ->set('p.modified_by_id', ':modifiedById')
+            ->where('p.id = :productId')->setParameters([
+                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
+                'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
+                'productId'    => $entity->get('productId')
+            ])
+            ->executeQuery();
     }
 
     /**
