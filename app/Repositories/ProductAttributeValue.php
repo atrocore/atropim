@@ -620,15 +620,19 @@ class ProductAttributeValue extends Relationship
         parent::beforeSave($entity, $options);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     */
     protected function afterSave(Entity $entity, array $options = array())
     {
-        $this->getPDO()->exec(
-            "UPDATE product SET modified_at='{$entity->get('modifiedAt')}', modified_by_id='{$this->getEntityManager()->getUser()->get('id')}' WHERE id='{$entity->get('productId')}'"
-        );
+        // update Product
+        $this->getConnection()->createQueryBuilder()
+            ->update('product', 'p')
+            ->set('p.modified_at', ':modifiedAt')
+            ->set('p.modified_by_id', ':modifiedById')
+            ->where('p.id = :productId')->setParameters([
+                'modifiedAt'   => $entity->get('modifiedAt'),
+                'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
+                'productId'    => $entity->get('productId')
+            ])
+            ->executeQuery();
 
         $this->moveImageFromTmp($entity);
 
