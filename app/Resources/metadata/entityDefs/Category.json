@@ -58,8 +58,6 @@
       "default": null,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true
