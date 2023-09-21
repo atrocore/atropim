@@ -79,6 +79,7 @@
     "role": "Role"
   },
   "labels": {
+    "removeHierarchically": "Delete Hierarchically",
     "setAsMainImage": "Set as Main Image",
     "allChannels": "All Channels",
     "nonHierarchicalProducts": "Non-hierarchical products",

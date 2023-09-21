@@ -91,6 +91,7 @@
     }
   },
   "labels": {
+    "removeHierarchically": "Hierarchisch löschen",
     "setAsMainImage": "Als Hauptbild setzen",
     "allChannels": "Alle Kanäle",
     "nonHierarchicalProducts": "Unhierarchische Produkte",
