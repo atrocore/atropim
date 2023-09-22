@@ -32,9 +32,9 @@ class ProductAttributeValue extends Relationship
 
     private array $pavsAttributes = [];
 
-    public function isInherited(Entity $entity): bool
+    public function isInherited(Entity $entity): ?bool
     {
-        return false;
+        return null;
     }
 
     public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language): array
