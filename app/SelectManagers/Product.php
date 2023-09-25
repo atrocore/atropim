@@ -676,6 +676,22 @@ class Product extends AbstractSelectManager
             case 'rangeInt':
                 if (substr($row['attribute'], -6) === 'UnitId') {
                     $row['attribute'] = 'varcharValue';
+                    if ($row['type'] === 'isNull') {
+                        $row = [
+                            'type'  => 'or',
+                            'value' => [
+                                [
+                                    'type'      => 'equals',
+                                    'attribute' => 'varcharValue',
+                                    'value'     => ''
+                                ],
+                                [
+                                    'type'      => 'isNull',
+                                    'attribute' => 'varcharValue'
+                                ],
+                            ]
+                        ];
+                    }
                 } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'intValue1';
                 } else {
@@ -688,6 +704,22 @@ class Product extends AbstractSelectManager
             case 'rangeFloat':
                 if (substr($row['attribute'], -6) === 'UnitId') {
                     $row['attribute'] = 'varcharValue';
+                    if ($row['type'] === 'isNull') {
+                        $row = [
+                            'type'  => 'or',
+                            'value' => [
+                                [
+                                    'type'      => 'equals',
+                                    'attribute' => 'varcharValue',
+                                    'value'     => ''
+                                ],
+                                [
+                                    'type'      => 'isNull',
+                                    'attribute' => 'varcharValue'
+                                ],
+                            ]
+                        ];
+                    }
                 } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'floatValue1';
                 } else {
