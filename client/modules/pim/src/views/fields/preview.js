@@ -11,6 +11,11 @@
 Espo.define('pim:views/fields/preview', 'dam:views/asset/fields/preview',
     Dep => Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this)
+            this.model.set('name', this.model.get('assetName'))
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
@@ -18,6 +23,6 @@ Espo.define('pim:views/fields/preview', 'dam:views/asset/fields/preview',
                 this.$el.parent().addClass('main-image global-main-image');
             }
         },
-        
+
     })
 );
