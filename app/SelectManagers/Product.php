@@ -675,7 +675,6 @@ class Product extends AbstractSelectManager
             case 'int':
             case 'rangeInt':
                 if (substr($row['attribute'], -6) === 'UnitId') {
-                    $row['attribute'] = 'varcharValue';
                     if ($row['type'] === 'isNull') {
                         $row = [
                             'type'  => 'or',
@@ -691,6 +690,8 @@ class Product extends AbstractSelectManager
                                 ],
                             ]
                         ];
+                    } else {
+                        $row['attribute'] = 'varcharValue';
                     }
                 } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'intValue1';
@@ -703,7 +704,6 @@ class Product extends AbstractSelectManager
             case 'float':
             case 'rangeFloat':
                 if (substr($row['attribute'], -6) === 'UnitId') {
-                    $row['attribute'] = 'varcharValue';
                     if ($row['type'] === 'isNull') {
                         $row = [
                             'type'  => 'or',
@@ -719,6 +719,8 @@ class Product extends AbstractSelectManager
                                 ],
                             ]
                         ];
+                    } else {
+                        $row['attribute'] = 'varcharValue';
                     }
                 } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'floatValue1';
