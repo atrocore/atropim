@@ -174,7 +174,8 @@
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit",
       "massUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "defaultScope": {
       "type": "enum",

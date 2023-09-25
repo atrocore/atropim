@@ -22,7 +22,6 @@ Espo.define('pim:views/fields/preview', 'dam:views/asset/fields/preview',
             if (this.$el && this.model.get('isMainImage')) {
                 this.$el.parent().addClass('main-image global-main-image');
             }
-        },
-
+        }
     })
 );
