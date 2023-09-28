@@ -3,8 +3,7 @@
     "name": "product"
   },
   {
-    "name": "asset",
-    "view": "pim:views/product-asset/fields/asset"
+    "name": "asset"
   },
   {
     "name": "preview",
