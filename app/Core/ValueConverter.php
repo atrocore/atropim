@@ -193,82 +193,112 @@ class ValueConverter extends Injectable
 
         switch ($attribute->get('type')) {
             case 'rangeInt':
-                $entity->set('valueFrom', $entity->get('intValue'));
-                $entity->set('valueTo', $entity->get('intValue1'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
+                if ($entity->has('intValue')) {
+                    $entity->set('valueFrom', $entity->get('intValue'));
+                    $entity->set('valueTo', $entity->get('intValue1'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
+                }
                 break;
             case 'rangeFloat':
-                $entity->set('valueFrom', $entity->get('floatValue'));
-                $entity->set('valueTo', $entity->get('floatValue1'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
+                if ($entity->has('floatValue')) {
+                    $entity->set('valueFrom', $entity->get('floatValue'));
+                    $entity->set('valueTo', $entity->get('floatValue1'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
+                }
                 break;
             case 'array':
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                if ($entity->has('textValue')) {
+                    $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                }
                 break;
             case 'extensibleMultiEnum':
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
-                $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                if (isset($options[0])) {
-                    $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
-                    $entity->set('valueOptionsData', $options);
+                if ($entity->has('textValue')) {
+                    $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
+                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                    if (isset($options[0])) {
+                        $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
+                        $entity->set('valueOptionsData', $options);
+                    }
                 }
                 break;
             case 'extensibleEnum':
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
-                $entity->set('value', $entity->get('varcharValue'));
-                $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                if (!empty($option)) {
-                    $entity->set('valueName', $option['preparedName']);
-                    $entity->set('valueOptionData', $option);
+                if ($entity->has('varcharValue')) {
+                    $entity->set('value', $entity->get('varcharValue'));
+                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                    if (!empty($option)) {
+                        $entity->set('valueName', $option['preparedName']);
+                        $entity->set('valueOptionData', $option);
+                    }
                 }
                 break;
             case 'text':
             case 'wysiwyg':
-                $entity->set('value', $entity->get('textValue'));
+                if ($entity->has('textValue')) {
+                    $entity->set('value', $entity->get('textValue'));
+                }
                 break;
             case 'bool':
-                $entity->set('value', !empty($entity->get('boolValue')));
+                if ($entity->has('boolValue')) {
+                    $entity->set('value', !empty($entity->get('boolValue')));
+                }
                 break;
             case 'currency':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueCurrency', $entity->get('varcharValue'));
+                if ($entity->has('floatValue')) {
+                    $entity->set('value', $entity->get('floatValue'));
+                    $entity->set('valueCurrency', $entity->get('varcharValue'));
+                }
                 break;
             case 'int':
-                $entity->set('value', $entity->get('intValue'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
+                if ($entity->has('intValue')) {
+                    $entity->set('value', $entity->get('intValue'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
+                }
                 break;
             case 'float':
-                $entity->set('value', $entity->get('floatValue'));
-                $entity->set('valueUnitId', $entity->get('varcharValue'));
+                if ($entity->has('floatValue')) {
+                    $entity->set('value', $entity->get('floatValue'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
+                }
                 break;
             case 'date':
-                $entity->set('value', $entity->get('dateValue'));
+                if ($entity->has('dateValue')) {
+                    $entity->set('value', $entity->get('dateValue'));
+                }
                 break;
             case 'datetime':
-                $entity->set('value', $entity->get('datetimeValue'));
+                if ($entity->has('datetimeValue')) {
+                    $entity->set('value', $entity->get('datetimeValue'));
+                }
                 break;
             case 'link':
-                $entity->set('valueId', $entity->get('varcharValue'));
-                if (!empty($entity->get('valueId'))) {
-                    $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
-                    if (!empty($foreign)) {
-                        $entity->set('valueName', $foreign->get('name'));
+                if ($entity->has('varcharValue')) {
+                    $entity->set('valueId', $entity->get('varcharValue'));
+                    if (!empty($entity->get('valueId'))) {
+                        $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
+                        if (!empty($foreign)) {
+                            $entity->set('valueName', $foreign->get('name'));
+                        }
                     }
                 }
                 break;
             case 'asset':
-                $entity->set('value', $entity->get('varcharValue'));
-                $entity->set('valueId', $entity->get('varcharValue'));
-                if (!empty($entity->get('valueId'))) {
-                    if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
-                        $entity->set('valueName', $attachment->get('name'));
-                        $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+                if ($entity->has('varcharValue')) {
+                    $entity->set('value', $entity->get('varcharValue'));
+                    $entity->set('valueId', $entity->get('varcharValue'));
+                    if (!empty($entity->get('valueId'))) {
+                        if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
+                            $entity->set('valueName', $attachment->get('name'));
+                            $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+                        }
                     }
                 }
                 break;
             default:
-                $entity->set('value', $entity->get('varcharValue'));
+                if ($entity->has('varcharValue')) {
+                    $entity->set('value', $entity->get('varcharValue'));
+                }
                 break;
         }
 
