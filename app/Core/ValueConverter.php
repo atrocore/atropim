@@ -189,6 +189,11 @@ class ValueConverter extends Injectable
 
     public function convertFrom(Entity $entity, Entity $attribute, bool $clear = true): void
     {
+        // if convert was already called with $clear=true
+        if (!$entity->has('textValue')) {
+            return;
+        }
+
         $entity->set('attributeType', $attribute->get('type'));
 
         switch ($attribute->get('type')) {
