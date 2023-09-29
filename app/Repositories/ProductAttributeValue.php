@@ -211,7 +211,7 @@ class ProductAttributeValue extends Relationship
         foreach ($pavs as $pav) {
             if (
                 $pav->get('attributeId') === $entity->get('attributeId')
-                && $pav->get('scope') === $entity->get('scope')
+                && $pav->get('channelId') === $entity->get('channelId')
                 && $pav->get('language') === $entity->get('language')
                 && $pav->get('isVariantSpecificAttribute') === $entity->get('isVariantSpecificAttribute')
                 && $this->arePavsValuesEqual($pav, $entity)
