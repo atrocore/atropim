@@ -542,14 +542,10 @@ class ProductAttributeValue extends Relationship
         $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
         if ($amountOfDigitsAfterComma !== null) {
             switch ($type) {
-                case 'float':
-                    if ($entity->get('floatValue') !== null) {
-                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
-                        $entity->set('value', $entity->get('floatValue'));
-                    }
+                case 'float':                   
                 case 'currency':
                     if ($entity->get('floatValue') !== null) {
-                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('value'), (int)$amountOfDigitsAfterComma));
+                        $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
                         $entity->set('value', $entity->get('floatValue'));
                     }
                     break;
