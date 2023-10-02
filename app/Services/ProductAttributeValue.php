@@ -18,10 +18,10 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Pim\Core\ValueConverter;
+use Espo\Services\Record;
 
 class ProductAttributeValue extends AbstractProductAttributeService
 {
@@ -297,7 +297,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function originalCreateEntity(\stdClass $attachment): Entity
     {
-        $result = parent::createEntity($attachment);
+        $result = Record::createEntity($attachment);
         try {
             $this->createAssociatedAttributeValue($attachment, $attachment->attributeId);
         } catch (\Throwable $e) {
@@ -398,15 +398,15 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         if ($this->isPseudoTransaction()) {
-            return parent::updateEntity($id, $data);
+            return Record::updateEntity($id, $data);
         }
 
         if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
-            return parent::updateEntity($id, $data);
+            return Record::updateEntity($id, $data);
         }
 
         if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
-            return parent::updateEntity($id, $data);
+            return Record::updateEntity($id, $data);
         }
 
         $inTransaction = false;
@@ -416,7 +416,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
         try {
             $this->createPseudoTransactionUpdateJobs($id, clone $data);
-            $result = parent::updateEntity($id, $data);
+            $result = Record::updateEntity($id, $data);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }
@@ -514,19 +514,19 @@ class ProductAttributeValue extends AbstractProductAttributeService
     public function deleteEntity($id)
     {
         if (!empty($this->simpleRemove)) {
-            return parent::deleteEntity($id);
+            return Record::deleteEntity($id);
         }
 
         if ($this->isPseudoTransaction()) {
-            return parent::deleteEntity($id);
+            return Record::deleteEntity($id);
         }
 
         if (!$this->getMetadata()->get('scopes.Product.relationInheritance', false)) {
-            return parent::deleteEntity($id);
+            return Record::deleteEntity($id);
         }
 
         if (in_array('productAttributeValues', $this->getMetadata()->get('scopes.Product.unInheritedRelations', []))) {
-            return parent::deleteEntity($id);
+            return Record::deleteEntity($id);
         }
 
         $inTransaction = false;
@@ -536,7 +536,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
         try {
             $this->createPseudoTransactionDeleteJobs($id);
-            $result = parent::deleteEntity($id);
+            $result = Record::deleteEntity($id);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
             }
