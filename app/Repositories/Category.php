@@ -215,11 +215,7 @@ class Category extends Hierarchy
 
         try {
             $result = $this->getMapper()->addRelation($category, 'channels', $channelId);
-            if (!empty($products = $category->get('products')) && count($products) > 0) {
-                foreach ($products as $product) {
-                    $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
-                }
-            }
+
             if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
                 foreach ($category->getChildren() as $child) {
                     $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
@@ -254,11 +250,7 @@ class Category extends Hierarchy
             $inTransaction = true;
         }
         try {
-            if (!empty($products = $category->get('products')) && count($products) > 0) {
-                foreach ($products as $product) {
-                    $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
-                }
-            }
+
             $result = $this->getMapper()->removeRelation($category, 'channels', $channelId);
             if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
                 foreach ($category->getChildren() as $child) {
@@ -300,7 +292,6 @@ class Category extends Hierarchy
         try {
             $result = $this->getMapper()->addRelation($category, 'products', $product->get('id'));
             $this->getProductRepository()->updateProductCategorySortOrder($product, $category);
-            $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
@@ -330,7 +321,6 @@ class Category extends Hierarchy
         }
         try {
             $result = $this->getMapper()->removeRelation($category, 'products', $product->get('id'));
-            $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
