@@ -387,8 +387,6 @@ class Product extends Hierarchy
 
         $result = $this->getMapper()->addRelation($product, 'categories', $category->get('id'));
         $this->updateProductCategorySortOrder($product, $category);
-        $this->getEntityManager()->getRepository('ProductChannel')->createRelationshipViaCategory($product, $category);
-
         return $result;
     }
 
