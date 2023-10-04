@@ -401,7 +401,6 @@ class Product extends Hierarchy
         }
 
         $result = $this->getMapper()->removeRelation($product, 'categories', $category->get('id'));
-        $this->getEntityManager()->getRepository('ProductChannel')->deleteRelationshipViaCategory($product, $category);
 
         return $result;
     }
