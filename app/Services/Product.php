@@ -145,6 +145,20 @@ class Product extends Hierarchy
         }
     }
 
+    protected function getProductAttributeForUpdating(EntityCollection $pavs, \stdClass $data): ?Entity
+    {
+
+        foreach ($pavs as $pav) {
+            if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope && $pav->get('language') == $data->language) {
+                if ($data->scope == 'Global' || ($data->scope === 'Channel' && property_exists($data, 'channelId') && $pav->get('channelId') == $data->channelId)) {
+                    return $pav;
+                }
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @inheritDoc
      */
@@ -163,33 +177,90 @@ class Product extends Hierarchy
                 $inTransaction = true;
             }
 
-            $ids = array_keys((array)$data->panelsData->productAttributeValues);
+            $pavService = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
 
-            if (!empty($ids)) {
-                $pavService = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
-                foreach ($this->getEntityManager()->getRepository('ProductAttributeValue')->where(['id' => $ids])->find() as $pav) {
-                    if (!empty($this->getMetadata()->get(['attributes', $pav->get('attributeType'), 'isValueReadOnly']))) {
-                        continue;
-                    }
+            // input data
+            $productAttributeValues = new \stdClass();
+            // pavs to update
+            $pavs = new EntityCollection();
 
-                    // prepare input
-                    $input = clone $data->panelsData->productAttributeValues->{$pav->get('id')};
-                    if (property_exists($data, '_ignoreConflict') && !empty($data->_ignoreConflict) && property_exists($data, '_prev')) {
-                        unset($input->_prev);
-                    }
-                    foreach (['attributeId', 'channelId', 'language'] as $field) {
-                        if (property_exists($input, $field)) {
-                            unset($input->$field);
-                        }
-                    }
-                    $input->isProductUpdate = true;
+            // For Mass Update
+            if (property_exists($data, 'massUpdateData')) {
+                $attributeIds = array_column((array)$data->panelsData->productAttributeValues, 'attributeId');
+                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
+
+                foreach ($data->panelsData->productAttributeValues as $pavData) {
+                    $existPav = $this->getProductAttributeForUpdating($existingPavs, $pavData);
                     try {
-                        $pavService->updateEntity($pav->get('id'), $input);
+                        if (!is_null($existPav)) {
+                            $productAttributeValues->{$existPav->get('id')} = $pavData;
+                            $pavs->append($existPav);
+                        } else {
+                            $isValidChannel = true;
+                            $copy = clone $pavData;
+
+                            if (property_exists($copy, 'createPavIfNotExists')) {
+                                if (empty($copy->createPavIfNotExists)) {
+                                    continue 1;
+                                }
+                                unset($copy->createPavIfNotExists);
+                            }
+
+                            if (property_exists($copy, 'channelId') && !empty($copy->channelId)) {
+                                $channelIds = $this->getEntityManager()->getRepository('ProductChannel')->select(['channelId'])->where(['productId' => $id])->find()->toArray();
+                                $channelIds = array_column($channelIds, 'channelId');
+
+                                if (!in_array($copy->channelId, $channelIds)) {
+                                    $isValidChannel = false;
+                                }
+                            }
+
+                            // Create pav if channel is valid
+                            if ($isValidChannel) {
+                                $copy->productId = $id;
+
+                                $result = $pavService->createEntity($copy);
+
+                                if (!$result->get('attributeIsMultilang')) {
+                                    $existingPavs->append($result);
+                                } else {
+                                    $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
+                                }
+                            }
+                        }
                     } catch (Conflict $e) {
                         $conflicts = array_merge($conflicts, $e->getFields());
-                    } catch (NotModified $e) {
-                        // ignore
                     }
+                }
+            } // For Single Product Update
+            else {
+                $ids = array_keys((array)$data->panelsData->productAttributeValues);
+                $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['id' => $ids])->find();
+                $productAttributeValues = $data->panelsData->productAttributeValues;
+            }
+
+            foreach ($pavs as $pav) {
+                if (!empty($this->getMetadata()->get(['attributes', $pav->get('attributeType'), 'isValueReadOnly']))) {
+                    continue;
+                }
+
+                // prepare input
+                $input = clone $productAttributeValues->{$pav->get('id')};
+                if (property_exists($data, '_ignoreConflict') && !empty($data->_ignoreConflict) && property_exists($data, '_prev')) {
+                    unset($input->_prev);
+                }
+                foreach (['attributeId', 'channelId', 'language'] as $field) {
+                    if (property_exists($input, $field)) {
+                        unset($input->$field);
+                    }
+                }
+                $input->isProductUpdate = true;
+                try {
+                    $pavService->updateEntity($pav->get('id'), $input);
+                } catch (Conflict $e) {
+                    $conflicts = array_merge($conflicts, $e->getFields());
+                } catch (NotModified $e) {
+                    // ignore
                 }
             }
         }
@@ -540,7 +611,7 @@ class Product extends Hierarchy
 
     /**
      * @param string $id
-     * @param array  $params
+     * @param array $params
      *
      * @return array
      * @throws Forbidden
