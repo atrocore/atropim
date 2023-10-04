@@ -278,7 +278,7 @@ class ValueConverter extends Injectable
                     if (!empty($entity->get('valueId'))) {
                         $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
                         if (!empty($foreign)) {
-                            $entity->set('valueName', $foreign->get($attribute->get('entityField') ?? 'name'));
+                            $entity->set('valueName', $foreign->get($attribute->get('foreignField') ?? 'name'));
                         }
                     }
                 }
