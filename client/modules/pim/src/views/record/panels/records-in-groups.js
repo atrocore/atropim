@@ -168,7 +168,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         afterRender() {
             Dep.prototype.afterRender.call(this);
             Dep.prototype.setupTotal.call(this)
-            console.log(this.collection);
             this.buildGroups();
 
             if (this.mode === 'edit') {
