@@ -148,6 +148,7 @@ Espo.define('pim:views/record/panels/refresh-after-update-related',  ['views/rec
                             this.model.trigger('after:updateRelated');
                         }, this);
                     });
+                    Dep.prototype.setupTotal.call(this)
                 }, this);
 
                 this.wait(false);
