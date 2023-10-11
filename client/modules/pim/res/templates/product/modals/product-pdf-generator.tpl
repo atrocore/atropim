@@ -42,3 +42,17 @@
         </div>
     </div>
 {{/if}}
+{{#if isEnabledAttachments}}
+    <div class="row">
+        <div class="col-xs-6 cell form-group">
+            <label class="control-label" data-name="saveAsAttachment">{{translate 'saveAsAttachment' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="saveAsAttachment">{{{saveAsAttachment}}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 cell form-group">
+            <label class="control-label" data-name="saveInField">{{translate 'saveInField' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="saveInField">{{{saveInField}}}</div>
+        </div>
+    </div>
+{{/if}}
