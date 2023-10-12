@@ -167,7 +167,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
         afterRender() {
             Dep.prototype.afterRender.call(this);
-
+            Dep.prototype.setupTotal.call(this)
             this.buildGroups();
 
             if (this.mode === 'edit') {
@@ -240,7 +240,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
 
         afterGroupRender() {
-
         },
 
         applyOverviewFilters() {
@@ -384,7 +383,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         },
 
-        actionDeleteAllRelationshipEntities(data){
+        actionDeleteAllRelationshipEntities(data) {
 
         },
 

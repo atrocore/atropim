@@ -157,6 +157,7 @@ Espo.define('pim:views/catalog/record/panels/categories', ['views/record/panels/
                         });
                     }, this);
                     collection.fetch();
+                    Dep.prototype.setupTotal.call(this)
                 }, this);
 
                 this.wait(false);

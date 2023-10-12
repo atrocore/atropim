@@ -166,6 +166,7 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
                         });
                     }, this);
                     collection.fetch();
+                    Dep.prototype.setupTotal.call(this)
                 }, this);
 
                 this.wait(false);
@@ -205,9 +206,9 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
         getBodyHtml() {
             return '' +
                 '<div class="row">' +
-                    '<div class="col-xs-12">' +
-                        '<span class="confirm-message">' + this.translate('removeAttribute(s)', 'messages', 'Attribute') + '</span>' +
-                    '</div>' +
+                '<div class="col-xs-12">' +
+                '<span class="confirm-message">' + this.translate('removeAttribute(s)', 'messages', 'Attribute') + '</span>' +
+                '</div>' +
                 '</div>';
         }
     })
