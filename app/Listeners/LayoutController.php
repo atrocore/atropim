@@ -107,24 +107,45 @@ class LayoutController extends AbstractListener
     /**
      * @param Event $event
      */
-    protected function modifyProductRelationshipsAdmin(Event $event)
+    protected function modifyProductRelationshipsLayout(Event $event, bool $isAdmin)
     {
-        if ($this->getContainer()->get('layout')->isCustom('Product', 'relationships')) {
-            return;
-        }
-
         $result = Json::decode($event->getArgument('result'), true);
         $newResult = [];
-        foreach ($result as $row) {
-            if ($row['name'] == 'productAttributeValues') {
-                $panels = $this->getMetadata()->get(['clientDefs', 'Product', 'bottomPanels', 'detail'], []);
-                foreach ($panels as $panel) {
-                    if (!empty($panel['tabId'])) {
-                        $newResult[] = ['name' => $panel['name']];
+
+        if ($this->getContainer()->get('layout')->isCustom('Product', 'relationships')) {
+            if ($isAdmin) {
+                return;
+            }
+
+            foreach ($result as $row) {
+                if (str_starts_with($row['name'], "tab_")) {
+                    if (!empty(substr($row['name'], 4)) && !empty($entity = $this->getEntityManager()->getEntity('AttributeTab', substr($row['name'], 4)))) {
+                        if (!$this->getContainer()->get('acl')->checkEntity($entity, 'read')) {
+                            continue 1;
+                        }
                     }
                 }
+                $newResult[] = $row;
             }
-            $newResult[] = $row;
+        } else {
+            foreach ($result as $row) {
+                if ($row['name'] == 'productAttributeValues') {
+                    $panels = $this->getMetadata()->get(['clientDefs', 'Product', 'bottomPanels', 'detail'], []);
+                    foreach ($panels as $panel) {
+                        if (!empty($panel['tabId'])) {
+                            if (!$isAdmin) {
+                                $entity = $this->getEntityManager()->getEntity('AttributeTab', $panel['tabId']);
+                                // check if user can read on AttributeTab
+                                if (!$this->getContainer()->get('acl')->checkEntity($entity, 'read')) {
+                                    continue 1;
+                                }
+                            }
+                            $newResult[] = ['name' => $panel['name']];
+                        }
+                    }
+                }
+                $newResult[] = $row;
+            }
         }
 
         $event->setArgument('result', Json::encode($newResult));
@@ -135,7 +156,12 @@ class LayoutController extends AbstractListener
      */
     protected function modifyProductRelationships(Event $event)
     {
-        $this->modifyProductRelationshipsAdmin($event);
+        $this->modifyProductRelationshipsLayout($event, false);
+    }
+
+    protected function modifyProductRelationshipsAdmin(Event $event)
+    {
+        $this->modifyProductRelationshipsLayout($event, true);
     }
 
     /**
