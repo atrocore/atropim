@@ -18,6 +18,8 @@ use Espo\ORM\Entity;
 
 class ToExtensibleMultiEnum implements AttributeConverterInterface
 {
+    public const LIMIT = 5000;
+
     protected Connection $connection;
 
     public function __construct(Connection $connection)
@@ -38,7 +40,7 @@ class ToExtensibleMultiEnum implements AttributeConverterInterface
                 ->andWhere('pav.attribute_type = :attributeType')
                 ->setParameter('attributeType', 'extensibleEnum')
                 ->setFirstResult(0)
-                ->setMaxResults(5000)
+                ->setMaxResults(self::LIMIT)
                 ->fetchAllAssociative();
 
             if (empty($res)) {
@@ -46,11 +48,10 @@ class ToExtensibleMultiEnum implements AttributeConverterInterface
             }
 
             foreach ($res as $v) {
-                $textValue = empty($v['varchar_value']) ? null : "[\"{$v['varchar_value']}\"]";
                 $this->connection->createQueryBuilder()
                     ->update($this->connection->quoteIdentifier('product_attribute_value'))
                     ->set('text_value', ':textValue')
-                    ->setParameter('textValue', $textValue)
+                    ->setParameter('textValue', $this->prepareTextValue($v['varchar_value']))
                     ->set('varchar_value', ':nullValue')
                     ->setParameter('nullValue', null)
                     ->set('attribute_type', ':attributeType')
@@ -60,5 +61,42 @@ class ToExtensibleMultiEnum implements AttributeConverterInterface
                     ->executeQuery();
             }
         }
+
+        while (true) {
+            $res = $this->connection->createQueryBuilder()
+                ->select('ca.id, ca.varchar_value')
+                ->from($this->connection->quoteIdentifier('classification_attribute'), 'ca')
+                ->where('ca.attribute_id = :attributeId')
+                ->setParameter('attributeId', $attribute->get('id'))
+                ->andWhere('ca.varchar_value IS NOT NULL')
+                ->setFirstResult(0)
+                ->setMaxResults(self::LIMIT)
+                ->fetchAllAssociative();
+
+            if (empty($res)) {
+                break;
+            }
+
+            foreach ($res as $v) {
+                $this->connection->createQueryBuilder()
+                    ->update($this->connection->quoteIdentifier('classification_attribute'))
+                    ->set('text_value', ':textValue')
+                    ->setParameter('textValue', $this->prepareTextValue($v['varchar_value']))
+                    ->set('varchar_value', ':nullValue')
+                    ->setParameter('nullValue', null)
+                    ->where('id = :id')
+                    ->setParameter('id', $v['id'])
+                    ->executeQuery();
+            }
+        }
+    }
+
+    protected function prepareTextValue($varcharValue): ?string
+    {
+        if ($varcharValue === null) {
+            return null;
+        }
+
+        return "[\"{$varcharValue}\"]";
     }
 }
