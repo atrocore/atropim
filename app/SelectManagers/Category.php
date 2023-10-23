@@ -33,7 +33,10 @@ class Category extends AbstractSelectManager
         $tableAlias = $queryConverter::TABLE_ALIAS;
         $fieldAlias = $queryConverter->fieldToAlias('childrenCount');
 
-        $qb->add('select', ["(SELECT COUNT(c1.id) FROM {$connection->quoteIdentifier('category')}  AS c1 WHERE c1.category_parent_id={$tableAlias}.id AND c1.deleted=:false) as $fieldAlias"], true);
+        $qb->add(
+            'select',
+            ["(SELECT COUNT(c1.id) FROM {$connection->quoteIdentifier('category')}  AS c1 WHERE c1.category_parent_id={$tableAlias}.id AND c1.deleted=:false) as $fieldAlias"], true
+        );
         $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
 
@@ -101,23 +104,33 @@ class Category extends AbstractSelectManager
             return;
         }
 
+        $connection = $this->getEntityManager()->getConnection();
+
         if (empty($catalogId)) {
+            $rows = $connection->createQueryBuilder()
+                ->select('category_id')
+                ->from('catalog_category')
+                ->where('deleted = :false')
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->fetchAllAssociative();
+
             $result['whereClause'][] = [
-                'id!=' => $this
-                    ->getEntityManager()
-                    ->getPDO()
-                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0")
-                    ->fetchAll(\PDO::FETCH_COLUMN)
+                'id!=' => array_column($rows, 'category_id')
             ];
             return;
         }
 
+        $rows = $connection->createQueryBuilder()
+            ->select('category_id')
+            ->from('catalog_category')
+            ->where('deleted = :false')
+            ->andWhere('catalog_id = :catalogId')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('catalogId', $catalogId)
+            ->fetchAllAssociative();
+
         $result['whereClause'][] = [
-            'id' => $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0 AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId))
-                ->fetchAll(\PDO::FETCH_COLUMN)
+            'id' => array_column($rows, 'category_id')
         ];
     }
 
