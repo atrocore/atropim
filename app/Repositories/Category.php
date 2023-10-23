@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
@@ -352,72 +353,89 @@ class Category extends Hierarchy
 
     public function getEntityPosition(Entity $entity, string $parentId): ?int
     {
+        $connection = $this->getEntityManager()->getConnection();
+
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
 
         if (empty($parentId)) {
             $additionalWhere = ' AND t.category_parent_id IS NULL ';
         } else {
-            $additionalWhere = ' AND t.category_parent_id=' . $this->getPDO()->quote($parentId);
+            $additionalWhere = ' AND t.category_parent_id=:parentId';
         }
 
-        $query = "SELECT x.position
-                  FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                        FROM `category` t
+        if (Converter::isPgSQL($this->getConnection())) {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, row_number() over(ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
+                        FROM {$connection->quoteIdentifier('category')} t
+                        WHERE t.deleted=:false $additionalWhere) x
+                      WHERE x.id=:id";
+        } else {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
+                        FROM {$connection->quoteIdentifier('category')} t
                             JOIN (SELECT @rownum:=0) r
-                        WHERE t.deleted=0 $additionalWhere
+                        WHERE t.deleted=:false $additionalWhere
                         ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-                  WHERE x.id=" . $this->getPDO()->quote($entity->get('id'));
+                      WHERE x.id=:id";
+        }
 
-        $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($query);
+        $sth->bindValue(':id', $entity->get('id'));
+        $sth->bindValue(':parentId', $parentId);
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $position = $sth->fetch(\PDO::FETCH_COLUMN);
 
         return (int)$position;
     }
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
+        $connection = $this->getEntityManager()->getConnection();
+
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
 
-        $select = 'c.*';
+        $select = ['c.*'];
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=c.id AND c1.deleted=0) as childrenCount";
+            $select [] = "(SELECT COUNT(c1.id) FROM {$connection->quoteIdentifier('category')} c1 WHERE c1.category_parent_id=c.id AND c1.deleted=:false) as children_count";
         }
 
-        if (empty($parentId)) {
-            $additionalWhere = ' AND c.category_parent_id IS NULL ';
-        } else {
-            $additionalWhere = ' AND c.category_parent_id=' . $this->getPDO()->quote($parentId);
-        }
-
-        $query = "SELECT {$select} 
-                  FROM category c
-                  WHERE c.deleted=0 $additionalWhere
-                  ORDER BY c.sort_order ASC, c.$sortBy {$sortOrder}, c.id ASC";
+        $qb = $connection->createQueryBuilder()
+            ->select($select)
+            ->from($connection->quoteIdentifier('category'), 'c')
+            ->where('c.deleted = :false')
+            ->andWhere('c.category_parent_id = :parentId')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('parentId', empty($parentId) ? null : $parentId)
+            ->addOrderBy('c.sort_order', 'ASC')
+            ->addOrderBy("c.$sortBy", $sortOrder)
+            ->addOrderBy('c.id', 'ASC');
 
         if (!is_null($offset) && !is_null($maxSize)) {
-            $query .= " LIMIT $maxSize OFFSET $offset";
+            $qb->setFirstResult($offset);
+            $qb->setMaxResults($maxSize);
         }
 
-        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+        return $qb->fetchAllAssociative();
     }
 
-    /**
-     * @return int
-     */
     public function getChildrenCount(string $parentId, $selectParams = null): int
     {
-        if (empty($parentId)) {
-            $query = "SELECT COUNT(id) as count
-                      FROM `category` c
-                      WHERE c.category_parent_id IS NULL AND c.deleted=0";
-        } else {
-            $query = "SELECT COUNT(id) as count
-                      FROM `category` c
-                      WHERE c.category_parent_id = '$parentId' AND c.deleted=0";
-        }
+        $connection = $this->getEntityManager()->getConnection();
 
-        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+        $res = $connection->createQueryBuilder()
+            ->select('COUNT(id) as count')
+            ->from($connection->quoteIdentifier('category'), 'c')
+            ->where('c.deleted = :false')
+            ->andWhere('c.category_parent_id = :parentId')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('parentId', empty($parentId) ? null : $parentId)
+            ->fetchAssociative();
+
+        return (int)$res['count'];
     }
 
     /**
