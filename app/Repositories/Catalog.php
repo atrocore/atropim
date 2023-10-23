@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
@@ -82,18 +83,19 @@ class Catalog extends Hierarchy
         return $this->getEntityManager()->getRepository('Category')->unrelateCatalogs($category, $entity, $options);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        /** @var string $id */
-        $id = $entity->get('id');
+        $connection = $this->getEntityManager()->getConnection();
 
-        // remove catalog products
-        $this->getEntityManager()->nativeQuery("UPDATE product SET deleted=1 WHERE catalog_id='$id'");
+        $connection->createQueryBuilder()
+            ->update($connection->quoteIdentifier('product'), 'p')
+            ->set('deleted', ':false')
+            ->where('p.catalog_id = :id')
+            ->setParameter('false', false, Mapper::getParameterType('false'))
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
