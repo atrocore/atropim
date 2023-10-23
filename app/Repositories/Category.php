@@ -372,7 +372,9 @@ class Category extends Hierarchy
 
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':id', $entity->get('id'));
-        $sth->bindValue(':parentId', $parentId);
+        if (!empty($parentId)) {
+            $sth->bindValue(':parentId', $parentId);
+        }
         $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
         $sth->execute();
 
