@@ -69,10 +69,18 @@ class Category extends Hierarchy
 
     public function getNotRelatedWithCatalogsTreeIds(): array
     {
-        return $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT id FROM category WHERE deleted=0 AND category_parent_id IS NULL AND id NOT IN (SELECT category_id FROM catalog_category WHERE deleted=0)")
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $connection = $this->getEntityManager()->getConnection();
+
+        $query = "SELECT c.id FROM {$connection->quoteIdentifier('category')} c 
+                  WHERE c.deleted=:false 
+                    AND c.category_parent_id IS NULL 
+                    AND c.id NOT IN (SELECT category_id FROM catalog_category WHERE deleted=:false)";
+
+        $sth = $this->getEntityManager()->getPDO()->prepare($query);
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        return $sth->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     public function canUnRelateCatalog(Entity $category, string $catalogId): void

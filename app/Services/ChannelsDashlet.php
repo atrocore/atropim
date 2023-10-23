@@ -35,22 +35,26 @@ class ChannelsDashlet extends AbstractDashletService
         $sql = "SELECT
                        c.id,
                        c.name,
-                       (SELECT COUNT(p.id) AS total FROM product p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=1) AS totalActive,
-                       (SELECT COUNT(p.id) AS total FROM product p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=0) AS totalInactive
+                       (SELECT COUNT(p.id) AS total FROM product p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=:true) AS total_active,
+                       (SELECT COUNT(p.id) AS total FROM product p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=:false) AS total_inactive
                 FROM channel AS c
-                WHERE c.deleted=0";
+                WHERE c.deleted=:false";
 
-        // get data
-        $data = $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_ASSOC);
+        $sth = $this->getEntityManager()->getPDO()->prepare($sql);
+        $sth->bindValue(':true', true, \PDO::PARAM_BOOL);
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
             foreach ($data as $row) {
                 $result['list'][] = [
                     'id'        => $row['id'],
                     'name'      => $row['name'],
-                    'products'  => (int)$row['totalActive'] + (int)$row['totalInactive'],
-                    'active'    => (int)$row['totalActive'],
-                    'notActive' => (int)$row['totalInactive']
+                    'products'  => (int)$row['total_active'] + (int)$row['total_inactive'],
+                    'active'    => (int)$row['total_active'],
+                    'notActive' => (int)$row['total_inactive']
                 ];
             }
 
