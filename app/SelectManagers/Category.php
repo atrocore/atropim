@@ -26,6 +26,10 @@ class Category extends AbstractSelectManager
 {
     public function addChildrenCount(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
     {
+        if (!empty($params['aggregation'])) {
+            return;
+        }
+
         $connection = $this->getEntityManager()->getConnection();
 
         $queryConverter = $mapper->getQueryConverter();
