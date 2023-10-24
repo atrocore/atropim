@@ -304,12 +304,20 @@ class Product extends Hierarchy
      */
     public function updateSortOrderInCategory(string $categoryId, array $ids): void
     {
-        $categoryId = $this->getPDO()->quote($categoryId);
-
         foreach ($ids as $k => $id) {
-            $id = $this->getPDO()->quote($id);
             $sortOrder = (int)$k * 10;
-            $this->getPDO()->exec("UPDATE `product_category` SET sorting=$sortOrder WHERE product_id=$id AND category_id=$categoryId AND deleted=0");
+
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                ->set('sorting', ':sorting')
+                ->where('pc.product_id = :productId')
+                ->andWhere('pc.category_id = :categoryId')
+                ->andWhere('pc.deleted = :false')
+                ->setParameter('sorting', $sortOrder, Mapper::getParameterType($sortOrder))
+                ->setParameter('productId', $id, Mapper::getParameterType($id))
+                ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->executeQuery();
         }
     }
 
@@ -419,13 +427,24 @@ class Product extends Hierarchy
 
     public function getProductsHierarchyMap(array $productIds): array
     {
-        $query = "SELECT entity_id AS childId, parent_id AS parentId
-                FROM product_hierarchy
-                WHERE entity_id IN ('" . implode("','", $productIds) . "') and deleted = 0";
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('t.entity_id, t.parent_id')
+            ->from($this->getConnection()->quoteIdentifier('product_hierarchy'), 't')
+            ->where('t.entity_id IN (:ids)')
+            ->andWhere('t.deleted = :false')
+            ->setParameter('ids', $productIds, Mapper::getParameterType($productIds))
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
 
-        $result = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($res as $row) {
+            $result[] = [
+                'childId'   => $row['entity_id'],
+                'parent_id' => $row['parentId']
+            ];
+        }
 
-        return empty($result) ? [] : $result;
+        return $result;
     }
 
     public function relateClassification($product, $classification): void
