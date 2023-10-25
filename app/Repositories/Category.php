@@ -397,12 +397,17 @@ class Category extends Hierarchy
             ->select($select)
             ->from($this->getConnection()->quoteIdentifier('category'), 'c')
             ->where('c.deleted = :false')
-            ->andWhere('c.category_parent_id = :parentId')
             ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('parentId', empty($parentId) ? null : $parentId)
             ->addOrderBy('c.sort_order', 'ASC')
             ->addOrderBy("c.$sortBy", $sortOrder)
             ->addOrderBy('c.id', 'ASC');
+
+        if (empty($parentId)) {
+            $qb->andWhere('c.category_parent_id IS NULL');
+        } else {
+            $qb->andWhere('c.category_parent_id = :parentId');
+            $qb->setParameter('parentId', $parentId);
+        }
 
         if (!is_null($offset) && !is_null($maxSize)) {
             $qb->setFirstResult($offset);
@@ -414,16 +419,22 @@ class Category extends Hierarchy
 
     public function getChildrenCount(string $parentId, $selectParams = null): int
     {
-        $res = $this->getConnection()->createQueryBuilder()
+        $qb = $this->getConnection()->createQueryBuilder()
             ->select('COUNT(id) as count')
             ->from($this->getConnection()->quoteIdentifier('category'), 'c')
             ->where('c.deleted = :false')
-            ->andWhere('c.category_parent_id = :parentId')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('parentId', empty($parentId) ? null : $parentId)
-            ->fetchAssociative();
+            ->setParameter('false', false, Mapper::getParameterType(false));
 
-        return (int)$res['count'];
+        if (empty($parentId)) {
+            $qb->andWhere('c.category_parent_id IS NULL');
+        } else {
+            $qb->andWhere('c.category_parent_id = :parentId');
+            $qb->setParameter('parentId', $parentId);
+        }
+
+        $res = $qb->fetchAssociative();
+
+        return empty($res) ? 0 : (int)$res['count'];
     }
 
     /**
