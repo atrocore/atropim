@@ -62,7 +62,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         actionSelectRelated(selectObj) {
-            console.log(selectObj)
+
         },
 
         createProductAttributeValue(selectObj) {

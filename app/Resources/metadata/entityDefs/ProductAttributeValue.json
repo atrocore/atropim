@@ -242,6 +242,19 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "referenceValue": {
+      "type": "varchar",
+      "maxLength": 50,
+      "aclFieldDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "textValue": {
       "type": "text",
       "aclFieldDisabled": true,
@@ -809,6 +822,12 @@
     "textValue": {
       "columns": [
         "textValue",
+        "deleted"
+      ]
+    },
+    "referenceValue": {
+      "columns": [
+        "referenceValue",
         "deleted"
       ]
     }

@@ -42,7 +42,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'floatValue',
             'floatValue1',
             'varcharValue',
-            'textValue'
+            'textValue',
+            'referenceValue'
         ];
 
     public function getGroupsPavs(string $productId, string $tabId, string $language = null): array

@@ -51,7 +51,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-
             if (this.model.get('attributeType')) {
                 let attributeType = this.model.get('attributeType');
 
@@ -93,7 +92,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 if (this.model.get('attributeMeasureId')) {
                     params.measureId = this.model.get('attributeMeasureId');
-                    if (['int', 'float'].includes(attributeType)) {
+                    if (['int', 'float', 'varchar'].includes(attributeType)) {
                         fieldView = "views/fields/unit-" + attributeType;
                     }
                 }

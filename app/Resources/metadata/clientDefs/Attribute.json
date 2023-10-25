@@ -162,7 +162,8 @@
                 "int",
                 "float",
                 "rangeInt",
-                "rangeFloat"
+                "rangeFloat",
+                "varchar"
               ]
             }
           ]
