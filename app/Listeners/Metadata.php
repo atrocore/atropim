@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
 use Pim\SelectManagers\ProductAttributeValue;
@@ -92,8 +93,14 @@ class Metadata extends AbstractListener
 
         $channels = $dataManager->getCacheData('channels');
         if (empty($channels)) {
+            $connection = $this->getEntityManager()->getConnection();
             try {
-                $channels = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM `channel` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+                $channels = $connection->createQueryBuilder()
+                    ->select('c.id,c.name')
+                    ->from($connection->quoteIdentifier('channel'), 'c')
+                    ->where('c.deleted = :false')
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->fetchAllAssociative();
             } catch (\Throwable $e) {
                 $channels = [];
             }
@@ -251,8 +258,14 @@ class Metadata extends AbstractListener
 
         $tabs = $dataManager->getCacheData('attribute_tabs');
         if ($tabs === null) {
+            $connection = $this->getEntityManager()->getConnection();
             try {
-                $tabs = $this->getContainer()->get('pdo')->query("SELECT id, `name` FROM attribute_tab WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+                $tabs = $connection->createQueryBuilder()
+                    ->select('t.id, t.name')
+                    ->from($connection->quoteIdentifier('attribute_tab'), 't')
+                    ->where('t.deleted = :false')
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->fetchAllAssociative();
             } catch (\Throwable $e) {
                 $tabs = [];
             }
