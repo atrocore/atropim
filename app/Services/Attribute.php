@@ -119,32 +119,6 @@ class Attribute extends Hierarchy
     }
 
     /**
-     * @return array
-     */
-    protected function getAttributesForFilter(): array
-    {
-        $sql
-            = 'SELECT 
-                   pf.id        AS classificationId,
-                   pf.name      AS classificationName,
-                   a.id         AS attributeId,
-                   a.name       AS attributeName,
-                   a.type       AS attributeType
-                FROM attribute AS a
-                LEFT JOIN classification_attribute AS pfa ON a.id = pfa.attribute_id AND pfa.deleted = 0
-                LEFT JOIN classification AS pf ON pf.id = pfa.classification_id  AND pf.deleted = 0
-                WHERE a.deleted=0 
-                  AND a.id IN (SELECT attribute_id FROM product_attribute_value WHERE deleted=0)';
-
-        $sth = $this->getEntityManager()->getPDO()->prepare($sql);
-        $sth->execute();
-
-        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        return (!empty($data)) ? $data : [];
-    }
-
-    /**
      * Get multilang fields
      *
      * @return array

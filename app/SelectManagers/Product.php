@@ -380,16 +380,10 @@ class Product extends AbstractSelectManager
         }
     }
 
-    /**
-     * Fetch all result from DB
-     *
-     * @param string $query
-     *
-     * @return array
-     */
     protected function fetchAll(string $query): array
     {
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
         $sth->execute();
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
