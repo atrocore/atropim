@@ -666,8 +666,8 @@ class ProductAttributeValue extends Relationship
     {
         $this->getConnection()->createQueryBuilder()
             ->update('product', 'p')
-            ->set('p.modified_at', ':modifiedAt')
-            ->set('p.modified_by_id', ':modifiedById')
+            ->set('modified_at', ':modifiedAt')
+            ->set('modified_by_id', ':modifiedById')
             ->where('p.id = :productId')->setParameters([
                 'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
                 'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
