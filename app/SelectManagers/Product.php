@@ -22,10 +22,7 @@ use Pim\Entities\Attribute;
 
 class Product extends AbstractSelectManager
 {
-    /**
-     * @var string
-     */
-    protected $customWhere = '';
+    protected array $productAttributes = [];
 
     private array $attributes = [];
 
@@ -39,9 +36,10 @@ class Product extends AbstractSelectManager
 
         if (!empty($params['where']) && is_array($params['where'])) {
             $where = [];
+            $this->productAttributes = [];
             foreach ($params['where'] as $row) {
                 if (!empty($row['isAttribute']) || !empty($row['value'][0]['isAttribute'])) {
-                    $productAttributes[] = $row;
+                    $this->productAttributes[] = $row;
                 } elseif (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
                     $productIds = [];
                     foreach (['ProductAsset', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
@@ -73,13 +71,8 @@ class Product extends AbstractSelectManager
         // get select params
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
-        // prepare custom where
-        $selectParams['customWhere'] .= $this->customWhere;
-
         // add product attributes filter
-        if (!empty($productAttributes)) {
-            $this->addProductAttributesFilter($selectParams, $productAttributes);
-        }
+        $selectParams['callbacks'][] = [$this, 'applyProductAttributesFilter'];
 
         // for products in category page
         if (!empty($params['sortBy']) && $params['sortBy'] == 'sorting') {
@@ -707,9 +700,15 @@ class Product extends AbstractSelectManager
         return $where;
     }
 
-    protected function addProductAttributesFilter(array &$selectParams, array $attributes): void
+    public function applyProductAttributesFilter(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
-        foreach ($attributes as $row) {
+        if (empty($this->productAttributes)) {
+            return;
+        }
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        foreach ($this->productAttributes as $row) {
             $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$this->convertAttributeWhere($row)]], true, true);
             $sp['select'] = ['productId', 'scope', 'channelId'];
 
@@ -729,14 +728,14 @@ class Product extends AbstractSelectManager
             }
 
             if ($row['type'] === 'arrayNoneOf') {
-                $selectParams['customWhere'] .= " AND product.id NOT IN ('" . implode("','", $productsIds) . "')";
+                $qb->andWhere("{$tableAlias}.id NOT IN (:productsIds)");
+                $qb->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds));
                 return;
             }
 
-            // prepare custom where
-            $selectParams['customWhere'] .= " AND product.id IN ('" . implode("','", $productsIds) . "')";
+            $qb->andWhere("{$tableAlias}.id IN (:productsIds)");
+            $qb->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds));
         }
-
     }
 
     protected function filteringByCategories(array &$params): void
