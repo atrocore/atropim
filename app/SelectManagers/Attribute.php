@@ -11,28 +11,27 @@
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class of Attribute
- */
 class Attribute extends AbstractSelectManager
 {
-    /**
-     * @inheritdoc
-     */
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function filterByType(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
     {
-        $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
-        $types = implode("','", array_keys($this->getMetadata()->get('attributes')));
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $attributeTypes = array_keys($this->getMetadata()->get('attributes'));
 
-        if (!isset($selectParams['customWhere'])) {
-            $selectParams['customWhere'] = '';
-        }
-        // add filtering by attributes types
-        $selectParams['customWhere'] .= " AND attribute.type IN ('{$types}')";
+        $qb->andWhere("{$tableAlias}.type IN (:attributeTypes)");
+        $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
+    }
 
-        return $selectParams;
+    public function applyAdditional(array &$result, array $params)
+    {
+        parent::applyAdditional($result, $params);
+
+        $result['callbacks'][] = [$this, 'filterByType'];
     }
 
     /**

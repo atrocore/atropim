@@ -19,9 +19,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class of Category
- */
 class Category extends AbstractSelectManager
 {
     public function addChildrenCount(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
@@ -34,7 +31,7 @@ class Category extends AbstractSelectManager
 
         $queryConverter = $mapper->getQueryConverter();
 
-        $tableAlias = $queryConverter::TABLE_ALIAS;
+        $tableAlias = $queryConverter->getMainTableAlias();
         $fieldAlias = $queryConverter->fieldToAlias('childrenCount');
 
         $qb->add(
@@ -44,11 +41,10 @@ class Category extends AbstractSelectManager
         $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function applyAdditional(array &$result, array $params)
     {
+        parent::applyAdditional($result, $params);
+
         $result['callbacks'][] = [$this, 'addChildrenCount'];
     }
 
