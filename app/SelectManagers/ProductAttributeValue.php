@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Espo\Core\Utils\Util;
 
@@ -44,10 +47,10 @@ class ProductAttributeValue extends AbstractSelectManager
             $pushBoolAttributeType = false;
             foreach ($params['where'] as $k => $v) {
                 if ($v['value'] === 'onlyTabAttributes' && isset($v['data']['onlyTabAttributes'])) {
-                    $onlyTabAttributes = true;
-                    $tabId = $v['data']['onlyTabAttributes'];
-                    if (empty($tabId) || $tabId === 'null') {
-                        $tabId = null;
+                    $this->onlyTabAttributes = true;
+                    $this->tabId = $v['data']['onlyTabAttributes'];
+                    if (empty($this->tabId) || $this->tabId === 'null') {
+                        $this->tabId = null;
                     }
                     unset($params['where'][$k]);
                 }
@@ -68,35 +71,67 @@ class ProductAttributeValue extends AbstractSelectManager
 
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
-        if (!isset($selectParams['customWhere'])) {
-            $selectParams['customWhere'] = '';
-        }
-
-        $language = \Pim\Services\ProductAttributeValue::getLanguagePrism();
-        if (!empty($language)) {
-            $languages = ['main'];
-            if ($this->getConfig()->get('isMultilangActive')) {
-                $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
-            }
-            if (!in_array($language, $languages)) {
-                throw new BadRequest('No such language is available.');
-            }
-            $selectParams['customWhere'] .= " AND product_attribute_value.language IN ('main','$language')";
-        }
-
-        if (!empty($onlyTabAttributes)) {
-            if (empty($tabId)) {
-                $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id IS NULL AND deleted=0)";
-            } else {
-                $tabId = $this->getEntityManager()->getPDO()->quote($tabId);
-                $selectParams['customWhere'] .= " AND product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=$tabId AND deleted=0)";
-            }
-        }
-
-        $this->applyLanguageBoolFilters($params, $selectParams);
-        $this->applyScopeBoolFilters($params, $selectParams);
-
         return $selectParams;
+    }
+
+    public function selectAttributeGroup(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        if ($this->isSubQuery) {
+            return;
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $qb->leftJoin($tableAlias, $connection->quoteIdentifier('attribute'), 'a1', "a1.id={$tableAlias}.attribute_id AND a1.deleted=:false");
+        $qb->leftJoin($tableAlias, $connection->quoteIdentifier('attribute_group'), 'ag1', "ag1.id=a1.attribute_group_id AND ag1.deleted=:false");
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+
+        $qb->add('select', ["ag1.id as {$mapper->getQueryConverter()->fieldToAlias('attributeGroupId')}"], true);
+        $qb->add('select', ["ag1.name as {$mapper->getQueryConverter()->fieldToAlias('attributeGroupName')}"], true);
+    }
+
+    public function filterByLanguage(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $language = \Pim\Services\ProductAttributeValue::getLanguagePrism();
+        if (empty($language)) {
+            return;
+        }
+
+        $languages = ['main'];
+        if ($this->getConfig()->get('isMultilangActive')) {
+            $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
+        }
+
+        if (!in_array($language, $languages)) {
+            throw new BadRequest('No such language is available.');
+        }
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $qb->andWhere("$tableAlias.language IN (:languages)");
+        $qb->setParameter('languages', $languages, Mapper::getParameterType($languages));
+    }
+
+    public function filterByTab(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        if (empty($this->onlyTabAttributes)) {
+            return;
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        if (empty($this->tabId)) {
+            $qb->andWhere("$tableAlias.attribute_id IN (SELECT attr.id FROM {$connection->quoteIdentifier('attribute')} attr WHERE attr.attribute_tab_id IS NULL AND attr.deleted=:false)");
+            $qb->setParameter('false', false, Mapper::getParameterType(false));
+        } else {
+            $qb->andWhere("$tableAlias.attribute_id IN (SELECT attr.id FROM {$connection->quoteIdentifier('attribute')} attr WHERE attr.attribute_tab_id=:tabId AND deleted=:false)");
+            $qb->setParameter('tabId', $this->tabId, Mapper::getParameterType($this->tabId));
+            $qb->setParameter('false', false, Mapper::getParameterType(false));
+        }
     }
 
     /**
@@ -104,21 +139,11 @@ class ProductAttributeValue extends AbstractSelectManager
      */
     public function applyAdditional(array &$result, array $params)
     {
-        if ($this->isSubQuery) {
-            return;
-        }
-
-        $additionalSelectColumns = [
-            'attributeGroupId'   => 'ag1.id',
-            'attributeGroupName' => 'ag1.name'
-        ];
-
-        $result['customJoin'] .= " LEFT JOIN attribute AS a1 ON a1.id=product_attribute_value.attribute_id AND a1.deleted=0";
-        $result['customJoin'] .= " LEFT JOIN attribute_group AS ag1 ON ag1.id=a1.attribute_group_id AND ag1.deleted=0";
-
-        foreach ($additionalSelectColumns as $alias => $sql) {
-            $result['additionalSelectColumns'][$sql] = $alias;
-        }
+        $result['callbacks'][] = [$this, 'selectAttributeGroup'];
+        $result['callbacks'][] = [$this, 'filterByLanguage'];
+        $result['callbacks'][] = [$this, 'filterByTab'];
+        $result['callbacks'][] = [$this, 'applyLanguageBoolFilters'];
+        $result['callbacks'][] = [$this, 'applyScopeBoolFilters'];
     }
 
     /**
@@ -187,18 +212,22 @@ class ProductAttributeValue extends AbstractSelectManager
         parent::applyBoolFilter($filterName, $result);
     }
 
-    public function applyLanguageBoolFilters($params, &$selectParams)
+    public function applyLanguageBoolFilters(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
         if (empty($this->filterLanguages)) {
             return;
         }
 
-        $languages = implode("','", $this->filterLanguages);
+        $connection = $this->getEntityManager()->getConnection();
 
-        $selectParams['customWhere'] .= " AND (product_attribute_value.language IN ('$languages') OR product_attribute_value.attribute_id IN (SELECT id FROM attribute WHERE deleted=0 AND is_multilang=0))";
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $qb->andWhere("$tableAlias.language IN (:languages) OR $tableAlias.attribute_id IN (SELECT attr1.id FROM {$connection->quoteIdentifier('attribute')} attr1 WHERE attr1.deleted=:false AND is_multilang=:false)");
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+        $qb->setParameter('languages', $this->filterLanguages, Mapper::getParameterType($this->filterLanguages));
     }
 
-    public function applyScopeBoolFilters($params, &$selectParams)
+    public function applyScopeBoolFilters(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
         if (empty($this->filterScopes)) {
             return;
@@ -212,8 +241,10 @@ class ProductAttributeValue extends AbstractSelectManager
         }
         $channelsIds[] = '';
 
-        $subQuery = "SELECT id FROM product_attribute_value WHERE channel_id IN ('" . implode("','", $channelsIds) . "') AND deleted=0";
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        $selectParams['customWhere'] .= " AND product_attribute_value.id IN ($subQuery)";
+        $qb->andWhere("$tableAlias.id IN (SELECT pav1.id FROM product_attribute_value pav1 WHERE pav1.channel_id IN (:channelsIds) AND deleted=:false)");
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+        $qb->setParameter('channelsIds', $channelsIds, Mapper::getParameterType($channelsIds));
     }
 }
