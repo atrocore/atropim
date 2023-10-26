@@ -11,6 +11,7 @@
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Pim\Core\SelectManagers\AbstractSelectManager;
@@ -44,8 +45,8 @@ class Product extends AbstractSelectManager
                     foreach (['ProductAsset', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
                         $sp = $this->createSelectManager($entityType)->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
                         $sp['select'] = ['productId'];
-                        $query = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $sp, true);
-                        $productIds = array_merge($productIds, $this->getEntityManager()->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN));
+                        $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
+                        $productIds = array_column($collection->toArray(), 'productId');
                     }
 
                     $where[] = [
@@ -543,12 +544,17 @@ class Product extends AbstractSelectManager
 
     protected function boolFilterWithoutMainImage(&$result)
     {
-        $query = "SELECT id FROM product WHERE id NOT IN ( SELECT DISTINCT product_id FROM product_asset WHERE is_main_image = 1 )";
-        $stmt = $this->getEntityManager()->getPDO()->query($query);
-        $arrayIds = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        $connection = $this->getEntityManager()->getConnection();
+
+        $res = $connection->createQueryBuilder()
+            ->select('p.id')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.id NOT IN (SELECT DISTINCT pa.product_id FROM product_asset pa WHERE pa.is_main_image = :true)')
+            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->fetchAllAssociative();
 
         $result['whereClause'][] = [
-            'id' => $arrayIds
+            'id' => array_column($res, 'id')
         ];
     }
 
@@ -770,11 +776,7 @@ class Product extends AbstractSelectManager
             $sp['select'] = ['productId', 'scope', 'channelId'];
 
             // get product attribute values
-            $pavData = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($this->getEntityManager()->getQuery()->createSelectQuery('ProductAttributeValue', $sp))
-                ->fetchAll(\PDO::FETCH_ASSOC);
+            $pavData = $this->getEntityManager()->getRepository('ProductAttributeValue')->find($sp)->toArray();
 
             // find product channels
             $productChannels = $this->getProductsChannels(array_column($pavData, 'productId'));
@@ -851,11 +853,16 @@ class Product extends AbstractSelectManager
      */
     protected function getProductsChannels(array $productsIds): array
     {
-        $productsChannels = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query("SELECT product_id, channel_id FROM product_channel WHERE deleted=0 AND product_id IN ('" . implode("','", $productsIds) . "')")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        $connection = $this->getEntityManager()->getConnection();
+
+        $productsChannels = $connection->createQueryBuilder()
+            ->select('t.product_id, t.channel_id')
+            ->from($connection->quoteIdentifier('product_channel'), 't')
+            ->where('t.deleted = :false')
+            ->andWhere('t.product_id IN (:ids)')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('ids', $productsIds, Mapper::getParameterType($productsIds))
+            ->fetchAllAssociative();
 
         $products = [];
         foreach ($productsChannels as $row) {
