@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
+
 /**
  * Class ProductsByStatusDashlet
  */
@@ -27,16 +29,15 @@ class ProductsByStatusDashlet extends AbstractDashletService
     {
         $result = ['total' => 0, 'list' => []];
 
-        $sql = "SELECT
-                    product_status AS status,
-                    COUNT(id)      AS amount
-                FROM product
-                WHERE deleted=0
-                GROUP BY product_status;";
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sth = $this->getPDO()->prepare($sql);
-        $sth->execute();
-        $products = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $products = $connection->createQueryBuilder()
+            ->select('p.product_status AS status, COUNT(p.id) AS amount')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('p.product_status')
+            ->fetchAllAssociative();
 
         $fieldDefs = $this->getInjection('metadata')->get(['entityDefs', 'Product', 'fields', 'productStatus']);
 
