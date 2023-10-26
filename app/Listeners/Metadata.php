@@ -129,8 +129,16 @@ class Metadata extends AbstractListener
 
         $attributes = $dataManager->getCacheData('attribute_product_fields');
         if ($attributes === null) {
+            $connection = $this->getEntityManager()->getConnection();
             try {
-                $attributes = $this->getContainer()->get('pdo')->query("SELECT * FROM attribute WHERE deleted=0 AND virtual_product_field=1")->fetchAll(\PDO::FETCH_ASSOC);
+                $attributes = $connection->createQueryBuilder()
+                    ->select('t.*')
+                    ->from($connection->quoteIdentifier('attribute'), 't')
+                    ->where('t.deleted = :false')
+                    ->andWhere('t.virtual_product_field = :true')
+                    ->setParameter('true', true, Mapper::getParameterType(true))
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->fetchAllAssociative();
             } catch (\Throwable $e) {
                 $attributes = [];
             }

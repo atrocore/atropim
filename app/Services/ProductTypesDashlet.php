@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
+
 class ProductTypesDashlet extends AbstractDashletService
 {
     /**
@@ -36,7 +39,7 @@ class ProductTypesDashlet extends AbstractDashletService
         foreach ($types as $type) {
             $method = 'get' . ucfirst($type) . 'Query';
             if (method_exists($this, $method)) {
-                $data = array_column($this->getPDO()->query($this->$method())->fetchAll(\PDO::FETCH_ASSOC), 'total', 'is_active');
+                $data = array_column($this->$method()->fetchAllAssociative(), 'total', 'is_active');
                 $list[] = [
                     'id'        => $type,
                     'name'      => $this->getInjection('language')->translate($type),
@@ -57,51 +60,71 @@ class ProductTypesDashlet extends AbstractDashletService
         $this->addDependency('metadata');
     }
 
-    protected function getNonHierarchicalProductsQuery(): string
+    protected function getNonHierarchicalProductsQuery(): QueryBuilder
     {
-        return "SELECT is_active, COUNT(id) AS total
-                 FROM `product`
-                 WHERE deleted=0
-                   AND id NOT IN (SELECT entity_id FROM `product_hierarchy` WHERE deleted=0)
-                   AND id NOT IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0)
-                 GROUP BY is_active";
+        $connection = $this->getEntityManager()->getConnection();
+
+        return $connection->createQueryBuilder()
+            ->select('p.is_active, COUNT(p.id) AS total')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.deleted = :false')
+            ->andWhere("p.id NOT IN (SELECT ph.entity_id FROM {$connection->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted=:false)")
+            ->andWhere("p.id NOT IN (SELECT ph.parent_id FROM {$connection->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted=:false)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('p.is_active');
     }
 
-    protected function getProductHierarchiesQuery(): string
+    protected function getProductHierarchiesQuery(): QueryBuilder
     {
-        return "SELECT is_active, COUNT(id) AS total
-                 FROM `product`
-                 WHERE deleted=0
-                     AND id NOT IN (SELECT entity_id FROM `product_hierarchy` WHERE deleted=0)
-                     AND id IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0)
-                 GROUP BY is_active";
+        $connection = $this->getEntityManager()->getConnection();
+
+        return $connection->createQueryBuilder()
+            ->select('p.is_active, COUNT(p.id) AS total')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.deleted = :false')
+            ->andWhere("p.id NOT IN (SELECT ph.entity_id FROM {$connection->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted=:false)")
+            ->andWhere("p.id IN (SELECT ph.parent_id FROM {$connection->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted=:false)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('p.is_active');
     }
 
-    protected function getLowestLevelProductsQuery(): string
+    protected function getLowestLevelProductsQuery(): QueryBuilder
     {
-        return "SELECT is_active, COUNT(id) AS total
-                 FROM `product`
-                 WHERE deleted=0
-                     AND id IN (SELECT entity_id FROM `product_hierarchy` WHERE deleted=0)
-                     AND id NOT IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0)
-                 GROUP BY is_active";
+        $connection = $this->getEntityManager()->getConnection();
+
+        return $connection->createQueryBuilder()
+            ->select('p.is_active, COUNT(p.id) AS total')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.deleted = :false')
+            ->andWhere("p.id IN (SELECT ph.entity_id FROM {$connection->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted=:false)")
+            ->andWhere("p.id NOT IN (SELECT ph.parent_id FROM {$connection->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted=:false)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('p.is_active');
     }
 
-    protected function getBundleProductsQuery(): string
+    protected function getBundleProductsQuery(): QueryBuilder
     {
-        return "SELECT is_active, COUNT(id) AS total
-                 FROM `product`
-                 WHERE deleted=0
-                     AND id IN (SELECT product_bundle_id FROM `product_bundle` WHERE deleted=0)
-                 GROUP BY is_active";
+        $connection = $this->getEntityManager()->getConnection();
+
+        return $connection->createQueryBuilder()
+            ->select('p.is_active, COUNT(p.id) AS total')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.deleted = :false')
+            ->andWhere("p.id IN (SELECT pb.product_bundle_id FROM {$connection->quoteIdentifier('product_bundle')} pb WHERE pb.deleted = :false)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('p.is_active');
     }
 
-    protected function getBundledProductsQuery(): string
+    protected function getBundledProductsQuery(): QueryBuilder
     {
-        return "SELECT is_active, COUNT(id) AS total
-                 FROM `product`
-                 WHERE deleted=0
-                     AND id IN (SELECT product_bundle_item_id FROM `product_bundle` WHERE deleted=0)
-                 GROUP BY is_active";
+        $connection = $this->getEntityManager()->getConnection();
+
+        return $connection->createQueryBuilder()
+            ->select('p.is_active, COUNT(p.id) AS total')
+            ->from($connection->quoteIdentifier('product'), 'p')
+            ->where('p.deleted = :false')
+            ->andWhere("p.id IN (SELECT pb.product_bundle_item_id FROM {$connection->quoteIdentifier('product_bundle')} pb WHERE pb.deleted = :false)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('p.is_active');
     }
 }
