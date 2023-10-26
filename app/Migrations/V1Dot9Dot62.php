@@ -25,10 +25,13 @@ class V1Dot9Dot62 extends Base
 
         $this->exec("UPDATE classification_attribute inner join attribute a on classification_attribute.attribute_id = a.id set reference_value = varchar_value where a.type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
         $this->exec("UPDATE classification_attribute inner join attribute a on classification_attribute.attribute_id = a.id set varchar_value = null where a.type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
+
+        $this->updateComposer("atrocore/pim", "^1.9.62");
     }
 
     public function down(): void
     {
+        throw new \Error("Downgrade is prohibited.");
     }
 
     protected function exec(string $query): void
