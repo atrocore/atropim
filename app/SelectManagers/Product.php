@@ -329,37 +329,15 @@ class Product extends AbstractSelectManager
         $brandId = (string)$this->getSelectCondition('notLinkedWithBrand');
 
         if (!empty($brandId)) {
-            // get Products linked with brand
-            $products = $this->getBrandProducts($brandId);
-            foreach ($products as $row) {
-                $result['whereClause'][] = [
-                    'id!=' => $row['productId']
-                ];
-            }
+            $products = $this->getEntityManager()->getRepository('Product')
+                ->select(['id'])
+                ->where(['brandId' => $brandId])
+                ->find();
+
+            $result['whereClause'][] = [
+                'id!=' => array_column($products->toArray(), 'id')
+            ];
         }
-    }
-
-    /**
-     * Get productIds related with brand
-     *
-     * @param string $brandId
-     *
-     * @return array
-     */
-    protected function getBrandProducts(string $brandId): array
-    {
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $sql
-            = 'SELECT id AS productId
-                FROM product
-                WHERE deleted = 0 
-                      AND brand_id = :brandId';
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute(['brandId' => $brandId]);
-
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     protected function getProductsIdsByClassificationIds(array $classificationIds): array
