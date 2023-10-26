@@ -22,17 +22,18 @@ use Pim\Entities\Attribute;
 
 class Product extends AbstractSelectManager
 {
-    protected array $productAttributes = [];
+    private array $productAttributes = [];
 
     private array $attributes = [];
+
+    private array $filterByCategories = [];
 
     /**
      * @inheritdoc
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        // filtering by categories
-        $this->filteringByCategories($params);
+        $this->prepareFilterByCategories($params);
 
         if (!empty($params['where']) && is_array($params['where'])) {
             $where = [];
@@ -71,7 +72,10 @@ class Product extends AbstractSelectManager
         // get select params
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
-        // add product attributes filter
+        // add filtering by categories
+        $selectParams['callbacks'][] = [$this, 'applyFilteringByCategories'];
+
+        // add filtering by product attributes
         $selectParams['callbacks'][] = [$this, 'applyProductAttributesFilter'];
 
         // for products in category page
@@ -738,11 +742,13 @@ class Product extends AbstractSelectManager
         }
     }
 
-    protected function filteringByCategories(array &$params): void
+    protected function prepareFilterByCategories(array &$params): void
     {
         if (empty($params['where'])) {
             return;
         }
+
+        $this->filterByCategories = [];
 
         foreach ($params['where'] as $k => $row) {
             if (empty($row['attribute'])) {
@@ -750,37 +756,65 @@ class Product extends AbstractSelectManager
             }
             if ($row['attribute'] == 'categories' && empty($row['subQuery'])) {
                 if (!empty($row['value'])) {
-                    $categories = [];
-                    foreach ($row['value'] as $id) {
-                        $dbData = $this->fetchAll("SELECT id FROM category WHERE (id='$id' OR category_route LIKE '%|$id|%') AND deleted=0");
-                        $categories = array_merge($categories, array_column($dbData, 'id'));
-                    }
-                    $innerSql = "SELECT product_id FROM product_category WHERE deleted=0 AND category_id IN ('" . implode("','", $categories) . "')";
-                }
-
-                switch ($row['type']) {
-                    case 'linkedWith':
-                        if (!empty($innerSql)) {
-                            $this->customWhere .= " AND product.id IN ($innerSql) ";
-                        }
-                        break;
-                    case 'isNotLinked':
-                        $this->customWhere .= " AND product.id NOT IN (SELECT product_id FROM product_category WHERE deleted=0) ";
-                        break;
-                    case 'isLinked':
-                        $this->customWhere .= " AND product.id IN (SELECT product_id FROM product_category WHERE deleted=0) ";
-                        break;
-                    case 'notLinkedWith':
-                        if (!empty($innerSql)) {
-                            $this->customWhere .= " AND product.id NOT IN ($innerSql) ";
-                        }
-                        break;
+                    $this->filterByCategories['ids'] = array_merge($this->filterByCategories, $row['value']);
+                    $this->filterByCategories['row'] = $row;
                 }
                 unset($params['where'][$k]);
             }
         }
 
         $params['where'] = array_values($params['where']);
+    }
+
+    public function applyFilteringByCategories(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        if (empty($this->filterByCategories['ids'])) {
+            return;
+        }
+
+        $ids = $this->filterByCategories['ids'];
+        $row = $this->filterByCategories['row'];
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        $categoriesIds = [];
+        if (in_array($row['type'], ['linkedWith', 'notLinkedWith'])) {
+            foreach ($ids as $id) {
+                $res = $connection->createQueryBuilder()
+                    ->select('c.id')
+                    ->from($connection->quoteIdentifier('category'), 'c')
+                    ->where('c.id= :id OR c.category_route LIKE :idLike')
+                    ->andWhere('c.deleted = :false')
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->setParameter('id', $id)
+                    ->setParameter('idLike', "%|{$id}|%")
+                    ->fetchAllAssociative();
+                $categoriesIds = array_merge($categoriesIds, array_column($res, 'id'));
+            }
+        }
+
+        switch ($row['type']) {
+            case 'isNotLinked':
+                $qb->andWhere("$tableAlias.id NOT IN (SELECT pc44.product_id FROM product_category pc44 WHERE pc44.deleted=:false)");
+                $qb->setParameter('false', false, Mapper::getParameterType(false));
+                break;
+            case 'isLinked':
+                $qb->andWhere("$tableAlias.id IN (SELECT pc44.product_id FROM product_category pc44 WHERE pc44.deleted=:false)");
+                $qb->setParameter('false', false, Mapper::getParameterType(false));
+                break;
+            case 'linkedWith':
+                $qb->andWhere("$tableAlias.id IN (SELECT pc22.product_id FROM product_category pc22 WHERE pc22.deleted=:false AND pc22.category_id IN (:categoriesIds))");
+                $qb->setParameter('false', false, Mapper::getParameterType(false));
+                $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
+                break;
+            case 'notLinkedWith':
+                $qb->andWhere("$tableAlias.id NOT IN (SELECT pc22.product_id FROM product_category pc22 WHERE pc22.deleted=:false AND pc22.category_id IN (:categoriesIds))");
+                $qb->setParameter('false', false, Mapper::getParameterType(false));
+                $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
+                break;
+        }
     }
 
     /**
