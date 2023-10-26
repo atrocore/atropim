@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
@@ -62,29 +63,25 @@ class AssociationEntity extends AbstractEntityListener
      */
     protected function hasProduct(Entity $entity, bool $isActive = false): bool
     {
-        // prepare attribute id
-        $associationId = $entity->get('id');
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sql
-            = "SELECT
-                  COUNT(ap.id) as total
-                FROM associated_product AS ap
-                  JOIN product AS pm 
-                    ON pm.id = ap.main_product_id AND pm.deleted = 0
-                  JOIN product AS pr 
-                    ON pr.id = ap.related_product_id AND pr.deleted = 0
-                WHERE ap.deleted = 0 AND ap.association_id = '{$associationId}'";
+        $qb = $connection->createQueryBuilder()
+            ->select('COUNT(ap.id) as total')
+            ->from('associated_product', 'ap')
+            ->innerJoin('ap', 'product', 'pm', 'pm.id = ap.main_product_id AND pm.deleted = :false')
+            ->innerJoin('ap', 'product', 'pr', 'pr.id = ap.related_product_id AND pr.deleted = :false')
+            ->where('ap.deleted = :false')
+            ->andWhere('ap.association_id = :associationId')
+            ->setParameter('associationId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
+            ->setParameter('false', false, Mapper::getParameterType(false));
 
         if ($isActive) {
-            $sql .= " AND (pm.is_active=1 OR pr.is_active=1)";
+            $qb->andWhere('pm.is_active=:true OR pr.is_active=:true');
+            $qb->setParameter('true', true, Mapper::getParameterType(true));
         }
 
-        // execute
-        $sth = $this->getEntityManager()->getPDO()->prepare($sql);
-        $sth->execute();
-
         // get data
-        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        $data = $qb->fetchAssociative();
 
         return !empty($data['total']);
     }
