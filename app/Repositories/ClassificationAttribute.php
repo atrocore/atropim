@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
@@ -147,14 +148,15 @@ class ClassificationAttribute extends Relationship
 
     public function getProductChannelsViaClassificationId(string $classificationId): array
     {
-        $classificationId = $this->getPDO()->quote($classificationId);
-
-        $sql = "SELECT p.id
-                FROM product p 
-                LEFT JOIN product_classification pcl on p.id = pcl.product_id AND pcl.deleted = 0 
-                WHERE pcl.classification_id=$classificationId AND p.deleted = 0";
-
-        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+        return $this->getConnection()->createQueryBuilder()
+            ->select('p.id')
+            ->from($this->getConnection()->quoteIdentifier('product'), 'p')
+            ->leftJoin('p', 'product_classification', 'pcl', 'p.id = pcl.product_id AND pcl.deleted = :false')
+            ->andWhere('pcl.classification_id = :id')
+            ->andWhere('p.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('id', $classificationId)
+            ->fetchAllAssociative();
     }
 
     /**
