@@ -319,41 +319,6 @@ class Product extends AbstractSelectManager
     }
 
     /**
-     * NotLinkedWithChannel filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithChannel(&$result)
-    {
-        $channelId = (string)$this->getSelectCondition('notLinkedWithChannel');
-
-        if (!empty($channelId)) {
-            $channelProducts = $this->createService('Channel')->getProducts($channelId);
-            foreach ($channelProducts as $row) {
-                $result['whereClause'][] = [
-                    'id!=' => (string)$row['productId']
-                ];
-            }
-        }
-    }
-
-    /**
-     * ActiveForChannel filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterActiveForChannel(&$result)
-    {
-        $channelId = (string)$this->getSelectCondition('activeForChannel');
-
-        if (empty($channelId)) {
-            $channelId = 'no-such-id';
-        }
-
-        $result['customWhere'] .= " AND product.id IN (SELECT product_id FROM `product_channel` WHERE deleted=0 AND is_active=1 AND channel_id='$channelId')";
-    }
-
-    /**
      * NotLinkedWithBrand filter
      *
      * @param array $result
