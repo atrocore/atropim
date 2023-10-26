@@ -17,10 +17,14 @@ class V1Dot9Dot62 extends Base
 {
     public function up(): void
     {
-        $this->exec("ALTER TABLE product_attribute_value ADD reference_value VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
-        $this->exec("ALTER TABLE classification_attribute ADD reference_value VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE product_attribute_value ADD reference_value VARCHAR(50) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("ALTER TABLE classification_attribute ADD reference_value VARCHAR(50) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+
         $this->exec("UPDATE product_attribute_value set reference_value = varchar_value where attribute_type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
         $this->exec("UPDATE product_attribute_value set varchar_value = null where attribute_type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
+
+        $this->exec("UPDATE classification_attribute inner join attribute a on classification_attribute.attribute_id = a.id set reference_value = varchar_value where a.type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
+        $this->exec("UPDATE classification_attribute inner join attribute a on classification_attribute.attribute_id = a.id set varchar_value = null where a.type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
     }
 
     public function down(): void
