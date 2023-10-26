@@ -12,8 +12,10 @@
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Pim\Services\GeneralStatisticsDashlet;
 use Pim\Entities\Attribute;
@@ -143,14 +145,16 @@ class Product extends AbstractSelectManager
         $result['whereClause'][] = $last;
     }
 
-    /**
-     * Products without any attributes
-     *
-     * @param $result
-     */
     protected function boolFilterWithoutProductAttributes(&$result)
     {
-        $result['customWhere'] .= " AND product.id NOT IN (SELECT DISTINCT product_id FROM product_attribute_value WHERE deleted=0)";
+        $result['callbacks'][] = [$this, 'applyBoolFilterWithoutProductAttributes'];
+    }
+
+    public function applyBoolFilterWithoutProductAttributes(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $qb->andWhere("$tableAlias.id NOT IN (SELECT DISTINCT product_id FROM product_attribute_value WHERE deleted=:false)");
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
 
     /**
@@ -428,19 +432,20 @@ class Product extends AbstractSelectManager
         }
     }
 
-    /**
-     * @param array $result
-     *
-     * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\Error
-     */
     protected function boolFilterLinkedWithCategory(array &$result)
     {
-        if (empty($id = $this->getSelectCondition('linkedWithCategory'))) {
+        $result['callbacks'][] = [$this, 'applyBoolFilterLinkedWithCategory'];
+    }
+
+    public function applyBoolFilterLinkedWithCategory(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $id = $this->getSelectCondition('linkedWithCategory');
+        if (empty($id)) {
             return;
         }
 
-        if (empty($category = $this->getEntityManager()->getEntity('Category', $id))) {
+        $category = $this->getEntityManager()->getEntity('Category', $id);
+        if (empty($category)) {
             throw new BadRequest('No such category');
         }
 
@@ -448,11 +453,11 @@ class Product extends AbstractSelectManager
         $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
         $categoriesIds[] = $category->get('id');
 
-        // prepare categories ids
-        $ids = implode("','", $categoriesIds);
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        // set custom where
-        $result['customWhere'] .= " AND product.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=0 AND category_id IN ('$ids'))";
+        $qb->andWhere("{$tableAlias}.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=:false AND category_id IN (:categoriesIds))");
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+        $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
     }
 
     protected function boolFilterLinkedWithClassification(array &$result)

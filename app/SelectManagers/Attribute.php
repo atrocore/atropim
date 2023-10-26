@@ -18,7 +18,7 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 class Attribute extends AbstractSelectManager
 {
-    public function filterByType(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
+    public function filterByType(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
         $attributeTypes = array_keys($this->getMetadata()->get('attributes'));
@@ -71,9 +71,9 @@ class Attribute extends AbstractSelectManager
                 ->select(['attributeId'])
                 ->where(
                     [
-                        'channelId' => $data['channelsIds'],
+                        'channelId'        => $data['channelsIds'],
                         'classificationId' => $data['classificationId'],
-                        'scope' => 'Channel',
+                        'scope'            => 'Channel',
                     ]
                 )
                 ->find()
@@ -132,7 +132,7 @@ class Attribute extends AbstractSelectManager
                 ->getRepository('Attribute')
                 ->select(['id'])
                 ->where([
-                    'defaultScope' => 'Channel',
+                    'defaultScope'       => 'Channel',
                     'defaultChannelId!=' => array_column($availableChannels, 'channelId')
                 ])
                 ->find()
