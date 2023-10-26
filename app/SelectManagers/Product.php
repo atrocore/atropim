@@ -304,22 +304,18 @@ class Product extends AbstractSelectManager
      */
     protected function getAssociatedProducts($associationId, $productId)
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sql
-            = 'SELECT
-          related_product_id
-        FROM
-          associated_product
-        WHERE
-          main_product_id =' . $pdo->quote($productId) . '
-          AND association_id = ' . $pdo->quote($associationId) . '
-          AND deleted = 0';
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
+        return $connection->createQueryBuilder()
+            ->select('related_product_id')
+            ->from('associated_product')
+            ->where('main_product_id = :productId')
+            ->andWhere('association_id = :associationId')
+            ->andWhere('deleted = :false')
+            ->setParameter('productId', $productId, Mapper::getParameterType($productId))
+            ->setParameter('associationId', $associationId, Mapper::getParameterType($associationId))
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
     }
 
     /**
