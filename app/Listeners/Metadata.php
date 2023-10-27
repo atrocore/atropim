@@ -178,6 +178,7 @@ class Metadata extends AbstractListener
 
             if (!empty($attribute['measure_id'])) {
                 $defs['measureId'] = $attribute['measure_id'];
+                $defs['unitIdField'] = true;
                 $metadata['entityDefs']['Product']['fields']["{$fieldName}UnitId"] = $additionalFieldDefs;
             }
 

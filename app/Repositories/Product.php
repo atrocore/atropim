@@ -174,8 +174,8 @@ class Product extends Hierarchy
     /**
      * @param string|Entity $productId
      * @param string|Entity $categoryId
-     * @param int|null      $sorting
-     * @param bool          $cascadeUpdate
+     * @param int|null $sorting
+     * @param bool $cascadeUpdate
      */
     public function updateProductCategorySortOrder($productId, $categoryId, int $sorting = null, bool $cascadeUpdate = true): void
     {
@@ -286,7 +286,7 @@ class Product extends Hierarchy
 
     /**
      * @param string $categoryId
-     * @param array  $ids
+     * @param array $ids
      *
      * @return void
      */
@@ -316,7 +316,7 @@ class Product extends Hierarchy
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      *
      * @throws BadRequest
      */
@@ -445,20 +445,21 @@ class Product extends Hierarchy
             $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
             $productAttributeValue->set(
                 [
-                    'productId'     => $product->get('id'),
-                    'attributeId'   => $ca->get('attributeId'),
-                    'language'      => $ca->get('language'),
-                    'scope'         => $ca->get('scope'),
-                    'channelId'     => $ca->get('channelId'),
-                    'boolValue'     => $ca->get('boolValue'),
-                    'dateValue'     => $ca->get('dateValue'),
-                    'datetimeValue' => $ca->get('datetimeValue'),
-                    'intValue'      => $ca->get('intValue'),
-                    'intValue1'     => $ca->get('intValue1'),
-                    'floatValue'    => $ca->get('floatValue'),
-                    'floatValue1'   => $ca->get('floatValue1'),
-                    'varcharValue'  => $ca->get('varcharValue'),
-                    'textValue'     => $ca->get('textValue'),
+                    'productId'      => $product->get('id'),
+                    'attributeId'    => $ca->get('attributeId'),
+                    'language'       => $ca->get('language'),
+                    'scope'          => $ca->get('scope'),
+                    'channelId'      => $ca->get('channelId'),
+                    'boolValue'      => $ca->get('boolValue'),
+                    'dateValue'      => $ca->get('dateValue'),
+                    'datetimeValue'  => $ca->get('datetimeValue'),
+                    'intValue'       => $ca->get('intValue'),
+                    'intValue1'      => $ca->get('intValue1'),
+                    'floatValue'     => $ca->get('floatValue'),
+                    'floatValue1'    => $ca->get('floatValue1'),
+                    'varcharValue'   => $ca->get('varcharValue'),
+                    'referenceValue' => $ca->get('referenceValue'),
+                    'textValue'      => $ca->get('textValue'),
                 ]
             );
 
