@@ -35,8 +35,9 @@ class Brand extends Base
 
             $connection->createQueryBuilder()
                 ->update($connection->quoteIdentifier('product'), 'p')
-                ->set('brand_id', null)
+                ->set('brand_id', ':null')
                 ->where('p.brand_id IN (:ids)')
+                ->setParameter('null', null)
                 ->setParameter('ids', $ids, Mapper::getParameterType($ids))
                 ->executeQuery();
 
