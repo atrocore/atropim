@@ -29,6 +29,7 @@ class ProductAttributeValue extends Relationship
                 || parent::isAttributeChanged('intValue')
                 || parent::isAttributeChanged('floatValue')
                 || parent::isAttributeChanged('varcharValue')
+                || parent::isAttributeChanged('referenceValue')
                 || parent::isAttributeChanged('textValue');
         }
 

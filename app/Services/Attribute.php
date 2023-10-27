@@ -103,6 +103,7 @@ class Attribute extends Hierarchy
             $record->clear('floatValue');
             $record->clear('varcharValue');
             $record->clear('textValue');
+            $record->clear('referenceValue');
 
             $record->set('attributeId', $entity->get('id'));
             $record->set('attributeName', $entity->get('name'));
