@@ -102,7 +102,7 @@
         "AttributeGroup",
         "ProductAttributeValue"
       ],
-      "sortBy": "attribute.sortOrderInProduct",
+      "sortBy": "attribute_mm.sortOrderInProduct",
       "asc": true
     },
     "categories": {
