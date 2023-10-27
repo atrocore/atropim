@@ -76,7 +76,7 @@ class ProductAttributeValue extends AbstractSelectManager
 
     public function selectAttributeGroup(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
-        if ($this->isSubQuery) {
+        if (!empty($params['aggregation']) || $this->isSubQuery) {
             return;
         }
 
