@@ -15,6 +15,7 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relationship;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\DateTime;
 use Espo\ORM\Entity;
@@ -412,28 +413,23 @@ class ProductAttributeValue extends Relationship
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
-        } catch (\Throwable $e) {
+        } catch (UniqueConstraintViolationException $e) {
             if (!empty($inTransaction)) {
                 $this->getPDO()->rollBack();
             }
 
-            // if duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
-                $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+            $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
 
-                $channelName = $entity->get('scope');
-                if ($channelName === 'Channel') {
-                    $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
-                    $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
-                }
-
-                throw new ProductAttributeAlreadyExists(
-                    sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, $channelName)
-                );
+            $channelName = $entity->get('scope');
+            if ($channelName === 'Channel') {
+                $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+                $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 
-            throw $e;
+            throw new ProductAttributeAlreadyExists(
+                sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, $channelName)
+            );
         }
 
         return $result;
@@ -450,15 +446,12 @@ class ProductAttributeValue extends Relationship
     {
         try {
             $result = parent::remove($entity, $options);
-        } catch (\Throwable $e) {
+        } catch (UniqueConstraintViolationException $e) {
             // delete duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                    $this->deleteFromDb($toDelete->get('id'), true);
-                }
-                return parent::remove($entity, $options);
+            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                $this->deleteFromDb($toDelete->get('id'));
             }
-            throw $e;
+            return parent::remove($entity, $options);
         }
 
         return $result;
