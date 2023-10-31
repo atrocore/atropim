@@ -128,36 +128,24 @@ class ProductAttributeValue extends Relationship
             return [];
         }
 
-        $qb = $this->getConnection()->createQueryBuilder();
-
-        $qb
-            ->select('pav.*')
-            ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
-            ->where('pav.deleted=:false')
-            ->andWhere('pav.product_id IN (:productsIds)')
-            ->andWhere('pav.attribute_id=:attributeId')
-            ->andWhere('pav.language=:lang')
-            ->andWhere('pav.scope=:scope')
-            ->andWhere('pav.is_variant_specific_attribute = :isVariantSpecificAttribute')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
-            ->setParameter('attributeId', $pav->get('attributeId'))
-            ->setParameter('lang', $pav->get('language'))
-            ->setParameter('scope', $pav->get('scope'))
-            ->setParameter('isVariantSpecificAttribute', $pav->get('isVariantSpecificAttribute'), ParameterType::BOOLEAN);
+        $query = "SELECT *
+                  FROM product_attribute_value
+                  WHERE deleted=0
+                    AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
+                    AND attribute_id='{$pav->get('attributeId')}'
+                    AND product_attribute_value.language='{$pav->get('language')}'
+                    AND scope='{$pav->get('scope')}'
+                    AND is_variant_specific_attribute='{$pav->get('isVariantSpecificAttribute')}'";
 
         if ($pav->get('scope') === 'Channel') {
-            $qb->andWhere('pav.channel_id = :channelId');
-            $qb->setParameter('channelId', $pav->get('channelId'));
+            $query .= " AND channel_id='{$pav->get('channelId')}'";
         }
 
-        $pavs = $qb->fetchAllAssociative();
-
         $result = [];
-        foreach ($pavs as $record) {
+        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $record) {
             foreach ($products as $product) {
                 if ($product['id'] === $record['product_id']) {
-                    $record['childrenCount'] = $product['children_count'];
+                    $record['childrenCount'] = $product['childrenCount'];
                     break 1;
                 }
             }
