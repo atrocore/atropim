@@ -157,7 +157,7 @@ class ProductAttributeValue extends Relationship
         foreach ($pavs as $record) {
             foreach ($products as $product) {
                 if ($product['id'] === $record['product_id']) {
-                    $record['childrenCount'] = $product['childrenCount'];
+                    $record['childrenCount'] = $product['children_count'];
                     break 1;
                 }
             }
@@ -291,11 +291,10 @@ class ProductAttributeValue extends Relationship
             case 'datetime':
                 $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
                 break;
-            case 'varchar':
-                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
+            case 'asset':
+            case 'link':
+            case 'extensibleEnum':
+                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
                 break;
             default:
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
