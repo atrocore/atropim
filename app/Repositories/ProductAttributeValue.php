@@ -314,7 +314,9 @@ class ProductAttributeValue extends Relationship
         $res = $this->getConnection()->createQueryBuilder()
             ->select('pav.id')
             ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
-            ->where("pav.product_id IN (SELECT ph.parent_id FROM {$this->getConnection()->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted = :false AND ph.entity_id = :productId)")
+            ->where(
+                "pav.product_id IN (SELECT ph.parent_id FROM {$this->getConnection()->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted = :false AND ph.entity_id = :productId)"
+            )
             ->andWhere('pav.deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->setParameter('productId', $entity->get('productId'), Mapper::getParameterType($entity->get('productId')))
@@ -446,21 +448,6 @@ class ProductAttributeValue extends Relationship
             ->removeCollection();
     }
 
-    public function remove(Entity $entity, array $options = [])
-    {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (UniqueConstraintViolationException $e) {
-            // delete duplicate
-            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                $this->deleteFromDb($toDelete->get('id'));
-            }
-            return parent::remove($entity, $options);
-        }
-
-        return $result;
-    }
-
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         $where = [
@@ -474,10 +461,8 @@ class ProductAttributeValue extends Relationship
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
         }
-        // Do not use find method from this class, it can cause infinite loop
-        $this->limit(0, 1)->where($where);
-        $collection = parent::find(['withDeleted' => $deleted]);
-        return count($collection) > 0 ? $collection[0] : null;
+
+        return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 
     protected function populateDefault(Entity $entity, Entity $attribute): void

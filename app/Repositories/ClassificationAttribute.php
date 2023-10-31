@@ -124,21 +124,6 @@ class ClassificationAttribute extends Relationship
             ->findOne(['withDeleted' => $deleted]);
     }
 
-    public function remove(Entity $entity, array $options = [])
-    {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (UniqueConstraintViolationException $e) {
-            // delete duplicate
-            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                $this->deleteFromDb($toDelete->get('id'));
-            }
-            return parent::remove($entity, $options);
-        }
-
-        return $result;
-    }
-
     public function getProductChannelsViaClassificationId(string $classificationId): array
     {
         return $this->getConnection()->createQueryBuilder()
