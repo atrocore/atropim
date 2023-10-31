@@ -15,7 +15,9 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relationship;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\DateTime;
 use Espo\ORM\Entity;
@@ -138,19 +140,21 @@ class ProductAttributeValue extends Relationship
             ->andWhere('pav.language = :language')
             ->andWhere('pav.scope = :scope')
             ->andWhere('pav.is_variant_specific_attribute = :isVariantSpecificAttribute')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('productsIds', $products, Mapper::getParameterType($products))
-            ->setParameter('language', $pav->get('language'), Mapper::getParameterType($pav->get('language')))
-            ->setParameter('scope', $pav->get('scope'), Mapper::getParameterType($pav->get('scope')))
-            ->setParameter('isVariantSpecificAttribute', $pav->get('isVariantSpecificAttribute'), Mapper::getParameterType($pav->get('isVariantSpecificAttribute')));
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
+            ->setParameter('language', $pav->get('language'))
+            ->setParameter('scope', $pav->get('scope'))
+            ->setParameter('isVariantSpecificAttribute', $pav->get('isVariantSpecificAttribute'), ParameterType::BOOLEAN);
 
         if ($pav->get('scope') === 'Channel') {
             $qb->andWhere('pav.channel_id = :channelId');
-            $qb->setParameter('channelId', $pav->get('channelId'), Mapper::getParameterType($pav->get('channelId')));
+            $qb->setParameter('channelId', $pav->get('channelId'));
         }
 
+        $pavs = $qb->fetchAllAssociative();
+
         $result = [];
-        foreach ($qb->fetchAllAssociative() as $record) {
+        foreach ($pavs as $record) {
             foreach ($products as $product) {
                 if ($product['id'] === $record['product_id']) {
                     $record['childrenCount'] = $product['childrenCount'];
