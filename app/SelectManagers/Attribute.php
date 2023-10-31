@@ -11,28 +11,27 @@
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class of Attribute
- */
 class Attribute extends AbstractSelectManager
 {
-    /**
-     * @inheritdoc
-     */
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function filterByType(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
-        $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
-        $types = implode("','", array_keys($this->getMetadata()->get('attributes')));
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $attributeTypes = array_keys($this->getMetadata()->get('attributes'));
 
-        if (!isset($selectParams['customWhere'])) {
-            $selectParams['customWhere'] = '';
-        }
-        // add filtering by attributes types
-        $selectParams['customWhere'] .= " AND attribute.type IN ('{$types}')";
+        $qb->andWhere("{$tableAlias}.type IN (:attributeTypes)");
+        $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
+    }
 
-        return $selectParams;
+    public function applyAdditional(array &$result, array $params)
+    {
+        parent::applyAdditional($result, $params);
+
+        $result['callbacks'][] = [$this, 'filterByType'];
     }
 
     /**
@@ -72,9 +71,9 @@ class Attribute extends AbstractSelectManager
                 ->select(['attributeId'])
                 ->where(
                     [
-                        'channelId' => $data['channelsIds'],
+                        'channelId'        => $data['channelsIds'],
                         'classificationId' => $data['classificationId'],
-                        'scope' => 'Channel',
+                        'scope'            => 'Channel',
                     ]
                 )
                 ->find()
@@ -133,7 +132,7 @@ class Attribute extends AbstractSelectManager
                 ->getRepository('Attribute')
                 ->select(['id'])
                 ->where([
-                    'defaultScope' => 'Channel',
+                    'defaultScope'       => 'Channel',
                     'defaultChannelId!=' => array_column($availableChannels, 'channelId')
                 ])
                 ->find()

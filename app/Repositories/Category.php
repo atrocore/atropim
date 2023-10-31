@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -54,25 +56,30 @@ class Category extends Hierarchy
 
     public function getParentChannelsIds(string $categoryId): array
     {
-        $categoryId = $this->getPDO()->quote($categoryId);
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('cc.channel_id')
+            ->from($this->getConnection()->quoteIdentifier('category_channel'), 'cc')
+            ->where('cc.deleted = :false')
+            ->andWhere("cc.category_id IN (SELECT c.category_parent_id FROM {$this->getConnection()->quoteIdentifier('category')} c WHERE c.deleted = :false AND id = :id)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('id', $categoryId, Mapper::getParameterType($categoryId))
+            ->fetchAllAssociative();
 
-        $query = "SELECT channel_id 
-                  FROM `category_channel` 
-                  WHERE deleted=0 
-                    AND category_id IN (SELECT category_parent_id FROM `category` WHERE deleted=0 AND id=$categoryId)";
-
-        return $this
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        return array_column($records, 'channel_id');
     }
 
     public function getNotRelatedWithCatalogsTreeIds(): array
     {
-        return $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT id FROM category WHERE deleted=0 AND category_parent_id IS NULL AND id NOT IN (SELECT category_id FROM catalog_category WHERE deleted=0)")
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('c.id')
+            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
+            ->where('c.deleted = :false')
+            ->andWhere('c.category_parent_id IS NULL')
+            ->andWhere('c.id NOT IN (SELECT cc.category_id FROM catalog_category cc WHERE cc.deleted = :false)')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
+
+        return array_column($records, 'id');
     }
 
     public function canUnRelateCatalog(Entity $category, string $catalogId): void
@@ -84,21 +91,18 @@ class Category extends Hierarchy
         $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
         $categoriesIds[] = $category->get('id');
 
-
-        $categoriesIds = implode("','", $categoriesIds);
-        $catalogId = $this->getPDO()->quote($catalogId);
-
-        $records = $this
-            ->getPDO()
-            ->query(
-                "SELECT id 
-                 FROM product_category 
-                 WHERE product_id IN (SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0) 
-                   AND category_id IN ('$categoriesIds') 
-                   AND deleted=0 
-                 LIMIT 0,1"
-            )
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('pc.id')
+            ->from('product_category', 'pc')
+            ->where('pc.deleted = :false')
+            ->andWhere('pc.category_id IN (:categoryIds)')
+            ->andWhere("pc.product_id IN (SELECT p.id FROM {$this->getConnection()->quoteIdentifier('product')} p WHERE p.catalog_id = :catalogId AND p.deleted = :false)")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('categoryIds', $categoriesIds, Mapper::getParameterType($categoriesIds))
+            ->setParameter('catalogId', $catalogId, Mapper::getParameterType($catalogId))
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+            ->fetchAllAssociative();
 
         if (!empty($records)) {
             throw new BadRequest($this->exception('categoryCannotBeUnRelatedFromCatalog'));
@@ -179,9 +183,14 @@ class Category extends Hierarchy
 
             foreach ($category->getChildren() as $child) {
                 $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
-                $this
-                    ->getPDO()
-                    ->exec("DELETE FROM `product_category` WHERE category_id='{$child->get('id')}' AND product_id IN (SELECT id FROM product WHERE catalog_id='$catalogId')");
+
+                $this->getConnection()->createQueryBuilder()
+                    ->delete('product_category')
+                    ->where('category_id = :childId')
+                    ->andWhere('product_id IN (SELECT id FROM product WHERE catalog_id = :catalogId)')
+                    ->setParameter('childId', $child->get('id'))
+                    ->setParameter('catalogId', $catalogId)
+                    ->executeQuery();
             }
 
             if (!empty($inTransaction)) {
@@ -342,18 +351,34 @@ class Category extends Hierarchy
         if (empty($parentId)) {
             $additionalWhere = ' AND t.category_parent_id IS NULL ';
         } else {
-            $additionalWhere = ' AND t.category_parent_id=' . $this->getPDO()->quote($parentId);
+            $additionalWhere = ' AND t.category_parent_id=:parentId';
         }
 
-        $query = "SELECT x.position
-                  FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                        FROM `category` t
+        if (Converter::isPgSQL($this->getConnection())) {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, row_number() over(ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
+                        FROM {$this->getConnection()->quoteIdentifier('category')} t
+                        WHERE t.deleted=:false $additionalWhere) x
+                      WHERE x.id=:id";
+        } else {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
+                        FROM {$this->getConnection()->quoteIdentifier('category')} t
                             JOIN (SELECT @rownum:=0) r
-                        WHERE t.deleted=0 $additionalWhere
+                        WHERE t.deleted=:false $additionalWhere
                         ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-                  WHERE x.id=" . $this->getPDO()->quote($entity->get('id'));
+                      WHERE x.id=:id";
+        }
 
-        $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($query);
+        $sth->bindValue(':id', $entity->get('id'));
+        if (!empty($parentId)) {
+            $sth->bindValue(':parentId', $parentId);
+        }
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $position = $sth->fetch(\PDO::FETCH_COLUMN);
 
         return (int)$position;
     }
@@ -363,45 +388,53 @@ class Category extends Hierarchy
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
 
-        $select = 'c.*';
+        $select = ['c.*'];
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(c1.id) FROM category c1 WHERE c1.category_parent_id=c.id AND c1.deleted=0) as childrenCount";
+            $select [] = "(SELECT COUNT(c1.id) FROM {$this->getConnection()->quoteIdentifier('category')} c1 WHERE c1.category_parent_id=c.id AND c1.deleted=:false) as children_count";
         }
+
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->select($select)
+            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
+            ->where('c.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->addOrderBy('c.sort_order', 'ASC')
+            ->addOrderBy("c.$sortBy", $sortOrder)
+            ->addOrderBy('c.id', 'ASC');
 
         if (empty($parentId)) {
-            $additionalWhere = ' AND c.category_parent_id IS NULL ';
+            $qb->andWhere('c.category_parent_id IS NULL');
         } else {
-            $additionalWhere = ' AND c.category_parent_id=' . $this->getPDO()->quote($parentId);
+            $qb->andWhere('c.category_parent_id = :parentId');
+            $qb->setParameter('parentId', $parentId);
         }
-
-        $query = "SELECT {$select} 
-                  FROM category c
-                  WHERE c.deleted=0 $additionalWhere
-                  ORDER BY c.sort_order ASC, c.$sortBy {$sortOrder}, c.id ASC";
 
         if (!is_null($offset) && !is_null($maxSize)) {
-            $query .= " LIMIT $maxSize OFFSET $offset";
+            $qb->setFirstResult($offset);
+            $qb->setMaxResults($maxSize);
         }
 
-        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+        return $qb->fetchAllAssociative();
     }
 
-    /**
-     * @return int
-     */
     public function getChildrenCount(string $parentId, $selectParams = null): int
     {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->select('COUNT(id) as count')
+            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
+            ->where('c.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false));
+
         if (empty($parentId)) {
-            $query = "SELECT COUNT(id) as count
-                      FROM `category` c
-                      WHERE c.category_parent_id IS NULL AND c.deleted=0";
+            $qb->andWhere('c.category_parent_id IS NULL');
         } else {
-            $query = "SELECT COUNT(id) as count
-                      FROM `category` c
-                      WHERE c.category_parent_id = '$parentId' AND c.deleted=0";
+            $qb->andWhere('c.category_parent_id = :parentId');
+            $qb->setParameter('parentId', $parentId);
         }
 
-        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+        $res = $qb->fetchAssociative();
+
+        return empty($res) ? 0 : (int)$res['count'];
     }
 
     /**
@@ -489,8 +522,18 @@ class Category extends Hierarchy
         }
 
         $result = $this->getMapper()->delete($entity);
-        $this->getPDO()->exec("DELETE FROM `product_category` WHERE category_id='{$entity->get('id')}'");
-        $this->getPDO()->exec("DELETE FROM `category_channel` WHERE category_id='{$entity->get('id')}'");
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete('product_category')
+            ->where('category_id = :categoryId')
+            ->setParameter('categoryId', $entity->get('id'))
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete('category_channel')
+            ->where('category_id = :categoryId')
+            ->setParameter('categoryId', $entity->get('id'))
+            ->executeQuery();
 
         foreach ($this->where(['categoryParentId' => $entity->get('id')])->find() as $child) {
             $this->remove($child, $options);
@@ -564,18 +607,18 @@ class Category extends Hierarchy
         // prepare data
         $data = array_merge([$entity->get('id')], array_column($data, 'id'));
 
-        // prepare sql
-        $sql = '';
         foreach ($data as $id) {
-            // prepare sql
-            $sql .= "UPDATE category SET sort_order=$sortOrder WHERE id='$id';";
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('category'), 'c')
+                ->set('c.sort_order', ':sortOrder')
+                ->where('c.id = :id')
+                ->setParameter('sortOrder', $sortOrder, Mapper::getParameterType($sortOrder))
+                ->setParameter('id', $id)
+                ->executeQuery();
 
             // increase sort order
             $sortOrder = $sortOrder + 10;
         }
-
-        // execute sql
-        $this->getEntityManager()->nativeQuery($sql);
     }
 
     protected function exception(string $key): string
@@ -657,12 +700,15 @@ class Category extends Hierarchy
 
     protected function updateRoute(Entity $entity): void
     {
-        $route = $this->getPDO()->quote(self::getCategoryRoute($entity));
-        $routeName = $this->getPDO()->quote(self::getCategoryRoute($entity, true));
-
-        $this
-            ->getEntityManager()
-            ->nativeQuery("UPDATE category SET category_route=$route, category_route_name=$routeName WHERE id='{$entity->get('id')}'");
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier('category'), 'c')
+            ->set('category_route', ':categoryRoute')
+            ->set('category_route_name', ':categoryRouteName')
+            ->where('c.id = :id')
+            ->setParameter('categoryRoute', self::getCategoryRoute($entity))
+            ->setParameter('categoryRouteName', self::getCategoryRoute($entity, true))
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     protected function updateCategoryTree(Entity $entity): void

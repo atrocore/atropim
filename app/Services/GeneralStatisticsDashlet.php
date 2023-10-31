@@ -74,8 +74,8 @@ class GeneralStatisticsDashlet extends AbstractDashletService
         $sql
             = "SELECT " . $select . " 
                 FROM product as p 
-                WHERE p.id NOT IN (SELECT product_id FROM product_asset WHERE deleted=0) 
-                  AND p.deleted=0";
+                WHERE p.id NOT IN (SELECT product_id FROM product_asset WHERE deleted=:false) 
+                  AND p.deleted=:false";
 
         return $sql;
     }
@@ -96,13 +96,13 @@ class GeneralStatisticsDashlet extends AbstractDashletService
                     (SELECT COUNT(ap.id)                  
                     FROM associated_product AS ap
                       JOIN product AS p_rel 
-                        ON p_rel.id = ap.related_product_id AND p_rel.deleted = 0
+                        ON p_rel.id = ap.related_product_id AND p_rel.deleted = :false
                       JOIN product AS p_main 
-                        ON p_main.id = ap.related_product_id AND p_main.deleted = 0
+                        ON p_main.id = ap.related_product_id AND p_main.deleted = :false
                       JOIN association 
-                        ON association.id = ap.association_id AND association.deleted = 0
-                    WHERE ap.deleted = 0 AND  ap.main_product_id = p.id) = 0 
-                AND p.deleted = 0";
+                        ON association.id = ap.association_id AND association.deleted = :false
+                    WHERE ap.deleted = :false AND  ap.main_product_id = p.id) = :false 
+                AND p.deleted = :false";
 
         return $sql;
     }
@@ -121,8 +121,8 @@ class GeneralStatisticsDashlet extends AbstractDashletService
 
         return "SELECT $select 
                 FROM product p 
-                LEFT JOIN product_category pc ON pc.product_id=p.id AND pc.deleted=0
-                WHERE p.deleted=0 
+                LEFT JOIN product_category pc ON pc.product_id=p.id AND pc.deleted=:false
+                WHERE p.deleted=:false 
                   AND pc.id IS NULL";
     }
 
@@ -133,8 +133,8 @@ class GeneralStatisticsDashlet extends AbstractDashletService
     {
         return "SELECT COUNT(p.id)
                 FROM product p
-                LEFT JOIN product_attribute_value pav ON pav.product_id = p.id AND pav.deleted = 0
-                WHERE p.deleted = 0 AND pav.id IS NULL";
+                LEFT JOIN product_attribute_value pav ON pav.product_id = p.id AND pav.deleted = :false
+                WHERE p.deleted = :false AND pav.id IS NULL";
     }
 
     protected function getAmountProductWithoutAssets(): int
@@ -143,10 +143,11 @@ class GeneralStatisticsDashlet extends AbstractDashletService
             return 0;
         }
 
-        $ids = $this
-            ->getPDO()
-            ->query($this->getQueryProductWithoutAssets(false))
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutAssets(false));
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $ids = $sth->fetchAll(\PDO::FETCH_COLUMN);
 
         $result = $this
             ->getInjection('serviceFactory')
@@ -167,10 +168,11 @@ class GeneralStatisticsDashlet extends AbstractDashletService
             return 0;
         }
 
-        $ids = $this
-            ->getPDO()
-            ->query($this->getQueryProductWithoutAssociatedProduct(false))
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutAssociatedProduct(false));
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $ids = $sth->fetchAll(\PDO::FETCH_COLUMN);
 
         $result = $this
             ->getInjection('serviceFactory')
@@ -191,10 +193,11 @@ class GeneralStatisticsDashlet extends AbstractDashletService
             return 0;
         }
 
-        $ids = $this
-            ->getPDO()
-            ->query($this->getQueryProductWithoutCategory(false))
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutCategory(false));
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $ids = $sth->fetchAll(\PDO::FETCH_COLUMN);
 
         $result = $this
             ->getInjection('serviceFactory')
@@ -213,10 +216,11 @@ class GeneralStatisticsDashlet extends AbstractDashletService
             return 0;
         }
 
-        $ids = $this
-            ->getPDO()
-            ->query($this->getQueryProductWithoutAttribute(false))
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutAttribute(false));
+        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $ids = $sth->fetchAll(\PDO::FETCH_COLUMN);
 
         $result = $this
             ->getInjection('serviceFactory')

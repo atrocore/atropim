@@ -14,12 +14,10 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-/**
- * Catalog repository
- */
 class Catalog extends Hierarchy
 {
     public function getProductsCount(Entity $catalog): int
@@ -34,24 +32,30 @@ class Catalog extends Hierarchy
 
     public function hasProducts(string $catalogId): bool
     {
-        $catalogId = $this->getPDO()->quote($catalogId);
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('p.id')
+            ->from($this->getConnection()->quoteIdentifier('product'), 'p')
+            ->where('p.catalog_id = :catalogId')
+            ->andWhere('deleted = :false')
+            ->setParameter('catalogId', $catalogId)
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAssociative();
 
-        $records = $this
-            ->getPDO()
-            ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0 LIMIT 0,1")
-            ->fetchAll(\PDO::FETCH_COLUMN);
-
-        return !empty($records);
+        return !empty($res);
     }
 
     public function getProductsIds(string $catalogId): array
     {
-        $catalogId = $this->getPDO()->quote($catalogId);
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('p.id')
+            ->from($this->getConnection()->quoteIdentifier('product'), 'p')
+            ->where('p.catalog_id = :catalogId')
+            ->andWhere('deleted = :false')
+            ->setParameter('catalogId', $catalogId)
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
 
-        return $this
-            ->getPDO()
-            ->query("SELECT id FROM product WHERE catalog_id=$catalogId AND deleted=0")
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        return array_column($res, 'id');
     }
 
     public function relateCategories(Entity $entity, $foreign, $data, $options)
@@ -82,18 +86,19 @@ class Catalog extends Hierarchy
         return $this->getEntityManager()->getRepository('Category')->unrelateCatalogs($category, $entity, $options);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        /** @var string $id */
-        $id = $entity->get('id');
+        $connection = $this->getEntityManager()->getConnection();
 
-        // remove catalog products
-        $this->getEntityManager()->nativeQuery("UPDATE product SET deleted=1 WHERE catalog_id='$id'");
+        $connection->createQueryBuilder()
+            ->update($connection->quoteIdentifier('product'), 'p')
+            ->set('deleted', ':false')
+            ->where('p.catalog_id = :id')
+            ->setParameter('false', false, Mapper::getParameterType('false'))
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

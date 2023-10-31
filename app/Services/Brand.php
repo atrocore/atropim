@@ -13,52 +13,34 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-/**
- * Brand service
- */
 class Brand extends Base
 {
-    /**
-     * @param Entity $entity
-     */
     protected function afterDeleteEntity(Entity $entity)
     {
-        // call parent action
         parent::afterDeleteEntity($entity);
 
-        // unlink
         $this->unlinkBrand([$entity->get('id')]);
     }
 
-    /**
-     * Unlink brand from products
-     *
-     * @param array $ids
-     *
-     * @return bool
-     */
     protected function unlinkBrand(array $ids): bool
     {
-        // prepare data
         $result = false;
 
         if (!empty($ids)) {
-            // prepare ids
-            $ids = implode("','", $ids);
+            $connection = $this->getEntityManager()->getConnection();
 
-            // prepare sql
-            $sql = sprintf("UPDATE product SET brand_id = null WHERE brand_id IN ('%s');", $ids);
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('product'), 'p')
+                ->set('brand_id', ':null')
+                ->where('p.brand_id IN (:ids)')
+                ->setParameter('null', null)
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                ->executeQuery();
 
-            $sth = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->prepare($sql);
-            $sth->execute();
-
-            // prepare result
             $result = true;
         }
 
