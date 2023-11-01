@@ -68,6 +68,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 $entity->set('attributeMeasureId', $attribute->get('measureId'));
                 $this->prepareUnitFieldValue($entity, 'value', [
                     'measureId' => $attribute->get('measureId'),
+                    'type'      => $attribute->get('type'),
                     'mainField' => 'value'
                 ]);
             }

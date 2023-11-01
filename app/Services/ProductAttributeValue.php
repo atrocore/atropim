@@ -501,8 +501,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
         $checkEntity = clone $entity;
-        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $entity->get('attribute'), false);
+
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $attribute, false);
 
         if ($checkEntity->get('value') === null || $checkEntity->get('value') === '') {
             $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
@@ -654,7 +656,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array  $defs
+     * @param array $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
@@ -816,6 +818,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('attributeMeasureId', $attribute->get('measureId'));
             $this->prepareUnitFieldValue($entity, 'value', [
                 'measureId' => $attribute->get('measureId'),
+                'type'      => $attribute->get('type'),
                 'mainField' => 'value'
             ]);
         }
