@@ -681,17 +681,17 @@ class Product extends AbstractSelectManager
                             'value' => [
                                 [
                                     'type'      => 'equals',
-                                    'attribute' => 'referenceValue',
+                                    'attribute' => 'varcharValue',
                                     'value'     => ''
                                 ],
                                 [
                                     'type'      => 'isNull',
-                                    'attribute' => 'referenceValue'
+                                    'attribute' => 'varcharValue'
                                 ],
                             ]
                         ];
                     } else {
-                        $row['attribute'] = 'referenceValue';
+                        $row['attribute'] = 'varcharValue';
                     }
                 } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'intValue1';
@@ -710,17 +710,17 @@ class Product extends AbstractSelectManager
                             'value' => [
                                 [
                                     'type'      => 'equals',
-                                    'attribute' => 'referenceValue',
+                                    'attribute' => 'varcharValue',
                                     'value'     => ''
                                 ],
                                 [
                                     'type'      => 'isNull',
-                                    'attribute' => 'referenceValue'
+                                    'attribute' => 'varcharValue'
                                 ],
                             ]
                         ];
                     } else {
-                        $row['attribute'] = 'referenceValue';
+                        $row['attribute'] = 'varcharValue';
                     }
                 } elseif (substr($row['attribute'], -2) === 'To') {
                     $row['attribute'] = 'floatValue1';
@@ -738,43 +738,13 @@ class Product extends AbstractSelectManager
                 $where['value'][] = $row;
                 break;
             case 'extensibleEnum':
-                $row['attribute'] = 'referenceValue';
+                $row['attribute'] = 'varcharValue';
                 $where['value'][] = $row;
                 $where['value'][] = [
                     'type'      => 'equals',
                     'attribute' => 'language',
                     'value'     => 'main',
                 ];
-                break;
-            case 'asset':
-            case 'link':
-                $row['attribute'] = 'referenceValue';
-                $where['value'][] = $row;
-                break;
-            case 'varchar':
-                if (substr($row['attribute'], -6) === 'UnitId') {
-                    if ($row['type'] === 'isNull') {
-                        $row = [
-                            'type'  => 'or',
-                            'value' => [
-                                [
-                                    'type'      => 'equals',
-                                    'attribute' => 'referenceValue',
-                                    'value'     => ''
-                                ],
-                                [
-                                    'type'      => 'isNull',
-                                    'attribute' => 'referenceValue'
-                                ],
-                            ]
-                        ];
-                    } else {
-                        $row['attribute'] = 'referenceValue';
-                    }
-                } else {
-                    $row['attribute'] = 'varcharValue';
-                }
-                $where['value'][] = $row;
                 break;
             default:
                 $row['attribute'] = 'varcharValue';

@@ -13,7 +13,6 @@
     "valueFrom": "Default Value From",
     "valueTo": "Default Value To",
     "varcharValue": "Default Value: String",
-    "referenceValue": "Default Value: Reference",
     "textValue": "Default Value: Text",
     "intValue": "Default Value: Integer",
     "floatValue": "Default Value: Float",

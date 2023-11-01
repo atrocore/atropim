@@ -38,7 +38,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
             'floatValue',
             'floatValue1',
             'varcharValue',
-            'referenceValue',
             'textValue',
             'data'
         ];
@@ -63,14 +62,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 }
             }
             $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
-
-            if ($attribute->get('measureId')) {
-                $entity->set('attributeMeasureId', $attribute->get('measureId'));
-                $this->prepareUnitFieldValue($entity, 'value', [
-                    'measureId' => $attribute->get('measureId'),
-                    'mainField' => 'value'
-                ]);
-            }
         }
     }
 

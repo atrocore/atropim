@@ -15,7 +15,6 @@
     "scope": "Scope",
     "channel": "Channel",
     "varcharValue": "Value: String",
-    "referenceValue": "Value: Reference",
     "textValue": "Value: Text",
     "intValue": "Value: Integer",
     "floatValue": "Value: Float",

@@ -96,7 +96,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 if (this.model.get('attributeMeasureId')) {
                     params.measureId = this.model.get('attributeMeasureId');
-                    if (['int', 'float', 'varchar'].includes(attributeType)) {
+                    if (['int', 'float'].includes(attributeType)) {
                         fieldView = "views/fields/unit-" + attributeType;
                     }
                 }
