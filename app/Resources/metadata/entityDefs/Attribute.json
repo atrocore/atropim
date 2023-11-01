@@ -180,6 +180,7 @@
     "defaultScope": {
       "type": "enum",
       "prohibitedEmptyValue": true,
+      "tooltip": true,
       "options": [
         "Global",
         "Channel"
@@ -192,7 +193,8 @@
       "view": "pim:views/attribute/fields/default-scope"
     },
     "defaultChannel": {
-      "type": "link"
+      "type": "link",
+      "tooltip": true
     },
     "isRequired": {
       "type": "bool",
