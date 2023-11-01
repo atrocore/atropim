@@ -392,16 +392,17 @@ class ProductAttributeValue extends Relationship
     {
         $this->getConnection()->createQueryBuilder()
             ->update($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
-            ->set('varchar_value', null)
-            ->set('text_value', null)
+            ->set('varchar_value', ':null')
+            ->set('text_value', ':null')
             ->set('bool_value', ':false')
-            ->set('float_value', null)
-            ->set('int_value', null)
-            ->set('date_value', null)
-            ->set('datetime_value', null)
+            ->set('float_value', ':null')
+            ->set('int_value', ':null')
+            ->set('date_value', ':null')
+            ->set('datetime_value', ':null')
             ->where('pav.id = :id')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->setParameter('id', $id, Mapper::getParameterType($id))
+            ->setParameter('null', null)
             ->executeQuery();
     }
 

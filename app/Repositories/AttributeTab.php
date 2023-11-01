@@ -38,8 +38,9 @@ class AttributeTab extends Base
 
         $connection->createQueryBuilder()
             ->update($connection->quoteIdentifier('attribute'), 'a')
-            ->set('attribute_tab_id', null)
+            ->set('attribute_tab_id', ':null')
             ->where('a.attribute_tab_id = :id')
+            ->setParameter('null', null)
             ->setParameter('id', $entity->get('id'))
             ->executeQuery();
 
