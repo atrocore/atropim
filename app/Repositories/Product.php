@@ -458,7 +458,6 @@ class Product extends Hierarchy
                     'floatValue'     => $ca->get('floatValue'),
                     'floatValue1'    => $ca->get('floatValue1'),
                     'varcharValue'   => $ca->get('varcharValue'),
-                    'referenceValue' => $ca->get('referenceValue'),
                     'textValue'      => $ca->get('textValue'),
                 ]
             );

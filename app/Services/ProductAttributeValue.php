@@ -42,8 +42,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'floatValue',
             'floatValue1',
             'varcharValue',
-            'textValue',
-            'referenceValue'
+            'textValue'
         ];
 
     public function getGroupsPavs(string $productId, string $tabId, string $language = null): array
@@ -501,8 +500,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
         $checkEntity = clone $entity;
-        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $entity->get('attribute'), false);
+
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $attribute, false);
 
         if ($checkEntity->get('value') === null || $checkEntity->get('value') === '') {
             $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
@@ -654,7 +655,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array  $defs
+     * @param array $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {

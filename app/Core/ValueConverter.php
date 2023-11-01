@@ -47,10 +47,10 @@ class ValueConverter extends Injectable
         switch ($attribute->get('type')) {
             case 'extensibleEnum':
                 if (property_exists($data, 'value')) {
-                    $data->referenceValue = null;
+                    $data->varcharValue = null;
                     $option = $this->findExtensibleEnumOption($attribute->get('extensibleEnumId'), $data->value);
                     if (!empty($option)) {
-                        $data->referenceValue = $option->get('id');
+                        $data->varcharValue = $option->get('id');
                     }
                     unset($data->value);
                 }
@@ -94,7 +94,7 @@ class ValueConverter extends Injectable
                     unset($data->value);
                 }
                 if (property_exists($data, 'valueUnitId')) {
-                    $data->referenceValue = $data->valueUnitId;
+                    $data->varcharValue = $data->valueUnitId;
                     unset($data->valueUnitId);
                 }
                 break;
@@ -108,7 +108,7 @@ class ValueConverter extends Injectable
                     unset($data->valueTo);
                 }
                 if (property_exists($data, 'valueUnitId')) {
-                    $data->referenceValue = $data->valueUnitId;
+                    $data->varcharValue = $data->valueUnitId;
                     unset($data->valueUnitId);
                 }
                 break;
@@ -131,7 +131,7 @@ class ValueConverter extends Injectable
                     unset($data->value);
                 }
                 if (property_exists($data, 'valueUnitId')) {
-                    $data->referenceValue = $data->valueUnitId;
+                    $data->varcharValue = $data->valueUnitId;
                     unset($data->valueUnitId);
                 }
                 break;
@@ -145,7 +145,7 @@ class ValueConverter extends Injectable
                     unset($data->valueTo);
                 }
                 if (property_exists($data, 'valueUnitId')) {
-                    $data->referenceValue = $data->valueUnitId;
+                    $data->varcharValue = $data->valueUnitId;
                     unset($data->valueUnitId);
                 }
                 break;
@@ -164,22 +164,12 @@ class ValueConverter extends Injectable
             case 'asset':
             case 'link':
                 if (property_exists($data, 'value')) {
-                    $data->referenceValue = $data->value;
-                    unset($data->value);
-                }
-                if (property_exists($data, 'valueId')) {
-                    $data->referenceValue = $data->valueId;
-                    unset($data->value);
-                }
-                break;
-            case 'varchar':
-                if (property_exists($data, 'value')) {
                     $data->varcharValue = $data->value;
                     unset($data->value);
                 }
-                if (property_exists($data, 'valueUnitId')) {
-                    $data->referenceValue = $data->valueUnitId;
-                    unset($data->valueUnitId);
+                if (property_exists($data, 'valueId')) {
+                    $data->varcharValue = $data->valueId;
+                    unset($data->value);
                 }
                 break;
             default:
@@ -206,14 +196,14 @@ class ValueConverter extends Injectable
                 if ($entity->has('intValue')) {
                     $entity->set('valueFrom', $entity->get('intValue'));
                     $entity->set('valueTo', $entity->get('intValue1'));
-                    $entity->set('valueUnitId', $entity->get('referenceValue'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
                 }
                 break;
             case 'rangeFloat':
                 if ($entity->has('floatValue')) {
                     $entity->set('valueFrom', $entity->get('floatValue'));
                     $entity->set('valueTo', $entity->get('floatValue1'));
-                    $entity->set('valueUnitId', $entity->get('referenceValue'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
                 }
                 break;
             case 'array':
@@ -234,8 +224,8 @@ class ValueConverter extends Injectable
                 break;
             case 'extensibleEnum':
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
-                if ($entity->has('referenceValue')) {
-                    $entity->set('value', $entity->get('referenceValue'));
+                if ($entity->has('varcharValue')) {
+                    $entity->set('value', $entity->get('varcharValue'));
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
                     if (!empty($option)) {
                         $entity->set('valueName', $option['preparedName']);
@@ -263,13 +253,13 @@ class ValueConverter extends Injectable
             case 'int':
                 if ($entity->has('intValue')) {
                     $entity->set('value', $entity->get('intValue'));
-                    $entity->set('valueUnitId', $entity->get('referenceValue'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
                 }
                 break;
             case 'float':
                 if ($entity->has('floatValue')) {
                     $entity->set('value', $entity->get('floatValue'));
-                    $entity->set('valueUnitId', $entity->get('referenceValue'));
+                    $entity->set('valueUnitId', $entity->get('varcharValue'));
                 }
                 break;
             case 'date':
@@ -283,8 +273,8 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'link':
-                if ($entity->has('referenceValue')) {
-                    $entity->set('valueId', $entity->get('referenceValue'));
+                if ($entity->has('varcharValue')) {
+                    $entity->set('valueId', $entity->get('varcharValue'));
                     if (!empty($entity->get('valueId'))) {
                         $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
                         if (!empty($foreign)) {
@@ -294,21 +284,15 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'asset':
-                if ($entity->has('referenceValue')) {
-                    $entity->set('value', $entity->get('referenceValue'));
-                    $entity->set('valueId', $entity->get('referenceValue'));
+                if ($entity->has('varcharValue')) {
+                    $entity->set('value', $entity->get('varcharValue'));
+                    $entity->set('valueId', $entity->get('varcharValue'));
                     if (!empty($entity->get('valueId'))) {
                         if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
                             $entity->set('valueName', $attachment->get('name'));
                             $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
                         }
                     }
-                }
-                break;
-            case 'varchar':
-                if ($entity->has('varcharValue')) {
-                    $entity->set('value', $entity->get('varcharValue'));
-                    $entity->set('valueUnitId', $entity->get('referenceValue'));
                 }
                 break;
             default:
@@ -327,7 +311,6 @@ class ValueConverter extends Injectable
             $entity->clear('floatValue');
             $entity->clear('floatValue1');
             $entity->clear('varcharValue');
-            $entity->clear('referenceValue');
             $entity->clear('textValue');
         }
     }

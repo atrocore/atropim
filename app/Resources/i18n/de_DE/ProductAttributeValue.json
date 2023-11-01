@@ -15,7 +15,6 @@
     "valueTo": "Wert auf",
     "scope": "Scope",
     "varcharValue": "Wert: Einzeiliger Text",
-    "referenceValue": "Wert: Referenz",
     "textValue": "Wert: Text",
     "intValue": "Wert: Ganzzahl",
     "floatValue": "Wert: Float",

@@ -246,7 +246,7 @@ class ProductAttributeValue extends Relationship
             case 'int':
                 $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
                 }
                 break;
             case 'rangeInt':
@@ -255,13 +255,13 @@ class ProductAttributeValue extends Relationship
                     $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue1'), $pav2->get('intValue1'));
                 }
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
                 }
                 break;
             case 'float':
                 $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
                 }
                 break;
             case 'rangeFloat':
@@ -270,7 +270,7 @@ class ProductAttributeValue extends Relationship
                     $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue1'), $pav2->get('floatValue1'));
                 }
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
                 }
                 break;
             case 'date':
@@ -278,12 +278,6 @@ class ProductAttributeValue extends Relationship
                 break;
             case 'datetime':
                 $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
-                break;
-            case 'varchar':
-                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
                 break;
             default:
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
@@ -475,8 +469,8 @@ class ProductAttributeValue extends Relationship
         }
 
         if ($entity->isNew()) {
-            if (!empty($attribute->get('measureId')) && empty($entity->get('referenceValue')) && !empty($attribute->get('defaultUnit'))) {
-                $entity->set('referenceValue', $attribute->get('defaultUnit'));
+            if (!empty($attribute->get('measureId')) && empty($entity->get('varcharValue')) && !empty($attribute->get('defaultUnit'))) {
+                $entity->set('varcharValue', $attribute->get('defaultUnit'));
             }
         }
     }
@@ -600,30 +594,21 @@ class ProductAttributeValue extends Relationship
                     break;
                 case 'currency':
                     $where['floatValue'] = $entity->get('floatValue');
-                    $where['refere'] = $entity->get('varcharValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'int':
                     $where['intValue'] = $entity->get('intValue');
-                    $where['referenceValue'] = $entity->get('referenceValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'float':
                     $where['floatValue'] = $entity->get('floatValue');
-                    $where['referenceValue'] = $entity->get('referenceValue');
+                    $where['varcharValue'] = $entity->get('varcharValue');
                     break;
                 case 'date':
                     $where['dateValue'] = $entity->get('dateValue');
                     break;
                 case 'datetime':
                     $where['datetimeValue'] = $entity->get('datetimeValue');
-                    break;
-                case 'varchar':
-                    $where['varcharValue'] = $entity->get('varcharValue');
-                    $where['referenceValue'] = $entity->get('referenceValue');
-                    break;
-                case 'asset':
-                case 'extensibleEnum':
-                case 'link':
-                    $where['referenceValue'] = $entity->get('referenceValue');
                     break;
                 default:
                     $where['varcharValue'] = $entity->get('varcharValue');
@@ -714,7 +699,7 @@ class ProductAttributeValue extends Relationship
                 }
                 break;
             case 'extensibleEnum':
-                $id = $entity->get('referenceValue');
+                $id = $entity->get('varcharValue');
                 if (!empty($id)) {
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
@@ -778,17 +763,17 @@ class ProductAttributeValue extends Relationship
             }
         }
 
-        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float', 'varchar']) && !empty($entity->get('referenceValue'))) {
+        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($entity->get('varcharValue'))) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->select(['id'])
                 ->where([
-                    'id'        => $entity->get('referenceValue'),
+                    'id'        => $entity->get('varcharValue'),
                     'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
                 ])
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get('referenceValue'), $attribute->get('name')));
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get('varcharValue'), $attribute->get('name')));
             }
         }
     }
@@ -913,10 +898,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->intValue1;
                 }
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
                 }
                 break;
             case 'rangeFloat':
@@ -932,10 +917,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->floatValue1;
                 }
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
                 }
                 break;
             case 'int':
@@ -945,10 +930,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['became']['value'] = $input->intValue;
                 }
 
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
                 }
                 break;
             case 'float':
@@ -958,10 +943,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['became']['value'] = $input->floatValue;
                 }
 
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
                 }
                 break;
             case 'array':
