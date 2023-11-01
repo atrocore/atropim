@@ -414,7 +414,7 @@ class Category extends Hierarchy
             $qb->setMaxResults($maxSize);
         }
 
-        return $qb->fetchAllAssociative();
+        return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
     }
 
     public function getChildrenCount(string $parentId, $selectParams = null): int

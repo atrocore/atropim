@@ -157,7 +157,7 @@ class ProductAttributeValue extends Relationship
         foreach ($pavs as $record) {
             foreach ($products as $product) {
                 if ($product['id'] === $record['product_id']) {
-                    $record['childrenCount'] = $product['children_count'];
+                    $record['childrenCount'] = $product['childrenCount'];
                     break 1;
                 }
             }
