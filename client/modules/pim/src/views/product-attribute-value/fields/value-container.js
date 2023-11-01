@@ -61,6 +61,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     readOnly: !!this.model.get('isValueReadOnly')
                 };
 
+                if (this.model.get('attributeIsMultilang')) {
+                    params.multilangLocale = this.model.get('language')
+                }
+
                 if (this.getMetadata().get(['attributes', this.model.get('attributeType'), 'isValueReadOnly'])) {
                     params.readOnly = true;
                 }
