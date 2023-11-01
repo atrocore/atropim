@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
 class ProductAsset extends AbstractSelectManager
@@ -24,13 +27,11 @@ class ProductAsset extends AbstractSelectManager
         return ProductAttributeValue::createScopePrismBoolFilterName($id);
     }
 
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function applyAdditional(array &$result, array $params)
     {
-        $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
+        parent::applyAdditional($result, $params);
 
-        $this->applyScopeBoolFilters($params, $selectParams);
-
-        return $selectParams;
+        $result['callbacks'][] = [$this, 'filterByChannel'];
     }
 
     public function applyBoolFilter($filterName, &$result)
@@ -48,11 +49,13 @@ class ProductAsset extends AbstractSelectManager
         parent::applyBoolFilter($filterName, $result);
     }
 
-    public function applyScopeBoolFilters($params, &$selectParams)
+    public function filterByChannel(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
     {
         if (empty($this->filterScopes)) {
             return;
         }
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
         $channelsIds = [];
         foreach ($this->filterScopes as $channelId) {
@@ -62,8 +65,8 @@ class ProductAsset extends AbstractSelectManager
         }
         $channelsIds[] = '';
 
-        $subQuery = "SELECT id FROM product_asset WHERE channel_id IN ('" . implode("','", $channelsIds) . "') AND deleted=0";
-
-        $selectParams['customWhere'] .= " AND product_asset.id IN ($subQuery)";
+        $qb->andWhere("{$tableAlias}.id IN (SELECT ps.id FROM product_asset ps WHERE ps.channel_id IN (:channelsIds) AND ps.deleted=:false)");
+        $qb->setParameter('channelsIds', $channelsIds, Mapper::getParameterType($channelsIds));
+        $qb->setParameter('false', false, false);
     }
 }

@@ -13,34 +13,32 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class ClassificationAttribute
- */
 class ClassificationAttribute extends AbstractSelectManager
 {
-    /**
-     * @inheritdoc
-     */
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function filterByAttributeType(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
     {
-        $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
-        $types = array_keys($this->getMetadata()->get(['attributes'], []));
-        $types = implode("','", $types);
+        $connection = $this->getEntityManager()->getConnection();
 
-        if (!isset($selectParams['customWhere'])) {
-            $selectParams['customWhere'] = '';
-        }
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $attributeTypes = array_keys($this->getMetadata()->get('attributes'));
 
-        // add filtering by attributes types
-        $selectParams['customWhere'] .= " 
-            AND classification_attribute.attribute_id IN (SELECT id 
-                                                            FROM attribute 
-                                                            WHERE type IN ('{$types}') AND deleted=0)";
-
-        return $selectParams;
+        $qb->andWhere("{$tableAlias}.attribute_id IN (SELECT a.id FROM {$connection->quoteIdentifier('attribute')} a WHERE a.type IN (:attributeTypes) AND deleted=:false)");
+        $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
+
+    public function applyAdditional(array &$result, array $params)
+    {
+        parent::applyAdditional($result, $params);
+
+        $result['callbacks'][] = [$this, 'filterByAttributeType'];
+    }
+
     /**
      * @param array $result
      */

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Relationship;
 use Espo\ORM\Entity;
@@ -86,27 +88,22 @@ class ClassificationAttribute extends Relationship
     {
         try {
             $result = parent::save($entity, $options);
-        } catch (\Throwable $e) {
-            // if duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                if ($entity->isNew()) {
-                    return $this->getDuplicateEntity($entity);
-                }
-                $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
-                $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
+        } catch (UniqueConstraintViolationException $e) {
+            if ($entity->isNew()) {
+                return $this->getDuplicateEntity($entity);
+            }
+            $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
+            $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
 
-                $channelName = $entity->get('scope');
-                if ($channelName === 'Channel') {
-                    $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
-                    $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
-                }
-
-                throw new ClassificationAttributeAlreadyExists(
-                    sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, "'$channelName'")
-                );
+            $channelName = $entity->get('scope');
+            if ($channelName === 'Channel') {
+                $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+                $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 
-            throw $e;
+            throw new ClassificationAttributeAlreadyExists(
+                sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, "'$channelName'")
+            );
         }
 
         return $result;
@@ -127,34 +124,17 @@ class ClassificationAttribute extends Relationship
             ->findOne(['withDeleted' => $deleted]);
     }
 
-    public function remove(Entity $entity, array $options = [])
-    {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (\Throwable $e) {
-            // delete duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                    $this->deleteFromDb($toDelete->get('id'), true);
-                }
-                return parent::remove($entity, $options);
-            }
-            throw $e;
-        }
-
-        return $result;
-    }
-
     public function getProductChannelsViaClassificationId(string $classificationId): array
     {
-        $classificationId = $this->getPDO()->quote($classificationId);
-
-        $sql = "SELECT p.id
-                FROM product p 
-                LEFT JOIN product_classification pcl on p.id = pcl.product_id AND pcl.deleted = 0 
-                WHERE pcl.classification_id=$classificationId AND p.deleted = 0";
-
-        return $this->getPDO()->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+        return $this->getConnection()->createQueryBuilder()
+            ->select('p.id')
+            ->from($this->getConnection()->quoteIdentifier('product'), 'p')
+            ->leftJoin('p', 'product_classification', 'pcl', 'p.id = pcl.product_id AND pcl.deleted = :false')
+            ->andWhere('pcl.classification_id = :id')
+            ->andWhere('p.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('id', $classificationId)
+            ->fetchAllAssociative();
     }
 
     /**

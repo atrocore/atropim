@@ -135,11 +135,6 @@ class Event extends AfterInstallAfterDelete
         $config->set('quickCreateList', $quickCreateList);
         $config->set('twoLevelTabList', $twoLevelTabList);
 
-        // set application name
-        if (in_array($config->get('applicationName'), ['AtroCORE', 'AtroDAM'])) {
-            $config->set('applicationName', 'AtroPIM');
-        }
-
         // save
         $config->save();
     }

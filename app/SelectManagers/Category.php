@@ -13,28 +13,39 @@ declare(strict_types=1);
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class of Category
- */
 class Category extends AbstractSelectManager
 {
-    /**
-     * @inheritDoc
-     */
+    public function addChildrenCount(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
+    {
+        if (!empty($params['aggregation'])) {
+            return;
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $queryConverter = $mapper->getQueryConverter();
+
+        $tableAlias = $queryConverter->getMainTableAlias();
+        $fieldAlias = $queryConverter->fieldToAlias('childrenCount');
+
+        $qb->add(
+            'select',
+            ["(SELECT COUNT(c1.id) FROM {$connection->quoteIdentifier('category')}  AS c1 WHERE c1.category_parent_id={$tableAlias}.id AND c1.deleted=:false) as $fieldAlias"], true
+        );
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+    }
+
     public function applyAdditional(array &$result, array $params)
     {
-        // prepare additional select columns
-        $additionalSelectColumns = [
-            'childrenCount' => '(SELECT COUNT(c1.id) FROM category AS c1 WHERE c1.category_parent_id=category.id AND c1.deleted=0)'
-        ];
+        parent::applyAdditional($result, $params);
 
-        // add additional select columns
-        foreach ($additionalSelectColumns as $alias => $sql) {
-            $result['additionalSelectColumns'][$sql] = $alias;
-        }
+        $result['callbacks'][] = [$this, 'addChildrenCount'];
     }
 
     protected function boolFilterNotParents(&$result): void
@@ -93,23 +104,33 @@ class Category extends AbstractSelectManager
             return;
         }
 
+        $connection = $this->getEntityManager()->getConnection();
+
         if (empty($catalogId)) {
+            $rows = $connection->createQueryBuilder()
+                ->select('category_id')
+                ->from('catalog_category')
+                ->where('deleted = :false')
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->fetchAllAssociative();
+
             $result['whereClause'][] = [
-                'id!=' => $this
-                    ->getEntityManager()
-                    ->getPDO()
-                    ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0")
-                    ->fetchAll(\PDO::FETCH_COLUMN)
+                'id!=' => array_column($rows, 'category_id')
             ];
             return;
         }
 
+        $rows = $connection->createQueryBuilder()
+            ->select('category_id')
+            ->from('catalog_category')
+            ->where('deleted = :false')
+            ->andWhere('catalog_id = :catalogId')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('catalogId', $catalogId)
+            ->fetchAllAssociative();
+
         $result['whereClause'][] = [
-            'id' => $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query("SELECT category_id FROM `catalog_category` WHERE deleted=0 AND catalog_id=" . $this->getEntityManager()->getPDO()->quote($catalogId))
-                ->fetchAll(\PDO::FETCH_COLUMN)
+            'id' => array_column($rows, 'category_id')
         ];
     }
 

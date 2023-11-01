@@ -15,51 +15,49 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Core\EventManager\Event;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Pim\Core\ValueConverter;
 
-/**
- * Class Product
- */
 class Product extends Hierarchy
 {
     public function getProductsIdsViaAccountId(string $accountId): array
     {
-        $accountId = $this->getPDO()->quote($accountId);
-        $query = "SELECT DISTINCT p.id 
-                  FROM `product_channel` pc 
-                  JOIN `product` p ON pc.product_id=p.id AND p.deleted=0 
-                  JOIN `channel` c ON pc.channel_id=c.id AND c.deleted=0
-                  JOIN `account` a ON a.channel_id=c.id AND a.deleted=0
-                  WHERE pc.deleted=0 AND a.id=$accountId";
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('p.id')
+            ->distinct()
+            ->from($this->getConnection()->quoteIdentifier('product_channel'), 'pc')
+            ->innerJoin('pc', $this->getConnection()->quoteIdentifier('product'), 'p', 'pc.product_id=p.id AND p.deleted=:false')
+            ->innerJoin('pc', $this->getConnection()->quoteIdentifier('channel'), 'c', 'pc.channel_id=c.id AND c.deleted=:false')
+            ->innerJoin('pc', $this->getConnection()->quoteIdentifier('account'), 'a', 'a.channel_id=c.id AND a.deleted=:false')
+            ->where('pc.deleted=:false')
+            ->andWhere('a.id=:id')
+            ->setParameter('id', $accountId)
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
 
-        return $this
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        return array_column($res, 'id');
     }
 
     public function getCategoriesChannelsIds(string $productId): array
     {
-        $productId = $this->getPDO()->quote($productId);
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('cc.channel_id')
+            ->from($this->getConnection()->quoteIdentifier('category_channel'), 'cc')
+            ->where('cc.deleted=:false')
+            ->andWhere(
+                "cc.category_id IN (SELECT pc.category_id FROM {$this->getConnection()->quoteIdentifier('product_category')} pc WHERE pc.deleted=:false AND pc.product_id=:productId)"
+            )
+            ->setParameter('productId', $productId)
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
 
-        $query = "SELECT channel_id 
-                  FROM `category_channel` 
-                  WHERE deleted=0 
-                    AND category_id IN (SELECT category_id FROM `product_category` WHERE deleted=0 AND product_id=$productId)";
-
-        return $this
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        return array_column($res, 'channel_id');
     }
 
-    /**
-     * @return array
-     */
     public function getInputLanguageList(): array
     {
         return $this->getConfig()->get('inputLanguageList', []);
@@ -67,16 +65,17 @@ class Product extends Hierarchy
 
     public function unlinkProductsFromNonLeafCategories(): void
     {
-        $data = $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "SELECT product_id as productId, category_id as categoryId FROM product_category WHERE category_id IN (SELECT DISTINCT category_parent_id FROM category WHERE category_parent_id IS NOT NULL AND deleted=0) AND deleted=0"
-            )
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $this->getConnection()->createQueryBuilder()
+            ->select('product_id, category_id')
+            ->from('product_category')
+            ->where('category_id IN (SELECT DISTINCT category_parent_id FROM category WHERE category_parent_id IS NOT NULL AND deleted=:false)')
+            ->andWhere('deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
 
         foreach ($data as $row) {
-            $product = $this->get($row['productId']);
-            $category = $this->getEntityManager()->getRepository('Category')->get($row['categoryId']);
+            $product = $this->get($row['product_id']);
+            $category = $this->getEntityManager()->getRepository('Category')->get($row['category_id']);
             if (!empty($product) && !empty($category)) {
                 $this->unrelate($product, 'categories', $category);
             }
@@ -152,23 +151,18 @@ class Product extends Hierarchy
         return true;
     }
 
-    /**
-     * @param array $productsIds
-     * @param array $categoriesIds
-     *
-     * @return array
-     */
     public function getProductCategoryLinkData(array $productsIds, array $categoriesIds): array
     {
-        $productsIds = implode("','", $productsIds);
-        $categoriesIds = implode("','", $categoriesIds);
-
-        return $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "SELECT * FROM product_category WHERE product_id IN ('$productsIds') AND category_id IN ('$categoriesIds') AND deleted=0"
-            )
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->getConnection()->createQueryBuilder()
+            ->select('pc.*')
+            ->from($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+            ->where('pc.product_id IN (:productsIds)')
+            ->andWhere('pc.category_id IN (:categoriesIds)')
+            ->andWhere('pc.deleted = :false')
+            ->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds))
+            ->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds))
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
     }
 
     /**
@@ -198,31 +192,49 @@ class Product extends Hierarchy
         }
 
         // update current
-        $this
-            ->getEntityManager()
-            ->nativeQuery("UPDATE product_category SET sorting='$sorting' WHERE category_id='$categoryId' AND product_id='$productId' AND deleted=0");
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+            ->set('sorting', ':sorting')
+            ->where('pc.category_id = :categoryId')
+            ->andWhere('pc.product_id = :productId')
+            ->andWhere('pc.deleted = :false')
+            ->setParameter('sorting', $sorting, Mapper::getParameterType($sorting))
+            ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
+            ->setParameter('productId', $productId, Mapper::getParameterType($productId))
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->executeQuery();
 
         if ($cascadeUpdate) {
             // get next records
-            $ids = $this
-                ->getEntityManager()
-                ->nativeQuery("SELECT id FROM product_category WHERE sorting>='$sorting' AND category_id='$categoryId' AND deleted=0 AND product_id!='$productId' ORDER BY sorting")
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('pc.id')
+                ->from($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                ->where('pc.sorting >= :sorting')
+                ->andWhere('pc.category_id = :categoryId')
+                ->andWhere('pc.deleted = :false')
+                ->andWhere('pc.product_id != :productId')
+                ->setParameter('sorting', $sorting, Mapper::getParameterType($sorting))
+                ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
+                ->setParameter('productId', $productId, Mapper::getParameterType($productId))
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->orderBy('pc.sorting', 'ASC')
+                ->fetchAllAssociative();
+
+            $ids = array_column($res, 'id');
 
             // update next records
             if (!empty($ids)) {
-                // prepare sql
-                $sql = '';
                 foreach ($ids as $id) {
-                    // increase max
                     $max = $max + 10;
 
-                    // prepare sql
-                    $sql .= "UPDATE product_category SET sorting='$max' WHERE id='$id';";
+                    $this->getConnection()->createQueryBuilder()
+                        ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                        ->set('sorting', ':sorting')
+                        ->where('pc.id = :id')
+                        ->setParameter('sorting', $max, Mapper::getParameterType($max))
+                        ->setParameter('id', $id, Mapper::getParameterType($id))
+                        ->executeQuery();
                 }
-
-                // execute sql
-                $this->getEntityManager()->nativeQuery($sql);
             }
         }
     }
@@ -292,12 +304,20 @@ class Product extends Hierarchy
      */
     public function updateSortOrderInCategory(string $categoryId, array $ids): void
     {
-        $categoryId = $this->getPDO()->quote($categoryId);
-
         foreach ($ids as $k => $id) {
-            $id = $this->getPDO()->quote($id);
             $sortOrder = (int)$k * 10;
-            $this->getPDO()->exec("UPDATE `product_category` SET sorting=$sortOrder WHERE product_id=$id AND category_id=$categoryId AND deleted=0");
+
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                ->set('sorting', ':sorting')
+                ->where('pc.product_id = :productId')
+                ->andWhere('pc.category_id = :categoryId')
+                ->andWhere('pc.deleted = :false')
+                ->setParameter('sorting', $sortOrder, Mapper::getParameterType($sortOrder))
+                ->setParameter('productId', $id, Mapper::getParameterType($id))
+                ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->executeQuery();
         }
     }
 
@@ -407,13 +427,24 @@ class Product extends Hierarchy
 
     public function getProductsHierarchyMap(array $productIds): array
     {
-        $query = "SELECT entity_id AS childId, parent_id AS parentId
-                FROM product_hierarchy
-                WHERE entity_id IN ('" . implode("','", $productIds) . "') and deleted = 0";
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('t.entity_id, t.parent_id')
+            ->from($this->getConnection()->quoteIdentifier('product_hierarchy'), 't')
+            ->where('t.entity_id IN (:ids)')
+            ->andWhere('t.deleted = :false')
+            ->setParameter('ids', $productIds, Mapper::getParameterType($productIds))
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
 
-        $result = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($res as $row) {
+            $result[] = [
+                'childId'   => $row['entity_id'],
+                'parent_id' => $row['parentId']
+            ];
+        }
 
-        return empty($result) ? [] : $result;
+        return $result;
     }
 
     public function relateClassification($product, $classification): void
