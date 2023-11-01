@@ -184,11 +184,12 @@ class Attribute extends Hierarchy
                 $this->getInjection('container')->get($converterName)->convert($entity);
             }
 
-            if (!$entity->isNew() && $entity->isAttributeChanged('measureId') && empty($entity->get('measureId'))) {
+            if (!$entity->isNew() && $entity->isAttributeChanged('measureId')) {
                 $this->getConnection()->createQueryBuilder()
                     ->update('product_attribute_value')
-                    ->set('sort_order_in_attribute_group', null)
+                    ->set('reference_value', ':null')
                     ->where('attribute_id = :id')
+                    ->setParameter('null', null)
                     ->setParameter('id', $entity->get('id'))
                     ->executeQuery();
             }
