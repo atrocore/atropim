@@ -245,6 +245,10 @@ class ProductAttributeValue extends Relationship
         switch ($pav1->get('attributeType')) {
             case 'array':
             case 'extensibleMultiEnum':
+                $val1 = @json_decode((string)$pav1->get('textValue'), true);
+                $val2 = @json_decode((string)$pav2->get('textValue'), true);
+                $result = Entity::areValuesEqual(Entity::TEXT, $val1 ?? [], $val2 ?? []);
+                break;
             case 'text':
             case 'wysiwyg':
                 $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
