@@ -66,25 +66,39 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         createProductAttributeValue(selectObj) {
-            let promises = [];
-            selectObj.forEach(item => {
-                this.getModelFactory().create(this.scope, model => {
-                    let attributes = {
-                        productId: this.model.get('id'),
-                        attributeId: item.id,
-                        assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name')
-                    };
+            Promise.resolve()
+                .then(() => {
+                    if (Array.isArray(selectObj)) {
+                        return Promise.resolve(selectObj)
+                    }
+                    return new Promise((resolve, reject) => {
+                        this.getFullEntityList('Attribute', selectObj, (items) => resolve(items))
+                    })
+                })
+                .then(items => {
+                    let promises = [];
+                    items.forEach(item => {
+                        this.getModelFactory().create(this.scope, model => {
+                            let attributes = {
+                                productId: this.model.get('id'),
+                                attributeId: item.id,
+                                assignedUserId: this.getUser().id,
+                                assignedUserName: this.getUser().get('name')
+                            };
 
-                    model.set(attributes);
-                    promises.push(model.save());
-                });
-            });
-            Promise.all(promises).then(() => {
-                this.notify('Linked', 'success');
-                this.model.trigger('after:relate', this.link, this.defs);
-                this.actionRefresh();
-            });
+                            model.set(attributes);
+                            promises.push(model.save());
+                        });
+                    });
+                    Promise.all(promises)
+                        .then(() => {
+                            this.notify('Linked', 'success');
+                        })
+                        .finally(() => {
+                            this.model.trigger('after:relate', this.link, this.defs);
+                            this.actionRefresh();
+                        });
+                })
         },
         getFullEntityList(url, params, callback, container) {
             if (url) {
@@ -131,33 +145,42 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 this.notify(false);
                 dialog.once('select', selectObj => {
                     this.notify('Loading...');
-                    if (!Array.isArray(selectObj)) {
-                        return;
-                    }
-                    let boolFilterList = this.getSelectBoolFilterList() || [];
-                    this.getFullEntityList('Attribute', {
-                        where: [
-                            {
-                                type: 'bool',
-                                value: boolFilterList,
-                                data: this.getSelectBoolFilterData(boolFilterList)
-                            },
-                            {
-                                attribute: 'attributeGroupId',
-                                type: 'in',
-                                value: selectObj.map(model => model.id)
+
+                    Promise.resolve()
+                        .then(() => {
+                            if (Array.isArray(selectObj)) {
+                                return Promise.resolve(selectObj)
                             }
-                        ]
-                    }, list => {
-                        let models = [];
-                        list.forEach(attributes => {
-                            this.getModelFactory().create('Attribute', model => {
-                                model.set(attributes);
-                                models.push(model);
+                            return new Promise((resolve, reject) => {
+                                this.getFullEntityList(scope, selectObj, (items) => resolve(items))
+                            })
+                        })
+                        .then((items)=> {
+                            let boolFilterList = this.getSelectBoolFilterList() || [];
+                            this.getFullEntityList('Attribute', {
+                                where: [
+                                    {
+                                        type: 'bool',
+                                        value: boolFilterList,
+                                        data: this.getSelectBoolFilterData(boolFilterList)
+                                    },
+                                    {
+                                        attribute: 'attributeGroupId',
+                                        type: 'in',
+                                        value: items.map(model => model.id)
+                                    }
+                                ]
+                            }, list => {
+                                let models = [];
+                                list.forEach(attributes => {
+                                    this.getModelFactory().create('Attribute', model => {
+                                        model.set(attributes);
+                                        models.push(model);
+                                    });
+                                });
+                                this.createProductAttributeValue(models);
                             });
-                        });
-                        this.createProductAttributeValue(models);
-                    });
+                        })
                 });
             });
         },
