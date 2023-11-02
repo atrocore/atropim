@@ -134,7 +134,7 @@ class ClassificationAttribute extends Relationship
             ->andWhere('p.deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->setParameter('id', $classificationId)
-            ->fetchAllAssociative();
+            ->fetchFirstColumn();
     }
 
     /**
