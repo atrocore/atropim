@@ -22,8 +22,8 @@ class ClassificationAttribute extends Relationship
 
     public function getAttributeType($attribute)
     {
-        if ($attribute === 'textValue') {
-            if ($this->has('attributeId') && !empty($attribute = $this->get('attribute'))) {
+        if ($attribute === 'textValue' && $this->has('attributeId')) {
+            if (!empty($attribute = $this->get('attribute'))) {
                 if (in_array($attribute->get('type'), ['array', 'extensibleMultiEnum'])) {
                     return IEntity::JSON_ARRAY;
                 }
