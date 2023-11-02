@@ -86,18 +86,24 @@ class ClassificationAttribute extends Relationship
 
     public function save(Entity $entity, array $options = [])
     {
+        $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
+        if ($entity->get('scope') === 'Channel') {
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+        }
+
+        if ($entity->isNew()) {
+            $duplicate = $this->getDuplicateEntity($entity);
+            if (!empty($duplicate)) {
+                return $duplicate;
+            }
+        }
+
         try {
             $result = parent::save($entity, $options);
         } catch (UniqueConstraintViolationException $e) {
-            if ($entity->isNew()) {
-                return $this->getDuplicateEntity($entity);
-            }
-            $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
             $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
-
             $channelName = $entity->get('scope');
             if ($channelName === 'Channel') {
-                $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
                 $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 

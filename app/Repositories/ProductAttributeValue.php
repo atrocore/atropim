@@ -423,6 +423,11 @@ class ProductAttributeValue extends Relationship
             $inTransaction = true;
         }
 
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+        if ($entity->get('scope') === 'Channel') {
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+        }
+
         try {
             $result = parent::save($entity, $options);
             if (!empty($inTransaction)) {
@@ -433,12 +438,9 @@ class ProductAttributeValue extends Relationship
                 $this->getPDO()->rollBack();
             }
 
-            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
             $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
-
             $channelName = $entity->get('scope');
-            if ($channelName === 'Channel') {
-                $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+            if ($entity->get('scope') === 'Channel') {
                 $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 
