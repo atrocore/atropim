@@ -20,6 +20,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
@@ -137,11 +138,13 @@ class ProductAttributeValue extends Relationship
             ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
             ->where('pav.deleted = :false')
             ->andWhere('pav.product_id IN (:productsIds)')
+            ->andWhere('pav.attribute_id = :attributeId')
             ->andWhere('pav.language = :language')
             ->andWhere('pav.scope = :scope')
             ->andWhere('pav.is_variant_specific_attribute = :isVariantSpecificAttribute')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
+            ->setParameter('attributeId', $pav->get('attributeId'))
             ->setParameter('language', $pav->get('language'))
             ->setParameter('scope', $pav->get('scope'))
             ->setParameter('isVariantSpecificAttribute', $pav->get('isVariantSpecificAttribute'), ParameterType::BOOLEAN);
@@ -420,6 +423,11 @@ class ProductAttributeValue extends Relationship
             $inTransaction = true;
         }
 
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+        if ($entity->get('scope') === 'Channel') {
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+        }
+
         try {
             $result = parent::save($entity, $options);
             if (!empty($inTransaction)) {
@@ -430,12 +438,9 @@ class ProductAttributeValue extends Relationship
                 $this->getPDO()->rollBack();
             }
 
-            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
             $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
-
             $channelName = $entity->get('scope');
-            if ($channelName === 'Channel') {
-                $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+            if ($entity->get('scope') === 'Channel') {
                 $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 

@@ -75,16 +75,11 @@ class Classification extends Hierarchy
 
     public function remove(Entity $entity, array $options = [])
     {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (UniqueConstraintViolationException $e) {
-            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                $this->deleteFromDb($toDelete->get('id'), true);
-            }
-            return parent::remove($entity, $options);
+        if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+            $this->deleteFromDb($toDelete->get('id'), true);
         }
 
-        return $result;
+        return parent::remove($entity, $options);
     }
 
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
