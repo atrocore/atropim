@@ -199,10 +199,10 @@ class ProductAttributeValue extends Relationship
     public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
     {
         $where = [
-            'productId' => $childProduct->get('id'),
-            'attributeId' => $parentPav->get('attributeId'),
-            'language' => $parentPav->get('language'),
-            'scope' => $parentPav->get('scope'),
+            'productId'                  => $childProduct->get('id'),
+            'attributeId'                => $parentPav->get('attributeId'),
+            'language'                   => $parentPav->get('language'),
+            'scope'                      => $parentPav->get('scope'),
             'isVariantSpecificAttribute' => $parentPav->get('isVariantSpecificAttribute'),
         ];
 
@@ -466,12 +466,12 @@ class ProductAttributeValue extends Relationship
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         $where = [
-            'id!=' => $entity->get('id'),
-            'language' => $entity->get('language'),
-            'productId' => $entity->get('productId'),
+            'id!='        => $entity->get('id'),
+            'language'    => $entity->get('language'),
+            'productId'   => $entity->get('productId'),
             'attributeId' => $entity->get('attributeId'),
-            'scope' => $entity->get('scope'),
-            'deleted' => $deleted,
+            'scope'       => $entity->get('scope'),
+            'deleted'     => $deleted,
         ];
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
@@ -593,10 +593,10 @@ class ProductAttributeValue extends Relationship
          */
         if (!$entity->isNew() && $attribute->get('unique') && $entity->isAttributeChanged('value')) {
             $where = [
-                'id!=' => $entity->id,
-                'language' => $entity->get('language'),
-                'attributeId' => $entity->get('attributeId'),
-                'scope' => $entity->get('scope'),
+                'id!='            => $entity->id,
+                'language'        => $entity->get('language'),
+                'attributeId'     => $entity->get('attributeId'),
+                'scope'           => $entity->get('scope'),
                 'product.deleted' => false
             ];
 
@@ -681,9 +681,9 @@ class ProductAttributeValue extends Relationship
             ->set('modified_at', ':modifiedAt')
             ->set('modified_by_id', ':modifiedById')
             ->where('p.id = :productId')->setParameters([
-                'modifiedAt' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
                 'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
-                'productId' => $entity->get('productId')
+                'productId'    => $entity->get('productId')
             ])
             ->executeQuery();
     }
@@ -737,7 +737,7 @@ class ProductAttributeValue extends Relationship
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
                         ->where([
-                            'id' => $id,
+                            'id'               => $id,
                             'extensibleEnumId' => $attribute->get('extensibleEnumId') ?? 'no-such-measure'
                         ])
                         ->findOne();
@@ -752,7 +752,7 @@ class ProductAttributeValue extends Relationship
                     $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
                         ->where([
-                            'id' => $ids,
+                            'id'               => $ids,
                             'extensibleEnumId' => $attribute->get('extensibleEnumId') ?? 'no-such-measure'
                         ])
                         ->find();
@@ -800,7 +800,7 @@ class ProductAttributeValue extends Relationship
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->select(['id'])
                 ->where([
-                    'id' => $entity->get('referenceValue'),
+                    'id'        => $entity->get('referenceValue'),
                     'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
                 ])
                 ->findOne();
@@ -908,7 +908,7 @@ class ProductAttributeValue extends Relationship
         }
 
         $result = [
-            'id' => $entity->get('id'),
+            'id'     => $entity->get('id'),
             'locale' => $entity->get('language') !== 'main' ? $entity->get('language') : '',
             'fields' => []
         ];
