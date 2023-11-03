@@ -591,9 +591,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         } else {
             $selectParams = $this->getSelectManagerFactory()->create('AttributeGroup')->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository('AttributeGroup')->handleSelectParams($selectParams);
-            $attributes = $this->getEntityManager()->getRepository('AttributeGroup')->find(array_merge($selectParams, ['select' => ['id']]))->toArray();
+            $groups = $this->getEntityManager()->getRepository('AttributeGroup')->find(array_merge($selectParams, ['select' => ['id']]))->toArray();
 
-            $ids = array_column($attributes, 'id');
+            $ids = array_column($groups, 'id');
         }
 
         $params['attributeWhere'][] = [
