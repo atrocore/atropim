@@ -66,59 +66,28 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         createProductAttributeValue(selectObj) {
-            Promise.resolve()
-                .then(() => {
-                    if (Array.isArray(selectObj)) {
-                        return Promise.resolve(selectObj)
-                    }
-                    return new Promise((resolve, reject) => {
-                        this.getFullEntityList('Attribute', selectObj, (items) => resolve(items))
-                    })
-                })
-                .then(items => {
-                    let promises = [];
-                    items.forEach(item => {
-                        this.getModelFactory().create(this.scope, model => {
-                            let attributes = {
-                                productId: this.model.get('id'),
-                                attributeId: item.id,
-                                assignedUserId: this.getUser().id,
-                                assignedUserName: this.getUser().get('name')
-                            };
-
-                            model.set(attributes);
-                            promises.push(model.save());
-                        });
-                    });
-                    Promise.all(promises)
-                        .then(() => {
-                            this.notify('Linked', 'success');
-                        })
-                        .finally(() => {
-                            this.model.trigger('after:relate', this.link, this.defs);
-                            this.actionRefresh();
-                        });
-                })
-        },
-        getFullEntityList(url, params, callback, container) {
-            if (url) {
-                container = container || [];
-
-                let options = params || {};
-                options.maxSize = options.maxSize || 200;
-                options.offset = options.offset || 0;
-
-                this.ajaxGetRequest(url, options).then(response => {
-                    container = container.concat(response.list || []);
-                    options.offset = container.length;
-                    if (response.total > container.length || response.total === -1) {
-                        this.getFullEntity(url, options, callback, container);
-                    } else {
-                        callback(container);
-                    }
-                });
+            const data = {
+                productId: this.model.get('id')
             }
+            if (Array.isArray(selectObj)) {
+                data.ids = selectObj.map(o => o.id)
+            } else {
+                data.where = selectObj.where
+            }
+
+            $.ajax({
+                url: `ProductAttributeValue/action/selectAttribute`,
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: (resp) => {
+                    this.notify(resp.message, 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:unrelate', this.link, this.defs);
+                }
+            });
         },
+
         actionSelectGroup() {
             const scope = 'AttributeGroup';
             const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
@@ -146,41 +115,33 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 dialog.once('select', selectObj => {
                     this.notify('Loading...');
 
-                    Promise.resolve()
-                        .then(() => {
-                            if (Array.isArray(selectObj)) {
-                                return Promise.resolve(selectObj)
-                            }
-                            return new Promise((resolve, reject) => {
-                                this.getFullEntityList(scope, selectObj, (items) => resolve(items))
-                            })
-                        })
-                        .then((items)=> {
-                            let boolFilterList = this.getSelectBoolFilterList() || [];
-                            this.getFullEntityList('Attribute', {
-                                where: [
-                                    {
-                                        type: 'bool',
-                                        value: boolFilterList,
-                                        data: this.getSelectBoolFilterData(boolFilterList)
-                                    },
-                                    {
-                                        attribute: 'attributeGroupId',
-                                        type: 'in',
-                                        value: items.map(model => model.id)
-                                    }
-                                ]
-                            }, list => {
-                                let models = [];
-                                list.forEach(attributes => {
-                                    this.getModelFactory().create('Attribute', model => {
-                                        model.set(attributes);
-                                        models.push(model);
-                                    });
-                                });
-                                this.createProductAttributeValue(models);
-                            });
-                        })
+                    const boolFilterList = this.getSelectBoolFilterList() || [];
+                    const data = {
+                        productId: this.model.get('id'),
+                        attributeWhere: [
+                            {
+                                type: 'bool',
+                                value: boolFilterList,
+                                data: this.getSelectBoolFilterData(boolFilterList)
+                            }]
+                    }
+                    if (Array.isArray(selectObj)) {
+                        data.ids = selectObj.map(o => o.id)
+                    } else {
+                        data.where = selectObj.where
+                    }
+
+                    $.ajax({
+                        url: `ProductAttributeValue/action/selectAttributeGroup`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: (resp) => {
+                            this.notify(resp.message, 'success');
+                            this.collection.fetch();
+                            this.model.trigger('after:unrelate', this.link, this.defs);
+                        }
+                    });
                 });
             });
         },
