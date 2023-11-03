@@ -494,20 +494,10 @@ class Product extends Hierarchy
                 ]
             );
 
-            if (!$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
-                $productAttributeValue->set(
-                    [
-                        'assignedUserId' => $product->get('assignedUserId'),
-                        'ownerUserId'    => $product->get('ownerUserId'),
-                        'teamsIds'       => $product->get('teamsIds')
-                    ]
-                );
-            }
-
             $productAttributeValue->clearCompletenessFields = true;
 
             try {
-                $this->getEntityManager()->saveEntity($productAttributeValue);
+                $this->getEntityManager()->saveEntity($productAttributeValue, ['ignoreDuplicate' => true]);
             } catch (BadRequest $e) {
             }
         }
