@@ -553,6 +553,58 @@ class ProductAttributeValue extends AbstractProductAttributeService
         return $result;
     }
 
+    public function linkAttribute(array $params, string $productId): array
+    {
+        if (isset($params['ids'])) {
+            $ids = $params['ids'];
+        } else {
+            $selectParams = $this->getSelectManagerFactory()->create('Attribute')->getSelectParams(['where' => $params['where']]);
+            $this->getEntityManager()->getRepository('Attribute')->handleSelectParams($selectParams);
+            $attributes = $this->getEntityManager()->getRepository('Attribute')->find(array_merge($selectParams, ['select' => ['id']]))->toArray();
+
+            $ids = array_column($attributes, 'id');
+        }
+
+        $success = 0;
+
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $pav = new \stdClass();
+                $pav->productId = $productId;
+                $pav->attributeId = $id;
+                try {
+                    $this->createEntity($pav);
+                    $success++;
+                } catch (\Exception $e) {
+                    // ignore
+                }
+            }
+        }
+
+        return ['message' => str_replace('{count}', $success . '', $this->getInjection('language')->translate('countOfLinkedAttributes', 'labels', 'ProductAttributeValue'))];
+    }
+
+    public function linkAttributeGroup(array $params, string $productId): array
+    {
+        if (isset($params['ids'])) {
+            $ids = $params['ids'];
+        } else {
+            $selectParams = $this->getSelectManagerFactory()->create('AttributeGroup')->getSelectParams(['where' => $params['where']]);
+            $this->getEntityManager()->getRepository('AttributeGroup')->handleSelectParams($selectParams);
+            $attributes = $this->getEntityManager()->getRepository('AttributeGroup')->find(array_merge($selectParams, ['select' => ['id']]))->toArray();
+
+            $ids = array_column($attributes, 'id');
+        }
+
+        $params['attributeWhere'][] = [
+            'type'      => 'in',
+            'attribute' => 'attributeGroupId',
+            'value'     => $ids
+        ];
+
+        return $this->linkAttribute(['where' => $params['attributeWhere']], $productId);
+    }
+
     /**
      * @param string $attributeGroupId
      *

@@ -41,7 +41,8 @@
   },
   "labels": {
     "Create ProductAttributeValue": "Produktattributwert erstellen",
-    "cannotLinkDefaultChannel": "Der Standardkanal '{channel}' für das ausgewählte Attribut ist nicht mit diesem Produkt verknüpft."
+    "cannotLinkDefaultChannel": "Der Standardkanal '{channel}' für das ausgewählte Attribut ist nicht mit diesem Produkt verknüpft.",
+    "countOfLinkedAttributes": "Anzahl der verknüpften Attribute: {count}"
   },
   "exceptions": {
     "attributeUnitValueIsRequired": "Die Einheit für das Attribut '%s' erforderlich.",
