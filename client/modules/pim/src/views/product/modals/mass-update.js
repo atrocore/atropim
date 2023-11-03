@@ -192,8 +192,6 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         attribute['valueTranslate'] = data[name + 'Translate']
                     }
 
-                    console.log(data, name, attribute)
-
                     result.panelsData.productAttributeValues.push(attribute);
                 }.bind(this));
             }
