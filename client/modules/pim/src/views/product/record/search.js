@@ -160,7 +160,7 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
         },
 
         addFilter(name, params, callback) {
-            if (params.fieldParams && params.fieldParams.isAttribute && !params.fieldParams.processed && ['rangeFloat', 'rangeInt', 'int', 'float'].indexOf(params.fieldParams.type) >= 0) {
+            if (params.fieldParams && params.fieldParams.isAttribute && !params.fieldParams.processed && ['rangeFloat', 'rangeInt', 'int', 'float', 'varchar'].indexOf(params.fieldParams.type) >= 0) {
                 const measureId = this.getAttribute(name)?.measureId
                 params.fieldParams.processed = true
                 const fieldType = params.fieldParams.type;
