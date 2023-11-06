@@ -185,7 +185,7 @@ class Product extends Hierarchy
             $pavs = new EntityCollection();
 
             // For Mass Update
-            if (property_exists($data, 'massUpdateData')) {
+            if (property_exists($data, '_isMassUpdate')) {
                 $attributeIds = array_column((array)$data->panelsData->productAttributeValues, 'attributeId');
                 $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
 

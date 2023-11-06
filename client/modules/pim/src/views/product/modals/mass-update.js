@@ -122,7 +122,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
                 if (attr.measureId) {
                     options.params.measureId = attr.measureId;
-                    if (['int', 'float'].includes(type)) {
+                    if (['int', 'float', 'varchar'].includes(type)) {
                         viewName = "views/fields/unit-" + type;
                     }
                 }
@@ -160,7 +160,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
                 this.attributeList.forEach(function (item) {
                     let view = this.getView(item.name),
-                        name = view.name,
+                        name = view.originalName || view.name,
                         data = view.fetch();
 
                     let attribute = {
