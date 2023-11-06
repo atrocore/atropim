@@ -13,7 +13,7 @@ namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot9Dot62 extends Base
+class V1Dot10Dot1 extends Base
 {
     public function up(): void
     {
@@ -26,7 +26,7 @@ class V1Dot9Dot62 extends Base
         $this->exec("UPDATE classification_attribute inner join attribute a on classification_attribute.attribute_id = a.id set reference_value = varchar_value where a.type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
         $this->exec("UPDATE classification_attribute inner join attribute a on classification_attribute.attribute_id = a.id set varchar_value = null where a.type in ('int','float','rangeInt','rangeFloat','asset','link','extensibleEnum')");
 
-        $this->updateComposer("atrocore/pim", "^1.9.62");
+        $this->updateComposer("atrocore/pim", "^1.10.1");
     }
 
     public function down(): void
