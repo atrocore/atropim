@@ -629,11 +629,6 @@ class Product extends Hierarchy
         }
 
         $foreignEntityName = 'ProductAttributeValue';
-
-        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
-            throw new Forbidden();
-        }
-
         $link = 'productAttributeValues';
 
         if (!empty($params['maxSize'])) {
@@ -654,14 +649,18 @@ class Product extends Hierarchy
          */
         $selectAttributeList = $recordService->getSelectAttributeList($params);
         if ($selectAttributeList) {
-            $selectAttributeList[] = 'ownerUserId';
-            $selectAttributeList[] = 'assignedUserId';
             $selectParams['select'] = array_unique($selectAttributeList);
         }
 
-        $collection = $this->getEntityManager()->getRepository('Product')->findRelated($entity, $link, $selectParams);
-        $recordService->prepareCollectionForOutput($collection);
-        foreach ($collection as $e) {
+        $pavs = $this->getEntityManager()->getRepository('Product')->findRelated($entity, $link, $selectParams);
+        $collection = new EntityCollection();
+
+        $recordService->prepareCollectionForOutput($pavs);
+        foreach ($pavs as $e) {
+            if (!$this->getAcl()->check($e, 'read')) {
+                continue;
+            }
+
             $recordService->loadAdditionalFieldsForList($e);
             if (!empty($params['loadAdditionalFields'])) {
                 $recordService->loadAdditionalFields($e);
@@ -670,6 +669,8 @@ class Product extends Hierarchy
                 $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
             }
             $recordService->prepareEntityForOutput($e);
+
+            $collection->append($e);
         }
 
         $collection = $this->preparePavsForOutput($collection);

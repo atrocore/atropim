@@ -357,7 +357,7 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        foreach (['value', 'ownerUser', 'assignedUser'] as $field) {
+        foreach (['value'] as $field) {
             foreach ($locales as $locale) {
                 $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
                 if (isset($data['entityDefs']['ProductAttributeValue']['fields'][$field . $preparedLocale])) {

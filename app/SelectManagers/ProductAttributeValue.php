@@ -146,20 +146,6 @@ class ProductAttributeValue extends AbstractSelectManager
         $result['callbacks'][] = [$this, 'applyScopeBoolFilters'];
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function accessOnlyOwn(&$result)
-    {
-        $d['createdById'] = $this->getUser()->id;
-        $d['ownerUserId'] = $this->getUser()->id;
-        $d['assignedUserId'] = $this->getUser()->id;
-
-        $result['whereClause'][] = array(
-            'OR' => $d
-        );
-    }
-
     protected function boolFilterLinkedWithAttributeGroup(array &$result): void
     {
         $data = (array)$this->getSelectCondition('linkedWithAttributeGroup');

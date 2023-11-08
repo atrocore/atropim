@@ -24,9 +24,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             'scope',
             'value',
             'attributeIsMultilang',
-            'isInheritAssignedUser',
-            'isInheritOwnerUser',
-            'isInheritTeams',
             'isVariantSpecificAttribute'
         ],
 
