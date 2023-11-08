@@ -346,15 +346,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $aData = new \stdClass();
             $aData->attributeId = $child->get('id');
             $aData->productId = $attachment->productId;
-            if (property_exists($attachment, 'ownerUserId')) {
-                $aData->ownerUserId = $attachment->ownerUserId;
-            }
-            if (property_exists($attachment, 'assignedUserId')) {
-                $aData->assignedUserId = $attachment->assignedUserId;
-            }
-            if (property_exists($attachment, 'teamsIds')) {
-                $aData->teamsIds = $attachment->teamsIds;
-            }
+
             $this->createEntity($aData);
         }
     }

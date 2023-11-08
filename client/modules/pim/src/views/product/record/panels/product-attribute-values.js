@@ -24,9 +24,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             'scope',
             'value',
             'attributeIsMultilang',
-            'isInheritAssignedUser',
-            'isInheritOwnerUser',
-            'isInheritTeams',
             'isVariantSpecificAttribute'
         ],
 
@@ -71,9 +68,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 this.getModelFactory().create(this.scope, model => {
                     let attributes = {
                         productId: this.model.get('id'),
-                        attributeId: item.id,
-                        assignedUserId: this.getUser().id,
-                        assignedUserName: this.getUser().get('name')
+                        attributeId: item.id
                     };
 
                     model.set(attributes);

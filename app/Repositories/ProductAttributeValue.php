@@ -519,21 +519,6 @@ class ProductAttributeValue extends Relationship
             $this->populateDefault($entity, $attribute);
         }
 
-        if ($entity->isNew() && !$this->getMetadata()->isModuleInstalled('OwnershipInheritance')) {
-            $product = $this->getEntityManager()->getRepository('Product')->get($entity->get('productId'));
-            if (!empty($product)) {
-                if (empty($entity->get('assignedUserId'))) {
-                    $entity->set('assignedUserId', $product->get('assignedUserId'));
-                }
-                if (empty($entity->get('ownerUserId'))) {
-                    $entity->set('ownerUserId', $product->get('ownerUserId'));
-                }
-                if (empty($entity->get('teamsIds'))) {
-                    $entity->set('teamsIds', array_column($product->get('teams')->toArray(), 'id'));
-                }
-            }
-        }
-
         $type = $attribute->get('type');
 
         /**
