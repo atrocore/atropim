@@ -14,8 +14,13 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relationship;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
@@ -47,13 +52,13 @@ class ProductAttributeValue extends Relationship
         $qb = $this->getConnection()->createQueryBuilder();
         $qb->select('pav.id, pav.attribute_id, pav.scope, pav.channel_id, c.name as channel_name, pav.language')
             ->from('product_attribute_value', 'pav')
-            ->leftJoin('pav', 'channel', 'c', 'pav.channel_id=c.id AND c.deleted=0')
-            ->where('pav.deleted=0')
+            ->leftJoin('pav', 'channel', 'c', 'pav.channel_id=c.id AND c.deleted=:false')
+            ->where('pav.deleted=:false')->setParameter('false', false, Mapper::getParameterType(false))
             ->andWhere('pav.product_id=:productId')->setParameter('productId', $productId);
         if (empty($tabId)) {
-            $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id IS NULL AND deleted=0)');
+            $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id IS NULL AND deleted=:false)');
         } else {
-            $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=:tabId AND deleted=0)')->setParameter('tabId', $tabId);
+            $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=:tabId AND deleted=:false)')->setParameter('tabId', $tabId);
         }
 
         $pavs = $qb->fetchAllAssociative();
@@ -75,9 +80,11 @@ class ProductAttributeValue extends Relationship
         $qb = $this->getConnection()->createQueryBuilder()
             ->select('a.*, ag.name' . $languageSuffix . ' as attribute_group_name, ag.sort_order as attribute_group_sort_order')
             ->from('attribute', 'a')
-            ->where('a.deleted=0')
-            ->leftJoin('a', 'attribute_group', 'ag', 'a.attribute_group_id=ag.id AND ag.deleted=0')
-            ->andWhere('a.id IN (:attributesIds)')->setParameter('attributesIds', $attrsIds, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+            ->where('a.deleted=:false')
+            ->leftJoin('a', 'attribute_group', 'ag', 'a.attribute_group_id=ag.id AND ag.deleted=:false')
+            ->andWhere('a.id IN (:attributesIds)')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('attributesIds', $attrsIds, Mapper::getParameterType($attrsIds));
 
         try {
             $attrs = $qb->fetchAllAssociative();
@@ -126,21 +133,31 @@ class ProductAttributeValue extends Relationship
             return [];
         }
 
-        $query = "SELECT *
-                  FROM product_attribute_value
-                  WHERE deleted=0
-                    AND product_id IN ('" . implode("','", array_column($products, 'id')) . "')
-                    AND attribute_id='{$pav->get('attributeId')}'
-                    AND product_attribute_value.language='{$pav->get('language')}'
-                    AND scope='{$pav->get('scope')}'
-                    AND is_variant_specific_attribute='{$pav->get('isVariantSpecificAttribute')}'";
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->select('pav.*')
+            ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
+            ->where('pav.deleted = :false')
+            ->andWhere('pav.product_id IN (:productsIds)')
+            ->andWhere('pav.attribute_id = :attributeId')
+            ->andWhere('pav.language = :language')
+            ->andWhere('pav.scope = :scope')
+            ->andWhere('pav.is_variant_specific_attribute = :isVariantSpecificAttribute')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
+            ->setParameter('attributeId', $pav->get('attributeId'))
+            ->setParameter('language', $pav->get('language'))
+            ->setParameter('scope', $pav->get('scope'))
+            ->setParameter('isVariantSpecificAttribute', $pav->get('isVariantSpecificAttribute'), ParameterType::BOOLEAN);
 
         if ($pav->get('scope') === 'Channel') {
-            $query .= " AND channel_id='{$pav->get('channelId')}'";
+            $qb->andWhere('pav.channel_id = :channelId');
+            $qb->setParameter('channelId', $pav->get('channelId'));
         }
 
+        $pavs = $qb->fetchAllAssociative();
+
         $result = [];
-        foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+        foreach ($pavs as $record) {
             foreach ($products as $product) {
                 if ($product['id'] === $record['product_id']) {
                     $record['childrenCount'] = $product['childrenCount'];
@@ -228,6 +245,10 @@ class ProductAttributeValue extends Relationship
         switch ($pav1->get('attributeType')) {
             case 'array':
             case 'extensibleMultiEnum':
+                $val1 = @json_decode((string)$pav1->get('textValue'), true);
+                $val2 = @json_decode((string)$pav2->get('textValue'), true);
+                $result = Entity::areValuesEqual(Entity::TEXT, json_encode($val1 ?? []), json_encode($val2 ?? []));
+                break;
             case 'text':
             case 'wysiwyg':
                 $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
@@ -244,7 +265,7 @@ class ProductAttributeValue extends Relationship
             case 'int':
                 $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
                 }
                 break;
             case 'rangeInt':
@@ -253,13 +274,13 @@ class ProductAttributeValue extends Relationship
                     $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue1'), $pav2->get('intValue1'));
                 }
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
                 }
                 break;
             case 'float':
                 $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
                 }
                 break;
             case 'rangeFloat':
@@ -268,7 +289,7 @@ class ProductAttributeValue extends Relationship
                     $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue1'), $pav2->get('floatValue1'));
                 }
                 if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
                 }
                 break;
             case 'date':
@@ -276,6 +297,17 @@ class ProductAttributeValue extends Relationship
                 break;
             case 'datetime':
                 $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
+                break;
+            case 'asset':
+            case 'link':
+            case 'extensibleEnum':
+                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                break;
+            case 'varchar':
+                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
+                if ($result) {
+                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                }
                 break;
             default:
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
@@ -291,12 +323,18 @@ class ProductAttributeValue extends Relationship
             return $this->productPavs[$entity->get('productId')];
         }
 
-        $query = "SELECT id
-                  FROM `product_attribute_value`
-                  WHERE product_id IN (SELECT parent_id FROM `product_hierarchy` WHERE deleted=0 AND entity_id='{$entity->get('productId')}')
-                    AND deleted=0";
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('pav.id')
+            ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
+            ->where(
+                "pav.product_id IN (SELECT ph.parent_id FROM {$this->getConnection()->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted = :false AND ph.entity_id = :productId)"
+            )
+            ->andWhere('pav.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('productId', $entity->get('productId'), Mapper::getParameterType($entity->get('productId')))
+            ->fetchAllAssociative();
 
-        $ids = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+        $ids = array_column($res, 'id');
 
         $this->productPavs[$entity->get('productId')] = empty($ids) ? null : $this->where(['id' => $ids])->find();
 
@@ -359,9 +397,20 @@ class ProductAttributeValue extends Relationship
 
     public function clearRecord(string $id): void
     {
-        $this->getPDO()->exec(
-            "UPDATE `product_attribute_value` SET varchar_value=NULL, text_value=NULL, bool_value=0, float_value=NULL, int_value=NULL, date_value=NULL, datetime_value=NULL WHERE id='$id'"
-        );
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
+            ->set('varchar_value', ':null')
+            ->set('text_value', ':null')
+            ->set('bool_value', ':false')
+            ->set('float_value', ':null')
+            ->set('int_value', ':null')
+            ->set('date_value', ':null')
+            ->set('datetime_value', ':null')
+            ->where('pav.id = :id')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('id', $id, Mapper::getParameterType($id))
+            ->setParameter('null', null)
+            ->executeQuery();
     }
 
     public function loadAttributes(array $ids): void
@@ -378,33 +427,30 @@ class ProductAttributeValue extends Relationship
             $inTransaction = true;
         }
 
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+        if ($entity->get('scope') === 'Channel') {
+            $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
+        }
+
         try {
             $result = parent::save($entity, $options);
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
             }
-        } catch (\Throwable $e) {
+        } catch (UniqueConstraintViolationException $e) {
             if (!empty($inTransaction)) {
                 $this->getPDO()->rollBack();
             }
 
-            // if duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
-                $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
-
-                $channelName = $entity->get('scope');
-                if ($channelName === 'Channel') {
-                    $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
-                    $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
-                }
-
-                throw new ProductAttributeAlreadyExists(
-                    sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, $channelName)
-                );
+            $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
+            $channelName = $entity->get('scope');
+            if ($entity->get('scope') === 'Channel') {
+                $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 
-            throw $e;
+            throw new ProductAttributeAlreadyExists(
+                sprintf($this->getInjection('language')->translate('attributeRecordAlreadyExists', 'exceptions'), $attributeName, $channelName)
+            );
         }
 
         return $result;
@@ -415,24 +461,6 @@ class ProductAttributeValue extends Relationship
         $this
             ->where(['productId' => $productId])
             ->removeCollection();
-    }
-
-    public function remove(Entity $entity, array $options = [])
-    {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (\Throwable $e) {
-            // delete duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                    $this->deleteFromDb($toDelete->get('id'), true);
-                }
-                return parent::remove($entity, $options);
-            }
-            throw $e;
-        }
-
-        return $result;
     }
 
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
@@ -448,10 +476,8 @@ class ProductAttributeValue extends Relationship
         if ($entity->get('scope') == 'Channel') {
             $where['channelId'] = $entity->get('channelId');
         }
-        // Do not use find method from this class, it can cause infinite loop
-        $this->limit(0, 1)->where($where);
-        $collection = parent::find(['withDeleted' => $deleted]);
-        return count($collection) > 0 ? $collection[0] : null;
+
+        return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 
     protected function populateDefault(Entity $entity, Entity $attribute): void
@@ -467,8 +493,8 @@ class ProductAttributeValue extends Relationship
         }
 
         if ($entity->isNew()) {
-            if (!empty($attribute->get('measureId')) && empty($entity->get('varcharValue')) && !empty($attribute->get('defaultUnit'))) {
-                $entity->set('varcharValue', $attribute->get('defaultUnit'));
+            if (!empty($attribute->get('measureId')) && empty($entity->get('referenceValue')) && !empty($attribute->get('defaultUnit'))) {
+                $entity->set('referenceValue', $attribute->get('defaultUnit'));
             }
         }
     }
@@ -527,7 +553,7 @@ class ProductAttributeValue extends Relationship
         $amountOfDigitsAfterComma = $entity->get('amountOfDigitsAfterComma');
         if ($amountOfDigitsAfterComma !== null) {
             switch ($type) {
-                case 'float':                   
+                case 'float':
                 case 'currency':
                     if ($entity->get('floatValue') !== null) {
                         $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
@@ -577,21 +603,30 @@ class ProductAttributeValue extends Relationship
                     break;
                 case 'currency':
                     $where['floatValue'] = $entity->get('floatValue');
-                    $where['varcharValue'] = $entity->get('varcharValue');
+                    $where['refere'] = $entity->get('varcharValue');
                     break;
                 case 'int':
                     $where['intValue'] = $entity->get('intValue');
-                    $where['varcharValue'] = $entity->get('varcharValue');
+                    $where['referenceValue'] = $entity->get('referenceValue');
                     break;
                 case 'float':
                     $where['floatValue'] = $entity->get('floatValue');
-                    $where['varcharValue'] = $entity->get('varcharValue');
+                    $where['referenceValue'] = $entity->get('referenceValue');
                     break;
                 case 'date':
                     $where['dateValue'] = $entity->get('dateValue');
                     break;
                 case 'datetime':
                     $where['datetimeValue'] = $entity->get('datetimeValue');
+                    break;
+                case 'varchar':
+                    $where['varcharValue'] = $entity->get('varcharValue');
+                    $where['referenceValue'] = $entity->get('referenceValue');
+                    break;
+                case 'asset':
+                case 'extensibleEnum':
+                case 'link':
+                    $where['referenceValue'] = $entity->get('referenceValue');
                     break;
                 default:
                     $where['varcharValue'] = $entity->get('varcharValue');
@@ -628,8 +663,8 @@ class ProductAttributeValue extends Relationship
     {
         $this->getConnection()->createQueryBuilder()
             ->update('product', 'p')
-            ->set('p.modified_at', ':modifiedAt')
-            ->set('p.modified_by_id', ':modifiedById')
+            ->set('modified_at', ':modifiedAt')
+            ->set('modified_by_id', ':modifiedById')
             ->where('p.id = :productId')->setParameters([
                 'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
                 'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
@@ -682,7 +717,7 @@ class ProductAttributeValue extends Relationship
                 }
                 break;
             case 'extensibleEnum':
-                $id = $entity->get('varcharValue');
+                $id = $entity->get('referenceValue');
                 if (!empty($id)) {
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                         ->select(['id'])
@@ -746,17 +781,17 @@ class ProductAttributeValue extends Relationship
             }
         }
 
-        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float']) && !empty($entity->get('varcharValue'))) {
+        if (in_array($attribute->get('type'), ['rangeInt', 'rangeFloat', 'int', 'float', 'varchar']) && !empty($entity->get('referenceValue'))) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->select(['id'])
                 ->where([
-                    'id'        => $entity->get('varcharValue'),
+                    'id'        => $entity->get('referenceValue'),
                     'measureId' => $attribute->get('measureId') ?? 'no-such-measure'
                 ])
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get('varcharValue'), $attribute->get('name')));
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get('referenceValue'), $attribute->get('name')));
             }
         }
     }
@@ -881,10 +916,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->intValue1;
                 }
-                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
+                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
                 }
                 break;
             case 'rangeFloat':
@@ -900,10 +935,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->floatValue1;
                 }
-                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
+                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
                 }
                 break;
             case 'int':
@@ -913,10 +948,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['became']['value'] = $input->intValue;
                 }
 
-                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
+                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
                 }
                 break;
             case 'float':
@@ -926,10 +961,10 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['became']['value'] = $input->floatValue;
                 }
 
-                if (property_exists($input, 'varcharValue') && $wasValueUnitId !== $input->varcharValue) {
+                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
-                    $result['attributes']['became']['valueUnitId'] = $input->varcharValue;
+                    $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
                 }
                 break;
             case 'array':

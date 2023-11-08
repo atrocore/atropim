@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
@@ -189,14 +190,8 @@ class AssociatedProduct extends Relationship
     {
         try {
             $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
-        } catch (\PDOException $e) {
-            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                $message = $e->getMessage();
-                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '(.*)'/", $message, $matches) && !empty($matches[2])) {
-                    throw new BadRequest($this->getInjection('language')->translate('productAssociationAlreadyExists', 'exceptions', 'Product'));
-                }
-            }
-            throw $e;
+        } catch (UniqueConstraintViolationException $e) {
+            throw new BadRequest($this->getInjection('language')->translate('productAssociationAlreadyExists', 'exceptions', 'Product'));
         }
 
         return $result;

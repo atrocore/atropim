@@ -43,6 +43,7 @@ Espo.define('pim:views/classification-attribute/fields/attribute', 'views/fields
             if (this.model.get('attributeId')) {
                 this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attribute => {
                     this.model.set('attributeType', attribute.type);
+                    this.model.set('attributeMeasureId', attribute.measureId);
                     this.model.set('maxLength', attribute.maxLength);
                     this.model.set('countBytesInsteadOfCharacters', attribute.countBytesInsteadOfCharacters);
                     this.model.set('min', attribute.min);

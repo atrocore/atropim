@@ -14,8 +14,22 @@ declare(strict_types=1);
 namespace Pim\Entities;
 
 use Atro\Core\Templates\Entities\Relationship;
+use Espo\ORM\IEntity;
 
 class ClassificationAttribute extends Relationship
 {
     protected $entityType = "ClassificationAttribute";
+
+    public function getAttributeType($attribute)
+    {
+        if ($attribute === 'textValue' && $this->has('attributeId')) {
+            if (!empty($attr = $this->get('attribute'))) {
+                if (in_array($attr->get('type'), ['array', 'extensibleMultiEnum'])) {
+                    return IEntity::JSON_ARRAY;
+                }
+            }
+        }
+
+        return parent::getAttributeType($attribute);
+    }
 }

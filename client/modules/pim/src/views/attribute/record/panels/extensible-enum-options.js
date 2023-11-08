@@ -14,11 +14,6 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
         setup() {
             this.defs.create = false;
 
-            Dep.prototype.setup.call(this);
-
-            this.collection.url = this.getCollectionUrl();
-            this.collection.urlRoot = this.getCollectionUrl();
-
             this.actionList = [];
 
             this.buttonList.push({
@@ -65,6 +60,9 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
 
         afterRender() {
             Dep.prototype.setup.call(this);
+
+            this.collection.url = this.getCollectionUrl();
+            this.collection.urlRoot = this.getCollectionUrl();
 
             this.$el.parent().hide();
             if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.attributeModel.get('type'))) {

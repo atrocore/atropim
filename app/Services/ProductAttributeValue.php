@@ -42,7 +42,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'floatValue',
             'floatValue1',
             'varcharValue',
-            'textValue'
+            'textValue',
+            'referenceValue'
         ];
 
     public function getGroupsPavs(string $productId, string $tabId, string $language = null): array
@@ -492,8 +493,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
         $checkEntity = clone $entity;
-        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $entity->get('attribute'), false);
+
+        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($checkEntity, $attribute, false);
 
         if ($checkEntity->get('value') === null || $checkEntity->get('value') === '') {
             $field = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType());
@@ -540,6 +543,58 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         return $result;
+    }
+
+    public function linkAttribute(array $params, string $productId): array
+    {
+        if (isset($params['ids'])) {
+            $ids = $params['ids'];
+        } else {
+            $selectParams = $this->getSelectManagerFactory()->create('Attribute')->getSelectParams(['where' => $params['where']]);
+            $this->getEntityManager()->getRepository('Attribute')->handleSelectParams($selectParams);
+            $attributes = $this->getEntityManager()->getRepository('Attribute')->find(array_merge($selectParams, ['select' => ['id']]))->toArray();
+
+            $ids = array_column($attributes, 'id');
+        }
+
+        $success = 0;
+
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $pav = new \stdClass();
+                $pav->productId = $productId;
+                $pav->attributeId = $id;
+                try {
+                    $this->createEntity($pav);
+                    $success++;
+                } catch (\Exception $e) {
+                    // ignore
+                }
+            }
+        }
+
+        return ['message' => str_replace('{count}', $success . '', $this->getInjection('language')->translate('countOfLinkedAttributes', 'labels', 'ProductAttributeValue'))];
+    }
+
+    public function linkAttributeGroup(array $params, string $productId): array
+    {
+        if (isset($params['ids'])) {
+            $ids = $params['ids'];
+        } else {
+            $selectParams = $this->getSelectManagerFactory()->create('AttributeGroup')->getSelectParams(['where' => $params['where']]);
+            $this->getEntityManager()->getRepository('AttributeGroup')->handleSelectParams($selectParams);
+            $groups = $this->getEntityManager()->getRepository('AttributeGroup')->find(array_merge($selectParams, ['select' => ['id']]))->toArray();
+
+            $ids = array_column($groups, 'id');
+        }
+
+        $params['attributeWhere'][] = [
+            'type'      => 'in',
+            'attribute' => 'attributeGroupId',
+            'value'     => $ids
+        ];
+
+        return $this->linkAttribute(['where' => $params['attributeWhere']], $productId);
     }
 
     /**
@@ -645,7 +700,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array  $defs
+     * @param array $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
@@ -807,6 +862,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('attributeMeasureId', $attribute->get('measureId'));
             $this->prepareUnitFieldValue($entity, 'value', [
                 'measureId' => $attribute->get('measureId'),
+                'type'      => $attribute->get('type'),
                 'mainField' => 'value'
             ]);
         }

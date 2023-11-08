@@ -83,4 +83,50 @@ class ProductAttributeValue extends Relationship
 
         return $this->getRecordService()->unlinkAttributeGroup($data->attributeGroupId, $data->productId, property_exists($data, 'hierarchically'));
     }
+
+    public function actionSelectAttribute(array $params, \stdClass $data, Request $request): array
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if ((!property_exists($data, 'ids') && !property_exists($data, 'where')) || !property_exists($data, 'productId')) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check('ClassificationAttribute', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $sParams = [];
+        if (property_exists($data, 'ids')) {
+            $sParams['ids'] = json_decode(json_encode($data->ids), true);
+        } else {
+            $sParams['where'] = json_decode(json_encode($data->where), true);
+        }
+
+        return $this->getRecordService()->linkAttribute($sParams, $data->productId);
+    }
+
+    public function actionSelectAttributeGroup(array $params, \stdClass $data, Request $request): array
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if ((!property_exists($data, 'ids') && !property_exists($data, 'where')) || !property_exists($data, 'productId') || !property_exists($data, 'attributeWhere')) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check('ClassificationAttribute', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $sParams = [
+            'attributeWhere' => json_decode(json_encode($data->attributeWhere), true)
+        ];
+        if (property_exists($data, 'ids')) {
+            $sParams['ids'] = json_decode(json_encode($data->ids), true);
+        } else {
+            $sParams['where'] = json_decode(json_encode($data->where), true);
+        }
+
+        return $this->getRecordService()->linkAttributeGroup($sParams, $data->productId);
+    }
 }

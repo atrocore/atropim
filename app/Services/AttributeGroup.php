@@ -11,37 +11,26 @@
 
 namespace Pim\Services;
 
-use Espo\ORM\Entity;
+use Atro\Core\Templates\Services\Base;
 
-/**
- * Class AttributeGroup
- */
-class AttributeGroup extends \Espo\Core\Templates\Services\Base
+class AttributeGroup extends Base
 {
-    /**
-     * Get sorted linked attributes
-     *
-     * @param $attributeGroupId
-     *
-     * @return array
-     */
     public function findLinkedEntitiesAttributes(string $attributeGroupId): array
     {
-        $attributesTypes = array_keys($this->getMetadata()->get(['attributes'], []));
+        $types = array_keys($this->getMetadata()->get(['attributes'], []));
 
-        $result = $this->getEntityManager()
+        $collection = $this->getEntityManager()
             ->getRepository('Attribute')
-            ->distinct()
-            ->join('attributeGroup')
-            ->where(['attributeGroupId' => $attributeGroupId, 'type' => $attributesTypes])
+            ->where([
+                'attributeGroupId' => $attributeGroupId,
+                'type'             => $types
+            ])
             ->order('sortOrderInAttributeGroup', 'ASC')
-            ->find()
-            ->toArray();
+            ->find();
 
         return [
-            'total' => count($result),
-            'list'  => $result
+            'total'      => count($collection),
+            'collection' => $collection
         ];
     }
-
 }

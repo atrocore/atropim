@@ -11,6 +11,7 @@
 
 namespace Pim\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
 /**
@@ -28,20 +29,22 @@ class Association extends AbstractSelectManager
      */
     public function getAssociatedProductAssociations($mainProductId, $relatedProductId = null)
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sql = 'SELECT
-          association_id 
-        FROM
-          associated_product
-        WHERE
-          main_product_id =' . $pdo->quote($mainProductId) . ' ' .
-            (empty($relatedProductId) ? '' : ('AND related_product_id = ' . $pdo->quote($relatedProductId))) . '
-          AND deleted = 0';
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $qb = $connection->createQueryBuilder()
+            ->select('association_id')
+            ->from('associated_product')
+            ->where('main_product_id = :mainProductId')
+            ->andWhere('deleted = :false')
+            ->setParameter('mainProductId', $mainProductId, Mapper::getParameterType($mainProductId))
+            ->setParameter('false', false, Mapper::getParameterType(false));
 
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
+        if (!empty($relatedProductId)) {
+            $qb->andWhere('related_product_id = :relatedProductId');
+            $qb->setParameter('relatedProductId', $relatedProductId, Mapper::getParameterType($relatedProductId));
+        }
+
+        return $qb->fetchAllAssociative();
     }
 
     /**

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
@@ -65,10 +66,7 @@ class Classification extends Hierarchy
     {
         try {
             $result = parent::save($entity, $options);
-        } catch (\PDOException $e) {
-            if (strpos($e->getMessage(), '1062') === false) {
-                throw $e;
-            }
+        } catch (UniqueConstraintViolationException $e) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('notUniqueValue', 'exceptions', 'Global'), 'code'));
         }
 
@@ -77,19 +75,11 @@ class Classification extends Hierarchy
 
     public function remove(Entity $entity, array $options = [])
     {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (\PDOException $e) {
-            if (strpos($e->getMessage(), '1062') === false) {
-                throw $e;
-            }
-            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                $this->deleteFromDb($toDelete->get('id'), true);
-            }
-            return parent::remove($entity, $options);
+        if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+            $this->deleteFromDb($toDelete->get('id'), true);
         }
 
-        return $result;
+        return parent::remove($entity, $options);
     }
 
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity

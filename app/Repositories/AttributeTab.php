@@ -34,9 +34,15 @@ class AttributeTab extends Base
      */
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this
-            ->getEntityManager()
-            ->nativeQuery("UPDATE attribute SET attribute_tab_id=NULL WHERE attribute_tab_id='{$entity->get('id')}'");
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->update($connection->quoteIdentifier('attribute'), 'a')
+            ->set('attribute_tab_id', ':null')
+            ->where('a.attribute_tab_id = :id')
+            ->setParameter('null', null)
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
 
         parent::afterRemove($entity, $options);
 

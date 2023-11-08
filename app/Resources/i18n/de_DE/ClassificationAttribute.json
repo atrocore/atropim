@@ -14,6 +14,7 @@
     "valueFrom": "Standardwert von",
     "valueTo": "Standardwert auf",
     "varcharValue": "Standardwert: Einzeiliger Text",
+    "referenceValue": "Standardwert: Referenz",
     "textValue": "Standardwert: Text",
     "intValue": "Standardwert: Ganzzahl",
     "floatValue": "Standardwert: Float",

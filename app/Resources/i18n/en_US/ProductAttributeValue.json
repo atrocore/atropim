@@ -15,6 +15,7 @@
     "scope": "Scope",
     "channel": "Channel",
     "varcharValue": "Value: String",
+    "referenceValue": "Value: Reference",
     "textValue": "Value: Text",
     "intValue": "Value: Integer",
     "floatValue": "Value: Float",
@@ -40,7 +41,8 @@
   },
   "labels": {
     "Create ProductAttributeValue": "Create Attribute Value",
-    "cannotLinkDefaultChannel": "Default channel '{channel}' for the selected attribute is not linked to this product."
+    "cannotLinkDefaultChannel": "Default channel '{channel}' for the selected attribute is not linked to this product.",
+    "countOfLinkedAttributes": "Count of linked attributes: {count}"
   },
   "exceptions": {
     "attributeUnitValueIsRequired": "Unit for the attribute '%s' is required.",

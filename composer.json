@@ -4,12 +4,12 @@
   "homepage": "https://atropim.com",
   "license": "GPL-3.0-only",
   "require": {
-    "atrocore/core": "~1.6.54"
+    "atrocore/core": "~1.7.0"
   },
   "conflict": {
     "atrocore/product-variants": "*",
     "atrocore/pdf-generator": "<1.4.44",
-    "atrocore/atrodam": "<1.5.18"
+    "atrocore/atrodam": "<1.6.0"
   },
   "autoload": {
     "psr-4": {

@@ -14,13 +14,11 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 
-/**
- * Class Attribute
- */
 class Attribute extends Hierarchy
 {
     protected function init()
@@ -40,9 +38,13 @@ class Attribute extends Hierarchy
     public function updateSortOrderInAttributeGroup(array $ids): void
     {
         foreach ($ids as $k => $id) {
-            $id = $this->getPDO()->quote($id);
-            $sortOrder = $k * 10;
-            $this->getPDO()->exec("UPDATE `attribute` SET sort_order_in_attribute_group=$sortOrder WHERE id=$id");
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
+                ->set('sort_order_in_attribute_group', ':sortOrder')
+                ->where('a.id = :id')
+                ->setParameter('sortOrder', $k * 10)
+                ->setParameter('id', $id)
+                ->executeQuery();
         }
     }
 
@@ -83,31 +85,44 @@ class Attribute extends Hierarchy
 
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
-            $query = "SELECT COUNT(*) 
-                      FROM product_attribute_value 
-                      WHERE attribute_id='{$entity->id}' 
-                        AND deleted=0 %s 
-                      GROUP BY %s, `language`, scope, channel_id HAVING COUNT(*) > 1";
+            $qb = $this->getConnection()->createQueryBuilder();
+
+            $qb
+                ->select('COUNT(*)')
+                ->from('product_attribute_value')
+                ->where('attribute_id = :attributeId')
+                ->andWhere('deleted = :false')
+                ->setParameter('attributeId', $entity->id)
+                ->setParameter('false', false, Mapper::getParameterType(false));
+
             switch ($entity->get('type')) {
                 case 'currency':
-                    $query = sprintf($query, 'AND float_value IS NOT NULL AND varchar_value IS NOT NULL', 'float_value, varchar_value');
+                    $qb->andWhere('float_value IS NOT NULL AND varchar_value IS NOT NULL');
+                    $qb->groupBy("float_value, varchar_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
                     break;
                 case 'float':
-                    $query = sprintf($query, 'AND float_value IS NOT NULL', 'float_value');
+                    $qb->andWhere('float_value IS NOT NULL');
+                    $qb->groupBy("float_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
                     break;
                 case 'int':
-                    $query = sprintf($query, 'AND int_value IS NOT NULL', 'int_value');
+                    $qb->andWhere('int_value IS NOT NULL');
+                    $qb->groupBy("int_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
                 case 'date':
-                    $query = sprintf($query, 'AND date_value IS NOT NULL', 'date_value');
+                    $qb->andWhere('date_value IS NOT NULL');
+                    $qb->groupBy("date_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
                 case 'datetime':
-                    $query = sprintf($query, 'AND datetime_value IS NOT NULL', 'datetime_value');
+                    $qb->andWhere('datetime_value IS NOT NULL');
+                    $qb->groupBy("datetime_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
                     break;
                 default:
-                    $query = sprintf($query, 'AND varchar_value IS NOT NULL', 'varchar_value');
+                    $qb->andWhere('varchar_value IS NOT NULL');
+                    $qb->groupBy("varchar_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
                     break;
             }
 
-            if (!empty($this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC))) {
+            $qb->having('COUNT(*) > 1');
+
+            if (!empty($qb->fetchAssociative())) {
                 throw new Error($this->exception('attributeNotHaveUniqueValue'));
             }
         }
@@ -117,15 +132,19 @@ class Attribute extends Hierarchy
                 throw new BadRequest($this->getInjection('language')->translate('regexNotValid', 'exceptions', 'FieldManager'));
             }
 
-            $query = "SELECT DISTINCT varchar_value
-                      FROM product_attribute_value 
-                      WHERE deleted=0 
-                        AND attribute_id='{$entity->get('id')}'
-                        AND varchar_value IS NOT NULL 
-                        AND varchar_value!=''";
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('varchar_value')
+                ->from('product_attribute_value')
+                ->where('attribute_id = :attributeId')
+                ->andWhere('deleted = :false')
+                ->andWhere('varchar_value IS NOT NULL')
+                ->andWhere("varchar_value != ''")
+                ->setParameter('attributeId', $entity->get('id'))
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->fetchAllAssociative();
 
-            foreach ($this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN) as $value) {
-                if (!preg_match($pattern, $value)) {
+            foreach ($res as $row) {
+                if (!preg_match($pattern, $row['varchar_value'])) {
                     throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
                 }
             }
@@ -165,8 +184,14 @@ class Attribute extends Hierarchy
                 $this->getInjection('container')->get($converterName)->convert($entity);
             }
 
-            if ($entity->isAttributeChanged('measureId') && empty($entity->get('measureId'))) {
-                $this->getPDO()->exec("UPDATE product_attribute_value SET varchar_value=NULL WHERE attribute_id='{$entity->get('id')}'");
+            if (!$entity->isNew() && $entity->isAttributeChanged('measureId')) {
+                $this->getConnection()->createQueryBuilder()
+                    ->update('product_attribute_value')
+                    ->set('reference_value', ':null')
+                    ->where('attribute_id = :id')
+                    ->setParameter('null', null)
+                    ->setParameter('id', $entity->get('id'))
+                    ->executeQuery();
             }
 
             $result = parent::save($entity, $options);

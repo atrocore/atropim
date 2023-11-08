@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
+
 /**
  * ChannelsDashlet class
  */
@@ -25,32 +27,34 @@ class ChannelsDashlet extends AbstractDashletService
      */
     public function getDashlet(): array
     {
-        // prepare result
         $result = [
             'total' => 0,
             'list'  => []
         ];
 
-        // prepare sql
-        $sql = "SELECT
-                       c.id,
-                       c.name,
-                       (SELECT COUNT(p.id) AS total FROM product p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=1) AS totalActive,
-                       (SELECT COUNT(p.id) AS total FROM product p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=0) AS totalInactive
-                FROM channel AS c
-                WHERE c.deleted=0";
+        $connection = $this->getEntityManager()->getConnection();
 
-        // get data
-        $data = $this->getEntityManager()->nativeQuery($sql)->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $connection->createQueryBuilder()
+            ->select([
+                "c.id",
+                "c.name",
+                "(SELECT COUNT(p.id) AS total FROM {$connection->quoteIdentifier('product')} p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=:true) AS total_active",
+                "(SELECT COUNT(p.id) AS total FROM {$connection->quoteIdentifier('product')} p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=:false) AS total_inactive"
+            ])
+            ->from($connection->quoteIdentifier('channel'), 'c')
+            ->where('c.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->fetchAllAssociative();
 
         if (!empty($data)) {
             foreach ($data as $row) {
                 $result['list'][] = [
                     'id'        => $row['id'],
                     'name'      => $row['name'],
-                    'products'  => (int)$row['totalActive'] + (int)$row['totalInactive'],
-                    'active'    => (int)$row['totalActive'],
-                    'notActive' => (int)$row['totalInactive']
+                    'products'  => (int)$row['total_active'] + (int)$row['total_inactive'],
+                    'active'    => (int)$row['total_active'],
+                    'notActive' => (int)$row['total_inactive']
                 ];
             }
 

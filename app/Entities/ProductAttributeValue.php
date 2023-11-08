@@ -15,6 +15,7 @@ namespace Pim\Entities;
 
 use Atro\Core\Templates\Entities\Relationship;
 use Espo\Core\Utils\Json;
+use Espo\ORM\IEntity;
 
 class ProductAttributeValue extends Relationship
 {
@@ -29,10 +30,20 @@ class ProductAttributeValue extends Relationship
                 || parent::isAttributeChanged('intValue')
                 || parent::isAttributeChanged('floatValue')
                 || parent::isAttributeChanged('varcharValue')
+                || parent::isAttributeChanged('referenceValue')
                 || parent::isAttributeChanged('textValue');
         }
 
         return parent::isAttributeChanged($name);
+    }
+
+    public function getAttributeType($attribute)
+    {
+        if ($attribute === 'textValue' && in_array($this->get('attributeType'), ['array', 'extensibleMultiEnum'])) {
+            return IEntity::JSON_ARRAY;
+        }
+
+        return parent::getAttributeType($attribute);
     }
 
     public function setData(array $data): void
