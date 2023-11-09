@@ -18,6 +18,7 @@
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
+    "defaultDate": "Standard Datum",
     "virtualProductField": "Virtuelles Produktfeld",
     "defaultScope": "Standardscope",
     "defaultChannel": "Standardkanal",

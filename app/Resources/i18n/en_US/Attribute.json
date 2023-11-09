@@ -17,6 +17,7 @@
     "prohibitedEmptyValue": "Disable empty value",
     "measure": "Measure",
     "defaultUnit": "Default Unit",
+    "defaultDate": "Default Date",
     "virtualProductField": "Virtual product field",
     "defaultScope": "Default scope",
     "defaultChannel": "Default channel",

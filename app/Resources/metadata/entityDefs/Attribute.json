@@ -177,6 +177,13 @@
       "filterDisabled": true,
       "importDisabled": true
     },
+    "defaultDate": {
+      "type": "varchar",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
     "defaultScope": {
       "type": "enum",
       "prohibitedEmptyValue": true,
