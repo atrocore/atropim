@@ -274,12 +274,20 @@ class ValueConverter extends Injectable
                 break;
             case 'date':
                 if ($entity->has('dateValue')) {
-                    $entity->set('value', $entity->get('dateValue'));
+                    $value = $entity->get('dateValue');
+                    if (!empty($value) && !empty($defaultDate = $attribute->get('defaultDate'))) {
+                        $value = $this->getEntityManager()->getRepository('Attribute')->convertDateWithModifier($value, $defaultDate);
+                    }
+                    $entity->set('value', $value);
                 }
                 break;
             case 'datetime':
                 if ($entity->has('datetimeValue')) {
-                    $entity->set('value', $entity->get('datetimeValue'));
+                    $value = $entity->get('datetimeValue');
+                    if (!empty($value) && !empty($defaultDate = $attribute->get('defaultDate'))) {
+                        $value = $this->getEntityManager()->getRepository('Attribute')->convertDateWithModifier($value, $defaultDate, 'Y-m-d H:i:s');
+                    }
+                    $entity->set('value', $value);
                 }
                 break;
             case 'link':

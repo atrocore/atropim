@@ -292,6 +292,20 @@
             }
           ]
         }
+      },
+      "defaultDate": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "date",
+                "datetime"
+              ]
+            }
+          ]
+        }
       }
     }
   }
