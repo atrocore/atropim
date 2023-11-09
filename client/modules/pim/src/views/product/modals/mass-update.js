@@ -131,6 +131,10 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                     options.params.extensibleEnumId = attr.extensibleEnumId;
                 }
 
+                if(attr.isMultilang){
+                    options.params.multilangLocale = language
+                }
+
                 this.createView(name, viewName, options, view => {
                     view.listenTo(view, 'after:render', () => {
                         let name = data.channelName ? data.channelName : 'Global';
