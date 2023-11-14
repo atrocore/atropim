@@ -130,13 +130,10 @@
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Product cannot be associated with itself.",
     "productAssociationAlreadyExists": "Such product association exists already.",
-    "productWithSuchSkuAlreadyExist": "Product with such SKU '%s' already exist",
     "youCantChangeClassificationInProduct": "You can't change Classification in Product",
     "youCantChangeFieldOfTypeInProduct": "You can't change field of Type in Product",
     "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "This category is not available for the catalog of the selected product, and thus cannot be linked.",
-    "mpnShouldHaveUniqueValue": "MPN '%s' should have unique value.",
-    "eanShouldHaveUniqueValue": "GTIN '%s' should have unique value.",
     "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
   }
 }

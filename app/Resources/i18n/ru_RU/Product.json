@@ -127,12 +127,9 @@
     "noSuchAssociation": "Проверка не удалась. Такой ассоциации не существует.",
     "itselfAssociation": "Продукт не может быть ассоциирован с самим собой.",
     "productAssociationAlreadyExists": "Такая продуктовая ассоциация уже существует.",
-    "productWithSuchSkuAlreadyExist": "Продукт с таким артикулом '%s' уже существует",
     "youCantChangeFieldOfTypeInProduct": "Вы не можете изменить поле тип продукта",
     "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Эта категория недоступна для каталога выбранного продукта и, следовательно, не может быть связана.",
-    "mpnShouldHaveUniqueValue": "MPN '%s' должно иметь уникальное значение.",
-    "eanShouldHaveUniqueValue": "GTIN '%s' должно иметь уникальное значение.",
     "productCatalogChangeException": "Вы не можете удалить/изменить каталог продукта, продукт использует категории которые разрешены для оригинального(предыдущего) каталога. Пожалуйста, сначала удалите связь с этими категориями."
   }
 }

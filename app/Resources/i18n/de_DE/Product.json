@@ -136,13 +136,10 @@
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
     "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
-    "productWithSuchSkuAlreadyExist": "Produkt mit einer solchen SKU '%s' existiert bereits",
     "youCantChangeClassificationInProduct": "Sie können die Klassifizierung in Product nicht ändern.",
     "youCantChangeFieldOfTypeInProduct": "Sie können das Feld Typ in Produkt nicht ändern",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
-    "mpnShouldHaveUniqueValue": "MPN '%s' sollte einen eindeutigen Wert haben.",
-    "eanShouldHaveUniqueValue": "GTIN '%s' sollte einen eindeutigen Wert haben.",
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
   }
 }
