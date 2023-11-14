@@ -603,7 +603,7 @@ class ProductAttributeValue extends Relationship
                     break;
                 case 'currency':
                     $where['floatValue'] = $entity->get('floatValue');
-                    $where['refere'] = $entity->get('varcharValue');
+                    $where['referenceValue'] = $entity->get('varcharValue');
                     break;
                 case 'int':
                     $where['intValue'] = $entity->get('intValue');
@@ -634,7 +634,7 @@ class ProductAttributeValue extends Relationship
             }
 
             if (!empty($this->select(['id'])->join(['product'])->where($where)->findOne())) {
-                throw new BadRequest(sprintf($this->exception("attributeShouldHaveBeUnique"), $entity->get('attribute')->get('name')));
+                throw new BadRequest(sprintf($this->exception("attributeShouldHaveBeUnique"), $attribute->get('name')));
             }
         }
 
@@ -644,8 +644,6 @@ class ProductAttributeValue extends Relationship
     protected function afterSave(Entity $entity, array $options = array())
     {
         $this->updateProductModifiedData($entity);
-
-        $this->moveImageFromTmp($entity);
 
         parent::afterSave($entity, $options);
 
@@ -665,7 +663,8 @@ class ProductAttributeValue extends Relationship
             ->update('product', 'p')
             ->set('modified_at', ':modifiedAt')
             ->set('modified_by_id', ':modifiedById')
-            ->where('p.id = :productId')->setParameters([
+            ->where('p.id = :productId')
+            ->setParameters([
                 'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
                 'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
                 'productId'    => $entity->get('productId')
@@ -855,15 +854,6 @@ class ProductAttributeValue extends Relationship
 
     protected function createAssignmentNotification(Entity $entity, ?string $userId): void
     {
-    }
-
-    protected function moveImageFromTmp(Entity $attributeValue): void
-    {
-        if (!empty($attribute = $attributeValue->get('attribute')) && $attribute->get('type') === 'image' && !empty($attributeValue->get('value'))) {
-            $file = $this->getEntityManager()->getEntity('Attachment', $attributeValue->get('value'));
-            $this->getInjection('serviceFactory')->create($file->getEntityType())->moveFromTmp($file);
-            $this->getEntityManager()->saveEntity($file);
-        }
     }
 
     protected function createNote(Entity $entity): void
