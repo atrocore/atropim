@@ -93,6 +93,9 @@ class Product extends Hierarchy
             ->getArgument('params');
 
         if ($relationName === 'productAttributeValues') {
+            $params['leftJoins'] = ['attribute'];
+            $params['sortBy'] = 'attribute_mm.sortOrderInProduct';
+            $params['asc'] = true;
             $params['limit'] = 9999;
         }
 

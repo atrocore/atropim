@@ -101,9 +101,7 @@
         "Attribute",
         "AttributeGroup",
         "ProductAttributeValue"
-      ],
-      "sortBy": "attribute_mm.sortOrderInProduct",
-      "asc": true
+      ]
     },
     "categories": {
       "create": false,
