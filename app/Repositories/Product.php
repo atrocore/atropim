@@ -321,9 +321,6 @@ class Product extends Hierarchy
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function init()
     {
         parent::init();
@@ -334,26 +331,8 @@ class Product extends Hierarchy
         $this->addDependency(ValueConverter::class);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array $options
-     *
-     * @throws BadRequest
-     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if (!$entity->isSkippedValidation('isProductSkuUnique') && !$this->isFieldUnique($entity, 'sku')) {
-            throw new BadRequest(sprintf($this->translate('productWithSuchSkuAlreadyExist', 'exceptions', 'Product'), $entity->get('sku')));
-        }
-
-        if (!$entity->isSkippedValidation('isProductEanUnique') && !$this->isFieldUnique($entity, 'ean')) {
-            throw new BadRequest(sprintf($this->translate('eanShouldHaveUniqueValue', 'exceptions', 'Product'), $entity->get('ean')));
-        }
-
-        if (!$entity->isSkippedValidation('isProductMpnUnique') && !$this->isFieldUnique($entity, 'mpn')) {
-            throw new BadRequest(sprintf($this->translate('mpnShouldHaveUniqueValue', 'exceptions', 'Product'), $entity->get('mpn')));
-        }
-
         if ($entity->isAttributeChanged('catalogId')) {
             $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
             $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
@@ -585,106 +564,6 @@ class Product extends Hierarchy
         }
     }
 
-    /**
-     * @param Entity $entity
-     * @param string $field
-     *
-     * @return bool
-     */
-    protected function isFieldUnique(Entity $entity, string $field): bool
-    {
-        $result = true;
-
-        if ($entity->hasField($field) && !empty($entity->get($field))) {
-            $products = $this
-                ->getEntityManager()
-                ->getRepository('Product')
-                ->where(
-                    [
-                        $field      => $entity->get($field),
-                        'catalogId' => $entity->get('catalogId'),
-                        'id!='      => $entity->id
-                    ]
-                )
-                ->count();
-
-            if ($products > 0) {
-                $result = false;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     * @throws Error
-     */
-    protected function saveAttributes(Entity $product): bool
-    {
-        if (!empty($product->productAttribute)) {
-            $data = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->where(
-                    [
-                        'productId'   => $product->get('id'),
-                        'attributeId' => array_keys($product->productAttribute),
-                        'scope'       => 'Global'
-                    ]
-                )
-                ->find();
-
-            // prepare exists
-            $exists = [];
-            if (count($data) > 0) {
-                foreach ($data as $v) {
-                    $exists[$v->get('attributeId')] = $v;
-                }
-            }
-
-            foreach ($product->productAttribute as $attributeId => $values) {
-                if (isset($exists[$attributeId])) {
-                    $entity = $exists[$attributeId];
-                } else {
-                    $entity = $this->getEntityManager()->getEntity('ProductAttributeValue');
-                    $entity->set('productId', $product->get('id'));
-                    $entity->set('attributeId', $attributeId);
-                    $entity->set('scope', 'Global');
-                }
-
-                foreach ($values['locales'] as $locale => $value) {
-                    if ($locale == 'default') {
-                        $entity->set('value', $value);
-                    } else {
-                        // prepare locale
-                        $locale = Util::toCamelCase(strtolower($locale), '_', true);
-                        $entity->set("value$locale", $value);
-                    }
-                }
-
-                if (isset($values['data']) && !empty($values['data'])) {
-                    foreach ($values['data'] as $field => $item) {
-                        $entity->set($field, $item);
-                    }
-                }
-
-                $this->getEntityManager()->saveEntity($entity);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param string $scope
-     *
-     * @return string
-     */
     protected function translate(string $key, string $label, $scope = ''): string
     {
         return $this->getInjection('language')->translate($key, $label, $scope);
