@@ -24,11 +24,15 @@ class ProductAttributeValue extends Base
 
     public function checkEntity(User $user, Entity $entity, $data, $action)
     {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
         if (empty($entity->get('attributeId'))) {
             return false;
         }
 
-        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($tab = $attribute->get('attributeTab'))) {
             return $this->getAclManager()->checkEntity($user, $tab, $action) && $this->getAclManager()->checkEntity($user, $attribute, $action);
