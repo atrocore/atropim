@@ -31,7 +31,6 @@ class ProductAttributeValue extends Relationship
     protected static $beforeSaveData = [];
 
     protected array $channelLanguages = [];
-    protected array $products = [];
     protected array $classificationAttributes = [];
     protected array $productPavs = [];
 
@@ -343,7 +342,7 @@ class ProductAttributeValue extends Relationship
 
     public function findClassificationAttribute(Entity $pav): ?Entity
     {
-        $product = $this->getProductById((string)$pav->get('productId'));
+        $product = $pav->get('product');
         if (empty($product)) {
             return null;
         }
@@ -1001,25 +1000,13 @@ class ProductAttributeValue extends Relationship
         return $result;
     }
 
-    public function getProductById(string $productId): ?Entity
-    {
-        if (empty($productId)) {
-            return null;
-        }
-
-        if (!array_key_exists($productId, $this->products)) {
-            $this->products[$productId] = $this->getEntityManager()->getRepository('Product')->get($productId);
-        }
-
-        return $this->products[$productId];
-    }
-
     public function getClassificationAttributesByClassificationId(string $classificationId): EntityCollection
     {
         if (!array_key_exists($classificationId, $this->classificationAttributes)) {
             $this->classificationAttributes[$classificationId] = $this
                 ->getEntityManager()
                 ->getRepository('ClassificationAttribute')
+                ->select(['id', 'attributeId', 'scope', 'channelId', 'language'])
                 ->where(['classificationId' => $classificationId])
                 ->find();
         }
