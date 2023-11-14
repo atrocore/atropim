@@ -383,7 +383,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     public function updateEntity($id, $data)
     {
-        $GLOBALS['debugSQL'] = [];
         if (!property_exists($data, 'attributeId')) {
             $entity = $this->getRepository()->get($id);
             if (!empty($entity)) {
@@ -420,8 +419,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
             throw $e;
         }
-
-        $foo = $GLOBALS['debugSQL'];
 
         return $result;
     }
