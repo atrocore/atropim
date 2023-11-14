@@ -19,6 +19,10 @@ class ProductAttributeValue extends Base
 {
     public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
         return $this->getAclManager()->checkScope($user, 'AttributeTab', $action) || $this->getAclManager()->checkScope($user, 'Attribute', $action);
     }
 
