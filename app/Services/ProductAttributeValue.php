@@ -383,6 +383,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     public function updateEntity($id, $data)
     {
+        $GLOBALS['debugSQL'] = [];
         if (!property_exists($data, 'attributeId')) {
             $entity = $this->getRepository()->get($id);
             if (!empty($entity)) {
@@ -419,6 +420,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
             throw $e;
         }
+
+        $foo = $GLOBALS['debugSQL'];
 
         return $result;
     }
@@ -827,14 +830,14 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
         }
 
-        if (!empty($attribute->get('attributeGroup'))) {
+        if (!empty($attribute->get('attributeGroupId'))) {
             $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
         } else {
             $entity->set('sortOrder', $attribute->get('sortOrderInProduct'));
         }
 
         $entity->set('channelCode', null);
-        if (!empty($channel = $entity->get('channel'))) {
+        if (!empty($entity->get('channelId')) && !empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
         }
 
