@@ -22,7 +22,7 @@ class Attribute extends \Espo\Core\Acl\Base
             return true;
         }
 
-        if (!empty($attributeTab = $entity->get('attributeTab'))) {
+        if (!empty($entity->get('attributeTabId')) && !empty($attributeTab = $entity->get('attributeTab'))) {
             if (!$this->getAclManager()->checkEntity($user, $attributeTab, 'read')) {
                 return false;
             }
