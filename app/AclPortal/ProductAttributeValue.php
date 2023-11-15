@@ -30,7 +30,7 @@ class ProductAttributeValue extends Base
 
         $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
 
-        if (!empty($tab = $attribute->get('attributeTab'))) {
+        if (!empty($entity->get('attributeTabId')) && !empty($tab = $attribute->get('attributeTab'))) {
             return $this->getAclManager()->checkEntity($user, $tab, $action) && $this->getAclManager()->checkEntity($user, $attribute, $action);
         }
 
