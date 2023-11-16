@@ -764,12 +764,12 @@ class Product extends AbstractSelectManager
             $hash = md5(microtime());
             if ($row['type'] === 'arrayNoneOf') {
                 $qb->andWhere("{$tableAlias}.id NOT IN (:productsIds_$hash)");
-                $qb->setParameter('productsIds_' . $hash, $productsIds, Mapper::getParameterType($productsIds));
+                $qb->setParameter("productsIds_$hash", $productsIds, Mapper::getParameterType($productsIds));
                 return;
             }
 
             $qb->andWhere("{$tableAlias}.id IN (:productsIds_$hash)");
-            $qb->setParameter('productsIds_' . $hash, $productsIds, Mapper::getParameterType($productsIds));
+            $qb->setParameter("productsIds_$hash", $productsIds, Mapper::getParameterType($productsIds));
         }
     }
 
