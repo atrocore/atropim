@@ -843,17 +843,19 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelName', 'Global');
         }
 
-        $classificationAttribute = $this->getRepository()->findClassificationAttribute($entity);
+        if (!$this->isExport) {
+            $classificationAttribute = $this->getRepository()->findClassificationAttribute($entity);
 
-        $this->getRepository()->prepareAttributeData($attribute, $entity, $classificationAttribute);
+            $this->getRepository()->prepareAttributeData($attribute, $entity, $classificationAttribute);
 
-        $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
-        if (!$entity->get('isPavRelationInherited')) {
-            $entity->set('isPavRelationInherited', !empty($classificationAttribute));
-        }
+            $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
+            if (!$entity->get('isPavRelationInherited')) {
+                $entity->set('isPavRelationInherited', !empty($classificationAttribute));
+            }
 
-        if ($entity->get('isPavRelationInherited')) {
-            $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
+            if ($entity->get('isPavRelationInherited')) {
+                $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
+            }
         }
 
         $this->getInjection('container')->get(ValueConverter::class)->convertFrom($entity, $attribute, $clear);
