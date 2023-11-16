@@ -15,6 +15,7 @@ namespace Pim\Services;
 
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
@@ -35,24 +36,27 @@ class Product extends Hierarchy
     {
         // set main images
         if (count($collection) > 0) {
-            $assets = $this
-                ->getEntityManager()
-                ->getRepository('Asset')
-                ->select(['id', 'fileId', 'fileName', 'productAssets.productId'])
-                ->join('productAssets')
-                ->where([
-                    'productAssets.productId'   => array_column($collection->toArray(), 'id'),
-                    'productAssets.isMainImage' => true
-                ])
-                ->find();
+            $conn = $this->getEntityManager()->getConnection();
+
+            $res = $conn->createQueryBuilder()
+                ->select('ps.id, a.file_id, a.name, ps.product_id')
+                ->from('product_asset', 'ps')
+                ->innerJoin('ps', 'asset', 'a', 'a.id=ps.asset_id AND a.deleted=:false')
+                ->where('ps.product_id IN (:productsIds)')
+                ->andWhere('ps.is_main_image = :true')
+                ->andWhere('ps.deleted = :false')
+                ->setParameter('productsIds', array_column($collection->toArray(), 'id'), $conn::PARAM_STR_ARRAY)
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
 
             foreach ($collection as $entity) {
                 $entity->set('mainImageId', null);
                 $entity->set('mainImageName', null);
-                foreach ($assets as $asset) {
-                    if ($asset->rowData['productAssets.productId'] === $entity->get('id')) {
-                        $entity->set('mainImageId', $asset->get('fileId'));
-                        $entity->set('mainImageName', $asset->get('fileName'));
+                foreach ($res as $item) {
+                    if ($item['product_id'] === $entity->get('id')) {
+                        $entity->set('mainImageId', $item['file_id']);
+                        $entity->set('mainImageName', $item['name']);
                     }
                 }
             }
