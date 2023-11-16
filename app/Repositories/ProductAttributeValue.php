@@ -414,6 +414,7 @@ class ProductAttributeValue extends Relationship
 
     public function loadAttributes(array $ids): void
     {
+        $ids = array_unique($ids);
         foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => $ids])->find() as $attribute) {
             $this->pavsAttributes[$attribute->get('id')] = $attribute;
         }
