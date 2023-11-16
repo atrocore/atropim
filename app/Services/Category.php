@@ -11,6 +11,7 @@
 
 namespace Pim\Services;
 
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Templates\Services\Hierarchy;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -93,24 +94,27 @@ class Category extends Hierarchy
     {
         // set main images
         if (count($collection) > 0) {
-            $assets = $this
-                ->getEntityManager()
-                ->getRepository('Asset')
-                ->select(['id', 'fileId', 'fileName', 'categoryAssets.categoryId'])
-                ->join('categoryAssets')
-                ->where([
-                    'categoryAssets.categoryId'  => array_column($collection->toArray(), 'id'),
-                    'categoryAssets.isMainImage' => true
-                ])
-                ->find();
+            $conn = $this->getEntityManager()->getConnection();
+
+            $res = $conn->createQueryBuilder()
+                ->select('cs.id, a.file_id, a.name, cs.category_id')
+                ->from('category_asset', 'cs')
+                ->innerJoin('cs', 'asset', 'a', 'a.id=cs.asset_id AND a.deleted=:false')
+                ->where('cs.category_id IN (:categoriesIds)')
+                ->andWhere('cs.is_main_image = :true')
+                ->andWhere('cs.deleted = :false')
+                ->setParameter('categoriesIds', array_column($collection->toArray(), 'id'), $conn::PARAM_STR_ARRAY)
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
 
             foreach ($collection as $entity) {
                 $entity->set('mainImageId', null);
                 $entity->set('mainImageName', null);
-                foreach ($assets as $asset) {
-                    if ($asset->rowData['categoryAssets.categoryId'] === $entity->get('id')) {
-                        $entity->set('mainImageId', $asset->get('fileId'));
-                        $entity->set('mainImageName', $asset->get('fileName'));
+                foreach ($res as $item) {
+                    if ($item['category_id'] === $entity->get('id')) {
+                        $entity->set('mainImageId', $item['file_id']);
+                        $entity->set('mainImageName', $item['name']);
                     }
                 }
             }

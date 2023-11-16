@@ -62,8 +62,6 @@ class Product extends Hierarchy
             }
         }
 
-        $collection->_skipLoadPreviewFor = ['mainImage'];
-
         parent::loadPreviewForCollection($collection);
     }
 
