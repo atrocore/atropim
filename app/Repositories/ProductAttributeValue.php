@@ -347,12 +347,12 @@ class ProductAttributeValue extends Relationship
 
     public function findClassificationAttribute(Entity $pav): ?array
     {
-        $product = $pav->get('product');
-        if (empty($product)) {
+        $productId = $pav->get('productId');
+        if (empty($productId)) {
             return null;
         }
 
-        foreach ($this->getProductClassificationAttributes($product->get('id')) as $item) {
+        foreach ($this->getProductClassificationAttributes($productId) as $item) {
             if ($item['attributeId'] !== $pav->get('attributeId')) {
                 continue;
             }
