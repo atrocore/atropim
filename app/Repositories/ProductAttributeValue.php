@@ -19,7 +19,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -31,7 +30,7 @@ class ProductAttributeValue extends Relationship
     protected static $beforeSaveData = [];
 
     protected array $channelLanguages = [];
-    protected array $classificationAttributes = [];
+    protected array $productCa = [];
     protected array $productPavs = [];
 
     public function isInherited(Entity $entity): ?bool
@@ -346,42 +345,67 @@ class ProductAttributeValue extends Relationship
         return $this->productPavs[$entity->get('productId')];
     }
 
-    public function findClassificationAttribute(Entity $pav): ?Entity
+    public function findClassificationAttribute(Entity $pav): ?array
     {
         $product = $pav->get('product');
         if (empty($product)) {
             return null;
         }
 
-        $classifications = $product->get('classifications');
-        if (empty($classifications[0])) {
-            return null;
-        }
-
-        foreach ($classifications as $classification) {
-            $classificationAttributes = $this->getClassificationAttributesByClassificationId($classification->get('id'));
-            foreach ($classificationAttributes as $pfa) {
-                if ($pfa->get('attributeId') !== $pav->get('attributeId')) {
-                    continue;
-                }
-
-                if ($pfa->get('scope') !== $pav->get('scope')) {
-                    continue;
-                }
-
-                if ($pfa->get('language') !== $pav->get('language')) {
-                    continue;
-                }
-
-                if ($pav->get('scope') === 'Channel' && $pfa->get('channelId') !== $pav->get('channelId')) {
-                    continue;
-                }
-
-                return $pfa;
+        foreach ($this->getProductClassificationAttributes($product->get('id')) as $item) {
+            if ($item['attributeId'] !== $pav->get('attributeId')) {
+                continue;
             }
+
+            if ($item['scope'] !== $pav->get('scope')) {
+                continue;
+            }
+
+            if ($item['language'] !== $pav->get('language')) {
+                continue;
+            }
+
+            if ($pav->get('scope') === 'Channel' && $item['channelId'] !== $pav->get('channelId')) {
+                continue;
+            }
+
+            return $item;
         }
 
         return null;
+    }
+
+    public function getProductClassificationAttributes(string $productId): array
+    {
+        if (!isset($this->productCa[$productId])) {
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('ca.*')
+                ->from('classification_attribute', 'ca')
+                ->leftJoin('ca', 'product_classification', 'pc', 'pc.classification_id = ca.classification_id')
+                ->where('pc.product_id = :productId')
+                ->andWhere('pc.deleted = :false')
+                ->andWhere('ca.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('productId', $productId)
+                ->fetchAllAssociative();
+
+            $result = [];
+            foreach (Util::arrayKeysToCamelCase($res) as $k => $v) {
+                $row = $v;
+                unset($row['data']);
+
+                $data = @json_decode($v['data'], true);
+                if (!empty($data['field'])){
+                    $row = array_merge($row, $data['field']);
+                }
+
+                $result[] = $row;
+            }
+
+            $this->productCa[$productId] = $result;
+        }
+
+        return $this->productCa[$productId];
     }
 
     public function getChannelLanguages(string $channelId): array
@@ -505,7 +529,7 @@ class ProductAttributeValue extends Relationship
         }
     }
 
-    public function prepareAttributeData(Entity $attribute, Entity $pav, ?Entity $classificationAttribute = null): void
+    public function prepareAttributeData(Entity $attribute, Entity $pav, ?array $classificationAttribute = null): void
     {
         $pav->set('isRequired', $attribute->get('isRequired'));
         $pav->set('maxLength', $attribute->get('maxLength'));
@@ -515,11 +539,11 @@ class ProductAttributeValue extends Relationship
         $pav->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
 
         if ($classificationAttribute !== null) {
-            $pav->set('isRequired', $classificationAttribute->get('isRequired'));
-            $pav->set('maxLength', $classificationAttribute->get('maxLength'));
-            $pav->set('countBytesInsteadOfCharacters', $classificationAttribute->get('countBytesInsteadOfCharacters'));
-            $pav->set('min', $classificationAttribute->get('min'));
-            $pav->set('max', $classificationAttribute->get('max'));
+            $pav->set('isRequired', $classificationAttribute['isRequired'] ?? null);
+            $pav->set('maxLength', $classificationAttribute['maxLength'] ?? null);
+            $pav->set('countBytesInsteadOfCharacters', $classificationAttribute['countBytesInsteadOfCharacters'] ?? null);
+            $pav->set('min', $classificationAttribute['min'] ?? null);
+            $pav->set('max', $classificationAttribute['max'] ?? null);
         }
     }
 
@@ -1005,19 +1029,5 @@ class ProductAttributeValue extends Relationship
         }
 
         return $result;
-    }
-
-    public function getClassificationAttributesByClassificationId(string $classificationId): EntityCollection
-    {
-        if (!array_key_exists($classificationId, $this->classificationAttributes)) {
-            $this->classificationAttributes[$classificationId] = $this
-                ->getEntityManager()
-                ->getRepository('ClassificationAttribute')
-                ->select(['id', 'attributeId', 'scope', 'channelId', 'language'])
-                ->where(['classificationId' => $classificationId])
-                ->find();
-        }
-
-        return $this->classificationAttributes[$classificationId];
     }
 }
