@@ -34,8 +34,6 @@ class ProductAttributeValue extends Relationship
     protected array $classificationAttributes = [];
     protected array $productPavs = [];
 
-    private array $pavsAttributes = [];
-
     public function isInherited(Entity $entity): ?bool
     {
         return null;
@@ -106,17 +104,25 @@ class ProductAttributeValue extends Relationship
 
     public function getPavAttribute(Entity $entity): \Pim\Entities\Attribute
     {
-        if (empty($this->pavsAttributes[$entity->get('attributeId')])) {
-            $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-            if (empty($attribute)) {
-                $this->getEntityManager()->getRepository('ClassificationAttribute')->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
-                $this->where(['attributeId' => $entity->get('attributeId')])->removeCollection();
-                throw new BadRequest("Attribute '{$entity->get('attributeId')}' does not exist.");
-            }
-            $this->pavsAttributes[$entity->get('attributeId')] = $attribute;
+        $attribute = $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+
+        if (empty($attribute)) {
+            $this->getConnection()->createQueryBuilder()
+                ->delete('classification_attribute')
+                ->where('attribute_id = :attributeId')
+                ->setParameter('attributeId', $entity->get('attributeId'))
+                ->executeQuery();
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('product_attribute_value')
+                ->where('attribute_id = :attributeId')
+                ->setParameter('attributeId', $entity->get('attributeId'))
+                ->executeQuery();
+
+            throw new BadRequest("Attribute '{$entity->get('attributeId')}' does not exist.");
         }
 
-        return $this->pavsAttributes[$entity->get('attributeId')];
+        return $attribute;
     }
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
