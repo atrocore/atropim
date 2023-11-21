@@ -177,9 +177,7 @@ class ValueConverter extends Injectable
                 if (property_exists($data, 'value')) {
                     $data->varcharValue = $data->value;
                     unset($data->value);
-                }
-
-                if (empty($data->varcharValue) && !empty($default = $attribute->get('defaultValue'))) {
+                } else if (empty($data->varcharValue) && !empty($default = $attribute->get('defaultValue'))) {
                     if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
                         // use twig
                         $default = $this->getInjection('twig')->renderTemplate($default, []);
