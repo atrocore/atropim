@@ -185,7 +185,7 @@
       "exportDisabled": true
     },
     "defaultValue": {
-      "type": "varchar",
+      "type": "text",
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,

@@ -20,7 +20,7 @@ class V1Dot10Dot6 extends Base
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
-        $this->addColumn($toSchema, 'attribute', 'default_value', ['type' => 'varchar', 'default' => null]);
+        $this->addColumn($toSchema, 'attribute', 'default_value', ['type' => 'text', 'default' => null]);
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->getPDO()->exec($sql);
