@@ -19,6 +19,7 @@
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
     "defaultDate": "Standard Datum",
+    "defaultValue": "Standardwert",
     "virtualProductField": "Virtuelles Produktfeld",
     "defaultScope": "Standardscope",
     "defaultChannel": "Standardkanal",

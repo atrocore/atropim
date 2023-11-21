@@ -201,6 +201,16 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('useDisabledTextareaInViewMode', attr.useDisabledTextareaInViewMode);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                 this.reRender();
+                if (attr.defaultValue && !this.model.get('id')) {
+                    if (attr.defaultValue.includes('{{') && attr.defaultValue.includes('}}')) {
+                        this.ajaxGetRequest(`Attribute/action/DefaultValue?id=${this.model.get('attributeId')}`)
+                            .success(seed => {
+                                this.model.set('value', seed.value)
+                            })
+                    } else {
+                        this.model.set('value', attr.defaultValue)
+                    }
+                }
             });
         }
     })

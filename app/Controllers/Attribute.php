@@ -13,8 +13,23 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-use Espo\Core\Templates\Controllers\Hierarchy;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Controllers\Hierarchy;
 
 class Attribute extends Hierarchy
 {
+
+    public function actionDefaultValue($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'create')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getDefaultValue((string)$request->get('id'));
+    }
 }

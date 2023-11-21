@@ -18,6 +18,7 @@
     "measure": "Міра",
     "defaultUnit": "Одиниця виміру за замовченням",
     "defaultDate": "Дата за замовченням",
+    "defaultValue": "Значення за замовчуванням",
     "virtualProductField": "Віртуальне поле продукту",
     "defaultScope": "Область за замовчуванням",
     "defaultChannel": "Канал за замовчуванням",

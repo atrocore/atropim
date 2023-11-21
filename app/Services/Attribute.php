@@ -14,9 +14,10 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Services\Hierarchy;
+use Atro\Core\Templates\Services\Hierarchy;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -180,5 +181,32 @@ class Attribute extends Hierarchy
         }
 
         return $result;
+    }
+
+    public function getDefaultValue(string $id): array
+    {
+        $attribute = $this->getRepository()->get($id);
+
+        if (empty($attribute)) {
+            throw new NotFound();
+        }
+
+        if ($attribute->get('type') !== 'varchar') {
+            throw new BadRequest('Invalid Type for default value');
+        }
+
+        $value = "";
+
+        if (!empty($default = $attribute->get('defaultValue'))) {
+            if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
+                // use twig
+                $default = $this->getInjection('twig')->renderTemplate($default, []);
+            }
+            $value = $default;
+        }
+
+        return [
+            "value" => $value
+        ];
     }
 }

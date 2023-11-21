@@ -63,7 +63,9 @@
         {
           "name": "defaultDate"
         },
-        false
+        {
+          "name": "defaultValue"
+        }
       ],
       [
         {
