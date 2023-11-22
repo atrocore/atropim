@@ -13,6 +13,7 @@ class ValueConverter extends Injectable
     public function __construct()
     {
         $this->addDependency('entityManager');
+        $this->addDependency('twig');
     }
 
     public function convertTo(\stdClass $data, Entity $attribute): void
@@ -176,7 +177,14 @@ class ValueConverter extends Injectable
                 if (property_exists($data, 'value')) {
                     $data->varcharValue = $data->value;
                     unset($data->value);
+                } else if (empty($data->varcharValue) && !empty($default = $attribute->get('defaultValue'))) {
+                    if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
+                        // use twig
+                        $default = $this->getInjection('twig')->renderTemplate($default, []);
+                    }
+                    $data->varcharValue = $default;
                 }
+
                 if (property_exists($data, 'valueUnitId')) {
                     $data->referenceValue = $data->valueUnitId;
                     unset($data->valueUnitId);

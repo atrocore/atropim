@@ -306,6 +306,19 @@
             }
           ]
         }
+      },
+      "defaultValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar"
+              ]
+            }
+          ]
+        }
       }
     }
   }

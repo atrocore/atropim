@@ -18,6 +18,7 @@
     "measure": "Measure",
     "defaultUnit": "Default Unit",
     "defaultDate": "Default Date",
+    "defaultValue": "Default Value",
     "virtualProductField": "Virtual product field",
     "defaultScope": "Default scope",
     "defaultChannel": "Default channel",

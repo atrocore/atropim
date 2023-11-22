@@ -931,6 +931,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        return parent::isEntityUpdated($this->getRepository()->get($entity->get('id')), $data);
+        $freshEntity = $this->getRepository()->where(['id' => $entity->get('id')])->findOne(["noCache" => true]);
+        return parent::isEntityUpdated($freshEntity, $data);
     }
 }

@@ -184,6 +184,13 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "defaultValue": {
+      "type": "text",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
     "defaultScope": {
       "type": "enum",
       "prohibitedEmptyValue": true,
