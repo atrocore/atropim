@@ -3,13 +3,11 @@
     "products": "Produkte",
     "categories": "Kategorien",
     "categoryAssets": "Asset-Kategorien",
-    "productAssets": "Asset-Produkte",
     "channel": "Kanal"
   },
   "links": {
     "products": "Produkte",
     "categories": "Kategorien",
-    "categoryAssets": "Asset-Kategorien",
-    "productAssets": "Asset-Produkte"
+    "categoryAssets": "Asset-Kategorien"
   }
 }

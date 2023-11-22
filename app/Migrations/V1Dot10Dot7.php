@@ -9,10 +9,18 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Pim\Controllers;
+namespace Pim\Migrations;
 
-use Atro\Core\Templates\Controllers\Relationship;
+use Atro\Core\Migration\Base;
 
-class ProductAsset extends Relationship
+class V1Dot10Dot7 extends Base
 {
+    public function up(): void
+    {
+        //  "name": "productAssets" to  "name": "assets" in custom
+    }
+
+    public function down(): void
+    {
+    }
 }

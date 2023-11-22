@@ -21,12 +21,12 @@
     ]
   },
   "relationshipPanels": {
-    "productAssets": {
+    "assets": {
       "view": "pim:views/record/panels/assets",
       "rowActionsView": "pim:views/record/row-actions/relationship-asset",
       "dragDrop": {
         "isActive": true,
-        "sortField": "sorting"
+        "sortField": "product_asset_mm.sorting"
       },
       "sortBy": "sorting",
       "asc": true

@@ -1,6 +1,6 @@
 {
   "fields": {
-    "productAssets": {
+    "products": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
@@ -20,15 +20,11 @@
     }
   },
   "links": {
-    "productAssets": {
+    "products": {
       "type": "hasMany",
-      "foreign": "asset",
-      "entity": "ProductAsset",
-      "audited": false,
-      "addRelationCustomDefs": {
-        "link": "products",
-        "entity": "Product"
-      }
+      "relationName": "productAsset",
+      "foreign": "assets",
+      "entity": "Product"
     },
     "categoryAssets": {
       "type": "hasMany",

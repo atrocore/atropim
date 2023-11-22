@@ -1,16 +1,5 @@
 {
   "fields": {
-    "product": {
-      "type": "link",
-      "required": true,
-      "relationshipField": true,
-      "mainRelationshipEntity": true
-    },
-    "asset": {
-      "type": "link",
-      "required": true,
-      "relationshipField": true
-    },
     "isMainImage": {
       "type": "bool",
       "view": "pim:views/fields/is-main-image"
@@ -41,131 +30,17 @@
     },
     "tags": {
       "type": "array"
-    },
-    "createdAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "modifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "createdBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "modifiedBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "preview": {
-      "type": "varchar",
-      "view": "pim:views/fields/preview",
-      "notStorable": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "fileId": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
-    },
-    "fileName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
-    },
-    "filePathsData": {
-      "type": "jsonObject",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
-    },
-    "icon": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
-    },
-    "isInherited": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
     }
   },
   "links": {
-    "product": {
-      "type": "belongsTo",
-      "foreign": "productAssets",
-      "entity": "Product"
-    },
-    "asset": {
-      "type": "belongsTo",
-      "foreign": "productAssets",
-      "entity": "Asset"
-    },
     "channel": {
       "type": "belongsTo",
       "foreign": "productAssets",
       "entity": "Channel"
-    },
-    "createdBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "modifiedBy": {
-      "type": "belongsTo",
-      "entity": "User"
     }
   },
-  "collection": {
-    "sortBy": "createdAt",
-    "asc": false
-  },
   "uniqueIndexes": {
-    "unique_relationship": [
+    "unique_relation": [
       "deleted",
       "product_id",
       "asset_id",
