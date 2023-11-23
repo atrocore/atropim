@@ -12,13 +12,13 @@
     "name": "categories"
   },
   {
-    "name": "productChannels"
+    "name": "channels"
   },
   {
     "name": "associatedMainProducts"
   },
   {
-    "name": "productAssets"
+    "name": "assets"
   },
   {
     "name": "contents"

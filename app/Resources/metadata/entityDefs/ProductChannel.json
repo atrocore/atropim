@@ -1,61 +1,7 @@
 {
   "fields": {
-    "createdAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "modifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "createdBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "modifiedBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "product": {
-      "type": "link",
-      "required": true,
-      "relationshipField": true
-    },
-    "channel": {
-      "type": "link",
-      "required": true,
-      "relationshipField": true
-    },
     "isActive": {
       "type": "bool"
     }
-  },
-  "links": {
-    "createdBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "modifiedBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "product": {
-      "type": "belongsTo",
-      "foreign": "productChannels",
-      "entity": "Product"
-    },
-    "channel": {
-      "type": "belongsTo",
-      "foreign": "productChannels",
-      "entity": "Channel"
-    }
-  },
-  "collection": {
-    "sortBy": "createdAt",
-    "asc": false,
-    "textFilterFields": [],
-    "fullTextSearch": false
   }
 }

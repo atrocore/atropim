@@ -9,8 +9,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Pim\Controllers;
+declare(strict_types=1);
 
-class CategoryAsset extends \Atro\Core\Templates\Controllers\Relationship
+namespace Pim\Repositories;
+
+use Atro\Core\Templates\Repositories\Relation;
+use Espo\ORM\Entity;
+
+class ProductCategory extends Relation
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+    }
 }

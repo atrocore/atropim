@@ -1,12 +1,12 @@
 {
   "fields": {
-    "productAssets": {
+    "products": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
       "noLoad": true
     },
-    "categoryAssets": {
+    "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
@@ -20,25 +20,17 @@
     }
   },
   "links": {
-    "productAssets": {
+    "products": {
       "type": "hasMany",
-      "foreign": "asset",
-      "entity": "ProductAsset",
-      "audited": false,
-      "addRelationCustomDefs": {
-        "link": "products",
-        "entity": "Product"
-      }
+      "relationName": "productAsset",
+      "foreign": "assets",
+      "entity": "Product"
     },
-    "categoryAssets": {
+    "categories": {
       "type": "hasMany",
-      "foreign": "asset",
-      "entity": "CategoryAsset",
-      "audited": false,
-      "addRelationCustomDefs": {
-        "link": "categories",
-        "entity": "Category"
-      }
+      "relationName": "categoryAsset",
+      "foreign": "assets",
+      "entity": "Category"
     },
     "brands": {
       "type": "hasMany",

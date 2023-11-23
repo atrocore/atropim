@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "mainCategory": {
+      "type": "bool",
+      "default": false
+    }
+  }
+}

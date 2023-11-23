@@ -45,29 +45,11 @@
       "trim": true,
       "unique": true
     },
-    "productChannels": {
+    "products": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true,
-      "foreignName": "productName",
-      "importDisabled": true
-    },
-    "productChannels_product": {
-      "type": "linkMultiple",
-      "entity": "Product",
-      "relationshipFilterField": "productChannels",
-      "relationshipFilterForeignField": "product",
-      "notStorable": true,
-      "filterDisabled": false,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+      "noLoad": true
     },
     "productAttributeValues": {
       "type": "linkMultiple",
@@ -123,14 +105,11 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "productChannels": {
+    "products": {
       "type": "hasMany",
-      "foreign": "channel",
-      "entity": "ProductChannel",
-      "addRelationCustomDefs": {
-        "link": "products",
-        "entity": "Product"
-      }
+      "relationName": "productChannel",
+      "foreign": "channels",
+      "entity": "Product"
     },
     "productAttributeValues": {
       "type": "hasMany",

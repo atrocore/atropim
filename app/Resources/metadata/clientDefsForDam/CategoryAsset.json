@@ -1,6 +1,0 @@
-{
-  "controller": "controllers/record",
-  "modalViews": {
-    "edit": "pim:views/product-asset/modals/edit"
-  }
-}

@@ -47,6 +47,53 @@ class LayoutController extends AbstractListener
         }
     }
 
+    protected function modifyAssetListSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/Asset/listSmall.json')) {
+            $result[] = ['name' => 'ProductAsset__channel'];
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyAssetDetailSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/Asset/detailSmall.json')) {
+            $result[0]['rows'][] = [['name' => 'ProductAsset__isMainImage'], ['name' => 'ProductAsset__sorting']];
+            $result[0]['rows'][] = [['name' => 'ProductAsset__scope'], ['name' => 'ProductAsset__channel']];
+
+            $result[0]['rows'][] = [['name' => 'CategoryAsset__isMainImage'], ['name' => 'CategoryAsset__sorting']];
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyChannelListSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/Channel/listSmall.json')) {
+            $result[] = ['name' => 'ProductChannel__isActive'];
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyChannelDetailSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/Channel/detailSmall.json')) {
+            $result[0]['rows'][] = [['name' => 'ProductChannel__isActive'], false];
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
     /**
      * @param Event $event
      */
