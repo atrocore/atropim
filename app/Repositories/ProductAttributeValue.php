@@ -563,7 +563,7 @@ class ProductAttributeValue extends Relationship
         }
 
         if (!$entity->isNew()) {
-            $fetched = $this->getEntityManager()->getEntity('ProductAttributeValue', $entity->get('id'));
+            $fetched = $this->where(['id' => $entity->get('id')])->findOne(['noCache' => true]);
             $this->getValueConverter()->convertFrom($fetched, $fetched->get('attribute'), false);
             self::$beforeSaveData = $fetched->toArray();
         }
@@ -988,6 +988,7 @@ class ProductAttributeValue extends Relationship
                 }
                 break;
             case 'array':
+            case 'extensibleEnum':
             case 'extensibleMultiEnum':
                 if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
