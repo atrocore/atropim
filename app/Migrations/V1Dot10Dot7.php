@@ -18,6 +18,8 @@ class V1Dot10Dot7 extends Base
     public function up(): void
     {
         //  "name": "productAssets" to  "name": "assets" in custom
+        //        categoryAssets
+//        productChannels
     }
 
     public function down(): void
