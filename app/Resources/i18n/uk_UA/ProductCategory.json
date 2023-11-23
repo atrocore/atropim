@@ -1,5 +1,8 @@
 {
   "fields": {
     "mainCategory": "Головна категория"
+  },
+  "labels": {
+    "categoryCanNotBeMain": "Категорія не може бути обрана як головна."
   }
 }

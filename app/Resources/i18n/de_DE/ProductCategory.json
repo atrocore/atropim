@@ -1,5 +1,8 @@
 {
   "fields": {
     "mainCategory": "Hauptkategorie"
+  },
+  "labels": {
+    "categoryCanNotBeMain": "Die Kategorie kann nicht als Hauptkategorie ausgewählt werden."
   }
 }
