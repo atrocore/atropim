@@ -10,8 +10,7 @@
     "classificationAttributes": "Klassifizierungattribute",
     "categories": "Kategorien",
     "code": "Code",
-    "productChannels": "Kanalprodukte",
-    "products": "Kanalprodukte",
+    "products": "Produkte",
     "type": "Typ"
   },
   "links": {
@@ -21,8 +20,7 @@
     "productAttributeValues": "Produktattributwerte",
     "productCategories": "Produktkategorien",
     "classificationAttributes": "Klassifizierungattribute",
-    "productChannels": "Kanalprodukte",
-    "products": "Kanalprodukte"
+    "products": "Produkte"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Verknüpfung der Kategorie '%s' mit Kanal '%s' aufgeben",

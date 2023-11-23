@@ -1,6 +1,6 @@
 {
   "fields": {
-    "isActive": "Активный",
+    "isActive": "Активный для канала",
     "product": "Продукт",
     "channel": "Канал"
   },

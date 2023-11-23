@@ -8,48 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/panels/assets', 'treo-core:views/record/panels/for-relationship-type',
+Espo.define('pim:views/record/panels/assets', 'dam:views/record/panels/assets',
     Dep => Dep.extend({
-
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.actionList.unshift({
-                label: this.translate('upload', 'labels', 'Asset'),
-                action: 'massAssetCreate',
-                data: {
-                    link: this.link
-                },
-                acl: 'create',
-                aclScope: 'Asset'
-            });
-        },
-
-        actionMassAssetCreate(data) {
-            this.notify('Loading...');
-            this.createView('massCreate', 'dam:views/asset/modals/edit', {
-                name: 'massCreate',
-                scope: 'Asset',
-                attributes: {massCreate: true},
-                fullFormDisabled: true,
-                layoutName: 'detailSmall'
-            }, view => {
-                view.render();
-                view.notify(false);
-
-                this.listenTo(view, 'before:save', attrs => {
-                    attrs['_createAssetRelation'] = {
-                        entityType: this.model.urlRoot,
-                        entityId: this.model.get('id')
-                    };
-                });
-
-                this.listenToOnce(view, 'after:save', () => {
-                    this.actionRefresh();
-                    this.model.trigger('after:relate', this.link, this.defs);
-                });
-            });
-        },
 
         actionSetAsMainImage(data) {
             this.notify('Saving...');

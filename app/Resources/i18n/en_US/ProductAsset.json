@@ -1,17 +1,10 @@
 {
   "fields": {
-    "product": "Product",
-    "asset": "Asset",
     "scope": "Scope",
     "channel": "Channel",
     "isMainImage": "Main Image",
     "tags": "Tags",
-    "preview": "Preview",
     "sorting": "Sort Order"
-  },
-  "links": {
-    "product": "Product",
-    "asset": "Asset"
   },
   "options": {
     "scope": {

@@ -8,23 +8,40 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/row-actions/relationship-asset', 'treo-core:views/record/row-actions/for-relationship-type',
+Espo.define('pim:views/record/row-actions/relationship-asset', 'views/record/row-actions/relationship',
     Dep => Dep.extend({
 
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
 
-            if (this.isImage() && !this.model.get('isMainImage') && this.options.acl.edit) {
+            let prefix = this.getRelationFieldPrefix();
+            if (this.isImage() && !this.model.get(prefix + 'isMainImage') && this.options.acl.edit) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage'),
                     data: {
-                        id: this.model.get('id')
+                        id: this.model.get(prefix + 'id')
                     }
                 });
             }
 
             return list;
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            let prefix = this.getRelationFieldPrefix();
+            if (this.$el && this.model.get(prefix + 'isMainImage')) {
+                this.$el.parent().addClass('main-image global-main-image');
+            }
+        },
+
+        getRelationFieldPrefix() {
+            let hashParts = window.location.hash.split('/view/');
+            let entityType = hashParts[0].replace('#', '');
+
+            return entityType + 'Asset__';
         },
 
         isImage() {

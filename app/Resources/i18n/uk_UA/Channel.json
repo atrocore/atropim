@@ -5,14 +5,12 @@
     "categories": "Категорії",
     "locales": "Мови",
     "code": "Код",
-    "productChannels": "Продукти каналу",
-    "products": "Продукти каналу",
+    "products": "Продукти",
     "type": "Тип"
   },
   "links": {
     "categories": "Категорії",
-    "productChannels": "Продукти каналу",
-    "products": "Продукти каналу"
+    "products": "Продукти"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Розірвати зв'язок категорії '%s' з каналом '%s'",

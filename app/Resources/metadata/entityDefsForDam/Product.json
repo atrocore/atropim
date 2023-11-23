@@ -9,7 +9,7 @@
       "filterDisabled": true,
       "emHidden": true
     },
-    "productAssets": {
+    "assets": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -22,14 +22,11 @@
       "entity": "Attachment",
       "skipOrmDefs": true
     },
-    "productAssets": {
+    "assets": {
       "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductAsset",
-      "addRelationCustomDefs": {
-        "link": "assets",
-        "entity": "Asset"
-      }
+      "relationName": "productAsset",
+      "foreign": "products",
+      "entity": "Asset"
     }
   }
 }

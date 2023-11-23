@@ -1,16 +1,12 @@
 {
-  "controller": "controllers/record",
-  "modalViews": {
-    "edit": "pim:views/product-asset/modals/edit"
-  },
   "dynamicLogic": {
     "fields": {
-      "channel": {
+      "ProductAsset__channel": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "scope",
+              "attribute": "ProductAsset__scope",
               "value": "Channel"
             }
           ]
@@ -19,7 +15,7 @@
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "scope",
+              "attribute": "ProductAsset__scope",
               "value": "Channel"
             }
           ]

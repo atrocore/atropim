@@ -14,26 +14,20 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Listeners\AbstractListener;
 
-class AssetService extends AbstractEntityListener
+class AssetService extends AbstractListener
 {
-    public function afterCreateEntity(Event $event): void
+    public function beforeUpdateEntity(Event $event): void
     {
-        $attachment = $event->getArgument('attachment');
-        $entity = $event->getArgument('entity');
-
-        if (property_exists($attachment, '_createAssetRelation') && !empty($attachment->_createAssetRelation)) {
-            $entityId = $attachment->_createAssetRelation->entityId;
-            $entityType = $attachment->_createAssetRelation->entityType;
-            $link = lcfirst($entityType) . 'Id';
-
-            $input = new \stdClass();
-            $input->assetId = $entity->get('id');
-            $input->$link = $entityId;
-            try {
-                $this->getServiceFactory()->create($entityType . 'Asset')->createEntity($input);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error('ProductAsset creating failed: ' . $e->getMessage());
+        $data = $event->getArgument('data');
+        if (property_exists($data, '_id') && property_exists($data, '_sortedIds') && property_exists($data, '_scope') && !empty($data->_sortedIds)) {
+            if ($data->_scope === 'Product') {
+                $this->getEntityManager()->getRepository('ProductAsset')->updateSortOrder($data->_id, $data->_sortedIds);
+                $event->setArgument('result', $this->getService('Asset')->getEntity($data->_itemId));
+            } elseif ($data->_scope === 'Category') {
+                $this->getEntityManager()->getRepository('CategoryAsset')->updateSortOrder($data->_id, $data->_sortedIds);
+                $event->setArgument('result', $this->getService('Asset')->getEntity($data->_itemId));
             }
         }
     }
