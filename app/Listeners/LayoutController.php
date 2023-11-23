@@ -65,6 +65,8 @@ class LayoutController extends AbstractListener
         if (!file_exists('custom/Espo/Custom/Resources/layouts/Asset/detailSmall.json')) {
             $result[0]['rows'][] = [['name' => 'ProductAsset__isMainImage'], ['name' => 'ProductAsset__sorting']];
             $result[0]['rows'][] = [['name' => 'ProductAsset__scope'], ['name' => 'ProductAsset__channel']];
+
+            $result[0]['rows'][] = [['name' => 'CategoryAsset__isMainImage'], ['name' => 'CategoryAsset__sorting']];
         }
 
         $event->setArgument('result', Json::encode($result));
