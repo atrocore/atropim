@@ -3,7 +3,7 @@ Espo.define('pim:views/category/record/row-actions/catalogs', 'views/record/row-
 
         getActionList() {
             let list = Dep.prototype.getActionList.call(this);
-            if (this.getParentView().getParentView().getParentView().model.get('categoryParentId')) {
+            if (!this.getParentView().getParentView().getParentView().model.get('isRoot')) {
                 list = list.filter(item => item.action !== 'unlinkRelated' && item.action !== 'removeRelated');
             }
 

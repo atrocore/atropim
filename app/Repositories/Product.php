@@ -68,7 +68,7 @@ class Product extends Hierarchy
         $data = $this->getConnection()->createQueryBuilder()
             ->select('product_id, category_id')
             ->from('product_category')
-            ->where('category_id IN (SELECT DISTINCT category_parent_id FROM category WHERE category_parent_id IS NOT NULL AND deleted=:false)')
+            ->where('category_id IN (SELECT DISTINCT parent_id FROM category_hierarchy deleted=:false)')
             ->andWhere('deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->fetchAllAssociative();
@@ -147,7 +147,7 @@ class Product extends Hierarchy
             $category = $this->getEntityManager()->getEntity('Category', $category);
         }
 
-        if ($category->getChildren()->count() > 0) {
+        if ($category->get('children')->count() > 0) {
             throw new BadRequest($this->translate("productCanNotLinkToNonLeafCategory", 'exceptions', 'Product'));
         }
 

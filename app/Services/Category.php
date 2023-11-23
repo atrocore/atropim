@@ -12,37 +12,13 @@
 namespace Pim\Services;
 
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Templates\Services\Hierarchy;
+use Atro\Core\Templates\Services\Hierarchy;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
 
 class Category extends Hierarchy
 {
-    protected $mandatorySelectAttributeList = ['categoryRoute'];
-
-    public function getRoute(string $id): array
-    {
-        if (empty($category = $this->getRepository()->get($id))) {
-            return [];
-        }
-
-        if (empty($categoryRoute = $category->get('categoryRoute'))) {
-            return [];
-        }
-
-        $route = explode('|', $categoryRoute);
-        array_shift($route);
-        array_pop($route);
-
-        return $route;
-    }
-
-    public function createEntity($attachment)
-    {
-        return Record::createEntity($attachment);
-    }
-
     protected function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
@@ -51,43 +27,12 @@ class Category extends Hierarchy
         $this->createCategoryAssets($entity, $data);
     }
 
-    public function updateEntity($id, $data)
-    {
-        return Record::updateEntity($id, $data);
-    }
-
     protected function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
         $this->createCategoryAssets($entity, $data);
-    }
-
-    public function linkEntity($id, $link, $foreignId)
-    {
-        return Record::linkEntity($id, $link, $foreignId);
-    }
-
-    public function deleteEntity($id)
-    {
-        return Record::deleteEntity($id);
-    }
-
-    public function unlinkEntity($id, $link, $foreignId)
-    {
-        return Record::unlinkEntity($id, $link, $foreignId);
-    }
-
-    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
-    {
-        $parent = $entity->get('categoryParent');
-        if (empty($parent)) {
-            $treeBranches[] = $entity;
-        } else {
-            $parent->child = $entity;
-            $this->createTreeBranches($parent, $treeBranches);
-        }
     }
 
     public function loadPreviewForCollection(EntityCollection $collection): void
@@ -125,9 +70,7 @@ class Category extends Hierarchy
 
     public function prepareEntityForOutput(Entity $entity)
     {
-        Record::prepareEntityForOutput($entity);
-
-        $entity->set('hasChildren', $entity->hasChildren());
+        Parent::prepareEntityForOutput($entity);
 
         $channels = $entity->get('channels');
         $channels = !empty($channels) && count($channels) > 0 ? $channels->toArray() : [];
@@ -191,7 +134,7 @@ class Category extends Hierarchy
             return $this->getServiceFactory()->create('Asset')->findEntities($params);
         }
 
-        $result = Record::findLinkedEntities($id, $link, $params);
+        $result = Parent::findLinkedEntities($id, $link, $params);
 
         /**
          * Mark channels as inherited from parent category

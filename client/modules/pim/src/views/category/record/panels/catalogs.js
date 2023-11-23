@@ -31,7 +31,7 @@ Espo.define('pim:views/category/record/panels/catalogs', 'views/record/panels/re
             let $create = $('.panel-catalogs .action[data-action=createRelated][data-panel=catalogs]');
             let $dropdown = $('.panel-catalogs .dropdown-toggle');
 
-            if (this.model.get('categoryParentId')) {
+            if (!this.model.get('isRoot')) {
                 $create.hide();
                 $dropdown.hide();
             } else {

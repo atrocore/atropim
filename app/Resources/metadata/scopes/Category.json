@@ -9,7 +9,7 @@
     "notifications": true,
     "stream": false,
     "disabled": false,
-    "type": "Base",
+    "type": "Hierarchy",
     "module": "Pim",
     "object": true,
     "statusField": null

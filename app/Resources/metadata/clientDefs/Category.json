@@ -1,6 +1,6 @@
 {
   "confirm": {
-    "categoryParentId": "Category.messages.categoryParentChangeConfirm"
+    "parents": "Category.messages.categoryParentChangeConfirm"
   },
   "controller": "pim:controllers/record-tree",
   "iconClass": "fas fa-th",
@@ -70,11 +70,22 @@
       "asc": true,
       "view": "pim:views/category/record/panels/products"
     },
-    "categories": {
+    "parents": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notChildren"
+      ]
+    },
+    "children": {
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notParents"
-      ]
+      ],
+      "dragDrop": {
+        "isActive": true,
+        "maxSize": 20,
+        "sortField": "sortOrder"
+      }
     }
   }
 }

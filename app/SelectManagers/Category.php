@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\IEntity;
@@ -36,7 +37,7 @@ class Category extends AbstractSelectManager
 
         $qb->add(
             'select',
-            ["(SELECT COUNT(c1.id) FROM {$connection->quoteIdentifier('category')}  AS c1 WHERE c1.category_parent_id={$tableAlias}.id AND c1.deleted=:false) as $fieldAlias"], true
+            ["(SELECT COUNT(c1.id) FROM {$connection->quoteIdentifier('category_hierarchy')}  AS c1 WHERE c1.parent_id={$tableAlias}.id AND c1.deleted=:false) as $fieldAlias"], true
         );
         $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
@@ -73,7 +74,7 @@ class Category extends AbstractSelectManager
         $category = $this->getEntityManager()->getRepository('Category')->get($notChildren);
         if (!empty($category)) {
             $result['whereClause'][] = [
-                'id!=' => array_merge(array_column($category->getChildren()->toArray(), 'id'), [$category->get('id')])
+                'id!=' => array_merge($category->getLinkMultipleIdList('children'), [$category->get('id')])
             ];
         }
     }
@@ -84,8 +85,17 @@ class Category extends AbstractSelectManager
     protected function boolFilterOnlyRootCategory(array &$result)
     {
         if ($this->hasBoolFilter('onlyRootCategory')) {
+            $connection = $this->getEntityManager()->getConnection();
+
+            $childrenIds = $connection->createQueryBuilder()
+                ->select('distinct(entity_id)', 'p_id')
+                ->from('category_hierarchy')
+                ->where('deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchFirstColumn();
+
             $result['whereClause'][] = [
-                'categoryParentId' => null
+                'id!=' => $childrenIds
             ];
         }
     }
@@ -140,15 +150,19 @@ class Category extends AbstractSelectManager
     protected function boolFilterOnlyLeafCategories(array &$result)
     {
         if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
-            $parents = $this
-                ->getEntityManager()
-                ->getRepository('Category')->select(['categoryParentId'])->where(['categoryParentId!=' => null])
-                ->find()
-                ->toArray();
+
+            $connection = $this->getEntityManager()->getConnection();
+
+            $parentIds = $connection->createQueryBuilder()
+                ->select('distinct(parent_id)', 'p_id')
+                ->from('category_hierarchy')
+                ->where('deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchFirstColumn();
 
             if (!empty($parents)) {
                 $result['whereClause'][] = [
-                    'id!=' => array_unique(array_column($parents, 'categoryParentId'))
+                    'id!=' => $parentIds
                 ];
             }
         }
