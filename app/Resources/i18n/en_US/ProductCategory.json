@@ -1,5 +1,6 @@
 {
   "fields": {
+    "sorting": "Sort Order for Category",
     "mainCategory": "Main Category"
   },
   "labels": {

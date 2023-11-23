@@ -1,5 +1,6 @@
 {
   "fields": {
+    "sorting": "Sortierreihenfolge für Kategorie",
     "mainCategory": "Hauptkategorie"
   },
   "labels": {
