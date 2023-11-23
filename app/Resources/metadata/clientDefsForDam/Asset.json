@@ -1,0 +1,26 @@
+{
+  "dynamicLogic": {
+    "fields": {
+      "ProductAsset__channel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "ProductAsset__scope",
+              "value": "Channel"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "ProductAsset__scope",
+              "value": "Channel"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -24,8 +24,7 @@ class ProductAsset extends Relation
             $entity->set('sorting', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
-        // for unique index
-        if (empty($entity->get('channelId'))) {
+        if ($entity->get('scope') === 'Global' || empty($entity->get('channelId'))) {
             $entity->set('channelId', '');
         }
 
