@@ -72,6 +72,28 @@ class LayoutController extends AbstractListener
         $event->setArgument('result', Json::encode($result));
     }
 
+    protected function modifyChannelListSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/Channel/listSmall.json')) {
+            $result[] = ['name' => 'ProductChannel__isActive'];
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyChannelDetailSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/Channel/detailSmall.json')) {
+            $result[0]['rows'][] = [['name' => 'ProductChannel__isActive'], false];
+        }
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
     /**
      * @param Event $event
      */
