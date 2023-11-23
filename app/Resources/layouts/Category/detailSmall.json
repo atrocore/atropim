@@ -30,6 +30,12 @@
           "name": "popular"
         },
         false
+      ],
+      [
+        {
+          "name": "ProductCategory__mainCategory"
+        },
+        false
       ]
     ]
   }

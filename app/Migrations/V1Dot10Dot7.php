@@ -57,6 +57,15 @@ class V1Dot10Dot7 extends Base
             unlink($path);
         }
 
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $this->addColumn($toSchema, 'product_category', 'main_category', ['type' => 'bool', 'default' => false]);
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getPDO()->exec($sql);
+        }
+
         $this->rebuild();
         $this->updateComposer('atrocore/pim', '^1.10.7');
     }
