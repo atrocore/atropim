@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Relation;
 use Espo\ORM\Entity;
 
-class CategoryAsset extends \Atro\Core\Templates\Repositories\Relationship
+class CategoryAsset extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew() && $entity->get('sorting') === null) {
-            $last = $this->where(['categoryId' => $entity->get('categoryId')])->order('sorting', 'DESC')->findOne();
-            $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
+            $entity->set('sorting', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
         parent::beforeSave($entity, $options);
@@ -32,24 +32,29 @@ class CategoryAsset extends \Atro\Core\Templates\Repositories\Relationship
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
-            foreach ($this->where(['isMainImage' => true, 'categoryId' => $entity->get('categoryId'), 'id!=' => $entity->get('id')])->find() as $categoryAsset) {
+            $categoryAssets = $this
+                ->select(['id', 'isMainImage'])
+                ->where(['isMainImage' => true, 'categoryId' => $entity->get('categoryId'), 'id!=' => $entity->get('id')])
+                ->find();
+
+            foreach ($categoryAssets as $categoryAsset) {
                 $categoryAsset->set('isMainImage', false);
                 $this->getEntityManager()->saveEntity($categoryAsset);
             }
         }
     }
 
-    public function updateSortOrder(array $ids): void
+    public function updateSortOrder(string $categoryId, array $assetsIds): void
     {
-        $collection = $this->where(['id' => $ids])->find();
-        if (count($collection) === 0) {
+        $collection = $this->where(['categoryId' => $categoryId, 'assetId' => $assetsIds])->find();
+        if (empty($collection[0])) {
             return;
         }
 
-        foreach ($ids as $k => $id) {
+        foreach ($assetsIds as $k => $id) {
             $sortOrder = (int)$k * 10;
             foreach ($collection as $entity) {
-                if ($entity->get('id') !== (string)$id) {
+                if ($entity->get('assetId') !== (string)$id) {
                     continue;
                 }
                 $entity->set('sorting', $sortOrder);

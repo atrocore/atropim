@@ -1,11 +1,11 @@
 {
   "fields": {
-    "categoryAssets": "Категории ассета",
+    "categories": "Категории",
     "products": "Продукты",
     "channel": "Канал"
   },
   "links": {
-    "categoryAssets": "Категории ассета",
+    "categories": "Категории",
     "products": "Продукты"
   }
 }

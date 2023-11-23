@@ -25,6 +25,9 @@ class AssetService extends AbstractListener
             if ($data->_scope === 'Product') {
                 $this->getEntityManager()->getRepository('ProductAsset')->updateSortOrder($data->_id, $data->_sortedIds);
                 $event->setArgument('result', $this->getService('Asset')->getEntity($data->_itemId));
+            } elseif ($data->_scope === 'Category') {
+                $this->getEntityManager()->getRepository('CategoryAsset')->updateSortOrder($data->_id, $data->_sortedIds);
+                $event->setArgument('result', $this->getService('Asset')->getEntity($data->_itemId));
             }
         }
     }

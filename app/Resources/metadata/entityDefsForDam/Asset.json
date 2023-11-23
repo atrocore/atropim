@@ -6,7 +6,7 @@
       "layoutMassUpdateDisabled": true,
       "noLoad": true
     },
-    "categoryAssets": {
+    "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
@@ -26,15 +26,11 @@
       "foreign": "assets",
       "entity": "Product"
     },
-    "categoryAssets": {
+    "categories": {
       "type": "hasMany",
-      "foreign": "asset",
-      "entity": "CategoryAsset",
-      "audited": false,
-      "addRelationCustomDefs": {
-        "link": "categories",
-        "entity": "Category"
-      }
+      "relationName": "categoryAsset",
+      "foreign": "assets",
+      "entity": "Category"
     },
     "brands": {
       "type": "hasMany",

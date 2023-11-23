@@ -18,7 +18,7 @@
     ]
   },
   "relationshipPanels": {
-    "categoryAssets": {
+    "assets": {
       "view": "pim:views/record/panels/assets",
       "rowActionsView": "pim:views/record/row-actions/relationship-asset",
       "dragDrop": {

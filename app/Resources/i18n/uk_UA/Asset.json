@@ -2,12 +2,10 @@
   "fields": {
     "products": "Продукти",
     "categories": "Категорії",
-    "categoryAssets": "Категорії асету",
     "channel": "Канал"
   },
   "links": {
     "products": "Продукти",
-    "categories": "Категорії",
-    "categoryAssets": "Категорії асету"
+    "categories": "Категорії"
   }
 }
