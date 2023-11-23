@@ -9,7 +9,7 @@
     },
     "scope": {
       "type": "enum",
-      "required": true,
+      "required": false,
       "prohibitedEmptyValue": true,
       "options": [
         "Global",

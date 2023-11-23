@@ -23,7 +23,7 @@
       "rowActionsView": "pim:views/record/row-actions/relationship-asset",
       "dragDrop": {
         "isActive": true,
-        "sortField": "sorting"
+        "sortField": "category_asset_mm.sorting"
       },
       "sortBy": "sorting",
       "asc": true
