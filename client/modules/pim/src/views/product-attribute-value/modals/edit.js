@@ -18,10 +18,10 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.ajaxGetRequest(`Product/${this.model.get('productId')}/productChannels`, null, {async: false}).done(response => {
+            this.ajaxGetRequest(`Product/${this.model.get('productId')}/channels`, null, {async: false}).done(response => {
                 if (response.total > 0) {
                     response.list.forEach(record => {
-                        this.channels.push(record.channelId);
+                        this.channels.push(record.id);
                     });
                 }
             });
