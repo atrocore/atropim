@@ -12,5 +12,6 @@
     "type": "Hierarchy",
     "module": "Pim",
     "object": true,
-    "statusField": null
+    "multiParents": false,
+    "dragAndDrop": true
 }
