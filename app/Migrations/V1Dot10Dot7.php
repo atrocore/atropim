@@ -104,8 +104,10 @@ class V1Dot10Dot7 extends Base
                 ->insert('category_hierarchy')
                 ->setValue('entity_id', ':id')
                 ->setValue('parent_id', ':category_parent_id')
+                ->setValue('hierarchy_sort_order', ':sort_order')
                 ->setParameter('id', $row['id'])
                 ->setParameter('category_parent_id', $row['category_parent_id'])
+                ->setParameter('sort_order', $row['sort_order'])
                 ->executeQuery();
         }
 
