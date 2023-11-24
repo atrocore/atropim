@@ -12,8 +12,6 @@
 namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\Error;
 
 class V1Dot10Dot6 extends Base
 {
@@ -23,10 +21,21 @@ class V1Dot10Dot6 extends Base
         $toSchema = clone $fromSchema;
 
         $this->addColumn($toSchema, 'attribute', 'default_value', ['type' => 'text', 'default' => null]);
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getPDO()->exec($sql);
+        }
     }
 
     public function down(): void
     {
-        throw new Error('Downgrade is prohibited!');
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $this->dropColumn($toSchema, 'attribute', 'default_value');
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getPDO()->exec($sql);
+        }
     }
 }
