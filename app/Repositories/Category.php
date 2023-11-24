@@ -393,10 +393,6 @@ class Category extends Hierarchy
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if (!empty($entity->get('_position'))) {
-            $this->updateSortOrderInTree($entity);
-        }
-
         // build tree
         $this->updateCategoryTree($entity);
 
@@ -464,71 +460,6 @@ class Category extends Hierarchy
         parent::init();
 
         $this->addDependency('language');
-    }
-
-    /**
-     * @param Entity $entity
-     */
-    protected function updateSortOrderInTree(Entity $entity): void
-    {
-        // prepare sort order
-        $sortOrder = 0;
-
-        // prepare data
-        $data = [];
-
-        if ($entity->get('_position') == 'after') {
-            // prepare sort order
-            $sortOrder = $this->select(['sortOrder'])->where(['id' => $entity->get('_target')])->findOne()->get('sortOrder');
-
-            // get collection
-            $data = $this
-                ->select(['id'])
-                ->where(
-                    [
-                        'id!='             => [$entity->get('_target'), $entity->get('id')],
-                        'sortOrder>='      => $sortOrder,
-                        'categoryParentId' => $entity->get('categoryParentId')
-                    ]
-                )
-                ->order('sortOrder')
-                ->find()
-                ->toArray();
-
-            // increase sort order
-            $sortOrder = $sortOrder + 10;
-
-        } elseif ($entity->get('_position') == 'inside') {
-            // get collection
-            $data = $this
-                ->select(['id'])
-                ->where(
-                    [
-                        'id!='             => $entity->get('id'),
-                        'sortOrder>='      => $sortOrder,
-                        'categoryParentId' => $entity->get('categoryParentId')
-                    ]
-                )
-                ->order('sortOrder')
-                ->find()
-                ->toArray();
-        }
-
-        // prepare data
-        $data = array_merge([$entity->get('id')], array_column($data, 'id'));
-
-        foreach ($data as $id) {
-            $this->getConnection()->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier('category'), 'c')
-                ->set('c.sort_order', ':sortOrder')
-                ->where('c.id = :id')
-                ->setParameter('sortOrder', $sortOrder, Mapper::getParameterType($sortOrder))
-                ->setParameter('id', $id)
-                ->executeQuery();
-
-            // increase sort order
-            $sortOrder = $sortOrder + 10;
-        }
     }
 
     protected function exception(string $key): string
