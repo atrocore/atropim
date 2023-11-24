@@ -6,8 +6,8 @@
     "isActive": "Active",
     "mainImage": "Main Image",
     "assets": "Assets",
-    "categoryParent": "Parent Category",
-    "categories": "Categories",
+    "parents": "Parent Category",
+    "children": "Categories",
     "channels": "Channels",
     "categoryRoute": "Сategory Tree (ID)",
     "categoryRouteName": "Сategory Tree",
@@ -18,8 +18,8 @@
     "sortOrder": "Sort Order"
   },
   "links": {
-    "categoryParent": "Parent Category",
-    "categories": "Child Categories",
+    "parents": "Parent Category",
+    "children": "Child Categories",
     "assets": "Assets",
     "channels": "Channels",
     "products": "Products",

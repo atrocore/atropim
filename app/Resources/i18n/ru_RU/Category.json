@@ -6,7 +6,7 @@
     "isActive": "Активный",
     "mainImage": "Основное изображение",
     "assets": "Ассеты",
-    "categoryParent": "Родительская категория",
+    "parents": "Родительская категория",
     "categories": "Категории",
     "channels": "Каналы",
     "categoryRoute": "Дерево категорий (ID)",
@@ -18,7 +18,7 @@
     "sortOrder": "Порядок сортировки"
   },
   "links": {
-    "categoryParent": "Родительская категория",
+    "parents": "Родительская категория",
     "categories": "Дочерние Категории",
     "assets": "Ассеты",
     "channels": "Каналы",

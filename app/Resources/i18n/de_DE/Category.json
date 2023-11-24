@@ -14,9 +14,9 @@
     "hasChildren": "hat untergeordnete Elemente",
     "sortOrder": "Sortierreihenfolge",
     "code": "Code",
-    "categories": "Kategorien",
+    "children": "Kategorien",
     "channels": "Kanäle",
-    "categoryParent": "Hauptkategorie",
+    "parents": "Hauptkategorie",
     "categoryRouteName": "Kategoriebaum",
     "catalogs": "Kataloge"
   },
@@ -26,9 +26,9 @@
     "assets": "Assets",
     "rootCategories": "Stammkategorien",
     "image": "Bild",
-    "categories": "Untergeordnete Kategorien",
+    "children": "Untergeordnete Kategorien",
     "channels": "Kanäle",
-    "categoryParent": "Hauptkategorie",
+    "parents": "Hauptkategorie",
     "catalogs": "Kataloge"
   },
   "labels": {
