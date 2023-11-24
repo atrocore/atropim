@@ -98,6 +98,21 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "categoryRoute": {
+      "type": "text",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": false,
+      "importDisabled": true
+    },
+    "categoryRouteName": {
+      "type": "text",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": false,
+      "importDisabled": true
+    },
     "hasChildren": {
       "type": "bool",
       "notStorable": true,

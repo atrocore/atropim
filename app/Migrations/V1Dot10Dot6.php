@@ -71,8 +71,6 @@ class V1Dot10Dot6 extends Base
         $toSchema = clone $fromSchema;
 
         $this->dropColumn($toSchema, 'category', 'category_parent_id');
-        $this->dropColumn($toSchema, 'category', 'category_route_name');
-        $this->dropColumn($toSchema, 'category', 'category_route');
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->getPDO()->exec($sql);
