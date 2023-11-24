@@ -103,6 +103,7 @@ class V1Dot10Dot8 extends Base
             file_put_contents($path, $contents);
         }
 
+        $this->rebuild();
         $this->updateComposer('atrocore/pim', '^1.10.8');
     }
 
