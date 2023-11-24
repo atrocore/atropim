@@ -147,7 +147,8 @@ class Product extends Hierarchy
             $category = $this->getEntityManager()->getEntity('Category', $category);
         }
 
-        if ($category->get('children')->count() > 0) {
+        $children = $category->get('children');
+        if (!empty($chidren) && $children->count() > 0) {
             throw new BadRequest($this->translate("productCanNotLinkToNonLeafCategory", 'exceptions', 'Product'));
         }
 

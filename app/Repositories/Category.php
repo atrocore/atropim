@@ -23,23 +23,32 @@ use Espo\ORM\EntityCollection;
 
 class Category extends Hierarchy
 {
-    public function getCategoryRoute(Entity $entity, bool $isName = false): string
+    public static function getCategoryRoute(Entity $entity, bool $isName = false): string
     {
         // prepare result
         $result = '';
 
-        $parentIds = $this->getParentsRecursivelyArray($entity->get('id'));
+        // prepare data
+        $data = [];
 
-        if (!empty($parentIds)) {
-            if ($isName) {
-                $data = [];
-                foreach ($parentIds as $id) {
-                    $parent = $this->get($id);
-                    $data[] = empty($parent) ? $id : trim((string)$parent->get('name'));
-                }
-                $result = implode(' / ', array_reverse($data));
+        while (!empty($parents = $entity->get('parents')) && $parents->count() > 0) {
+            // push id
+            $parent = $parents->offsetGet(0);
+            if (!$isName || empty($parent->get('name'))) {
+                $data[] = $parent->get('id');
             } else {
-                $result = '|' . implode('|', array_reverse($parentIds)) . '|';
+                $data[] = trim((string)$parent->get('name'));
+            }
+
+            // to next category
+            $entity = $parent;
+        }
+
+        if (!empty($data)) {
+            if (!$isName) {
+                $result = '|' . implode('|', array_reverse($data)) . '|';
+            } else {
+                $result = implode(' / ', array_reverse($data));
             }
         }
 
@@ -115,7 +124,6 @@ class Category extends Hierarchy
         if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
             return $this->getMapper()->addRelation($category, 'catalogs', $catalogId);
         }
-
 
         if (!$this->isRoot($category->get('id'))) {
             throw new BadRequest($this->exception('onlyRootCategoryCanBeLinked'));
@@ -389,6 +397,9 @@ class Category extends Hierarchy
             $this->updateSortOrderInTree($entity);
         }
 
+        // build tree
+        $this->updateCategoryTree($entity);
+
         // relate parent channels
         $parents = $entity->get('parents');
         if ($entity->isNew() && !empty($parents) && count($parents) > 0) {
@@ -560,8 +571,9 @@ class Category extends Hierarchy
 
         if (empty($entity->recursiveSave) && $isDeactivate && !$entity->isNew()) {
             // update all children
-            $children = $this->getEntityChildren($entity->get('categories'), []);
-            foreach ($children as $child) {
+            $ids = $this->getChildrenRecursivelyArray($entity->get('id'));
+            foreach ($ids as $id) {
+                $child = $this->get($id);
                 $child->set('isActive', false);
                 $this->saveEntity($child);
             }
@@ -576,18 +588,33 @@ class Category extends Hierarchy
         $this->getEntityManager()->saveEntity($entity);
     }
 
-    protected function getEntityChildren(EntityCollection $entities, array $children): array
+    protected function updateRoute(Entity $entity): void
     {
-        if (!empty($entities)) {
-            foreach ($entities as $entity) {
-                $children[] = $entity;
-            }
-            foreach ($entities as $entity) {
-                $children = $this->getEntityChildren($entity->get('categories'), $children);
-            }
-        }
-
-        return $children;
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier('category'), 'c')
+            ->set('category_route', ':categoryRoute')
+            ->set('category_route_name', ':categoryRouteName')
+            ->where('c.id = :id')
+            ->setParameter('categoryRoute', self::getCategoryRoute($entity))
+            ->setParameter('categoryRouteName', self::getCategoryRoute($entity, true))
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
+    protected function updateCategoryTree(Entity $entity): void
+    {
+        if (!empty($entity->recursiveSave)) {
+            return;
+        }
+
+        $this->updateRoute($entity);
+
+        if (!$entity->isNew()) {
+            $ids = $this->getChildrenRecursivelyArray($entity->get('id'));
+            foreach ($ids as $id) {
+                $child = $this->get($id);
+                $this->updateRoute($child);
+            }
+        }
+    }
 }

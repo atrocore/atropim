@@ -71,10 +71,12 @@ class Category extends AbstractSelectManager
             return;
         }
 
-        $category = $this->getEntityManager()->getRepository('Category')->get($notChildren);
+        $repository = $this->getEntityManager()->getRepository('Category');
+        $category = $repository->get($notChildren);
+
         if (!empty($category)) {
             $result['whereClause'][] = [
-                'id!=' => array_merge($category->getLinkMultipleIdList('children'), [$category->get('id')])
+                'id!=' => array_merge($repository->getChildrenRecursivelyArray($category->get('id')), [$category->get('id')])
             ];
         }
     }

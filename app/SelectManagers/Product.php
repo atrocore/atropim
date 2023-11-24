@@ -435,13 +435,13 @@ class Product extends AbstractSelectManager
             return;
         }
 
-        $category = $this->getEntityManager()->getEntity('Category', $id);
-        if (empty($category)) {
+        $repository = $category = $this->getEntityManager()->getRepository('Category');
+        if (empty($category = $repository->get($id))) {
             throw new BadRequest('No such category');
         }
 
         // collect categories
-        $categoriesIds = $category->getLinkMultipleIdList('children');
+        $categoriesIds = $repository->getChildrenRecursivelyArray($category->get('id'));
         $categoriesIds[] = $category->get('id');
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
