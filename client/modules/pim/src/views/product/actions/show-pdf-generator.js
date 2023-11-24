@@ -20,8 +20,8 @@ Espo.define('pim:views/product/actions/show-pdf-generator', 'pdf-generator:views
                     let channels = [];
                     response.list.forEach(record => {
                         channels.push({
-                            "id": record.channelId,
-                            "name": record.channelName
+                            "id": record.id,
+                            "name": record.name
                         });
                     });
 
@@ -40,7 +40,7 @@ Espo.define('pim:views/product/actions/show-pdf-generator', 'pdf-generator:views
                 && this.getAcl().check('Channel', 'read')
                 && this.getAcl().check('ProductChannel', 'read')
             ) {
-                return this.ajaxGetRequest(`Product/${this.model.id}/productChannels`);
+                return this.ajaxGetRequest(`Product/${this.model.id}/channels`);
             } else {
                 return new Promise(resolve => resolve({list: [], total: 0}));
             }
