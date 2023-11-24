@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
+use Atro\Core\Templates\Entities\Hierarchy;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Core\Exceptions\Error;
@@ -20,7 +21,7 @@ use Espo\Core\Exceptions\Error;
 /**
  * Entity Category
  */
-class Category extends \Espo\Core\Templates\Entities\Base
+class Category extends Hierarchy
 {
     public bool $recursiveSave = false;
 
@@ -64,29 +65,9 @@ class Category extends \Espo\Core\Templates\Entities\Base
         // validation
         $this->isEntity();
 
-        $count = $this
-            ->getEntityManager()
-            ->getRepository('Category')
-            ->where(['categoryParentId' => $this->get('id')])
-            ->count();
+        $children = $this->get('children');
 
-        return !empty($count);
-    }
-
-    /**
-     * @return EntityCollection
-     * @throws Error
-     */
-    public function getChildren(): EntityCollection
-    {
-        // validation
-        $this->isEntity();
-
-        return $this
-            ->getEntityManager()
-            ->getRepository('Category')
-            ->where(['categoryRoute*' => "%|" . $this->get('id') . "|%"])
-            ->find();
+        return !empty($children) && count($children) > 0;
     }
 
     /**
@@ -103,10 +84,10 @@ class Category extends \Espo\Core\Templates\Entities\Base
             'categories.id' => [$this->get('id')]
         ];
 
-        $categoryChildren = $this->getChildren();
+        $childIds = $this->getEntityManager()->getRepository('Category')->getChildrenRecursivelyArray($this->get('id'));
 
-        if (count($categoryChildren) > 0) {
-            $where['categories.id'] = array_merge($where['categories.id'], array_column($categoryChildren->toArray(), 'id'));
+        if (count($childIds) > 0) {
+            $where['categories.id'] = array_merge($where['categories.id'], $childIds);
         }
 
         return $this

@@ -6,8 +6,8 @@
     "isActive": "Активний",
     "mainImage": "Основне зображення",
     "assets": "Асети",
-    "categoryParent": "Батьківська категорія",
-    "categories": "Категорії",
+    "parents": "Батьківська категорія",
+    "children": "Категорії",
     "channels": "Канали",
     "categoryRoute": "Дерево категорій (ID)",
     "categoryRouteName": "Дерево категорій",
@@ -18,8 +18,8 @@
     "sortOrder": "Порядок сортування"
   },
   "links": {
-    "categoryParent": "Батьківська категорія",
-    "categories": "Дочірні категорії",
+    "parents": "Батьківська категорія",
+    "children": "Дочірні категорії",
     "assets": "Асети",
     "channels": "Канали",
     "products": "Продукти",

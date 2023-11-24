@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-use Espo\Core\Templates\Controllers\Hierarchy;
+use Atro\Core\Templates\Controllers\Hierarchy;
 
 class Category extends Hierarchy
 {

@@ -31,8 +31,9 @@ class Category extends Hierarchy
         // prepare data
         $data = [];
 
-        while (!empty($parent = $entity->get('categoryParent'))) {
+        while (!empty($parents = $entity->get('parents')) && $parents->count() > 0) {
             // push id
+            $parent = $parents->offsetGet(0);
             if (!$isName || empty($parent->get('name'))) {
                 $data[] = $parent->get('id');
             } else {
@@ -60,7 +61,7 @@ class Category extends Hierarchy
             ->select('cc.channel_id')
             ->from($this->getConnection()->quoteIdentifier('category_channel'), 'cc')
             ->where('cc.deleted = :false')
-            ->andWhere("cc.category_id IN (SELECT c.category_parent_id FROM {$this->getConnection()->quoteIdentifier('category')} c WHERE c.deleted = :false AND id = :id)")
+            ->andWhere("cc.category_id IN (SELECT c.parent_id FROM {$this->getConnection()->quoteIdentifier('category_hierarchy')} c WHERE c.deleted = :false AND entity_id = :id)")
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->setParameter('id', $categoryId, Mapper::getParameterType($categoryId))
             ->fetchAllAssociative();
@@ -74,7 +75,7 @@ class Category extends Hierarchy
             ->select('c.id')
             ->from($this->getConnection()->quoteIdentifier('category'), 'c')
             ->where('c.deleted = :false')
-            ->andWhere('c.category_parent_id IS NULL')
+            ->andWhere("c.id NOT IN (SELECT DISTINCT c.entity_id FROM {$this->getConnection()->quoteIdentifier('category_hierarchy')} c WHERE c.deleted = :false)")
             ->andWhere('c.id NOT IN (SELECT cc.category_id FROM catalog_category cc WHERE cc.deleted = :false)')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->fetchAllAssociative();
@@ -88,7 +89,7 @@ class Category extends Hierarchy
             return;
         }
 
-        $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
+        $categoriesIds = $this->getChildrenRecursivelyArray($category->get('id'));
         $categoriesIds[] = $category->get('id');
 
         $records = $this->getConnection()->createQueryBuilder()
@@ -124,7 +125,7 @@ class Category extends Hierarchy
             return $this->getMapper()->addRelation($category, 'catalogs', $catalogId);
         }
 
-        if (!empty($category->get('categoryParent'))) {
+        if (!$this->isRoot($category->get('id'))) {
             throw new BadRequest($this->exception('onlyRootCategoryCanBeLinked'));
         }
 
@@ -134,8 +135,8 @@ class Category extends Hierarchy
         }
         try {
             $result = $this->getMapper()->addRelation($category, 'catalogs', $catalogId);
-            foreach ($category->getChildren() as $child) {
-                $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
+            foreach ($this->getChildrenRecursivelyArray($category->get('id')) as $childId) {
+                $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $childId, 'catalogs', $catalogId);
             }
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
@@ -165,7 +166,7 @@ class Category extends Hierarchy
             return $this->getMapper()->removeRelation($category, 'catalogs', $catalogId);
         }
 
-        if (!empty($category->get('categoryParent'))) {
+        if (!$this->isRoot($category->get('id'))) {
             throw new BadRequest($this->exception('onlyRootCategoryCanBeUnLinked'));
         }
 
@@ -181,14 +182,14 @@ class Category extends Hierarchy
         try {
             $result = $this->getMapper()->removeRelation($category, 'catalogs', $catalogId);
 
-            foreach ($category->getChildren() as $child) {
-                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'catalogs', $catalogId);
+            foreach ($this->getChildrenRecursivelyArray($category->get('id')) as $childId) {
+                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $childId, 'catalogs', $catalogId);
 
                 $this->getConnection()->createQueryBuilder()
                     ->delete('product_category')
                     ->where('category_id = :childId')
                     ->andWhere('product_id IN (SELECT id FROM product WHERE catalog_id = :catalogId)')
-                    ->setParameter('childId', $child->get('id'))
+                    ->setParameter('childId', $childId)
                     ->setParameter('catalogId', $catalogId)
                     ->executeQuery();
             }
@@ -226,8 +227,8 @@ class Category extends Hierarchy
             $result = $this->getMapper()->addRelation($category, 'channels', $channelId);
 
             if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
-                foreach ($category->getChildren() as $child) {
-                    $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
+                foreach ($this->getChildrenRecursivelyArray($category->get('id')) as $childId) {
+                    $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $childId, 'channels', $channelId);
                 }
             }
             if (!empty($inTransaction)) {
@@ -262,8 +263,8 @@ class Category extends Hierarchy
 
             $result = $this->getMapper()->removeRelation($category, 'channels', $channelId);
             if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
-                foreach ($category->getChildren() as $child) {
-                    $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $child->get('id'), 'channels', $channelId);
+                foreach ($this->getChildrenRecursivelyArray($category->get('id')) as $childId) {
+                    $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $childId, 'channels', $channelId);
                 }
             }
 
@@ -343,103 +344,9 @@ class Category extends Hierarchy
         return $result;
     }
 
-    public function getEntityPosition(Entity $entity, string $parentId): ?int
-    {
-        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
-
-        if (empty($parentId)) {
-            $additionalWhere = ' AND t.category_parent_id IS NULL ';
-        } else {
-            $additionalWhere = ' AND t.category_parent_id=:parentId';
-        }
-
-        if (Converter::isPgSQL($this->getConnection())) {
-            $query = "SELECT x.position
-                      FROM (SELECT t.id, row_number() over(ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
-                        FROM {$this->getConnection()->quoteIdentifier('category')} t
-                        WHERE t.deleted=:false $additionalWhere) x
-                      WHERE x.id=:id";
-        } else {
-            $query = "SELECT x.position
-                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-                        FROM {$this->getConnection()->quoteIdentifier('category')} t
-                            JOIN (SELECT @rownum:=0) r
-                        WHERE t.deleted=:false $additionalWhere
-                        ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-                      WHERE x.id=:id";
-        }
-
-        $sth = $this->getEntityManager()->getPDO()->prepare($query);
-        $sth->bindValue(':id', $entity->get('id'));
-        if (!empty($parentId)) {
-            $sth->bindValue(':parentId', $parentId);
-        }
-        $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
-        $sth->execute();
-
-        $position = $sth->fetch(\PDO::FETCH_COLUMN);
-
-        return (int)$position;
-    }
-
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
-    {
-        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
-
-        $select = ['c.*'];
-        if ($withChildrenCount) {
-            $select [] = "(SELECT COUNT(c1.id) FROM {$this->getConnection()->quoteIdentifier('category')} c1 WHERE c1.category_parent_id=c.id AND c1.deleted=:false) as children_count";
-        }
-
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->select($select)
-            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
-            ->where('c.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->addOrderBy('c.sort_order', 'ASC')
-            ->addOrderBy("c.$sortBy", $sortOrder)
-            ->addOrderBy('c.id', 'ASC');
-
-        if (empty($parentId)) {
-            $qb->andWhere('c.category_parent_id IS NULL');
-        } else {
-            $qb->andWhere('c.category_parent_id = :parentId');
-            $qb->setParameter('parentId', $parentId);
-        }
-
-        if (!is_null($offset) && !is_null($maxSize)) {
-            $qb->setFirstResult($offset);
-            $qb->setMaxResults($maxSize);
-        }
-
-        return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
-    }
-
-    public function getChildrenCount(string $parentId, $selectParams = null): int
-    {
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->select('COUNT(id) as count')
-            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
-            ->where('c.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false));
-
-        if (empty($parentId)) {
-            $qb->andWhere('c.category_parent_id IS NULL');
-        } else {
-            $qb->andWhere('c.category_parent_id = :parentId');
-            $qb->setParameter('parentId', $parentId);
-        }
-
-        $res = $qb->fetchAssociative();
-
-        return empty($res) ? 0 : (int)$res['count'];
-    }
-
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      *
      * @throws BadRequest
      */
@@ -449,25 +356,29 @@ class Category extends Hierarchy
             $entity->set('code', null);
         }
 
-        if ($entity->isAttributeChanged('categoryParentId')) {
-            $childrenIds = array_column($entity->getChildren()->toArray(), 'id');
-            if ($entity->get('categoryParentId') === $entity->get('id') || in_array($entity->get('categoryParentId'), $childrenIds)) {
-                throw new BadRequest($this->exception('youCanNotChooseChildCategory'));
-            }
+        if ($entity->isAttributeChanged('parentsIds')) {
+            $parents = $entity->get('parents');
 
-            if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
-                $categoryParent = $entity->get('categoryParent');
-                if (!empty($categoryParent)) {
-                    $categoryParentProducts = $categoryParent->get('products');
-                    if (!empty($categoryParentProducts) && count($categoryParentProducts) > 0) {
-                        throw new BadRequest($this->exception('parentCategoryHasProducts'));
+            if (!empty($parents) && count($parents) > 0) {
+                if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
+                    foreach ($parents as $parent) {
+                        $categoryParentProducts = $parent->get('products');
+                        if (!empty($categoryParentProducts) && count($categoryParentProducts) > 0) {
+                            throw new BadRequest($this->exception('parentCategoryHasProducts'));
+                        }
                     }
                 }
-            }
-        }
 
-        if ($entity->isAttributeChanged('categoryParentId') && !empty($parent = $this->get($entity->get('categoryParentId')))) {
-            $entity->set('catalogsIds', $parent->getLinkMultipleIdList('catalogs'));
+                $catalogIds = [];
+                foreach ($parents as $parent) {
+                    foreach ($parent->getLinkMultipleIdList('catalogs') as $catalogId) {
+                        if (!in_array($catalogId, $catalogIds)) {
+                            $catalogIds[] = $catalogId;
+                        }
+                    }
+                }
+                $entity->set('catalogsIds', $catalogIds);
+            }
         }
 
         if ($entity->isNew()) {
@@ -490,10 +401,13 @@ class Category extends Hierarchy
         $this->updateCategoryTree($entity);
 
         // relate parent channels
-        if ($entity->isNew() && !empty($parent = $entity->get('categoryParent'))) {
-            if (!empty($parentChannels = $parent->get('channels')) && count($parentChannels) > 0) {
-                foreach ($parentChannels as $parentChannel) {
-                    $this->relate($entity, 'channels', $parentChannel);
+        $parents = $entity->get('parents');
+        if ($entity->isNew() && !empty($parents) && count($parents) > 0) {
+            foreach ($parents as $parent) {
+                if (!empty($parentChannels = $parent->get('channels')) && count($parentChannels) > 0) {
+                    foreach ($parentChannels as $parentChannel) {
+                        $this->relate($entity, 'channels', $parentChannel);
+                    }
                 }
             }
         }
@@ -534,10 +448,6 @@ class Category extends Hierarchy
             ->where('category_id = :categoryId')
             ->setParameter('categoryId', $entity->get('id'))
             ->executeQuery();
-
-        foreach ($this->where(['categoryParentId' => $entity->get('id')])->find() as $child) {
-            $this->remove($child, $options);
-        }
 
         if ($result) {
             $this->afterRemove($entity, $options);
@@ -643,9 +553,13 @@ class Category extends Hierarchy
 
         if (empty($entity->recursiveSave) && $isActivate && !$entity->isNew()) {
             // update all parents
-            foreach ($this->getEntityParents($entity, []) as $parent) {
-                $parent->set('isActive', true);
-                $this->saveEntity($parent);
+            $ids = $this->getParentsRecursivelyArray($entity->get('id'));
+            foreach ($ids as $id) {
+                $parent = $this->get($id);
+                if (!empty($parent)) {
+                    $parent->set('isActive', true);
+                    $this->saveEntity($parent);
+                }
             }
         }
     }
@@ -657,8 +571,9 @@ class Category extends Hierarchy
 
         if (empty($entity->recursiveSave) && $isDeactivate && !$entity->isNew()) {
             // update all children
-            $children = $this->getEntityChildren($entity->get('categories'), []);
-            foreach ($children as $child) {
+            $ids = $this->getChildrenRecursivelyArray($entity->get('id'));
+            foreach ($ids as $id) {
+                $child = $this->get($id);
                 $child->set('isActive', false);
                 $this->saveEntity($child);
             }
@@ -671,31 +586,6 @@ class Category extends Hierarchy
         $entity->recursiveSave = true;
 
         $this->getEntityManager()->saveEntity($entity);
-    }
-
-    protected function getEntityParents(Entity $category, array $parents): array
-    {
-        $parent = $category->get('categoryParent');
-        if (!empty($parent)) {
-            $parents[] = $parent;
-            $parents = $this->getEntityParents($parent, $parents);
-        }
-
-        return $parents;
-    }
-
-    protected function getEntityChildren(EntityCollection $entities, array $children): array
-    {
-        if (!empty($entities)) {
-            foreach ($entities as $entity) {
-                $children[] = $entity;
-            }
-            foreach ($entities as $entity) {
-                $children = $this->getEntityChildren($entity->get('categories'), $children);
-            }
-        }
-
-        return $children;
     }
 
     protected function updateRoute(Entity $entity): void
@@ -720,8 +610,9 @@ class Category extends Hierarchy
         $this->updateRoute($entity);
 
         if (!$entity->isNew()) {
-            $children = $this->getEntityChildren($entity->get('categories'), []);
-            foreach ($children as $child) {
+            $ids = $this->getChildrenRecursivelyArray($entity->get('id'));
+            foreach ($ids as $id) {
+                $child = $this->get($id);
                 $this->updateRoute($child);
             }
         }

@@ -98,10 +98,6 @@
       "importDisabled": true,
       "exportDisabled": true
     },
-    "categoryParent": {
-      "type": "link",
-      "view": "pim:views/category/fields/category-parent"
-    },
     "categoryRoute": {
       "type": "text",
       "layoutListDisabled": true,
@@ -115,14 +111,6 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": false,
-      "importDisabled": true
-    },
-    "categories": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "filterDisabled": false,
-      "noLoad": true,
       "importDisabled": true
     },
     "hasChildren": {
@@ -154,6 +142,31 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "view": "views/fields/hierarchy-parents"
+    },
+    "hierarchySortOrder": {
+      "type": "int",
+      "notStorable": true,
+      "relatingEntityField": [
+        "Category"
+      ],
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -179,16 +192,32 @@
       "relationName": "EntityTeam",
       "layoutRelationshipsDisabled": true
     },
-    "categoryParent": {
-      "type": "belongsTo",
-      "foreign": "categories",
-      "entity": "Category"
-    },
-    "categories": {
+    "children": {
       "type": "hasMany",
-      "foreign": "categoryParent",
+      "relationName": "CategoryHierarchy",
+      "foreign": "parents",
       "entity": "Category",
-      "disableMassRelation": true
+      "audited": false,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ],
+      "additionalColumns": {
+        "hierarchySortOrder": {
+          "type": "int"
+        }
+      }
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "CategoryHierarchy",
+      "foreign": "children",
+      "entity": "Category",
+      "audited": false,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
     },
     "catalogs": {
       "type": "hasMany",

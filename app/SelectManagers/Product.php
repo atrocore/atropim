@@ -175,15 +175,9 @@ class Product extends AbstractSelectManager
             // prepare ids
             $ids = ['-1'];
 
-            // get root id
-            if (empty($category->get('categoryParent'))) {
-                $rootId = $category->get('id');
-            } else {
-                $tree = explode("|", (string)$category->get('categoryRoute'));
-                $rootId = (!empty($tree[1])) ? $tree[1] : null;
-            }
+            $route = $this->getEntityManager()->getRepository('Category')->getHierarchyRoute($category->get('id'));
 
-            if (!empty($rootId)) {
+            if (!empty($rootId = array_keys($route)[0])) {
                 $catalogs = $this
                     ->getEntityManager()
                     ->getRepository('Catalog')
@@ -441,13 +435,13 @@ class Product extends AbstractSelectManager
             return;
         }
 
-        $category = $this->getEntityManager()->getEntity('Category', $id);
-        if (empty($category)) {
+        $repository = $category = $this->getEntityManager()->getRepository('Category');
+        if (empty($category = $repository->get($id))) {
             throw new BadRequest('No such category');
         }
 
         // collect categories
-        $categoriesIds = array_column($category->getChildren()->toArray(), 'id');
+        $categoriesIds = $repository->getChildrenRecursivelyArray($category->get('id'));
         $categoriesIds[] = $category->get('id');
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
