@@ -926,12 +926,12 @@ class ProductAttributeValue extends Relationship
             case 'rangeInt':
                 $wasValueFrom = self::$beforeSaveData['valueFrom'] ?? null;
                 $wasValueTo = self::$beforeSaveData['valueTo'] ?? null;
-                if (property_exists($input, 'intValue') && $wasValue !== $input->intValue) {
+                if (property_exists($input, 'intValue') && $wasValueFrom !== $input->intValue) {
                     $result['fields'][] = 'valueFrom';
                     $result['attributes']['was']['valueFrom'] = $wasValueFrom;
                     $result['attributes']['became']['valueFrom'] = $input->intValue;
                 }
-                if (property_exists($input, 'intValue1') && $wasValue !== $input->intValue1) {
+                if (property_exists($input, 'intValue1') && $wasValueTo !== $input->intValue1) {
                     $result['fields'][] = 'valueTo';
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->intValue1;
@@ -945,12 +945,12 @@ class ProductAttributeValue extends Relationship
             case 'rangeFloat':
                 $wasValueFrom = self::$beforeSaveData['valueFrom'] ?? null;
                 $wasValueTo = self::$beforeSaveData['valueTo'] ?? null;
-                if (property_exists($input, 'floatValue') && $wasValue !== $input->floatValue) {
+                if (property_exists($input, 'floatValue') && !Util::isFloatEqual( (float)$wasValueFrom, (float)$input->floatValue1)) {
                     $result['fields'][] = 'valueFrom';
                     $result['attributes']['was']['valueFrom'] = $wasValueFrom;
                     $result['attributes']['became']['valueFrom'] = $input->floatValue;
                 }
-                if (property_exists($input, 'floatValue1') && $wasValue !== $input->floatValue1) {
+                if (property_exists($input, 'floatValue1') && !Util::isFloatEqual( (float)$wasValueTo, (float)$input->floatValue1)) {
                     $result['fields'][] = 'valueTo';
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->floatValue1;
@@ -975,7 +975,7 @@ class ProductAttributeValue extends Relationship
                 }
                 break;
             case 'float':
-                if (property_exists($input, 'floatValue') && $wasValue !== $input->floatValue) {
+                if (property_exists($input, 'floatValue') && !Util::isFloatEqual((float) $wasValue,(float) $input->floatValue)) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $input->floatValue;
