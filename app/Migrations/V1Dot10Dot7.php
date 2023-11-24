@@ -94,7 +94,7 @@ class V1Dot10Dot7 extends Base
         // Migrate Data
         $connection = $this->getConnection();
         $rows = $connection->createQueryBuilder()
-            ->select('id', 'category_parent_id')
+            ->select('id', 'category_parent_id', 'sort_order')
             ->from('category')
             ->where('category_parent_id is not null')
             ->fetchAllAssociative();
