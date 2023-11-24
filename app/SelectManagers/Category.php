@@ -90,7 +90,7 @@ class Category extends AbstractSelectManager
             $connection = $this->getEntityManager()->getConnection();
 
             $childrenIds = $connection->createQueryBuilder()
-                ->select('distinct(entity_id)', 'p_id')
+                ->select('distinct(entity_id)')
                 ->from('category_hierarchy')
                 ->where('deleted = :false')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -156,7 +156,7 @@ class Category extends AbstractSelectManager
             $connection = $this->getEntityManager()->getConnection();
 
             $parentIds = $connection->createQueryBuilder()
-                ->select('distinct(parent_id)', 'p_id')
+                ->select('distinct(parent_id)')
                 ->from('category_hierarchy')
                 ->where('deleted = :false')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
