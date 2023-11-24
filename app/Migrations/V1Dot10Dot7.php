@@ -66,6 +66,60 @@ class V1Dot10Dot7 extends Base
             $this->getPDO()->exec($sql);
         }
 
+
+        // Migrate schema
+        $tableName = 'category_hierarchy';
+        $table = $toSchema->createTable($tableName);
+        $this->addColumn($toSchema, $tableName, 'id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
+        $this->addColumn($toSchema, $tableName, 'deleted', ['type' => 'bool', 'default' => 0]);
+        $this->addColumn($toSchema, $tableName, 'entity_id', ['type' => 'varchar', 'default' => null]);
+        $this->addColumn($toSchema, $tableName, 'parent_id', ['type' => 'varchar', 'default' => null]);
+        $this->addColumn($toSchema, $tableName, 'hierarchy_sort_order', ['type' => 'int', 'default' => null]);
+
+        $table->setPrimaryKey(['id']);
+        $indexes = [
+            ['entity_id'],
+            ['parent_id'],
+            ['entity_id', 'parent_id']
+        ];
+        foreach ($indexes as $index) {
+            $table->addIndex($index);
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getPDO()->exec($sql);
+        }
+
+
+        // Migrate Data
+        $connection = $this->getConnection();
+        $rows = $connection->createQueryBuilder()
+            ->select('id', 'category_parent_id')
+            ->from('category')
+            ->where('category_parent_id is not null')
+            ->fetchAllAssociative();
+
+        foreach ($rows as $row) {
+            $connection->createQueryBuilder()
+                ->insert('category_hierarchy')
+                ->setValue('entity_id', ':id')
+                ->setValue('parent_id', ':category_parent_id')
+                ->setParameter('id', $row['id'])
+                ->setParameter('category_parent_id', $row['category_parent_id'])
+                ->executeQuery();
+        }
+
+
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $this->dropColumn($toSchema, 'category', 'category_parent_id');
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getPDO()->exec($sql);
+        }
+
+
         $this->rebuild();
         $this->updateComposer('atrocore/pim', '^1.10.7');
     }

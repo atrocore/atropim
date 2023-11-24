@@ -39,9 +39,9 @@ class Category extends Hierarchy
         // validation
         $this->isEntity();
 
-        $routeIds = array_keys($this->getEntityManager()->getRepository('Category')->getHierarchyRoute($this->get('id')));
+        $categoryRoute = explode('|', (string)$this->get('categoryRoute'));
 
-        return (isset($routeIds[0])) ? $this->getEntityManager()->getEntity('Category', $routeIds[0]) : $this;
+        return (isset($categoryRoute[1])) ? $this->getEntityManager()->getEntity('Category', $categoryRoute[1]) : $this;
     }
 
     public function getParentsIds(): array
@@ -49,7 +49,11 @@ class Category extends Hierarchy
         // validation
         $this->isEntity();
 
-        return array_keys($this->getEntityManager()->getRepository('Category')->getHierarchyRoute($this->get('id')));
+        $parentsIds = explode('|', (string)$this->get('categoryRoute'));
+        array_shift($parentsIds);
+        array_pop($parentsIds);
+
+        return $parentsIds;
     }
 
     /**
