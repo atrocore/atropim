@@ -121,6 +121,28 @@ class V1Dot10Dot7 extends Base
             $this->getPDO()->exec($sql);
         }
 
+        // Migrate layouts
+        $path = "custom/Espo/Custom/Resources/layouts/Category/relationships.json";
+        if (file_exists($path)) {
+            $contents = file_get_contents($path);
+            $contents = str_replace('"categories"', '"children"', $contents);
+            file_put_contents($path, $contents);
+        }
+
+        $path = "custom/Espo/Custom/Resources/layouts/Category/detail.json";
+        if (file_exists($path)) {
+            $contents = file_get_contents($path);
+            $contents = str_replace('"categoryParent"', '"parents"', $contents);
+            file_put_contents($path, $contents);
+        }
+
+        $path = "custom/Espo/Custom/Resources/layouts/Category/detailSmall.json";
+        if (file_exists($path)) {
+            $contents = file_get_contents($path);
+            $contents = str_replace('"categoryParent"', '"parents"', $contents);
+            file_put_contents($path, $contents);
+        }
+
 
         $this->rebuild();
         $this->updateComposer('atrocore/pim', '^1.10.7');
