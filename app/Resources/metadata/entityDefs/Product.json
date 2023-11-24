@@ -264,17 +264,7 @@
     "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "noLoad": true,
-      "columns": {
-        "sorting": "sorting"
-      }
-    },
-    "sorting": {
-      "type": "int",
-      "notStorable": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "description": "Sorting products in category"
+      "noLoad": true
     },
     "contents": {
       "type": "linkMultiple"

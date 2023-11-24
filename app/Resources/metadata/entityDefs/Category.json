@@ -135,23 +135,7 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true,
-      "columns": {
-        "sorting": "sorting"
-      }
-    },
-    "sorting": {
-      "type": "int",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "description": "Sorting products in category"
+      "noLoad": true
     },
     "channels": {
       "type": "linkMultiple",
@@ -246,12 +230,7 @@
       "relationName": "productCategory",
       "foreign": "categories",
       "entity": "Product",
-      "audited": false,
-      "additionalColumns": {
-        "sorting": {
-          "type": "int"
-        }
-      }
+      "audited": false
     },
     "channels": {
       "type": "hasMany",
