@@ -614,17 +614,6 @@ class Product extends Hierarchy
         }
     }
 
-//    public function findLinkedEntities($id, $link, $params)
-//    {
-//        if ($link === 'assets') {
-//            echo '<pre>';
-//            print_r($params);
-//            die();
-//        }
-//
-//        return parent::findLinkedEntities($id, $link, $params);
-//    }
-
     /**
      * @param string $id
      * @param array $params
