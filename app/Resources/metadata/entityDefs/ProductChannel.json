@@ -3,5 +3,12 @@
     "isActive": {
       "type": "bool"
     }
+  },
+  "links": {
+    "product": {
+      "type": "belongsTo",
+      "foreign": "productChannels",
+      "entity": "Product"
+    }
   }
 }

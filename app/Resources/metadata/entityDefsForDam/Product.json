@@ -14,6 +14,12 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "productAssets": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -27,6 +33,11 @@
       "relationName": "productAsset",
       "foreign": "products",
       "entity": "Asset"
+    },
+    "productAssets": {
+      "type": "hasMany",
+      "foreign": "product",
+      "entity": "ProductAsset"
     }
   }
 }

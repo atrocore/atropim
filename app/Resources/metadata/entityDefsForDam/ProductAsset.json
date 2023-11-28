@@ -33,6 +33,11 @@
     }
   },
   "links": {
+    "product": {
+      "type": "belongsTo",
+      "foreign": "productAssets",
+      "entity": "Product"
+    },
     "channel": {
       "type": "belongsTo",
       "foreign": "productAssets",

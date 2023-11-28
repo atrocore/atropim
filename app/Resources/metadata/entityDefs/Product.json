@@ -201,6 +201,12 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
+    "productChannels": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
     "productChannels_channel": {
       "type": "linkMultiple",
       "entity": "Channel",
@@ -416,6 +422,11 @@
       "relationName": "productChannel",
       "foreign": "products",
       "entity": "Channel"
+    },
+    "productChannels": {
+      "type": "hasMany",
+      "foreign": "product",
+      "entity": "ProductChannel"
     },
     "createdBy": {
       "type": "belongsTo",
