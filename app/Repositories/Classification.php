@@ -105,21 +105,4 @@ class Classification extends Hierarchy
         $this->addDependency('language');
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
-    {
-        if ($relationName === 'products') {
-            $this->getEntityManager()->getRepository('Product')->relateClassification($foreign, $entity);
-        }
-
-        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
-    }
-
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName === 'products') {
-            $this->getEntityManager()->getRepository('Product')->unRelateClassification($foreign, $entity);
-        }
-
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
-    }
 }
