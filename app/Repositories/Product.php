@@ -357,24 +357,6 @@ class Product extends Hierarchy
         parent::afterRemove($entity, $options);
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
-    {
-        if ($relationName === 'classifications') {
-            $this->relateClassification($entity, $foreign);
-        }
-
-        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
-    }
-
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        if ($relationName === 'classifications') {
-            $this->unRelateClassification($entity, $foreign);
-        }
-
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
-    }
-
     public function relateCategories(Entity $product, $category, $data, $options)
     {
         if (is_bool($category)) {
