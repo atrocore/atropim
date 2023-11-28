@@ -128,6 +128,10 @@ class Product extends Hierarchy
 
     public function setProductMainImage(Entity $entity): void
     {
+        if ($this->isImport) {
+            return;
+        }
+
         if (!$entity->has('mainImageId')) {
             $entity->set('mainImageId', null);
             $entity->set('mainImageName', null);
