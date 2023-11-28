@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
@@ -67,6 +68,6 @@ class ProductAsset extends AbstractSelectManager
 
         $qb->andWhere("{$tableAlias}.id IN (SELECT ps.id FROM product_asset ps WHERE ps.channel_id IN (:channelsIds) AND ps.deleted=:false)");
         $qb->setParameter('channelsIds', $channelsIds, Mapper::getParameterType($channelsIds));
-        $qb->setParameter('false', false, false);
+        $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
 }
