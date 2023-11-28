@@ -93,6 +93,7 @@
   "labels": {
     "removeHierarchically": "Hierarchisch löschen",
     "setAsMainImage": "Als Hauptbild setzen",
+    "setAsMainCategory": "Als Hauptkategorie festlegen",
     "allChannels": "Alle Kanäle",
     "nonHierarchicalProducts": "Unhierarchische Produkte",
     "productHierarchies": "Produkthierarchien",
