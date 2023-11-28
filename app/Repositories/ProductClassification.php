@@ -19,12 +19,16 @@ class ProductClassification extends Relation
     protected function afterSave(Entity $entity, array $data = [])
     {
         parent::afterSave($entity, $data);
-        $this->getEntityManager()->getRepository('Product')->relateClassification($entity->get('productId'), $entity->get('classificationId'));
+
+        if ($entity->isNew()) {
+            $this->getEntityManager()->getRepository('Product')->relateClassification($entity->get('productId'), $entity->get('classificationId'));
+        }
     }
 
     protected function afterRemove(Entity $entity, $options = [])
     {
         $this->getEntityManager()->getRepository('Product')->unRelateClassification($entity->get('productId'), $entity->get('classificationId'));
+
         parent::afterRemove($entity);
     }
 }
