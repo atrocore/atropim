@@ -333,19 +333,25 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function createAssociatedAttributeValue(\stdClass $attachment, string $attributeId): void
     {
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
+        $attrRepo = $this->getEntityManager()->getRepository('Attribute');
+
+        $attribute = $attrRepo->get($attributeId);
         if (empty($attribute)) {
             return;
         }
 
-        $children = $attribute->get('children');
-        if (empty($children) || count($children) === 0) {
+        if (!$attribute->has('childrenIds')) {
+            $attribute->set('childrenIds', $attribute->getLinkMultipleIdList('children'));
+            $attrRepo->putToCache($attribute->get('id'), $attribute);
+        }
+
+        if (empty($attribute->get('childrenIds'))) {
             return;
         }
 
-        foreach ($children as $child) {
+        foreach ($attribute->get('childrenIds') as $childId) {
             $aData = new \stdClass();
-            $aData->attributeId = $child->get('id');
+            $aData->attributeId = $childId;
             $aData->productId = $attachment->productId;
 
             $this->createEntity($aData);
@@ -931,7 +937,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $freshEntity = $this->getRepository()->where(['id' => $entity->get('id')])->findOne(["noCache" => true]);
-        return parent::isEntityUpdated($freshEntity, $data);
+        $fetched = property_exists($entity, '_fetchedEntity') ? $entity->_fetchedEntity : $this->getRepository()->where(['id' => $entity->get('id')])->findOne(["noCache" => true]);
+        return parent::isEntityUpdated($fetched, $data);
     }
 }
