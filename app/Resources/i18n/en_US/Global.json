@@ -81,6 +81,7 @@
   "labels": {
     "removeHierarchically": "Delete Hierarchically",
     "setAsMainImage": "Set as Main Image",
+    "setAsMainCategory": "Set as Main Category",
     "allChannels": "All Channels",
     "nonHierarchicalProducts": "Non-hierarchical products",
     "productHierarchies": "Product hierarchies",

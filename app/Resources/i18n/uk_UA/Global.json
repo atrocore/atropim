@@ -80,6 +80,7 @@
   },
   "labels": {
     "setAsMainImage": "Призначити основним зображенням",
+    "setAsMainCategory": "Встановити як основну категорію",
     "allChannels": "Усі канали",
     "nonHierarchicalProducts": "Неієрархічні продукти",
     "productHierarchies": "Продуктові ієрархії",
