@@ -12,6 +12,7 @@
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -116,7 +117,7 @@ class Product extends AbstractSelectManager
         $pavData = $this
             ->getEntityManager()
             ->getRepository('ProductAttributeValue')
-            ->select(['productId', 'scope', 'channelId'])
+            ->select(['productId'])
             ->where([
                 'attributeType' => ['varchar', 'text', 'wysiwyg', 'extensibleEnum'],
                 ['OR' => [['varcharValue*' => $textFilter], ['textValue*' => $textFilter]]],
@@ -124,19 +125,8 @@ class Product extends AbstractSelectManager
             ->find()
             ->toArray();
 
-        // find product channels
-        $productChannels = $this->getProductsChannels(array_column($pavData, 'productId'));
-
-        // filtering products
-        foreach ($pavData as $row) {
-            if ($row['scope'] == 'Channel' && (!isset($productChannels[$row['productId']]) || !in_array($row['channelId'], $productChannels[$row['productId']]))) {
-                continue 1;
-            }
-            $productsIds[] = $row['productId'];
-        }
-
-        if (!empty($productsIds)) {
-            $last['OR']['id'] = $productsIds;
+        if (!empty($pavData)) {
+            $last['OR']['id'] = array_column($pavData, 'productId');
         }
 
         $result['whereClause'][] = $last;
@@ -736,34 +726,24 @@ class Product extends AbstractSelectManager
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
+        /** @var \Pim\Repositories\ProductAttributeValue $pavRepo */
+        $pavRepo = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
         foreach ($this->productAttributes as $row) {
             $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$this->convertAttributeWhere($row)]], true, true);
-            $sp['select'] = ['productId', 'scope', 'channelId'];
+            $sp['select'] = ['productId'];
 
-            // get product attribute values
-            $pavData = $this->getEntityManager()->getRepository('ProductAttributeValue')->find($sp)->toArray();
+            $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
 
-            // find product channels
-            $productChannels = $this->getProductsChannels(array_column($pavData, 'productId'));
-
-            // filtering products
-            $productsIds = [];
-            foreach ($pavData as $v) {
-                if ($v['scope'] == 'Channel' && (!isset($productChannels[$v['productId']]) || !in_array($v['channelId'], $productChannels[$v['productId']]))) {
-                    continue 1;
-                }
-                $productsIds[] = $v['productId'];
-            }
-
-            $hash = md5(microtime());
+            $operator = 'IN';
             if ($row['type'] === 'arrayNoneOf') {
-                $qb->andWhere("{$tableAlias}.id NOT IN (:productsIds_$hash)");
-                $qb->setParameter("productsIds_$hash", $productsIds, Mapper::getParameterType($productsIds));
-                return;
+                $operator = 'NOT IN';
             }
 
-            $qb->andWhere("{$tableAlias}.id IN (:productsIds_$hash)");
-            $qb->setParameter("productsIds_$hash", $productsIds, Mapper::getParameterType($productsIds));
+            $qb->andWhere("{$tableAlias}.id $operator ({$qb1->getSql()})");
+            foreach ($qb1->getParameters() as $param => $val) {
+                $qb->setParameter($param, $val, Mapper::getParameterType($val));
+            }
         }
     }
 
@@ -840,32 +820,6 @@ class Product extends AbstractSelectManager
                 $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
                 break;
         }
-    }
-
-    /**
-     * @param array $productsIds
-     *
-     * @return array
-     */
-    protected function getProductsChannels(array $productsIds): array
-    {
-        $connection = $this->getEntityManager()->getConnection();
-
-        $productsChannels = $connection->createQueryBuilder()
-            ->select('t.product_id, t.channel_id')
-            ->from($connection->quoteIdentifier('product_channel'), 't')
-            ->where('t.deleted = :false')
-            ->andWhere('t.product_id IN (:ids)')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('ids', $productsIds, Mapper::getParameterType($productsIds))
-            ->fetchAllAssociative();
-
-        $products = [];
-        foreach ($productsChannels as $row) {
-            $products[$row['product_id']][] = $row['channel_id'];
-        }
-
-        return $products;
     }
 
     protected function accessPortalOnlyAccount(&$result)
