@@ -563,7 +563,7 @@ class ProductAttributeValue extends Relationship
         }
 
         if (!$entity->isNew()) {
-            $fetched = $this->where(['id' => $entity->get('id')])->findOne(['noCache' => true]);
+            $fetched = property_exists($entity, '_fetchedEntity') ? $entity->_fetchedEntity : $this->where(['id' => $entity->get('id')])->findOne(['noCache' => true]);
             $this->getValueConverter()->convertFrom($fetched, $fetched->get('attribute'), false);
             self::$beforeSaveData = $fetched->toArray();
         }
