@@ -26,30 +26,27 @@ class V1Dot10Dot8 extends Base
             $this->getPDO()->exec($sql);
         }
 
-
         // Migrate schema
         $tableName = 'category_hierarchy';
-        $table = $toSchema->createTable($tableName);
-        $this->addColumn($toSchema, $tableName, 'id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
-        $this->addColumn($toSchema, $tableName, 'deleted', ['type' => 'bool', 'default' => 0]);
-        $this->addColumn($toSchema, $tableName, 'entity_id', ['type' => 'varchar', 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'parent_id', ['type' => 'varchar', 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'hierarchy_sort_order', ['type' => 'int', 'default' => null]);
+        if (!$toSchema->hasTable($tableName)) {
+            $table = $toSchema->createTable($tableName);
+            $this->addColumn($toSchema, $tableName, 'id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
+            $this->addColumn($toSchema, $tableName, 'deleted', ['type' => 'bool', 'default' => 0]);
+            $this->addColumn($toSchema, $tableName, 'entity_id', ['type' => 'varchar', 'default' => null]);
+            $this->addColumn($toSchema, $tableName, 'parent_id', ['type' => 'varchar', 'default' => null]);
+            $this->addColumn($toSchema, $tableName, 'hierarchy_sort_order', ['type' => 'int', 'default' => null]);
 
-        $table->setPrimaryKey(['id']);
-        $indexes = [
-            ['entity_id'],
-            ['parent_id'],
-            ['entity_id', 'parent_id']
-        ];
-        foreach ($indexes as $index) {
-            $table->addIndex($index);
-        }
-
-        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            try {
+            $table->setPrimaryKey(['id']);
+            $indexes = [
+                ['entity_id'],
+                ['parent_id'],
+                ['entity_id', 'parent_id']
+            ];
+            foreach ($indexes as $index) {
+                $table->addIndex($index);
+            }
+            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
                 $this->getPDO()->exec($sql);
-            } catch (\Throwable $e) {
             }
         }
 
