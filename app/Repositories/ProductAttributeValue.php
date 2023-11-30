@@ -539,7 +539,7 @@ class ProductAttributeValue extends Relationship
         $pav->set('amountOfDigitsAfterComma', $attribute->get('amountOfDigitsAfterComma'));
 
         if ($classificationAttribute !== null) {
-            $pav->set('isRequired', $classificationAttribute['isRequired'] ?? null);
+            $pav->set('isRequired', !empty($classificationAttribute['isRequired']));
             $pav->set('maxLength', $classificationAttribute['maxLength'] ?? null);
             $pav->set('countBytesInsteadOfCharacters', $classificationAttribute['countBytesInsteadOfCharacters'] ?? null);
             $pav->set('min', $classificationAttribute['min'] ?? null);
