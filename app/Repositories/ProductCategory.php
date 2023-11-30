@@ -43,7 +43,7 @@ class ProductCategory extends Relation
                 foreach ($res as $row) {
                     $rowRoot = $this->getCategoryRoot($row['category_id'], (string)$row['category_route']);
                     if ($root === $rowRoot) {
-                        // remove main category from others
+                        // remove mainCategory from productCategory
                         $pc = $this->get($row['id']);
                         $pc->set('mainCategory', false);
                         $this->save($pc);
