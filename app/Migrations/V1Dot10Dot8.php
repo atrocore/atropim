@@ -47,9 +47,11 @@ class V1Dot10Dot8 extends Base
         }
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->getPDO()->exec($sql);
+            try {
+                $this->getPDO()->exec($sql);
+            } catch (\Throwable $e) {
+            }
         }
-
 
         // Migrate Data
         $connection = $this->getConnection();
