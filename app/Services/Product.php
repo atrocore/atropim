@@ -128,7 +128,7 @@ class Product extends Hierarchy
 
     public function setProductMainImage(Entity $entity): void
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return;
         }
 

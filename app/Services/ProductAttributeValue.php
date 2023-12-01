@@ -849,7 +849,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelName', 'Global');
         }
 
-        if (!$this->isExport && !$this->isImport) {
+        if (!$this->isExport && empty($this->getMemoryStorage()->get('importJobId'))) {
             $classificationAttribute = $this->getRepository()->findClassificationAttribute($entity);
 
             $this->getRepository()->prepareAttributeData($attribute, $entity, $classificationAttribute);
