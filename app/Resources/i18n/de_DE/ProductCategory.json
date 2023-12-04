@@ -2,8 +2,5 @@
   "fields": {
     "sorting": "Sortierreihenfolge für Kategorie",
     "mainCategory": "Hauptkategorie"
-  },
-  "labels": {
-    "categoryCanNotBeMain": "Die Kategorie kann nicht als Hauptkategorie ausgewählt werden."
   }
 }
