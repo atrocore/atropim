@@ -177,12 +177,14 @@ class ValueConverter extends Injectable
                 if (property_exists($data, 'value')) {
                     $data->varcharValue = $data->value;
                     unset($data->value);
-                } else if (empty($data->varcharValue) && !empty($default = $attribute->get('defaultValue'))) {
-                    if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
-                        // use twig
-                        $default = $this->getInjection('twig')->renderTemplate($default, []);
+                } else {
+                    if (empty($data->varcharValue) && !empty($default = $attribute->get('defaultValue'))) {
+                        if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
+                            // use twig
+                            $default = $this->getInjection('twig')->renderTemplate($default, []);
+                        }
+                        $data->varcharValue = $default;
                     }
-                    $data->varcharValue = $default;
                 }
 
                 if (property_exists($data, 'valueUnitId')) {
@@ -233,10 +235,13 @@ class ValueConverter extends Injectable
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
                 if ($entity->has('textValue')) {
                     $entity->set('value', @json_decode((string)$entity->get('textValue'), true));
-                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                    if (isset($options[0])) {
-                        $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
-                        $entity->set('valueOptionsData', $options);
+                    if (!$this->isExport()) {
+                        $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                            ->getPreparedOptions($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                        if (isset($options[0])) {
+                            $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
+                            $entity->set('valueOptionsData', $options);
+                        }
                     }
                 }
                 break;
@@ -244,10 +249,13 @@ class ValueConverter extends Injectable
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
                 if ($entity->has('referenceValue')) {
                     $entity->set('value', $entity->get('referenceValue'));
-                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
-                    if (!empty($option)) {
-                        $entity->set('valueName', $option['preparedName']);
-                        $entity->set('valueOptionData', $option);
+                    if (!$this->isExport()) {
+                        $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                            ->getPreparedOption($entity->get('attributeExtensibleEnumId'), $entity->get('value'));
+                        if (!empty($option)) {
+                            $entity->set('valueName', $option['preparedName']);
+                            $entity->set('valueOptionData', $option);
+                        }
                     }
                 }
                 break;
@@ -301,7 +309,7 @@ class ValueConverter extends Injectable
             case 'link':
                 if ($entity->has('referenceValue')) {
                     $entity->set('valueId', $entity->get('referenceValue'));
-                    if (!empty($entity->get('valueId'))) {
+                    if (!$this->isExport() && !empty($entity->get('valueId'))) {
                         $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
                         if (!empty($foreign)) {
                             $entity->set('valueName', $foreign->get($attribute->get('entityField') ?? 'name'));
@@ -313,7 +321,7 @@ class ValueConverter extends Injectable
                 if ($entity->has('referenceValue')) {
                     $entity->set('value', $entity->get('referenceValue'));
                     $entity->set('valueId', $entity->get('referenceValue'));
-                    if (!empty($entity->get('valueId'))) {
+                    if (!$this->isExport() && !empty($entity->get('valueId'))) {
                         if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
                             $entity->set('valueName', $attachment->get('name'));
                             $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
@@ -351,6 +359,11 @@ class ValueConverter extends Injectable
     protected function getEntityManager(): EntityManager
     {
         return $this->getInjection('entityManager');
+    }
+
+    protected function isExport(): bool
+    {
+        return !empty($this->getEntityManager()->getMemoryStorage()->get('exportJobId'));
     }
 
     protected function getMeasureUnits(string $measureId): array

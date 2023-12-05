@@ -177,8 +177,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
-        $this->getRepository()->loadAttributes(array_column($collection->toArray(), 'attributeId'));
-
         /**
          * Sort attribute values
          */
