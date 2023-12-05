@@ -213,7 +213,7 @@
       "relationshipFilterField": "productChannels",
       "relationshipFilterForeignField": "channel",
       "notStorable": true,
-      "filterDisabled": false,
+      "filterDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
