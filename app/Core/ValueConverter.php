@@ -39,7 +39,7 @@ class ValueConverter extends Injectable
         /**
          * Keep virtual values for conditions and validation
          */
-        foreach (['value', 'valueUnitId', 'valueId', 'valueFrom', 'valueTo', 'valueCurrency'] as $name) {
+        foreach (['value', 'valueUnitId', 'valueId', 'valueFrom', 'valueTo', 'valueCurrency', 'valueIds'] as $name) {
             if (property_exists($data, $name)) {
                 $data->_virtualValue[$name] = $data->$name;
             }
@@ -170,7 +170,13 @@ class ValueConverter extends Injectable
                 }
                 if (property_exists($data, 'valueId')) {
                     $data->referenceValue = $data->valueId;
-                    unset($data->value);
+                    unset($data->valueId);
+                }
+                break;
+            case 'linkMultiple':
+                if (property_exists($data, 'valueIds')) {
+                    $data->{$attribute->get('id') . '_' . lcfirst($attribute->get('entityType')) . 'Ids'} = $data->valueIds;
+                    unset($data->valueIds);
                 }
                 break;
             case 'varchar':
@@ -316,6 +322,12 @@ class ValueConverter extends Injectable
                         }
                     }
                 }
+                break;
+            case 'linkMultiple':
+                $field = $attribute->get('id') . '_' . lcfirst($attribute->get('entityType'));
+                $entity->loadLinkMultipleField($field);
+                $entity->set('valueIds', $entity->get($field . 'Ids'));
+                $entity->set('valueNames', $entity->get($field . 'Names'));
                 break;
             case 'asset':
                 if ($entity->has('referenceValue')) {

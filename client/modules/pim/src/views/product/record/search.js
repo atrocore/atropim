@@ -37,7 +37,7 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                                 type: attribute.get('type')
                             };
 
-                            if (attribute.get('type') === 'link') {
+                            if (['link', 'linkMultiple'].indexOf(attribute.get('type')) >= 0) {
                                 fieldParams.foreignScope = attribute.get('entityType');
                             }
 

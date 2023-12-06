@@ -15,8 +15,10 @@ namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
+use Pim\Core\Database\Orm\Relations\PavLinkMultiple;
 use Pim\SelectManagers\ProductAttributeValue;
 
 class Metadata extends AbstractListener
@@ -67,10 +69,69 @@ class Metadata extends AbstractListener
 
         $data = $this->addVirtualProductFields($data);
 
+        $data = $this->addLinkMultipleAttributeRelations($data);
+
         $this->addLanguageBoolFiltersForPav($data);
         $this->addScopeBoolFilters($data);
 
         $event->setArgument('data', $data);
+    }
+
+    public function addLinkMultipleAttributeRelations(array $metadata): array
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return $metadata;
+        }
+
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $attributes = $dataManager->getCacheData('link_multiple_attributes');
+        if ($attributes === null) {
+            $connection = $this->getEntityManager()->getConnection();
+            try {
+                $attributes = $connection->createQueryBuilder()
+                    ->select('*')
+                    ->from($connection->quoteIdentifier('attribute'))
+                    ->where('deleted = :false')
+                    ->andWhere('type = :linkMultiple')
+                    ->setParameter('linkMultiple', 'linkMultiple')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $attributes = [];
+            }
+
+            $dataManager->setCacheData('link_multiple_attributes', $attributes);
+        }
+
+        foreach ($attributes as $attribute) {
+            try {
+                $data = json_decode($attribute['data'], true);
+            } catch (\Exception $exception) {
+                continue;
+            }
+
+            $entityType = $data['field']['entityType'];
+            $entityField = $data['field']['entityField'];
+            if (empty($entityType)) {
+                continue;
+            }
+
+
+            $linkName = $attribute['id'] . '_' . lcfirst($entityType);
+//            $metadata['entityDefs']['ProductAttributeValue']['fields'][$linkName] = [
+//                'type' => 'linkMultiple'
+//            ];
+//
+            $metadata['entityDefs']['ProductAttributeValue']['links'][$linkName] = [
+                'type'         => 'manyMany',
+                'entity'       => $entityType,
+                'nameField'    => $entityField,
+                'relationName' => Util::toCamelCase(implode('_', ['ProductAttributeValue', $attribute['id'], $entityType]))
+            ];
+        }
+
+        return $metadata;
     }
 
     protected function addLanguageBoolFiltersForPav(array &$metadata): void

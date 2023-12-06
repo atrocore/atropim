@@ -62,7 +62,7 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
                     searchParams: this.options.searchParams,
                 };
 
-                if (type === 'link') {
+                if (type === 'link' || type === 'linkMultiple') {
                     options.foreignScope = this.options.params.foreignScope;
                 }
 

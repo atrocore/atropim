@@ -33,6 +33,7 @@ class Attribute extends Hierarchy
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
+        $this->getInjection('dataManager')->setCacheData('link_multiple_attributes', null);
     }
 
     public function updateSortOrderInAttributeGroup(array $ids): void
