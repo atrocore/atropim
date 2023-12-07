@@ -117,7 +117,6 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-
             $linkName = $attribute['id'] . '_' . lcfirst($entityType);
             $metadata['entityDefs']['ProductAttributeValue']['links'][$linkName] = [
                 'type'         => 'manyMany',
