@@ -119,14 +119,9 @@ class Metadata extends AbstractListener
 
 
             $linkName = $attribute['id'] . '_' . lcfirst($entityType);
-//            $metadata['entityDefs']['ProductAttributeValue']['fields'][$linkName] = [
-//                'type' => 'linkMultiple'
-//            ];
-//
             $metadata['entityDefs']['ProductAttributeValue']['links'][$linkName] = [
                 'type'         => 'manyMany',
                 'entity'       => $entityType,
-                'nameField'    => $entityField,
                 'relationName' => Util::toCamelCase(implode('_', ['ProductAttributeValue', $attribute['id'], $entityType]))
             ];
         }
