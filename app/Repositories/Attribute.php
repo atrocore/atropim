@@ -214,11 +214,12 @@ class Attribute extends Hierarchy
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
-        if ($entity->isAttributeChanged('virtualProductField')
-            || (!empty($entity->get('virtualProductField') && $entity->isAttributeChanged('code')))
-            || ($entity->isNew() ? $entity->get('type') == 'linkMultiple' : $entity->isAttributeChanged('entityType'))
-        ) {
+        if ($entity->isAttributeChanged('virtualProductField') || (!empty($entity->get('virtualProductField') && $entity->isAttributeChanged('code')))) {
             $this->clearCache();
+        }
+
+        if ($entity->isAttributeChanged('entityType') && $entity->get('type') == 'linkMultiple') {
+            $this->getInjection('dataManager')->rebuild();
         }
 
         parent::afterSave($entity, $options);
