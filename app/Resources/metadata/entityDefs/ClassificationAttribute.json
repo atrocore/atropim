@@ -365,8 +365,21 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "valueNames": {
+    "valueIds": {
       "type": "jsonArray",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueNames": {
+      "type": "jsonObject",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -392,6 +405,19 @@
       "emHidden": true
     },
     "attributeType": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeEntityType": {
       "type": "varchar",
       "notStorable": true,
       "layoutListDisabled": true,
