@@ -763,8 +763,8 @@ class Product extends AbstractSelectManager
                 if (!empty($row['value'])) {
                     $this->filterByCategories['ids'] = array_merge($this->filterByCategories, $row['value']);
                     $this->filterByCategories['row'] = $row;
+                    unset($params['where'][$k]);
                 }
-                unset($params['where'][$k]);
             }
         }
 
