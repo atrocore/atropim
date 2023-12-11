@@ -174,14 +174,6 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'linkMultiple':
-                if (property_exists($data, 'valueIds')) {
-                    if (property_exists($data, '_relationName') && $data->_relationName == 'classificationAttributes') {
-                        $data->textValue = json_encode($data->valueIds);
-                    } else {
-                        $data->{$attribute->get('id') . '_' . lcfirst($attribute->get('entityType')) . 'Ids'} = $data->valueIds;
-                    }
-                    unset($data->valueIds);
-                }
                 break;
             case 'varchar':
                 if (property_exists($data, 'value')) {
@@ -328,38 +320,25 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'linkMultiple':
-                $loadNames = false;
-                if ($entity->getEntityType() == 'ClassificationAttribute') {
-                    if ($entity->has('textValue')) {
-                        $entity->set('valueIds', @json_decode((string)$entity->get('textValue'), true) ?? []);
-                        $loadNames = true;
-                    }
-                } else {
-                    $field = $attribute->get('id') . '_' . lcfirst($attribute->get('entityType'));
-                    if (!$this->isExport()) {
-                        $column = $attribute->get('entityField');
-                        $entity->loadLinkMultipleField($field);
-                        $entity->set('valueIds', $entity->get($field . 'Ids'));
-                        if ($column == 'name') {
-                            $entity->set('valueNames', $entity->get($field . 'Names'));
+                $field = $attribute->get('id') . '_' . lcfirst($attribute->get('entityType'));
+                if (!$this->isExport()) {
+                    $column = $attribute->get('entityField');
+                    $entity->loadLinkMultipleField($field);
+                    $entity->set('valueIds', $entity->get($field . 'Ids'));
+                    if ($column == 'name') {
+                        $entity->set('valueNames', $entity->get($field . 'Names'));
+                    } else if ($column != 'id') {
+                        $entities = $this->getEntityManager()->getRepository($attribute->get('entityType'))
+                            ->select(['id', $attribute->get('entityField')])
+                            ->where(['id' => $entity->get('valueIds')])->find();
+                        $names = new \stdClass();
+                        if (!empty($entities) && $entities->count() > 0) {
+                            $entities = $entities->toArray();
+                            $names = array_column($entities, $attribute->get('entityField'), 'id');
                         }
-                        if (!in_array($column, ['id', 'name'])) {
-                            $loadNames = true;
-                        }
+                        $entity->set('valueNames', $names);
                     }
                 }
-                if (!$this->isExport() && !empty($loadNames)) {
-                    $entities = $this->getEntityManager()->getRepository($attribute->get('entityType'))
-                        ->select(['id', $attribute->get('entityField')])
-                        ->where(['id' => $entity->get('valueIds')])->find();
-                    $names = new \stdClass();
-                    if (!empty($entities) && $entities->count() > 0) {
-                        $entities = $entities->toArray();
-                        $names = array_column($entities, $attribute->get('entityField'), 'id');
-                    }
-                    $entity->set('valueNames', $names);
-                }
-
                 break;
             case 'asset':
                 if ($entity->has('referenceValue')) {
