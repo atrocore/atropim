@@ -33,7 +33,6 @@ class Attribute extends Hierarchy
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
-        $this->getInjection('dataManager')->setCacheData('link_multiple_attributes', null);
     }
 
     public function updateSortOrderInAttributeGroup(array $ids): void
@@ -218,10 +217,6 @@ class Attribute extends Hierarchy
             $this->clearCache();
         }
 
-        if ($entity->isAttributeChanged('entityType') && $entity->get('type') == 'linkMultiple') {
-            $this->getInjection('dataManager')->rebuild();
-        }
-
         parent::afterSave($entity, $options);
 
         /**
@@ -246,7 +241,7 @@ class Attribute extends Hierarchy
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        if (!empty($entity->get('virtualProductField')) || $entity->get('type') == 'linkMultiple') {
+        if (!empty($entity->get('virtualProductField'))) {
             $this->clearCache();
         }
 
