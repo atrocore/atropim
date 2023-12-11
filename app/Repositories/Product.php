@@ -464,8 +464,7 @@ class Product extends Hierarchy
             $attribute = $ca->get('attribute');
             if (!empty($attribute) && $attribute->get('type') === 'linkMultiple') {
                 $linkName = "{$attribute->get('id')}_" . lcfirst($attribute->get('entityType'));
-                $productAttributeValue->set($linkName . 'Ids', json_decode($productAttributeValue->get('textValue'), true));
-                $productAttributeValue->set('textValue', null);
+                $productAttributeValue->set('valueIds', $ca->getLinkMultipleIdList($linkName));
             }
 
             try {

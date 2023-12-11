@@ -1023,4 +1023,40 @@ class ProductAttributeValue extends Relationship
 
         return $result;
     }
+
+    protected function processSpecifiedRelationsSave(Entity $entity)
+    {
+        parent::processSpecifiedRelationsSave($entity);
+        $fieldName = 'valueIds';
+
+        if ($entity->get('attributeType') == 'linkMultiple' && $entity->has($fieldName)) {
+            $attribute = $entity->get('attribute');
+            $specifiedIds = $entity->get($fieldName);
+            $linkName = "{$attribute->get('id')}_" . lcfirst($attribute->get('entityType'));
+            $existingIds = [];
+
+            $foreignCollection = $entity->get($linkName);
+            if (!empty($foreignCollection) && $foreignCollection->count() > 0) {
+                foreach ($foreignCollection as $foreignEntity) {
+                    $existingIds[] = $foreignEntity->id;
+                }
+            }
+
+            if (!$entity->isNew()) {
+                $entity->setFetched($fieldName, $existingIds);
+            }
+
+            foreach ($existingIds as $id) {
+                if (!in_array($id, $specifiedIds)) {
+                    $this->unrelate($entity, $linkName, $id);
+                }
+            }
+
+            foreach ($specifiedIds as $id) {
+                if (!in_array($id, $existingIds)) {
+                    $this->relate($entity, $linkName, $id, null);
+                }
+            }
+        }
+    }
 }

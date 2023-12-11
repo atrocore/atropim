@@ -32,16 +32,4 @@ class ClassificationAttribute extends Relationship
 
         return parent::getAttributeType($attribute);
     }
-
-    public function getRelations()
-    {
-        $relations = parent::getRelations();
-        if ($this->get('attributeType') == 'linkMultiple') {
-            $linkName = "{$this->get('attributeId')}_{$this->get('attribute')->get('entityType')}";
-            if (!empty($relations[$linkName])) {
-                $relations['value'] = $relations[$linkName];
-            }
-        }
-        return $relations;
-    }
 }

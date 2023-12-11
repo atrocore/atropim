@@ -89,16 +89,4 @@ class ProductAttributeValue extends Relationship
     {
         return $this->entityManager->getRepository('ProductAttributeValue');
     }
-
-    public function getRelations()
-    {
-        $relations = parent::getRelations();
-        if ($this->get('attributeType') == 'linkMultiple') {
-            $linkName = "{$this->get('attributeId')}_{$this->get('attribute')->get('entityType')}";
-            if (!empty($relations[$linkName])) {
-                $relations['value'] = $relations[$linkName];
-            }
-        }
-        return $relations;
-    }
 }
