@@ -174,6 +174,7 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'linkMultiple':
+                // nothing to change
                 break;
             case 'varchar':
                 if (property_exists($data, 'value')) {
