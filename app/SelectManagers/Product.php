@@ -13,6 +13,8 @@ namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -114,16 +116,18 @@ class Product extends AbstractSelectManager
         }
 
         // find product attribute values
-        $pavData = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select(['productId'])
-            ->where([
-                'attributeType' => ['varchar', 'text', 'wysiwyg', 'extensibleEnum'],
-                ['OR' => [['varcharValue*' => $textFilter], ['textValue*' => $textFilter]]],
-            ])
-            ->find()
-            ->toArray();
+        $conn = $this->getEntityManager()->getConnection();
+
+        $pavData = $conn->createQueryBuilder()
+            ->select('product_id AS productId')
+            ->from($conn->quoteIdentifier('product_attribute_value'))
+            ->where('deleted = :false')
+            ->andWhere('attribute_type IN (:attribute_type)')
+            ->andWhere('varchar_value LIKE :value OR text_value LIKE :value')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('attribute_type', ['varchar', 'text', 'wysiwyg', 'extensibleEnum'], Connection::PARAM_STR_ARRAY)
+            ->setParameter('value', $textFilter, ParameterType::STRING)
+            ->fetchAllAssociative();
 
         if (!empty($pavData)) {
             $last['OR']['id'] = array_column($pavData, 'productId');
