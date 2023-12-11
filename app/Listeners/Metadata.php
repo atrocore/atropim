@@ -15,10 +15,8 @@ namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
-use Pim\Core\Database\Orm\Relations\PavLinkMultiple;
 use Pim\SelectManagers\ProductAttributeValue;
 
 class Metadata extends AbstractListener
@@ -74,7 +72,6 @@ class Metadata extends AbstractListener
 
         $event->setArgument('data', $data);
     }
-
 
     protected function addLanguageBoolFiltersForPav(array &$metadata): void
     {
