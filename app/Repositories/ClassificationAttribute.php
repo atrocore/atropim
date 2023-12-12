@@ -188,35 +188,8 @@ class ClassificationAttribute extends Relationship
         parent::processSpecifiedRelationsSave($entity);
 
         $attribute = $entity->get('attribute');
-        $fieldName = 'valueIds';
-
-        if (!empty($attribute) && $attribute->get('type') == 'linkMultiple' && $entity->has($fieldName)) {
-            $specifiedIds = $entity->get($fieldName);
-            $linkName = "{$attribute->get('id')}_" . lcfirst($attribute->get('entityType'));
-            $existingIds = [];
-
-            $foreignCollection = $entity->get($linkName);
-            if (!empty($foreignCollection) && $foreignCollection->count() > 0) {
-                foreach ($foreignCollection as $foreignEntity) {
-                    $existingIds[] = $foreignEntity->id;
-                }
-            }
-
-            if (!$entity->isNew()) {
-                $entity->setFetched($fieldName, $existingIds);
-            }
-
-            foreach ($existingIds as $id) {
-                if (!in_array($id, $specifiedIds)) {
-                    $this->unrelate($entity, $linkName, $id);
-                }
-            }
-
-            foreach ($specifiedIds as $id) {
-                if (!in_array($id, $existingIds)) {
-                    $this->relate($entity, $linkName, $id, null);
-                }
-            }
+        if (!empty($attribute) && $attribute->get('type') == 'linkMultiple') {
+            ProductAttributeValue::saveLinkMultipleValues($entity, $this);
         }
     }
 

@@ -321,7 +321,7 @@ class ValueConverter extends Injectable
                 }
                 break;
             case 'linkMultiple':
-                $field = $attribute->get('id') . '_' . lcfirst($attribute->get('entityType'));
+                $field = $attribute->getLinkMultipleLinkName();
                 if (!$this->isExport()) {
                     $column = $attribute->get('entityField');
                     $entity->loadLinkMultipleField($field);

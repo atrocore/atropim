@@ -677,7 +677,7 @@ class Product extends AbstractSelectManager
                 $where['value'][] = $row;
                 break;
             case 'linkMultiple':
-                $row['attribute'] = "{$attribute->get('id')}_" . lcfirst($attribute->get('entityType'));
+                $row['attribute'] = $attribute->getLinkMultipleLinkName();
                 $where['value'][] = $row;
                 break;
             case 'varchar':
