@@ -676,6 +676,10 @@ class Product extends AbstractSelectManager
                 $row['attribute'] = 'referenceValue';
                 $where['value'][] = $row;
                 break;
+            case 'linkMultiple':
+                $row['attribute'] = $attribute->getLinkMultipleLinkName();
+                $where['value'][] = $row;
+                break;
             case 'varchar':
                 if (substr($row['attribute'], -6) === 'UnitId') {
                     if ($row['type'] === 'isNull') {

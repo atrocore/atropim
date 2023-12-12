@@ -182,4 +182,15 @@ class ClassificationAttribute extends Relationship
     {
         return $this->getEntityManager()->getRepository('ProductAttributeValue');
     }
+
+    protected function processSpecifiedRelationsSave(Entity $entity)
+    {
+        parent::processSpecifiedRelationsSave($entity);
+
+        $attribute = $entity->get('attribute');
+        if (!empty($attribute) && $attribute->get('type') == 'linkMultiple') {
+            ProductAttributeValue::saveLinkMultipleValues($entity, $this);
+        }
+    }
+
 }

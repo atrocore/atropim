@@ -172,8 +172,8 @@ class Product extends Hierarchy
     /**
      * @param string|Entity $productId
      * @param string|Entity $categoryId
-     * @param int|null $sorting
-     * @param bool $cascadeUpdate
+     * @param int|null      $sorting
+     * @param bool          $cascadeUpdate
      */
     public function updateProductCategorySortOrder($productId, $categoryId, int $sorting = null, bool $cascadeUpdate = true): void
     {
@@ -302,7 +302,7 @@ class Product extends Hierarchy
 
     /**
      * @param string $categoryId
-     * @param array $ids
+     * @param array  $ids
      *
      * @return void
      */
@@ -460,6 +460,12 @@ class Product extends Hierarchy
             );
 
             $productAttributeValue->clearCompletenessFields = true;
+
+            $attribute = $ca->get('attribute');
+            if (!empty($attribute) && $attribute->get('type') === 'linkMultiple') {
+                $linkName = $attribute->getLinkMultipleLinkName();
+                $productAttributeValue->set('valueIds', $ca->getLinkMultipleIdList($linkName));
+            }
 
             try {
                 $this->getEntityManager()->saveEntity($productAttributeValue, ['ignoreDuplicate' => true]);

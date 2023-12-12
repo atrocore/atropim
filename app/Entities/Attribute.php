@@ -13,9 +13,19 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Espo\Core\Templates\Entities\Hierarchy;
+use Atro\Core\Templates\Entities\Hierarchy;
 
 class Attribute extends Hierarchy
 {
     protected $entityType = "Attribute";
+
+    public function getLinkMultipleLinkName(): string
+    {
+        return self::buildLinkMultipleLinkName($this->get('id'), $this->get('entityType'));
+    }
+
+    public static function buildLinkMultipleLinkName(string $id, string $entityType): string
+    {
+        return $id . '_' . lcfirst($entityType);
+    }
 }

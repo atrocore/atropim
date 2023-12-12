@@ -39,7 +39,7 @@ class ValueConverter extends Injectable
         /**
          * Keep virtual values for conditions and validation
          */
-        foreach (['value', 'valueUnitId', 'valueId', 'valueFrom', 'valueTo', 'valueCurrency'] as $name) {
+        foreach (['value', 'valueUnitId', 'valueId', 'valueFrom', 'valueTo', 'valueCurrency', 'valueIds'] as $name) {
             if (property_exists($data, $name)) {
                 $data->_virtualValue[$name] = $data->$name;
             }
@@ -170,8 +170,11 @@ class ValueConverter extends Injectable
                 }
                 if (property_exists($data, 'valueId')) {
                     $data->referenceValue = $data->valueId;
-                    unset($data->value);
+                    unset($data->valueId);
                 }
+                break;
+            case 'linkMultiple':
+                // nothing to change
                 break;
             case 'varchar':
                 if (property_exists($data, 'value')) {
@@ -314,6 +317,27 @@ class ValueConverter extends Injectable
                         if (!empty($foreign)) {
                             $entity->set('valueName', $foreign->get($attribute->get('entityField') ?? 'name'));
                         }
+                    }
+                }
+                break;
+            case 'linkMultiple':
+                $field = $attribute->getLinkMultipleLinkName();
+                if (!$this->isExport()) {
+                    $column = $attribute->get('entityField');
+                    $entity->loadLinkMultipleField($field);
+                    $entity->set('valueIds', $entity->get($field . 'Ids'));
+                    if ($column == 'name') {
+                        $entity->set('valueNames', $entity->get($field . 'Names'));
+                    } else if ($column != 'id') {
+                        $entities = $this->getEntityManager()->getRepository($attribute->get('entityType'))
+                            ->select(['id', $attribute->get('entityField')])
+                            ->where(['id' => $entity->get('valueIds')])->find();
+                        $names = new \stdClass();
+                        if (!empty($entities) && $entities->count() > 0) {
+                            $entities = $entities->toArray();
+                            $names = array_column($entities, $attribute->get('entityField'), 'id');
+                        }
+                        $entity->set('valueNames', $names);
                     }
                 }
                 break;

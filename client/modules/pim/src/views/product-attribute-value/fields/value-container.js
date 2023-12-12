@@ -47,6 +47,8 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.model.set('valueId', undefined);
             this.model.set('valueName', undefined);
             this.model.set('valuePathsData', undefined);
+            this.model.set('valueIds', undefined);
+            this.model.set('valueNames', undefined);
         },
 
         afterRender() {
@@ -116,7 +118,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     inlineEditDisabled: true
                 };
 
-                if (attributeType === 'link') {
+                if (attributeType === 'link' || attributeType === 'linkMultiple') {
                     options.foreignScope = this.model.get('attributeEntityType');
                 }
 

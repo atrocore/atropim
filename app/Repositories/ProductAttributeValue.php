@@ -22,6 +22,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\Repositories\RDB;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\ValueConverter;
 
@@ -395,7 +396,7 @@ class ProductAttributeValue extends Relationship
                 unset($row['data']);
 
                 $data = @json_decode($v['data'], true);
-                if (!empty($data['field'])){
+                if (!empty($data['field'])) {
                     $row = array_merge($row, $data['field']);
                 }
 
@@ -967,7 +968,7 @@ class ProductAttributeValue extends Relationship
                 }
                 break;
             case 'float':
-                if (property_exists($input, 'floatValue') && !Util::isFloatEquals((float) $wasValue,(float) $input->floatValue)) {
+                if (property_exists($input, 'floatValue') && !Util::isFloatEquals((float)$wasValue, (float)$input->floatValue)) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $input->floatValue;
@@ -1022,5 +1023,46 @@ class ProductAttributeValue extends Relationship
         }
 
         return $result;
+    }
+
+    protected function processSpecifiedRelationsSave(Entity $entity)
+    {
+        parent::processSpecifiedRelationsSave($entity);
+
+        if ($entity->get('attributeType') == 'linkMultiple') {
+            self::saveLinkMultipleValues($entity, $this);
+        }
+    }
+
+    public static function saveLinkMultipleValues(Entity $entity, RDB $repository)
+    {
+        if ($entity->has('valueIds')) {
+            $specifiedIds = $entity->get('valueIds');
+            $linkName = $entity->get('attribute')->getLinkMultipleLinkName();
+            $existingIds = [];
+
+            $foreignCollection = $entity->get($linkName);
+            if (!empty($foreignCollection) && $foreignCollection->count() > 0) {
+                foreach ($foreignCollection as $foreignEntity) {
+                    $existingIds[] = $foreignEntity->id;
+                }
+            }
+
+            if (!$entity->isNew()) {
+                $entity->setFetched('valueIds', $existingIds);
+            }
+
+            foreach ($existingIds as $id) {
+                if (!in_array($id, $specifiedIds)) {
+                    $repository->unrelate($entity, $linkName, $id);
+                }
+            }
+
+            foreach ($specifiedIds as $id) {
+                if (!in_array($id, $existingIds)) {
+                    $repository->relate($entity, $linkName, $id, null);
+                }
+            }
+        }
     }
 }

@@ -458,6 +458,32 @@
       "importDisabled": false,
       "emHidden": true
     },
+    "valueIds": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
     "valueOptionData": {
       "type": "jsonArray",
       "notStorable": true,
@@ -473,19 +499,6 @@
     },
     "valuePathsData": {
       "type": "jsonObject",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "valueNames": {
-      "type": "jsonArray",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,

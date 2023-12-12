@@ -29,6 +29,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
             'attributeId',
             'attributeName',
             'attributeType',
+            'attributeEntityType',
             'attributeTooltip',
             'intValue',
             'intValue1',
@@ -55,6 +56,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         if (!empty($attribute)) {
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+            $entity->set('attributeEntityType', $attribute->get('entityType'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));
             if (!empty($this->getConfig()->get('isMultilangActive'))) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
