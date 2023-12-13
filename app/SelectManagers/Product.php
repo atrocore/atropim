@@ -31,6 +31,8 @@ class Product extends AbstractSelectManager
 
     private array $filterByCategories = [];
 
+    private string $textFilter = '';
+
     /**
      * @inheritdoc
      */
@@ -75,6 +77,8 @@ class Product extends AbstractSelectManager
         // get select params
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
 
+        $selectParams['callbacks'][] = [$this, 'applyFilterText'];
+
         // add filtering by categories
         $selectParams['callbacks'][] = [$this, 'applyFilteringByCategories'];
 
@@ -90,9 +94,6 @@ class Product extends AbstractSelectManager
         return $selectParams;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function textFilter($textFilter, &$result)
     {
         parent::textFilter($textFilter, $result);
@@ -107,30 +108,8 @@ class Product extends AbstractSelectManager
             return;
         }
 
-        $textFilter = $textFilter . '%';
-        if (mb_strpos($textFilter, 'ft:') === 0) {
-            $textFilter = mb_substr($textFilter, 3);
-        }
-        if (mb_strpos($textFilter, '*') !== false) {
-            $textFilter = str_replace('*', '%', $textFilter);
-        }
-
-        // find product attribute values
-        $conn = $this->getEntityManager()->getConnection();
-
-        $pavData = $conn->createQueryBuilder()
-            ->select('product_id AS productId')
-            ->from($conn->quoteIdentifier('product_attribute_value'))
-            ->where('deleted = :false')
-            ->andWhere('attribute_type IN (:attribute_type)')
-            ->andWhere('varchar_value LIKE :value OR text_value LIKE :value')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('attribute_type', ['varchar', 'text', 'wysiwyg', 'extensibleEnum'], Connection::PARAM_STR_ARRAY)
-            ->setParameter('value', $textFilter, ParameterType::STRING)
-            ->fetchAllAssociative();
-
-        if (!empty($pavData)) {
-            $last['OR']['id'] = array_column($pavData, 'productId');
+        if (!empty($textFilter)) {
+            $this->textFilter = $textFilter;
         }
 
         $result['whereClause'][] = $last;
@@ -823,6 +802,59 @@ class Product extends AbstractSelectManager
                 $qb->setParameter('false', false, Mapper::getParameterType(false));
                 $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
                 break;
+        }
+    }
+
+    public function applyFilterText(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        if (empty($this->textFilter)) {
+            return;
+        }
+
+        $textFilter = $this->textFilter;
+        if (mb_strpos($textFilter, 'ft:') === 0) {
+            $textFilter = mb_substr($textFilter, 3);
+        }
+
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        /** @var \Pim\Repositories\ProductAttributeValue $pavRepo */
+        $pavRepo = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
+        $where = [
+            'type'  => 'and',
+            'value' => [
+                [
+                    'type'      => 'in',
+                    'attribute' => 'attributeType',
+                    'value'     => ['varchar', 'text', 'wysiwyg', 'extensibleEnum']
+                ],
+                [
+                    'type'      => 'or',
+                    'value'     => [
+                        [
+                            'type'      => 'like',
+                            'attribute' => 'textValue',
+                            'value'     => "$textFilter%"
+                        ],
+                        [
+                            'type'      => 'like',
+                            'attribute' => 'varcharValue',
+                            'value'     => "$textFilter%"
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$where]], true, true);
+        $sp['select'] = ['productId'];
+
+        $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
+
+        $qb->orWhere("{$tableAlias}.id IN ({$qb1->getSql()})");
+        foreach ($qb1->getParameters() as $param => $val) {
+            $qb->setParameter($param, $val, Mapper::getParameterType($val));
         }
     }
 
