@@ -899,6 +899,11 @@ class ProductAttributeValue extends Relationship
         $this->getEntityManager()->saveEntity($note);
     }
 
+    protected function notEqualAndNotEmpty($val1, $val2): bool
+    {
+        return ($val1 !== $val2) && !(empty($val1) && empty($val2));
+    }
+
     protected function getNoteData(Entity $entity): ?array
     {
         if (!property_exists($entity, '_input')) {
@@ -929,7 +934,7 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->intValue1;
                 }
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'referenceValue') && $this->notEqualAndNotEmpty($wasValueUnitId, $input->referenceValue)) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
@@ -948,7 +953,7 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['was']['valueTo'] = $wasValueTo;
                     $result['attributes']['became']['valueTo'] = $input->floatValue1;
                 }
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'referenceValue') && $this->notEqualAndNotEmpty($wasValueUnitId, $input->referenceValue)) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
@@ -961,7 +966,7 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['became']['value'] = $input->intValue;
                 }
 
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'referenceValue') && $this->notEqualAndNotEmpty($wasValueUnitId, $input->referenceValue)) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
@@ -974,7 +979,7 @@ class ProductAttributeValue extends Relationship
                     $result['attributes']['became']['value'] = $input->floatValue;
                 }
 
-                if (property_exists($input, 'referenceValue') && $wasValueUnitId !== $input->referenceValue) {
+                if (property_exists($input, 'referenceValue') && $this->notEqualAndNotEmpty($wasValueUnitId, $input->referenceValue)) {
                     $result['fields'][] = 'valueUnit';
                     $result['attributes']['was']['valueUnitId'] = $wasValueUnitId;
                     $result['attributes']['became']['valueUnitId'] = $input->referenceValue;
@@ -983,7 +988,7 @@ class ProductAttributeValue extends Relationship
             case 'array':
             case 'extensibleEnum':
             case 'extensibleMultiEnum':
-                if ($wasValue !== $entity->get('value')) {
+                if ($this->notEqualAndNotEmpty($wasValue, $entity->get('value'))) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
@@ -997,7 +1002,7 @@ class ProductAttributeValue extends Relationship
                 }
                 $wasValueCurrency = self::$beforeSaveData['valueCurrency'] ?? null;
 
-                if (property_exists($input, 'varcharValue') && $wasValueCurrency !== $input->varcharValue) {
+                if (property_exists($input, 'varcharValue') && $this->notEqualAndNotEmpty($wasValueCurrency, $input->varcharValue)) {
                     $result['fields'][] = 'valueCurrency';
                     $result['attributes']['was']['valueCurrency'] = $wasValueCurrency;
                     $result['attributes']['became']['valueCurrency'] = $input->varcharValue;
