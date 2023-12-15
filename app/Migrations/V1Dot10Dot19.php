@@ -21,40 +21,53 @@ class V1Dot10Dot19 extends Base
     {
         // Migrate Data
         $connection = $this->getConnection();
-        $rows = $connection->createQueryBuilder()
-            ->select('id', 'data')
-            ->from('note')
-            ->where('pav_id is not null')
-            ->where('deleted = :false')
-            ->where('type = :update')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('update', 'Update')
-            ->fetchAllAssociative();
+        $limit = 2000;
+        $offset = 0;
 
-        $ids = [];
-        foreach ($rows as $row) {
-            try {
-                $data = json_decode($row['data'], true);
-                foreach (['value', 'valueUnitId'] as $field) {
-                    if (array_key_exists($field, $data['attributes']['was'])) {
-                        if (empty($data['attributes']['was'][$field]) && empty($data['attributes']['became'][$field])) {
-                            $ids[] = $row['id'];
-                            break;
+        while (true) {
+            $rows = $connection->createQueryBuilder()
+                ->select('id', 'data')
+                ->from('note')
+                ->where('pav_id is not null')
+                ->where('deleted = :false')
+                ->where('type = :update')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('update', 'Update')
+                ->setMaxResults($limit)
+                ->setFirstResult($offset)
+                ->fetchAllAssociative();
+
+            if (empty($rows)) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            $ids = [];
+            foreach ($rows as $row) {
+                try {
+                    $data = json_decode($row['data'], true);
+                    foreach (['value', 'valueUnitId'] as $field) {
+                        if (array_key_exists($field, $data['attributes']['was'])) {
+                            if (empty($data['attributes']['was'][$field]) && empty($data['attributes']['became'][$field])) {
+                                $ids[] = $row['id'];
+                                break;
+                            }
                         }
                     }
+                } catch (\Exception $e) {
+
                 }
-            } catch (\Exception $e) {
-
             }
-        }
 
-        $connection->createQueryBuilder()
-            ->update('note')
-            ->set('deleted', ':true')
-            ->where('id IN (:ids)')
-            ->setParameter('ids', $ids, Mapper::getParameterType($ids))
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->executeStatement();
+            $connection->createQueryBuilder()
+                ->update('note')
+                ->set('deleted', ':true')
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->executeStatement();
+        }
 
 
         $this->updateComposer('atrocore/pim', '^1.10.19');
