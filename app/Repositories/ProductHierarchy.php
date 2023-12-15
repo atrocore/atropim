@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ProductHierarchy extends Relation
