@@ -335,7 +335,7 @@
   "links": {
     "children": {
       "type": "hasMany",
-      "relationName": "ProductHierarchy",
+      "relationName": "productHierarchy",
       "foreign": "parents",
       "entity": "Product",
       "audited": false,
@@ -352,7 +352,7 @@
     },
     "parents": {
       "type": "hasMany",
-      "relationName": "ProductHierarchy",
+      "relationName": "productHierarchy",
       "foreign": "children",
       "entity": "Product",
       "audited": false,

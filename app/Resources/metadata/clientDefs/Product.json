@@ -85,7 +85,8 @@
         "isActive": true,
         "maxSize": 20,
         "sortField": "sortOrder"
-      }
+      },
+      "view": "pim:views/product/record/panels/children"
     },
     "productAttributeValues": {
       "createAction": "createRelatedConfigured",

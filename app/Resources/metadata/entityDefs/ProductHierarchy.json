@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "mainChild": {
+      "type": "bool",
+      "default": false
+    }
+  }
+}
