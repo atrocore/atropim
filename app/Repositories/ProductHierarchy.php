@@ -23,9 +23,9 @@ class ProductHierarchy extends Relation
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isAttributeChanged('mainChild') && !empty($entity->get('mainChild'))) {
-            $res = $this->getConnection()->createQueryBuilder()
-                ->select('id')
-                ->from('product_hierarchy')
+            $this->getConnection()->createQueryBuilder()
+                ->update('product_hierarchy')
+                ->set('main_child', ':false')
                 ->where('deleted = :false')
                 ->andWhere('parent_id = :parentId')
                 ->andWhere('main_child = :true')
@@ -34,15 +34,7 @@ class ProductHierarchy extends Relation
                 ->setParameter('parentId', $entity->get('parentId'),  ParameterType::STRING)
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('id', $entity->isNew() ? 'no-such-id' : $entity->get('id'), ParameterType::STRING)
-                ->fetchAllAssociative();
-
-            if (!empty($res)) {
-                foreach ($res as $row) {
-                    $parent = $this->get($row['id']);
-                    $parent->set('mainChild', false);
-                    $this->save($parent);
-                }
-            }
+                ->executeQuery();
         }
 
         parent::beforeSave($entity, $options);
