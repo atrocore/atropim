@@ -40,7 +40,6 @@ AtroPIM comes with a lot of features directly out of the box, including:
 - attribute groups and attributes;
 - product and category images (available only when the [AtroDAM module](https://atrodam.com) is also installed to your AtroPIM system);
 - assets (available only when the [AtroDAM module](https://atrodam.com) is also installed to your AtroPIM system);  
-- portals;
 - and much more.
 
 Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](http://atropim.com). Find out more about the AtroDAM module [here](https://atrodam.com).
