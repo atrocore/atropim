@@ -24,14 +24,14 @@ class ProductHierarchy extends Relation
     {
         if ($entity->isAttributeChanged('mainChild') && !empty($entity->get('mainChild'))) {
             $res = $this->getConnection()->createQueryBuilder()
-                ->select('id, parent_id')
+                ->select('id')
                 ->from('product_hierarchy')
                 ->where('deleted = :false')
-                ->andWhere('parent_id = :parentsId')
+                ->andWhere('parent_id = :parentId')
                 ->andWhere('main_child = :true')
                 ->andWhere('id != :id')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('parentsId', $entity->get('parentId'),  ParameterType::STRING)
+                ->setParameter('parentId', $entity->get('parentId'),  ParameterType::STRING)
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('id', $entity->isNew() ? 'no-such-id' : $entity->get('id'), ParameterType::STRING)
                 ->fetchAllAssociative();
