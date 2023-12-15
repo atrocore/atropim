@@ -8,5 +8,8 @@
   },
   {
     "name": "isActive"
+  },
+  {
+    "name": "ProductHierarchy__mainChild"
   }
 ]

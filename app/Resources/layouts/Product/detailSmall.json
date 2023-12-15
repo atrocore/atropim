@@ -31,7 +31,9 @@
         {
           "name": "ProductCategory__sorting"
         },
-        false
+        {
+          "name": "ProductHierarchy__mainChild"
+        }
       ]
     ]
   }

@@ -81,6 +81,7 @@
   "labels": {
     "setAsMainImage": "Призначити основним зображенням",
     "setAsMainCategory": "Встановити як основну категорію",
+    "setAsMainVariant": "Встановити як основний варіант",
     "allChannels": "Усі канали",
     "nonHierarchicalProducts": "Неієрархічні продукти",
     "productHierarchies": "Продуктові ієрархії",
