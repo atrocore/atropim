@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Relationship;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-class AssociatedProduct extends Relationship
+class AssociatedProduct extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
