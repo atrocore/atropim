@@ -20,13 +20,12 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Services\Hierarchy;
+use Atro\Core\Templates\Services\Hierarchy;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\MassActions;
-use Espo\Services\Record;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 
 class Product extends Hierarchy
@@ -539,38 +538,42 @@ class Product extends Hierarchy
             $product = $this->getEntity($id);
 
             if ($product) {
-                $pfas = $this
-                    ->getEntityManager()
-                    ->getRepository('ClassificationAttribute')
-                    ->where([
-                        'classificationId' => $product->get('classificationId'),
-                        'scope'            => 'Channel',
-                        'channelId'        => $foreignId
-                    ])
-                    ->find();
-
-                if (count($pfas) > 0) {
-                    /** @var ProductAttributeValue $service */
-                    $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
-
-                    foreach ($pfas as $pfa) {
-                        $data = new \stdClass();
-                        $data->attributeId = $pfa->get('attributeId');
-                        $data->productId = $id;
-                        $data->scope = $pfa->get('scope');
-                        $data->channelId = $pfa->get('channelId');
-                        $data->channelName = $pfa->get('channelName');
-
-                        try {
-                            $service->createEntity($data);
-                        } catch (\Throwable $e) {
-                        }
-                    }
-                }
+               $this->createChannelProductAttributeValues($product, $foreignId);
             }
         }
 
         return $result;
+    }
+
+    public function createChannelProductAttributeValues(Entity $product, string $channelId){
+        $pfas = $this
+            ->getEntityManager()
+            ->getRepository('ClassificationAttribute')
+            ->where([
+                'classificationId' => $product->get('classificationId'),
+                'scope'            => 'Channel',
+                'channelId'        => $channelId
+            ])
+            ->find();
+
+        if (count($pfas) > 0) {
+            /** @var ProductAttributeValue $service */
+            $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
+
+            foreach ($pfas as $pfa) {
+                $data = new \stdClass();
+                $data->attributeId = $pfa->get('attributeId');
+                $data->productId = $product->get('id');
+                $data->scope = $pfa->get('scope');
+                $data->channelId = $pfa->get('channelId');
+                $data->channelName = $pfa->get('channelName');
+
+                try {
+                    $service->createEntity($data);
+                } catch (\Throwable $e) {
+                }
+            }
+        }
     }
 
     public function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
