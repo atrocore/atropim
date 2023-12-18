@@ -16,7 +16,6 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hideLastViewed": true,
-  "relationsVirtualFields": false,
   "completeness": {
     "replacement": "Product",
     "service": "Completeness\\Services\\ProductCompleteness"
