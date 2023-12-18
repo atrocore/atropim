@@ -8,7 +8,7 @@
   "notifications": true,
   "stream": false,
   "disabled": false,
-  "type": "Relationship",
+  "type": "Base",
   "module": "Pim",
   "object": true,
   "overviewFilters": false,

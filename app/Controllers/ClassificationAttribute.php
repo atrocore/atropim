@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\Error;
-use Atro\Core\Templates\Controllers\Relationship;
+use Atro\Core\Templates\Controllers\Base;
 use Slim\Http\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
-class ClassificationAttribute extends Relationship
+class ClassificationAttribute extends Base
 {
     public function actionCreate($params, $data, $request)
     {

@@ -16,12 +16,12 @@ namespace Pim\Repositories;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Relationship;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
 
-class ClassificationAttribute extends Relationship
+class ClassificationAttribute extends Base
 {
     public function getInheritedPavs(string $id): EntityCollection
     {
@@ -192,5 +192,4 @@ class ClassificationAttribute extends Relationship
             ProductAttributeValue::saveLinkMultipleValues($entity, $this);
         }
     }
-
 }
