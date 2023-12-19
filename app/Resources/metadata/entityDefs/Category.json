@@ -151,22 +151,6 @@
     "parents": {
       "type": "linkMultiple",
       "view": "views/fields/hierarchy-parents"
-    },
-    "hierarchySortOrder": {
-      "type": "int",
-      "notStorable": true,
-      "relatingEntityField": [
-        "Category"
-      ],
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
     }
   },
   "links": {
@@ -201,12 +185,7 @@
       "midKeys": [
         "entityId",
         "parentId"
-      ],
-      "additionalColumns": {
-        "hierarchySortOrder": {
-          "type": "int"
-        }
-      }
+      ]
     },
     "parents": {
       "type": "hasMany",
