@@ -11,7 +11,9 @@
 
 namespace Pim\Entities;
 
-class AssociatedProduct extends \Atro\Core\Templates\Entities\Relationship
+use Atro\Core\Templates\Entities\Base;
+
+class AssociatedProduct extends Base
 {
     protected $entityType = "AssociatedProduct";
 }

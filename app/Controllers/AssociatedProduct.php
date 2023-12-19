@@ -13,13 +13,10 @@ namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Controllers\Base;
 
-/**
- * AssociatedProduct controller
- */
-class AssociatedProduct extends \Atro\Core\Templates\Controllers\Relationship
+class AssociatedProduct extends Base
 {
-
     public function actionRemoveFromProduct($params, $data, $request)
     {
         if (!$request->isPost()) {

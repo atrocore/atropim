@@ -167,22 +167,6 @@
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
-    "hierarchySortOrder": {
-      "type": "int",
-      "notStorable": true,
-      "relatingEntityField": [
-        "Boo"
-      ],
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
-    },
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,
@@ -343,12 +327,7 @@
       "midKeys": [
         "entityId",
         "parentId"
-      ],
-      "additionalColumns": {
-        "hierarchySortOrder": {
-          "type": "int"
-        }
-      }
+      ]
     },
     "parents": {
       "type": "hasMany",

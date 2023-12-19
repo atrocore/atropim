@@ -244,22 +244,6 @@
       "filterDisabled": true,
       "tooltip": true
     },
-    "hierarchySortOrder": {
-      "type": "int",
-      "notStorable": true,
-      "relatingEntityField": [
-        "Attribute"
-      ],
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "emHidden": true
-    },
     "tooltip": {
       "type": "text",
       "isMultilang": true,
@@ -358,12 +342,7 @@
       "midKeys": [
         "entityId",
         "parentId"
-      ],
-      "additionalColumns": {
-        "hierarchySortOrder": {
-          "type": "int"
-        }
-      }
+      ]
     },
     "parents": {
       "type": "hasMany",

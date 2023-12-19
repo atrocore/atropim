@@ -8,7 +8,7 @@
   "notifications": true,
   "stream": false,
   "disabled": false,
-  "type": "Relationship",
+  "type": "Base",
   "module": "Pim",
   "object": true,
   "overviewFilters": false,
@@ -16,7 +16,6 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hideLastViewed": true,
-  "relationsVirtualFields": false,
   "completeness": {
     "replacement": "Product",
     "service": "Completeness\\Services\\ProductCompleteness"

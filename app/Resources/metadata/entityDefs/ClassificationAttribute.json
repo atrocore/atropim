@@ -2,14 +2,11 @@
   "fields": {
     "classification": {
       "type": "link",
-      "required": true,
-      "relationshipField": true,
-      "mainRelationshipEntity": true
+      "required": true
     },
     "attribute": {
       "type": "link",
       "required": true,
-      "relationshipField": true,
       "view": "pim:views/classification-attribute/fields/attribute"
     },
     "language": {

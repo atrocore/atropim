@@ -17,12 +17,12 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Services\Relationship;
+use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Language;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
-class AssociatedProduct extends Relationship
+class AssociatedProduct extends Base
 {
     protected $mandatorySelectAttributeList = ['backwardAssociatedProductId'];
 

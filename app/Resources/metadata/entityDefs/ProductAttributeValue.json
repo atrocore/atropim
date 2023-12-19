@@ -2,14 +2,11 @@
   "fields": {
     "product": {
       "type": "link",
-      "required": true,
-      "relationshipField": true,
-      "mainRelationshipEntity": true
+      "required": true
     },
     "attribute": {
       "type": "link",
       "required": true,
-      "relationshipField": true,
       "view": "pim:views/product-attribute-value/fields/attribute"
     },
     "language": {

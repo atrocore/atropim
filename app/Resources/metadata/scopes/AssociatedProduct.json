@@ -5,7 +5,7 @@
   "acl": true,
   "disabled": false,
   "customizable": true,
-  "type": "Relationship",
+  "type": "Base",
   "module": "Pim",
   "importable": true
 }

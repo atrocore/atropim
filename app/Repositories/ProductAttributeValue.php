@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Atro\Core\Templates\Repositories\Relationship;
+use Atro\Core\Templates\Repositories\Base;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -26,7 +26,7 @@ use Espo\ORM\Repositories\RDB;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\ValueConverter;
 
-class ProductAttributeValue extends Relationship
+class ProductAttributeValue extends Base
 {
     protected static $beforeSaveData = [];
 

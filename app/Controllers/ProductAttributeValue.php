@@ -15,10 +15,10 @@ namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Atro\Core\Templates\Controllers\Relationship;
+use Atro\Core\Templates\Controllers\Base;
 use Slim\Http\Request;
 
-class ProductAttributeValue extends Relationship
+class ProductAttributeValue extends Base
 {
     public function actionGroupsPavs($params, $data, $request)
     {
