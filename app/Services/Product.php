@@ -527,55 +527,6 @@ class Product extends Hierarchy
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function linkEntity($id, $link, $foreignId)
-    {
-        $result = parent::linkEntity($id, $link, $foreignId);
-
-        if (!empty($result) && $link === 'channels') {
-            $product = $this->getEntity($id);
-
-            if ($product) {
-               $this->createChannelProductAttributeValues($product, $foreignId);
-            }
-        }
-
-        return $result;
-    }
-
-    public function createChannelProductAttributeValues(Entity $product, string $channelId){
-        $pfas = $this
-            ->getEntityManager()
-            ->getRepository('ClassificationAttribute')
-            ->where([
-                'classificationId' => $product->get('classificationId'),
-                'scope'            => 'Channel',
-                'channelId'        => $channelId
-            ])
-            ->find();
-
-        if (count($pfas) > 0) {
-            /** @var ProductAttributeValue $service */
-            $service = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
-
-            foreach ($pfas as $pfa) {
-                $data = new \stdClass();
-                $data->attributeId = $pfa->get('attributeId');
-                $data->productId = $product->get('id');
-                $data->scope = $pfa->get('scope');
-                $data->channelId = $pfa->get('channelId');
-                $data->channelName = $pfa->get('channelName');
-
-                try {
-                    $service->createEntity($data);
-                } catch (\Throwable $e) {
-                }
-            }
-        }
-    }
-
     public function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
         if (!property_exists($data, 'productId')) {
