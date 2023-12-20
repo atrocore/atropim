@@ -18,15 +18,9 @@ use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-/**
- * Class AssociationEntity
- */
 class AssetEntity extends AbstractEntityListener
 {
-    /**
-     * @param Event $event
-     */
-    public function afterRemove(Event $event)
+    public function afterRemove(Event $event): void
     {
         /** @var Entity $entity */
         $entity = $event->getArgument('entity');
@@ -34,19 +28,15 @@ class AssetEntity extends AbstractEntityListener
         // remove related pavs
         $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
         $pavs = $repository->select(['id'])->where(['attributeType' => 'asset', 'referenceValue' => $entity->get('fileId')])->find();
-        if (!empty($pavs) && $pavs->count() > 0) {
-            foreach ($pavs as $pav) {
-                $repository->remove($pav);
-            }
+        foreach ($pavs as $pav) {
+            $repository->remove($pav);
         }
 
         // remove related product_assets
         $repository = $this->getEntityManager()->getRepository('ProductAsset');
         $pas = $repository->select(['id'])->where(['assetId' => $entity->get('id')])->find();
-        if (!empty($pas) && $pas->count() > 0) {
-            foreach ($pas as $pa) {
-                $repository->remove($pa);
-            }
+        foreach ($pas as $pa) {
+            $repository->remove($pa);
         }
     }
 }
