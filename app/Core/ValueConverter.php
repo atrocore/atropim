@@ -367,6 +367,18 @@ class ValueConverter extends Injectable
         }
 
         if ($clear) {
+            $entity->_technicalFieldValues = [
+                "boolValue" => $entity->get('boolValue'),
+                "dateValue" => $entity->get('dateValue'),
+                "datetimeValue" => $entity->get('datetimeValue'),
+                "intValue" => $entity->get('intValue'),
+                "intValue1" => $entity->get('intValue1'),
+                "floatValue" => $entity->get('floatValue'),
+                "floatValue1" => $entity->get('floatValue1'),
+                "varcharValue" => $entity->get('varcharValue'),
+                "referenceValue" => $entity->get('referenceValue'),
+                "textValue" => $entity->get('textValue')
+            ];
             $entity->clear('boolValue');
             $entity->clear('dateValue');
             $entity->clear('datetimeValue');
