@@ -263,7 +263,6 @@
       "lengthOfCut": 400,
       "isMultilang": true
     },
-
     "amountOfDigitsAfterComma": {
       "type": "int",
       "min": 0
