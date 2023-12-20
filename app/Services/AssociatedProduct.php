@@ -24,7 +24,7 @@ use Espo\ORM\Entity;
 
 class AssociatedProduct extends Base
 {
-    protected $mandatorySelectAttributeList = ['backwardAssociatedProductId'];
+    protected $mandatorySelectAttributeList = ['backwardAssociatedProductId', 'relatedProductId', 'relatedProductName'];
 
     public function createEntity($attachment)
     {
