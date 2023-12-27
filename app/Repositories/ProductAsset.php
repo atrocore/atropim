@@ -70,4 +70,9 @@ class ProductAsset extends Relation
             }
         }
     }
+
+    public function removeByProductId(string $productId): void
+    {
+        $this->where(['productId' => $productId])->removeCollection();
+    }
 }
