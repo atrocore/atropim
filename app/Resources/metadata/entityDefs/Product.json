@@ -59,8 +59,8 @@
       "importDisabled": true
     },
     "price": {
-      "type": "currency",
-      "view": "pim:views/product/fields/price"
+      "type": "float",
+      "measureId": "currency"
     },
     "priceConverted": {
       "layoutDetailDisabled": true,

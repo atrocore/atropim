@@ -22,7 +22,6 @@
     "Brand": "Marke",
     "Tax": "Tax",
     "Settings": "Administration",
-    "Currency": "Währung",
     "ClassificationAttribute": "Klassifizierungattribut",
     "Content": "Content",
     "ContentGroup": "Content Gruppe"
@@ -50,7 +49,6 @@
     "Tax": "Steuern",
     "Settings": "Administration",
     "ActionHistoryRecord": "Aktionsgeschichte",
-    "Currency": "Währung",
     "Dashboard": "Instrumententafel",
     "EmailAddress": "E-Mail Addresse",
     "ClassificationAttribute": "Klassifizierungattribute",

@@ -608,7 +608,6 @@ class Product extends AbstractSelectManager
                 }
                 $where['value'][] = $row;
                 break;
-            case 'currency':
             case 'float':
             case 'rangeFloat':
                 if (substr($row['attribute'], -6) === 'UnitId') {

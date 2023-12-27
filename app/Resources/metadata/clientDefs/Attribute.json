@@ -218,7 +218,6 @@
               "attribute": "type",
               "value": [
                 "asset",
-                "currency",
                 "date",
                 "datetime",
                 "float",
@@ -251,7 +250,6 @@
               "attribute": "type",
               "value": [
                 "float",
-                "currency",
                 "rangeFloat"
               ]
             }

@@ -327,11 +327,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 return _.isEqual(fetchedData.valueId, initialData.valueId);
             }
 
-            if (typeof fetchedData.valueCurrency !== 'undefined') {
-                fetchedData.data = {currency: fetchedData.valueCurrency};
-                return _.isEqual(fetchedData.valueCurrency, initialData.valueCurrency) && _.isEqual(fetchedData.value, initialData.value);
-            }
-
             if (typeof fetchedData.valueUnitId !== 'undefined') {
                 return _.isEqual(fetchedData.valueUnitId, initialData.valueUnitId) && _.isEqual(fetchedData.value, initialData.value);
             }

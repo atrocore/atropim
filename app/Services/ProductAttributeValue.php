@@ -244,7 +244,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
             }
 
-            if (!property_exists($attachment, 'amountOfDigitsAfterComma') && in_array($attribute->get('type'), ['float', 'currency'])
+            if (!property_exists($attachment, 'amountOfDigitsAfterComma') && $attribute->get('type') === 'float'
                 && $attribute->get('amountOfDigitsAfterComma') !== null) {
                 $attachment->amountOfDigitsAfterComma = $attribute->get('amountOfDigitsAfterComma');
             }
@@ -704,7 +704,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array $defs
+     * @param array  $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
@@ -787,7 +787,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $fields = [$entity->get('id') => $entity->get('attributeName')];
         }
 
-        foreach (['id', 'unit', 'unitId', 'currency'] as $item) {
+        foreach (['id', 'unit', 'unitId'] as $item) {
             if (isset($fields['value' . ucfirst($item)])) {
                 unset($fields['value' . ucfirst($item)]);
             }

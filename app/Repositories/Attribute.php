@@ -96,10 +96,6 @@ class Attribute extends Hierarchy
                 ->setParameter('false', false, Mapper::getParameterType(false));
 
             switch ($entity->get('type')) {
-                case 'currency':
-                    $qb->andWhere('float_value IS NOT NULL AND varchar_value IS NOT NULL');
-                    $qb->groupBy("float_value, varchar_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
-                    break;
                 case 'float':
                     $qb->andWhere('float_value IS NOT NULL');
                     $qb->groupBy("float_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");

@@ -55,7 +55,6 @@
     "type": {
       "array": "Anordnung",
       "bool": "Boolesch",
-      "currency": "Währung",
       "date": "Datum",
       "datetime": "Datum-Uhrzeit",
       "extensibleEnum": "Liste",

@@ -55,7 +55,6 @@
     "type": {
       "array": "Array",
       "bool": "Boolean",
-      "currency": "Currency",
       "date": "Date",
       "datetime": "Date-time",
       "extensibleEnum": "List",
