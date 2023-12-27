@@ -438,23 +438,14 @@ class Category extends Hierarchy
     {
         $result = parent::remove($entity);
 
-        $productionCategories = $this->getEntityManager()
-            ->getRepository('ProductCategory')
+        $this->getEntityManager()->getRepository('ProductCategory')
             ->where(["categoryId"  => $entity->get('id')])
-            ->find();
+            ->removeCollection();
 
-        foreach ($productionCategories as $pm) {
-            $this->getEntityManager()->removeEntity($pm);
-        }
-
-        $productionChannels = $this->getEntityManager()
+        $this->getEntityManager()
             ->getRepository('CategoryChannel')
             ->where(["categoryId"  => $entity->get('id')])
-            ->find();
-
-        foreach ($productionChannels as $pc) {
-            $this->getEntityManager()->removeEntity($pc);
-        }
+            ->removeCollection();
 
         return $result;
     }
