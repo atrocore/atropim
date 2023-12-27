@@ -15,6 +15,7 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
@@ -245,7 +246,24 @@ class Attribute extends Hierarchy
             $this->clearCache();
         }
 
+        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByAttributeId($entity->get('id'));
+
         parent::afterRemove($entity, $options);
+    }
+
+    protected function afterRestore($entity)
+    {
+        parent::afterRestore($entity);
+
+        $this->getConnection()
+            ->createQueryBuilder()
+            ->update('product_attribute_value')
+            ->set('deleted',':false')
+            ->where('attribute_id = :attributeId')
+            ->andWhere('deleted = :true')
+            ->setParameter('false',false, ParameterType::BOOLEAN)
+            ->setParameter('attributeId',$entity->get('id'), Mapper::getParameterType($entity->get('id')))
+            ->setParameter('true',true, ParameterType::BOOLEAN);
     }
 
     /**
