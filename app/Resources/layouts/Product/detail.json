@@ -63,7 +63,7 @@
       ],
       [
         {
-          "name": "price"
+          "name": "unitPrice"
         },
         false
       ],
