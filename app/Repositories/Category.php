@@ -434,6 +434,52 @@ class Category extends Hierarchy
 
     }
 
+    public function remove(Entity $entity, array $options = [])
+    {
+        $result = parent::remove($entity);
+
+        $productionCategories = $this->getEntityManager()
+            ->getRepository('ProductCategory')
+            ->where(["categoryId"  => $entity->get('id')])
+            ->find();
+
+        foreach ($productionCategories as $pm) {
+            $this->getEntityManager()->removeEntity($pm);
+        }
+
+        $productionChannels = $this->getEntityManager()
+            ->getRepository('CategoryChannel')
+            ->where(["categoryId"  => $entity->get('id')])
+            ->find();
+
+        foreach ($productionChannels as $pc) {
+            $this->getEntityManager()->removeEntity($pc);
+        }
+
+        return $result;
+    }
+
+    protected function afterRestore($entity)
+    {
+        parent::afterRestore($entity);
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('product_category')
+            ->set('deleted',':deleted')
+            ->where('category_id = :categoryId')
+            ->setParameter('categoryId', $entity->get('id'))
+            ->setParameter('deleted',false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('category_channel')
+            ->set('deleted',':deleted')
+            ->where('category_id = :categoryId')
+            ->setParameter('categoryId', $entity->get('id'))
+            ->setParameter('deleted',false, ParameterType::BOOLEAN)
+            ->executeQuery();
+    }
+
     /**
      * @inheritdoc
      */
