@@ -442,8 +442,7 @@ class Category extends Hierarchy
             ->where(["categoryId"  => $entity->get('id')])
             ->removeCollection();
 
-        $this->getEntityManager()
-            ->getRepository('CategoryChannel')
+        $this->getEntityManager()->getRepository('CategoryChannel')
             ->where(["categoryId"  => $entity->get('id')])
             ->removeCollection();
 
