@@ -39,7 +39,6 @@ class AssociatedProduct extends Base
         $this->where(['relatedProductId' => $productId])->removeCollection();
     }
 
-
     public function updateSortOrder(array $ids): void
     {
         $collection = $this->where(['id' => $ids])->find();

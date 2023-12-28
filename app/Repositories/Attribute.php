@@ -247,7 +247,6 @@ class Attribute extends Hierarchy
         }
 
         $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByAttributeId($entity->get('id'));
-
         parent::afterRemove($entity, $options);
     }
 
