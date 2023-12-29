@@ -22,6 +22,14 @@ class V1Dot11Dot2 extends Base
     {
         \Atro\Migrations\V1Dot8Dot3::migrateCurrencyField($this, 'Product', 'price', 'currency');
 
+        // fetch currencies in the system
+        $units = $this->getConnection()->createQueryBuilder()
+            ->select(['name', 'id'])
+            ->from('unit')
+            ->where('measure_id=:id')
+            ->setParameter('id', 'currency')
+            ->fetchAllKeyValue();
+
         // change currency type to float with measure
         $this->getConnection()->createQueryBuilder()
             ->update('attribute')
