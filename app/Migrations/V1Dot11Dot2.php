@@ -84,7 +84,7 @@ class V1Dot11Dot2 extends Base
             }
         }
 
-        $this->updateComposer('atrocore/pim', '^1.8.3');
+        $this->updateComposer('atrocore/pim', '^1.11.2');
     }
 
     public function down(): void
