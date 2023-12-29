@@ -62,13 +62,6 @@
       "type": "float",
       "measureId": "currency"
     },
-    "priceConverted": {
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true
-    },
     "productStatus": {
       "type": "enum",
       "required": true,
