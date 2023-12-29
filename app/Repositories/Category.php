@@ -16,6 +16,7 @@ namespace Pim\Repositories;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -417,9 +418,9 @@ class Category extends Hierarchy
         parent::afterSave($entity, $options);
     }
 
-    public function remove(Entity $entity, array $options = [])
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
-        $this->beforeRemove($entity, $options);
+        parent::beforeRemove($entity, $options);
 
         if ($this->getConfig()->get('behaviorOnCategoryDelete', 'cascade') !== 'cascade') {
             if (!empty($products = $entity->get('products')) && count($products) > 0) {
@@ -431,25 +432,42 @@ class Category extends Hierarchy
             }
         }
 
-        $result = $this->getMapper()->delete($entity);
+    }
 
-        $this->getConnection()->createQueryBuilder()
-            ->delete('product_category')
-            ->where('category_id = :categoryId')
-            ->setParameter('categoryId', $entity->get('id'))
-            ->executeQuery();
+    public function remove(Entity $entity, array $options = [])
+    {
+        $result = parent::remove($entity);
 
-        $this->getConnection()->createQueryBuilder()
-            ->delete('category_channel')
-            ->where('category_id = :categoryId')
-            ->setParameter('categoryId', $entity->get('id'))
-            ->executeQuery();
+        $this->getEntityManager()->getRepository('ProductCategory')
+            ->where(["categoryId"  => $entity->get('id')])
+            ->removeCollection();
 
-        if ($result) {
-            $this->afterRemove($entity, $options);
-        }
+        $this->getEntityManager()->getRepository('CategoryChannel')
+            ->where(["categoryId"  => $entity->get('id')])
+            ->removeCollection();
 
         return $result;
+    }
+
+    protected function afterRestore($entity)
+    {
+        parent::afterRestore($entity);
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('product_category')
+            ->set('deleted',':deleted')
+            ->where('category_id = :categoryId')
+            ->setParameter('categoryId', $entity->get('id'))
+            ->setParameter('deleted',false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('category_channel')
+            ->set('deleted',':deleted')
+            ->where('category_id = :categoryId')
+            ->setParameter('categoryId', $entity->get('id'))
+            ->setParameter('deleted',false, ParameterType::BOOLEAN)
+            ->executeQuery();
     }
 
     /**
