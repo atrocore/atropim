@@ -134,8 +134,19 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $pavs
             );
             $result[$key]['rowList'] = array_column($pavs, 'id');
-            $result[$key]['collection'] = $this->findEntities(['where' => [['type' => 'in', 'attribute' => 'id', 'value' => array_column($pavs, 'id')]]])['collection']->toArray();
             unset($result[$key]['pavs']);
+
+            $pavsRes = $this->findEntities([
+                'where' => [
+                    [
+                        'type'      => 'in',
+                        'attribute' => 'id',
+                        'value'     => array_column($pavs, 'id')
+                    ]
+                ]
+            ]);
+
+            $result[$key]['collection'] = isset($pavsRes['collection']) ? $pavsRes['collection']->toArray() : [];
         }
 
         return array_values($result);
@@ -705,7 +716,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array $defs
+     * @param array  $defs
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
