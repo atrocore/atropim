@@ -141,7 +141,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     [
                         'type'      => 'in',
                         'attribute' => 'id',
-                        'value'     => array_column($pavs, 'id')
+                        'value'     => $result[$key]['rowList']
                     ]
                 ]
             ]);
