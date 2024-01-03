@@ -412,8 +412,8 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": false,
-      "importDisabled": false,
+      "exportDisabled": true,
+      "importDisabled": true,
       "emHidden": true
     },
     "valueAllUnits": {
