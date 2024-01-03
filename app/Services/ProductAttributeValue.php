@@ -134,6 +134,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $pavs
             );
             $result[$key]['rowList'] = array_column($pavs, 'id');
+            $result[$key]['collection'] = $this->findEntities(['where' => [['type' => 'in', 'attribute' => 'id', 'value' => array_column($pavs, 'id')]]])['collection']->toArray();
             unset($result[$key]['pavs']);
         }
 

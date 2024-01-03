@@ -184,7 +184,16 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
             return this.baseSelectFields || [];
         },
 
-        initGroupCollection(group, groupCollection) {
+        initGroupCollection(group, groupCollection, callback) {
+            groupCollection.fetch().success(() => {
+                groupCollection.forEach(item => {
+                    if (this.collection.get(item.get('id'))) {
+                        this.collection.remove(item.get('id'));
+                    }
+                    this.collection.add(item);
+                });
+                callback();
+            });
         },
 
         buildGroups() {
@@ -194,17 +203,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
             let count = 0;
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, groupCollection => {
-                    this.initGroupCollection(group, groupCollection)
-                    groupCollection.fetch().success(() => {
-                        groupCollection.forEach(item => {
-                            if (this.collection.get(item.get('id'))) {
-                                this.collection.remove(item.get('id'));
-                            }
-                            this.collection.add(item);
-                        })
-
+                    this.initGroupCollection(group, groupCollection, () => {
                         let viewName = this.defs.recordListView || 'pim:views/record/list-in-groups';
-
                         let options = {
                             collection: groupCollection,
                             layoutName: this.layoutName,
