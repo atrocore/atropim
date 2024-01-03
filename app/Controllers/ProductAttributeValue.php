@@ -30,7 +30,16 @@ class ProductAttributeValue extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getGroupsPavs((string)$request->get('productId'), (string)$request->get('tabId'));
+        return $this
+            ->getRecordService()
+            ->getGroupsPavs(
+                (string)$request->get('productId'),
+                (string)$request->get('tabId'),
+                null,
+                $request->get('fieldFilter'),
+                $request->get('languageFilter'),
+                $request->get('scopeFilter')
+            );
     }
 
     public function actionInheritPav($params, $data, $request)
@@ -60,9 +69,9 @@ class ProductAttributeValue extends Base
     }
 
     /**
-     * @param array $params
+     * @param array     $params
      * @param \stdClass $data
-     * @param Request $request
+     * @param Request   $request
      *
      * @return bool
      *

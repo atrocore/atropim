@@ -221,7 +221,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                         };
 
                         this.createView(group.key, viewName, options, view => {
-                            view.listenTo(view, 'after:render', () => this.applyOverviewFilters());
                             view.listenTo(view, 'remove-group', (data) => this.unlinkGroup(data));
                             view.listenTo(view, 'remove-group-hierarchically', (data) => this.unlinkGroupHierarchy(data));
 
@@ -229,7 +228,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                                 count++;
                                 if (count === this.groups.length) {
                                     this.afterGroupRender()
-                                    this.applyOverviewFilters();
                                     this.trigger('groups-rendered');
                                 }
                             });
@@ -243,54 +241,9 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
 
         applyOverviewFilters() {
-            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter') || ['allValues'];
-            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'];
-            const scopeFilter = this.getStorage().get('scopeFilter', 'OverviewFilter') || ['allChannels'];
-
-            $.each(this.getValueFields(), (name, fieldView) => {
-                let value = fieldView.model.get('value'),
-                    hide = false;
-
-                if (!fieldFilter.includes('allValues')) {
-                    // hide filled
-                    if (!hide && fieldFilter.includes('filled')) {
-                        hide = this.isEmptyValue(value);
-                    }
-
-                    // hide empty
-                    if (!hide && fieldFilter.includes('empty')) {
-                        hide = !this.isEmptyValue(value);
-                    }
-
-                    // hide optional
-                    if (!hide && fieldFilter.includes('optional')) {
-                        hide = this.isRequiredValue(fieldView);
-                    }
-
-                    // hide required
-                    if (!hide && fieldFilter.includes('required')) {
-                        hide = !this.isRequiredValue(fieldView);
-                    }
-                }
-
-                if (!scopeFilter.includes('allChannels')) {
-                    // hide channel
-                    if (!hide && !this.isScopeValid(fieldView, scopeFilter)) {
-                        hide = true;
-                    }
-                }
-
-                // for languages
-                if (!languageFilter.includes('allLanguages')) {
-                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                        let language = fieldView.model.get('language') || 'main';
-                        if (!languageFilter.includes(language)) {
-                            hide = true;
-                        }
-                    }
-                }
-
-                this.controlRowVisibility(fieldView, name, hide);
+            this.getCollectionFactory().create(this.scope, collection => {
+                this.collection = collection;
+                this.actionRefresh();
             });
         },
 

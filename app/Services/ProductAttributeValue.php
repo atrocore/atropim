@@ -46,7 +46,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'referenceValue'
         ];
 
-    public function getGroupsPavs(string $productId, string $tabId, string $language = null): array
+    public function getGroupsPavs(string $productId, string $tabId, ?string $language, array $fieldFilter, array $languageFilter, array $scopeFilter): array
     {
         if (empty($productId)) {
             throw new NotFound();
@@ -56,7 +56,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
         }
 
-        $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language);
+        $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language, $languageFilter, $scopeFilter);
 
         /**
          * Prepare attributes groups
@@ -133,20 +133,70 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 array_column($pavs, 'language'), SORT_ASC,
                 $pavs
             );
-            $result[$key]['rowList'] = array_column($pavs, 'id');
-            unset($result[$key]['pavs']);
+            $result[$key]['collection'] = [];
 
             $pavsRes = $this->findEntities([
                 'where' => [
                     [
                         'type'      => 'in',
                         'attribute' => 'id',
-                        'value'     => $result[$key]['rowList']
+                        'value'     => array_column($pavs, 'id')
                     ]
                 ]
             ]);
 
-            $result[$key]['collection'] = isset($pavsRes['collection']) ? $pavsRes['collection']->toArray() : [];
+            if (isset($pavsRes['collection'])) {
+                foreach ($pavsRes['collection'] as $pavEntity) {
+                    // filter by field filter
+                    if (!empty($fieldFilter) && !in_array('allValues', $fieldFilter)) {
+                        switch ($pavEntity->get('attributeType')) {
+                            case 'asset':
+                            case 'link':
+                                $isEmpty = empty($pavEntity->get('valueId'));
+                                break;
+                            case 'int':
+                            case 'float':
+                                $isEmpty = $pavEntity->get('value') === null;
+                                break;
+                            case 'rangeInt':
+                            case 'rangeFloat':
+                                $isEmpty = $pavEntity->get('valueFrom') === null && $pavEntity->get('valueTo') === null;
+                                break;
+                            case 'array':
+                            case 'extensibleMultiEnum':
+                                $isEmpty = empty($pavEntity->get('value'));
+                                break;
+                            case 'linkMultiple':
+                                $isEmpty = $pavEntity->get('valueIds');
+                                break;
+                            default:
+                                $isEmpty = $pavEntity->get('value') === '' || $pavEntity->get('value') === null;
+                        }
+
+                        if (in_array('filled', $fieldFilter) && $isEmpty) {
+                            continue;
+                        } elseif (in_array('empty', $fieldFilter) && !$isEmpty) {
+                            continue;
+                        }
+
+                        $isRequired = !empty($pavEntity->get('isRequired'));
+
+                        if (in_array('required', $fieldFilter) && !$isRequired) {
+                            continue;
+                        } elseif (in_array('optional', $fieldFilter) && $isRequired) {
+                            continue;
+                        }
+                    }
+
+                    $result[$key]['collection'][] = $pavEntity->toArray();
+                }
+            }
+
+            $result[$key]['rowList'] = array_column($result[$key]['collection'], 'id');
+            if (empty($result[$key]['rowList'])) {
+                unset($result[$key]);
+            }
+            unset($result[$key]['pavs']);
         }
 
         return array_values($result);

@@ -39,7 +39,7 @@ class ProductAttributeValue extends Base
         return null;
     }
 
-    public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language): array
+    public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language, array $languageFilter, array $scopeFilter): array
     {
         // prepare tabId
         if ($tabId === 'null') {
@@ -50,12 +50,26 @@ class ProductAttributeValue extends Base
         $qb->select('pav.id, pav.attribute_id, pav.scope, pav.channel_id, c.name as channel_name, pav.language')
             ->from('product_attribute_value', 'pav')
             ->leftJoin('pav', 'channel', 'c', 'pav.channel_id=c.id AND c.deleted=:false')
-            ->where('pav.deleted=:false')->setParameter('false', false, Mapper::getParameterType(false))
+            ->where('pav.deleted=:false')->setParameter('false', false, ParameterType::BOOLEAN)
             ->andWhere('pav.product_id=:productId')->setParameter('productId', $productId);
         if (empty($tabId)) {
             $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id IS NULL AND deleted=:false)');
         } else {
             $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=:tabId AND deleted=:false)')->setParameter('tabId', $tabId);
+        }
+
+        if (!empty($languageFilter) && !in_array('allLanguages', $languageFilter)) {
+            $qb->andWhere('pav.language IN (:languagesFilter)')->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
+        }
+
+        if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter)) {
+            $scopeFilter = array_map(function ($v) {
+                if ($v === 'Global') {
+                    return '';
+                }
+                return $v;
+            }, $scopeFilter);
+            $qb->andWhere('pav.channel_id IN (:channelsIds)')->setParameter('channelsIds', $scopeFilter, Connection::PARAM_STR_ARRAY);
         }
 
         $pavs = $qb->fetchAllAssociative();
@@ -80,8 +94,8 @@ class ProductAttributeValue extends Base
             ->where('a.deleted=:false')
             ->leftJoin('a', 'attribute_group', 'ag', 'a.attribute_group_id=ag.id AND ag.deleted=:false')
             ->andWhere('a.id IN (:attributesIds)')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('attributesIds', $attrsIds, Mapper::getParameterType($attrsIds));
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('attributesIds', $attrsIds, Connection::PARAM_STR_ARRAY);
 
         try {
             $attrs = $qb->fetchAllAssociative();
