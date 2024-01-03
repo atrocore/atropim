@@ -486,6 +486,13 @@ class ProductAttributeValue extends Base
             ->removeCollection();
     }
 
+    public function removeByAttributeId(string $attributeId): void
+    {
+        $this
+            ->where(['attributeId' => $attributeId])
+            ->removeCollection();
+    }
+
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         $where = [

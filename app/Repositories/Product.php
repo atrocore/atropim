@@ -16,6 +16,7 @@ namespace Pim\Repositories;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
@@ -356,6 +357,33 @@ class Product extends Hierarchy
         $this->getEntityManager()->getRepository('ProductAsset')->removeByProductId($entity->get('id'));
 
         parent::afterRemove($entity, $options);
+    }
+
+    protected function afterRestore($entity)
+    {
+        parent::afterRestore($entity);
+
+        $this->getConnection()
+            ->createQueryBuilder()
+            ->update('product_attribute_value')
+            ->set('deleted',':false')
+            ->where('product_id = :productId')
+            ->andWhere('deleted = :true')
+            ->setParameter('false',false, ParameterType::BOOLEAN)
+            ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
+            ->setParameter('true',true, ParameterType::BOOLEAN);
+
+        $this->getConnection()
+            ->createQueryBuilder()
+            ->update('associated_product')
+            ->set('deleted',':false')
+            ->where('main_product_id = :productId')
+            ->orWhere('related_product_id = :productId')
+            ->andWhere('deleted = :true')
+            ->setParameter('false',false, ParameterType::BOOLEAN)
+            ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
+            ->setParameter('true',true, ParameterType::BOOLEAN);
+
     }
 
     public function relateCategories(Entity $product, $category, $data, $options)
