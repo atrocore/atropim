@@ -146,13 +146,17 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         fetchCollectionGroups(callback) {
             this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', {
                 tabId: this.defs.tabId,
-                productId: this.model.get('id')
+                productId: this.model.get('id'),
+                fieldFilter: this.getStorage().get('fieldFilter', 'OverviewFilter') || ['allValues'],
+                languageFilter: this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'],
+                scopeFilter: this.getStorage().get('scopeFilter', 'OverviewFilter') || ['allChannels']
             }).then(data => {
                 this.groups = data;
                 callback();
             });
         },
-        initGroupCollection(group, groupCollection) {
+
+        initGroupCollection(group, groupCollection, callback) {
             groupCollection.url = 'Product/' + this.model.id + '/productAttributeValues';
             groupCollection.data.select = this.getSelectFields().join(',');
             groupCollection.data.tabId = this.defs.tabId;
@@ -169,6 +173,22 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 }
             ];
             groupCollection.maxSize = 9999;
+
+            group.collection.forEach(item => {
+                this.getModelFactory().create('ProductAttributeValue', model => {
+                    model.set(item);
+                    groupCollection.add(model);
+                });
+            });
+
+            groupCollection.forEach(item => {
+                if (this.collection.get(item.get('id'))) {
+                    this.collection.remove(item.get('id'));
+                }
+                this.collection.add(item);
+            });
+
+            callback();
         },
 
         isScopeValid(view, channels) {
