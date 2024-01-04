@@ -95,16 +95,13 @@ class ProductAttributeValue extends AbstractSelectManager
     public function filterByLanguage(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
         $language = \Pim\Services\ProductAttributeValue::getLanguagePrism();
-        if (empty($language)) {
-            return;
-        }
 
         $languages = ['main'];
         if ($this->getConfig()->get('isMultilangActive')) {
             $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
         }
 
-        if (!in_array($language, $languages)) {
+        if (!empty($language) && !in_array($language, $languages)) {
             throw new BadRequest('No such language is available.');
         }
 
