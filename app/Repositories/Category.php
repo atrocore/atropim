@@ -24,15 +24,16 @@ use Espo\ORM\EntityCollection;
 
 class Category extends Hierarchy
 {
-    public static function getCategoryRoute(Entity $entity, bool $isName = false): string
+    public function getCategoryRoute(Entity $entity, bool $isName = false): string
     {
         // prepare result
         $result = '';
 
         // prepare data
         $data = [];
+        $parents = $this->getParents($entity);
 
-        while (!empty($parents = $entity->get('parents')) && $parents->count() > 0) {
+        while (!empty($parents) && $parents->count() > 0) {
             // push id
             $parent = $parents->offsetGet(0);
             if (!$isName || empty($parent->get('name'))) {
@@ -42,7 +43,7 @@ class Category extends Hierarchy
             }
 
             // to next category
-            $entity = $parent;
+            $parents = $this->getParents($parent);
         }
 
         if (!empty($data)) {
@@ -54,6 +55,20 @@ class Category extends Hierarchy
         }
 
         return $result;
+    }
+
+    protected function getParents(Entity $entity)
+    {
+        $parents = $entity->get('parents');
+        if (empty($parents) || $parents->count() == 0) {
+            $parents = $this
+                ->getEntityManager()
+                ->getRepository($entity->getRelationParam('parents', 'entity'))
+                ->where(['id' => $entity->get('parentsIds')])
+                ->find();
+        }
+
+        return $parents;
     }
 
     public function getParentChannelsIds(string $categoryId): array
@@ -544,8 +559,8 @@ class Category extends Hierarchy
             ->set('category_route', ':categoryRoute')
             ->set('category_route_name', ':categoryRouteName')
             ->where('c.id = :id')
-            ->setParameter('categoryRoute', self::getCategoryRoute($entity))
-            ->setParameter('categoryRouteName', self::getCategoryRoute($entity, true))
+            ->setParameter('categoryRoute', $this->getCategoryRoute($entity))
+            ->setParameter('categoryRouteName', $this->getCategoryRoute($entity, true))
             ->setParameter('id', $entity->get('id'))
             ->executeQuery();
     }
