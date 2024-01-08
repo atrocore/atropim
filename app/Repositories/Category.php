@@ -33,7 +33,7 @@ class Category extends Hierarchy
         $data = [];
         $parents = $this->getParents($entity);
 
-        while (!empty($parents) && $parents->count() > 0) {
+        while (!empty($parents[0])) {
             // push id
             $parent = $parents->offsetGet(0);
             if (!$isName || empty($parent->get('name'))) {
