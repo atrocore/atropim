@@ -16,7 +16,7 @@ namespace Pim\Migrations;
 use Atro\Core\Migration\Base;
 use Espo\Core\Exceptions\Error;
 
-class V1Dot11Dot2 extends Base
+class V1Dot11Dot3 extends Base
 {
     public function up(): void
     {
