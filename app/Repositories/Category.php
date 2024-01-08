@@ -57,15 +57,11 @@ class Category extends Hierarchy
         return $result;
     }
 
-    protected function getParents(Entity $entity)
+    protected function getParents(Entity $entity): ?EntityCollection
     {
         $parents = $entity->get('parents');
-        if (empty($parents) || $parents->count() == 0) {
-            $parents = $this
-                ->getEntityManager()
-                ->getRepository($entity->getRelationParam('parents', 'entity'))
-                ->where(['id' => $entity->get('parentsIds')])
-                ->find();
+        if (empty($parents[0]) && !empty($entity->get('parentsIds'))) {
+            $parents = $this->where(['id' => $entity->get('parentsIds')])->find();
         }
 
         return $parents;
