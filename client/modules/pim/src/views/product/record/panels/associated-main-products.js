@@ -14,7 +14,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:vi
         disableSelect: true,
         rowActionsView: 'views/record/row-actions/relationship-no-unlink',
 
-        initGroupCollection(group, groupCollection) {
+        initGroupCollection(group, groupCollection, callback) {
             groupCollection.url = 'AssociatedProduct';
             groupCollection.data.select = 'association_id';
             groupCollection.data.tabId = this.defs.tabId;
@@ -31,6 +31,16 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:vi
                 }
             ];
             groupCollection.maxSize = 9999;
+
+            groupCollection.fetch().success(() => {
+                groupCollection.forEach(item => {
+                    if (this.collection.get(item.get('id'))) {
+                        this.collection.remove(item.get('id'));
+                    }
+                    this.collection.add(item);
+                });
+                callback();
+            });
         },
 
         fetchCollectionGroups(callback) {
