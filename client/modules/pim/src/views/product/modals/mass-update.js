@@ -188,10 +188,6 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         attribute['valueUnitId'] = data[name + 'UnitId'];
                     }
 
-                    if (view.fieldType === 'currency') {
-                        attribute['valueCurrency'] = data[name + 'Currency'];
-                    }
-
                     if (data[name + 'Translate']) {
                         attribute['valueTranslate'] = data[name + 'Translate']
                     }

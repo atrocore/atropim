@@ -275,12 +275,6 @@ class ProductAttributeValue extends Base
             case 'bool':
                 $result = Entity::areValuesEqual(Entity::BOOL, $pav1->get('boolValue'), $pav2->get('boolValue'));
                 break;
-            case 'currency':
-                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
-                }
-                break;
             case 'int':
                 $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
                 if ($result) {
@@ -598,7 +592,6 @@ class ProductAttributeValue extends Base
         if ($amountOfDigitsAfterComma !== null) {
             switch ($type) {
                 case 'float':
-                case 'currency':
                     if ($entity->get('floatValue') !== null) {
                         $entity->set('floatValue', $this->roundValueUsingAmountOfDigitsAfterComma((string)$entity->get('floatValue'), (int)$amountOfDigitsAfterComma));
                         $entity->set('value', $entity->get('floatValue'));
@@ -644,10 +637,6 @@ class ProductAttributeValue extends Base
                     break;
                 case 'bool':
                     $where['boolValue'] = $entity->get('boolValue');
-                    break;
-                case 'currency':
-                    $where['floatValue'] = $entity->get('floatValue');
-                    $where['referenceValue'] = $entity->get('varcharValue');
                     break;
                 case 'int':
                     $where['intValue'] = $entity->get('intValue');
@@ -1013,20 +1002,6 @@ class ProductAttributeValue extends Base
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
-                }
-                break;
-            case 'currency':
-                if ($wasValue !== $entity->get('value')) {
-                    $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = $wasValue;
-                    $result['attributes']['became']['value'] = $entity->get('value');
-                }
-                $wasValueCurrency = self::$beforeSaveData['valueCurrency'] ?? null;
-
-                if (property_exists($input, 'varcharValue') && $this->notEqualAndNotEmpty($wasValueCurrency, $input->varcharValue)) {
-                    $result['fields'][] = 'valueCurrency';
-                    $result['attributes']['was']['valueCurrency'] = $wasValueCurrency;
-                    $result['attributes']['became']['valueCurrency'] = $input->varcharValue;
                 }
                 break;
             case 'asset':

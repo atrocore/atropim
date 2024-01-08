@@ -113,19 +113,6 @@ class ValueConverter extends Injectable
                     unset($data->valueUnitId);
                 }
                 break;
-            case 'currency':
-                if (property_exists($data, 'value')) {
-                    $data->floatValue = $data->value;
-                    unset($data->value);
-                }
-                if (property_exists($data, 'data') && property_exists($data->data, 'currency')) {
-                    $data->varcharValue = $data->data->currency;
-                }
-                if (property_exists($data, 'valueCurrency')) {
-                    $data->varcharValue = $data->valueCurrency;
-                    unset($data->valueCurrency);
-                }
-                break;
             case 'float':
                 if (property_exists($data, 'value')) {
                     $data->floatValue = $data->value;
@@ -271,12 +258,6 @@ class ValueConverter extends Injectable
             case 'bool':
                 if ($entity->has('boolValue')) {
                     $entity->set('value', !empty($entity->get('boolValue')));
-                }
-                break;
-            case 'currency':
-                if ($entity->has('floatValue')) {
-                    $entity->set('value', $entity->get('floatValue'));
-                    $entity->set('valueCurrency', $entity->get('varcharValue'));
                 }
                 break;
             case 'int':

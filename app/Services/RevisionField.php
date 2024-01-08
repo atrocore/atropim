@@ -70,18 +70,6 @@ class RevisionField extends \Revisions\Services\RevisionField
                                 $became['valueUnitId'] = $data['attributes']['became'][$field . 'UnitId'];
                             }
 
-                            // for currency
-                            if (isset($data['attributes']['was'][$field . 'Currency'])) {
-                                $was['valueCurrency'] = $data['attributes']['was'][$field . 'Currency'];
-                                $became['valueCurrency'] = null;
-                            }
-                            if (isset($data['attributes']['became'][$field . 'Currency'])) {
-                                if (!isset($was['valueCurrency'])) {
-                                    $was['valueCurrency'] = null;
-                                }
-                                $became['valueCurrency'] = $data['attributes']['became'][$field . 'Currency'];
-                            }
-
                             if (is_bool($became)) {
                                 $was = (bool)$was;
                             }

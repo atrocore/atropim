@@ -59,15 +59,8 @@
       "importDisabled": true
     },
     "price": {
-      "type": "currency",
-      "view": "pim:views/product/fields/price"
-    },
-    "priceConverted": {
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true
+      "type": "float",
+      "measureId": "currency"
     },
     "productStatus": {
       "type": "enum",

@@ -205,9 +205,6 @@ class Metadata extends AbstractListener
 
             $metadata['entityDefs']['Product']['fields'][$fieldName] = $defs;
             switch ($attribute['type']) {
-                case 'currency':
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Currency"] = $additionalFieldDefs;
-                    break;
                 case 'asset':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
                         'attributeId'    => $attribute['id'],

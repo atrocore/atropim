@@ -1037,9 +1037,6 @@ class Product extends Hierarchy
                     $product->set($fieldName, $pav->get('value'));
                     $product->set($fieldName . 'UnitId', $pav->get('valueUnitId'));
                     switch ($pav->get('attributeType')) {
-                        case 'currency':
-                            $product->set($fieldName . 'Currency', $pav->get('valueCurrency'));
-                            break;
                         case 'rangeInt':
                         case 'rangeFloat':
                             $product->set($fieldName . 'From', $pav->get('From'));
