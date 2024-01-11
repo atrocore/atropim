@@ -4,5 +4,8 @@
   },
   "links": {
     "attributes": "Attributes"
+  },
+  "exceptions": {
+    "measureIsUsedOnAttributes": "Ця міра використовується для атрибутів: (%s)"
   }
 }

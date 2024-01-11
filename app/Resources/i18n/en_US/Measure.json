@@ -4,5 +4,8 @@
   },
   "links": {
     "attributes": "Attributes"
+  },
+  "exceptions": {
+    "measureIsUsedOnAttributes": "This measure is used on attributes: (%s)"
   }
 }
