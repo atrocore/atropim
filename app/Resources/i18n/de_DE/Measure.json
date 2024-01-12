@@ -4,5 +4,8 @@
   },
   "links": {
     "attributes": "Attribute"
+  },
+  "exceptions": {
+    "measureIsUsedOnAttributes": "Dieses Maß wird für Attribute verwendet: (%s)"
   }
 }
