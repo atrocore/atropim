@@ -20,7 +20,10 @@ class V1Dot11Dot3 extends Base
 {
     public function up(): void
     {
-        \Atro\Migrations\V1Dot8Dot3::migrateCurrencyField($this, 'Product', 'price', 'currency');
+        try {
+            \Atro\Migrations\V1Dot8Dot3::migrateCurrencyField($this, 'Product', 'price', 'currency');
+        } catch (\Throwable $e) {
+        }
 
         // fetch currencies in the system
         $units = $this->getConnection()->createQueryBuilder()
