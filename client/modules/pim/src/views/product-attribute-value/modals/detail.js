@@ -11,7 +11,22 @@
 Espo.define('pim:views/product-attribute-value/modals/detail', 'views/modals/detail',
     Dep => Dep.extend({
 
-        fullFormDisabled: true
+        fullFormDisabled: true,
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            if (!this.checkPavScope('edit')) {
+                this.removeButton('edit');
+            }
+        },
+
+        checkPavScope(action) {
+            if (this.model.get('tabId')) {
+                return this.getAcl().check('AttributeTab', action) && this.getAcl().check('Attribute', action);
+            }
+
+            return this.getAcl().check('Attribute', action);
+        }
     })
 );

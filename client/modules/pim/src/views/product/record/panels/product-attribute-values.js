@@ -175,6 +175,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             groupCollection.maxSize = 9999;
 
             group.collection.forEach(item => {
+                item.tabId = this.defs.tabId;
+
                 this.getModelFactory().create('ProductAttributeValue', model => {
                     model.set(item);
                     groupCollection.add(model);
