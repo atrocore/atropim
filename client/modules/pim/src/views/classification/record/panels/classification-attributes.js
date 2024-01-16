@@ -496,7 +496,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             group.rowList.forEach(id => {
                 collection.add(this.collection.get(id));
             });
-
+            collection.total = group.rowList.length
             collection.url = `Classification/${this.model.id}/classificationAttributes`;
             collection.where = [
                 {
