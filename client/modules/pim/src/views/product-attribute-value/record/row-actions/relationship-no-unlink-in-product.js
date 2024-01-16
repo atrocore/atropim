@@ -24,7 +24,7 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.options.acl.edit) {
+            if (this.checkPavScope('edit')) {
                 list = list.concat([
                     {
                         action: 'quickEdit',
@@ -37,7 +37,7 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                 ]);
             }
 
-            if (this.options.acl.delete) {
+            if (this.checkPavScope('delete')) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',
@@ -61,7 +61,14 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
             }
             this.runPipeline('actionListPipe', list);
             return list;
-        }
+        },
 
+        checkPavScope(action) {
+            if (this.model.get('tabId')) {
+                return this.getAcl().check('AttributeTab', action) && this.getAcl().check('Attribute', action);
+            }
+
+            return this.getAcl().check('Attribute', action);
+        }
     })
 );
