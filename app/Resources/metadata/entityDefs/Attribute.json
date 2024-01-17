@@ -253,9 +253,7 @@
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
+      "filterDisabled": true
     },
     "description": {
       "type": "text",
