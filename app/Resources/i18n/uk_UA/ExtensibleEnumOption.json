@@ -1,0 +1,5 @@
+{
+  "exceptions": {
+    "extensibleEnumOptionIsUsedOnAttribute": "Опція списку '%s' використовується атрибутом '%s' в продукті '%s'."
+  }
+}

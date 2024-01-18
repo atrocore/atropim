@@ -1,0 +1,5 @@
+{
+  "exceptions": {
+    "extensibleEnumOptionIsUsedOnAttribute": "The List Option '%s' is used by the Attribute '%s' in the Product '%s'."
+  }
+}
