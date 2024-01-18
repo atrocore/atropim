@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Exception;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 
 class UnitEntity extends AbstractEntityListener
@@ -27,17 +25,26 @@ class UnitEntity extends AbstractEntityListener
         /** @var Entity $entity */
         $entity = $event->getArgument('entity');
 
-        echo '<pre>';
-        print_r('123');
-        die();
+        $conn = $this->getEntityManager()->getConnection();
 
-//        $attributes = $this->getEntityManager()->getRepository('Attribute')
-//            ->select(['name'])->where(['measureId' => $entity->get('id')])->find()->toArray();
-//
-//        if (count($attributes) > 0) {
-//            throw new BadRequest(sprintf($this->translate('measureIsUsedOnAttributes', 'exceptions', 'Measure'),
-//                join(" , ", array_column($attributes, 'name'))));
-//        }
+        $pav = $conn->createQueryBuilder()
+            ->select('t.*')
+            ->from($conn->quoteIdentifier('product_attribute_value'), 't')
+            ->where('t.reference_value = :unitId')
+            ->andWhere('t.deleted = :false')
+            ->setParameter('unitId', $entity->get('id'))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAssociative();
 
+        if (!empty($pav)) {
+            $pavEntity = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($pav['id']);
+            throw new BadRequest(
+                sprintf(
+                    $this->getLanguage()->translate('unitIsUsedOnAttribute', 'exceptions', 'Unit'),
+                    $pavEntity->get('attributeName') ?? $pavEntity->get('attributeId'),
+                    $pavEntity->get('productName') ?? $pavEntity->get('productId')
+                )
+            );
+        }
     }
 }

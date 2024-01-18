@@ -6,6 +6,6 @@
     "attributes": "Attribute"
   },
   "exceptions": {
-    "measureIsUsedOnAttribute": "Das Maß  '%s' wird im Attribut '%s'."
+    "measureIsUsedOnAttribute": "Das Maß '%s' wird im Attribut '%s' verwendet."
   }
 }
