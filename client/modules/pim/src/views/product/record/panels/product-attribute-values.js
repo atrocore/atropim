@@ -405,6 +405,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             this.initialAttributes = this.getInitialAttributes();
         },
         setEditMode() {
+            if (!this.checkAclEdit()) {
+                return;
+            }
+
             this.initialAttributes = this.getInitialAttributes();
 
             const groupsRendered = this.groups.every(group => {
@@ -485,6 +489,13 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 });
             });
         },
+        checkAclEdit() {
+            if (this.defs.tabId) {
+                return this.getAcl().check('AttributeTab', 'edit') && this.getAcl().check('Attribute', 'edit');
+            }
+
+            return this.getAcl().check('Attribute', 'edit');
+        }
 
     })
 );
