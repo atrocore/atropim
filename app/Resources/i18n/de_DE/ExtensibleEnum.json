@@ -6,6 +6,6 @@
     "attributes": "Attribute"
   },
   "exceptions": {
-    "extensibleEnumIsUsedOnAttribute": "Das Liste '%s' wird im Attribut '%s' verwendet."
+    "extensibleEnumIsUsedOnAttribute": "Die Liste '%s' wird im Attribut '%s' verwendet."
   }
 }
