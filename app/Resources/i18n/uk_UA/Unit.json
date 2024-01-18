@@ -1,5 +1,6 @@
 {
   "exceptions": {
-    "unitIsUsedOnAttribute": "Одиниця виміру '%s' використовується атрибутом '%s' в продукті '%s'."
+    "unitIsUsedOnProductAttribute": "Одиниця виміру '%s' використовується атрибутом '%s' в продукті '%s'.",
+    "unitIsUsedOnClassificationAttribute": "Одиниця виміру '%s' використовується атрибутом '%s' в класифікації '%s'."
   }
 }
