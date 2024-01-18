@@ -41,6 +41,7 @@ class UnitEntity extends AbstractEntityListener
             throw new BadRequest(
                 sprintf(
                     $this->getLanguage()->translate('unitIsUsedOnAttribute', 'exceptions', 'Unit'),
+                    $entity->get('name'),
                     $pavEntity->get('attributeName') ?? $pavEntity->get('attributeId'),
                     $pavEntity->get('productName') ?? $pavEntity->get('productId')
                 )
