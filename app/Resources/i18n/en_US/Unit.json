@@ -1,0 +1,6 @@
+{
+  "exceptions": {
+    "unitIsUsedOnProductAttribute": "The unit '%s' is used by the Attribute '%s' in the Product '%s'.",
+    "unitIsUsedOnClassificationAttribute": "The unit '%s' is used by the Attribute '%s' in the Classification '%s'."
+  }
+}
