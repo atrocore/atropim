@@ -15,6 +15,7 @@ Espo.define('pim:views/attribute-tab/record/panels/attributes', 'pim:views/class
                 collection.add(this.collection.get(id));
             });
 
+            collection.total = group.rowList.length;
             collection.url = `AttributeTab/${this.model.id}/attributes`;
 
             this.listenTo(collection, 'sync', () => {
