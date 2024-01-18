@@ -43,10 +43,32 @@ class ExtensibleEnumOptionEntity extends AbstractEntityListener
             $pavEntity = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($pav['id']);
             throw new BadRequest(
                 sprintf(
-                    $this->getLanguage()->translate('extensibleEnumOptionIsUsedOnAttribute', 'exceptions', 'ExtensibleEnumOption'),
+                    $this->getLanguage()->translate('extensibleEnumOptionIsUsedOnProductAttribute', 'exceptions', 'ExtensibleEnumOption'),
                     $entity->get('name'),
                     $pavEntity->get('attributeName') ?? $pavEntity->get('attributeId'),
                     $pavEntity->get('productName') ?? $pavEntity->get('productId')
+                )
+            );
+        }
+
+        $ca = $conn->createQueryBuilder()
+            ->select('t.*')
+            ->from($conn->quoteIdentifier('classification_attribute'), 't')
+            ->where("t.reference_value = :referenceValue OR t.text_value LIKE :textValue")
+            ->andWhere('t.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('referenceValue', $entity->get('id'))
+            ->setParameter('textValue', "%\"{$entity->get('id')}\"%")
+            ->fetchAssociative();
+
+        if (!empty($ca)) {
+            $caEntity = $this->getEntityManager()->getRepository('ClassificationAttribute')->get($ca['id']);
+            throw new BadRequest(
+                sprintf(
+                    $this->getLanguage()->translate('extensibleEnumOptionIsUsedOnClassificationAttribute', 'exceptions', 'ExtensibleEnumOption'),
+                    $entity->get('name'),
+                    $caEntity->get('attributeName') ?? $caEntity->get('attributeId'),
+                    $caEntity->get('classificationName') ?? $caEntity->get('classificationId')
                 )
             );
         }

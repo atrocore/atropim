@@ -1,5 +1,6 @@
 {
   "exceptions": {
-    "extensibleEnumOptionIsUsedOnAttribute": "Опція списку '%s' використовується атрибутом '%s' в продукті '%s'."
+    "extensibleEnumOptionIsUsedOnProductAttribute": "Опція списку '%s' використовується атрибутом '%s' в продукті '%s'.",
+    "extensibleEnumOptionIsUsedOnClassificationAttribute": "Опція списку '%s' використовується атрибутом '%s' в класифікації '%s'."
   }
 }
