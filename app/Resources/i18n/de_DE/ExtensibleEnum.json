@@ -4,5 +4,8 @@
   },
   "links": {
     "attributes": "Attribute"
+  },
+  "exceptions": {
+    "extensibleEnumIsUsedOnAttribute": "Das Liste '%s' wird im Attribut '%s' verwendet."
   }
 }
