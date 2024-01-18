@@ -94,6 +94,7 @@
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
     "attributeNotHaveUniqueValue": "Attribut hat keinen eindeutigen Wert.",
-    "someAttributeDontMathToPattern": "Einige Attribute stimmen nicht mit dem Muster überein."
+    "someAttributeDontMathToPattern": "Einige Attribute stimmen nicht mit dem Muster überein.",
+    "invalidType": "Der Attributtyp „{type}“ ist ungültig"
   }
 }
