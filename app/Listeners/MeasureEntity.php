@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Exception;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 
 class MeasureEntity extends AbstractEntityListener
@@ -27,12 +25,25 @@ class MeasureEntity extends AbstractEntityListener
         /** @var Entity $entity */
         $entity = $event->getArgument('entity');
 
-        $attributes = $this->getEntityManager()->getRepository('Attribute')
-            ->select(['name'])->where(['measureId' => $entity->get('id')])->find()->toArray();
+        $conn = $this->getEntityManager()->getConnection();
 
-        if (count($attributes) > 0) {
-            throw new BadRequest(sprintf($this->translate('measureIsUsedOnAttributes', 'exceptions', 'Measure'),
-                join(" , ", array_column($attributes, 'name'))));
+        $attribute = $conn->createQueryBuilder()
+            ->select('t.*')
+            ->from($conn->quoteIdentifier('attribute'), 't')
+            ->where('t.measure_id = :measureId')
+            ->andWhere('t.deleted = :false')
+            ->setParameter('measureId', $entity->get('id'))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAssociative();
+
+        if (!empty($attribute)) {
+            throw new BadRequest(
+                sprintf(
+                    $this->getLanguage()->translate('measureIsUsedOnAttribute', 'exceptions', 'Measure'),
+                    $entity->get('name') ?? $entity->get('id'),
+                    $attribute['name'] ?? $attribute['id']
+                )
+            );
         }
 
     }

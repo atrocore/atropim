@@ -1,11 +1,11 @@
 {
   "fields": {
-    "attributes": "Attributes"
+    "attributes": "Атрибути"
   },
   "links": {
-    "attributes": "Attributes"
+    "attributes": "Атрибути"
   },
   "exceptions": {
-    "measureIsUsedOnAttributes": "Ця міра використовується для атрибутів: (%s)"
+    "measureIsUsedOnAttribute": "Міра '%s' використовується атрибутом '%s'."
   }
 }
