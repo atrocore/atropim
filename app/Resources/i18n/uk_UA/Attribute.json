@@ -76,6 +76,7 @@
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
     "attributeIsUsedInClassifications": "Атрибут уже використовується в класифікаціях. Будь ласка, спочатку оновіть класифікації.",
     "attributeNotHaveUniqueValue": "Атрибут не має унікального значення.",
-    "someAttributeDontMathToPattern": "Деякі атрибути не відповідають шаблону."
+    "someAttributeDontMathToPattern": "Деякі атрибути не відповідають шаблону.",
+    "invalidType": "Тип атрибута '{type}' недійсний"
   }
 }
