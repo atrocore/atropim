@@ -39,11 +39,6 @@ class Classification extends Hierarchy
         }
     }
 
-    protected function duplicateProducts(Entity $entity, Entity $duplicatingEntity)
-    {
-        // ignore duplicating for link 'products'
-    }
-
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
