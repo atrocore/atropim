@@ -24,45 +24,6 @@ class ProductService extends AbstractListener
         $parent = $event->getArgument('parent');
         $child = $event->getArgument('child');
 
-        $pavs = $parent->get('productAttributeValues');
-        if (!empty($pavs[0])) {
-            $pavRepository = $this->getEntityManager()->getRepository('ProductAttributeValue');
-            $pavService = $this->getService('ProductAttributeValue');
-            foreach ($pavs as $parentPav) {
-                $childPav = $pavRepository->getChildPavForProduct($parentPav, $child);
-
-                // create child PAV if not exist
-                if (empty($childPav)) {
-                    $childPav = $pavRepository->get();
-                    $childPav->set($parentPav->toArray());
-                    $childPav->id = null;
-                    $childPav->set('productId', $child->get('id'));
-                    try {
-                        $pavRepository->save($childPav);;
-                    } catch (\Throwable $e) {
-                        $GLOBALS['log']->error('Create child PAV failed: ' . $e->getMessage());
-                    }
-                    continue;
-                }
-
-                $pavService->prepareEntityForOutput($childPav);
-                if ($childPav->get('isPavValueInherited') === false) {
-                    $value = $childPav->get('value');
-                    $parentValue = $parentPav->get('value');
-                    if ($childPav->get('attributeType') === 'asset') {
-                        $value = $childPav->get('valueId');
-                        $parentValue = $parentPav->get('valueId');
-                    }
-
-                    if ($value === null) {
-                        try {
-                            $pavService->inheritPav($childPav);
-                        } catch (\Throwable $e) {
-                            $GLOBALS['log']->error('Inherit PAV failed: ' . $e->getMessage());
-                        }
-                    }
-                }
-            }
-        }
+        $this->getService('Product')->inheritedAllFromParent($parent, $child);
     }
 }

@@ -770,6 +770,18 @@ class Product extends Hierarchy
         }
     }
 
+    public function createEntity($attachment)
+    {
+        $entity = parent::createEntity($attachment);
+
+        if(!empty(($parentsIds = $entity->getLinkMultipleIdList('parents'))[0])){
+            foreach ($parentsIds as $parentsId){
+                $this->inheritedAllFromParent($parentsId, $entity);
+            }
+        }
+        return $entity;
+    }
+
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         if (property_exists($data, 'assetsNames')) {
@@ -1054,5 +1066,56 @@ class Product extends Hierarchy
             }
         }
         $product->attributesFieldsIsSet = true;
+    }
+    
+    public  function inheritedAllFromParent($parent, $child){
+        if(is_string($parent)){
+            $parent = $this->getRepository()->get($parent);
+        }
+
+        if(is_string($child)){
+            $child = $this->getRepository()->get($child);
+        }
+
+        $pavs = $parent->get('productAttributeValues');
+        if (!empty($pavs[0])) {
+            $pavRepository = $this->getEntityManager()->getRepository('ProductAttributeValue');
+            $pavService = $this->getServiceFactory()->create('ProductAttributeValue');
+            foreach ($pavs as $parentPav) {
+                $childPav = $pavRepository->getChildPavForProduct($parentPav, $child);
+
+                // create child PAV if not exist
+                if (empty($childPav)) {
+                    $childPav = $pavRepository->get();
+                    $childPav->set($parentPav->toArray());
+                    $childPav->id = null;
+                    $childPav->set('productId', $child->get('id'));
+                    try {
+                        $pavRepository->save($childPav);;
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error('Create child PAV failed: ' . $e->getMessage());
+                    }
+                    continue;
+                }
+
+                $pavService->prepareEntityForOutput($childPav);
+                if ($childPav->get('isPavValueInherited') === false) {
+                    $value = $childPav->get('value');
+                    $parentValue = $parentPav->get('value');
+                    if ($childPav->get('attributeType') === 'asset') {
+                        $value = $childPav->get('valueId');
+                        $parentValue = $parentPav->get('valueId');
+                    }
+
+                    if ($value === null) {
+                        try {
+                            $pavService->inheritPav($childPav);
+                        } catch (\Throwable $e) {
+                            $GLOBALS['log']->error('Inherit PAV failed: ' . $e->getMessage());
+                        }
+                    }
+                }
+            }
+        }
     }
 }
