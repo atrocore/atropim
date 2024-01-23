@@ -63,31 +63,10 @@
       "measureId": "currency"
     },
     "productStatus": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "options": [
-        "draft",
-        "prepared",
-        "reviewed",
-        "notReady",
-        "ready"
-      ],
-      "optionsIds": [
-        "draft",
-        "prepared",
-        "reviewed",
-        "notReady",
-        "ready"
-      ],
-      "optionColors": [
-        "00BFFF",
-        "004DFF",
-        "800080",
-        "FF0000",
-        "00FF00"
-      ],
-      "default": "draft"
+      "type": "extensibleEnum",
+      "required": false,
+      "extensibleEnumId": "productStatus",
+      "defaultId": "draft"
     },
     "tax": {
       "type": "link",
