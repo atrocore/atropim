@@ -16,7 +16,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['pim:vi
 
         initGroupCollection(group, groupCollection, callback) {
             groupCollection.url = 'AssociatedProduct';
-            groupCollection.data.select = 'association_id';
+            groupCollection.data.select = 'associationId,sorting';
             groupCollection.data.tabId = this.defs.tabId;
             groupCollection.where = [
                 {
