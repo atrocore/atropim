@@ -193,9 +193,15 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (view.treeScope === 'Classification' ) {
                 $.ajax({url: `Product/${view.model.get('id')}/classifications`, type: 'GET'}).done(response => {
                     let route = [];
+                    view.prepareTreeRoute(treeData, route);
                     if(response.total && response.total > 0) {
-                        view.prepareTreeRoute(treeData, route);
-                        response.list.forEach((attribute) =>  view.selectTreeNode(attribute.id, route))
+                        let $tree = view.getTreeEl();
+                        response.list.forEach((classification) =>  {
+                            let node = $tree.tree('getNodeById', classification.id);
+                            if (node && node.element) {
+                                $(node.element).addClass('jqtree-selected');
+                            }
+                        })
                     }
                 });
             }
