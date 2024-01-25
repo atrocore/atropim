@@ -453,11 +453,6 @@ class ProductAttributeValue extends Base
 
     public function save(Entity $entity, array $options = [])
     {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
         if ($entity->get('scope') === 'Channel') {
             $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
@@ -465,14 +460,7 @@ class ProductAttributeValue extends Base
 
         try {
             $result = parent::save($entity, $options);
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
         } catch (UniqueConstraintViolationException $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-
             $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
             $channelName = $entity->get('scope');
             if ($entity->get('scope') === 'Channel') {

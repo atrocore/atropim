@@ -468,25 +468,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return Record::updateEntity($id, $data);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $this->createPseudoTransactionUpdateJobs($id, clone $data);
-            $result = Record::updateEntity($id, $data);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
+        $this->createPseudoTransactionUpdateJobs($id, clone $data);
+        return Record::updateEntity($id, $data);
     }
 
     protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
@@ -590,25 +573,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return Record::deleteEntity($id);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $this->createPseudoTransactionDeleteJobs($id);
-            $result = Record::deleteEntity($id);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
+        $this->createPseudoTransactionDeleteJobs($id);
+        return Record::deleteEntity($id);
     }
 
     public function linkAttribute(array $params, string $productId): array
