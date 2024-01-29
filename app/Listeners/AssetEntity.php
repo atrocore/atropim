@@ -16,10 +16,28 @@ namespace Pim\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\PseudoTransactionManager;
 use Espo\ORM\Entity;
 
 class AssetEntity extends AbstractEntityListener
 {
+    public function afterSave(Event $event)
+    {
+        $entity = $event->getArgument('entity');
+
+        $productAssets = $this
+            ->getEntityManager()
+            ->getRepository('ProductAsset')
+            ->where(['assetId' => $entity->get('id')])
+            ->find();
+
+        if (count($productAssets) > 0) {
+            foreach ($productAssets as $productAsset) {
+                $this->getEntityManager()->saveEntity($productAsset);
+            }
+        }
+    }
+
     public function afterRemove(Event $event): void
     {
         /** @var Entity $entity */
@@ -38,5 +56,13 @@ class AssetEntity extends AbstractEntityListener
         foreach ($pas as $pa) {
             $repository->remove($pa);
         }
+    }
+
+    /**
+     * @return PseudoTransactionManager
+     */
+    protected function getPseudoTransactionManager(): PseudoTransactionManager
+    {
+        return $this->getContainer()->get('pseudoTransactionManager');
     }
 }
