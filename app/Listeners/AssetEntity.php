@@ -16,7 +16,6 @@ namespace Pim\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\PseudoTransactionManager;
 use Espo\ORM\Entity;
 
 class AssetEntity extends AbstractEntityListener
@@ -56,13 +55,5 @@ class AssetEntity extends AbstractEntityListener
         foreach ($pas as $pa) {
             $repository->remove($pa);
         }
-    }
-
-    /**
-     * @return PseudoTransactionManager
-     */
-    protected function getPseudoTransactionManager(): PseudoTransactionManager
-    {
-        return $this->getContainer()->get('pseudoTransactionManager');
     }
 }
