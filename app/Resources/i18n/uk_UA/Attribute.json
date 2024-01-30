@@ -48,7 +48,8 @@
   "labels": {
     "Create Attribute": "Створити атрибут",
     "classification": "Класифікація",
-    "addNewValue": "Додати нове значення"
+    "addNewValue": "Додати нове значення",
+    "extensibleEnumOptions": "Опції списку"
   },
   "messages": {
      "allLingualAttrsWillDeleted": "Якщо багатомовний атрибут встановлюється як одномовний, усі значення атрибутів для додаткових мов буде видалено. Ви бажаєте продовжити?",
