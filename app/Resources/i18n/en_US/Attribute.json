@@ -49,7 +49,8 @@
   "labels": {
     "Create Attribute": "Create Attribute",
     "Classification": "Classification",
-    "addNewValue": "Add new value"
+    "addNewValue": "Add new value",
+    "extensibleEnumOptions": "List Options"
   },
   "options": {
     "type": {

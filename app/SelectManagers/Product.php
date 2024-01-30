@@ -833,8 +833,8 @@ class Product extends AbstractSelectManager
                     'value'     => ['varchar', 'text', 'wysiwyg', 'extensibleEnum']
                 ],
                 [
-                    'type'      => 'or',
-                    'value'     => [
+                    'type'  => 'or',
+                    'value' => [
                         [
                             'type'      => 'like',
                             'attribute' => 'textValue',
@@ -854,8 +854,8 @@ class Product extends AbstractSelectManager
         $sp['select'] = ['productId'];
 
         $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
-
-        $qb->orWhere("{$tableAlias}.id IN ({$qb1->getSql()})");
+        $sql = $qb1->getSql(). " AND $tableAlias.id = t2.product_id";
+        $qb->orWhere("EXISTS ({$qb1->getSql()})");
         foreach ($qb1->getParameters() as $param => $val) {
             $qb->setParameter($param, $val, Mapper::getParameterType($val));
         }
