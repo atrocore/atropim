@@ -192,4 +192,14 @@ class ClassificationAttribute extends Base
             ProductAttributeValue::saveLinkMultipleValues($entity, $this);
         }
     }
+
+    protected function getOwnNotificationMessageData(Entity $entity): array
+    {
+        return [
+            'entityName' => $entity->get('attribute')->get('name'),
+            'entityType' => $entity->getEntityType(),
+            'entityId'   => $entity->get('id'),
+            'changedBy'  => $this->getEntityManager()->getUser()->get('id')
+        ];
+    }
 }
