@@ -48,6 +48,7 @@ class Module extends AbstractModule
     public function loadLayouts(string $scope, string $name, array &$data)
     {
         if ($scope === 'Product') {
+            // ignore data coming from Atro
             $data = [];
         }
 
