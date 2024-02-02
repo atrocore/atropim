@@ -160,13 +160,11 @@ class ProductAttributeValue extends Base
             ->andWhere('pav.attribute_id = :attributeId')
             ->andWhere('pav.language = :language')
             ->andWhere('pav.scope = :scope')
-            ->andWhere('pav.is_variant_specific_attribute = :isVariantSpecificAttribute')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
             ->setParameter('attributeId', $pav->get('attributeId'))
             ->setParameter('language', $pav->get('language'))
-            ->setParameter('scope', $pav->get('scope'))
-            ->setParameter('isVariantSpecificAttribute', $pav->get('isVariantSpecificAttribute'), ParameterType::BOOLEAN);
+            ->setParameter('scope', $pav->get('scope'));
 
         if ($pav->get('scope') === 'Channel') {
             $qb->andWhere('pav.channel_id = :channelId');
@@ -222,7 +220,6 @@ class ProductAttributeValue extends Base
             'attributeId'                => $parentPav->get('attributeId'),
             'language'                   => $parentPav->get('language'),
             'scope'                      => $parentPav->get('scope'),
-            'isVariantSpecificAttribute' => $parentPav->get('isVariantSpecificAttribute'),
         ];
 
         if ($parentPav->get('scope') === 'Channel') {
@@ -249,7 +246,6 @@ class ProductAttributeValue extends Base
                 $pav->get('attributeId') === $entity->get('attributeId')
                 && $pav->get('channelId') === $entity->get('channelId')
                 && $pav->get('language') === $entity->get('language')
-                && $pav->get('isVariantSpecificAttribute') === $entity->get('isVariantSpecificAttribute')
                 && $this->arePavsValuesEqual($pav, $entity)
             ) {
                 return true;
