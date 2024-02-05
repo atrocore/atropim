@@ -15,5 +15,6 @@
   "hasTeam": false,
   "hasOwner": false,
   "hasActivities": false,
-  "hasTasks": false
+  "hasTasks": false,
+  "hasActive": true
 }
