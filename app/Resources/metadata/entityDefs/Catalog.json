@@ -42,9 +42,6 @@
       "type": "linkMultiple",
       "view": "views/fields/teams"
     },
-    "isActive": {
-      "type": "bool"
-    },
     "products": {
       "type": "linkMultiple",
       "readOnly": true,

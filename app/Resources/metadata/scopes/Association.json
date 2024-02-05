@@ -11,5 +11,5 @@
     "type": "Base",
     "module": "Pim",
     "object": true,
-    "hasActive": true
+    "isActiveUnavailable": true
 }

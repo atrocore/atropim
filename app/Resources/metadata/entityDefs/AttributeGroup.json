@@ -22,16 +22,7 @@
       "unique": true
     },
     "isActive": {
-      "notNull": true,
-      "type": "bool",
-      "default": true,
-      "audited": false,
-      "readOnly": true,
-      "tooltip": false,
-      "layoutDetailDisabled": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true,
-      "layoutListDisabled": true
+      "default": true
     },
     "createdAt": {
       "type": "datetime",

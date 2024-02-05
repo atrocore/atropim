@@ -40,5 +40,5 @@
   "completeness": {
     "service": "Completeness\\Services\\ProductCompleteness"
   },
-  "hasActive": true
+  "isActiveUnavailable": true
 }

@@ -13,5 +13,5 @@
     "object": true,
     "multiParents": false,
     "dragAndDrop": true,
-    "hasActive": true
+    "isActiveUnavailable": true
 }
