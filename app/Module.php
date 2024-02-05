@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Pim;
 
-use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Json;
 use Atro\Core\ModuleManager\AbstractModule;
 
