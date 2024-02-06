@@ -1,11 +1,5 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "required": true,
-      "trim": true,
-      "isMultilang": true
-    },
     "productAttributeValues": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -33,16 +27,6 @@
       "importDisabled": true,
       "exportDisabled": false
     },
-    "sku": {
-      "type": "varchar",
-      "trim": true,
-      "massUpdateDisabled": true
-    },
-    "isActive": {
-      "notNull": true,
-      "type": "bool",
-      "default": false
-    },
     "amount": {
       "type": "float",
       "min": 0,
@@ -57,10 +41,6 @@
       "noLoad": true,
       "exportDisabled": false,
       "importDisabled": true
-    },
-    "price": {
-      "type": "float",
-      "measureId": "currency"
     },
     "productStatus": {
       "type": "enum",
@@ -136,29 +116,8 @@
       "emHidden": true,
       "exportDisabled": true
     },
-    "longDescription": {
-      "type": "wysiwyg",
-      "trim": true,
-      "isMultilang": true
-    },
     "productSerie": {
       "type": "link"
-    },
-    "children": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "noLoad": true
-    },
-    "parents": {
-      "type": "linkMultiple",
-      "view": "views/fields/hierarchy-parents",
-      "noLoad": false
-    },
-    "sortOrder": {
-      "type": "int",
-      "default": null,
-      "massUpdateDisabled": true,
-      "filterDisabled": true
     },
     "data": {
       "type": "jsonObject",
@@ -200,14 +159,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "createdAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "modifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
     "modifiedAtExpanded": {
       "type": "datetime",
       "notStorable": true,
@@ -219,16 +170,6 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
-    },
-    "createdBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "modifiedBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
     },
     "ownerUser": {
       "type": "link",
@@ -310,30 +251,6 @@
     }
   },
   "links": {
-    "children": {
-      "type": "hasMany",
-      "relationName": "productHierarchy",
-      "foreign": "parents",
-      "entity": "Product",
-      "audited": false,
-      "disableMassRelation": true,
-      "midKeys": [
-        "entityId",
-        "parentId"
-      ]
-    },
-    "parents": {
-      "type": "hasMany",
-      "relationName": "productHierarchy",
-      "foreign": "children",
-      "entity": "Product",
-      "audited": false,
-      "disableMassRelation": true,
-      "midKeys": [
-        "parentId",
-        "entityId"
-      ]
-    },
     "classifications": {
       "type": "hasMany",
       "foreign": "products",
@@ -400,14 +317,6 @@
       "foreign": "product",
       "entity": "ProductChannel"
     },
-    "createdBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "modifiedBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
     "ownerUser": {
       "type": "belongsTo",
       "entity": "User"
@@ -452,12 +361,6 @@
     ]
   },
   "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    },
     "ownerUser": {
       "columns": [
         "ownerUserId",

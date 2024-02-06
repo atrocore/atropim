@@ -44,4 +44,14 @@ class Module extends AbstractModule
 
         $data = Json::decode(Json::encode($data));
     }
+
+    public function loadLayouts(string $scope, string $name, array &$data)
+    {
+        if ($scope === 'Product') {
+            // ignore data coming from Atro
+            $data = [];
+        }
+
+        parent::loadLayouts($scope, $name, $data);
+    }
 }

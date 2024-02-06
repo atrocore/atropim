@@ -1,6 +1,5 @@
 {
   "controller": "pim:controllers/product",
-  "iconClass": "fas fa-box-open",
   "quickCreate": true,
   "navigateToEntityAfterQuickCreate": true,
   "quickCreateOptions": {
@@ -122,16 +121,6 @@
   },
   "dynamicLogic": {
     "fields": {
-      "sortOrder": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isRoot"
-            }
-          ]
-        }
-      },
       "type": {
         "readOnly": {
           "conditionGroup": [

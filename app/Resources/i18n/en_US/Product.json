@@ -15,8 +15,6 @@
     "associatedMainProducts": "Associated Products: Related",
     "associatedRelatedProduct": "Associated Products: Main",
     "productStatus": "Product Status",
-    "sku": "SKU",
-    "isActive": "Active",
     "type": "Type",
     "amount": "Amount",
     "price": "Purchase Price",
@@ -27,7 +25,6 @@
     "uvp": "UVP",
     "image": "Main Image",
     "tag": "Tag",
-    "longDescription": "Long Description",
     "productSerie": "Product Serie",
     "association": "Association",
     "catalog": "Catalog",
@@ -36,9 +33,7 @@
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "contents": "Contents",
-    "taskStatus": "Task status",
-    "children": "Child products",
-    "parents": "Parent Products"
+    "taskStatus": "Task status"
   },
   "links": {
     "productSerie": "Product Series",
@@ -60,12 +55,9 @@
     "catalog": "Catalog",
     "channels": "Channels",
     "productChannels": "Product Channels",
-    "contents": "Contents",
-    "children": "Child products",
-    "parents": "Parent Products"
+    "contents": "Contents"
   },
   "labels": {
-    "Create Product": "Create Product",
     "Product Attributes": "Attributes",
     "thereIsNoValidAttributesForChannel": "There is no valid attributes for channel",
     "addAttributeFilter": "Add Attribute Filter",

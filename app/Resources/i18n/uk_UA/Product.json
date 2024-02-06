@@ -15,8 +15,6 @@
     "associatedMainProducts": "Асоційовані продукти: Пов'язані",
     "associatedRelatedProduct": "Асоційовані продукти: Основні",
     "productStatus": "Статус продукту",
-    "sku": "Артикул",
-    "isActive": "Активний",
     "type": "Тип",
     "amount": "Кількість",
     "price": "Ціна покупки",
@@ -27,7 +25,6 @@
     "uvp": "UVP",
     "image": "Основне зображення",
     "tag": "Тег",
-    "longDescription": "Довгий опис",
     "productSerie": "Серія продукту",
     "association": "Асоціація",
     "catalog": "Каталог",
@@ -36,9 +33,7 @@
     "basePriceAmount": "Базова ціна",
     "packedAmount": "Кількість в упаковці",
     "contents": "Контент",
-    "taskStatus": "Статус завдання",
-    "children": "Дочірні продукти",
-    "parents": "Батьківські продукти"
+    "taskStatus": "Статус завдання"
   },
   "links": {
     "productSerie": "Серії продукту",
@@ -60,12 +55,9 @@
     "catalog": "Каталог",
     "channels": "Канали",
     "productChannels": "Канали продукту",
-    "contents": "Контент",
-    "children": "Дочірні продукти",
-    "parents": "Батьківські продукти"
+    "contents": "Контент"
   },
   "labels": {
-    "Create Product": "Створити продукт",
     "Product Attributes": "Атрибути",
     "thereIsNoValidAttributesForChannel": "Для каналу немає допустимих атрибутів",
     "addAttributeFilter": "Додати фільтр атрибутів",

@@ -5,7 +5,6 @@
     "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",
     "channelProducts": "Kanalprodukte",
-    "isActive": "Aktiv",
     "productAttributeValues": "Attributwerte",
     "productBundles": "Produktbündel",
     "classifications": "Klassifizierungen",
@@ -27,7 +26,6 @@
     "data": "Daten",
     "categories": "Produktkategorien",
     "brand": "Marke",
-    "sku": "SKU",
     "type": "Typ",
     "amount": "Menge",
     "tax": "MwSt.",
@@ -41,9 +39,7 @@
     "catalog": "Katalog",
     "packedAmount": "Gepackte Menge",
     "contents": "Contents",
-    "taskStatus": "Task status",
-    "children": "Kinderprodukte",
-    "parents": "Elternprodukte"
+    "taskStatus": "Task status"
   },
   "links": {
     "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
@@ -67,16 +63,13 @@
     "catalog": "Katalog",
     "channels": "Kanäle",
     "productChannels": "Produktkanäle",
-    "contents": "Contents",
-    "children": "Kinderprodukte",
-    "parents": "Elternprodukte"
+    "contents": "Contents"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
     "Add Import Filter": "Importfilter hinzufügen",
     "associatedProducts": "Assoziierungen",
     "Channels": "Kanäle",
-    "Create Product": "Produkt erstellen",
     "itemsInRow": "Anzahl Elemente in der Reihe",
     "thereIsNoValidAttributesForChannel": "Es gibt keine gültigen Attribute für Kanal",
     "withoutAnyCategory": "Ohne Kategorie",
