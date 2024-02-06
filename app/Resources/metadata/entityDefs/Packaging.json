@@ -13,9 +13,6 @@
     "price": {
       "type": "float"
     },
-    "isActive": {
-      "type": "bool"
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
