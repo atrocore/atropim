@@ -39,5 +39,6 @@
   },
   "completeness": {
     "service": "Completeness\\Services\\ProductCompleteness"
-  }
+  },
+  "isActiveUnavailable": true
 }

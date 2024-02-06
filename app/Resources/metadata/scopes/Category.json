@@ -12,5 +12,6 @@
     "module": "Pim",
     "object": true,
     "multiParents": false,
-    "dragAndDrop": true
+    "dragAndDrop": true,
+    "isActiveUnavailable": true
 }

@@ -1,9 +1,4 @@
 {
-  "fields": {
-    "isActive": {
-      "type": "bool"
-    }
-  },
   "links": {
     "product": {
       "type": "belongsTo",

@@ -16,14 +16,6 @@
             "tooltip": false,
             "isMultilang": true
         },
-        "isActive": {
-            "notNull": true,
-            "type": "bool",
-            "default": false,
-            "audited": false,
-            "readOnly": false,
-            "tooltip": false
-        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
