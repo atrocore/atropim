@@ -900,6 +900,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 'mainField' => 'value'
             ]);
         }
+
+        if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
+            $entity->set('attributeIsDropdown', $attribute->get('dropdown'));
+        }
     }
 
     protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void

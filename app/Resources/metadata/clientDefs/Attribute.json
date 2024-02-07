@@ -69,6 +69,20 @@
   },
   "dynamicLogic": {
     "fields": {
+      "dropdown": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
+            }
+          ]
+        }
+      },
       "extensibleEnum": {
         "visible": {
           "conditionGroup": [
