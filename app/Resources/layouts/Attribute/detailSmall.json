@@ -125,7 +125,9 @@
         {
           "name": "extensibleEnum"
         },
-        false
+        {
+          "name": "dropdown"
+        }
       ],
       [
         {
