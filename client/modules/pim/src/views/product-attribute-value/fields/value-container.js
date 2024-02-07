@@ -106,6 +106,13 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
+                    if (this.model.get('attributeIsDropdown')) {
+                        if (attributeType === 'extensibleMultiEnum') {
+                            fieldView = 'views/fields/extensible-multi-enum-dropdown';
+                        } else {
+                            fieldView = 'views/fields/extensible-enum-dropdown';
+                        }
+                    }
                 }
 
                 let options = {
@@ -198,6 +205,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('attributeType', attr.type);
                 this.model.set('attributeEntityType', attr.entityType);
                 this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
+                this.model.set('attributeIsDropdown', attr.dropdown);
                 this.model.set('maxLength', attr.maxLength);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('useDisabledTextareaInViewMode', attr.useDisabledTextareaInViewMode);
