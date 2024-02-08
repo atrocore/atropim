@@ -335,23 +335,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return $this->originalCreateEntity($attachment);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = $this->originalCreateEntity($attachment);
-            $this->createPseudoTransactionCreateJobs(clone $attachment);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $result = $this->originalCreateEntity($attachment);
+        $this->createPseudoTransactionCreateJobs(clone $attachment);
 
         return $result;
     }
