@@ -33,6 +33,8 @@ class Product extends AbstractSelectManager
 
     private string $textFilter = '';
 
+    private array $textFilterParams = [];
+
     /**
      * @inheritdoc
      */
@@ -66,6 +68,8 @@ class Product extends AbstractSelectManager
                             ]
                         ]
                     ];
+                } else if (!empty($row['type']) && $row['type'] == 'textFilter') {
+                    $this->textFilterParams[] = $row;
                 } else {
                     $where[] = $row;
                 }
@@ -810,6 +814,15 @@ class Product extends AbstractSelectManager
 
     public function applyFilterText(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
     {
+        $textFilterParams = [];
+        foreach ($this->textFilterParams as $row) {
+            if (isset($row['value']) || $row['value'] !== '') {
+                $this->textFilter($row['value'], $textFilterParams);
+            }
+        }
+
+        $textFilterQuery = $mapper->createSelectQueryBuilder($relEntity, $textFilterParams);
+
         if (empty($this->textFilter)) {
             return;
         }
@@ -854,8 +867,11 @@ class Product extends AbstractSelectManager
         $sp['select'] = ['productId'];
 
         $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
+        $qb->andWhere($qb->expr()->or(
+            "{$tableAlias}.id IN ({$qb1->getSql()})",
+            $textFilterQuery->getQueryPart('where')
+        ));
 
-        $qb->orWhere("{$tableAlias}.id IN ({$qb1->getSql()})");
         foreach ($qb1->getParameters() as $param => $val) {
             $qb->setParameter($param, $val, Mapper::getParameterType($val));
         }
