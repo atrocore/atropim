@@ -872,7 +872,7 @@ class Product extends AbstractSelectManager
             $textFilterQuery->getQueryPart('where')
         ));
 
-        foreach ($qb1->getParameters() as $param => $val) {
+        foreach (array_merge($qb1->getParameters(), $textFilterQuery->getParameters()) as $param => $val) {
             $qb->setParameter($param, $val, Mapper::getParameterType($val));
         }
     }
