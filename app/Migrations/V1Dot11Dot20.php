@@ -59,6 +59,15 @@ class V1Dot11Dot20 extends Base
             ];
 
             file_put_contents($file, json_encode($custom, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        } else {
+            $fromSchema = $this->getCurrentSchema();
+            $toSchema = clone $fromSchema;
+
+            $toSchema->dropTable('packaging');
+
+            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                $this->execute($sql);
+            }
         }
 
         $this->updateComposer('atrocore/pim', '^1.11.20');
@@ -89,8 +98,7 @@ class V1Dot11Dot20 extends Base
   "hasActive": true
 }';
 
-    protected string $entityDefsData = '
-    {
+    protected string $entityDefsData = '{
   "fields": {
     "name": {
       "type": "varchar",
@@ -149,8 +157,7 @@ class V1Dot11Dot20 extends Base
 }
     ';
 
-    protected string $clientDefsData = '
-    {
+    protected string $clientDefsData = '{
     "controller": "controllers/record",
     "iconClass": "fas fa-box",
     "boolFilterList": [
