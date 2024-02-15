@@ -43,6 +43,9 @@ class Product extends AbstractSelectManager
         $this->prepareFilterByCategories($params);
 
         if (!empty($params['where']) && is_array($params['where'])) {
+            if (method_exists($this, 'mutateWhereQuery')){
+                $this->mutateWhereQuery($params['where']);
+            }
             $where = [];
             $this->productAttributes = [];
             foreach ($params['where'] as $row) {
