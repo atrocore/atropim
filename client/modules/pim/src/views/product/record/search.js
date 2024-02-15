@@ -240,20 +240,22 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                 this.bool[name] = this.$el.find('input[name="' + name + '"]').prop('checked');
             }, this);
 
-            for (let field in this.advanced) {
-                let filterView = this.getView('filter-' + field);
-                if (filterView) {
-                    let view = filterView.getView('field');
-                    if (view) {
-                        this.advanced[field] = view.fetchSearch();
-                        let fieldParams = view.options.searchParams.fieldParams || {};
-                        if (fieldParams.isAttribute) {
-                            if (this.advanced[field] === false) {
-                                this.advanced[field] = {};
+            if (!this.model.get('hasQueryBuilderFilter')) {
+                for (let field in this.advanced) {
+                    let filterView = this.getView('filter-' + field);
+                    if (filterView) {
+                        let view = filterView.getView('field');
+                        if (view) {
+                            this.advanced[field] = view.fetchSearch();
+                            let fieldParams = view.options.searchParams.fieldParams || {};
+                            if (fieldParams.isAttribute) {
+                                if (this.advanced[field] === false) {
+                                    this.advanced[field] = {};
+                                }
+                                this.advanced[field]['fieldParams'] = fieldParams;
                             }
-                            this.advanced[field]['fieldParams'] = fieldParams;
+                            view.searchParams = this.advanced[field];
                         }
-                        view.searchParams = this.advanced[field];
                     }
                 }
             }
