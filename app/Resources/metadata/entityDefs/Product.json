@@ -27,11 +27,6 @@
       "importDisabled": true,
       "exportDisabled": false
     },
-    "amount": {
-      "type": "float",
-      "min": 0,
-      "default": 0
-    },
     "associatedRelatedProduct": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -81,10 +76,6 @@
     "mpn": {
       "type": "varchar",
       "trim": true
-    },
-    "packaging": {
-      "type": "link",
-      "view": "pim:views/product/fields/packaging"
     },
     "uvp": {
       "type": "float",
