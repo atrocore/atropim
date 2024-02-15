@@ -49,12 +49,6 @@
       ],
       [
         {
-          "name": "packaging"
-        },
-        false
-      ],
-      [
-        {
           "name": "uvp"
         },
         {
@@ -69,7 +63,7 @@
       ],
       [
         {
-          "name": "amount"
+          "name": "quantity"
         },
         false
       ],

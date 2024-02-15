@@ -11,7 +11,7 @@
 
 namespace Pim\Controllers;
 
-use Espo\Core\Templates\Controllers\Base;
+use Atro\Core\Templates\Controllers\Base;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
 
