@@ -90,7 +90,8 @@ class V1Dot11Dot20 extends Base
   "stream": false,
   "disabled": false,
   "type": "Base",
-  "module": "Pim",
+  "isCustom": true,
+  "module": "Custom",
   "object": true,
   "hasOwner": true,
   "hasAssignedUser": true,
@@ -108,10 +109,12 @@ class V1Dot11Dot20 extends Base
     "description": {
       "type": "text",
       "rows": 4,
-      "lengthOfCut": 400
+      "lengthOfCut": 400,
+       "isCustom": true
     },
     "price": {
-      "type": "float"
+      "type": "float",
+       "isCustom": true
     },
     "createdAt": {
       "type": "datetime",
@@ -132,7 +135,8 @@ class V1Dot11Dot20 extends Base
       "view": "views/fields/user"
     },
     "products": {
-      "type": "linkMultiple"
+      "type": "linkMultiple",
+       "isCustom": true
     }
   },
   "links": {
@@ -147,7 +151,8 @@ class V1Dot11Dot20 extends Base
     "products": {
       "type": "hasMany",
       "foreign": "packaging",
-      "entity": "Product"
+      "entity": "Product",
+       "isCustom": true
     }
   },
   "collection": {
