@@ -72,6 +72,15 @@ class Attribute extends Hierarchy
             ->getArgument('entity');
     }
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('dropdown') === null) {
+            $entity->set('dropdown', false);
+        }
+    }
+
     /**
      * @inheritDoc
      */

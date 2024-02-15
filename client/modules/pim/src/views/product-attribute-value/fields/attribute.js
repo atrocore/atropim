@@ -78,6 +78,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
                 attributeType: model.get('type'),
                 attributeExtensibleEnumId: model.get('extensibleEnumId'),
                 attributeMeasureId: model.get('measureId'),
+                attributeIsDropdown: model.get('dropdown'),
                 amountOfDigitsAfterComma: model.get('amountOfDigitsAfterComma'),
                 attributeIsMultilang: model.get('isMultilang'),
                 defaultScope: model.get('defaultScope'),
