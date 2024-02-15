@@ -279,11 +279,6 @@
       "type": "belongsTo",
       "entity": "Tax"
     },
-    "packaging": {
-      "type": "belongsTo",
-      "entity": "Packaging",
-      "foreign": "products"
-    },
     "calls": {
       "type": "hasChildren",
       "entity": "Call",
