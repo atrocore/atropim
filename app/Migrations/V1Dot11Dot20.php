@@ -78,6 +78,18 @@ class V1Dot11Dot20 extends Base
         throw new Error("Downgrade is prohibited");
     }
 
+    /**
+     * @param string $sql
+     */
+    protected function execute(string $sql)
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
+        }
+    }
+
 
     protected string $scopeData = '{
   "entity": true,
