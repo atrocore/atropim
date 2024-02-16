@@ -326,33 +326,6 @@ class Product extends AbstractSelectManager
         return array_column($products->toArray(), 'id');
     }
 
-    /**
-     * NotLinkedWithPackaging filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithPackaging(&$result)
-    {
-        // find products
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->where(
-                [
-                    'packagingId' => (string)$this->getSelectCondition('notLinkedWithPackaging')
-                ]
-            )
-            ->find();
-
-        if (!empty($products)) {
-            foreach ($products as $product) {
-                $result['whereClause'][] = [
-                    'id!=' => $product->get('id')
-                ];
-            }
-        }
-    }
-
     protected function fetchAll(string $query): array
     {
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
