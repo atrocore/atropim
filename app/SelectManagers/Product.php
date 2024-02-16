@@ -12,9 +12,6 @@
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
-use Atro\ORM\DB\RDB\Query\QueryConverter;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -25,8 +22,6 @@ use Pim\Entities\Attribute;
 
 class Product extends AbstractSelectManager
 {
-    private array $productAttributes = [];
-
     private array $attributes = [];
 
     private array $filterByCategories = [];
@@ -44,18 +39,17 @@ class Product extends AbstractSelectManager
 
         if (!empty($params['where']) && is_array($params['where'])) {
             $this->mutateWhereQuery($params['where']);
+            $this->mutateWhereAttributeQuery($params['where']);
+
             $where = [];
-            $this->productAttributes = [];
             foreach ($params['where'] as $row) {
-                if (!empty($row['isAttribute']) || !empty($row['value'][0]['isAttribute'])) {
-                    $this->productAttributes[] = $row;
-                } elseif (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
+                if (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
                     $productIds = [];
                     foreach (['ProductAsset', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
                         $sp = $this->createSelectManager($entityType)->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
                         $sp['select'] = ['productId'];
                         $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
-                        $productIds = array_column($collection->toArray(), 'productId');
+                        $productIds = array_merge($productIds, array_column($collection->toArray(), 'productId'));
                     }
 
                     $where[] = [
@@ -87,9 +81,6 @@ class Product extends AbstractSelectManager
         // add filtering by categories
         $selectParams['callbacks'][] = [$this, 'applyFilteringByCategories'];
 
-        // add filtering by product attributes
-        $selectParams['callbacks'][] = [$this, 'applyProductAttributesFilter'];
-
         // for products in category page
         if (!empty($params['sortBy']) && $params['sortBy'] == 'sorting') {
             $selectParams['additionalColumns']['sorting'] = 'sorting';
@@ -97,6 +88,44 @@ class Product extends AbstractSelectManager
         }
 
         return $selectParams;
+    }
+
+    public function mutateWhereAttributeQuery(array &$where): void
+    {
+        foreach ($where as &$item) {
+            if (isset($item['value']) && is_array($item['value'])) {
+                $this->mutateWhereAttributeQuery($item['value']);
+            } else {
+                if (!empty($item['isAttribute'])) {
+                    /** @var \Pim\Repositories\ProductAttributeValue $pavRepo */
+                    $pavRepo = $this->getEntityManager()->getRepository('ProductAttributeValue');
+
+                    $attributeId = $item['attribute'];
+
+                    $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$this->convertAttributeWhere($item)]], true, true);
+                    $sp['select'] = ['productId'];
+
+                    $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
+
+                    $operator = 'IN';
+                    if ($item['type'] === 'arrayNoneOf') {
+                        $operator = 'NOT IN';
+                    }
+
+                    $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+
+                    $innerSql = str_replace($mainTableAlias, "t_{$attributeId}", $qb1->getSql());
+
+                    $item = [
+                        'type'  => 'innerSql',
+                        'value' => [
+                            "sql"        => "$mainTableAlias.id $operator ({$innerSql})",
+                            "parameters" => $qb1->getParameters()
+                        ]
+                    ];
+                }
+            }
+        }
     }
 
     protected function textFilter($textFilter, &$result)
@@ -682,35 +711,6 @@ class Product extends AbstractSelectManager
         return $where;
     }
 
-    public function applyProductAttributesFilter(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        if (empty($this->productAttributes)) {
-            return;
-        }
-
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        /** @var \Pim\Repositories\ProductAttributeValue $pavRepo */
-        $pavRepo = $this->getEntityManager()->getRepository('ProductAttributeValue');
-
-        foreach ($this->productAttributes as $row) {
-            $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$this->convertAttributeWhere($row)]], true, true);
-            $sp['select'] = ['productId'];
-
-            $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
-
-            $operator = 'IN';
-            if ($row['type'] === 'arrayNoneOf') {
-                $operator = 'NOT IN';
-            }
-
-            $qb->andWhere("{$tableAlias}.id $operator ({$qb1->getSql()})");
-            foreach ($qb1->getParameters() as $param => $val) {
-                $qb->setParameter($param, $val, Mapper::getParameterType($val));
-            }
-        }
-    }
-
     protected function prepareFilterByCategories(array &$params): void
     {
         if (empty($params['where'])) {
@@ -820,8 +820,8 @@ class Product extends AbstractSelectManager
                     'value'     => ['varchar', 'text', 'wysiwyg', 'extensibleEnum']
                 ],
                 [
-                    'type'      => 'or',
-                    'value'     => [
+                    'type'  => 'or',
+                    'value' => [
                         [
                             'type'      => 'like',
                             'attribute' => 'textValue',
@@ -841,10 +841,12 @@ class Product extends AbstractSelectManager
         $sp['select'] = ['productId'];
 
         $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
-        $qb->andWhere($qb->expr()->or(
-            "{$tableAlias}.id IN ({$qb1->getSql()})",
-            $textFilterQuery->getQueryPart('where')
-        ));
+        $qb->andWhere(
+            $qb->expr()->or(
+                "{$tableAlias}.id IN ({$qb1->getSql()})",
+                $textFilterQuery->getQueryPart('where')
+            )
+        );
 
         foreach (array_merge($qb1->getParameters(), $textFilterQuery->getParameters()) as $param => $val) {
             $qb->setParameter($param, $val, Mapper::getParameterType($val));
