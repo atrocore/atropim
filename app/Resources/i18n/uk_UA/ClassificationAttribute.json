@@ -13,12 +13,14 @@
     "valueFrom": "Значення за замовчуванням від",
     "valueTo": "Значення за замовчуванням до",
     "min": "Мінімальне значення",
-    "max": "Максимальне значення"
+    "max": "Максимальне значення",
+    "extensibleEnumOptions": "Опції списку"
   },
   "links": {
     "classification": "Класифікація",
     "attribute": "Атрибут",
-    "channel": "Канал"
+    "channel": "Канал",
+    "extensibleEnumOptions": "Опції списку"
   },
   "labels": {
     "Create ClassificationAttribute": "Створити атрибут класифікації",

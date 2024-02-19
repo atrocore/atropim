@@ -103,6 +103,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     }
                 }
 
+                let customOptions = {}
                 if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
@@ -113,6 +114,16 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                             fieldView = 'views/fields/extensible-enum-dropdown';
                         }
                     }
+
+                    customOptions = {
+                        customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
+                        customBoolFilterData:{
+                            onlyForClassificationAttributesUsingPavId(){
+                                return this.model.get('id')
+                            }
+                        }
+                    }
+
                 }
 
                 let options = {
@@ -122,13 +133,13 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
-                    inlineEditDisabled: true
+                    inlineEditDisabled: true,
+                    ...customOptions
                 };
 
                 if (attributeType === 'link' || attributeType === 'linkMultiple') {
                     options.foreignScope = this.model.get('attributeEntityType');
                 }
-
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
 

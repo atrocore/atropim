@@ -511,6 +511,11 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "extensibleEnumOptions": {
+      "type": "linkMultiple",
+      "noLoad": false,
+      "view": "pim:views/classification-attribute/fields/extensible-enum-options"
     }
   },
   "links": {
@@ -536,6 +541,12 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "extensibleEnumOptions": {
+      "type": "hasMany",
+      "foreign": "classificationAttributes",
+      "relationName": "ClassificationAttributeExtensibleEnumOption",
+      "entity": "ExtensibleEnumOption"
     }
   },
   "collection": {

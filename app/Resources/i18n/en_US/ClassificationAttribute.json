@@ -21,12 +21,14 @@
     "datetimeValue": "Default Value: Date-time",
     "boolValue": "Default Value: Boolean",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "extensibleEnumOptions": "List Options"
   },
   "links": {
     "classification": "Classification",
     "attribute": "Attribute",
-    "channel": "Channel"
+    "channel": "Channel",
+    "extensibleEnumOptions": "List Options"
   },
   "labels": {
     "Create ClassificationAttribute": "Create Classification Attribute",

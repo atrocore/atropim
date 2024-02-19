@@ -54,6 +54,12 @@
           "name": "value"
         },
         false
+      ],
+      [
+        {
+          "name": "extensibleEnumOptions"
+        },
+        false
       ]
     ],
     "style": "default",

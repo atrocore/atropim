@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "classificationAttributes": {
+      "type": "linkMultiple",
+      "noLoad": true
+    }
+  },
+  "links": {
+    "classificationAttributes": {
+      "type": "hasMany",
+      "foreign": "extensibleEnumOptions",
+      "relationName": "ClassificationAttributeExtensibleEnumOption",
+      "entity": "ClassificationAttribute"
+    }
+  }
+}
