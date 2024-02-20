@@ -109,7 +109,8 @@
     "notLinkedWithProductSerie": "Не пов'язаний із серією продукту",
     "linkedWithCategory": "Пов'язаний із категорією",
     "onlyConfigurableProducts": "Тільки продукти, які моуть бути конфігуровані",
-    "withoutImageAssets": "Без ассетів"
+    "withoutImageAssets": "Без ассетів",
+    "withoutMainImage": "Без основного зображення"
   },
   "messages": {
     "productCatalogChangeConfirm": "Ви впевнені, що хочете встановити/видалити/змінити каталог для продукту? Всі категорії дозволені для оригінального(попереднього) каталогу втратять зв'язок з продуктом."
