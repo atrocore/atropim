@@ -62,14 +62,23 @@ class ProductAttributeValue extends Base
             $qb->andWhere('pav.language IN (:languagesFilter)')->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
         }
 
-        if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter)) {
+        if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter) ) {
+            $sql = "";
+            if(in_array('linkedChannels', $scopeFilter)){
+                $sql.= "pav.channel_id IN (SELECT channel_id FROM product_channel where product_id =:productId and deleted=:false) OR " ;
+            }
             $scopeFilter = array_map(function ($v) {
-                if ($v === 'Global') {
+                if ($v === 'Global' || $v === "linkedChannels") {
                     return '';
                 }
                 return $v;
             }, $scopeFilter);
-            $qb->andWhere('pav.channel_id IN (:channelsIds)')->setParameter('channelsIds', $scopeFilter, Connection::PARAM_STR_ARRAY);
+
+            $sql .= 'pav.channel_id IN (:channelsIds)';
+
+            $qb->andWhere($sql)
+                ->setParameter('channelsIds', $scopeFilter, Connection::PARAM_STR_ARRAY);
+
         }
 
         $pavs = $qb->fetchAllAssociative();
