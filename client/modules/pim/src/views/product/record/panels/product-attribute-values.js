@@ -149,7 +149,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 productId: this.model.get('id'),
                 fieldFilter: this.getStorage().get('fieldFilter', 'OverviewFilter') || ['allValues'],
                 languageFilter: this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'],
-                scopeFilter: this.getStorage().get('scopeFilter', 'OverviewFilter') || ['allChannels']
+                scopeFilter: this.getStorage().get('scopeFilter', 'OverviewFilter') || ['linkedChannels']
             }).then(data => {
                 this.groups = data;
                 callback();
