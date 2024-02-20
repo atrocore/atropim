@@ -93,7 +93,7 @@ class Product extends AbstractSelectManager
     public function mutateWhereAttributeQuery(array &$where): void
     {
         foreach ($where as &$item) {
-            if (isset($item['value']) && is_array($item['value'])) {
+            if (isset($item['value']) && is_array($item['value']) && empty($item['isAttribute'])) {
                 $this->mutateWhereAttributeQuery($item['value']);
             } else {
                 if (!empty($item['isAttribute'])) {
