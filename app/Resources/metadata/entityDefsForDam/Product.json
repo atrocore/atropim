@@ -1,5 +1,8 @@
 {
   "fields": {
+    "image": {
+      "filterDisabled": true
+    },
     "mainImage": {
       "type": "image",
       "previewSize": "medium",

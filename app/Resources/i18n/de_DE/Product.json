@@ -114,7 +114,8 @@
     "notLinkedWithBrand": "Ohne Marke",
     "notLinkedWithProductSerie": "Ohne Produktserie",
     "linkedWithCategory": "Mit Kategorie",
-    "onlyConfigurableProducts": "Nur konfigurierbare Produkte"
+    "onlyConfigurableProducts": "Nur konfigurierbare Produkte",
+    "withoutMainImage": "Ohne Hauptbild"
   },
   "messages": {
     "productCatalogChangeConfirm": "Möchten Sie die Verknüpfung zwischen dem Produkt und dem bisherigen Katalog wirklich aufheben/ändern? Alle für den ursprünglichen Katalog zulässigen Kategorien werden vom Produkt entkoppelt."

@@ -109,7 +109,8 @@
     "notLinkedWithProductSerie": "Without Product Serie",
     "linkedWithCategory": "With Category",
     "onlyConfigurableProducts": "Only Configurable Products",
-    "withoutImageAssets": "Without Assets"
+    "withoutImageAssets": "Without Assets",
+    "withoutMainImage": "Without Main Image"
   },
   "messages": {
     "productCatalogChangeConfirm": "Are you sure you want to set/unlink/modify the catalog for the current product? All categories allowed for the original catalog will be also unlinked for the product."
