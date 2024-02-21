@@ -21,13 +21,10 @@
 Espo.define('pim:views/classification-attribute/fields/extensible-enum-options', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
-        getSelectFilters(){
-            return {
-                "where": {
-                    "field":"extensibleEnumId",
-                    "type":"in",
-                    "value": [this.model.get('attributeExtensibleEnumId')]
-                }
+        selectBoolFilterList: ['onlyForExtensibleEnum'],
+        boolFilterData: {
+            onlyForExtensibleEnum(){
+                return this.model.get('attributeExtensibleEnumId')
             }
         }
     });

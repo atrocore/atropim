@@ -978,6 +978,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
-        return array_merge(array_column($values, 'id'), [$pavId]);
+        return array_column($values, 'id');
     }
 }

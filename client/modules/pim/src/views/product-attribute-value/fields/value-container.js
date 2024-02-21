@@ -103,6 +103,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     }
                 }
 
+
                 let customOptions = {}
                 if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
@@ -115,14 +116,30 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                         }
                     }
 
-                    customOptions = {
-                        customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
-                        customBoolFilterData:{
-                            onlyForClassificationAttributesUsingPavId(){
-                                return this.model.get('id')
+                    if(this.model.urlRoot === 'ClassificationAttribute'
+                        && this.model.get('extensibleEnumOptionsIds')
+                        && this.model.get('extensibleEnumOptionsIds').length > 0
+                    ) {
+                        customOptions = {
+                            customSelectBoolFilters: ['onlyExtensibleEnumIds'],
+                            customBoolFilterData:{
+                                onlyExtensibleEnumIds(){
+                                    return this.model.get('extensibleEnumOptionsIds')
+                                }
+                            }
+                        }
+                    }else{
+                        customOptions = {
+                            customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
+                            customBoolFilterData:{
+                                onlyForClassificationAttributesUsingPavId(){
+                                    return this.model.get('id')
+                                }
+
                             }
                         }
                     }
+
 
                 }
 
@@ -150,6 +167,25 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                             view.setNotRequired();
                         }
                     });
+
+                    if(this.model.urlRoot === 'ClassificationAttribute'){
+                        this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
+
+                            if(attributeType === 'extensibleEnum'
+                                && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))){
+                                view.clearLink()
+                            }
+
+                            if(attributeType === 'extensibleMultiEnum') {
+                                (this.model.get('value') ?? []).forEach(v =>{
+                                    if(!this.model.get('extensibleEnumOptionsIds').includes(v)){
+                                        view.deleteLink(v)
+                                    }
+                                })
+                            }
+                        });
+                    }
+
                 });
 
                 if (this.mode === 'edit' && 'extensibleMultiEnum' === attributeType) {
