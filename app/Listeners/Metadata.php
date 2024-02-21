@@ -69,6 +69,7 @@ class Metadata extends AbstractListener
 
         $this->addLanguageBoolFiltersForPav($data);
         $this->addScopeBoolFilters($data);
+        $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
         $event->setArgument('data', $data);
     }
@@ -364,5 +365,11 @@ class Metadata extends AbstractListener
         }
 
         return $data;
+    }
+
+    protected  function addOnlyExtensibleEnumOptionForCABoolFilter(&$metadata){
+        $metadata['clientDefs']['ExtensibleEnumOption']['boolFilterList'][] = "onlyForClassificationAttributesUsingPavId";
+        $metadata['clientDefs']['ExtensibleEnumOption']['hiddenBoolFilterList'][] = "onlyForClassificationAttributesUsingPavId";
+
     }
 }

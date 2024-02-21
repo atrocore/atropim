@@ -22,12 +22,14 @@
     "datetimeValue": "Standardwert: Datum-Uhrzeit",
     "boolValue": "Standardwert: Boolesch",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "extensibleEnumOptions": "Auswahloptionen"
   },
   "links": {
     "classification": "Klassifizierung",
     "attribute": "Attribute",
-    "channel": "Kanal"
+    "channel": "Kanal",
+    "extensibleEnumOptions": "Auswahloptionen"
   },
   "labels": {
     "Create ClassificationAttribute": "Attribut der Klassifizierung erstellen",
