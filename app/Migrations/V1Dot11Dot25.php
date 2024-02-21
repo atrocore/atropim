@@ -17,7 +17,7 @@ use Atro\Core\Migration\Base;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 
-class V1Dot11Dot24 extends Base
+class V1Dot11Dot25 extends Base
 {
     public function up(): void
     {
