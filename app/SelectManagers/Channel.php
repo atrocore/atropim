@@ -55,9 +55,9 @@ class Channel extends AbstractSelectManager
                 ->select(['channelId'])
                 ->where(
                     [
-                        'attributeId'     => $data['attributeId'],
+                        'attributeId'      => $data['attributeId'],
                         'classificationId' => $data['classificationId'],
-                        'scope'           => 'Channel',
+                        'channelId!='      => '',
                     ]
                 )
                 ->find()
@@ -86,7 +86,7 @@ class Channel extends AbstractSelectManager
                     [
                         'attributeId' => $data['attributeId'],
                         'productId'   => $data['productId'],
-                        'scope'       => 'Channel',
+                        'channelId!=' => '',
                     ]
                 )
                 ->find()

@@ -168,14 +168,9 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
         }
 
-        if (!property_exists($data, 'scope')) {
-            $data->scope = $attribute->get('defaultScope') ?? 'Global';
-            if ($data->scope === 'Channel') {
-                if (!empty($attribute->get('defaultChannelId'))) {
-                    $data->channelId = $attribute->get('defaultChannelId');
-                } else {
-                    $data->scope = 'Global';
-                }
+        if (!property_exists($data, 'Id')) {
+            if (!empty($attribute->get('defaultChannelId'))) {
+                $data->channelId = $attribute->get('defaultChannelId');
             }
         }
 

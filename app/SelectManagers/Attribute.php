@@ -73,7 +73,6 @@ class Attribute extends AbstractSelectManager
                     [
                         'channelId'        => $data['channelsIds'],
                         'classificationId' => $data['classificationId'],
-                        'scope'            => 'Channel',
                     ]
                 )
                 ->find()
@@ -102,7 +101,6 @@ class Attribute extends AbstractSelectManager
                     [
                         'channelId' => $data['channelId'],
                         'productId' => $data['productId'],
-                        'scope'     => 'Channel',
                     ]
                 )
                 ->find()
@@ -132,7 +130,6 @@ class Attribute extends AbstractSelectManager
                 ->getRepository('Attribute')
                 ->select(['id'])
                 ->where([
-                    'defaultScope'       => 'Channel',
                     'defaultChannelId!=' => array_column($availableChannels, 'channelId')
                 ])
                 ->find()

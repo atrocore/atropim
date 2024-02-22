@@ -155,12 +155,9 @@ class Product extends Hierarchy
 
     protected function getProductAttributeForUpdating(EntityCollection $pavs, \stdClass $data): ?Entity
     {
-
         foreach ($pavs as $pav) {
-            if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope && $pav->get('language') == $data->language) {
-                if ($data->scope == 'Global' || ($data->scope === 'Channel' && property_exists($data, 'channelId') && $pav->get('channelId') == $data->channelId)) {
-                    return $pav;
-                }
+            if ($pav->get('attributeId') == $data->attributeId && $pav->get('language') == $data->language && $pav->get('channelId') == $data->channelId) {
+                return $pav;
             }
         }
 
