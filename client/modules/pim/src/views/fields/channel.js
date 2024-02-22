@@ -10,6 +10,15 @@
 
 Espo.define('pim:views/fields/channel', 'views/fields/link',
     Dep => Dep.extend({
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'list' && this.model.get('channelId') === '') {
+                this.$el.html(this.translate('Global'));
+            }
+        }
+        
     })
 );
 

@@ -87,6 +87,7 @@
     }
   },
   "labels": {
+    "Global": "Global",
     "removeHierarchically": "Hierarchisch löschen",
     "setAsMainImage": "Als Hauptbild setzen",
     "setAsMainCategory": "Als Hauptkategorie festlegen",
