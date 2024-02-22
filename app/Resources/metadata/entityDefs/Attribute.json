@@ -193,6 +193,7 @@
     },
     "defaultChannel": {
       "type": "link",
+      "view": "pim:views/fields/channel",
       "tooltip": true
     },
     "isRequired": {

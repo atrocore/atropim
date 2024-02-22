@@ -14,11 +14,11 @@ Espo.define('pim:views/fields/channel', 'views/fields/link',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'list' && this.model.get('channelId') === '') {
+            if (this.mode === 'list' && (!this.model.get(this.name + 'Id') || this.model.get(this.name + 'Id') === '')) {
                 this.$el.html(this.translate('Global'));
             }
         }
-        
+
     })
 );
 
