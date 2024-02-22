@@ -35,7 +35,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
         createDisabled: true,
 
         setup() {
-            this.mandatorySelectAttributeList = ['type', 'isMultilang', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
+            this.mandatorySelectAttributeList = ['type', 'isMultilang', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
             if (this.model.get('attributeTooltip')) {
                 var $a;
                 this.once('after:render', function () {
@@ -81,7 +81,6 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
                 attributeIsDropdown: model.get('dropdown'),
                 amountOfDigitsAfterComma: model.get('amountOfDigitsAfterComma'),
                 attributeIsMultilang: model.get('isMultilang'),
-                defaultScope: model.get('defaultScope'),
                 defaultChannelId: model.get('defaultChannelId'),
                 defaultChannelName: model.get('defaultChannelName'),
                 isRequired: model.get('isRequired')
