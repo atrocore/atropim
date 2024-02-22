@@ -81,7 +81,7 @@
       "required": false,
       "notNull": true,
       "default": "",
-      "view": "pim:views/classification-attribute/fields/channel"
+      "view": "pim:views/fields/channel"
     },
     "boolValue": {
       "type": "bool",

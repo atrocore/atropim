@@ -11,17 +11,6 @@
 Espo.define('pim:views/classification-attribute/fields/attribute', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithClassificationAttribute'],
-
-        boolFilterData: {
-            notLinkedWithClassificationAttribute() {
-                return {
-                    classificationId: this.model.get('classificationId'),
-                    channelsIds: this.model.get('channelsIds')
-                };
-            }
-        },
-
         setup() {
             Dep.prototype.setup.call(this);
 

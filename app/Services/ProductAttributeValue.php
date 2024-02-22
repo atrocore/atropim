@@ -857,11 +857,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelCode', $channel->get('code'));
         }
 
-        if (empty($entity->get('channelId'))) {
-            $entity->set('channelId', null);
-            $entity->set('channelName', 'Global');
-        }
-
         if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId'))) {
             $classificationAttribute = $this->getRepository()->findClassificationAttribute($entity);
 

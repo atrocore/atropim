@@ -56,34 +56,6 @@ class Attribute extends AbstractSelectManager
         ];
     }
 
-    /**
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithClassificationAttribute(array &$result)
-    {
-        // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithClassificationAttribute');
-
-        if (isset($data['classificationId']) && isset($data['channelsIds'])) {
-            $attributesIds = $this
-                ->getEntityManager()
-                ->getRepository('ClassificationAttribute')
-                ->select(['attributeId'])
-                ->where(
-                    [
-                        'channelId'        => $data['channelsIds'],
-                        'classificationId' => $data['classificationId'],
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($attributesIds, 'attributeId')
-            ];
-        }
-    }
-
     protected function boolFilterFromAttributesTab(array &$result): void
     {
         $data = (array)$this->getSelectCondition('fromAttributesTab');

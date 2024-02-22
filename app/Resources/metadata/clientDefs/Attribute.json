@@ -5,14 +5,12 @@
     "onlyMy",
     "notLinkedWithProduct",
     "fromAttributesTab",
-    "notLinkedWithClassificationAttribute",
     "notParents",
     "notChildren"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "fromAttributesTab",
-    "notLinkedWithClassificationAttribute",
     "notParents",
     "notChildren"
   ],
