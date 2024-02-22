@@ -5,19 +5,9 @@
         {
           "name": "attribute"
         },
-        false
-      ],
-      [
-        {
-          "name": "scope"
-        },
-        false
-      ],
-      [
         {
           "name": "channel"
-        },
-        false
+        }
       ],
       [
         {

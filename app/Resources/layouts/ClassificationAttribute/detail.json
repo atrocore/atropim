@@ -9,14 +9,6 @@
       ],
       [
         {
-          "name": "scope"
-        },
-        {
-          "name": "channel"
-        }
-      ],
-      [
-        {
           "name": "isRequired"
         },
         false
@@ -25,7 +17,9 @@
         {
           "name": "attribute"
         },
-        false
+        {
+          "name": "channel"
+        }
       ],
       [
         {

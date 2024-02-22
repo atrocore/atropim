@@ -76,23 +76,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "scope": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "layoutListSmallDisabled": true,
-      "fontSize": 1,
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "optionsIds": [
-        "Global",
-        "Channel"
-      ],
-      "default": "Global",
-      "view": "pim:views/fields/scope"
-    },
     "channel": {
       "type": "link",
       "required": false,
@@ -553,10 +536,6 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "classification.name",
-      "attribute.name",
-      "scope",
-      "channel.name",
       "varcharValue",
       "textValue",
       "intValue",
@@ -572,7 +551,6 @@
       "classification_id",
       "attribute_id",
       "language",
-      "scope",
       "channel_id"
     ]
   },

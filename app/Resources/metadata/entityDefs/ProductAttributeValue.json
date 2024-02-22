@@ -803,7 +803,6 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "scope",
       "varcharValue",
       "textValue",
       "intValue",
