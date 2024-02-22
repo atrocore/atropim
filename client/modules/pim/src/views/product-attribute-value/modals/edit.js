@@ -31,21 +31,15 @@ Espo.define('pim:views/product-attribute-value/modals/edit', 'views/modals/edit'
 
                 if (attributeId) {
                     const defaultRequired = this.model.get('isRequired');
-                    const defaultScope = this.model.get('defaultScope');
                     const defaultChannelId = this.model.get('defaultChannelId');
 
                     this.model.set('isRequired', defaultRequired);
 
-                    if (defaultScope === 'Global') {
-                        this.model.set('scope', this.model.get('defaultScope'))
-                    } else if (defaultScope === 'Channel') {
+                    if (defaultChannelId && defaultChannelId !== '') {
                         if (this.channels.includes(defaultChannelId)) {
-                            this.model.set('scope', this.model.get('defaultScope'))
                             this.model.set('channelId', defaultChannelId)
                             this.model.set('channelName', this.model.get('defaultChannelName'));
                         } else {
-                            this.model.set('scope', 'Global');
-
                             const msg = this.getLanguage().translate('cannotLinkDefaultChannel', 'labels', 'ProductAttributeValue').replace('{channel}', this.model.get('defaultChannelName'))
                             this.notify(msg, 'info');
                         }
