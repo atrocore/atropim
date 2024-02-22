@@ -89,8 +89,7 @@
       "createAction": "createRelatedConfigured",
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
-        "fromAttributesTab",
-        "onlyDefaultChannelAttributes"
+        "fromAttributesTab"
       ],
       "tabId": null,
       "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",

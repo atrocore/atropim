@@ -84,65 +84,6 @@ class Attribute extends AbstractSelectManager
         }
     }
 
-    /**
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithProductAttributeValue(array &$result)
-    {
-        // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithProductAttributeValue');
-
-        if (isset($data['productId']) && isset($data['channelId'])) {
-            $attributesIds = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->select(['attributeId'])
-                ->where(
-                    [
-                        'channelId' => $data['channelId'],
-                        'productId' => $data['productId'],
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($attributesIds, 'attributeId')
-            ];
-        }
-    }
-
-    protected function boolFilterOnlyDefaultChannelAttributes(array &$result)
-    {
-        $data = (array)$this->getSelectCondition('onlyDefaultChannelAttributes');
-
-        if (isset($data['productId'])) {
-            $availableChannels = $this
-                ->getEntityManager()
-                ->getRepository('ProductChannel')
-                ->select(['channelId'])
-                ->where(['productId' => $data['productId']])
-                ->find()
-                ->toArray();
-
-            $excludedAttributes = $this
-                ->getEntityManager()
-                ->getRepository('Attribute')
-                ->select(['id'])
-                ->where([
-                    'defaultChannelId!=' => array_column($availableChannels, 'channelId')
-                ])
-                ->find()
-                ->toArray();
-
-            if ($excludedAttributes) {
-                $result['whereClause'][] = [
-                    'id!=' => array_column($excludedAttributes, 'id')
-                ];
-            }
-        }
-    }
-
     protected function boolFilterFromAttributesTab(array &$result): void
     {
         $data = (array)$this->getSelectCondition('fromAttributesTab');

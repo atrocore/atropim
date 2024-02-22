@@ -70,35 +70,6 @@ class Channel extends AbstractSelectManager
     }
 
     /**
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithProductAttributeValue(array &$result)
-    {
-        // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithProductAttributeValue');
-
-        if (isset($data['productId']) && isset($data['attributeId'])) {
-            $channelsIds = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->select(['channelId'])
-                ->where(
-                    [
-                        'attributeId' => $data['attributeId'],
-                        'productId'   => $data['productId'],
-                        'channelId!=' => '',
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($channelsIds, 'channelId')
-            ];
-        }
-    }
-
-    /**
      * NotLinkedWithPriceProfile filter
      *
      * @param array $result

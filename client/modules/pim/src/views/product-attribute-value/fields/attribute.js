@@ -11,17 +11,11 @@
 Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductAttributeValue', 'fromAttributesTab'],
+        selectBoolFilterList: ['fromAttributesTab'],
 
         listTemplate: 'pim:product-attribute-value/fields/attribute',
 
         boolFilterData: {
-            notLinkedWithProductAttributeValue() {
-                return {
-                    productId: this.model.get('productId'),
-                    channelId: this.model.get('channelId')
-                };
-            },
             fromAttributesTab() {
                 if (!this.model.get('productId')) {
                     return;

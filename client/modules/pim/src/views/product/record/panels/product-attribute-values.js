@@ -50,11 +50,6 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 return {
                     tabId: this.defs.tabId
                 }
-            },
-            onlyDefaultChannelAttributes() {
-                return {
-                    productId: this.model.id
-                }
             }
         },
 
