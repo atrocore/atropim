@@ -148,7 +148,7 @@ class Product extends Hierarchy
                 [
                     'productId'   => $this->get('id'),
                     'attributeId' => $attributeId,
-                    'scope'       => 'Global'
+                    'channelId'   => ''
                 ]
             )
             ->findOne();
@@ -192,7 +192,7 @@ class Product extends Hierarchy
                 [
                     'productId'   => $this->get('id'),
                     'attributeId' => $attributeId,
-                    'scope'       => 'Global'
+                    'channelId'   => ''
                 ]
             )
             ->findOne();
