@@ -278,7 +278,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         foreach ($collection as $k => $entity) {
             $row = [
                 'entity'      => $entity,
-                'channelName' => $entity->get('scope') === 'Global' ? '-9999' : $entity->get('channelName'),
+                'channelName' => empty($entity->get('channelId')) ? '-9999' : $entity->get('channelName'),
                 'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
             ];
 

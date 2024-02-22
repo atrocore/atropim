@@ -223,12 +223,8 @@ class ProductAttributeValue extends Base
             'productId'                  => $childProduct->get('id'),
             'attributeId'                => $parentPav->get('attributeId'),
             'language'                   => $parentPav->get('language'),
-            'scope'                      => $parentPav->get('scope'),
+            'channelId'                  => $parentPav->get('channelId'),
         ];
-
-        if ($parentPav->get('scope') === 'Channel') {
-            $where['channelId'] = $parentPav->get('channelId');
-        }
 
         return $this->where($where)->findOne();
     }
@@ -366,15 +362,11 @@ class ProductAttributeValue extends Base
                 continue;
             }
 
-            if ($item['scope'] !== $pav->get('scope')) {
-                continue;
-            }
-
             if ($item['language'] !== $pav->get('language')) {
                 continue;
             }
 
-            if ($pav->get('scope') === 'Channel' && $item['channelId'] !== $pav->get('channelId')) {
+            if ($item['channelId'] !== $pav->get('channelId')) {
                 continue;
             }
 
@@ -454,7 +446,7 @@ class ProductAttributeValue extends Base
     public function save(Entity $entity, array $options = [])
     {
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
-        if ($entity->get('scope') === 'Channel') {
+        if (!empty($entity->get('channelId'))) {
             $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
         }
 
@@ -462,8 +454,8 @@ class ProductAttributeValue extends Base
             $result = parent::save($entity, $options);
         } catch (UniqueConstraintViolationException $e) {
             $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
-            $channelName = $entity->get('scope');
-            if ($entity->get('scope') === 'Channel') {
+            $channelName = 'Global';
+            if (!empty($entity->get('channelId'))) {
                 $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 
@@ -496,12 +488,9 @@ class ProductAttributeValue extends Base
             'language'    => $entity->get('language'),
             'productId'   => $entity->get('productId'),
             'attributeId' => $entity->get('attributeId'),
-            'scope'       => $entity->get('scope'),
+            'channelId'   => $entity->get('channelId'),
             'deleted'     => $deleted,
         ];
-        if ($entity->get('scope') == 'Channel') {
-            $where['channelId'] = $entity->get('channelId');
-        }
 
         return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
@@ -606,13 +595,9 @@ class ProductAttributeValue extends Base
                 'id!='            => $entity->id,
                 'language'        => $entity->get('language'),
                 'attributeId'     => $entity->get('attributeId'),
-                'scope'           => $entity->get('scope'),
+                'channelId'       => $entity->get('channelId'),
                 'product.deleted' => false
             ];
-
-            if ($entity->get('scope') === 'Channel') {
-                $where['channelId'] = $entity->get('channelId');
-            }
 
             switch ($entity->get('attributeType')) {
                 case 'array':

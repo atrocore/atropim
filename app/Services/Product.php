@@ -1011,8 +1011,8 @@ class Product extends Hierarchy
             'where' => [
                 [
                     'type'      => 'in',
-                    'attribute' => 'scope',
-                    'value'     => 'Global'
+                    'attribute' => 'channelId',
+                    'value'     => ''
                 ],
                 [
                     'type'      => 'in',

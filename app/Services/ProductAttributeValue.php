@@ -248,7 +248,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         foreach ($collection as $k => $entity) {
             $row = [
                 'entity'      => $entity,
-                'channelName' => $entity->get('scope') === 'Global' ? '-9999' : $entity->get('channelName'),
+                'channelName' => empty($entity->get('channelId')) ? '-9999' : $entity->get('channelName'),
                 'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
             ];
 
@@ -857,8 +857,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('channelCode', $channel->get('code'));
         }
 
-        if ($entity->get('scope') === 'Global') {
-            $entity->set('channelId', '');
+        if (empty($entity->get('channelId'))) {
             $entity->set('channelName', 'Global');
         }
 
