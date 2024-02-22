@@ -940,14 +940,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
-        if (!property_exists($data, 'scope')) {
-            $data->scope = $attribute->get('defaultScope') ?? 'Global';
-            if ($data->scope === 'Channel') {
-                if (!empty($attribute->get('defaultChannelId'))) {
-                    $data->channelId = $attribute->get('defaultChannelId');
-                } else {
-                    $data->scope = 'Global';
-                }
+        if (!property_exists($data, 'channelId')) {
+            if (!empty($attribute->get('defaultChannelId'))) {
+                $data->channelId = $attribute->get('defaultChannelId');
             }
         }
     }

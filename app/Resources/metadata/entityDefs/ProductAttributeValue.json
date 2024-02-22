@@ -15,22 +15,6 @@
       "view": "pim:views/classification-attribute/fields/language",
       "prohibitedEmptyValue": true
     },
-    "scope": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "layoutListSmallDisabled": true,
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "optionsIds": [
-        "Global",
-        "Channel"
-      ],
-      "default": "Global",
-      "view": "pim:views/fields/scope"
-    },
     "channel": {
       "type": "link",
       "notNull": true,
@@ -738,7 +722,6 @@
       "product_id",
       "attribute_id",
       "language",
-      "scope",
       "channel_id"
     ]
   },

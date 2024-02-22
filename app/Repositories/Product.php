@@ -566,19 +566,13 @@ class Product extends Hierarchy
 
         foreach ($cas as $ca) {
             foreach ($pavs as $pav) {
-                if ($pav->get('attributeId') === $ca->get('attributeId') && $pav->get('scope') === $ca->get('scope')) {
-                    if ($ca->get('scope') === 'Channel' && $pav->get('channelId') !== $ca->get('channelId')) {
-                        continue 1;
-                    }
-
+                if ($pav->get('attributeId') === $ca->get('attributeId') && $pav->get('channelId') === $ca->get('channelId')) {
                     $this->getValueConverter()->convertFrom($pav, $pav->get('attribute'));
-
                     if ($mode === 'removeOnlyInheritedAttributesWithNoValue') {
                         if ($pav->get('value') !== null && $pav->get('value') !== '') {
                             continue 1;
                         }
                     }
-
                     $this->getEntityManager()->removeEntity($pav);
                 }
             }

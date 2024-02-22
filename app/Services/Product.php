@@ -679,13 +679,9 @@ class Product extends Hierarchy
 
         $records = [];
 
-        // filtering pavs by scope and channel
         foreach ($collection as $pav) {
             if (!isset($scopeData[$pav->get('id')])) {
                 continue 1;
-            }
-            if ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && empty($scopeData[$pav->get('id')]->get('channelId'))) {
-                continue;
             }
             $records[$pav->get('id')] = $pav;
         }

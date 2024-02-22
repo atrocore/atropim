@@ -13,7 +13,6 @@
     "valueFrom": "Value From",
     "valueTo": "Value To",
     "valueUnitId": "Value Unit",
-    "scope": "Scope",
     "channel": "Channel",
     "varcharValue": "Value: String",
     "referenceValue": "Value: Reference",

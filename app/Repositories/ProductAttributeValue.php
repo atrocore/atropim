@@ -47,7 +47,7 @@ class ProductAttributeValue extends Base
         }
 
         $qb = $this->getConnection()->createQueryBuilder();
-        $qb->select('pav.id, pav.attribute_id, pav.scope, pav.channel_id, c.name as channel_name, pav.language')
+        $qb->select('pav.id, pav.attribute_id, pav.channel_id, c.name as channel_name, pav.language')
             ->from('product_attribute_value', 'pav')
             ->leftJoin('pav', 'channel', 'c', 'pav.channel_id=c.id AND c.deleted=:false')
             ->where('pav.deleted=:false')->setParameter('false', false, ParameterType::BOOLEAN)
@@ -168,17 +168,12 @@ class ProductAttributeValue extends Base
             ->andWhere('pav.product_id IN (:productsIds)')
             ->andWhere('pav.attribute_id = :attributeId')
             ->andWhere('pav.language = :language')
-            ->andWhere('pav.scope = :scope')
+            ->andWhere('pav.channel_id = :channelId')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
             ->setParameter('attributeId', $pav->get('attributeId'))
             ->setParameter('language', $pav->get('language'))
-            ->setParameter('scope', $pav->get('scope'));
-
-        if ($pav->get('scope') === 'Channel') {
-            $qb->andWhere('pav.channel_id = :channelId');
-            $qb->setParameter('channelId', $pav->get('channelId'));
-        }
+            ->setParameter('channelId', $pav->get('channelId'));
 
         $pavs = $qb->fetchAllAssociative();
 
