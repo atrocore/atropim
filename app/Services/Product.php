@@ -720,7 +720,7 @@ class Product extends Hierarchy
         }
 
         foreach ($records as $pav) {
-            if ($pav->get('scope') === 'Global') {
+            if (empty($pav->get('channelId'))) {
                 $pav->set('channelId', null);
                 $pav->set('channelName', 'Global');
             }
@@ -743,7 +743,7 @@ class Product extends Hierarchy
             }
 
             foreach ($collection as $pav) {
-                if ($scopeData[$pav->get('id')]->get('scope') === 'Global' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
+                if ($scopeData[$pav->get('id')]->get('channelId') === '' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
                     $newCollection->append($pav);
                 }
             }

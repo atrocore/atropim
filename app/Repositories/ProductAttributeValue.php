@@ -201,16 +201,10 @@ class ProductAttributeValue extends Base
         foreach ($pavs as $pav) {
             if (
                 $pav->get('attributeId') === $entity->get('attributeId')
-                && $pav->get('scope') === $entity->get('scope')
+                && $pav->get('channelId') === $entity->get('channelId')
                 && $pav->get('language') === $entity->get('language')
             ) {
-                if ($pav->get('scope') === 'Global') {
-                    return $pav;
-                }
-
-                if ($pav->get('channelId') === $entity->get('channelId')) {
-                    return $pav;
-                }
+                return $pav;
             }
         }
 

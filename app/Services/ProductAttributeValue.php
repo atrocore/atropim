@@ -107,7 +107,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $row = [
                 'id'          => $record['id'],
-                'channelName' => $record['scope'] === 'Global' ? '-9999' : $record['channel_name'],
+                'channelName' => empty($record['channel_id']) ? '-9999' : $record['channel_name'],
                 'language'    => $record['language'] === 'main' ? null : $record['language'],
                 'tooltip'     => $tooltip
             ];
@@ -858,6 +858,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         if (empty($entity->get('channelId'))) {
+            $entity->set('channelId', null);
             $entity->set('channelName', 'Global');
         }
 
