@@ -19,5 +19,10 @@ Espo.define('pim:views/fields/full-width-list-image', 'views/fields/image',
             }
         },
 
+        isCalledForList: function () {
+            // to use preview size on list
+            return false;
+        }
+
     })
 );
