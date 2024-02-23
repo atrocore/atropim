@@ -63,12 +63,16 @@ class Entity extends AbstractEntityListener
     }
 
     protected  function boolFilterOnlyExtensibleEnumIds(&$params, ?array $ids){
+
+        if(empty($ids)){
+            return $params;
+        }
+
         $params['where'][] = [
             "type" => "in",
             "attribute" => "id",
             "value" =>  $ids
         ];
-
         return $params;
     }
 
