@@ -22,14 +22,6 @@
               "attribute": "attributeId"
             }
           ]
-        },
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
         }
       },
       "value": {
