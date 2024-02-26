@@ -173,13 +173,20 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                             if(attributeType === 'extensibleEnum'
                                 && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))){
-                                view.clearLink()
+                                try{
+                                    view.clearLink()
+                                }catch (e) {
+
+                                }
                             }
 
                             if(attributeType === 'extensibleMultiEnum') {
                                 (this.model.get('value') ?? []).forEach(v =>{
                                     if(!this.model.get('extensibleEnumOptionsIds').includes(v)){
-                                        view.deleteLink(v)
+                                        try{
+                                            view.deleteLink(v)
+                                        }catch (e) {
+                                        }
                                     }
                                 })
                             }

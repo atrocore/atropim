@@ -796,7 +796,6 @@ class ProductAttributeValue extends Base
                         ->setParameter('ids', $ids, Mapper::getParameterType($ids))
                         ->fetchAllAssociative();
 
-
                     $diff = array_diff($ids, array_column($options, 'id'));
                     foreach ($diff as $id) {
                         throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
