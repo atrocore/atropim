@@ -842,6 +842,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
 
+        if ($entity->get('channelId') === '') {
+            $entity->set('channelId', null);
+        }
+
         if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
         }

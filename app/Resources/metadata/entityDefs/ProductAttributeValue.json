@@ -17,7 +17,6 @@
     },
     "channel": {
       "type": "link",
-      "view": "pim:views/fields/channel",
       "notNull": true,
       "default": "",
       "required": false
