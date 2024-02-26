@@ -41,7 +41,7 @@ class V1Dot11Dot26 extends Base
             $this->exec("ALTER TABLE attribute DROP default_scope");
         }
 
-        $this->updateComposer('atrocore/pim', '^1.12.0');
+        $this->updateComposer('atrocore/pim', '^1.11.26');
     }
 
     public function down(): void
