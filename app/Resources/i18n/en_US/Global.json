@@ -77,7 +77,6 @@
     "role": "Role"
   },
   "labels": {
-    "Global": "Global",
     "removeHierarchically": "Delete Hierarchically",
     "setAsMainImage": "Set as Main Image",
     "setAsMainCategory": "Set as Main Category",
