@@ -41,64 +41,6 @@ class Channel extends AbstractSelectManager
     }
 
     /**
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithClassificationAttribute(array &$result)
-    {
-        // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithClassificationAttribute');
-
-        if (isset($data['classificationId']) && isset($data['attributeId'])) {
-            $channelsIds = $this
-                ->getEntityManager()
-                ->getRepository('ClassificationAttribute')
-                ->select(['channelId'])
-                ->where(
-                    [
-                        'attributeId'     => $data['attributeId'],
-                        'classificationId' => $data['classificationId'],
-                        'scope'           => 'Channel',
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($channelsIds, 'channelId')
-            ];
-        }
-    }
-
-    /**
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithProductAttributeValue(array &$result)
-    {
-        // get filter data
-        $data = (array)$this->getSelectCondition('notLinkedWithProductAttributeValue');
-
-        if (isset($data['productId']) && isset($data['attributeId'])) {
-            $channelsIds = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->select(['channelId'])
-                ->where(
-                    [
-                        'attributeId' => $data['attributeId'],
-                        'productId'   => $data['productId'],
-                        'scope'       => 'Channel',
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($channelsIds, 'channelId')
-            ];
-        }
-    }
-
-    /**
      * NotLinkedWithPriceProfile filter
      *
      * @param array $result

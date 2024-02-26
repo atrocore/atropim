@@ -13,7 +13,6 @@
     "valueFrom": "Значення від",
     "valueTo": "Значення до",
     "valueUnitId": "Одиниця значення",
-    "scope": "Область дії",
     "channel": "Канал",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",

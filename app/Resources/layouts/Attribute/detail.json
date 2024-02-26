@@ -69,11 +69,9 @@
       ],
       [
         {
-          "name": "defaultScope"
-        },
-        {
           "name": "defaultChannel"
-        }
+        },
+        false
       ],
       [
         {

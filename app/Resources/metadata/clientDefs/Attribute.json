@@ -5,16 +5,12 @@
     "onlyMy",
     "notLinkedWithProduct",
     "fromAttributesTab",
-    "notLinkedWithClassificationAttribute",
-    "notLinkedWithProductAttributeValue",
     "notParents",
     "notChildren"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "fromAttributesTab",
-    "notLinkedWithClassificationAttribute",
-    "notLinkedWithProductAttributeValue",
     "notParents",
     "notChildren"
   ],
@@ -282,26 +278,6 @@
                 "varchar",
                 "wysiwyg"
               ]
-            }
-          ]
-        }
-      },
-      "defaultChannel": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "defaultScope",
-              "value": "Channel"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "defaultScope",
-              "value": "Channel"
             }
           ]
         }

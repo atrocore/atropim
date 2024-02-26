@@ -155,12 +155,9 @@ class Product extends Hierarchy
 
     protected function getProductAttributeForUpdating(EntityCollection $pavs, \stdClass $data): ?Entity
     {
-
         foreach ($pavs as $pav) {
-            if ($pav->get('attributeId') == $data->attributeId && $pav->get('scope') == $data->scope && $pav->get('language') == $data->language) {
-                if ($data->scope == 'Global' || ($data->scope === 'Channel' && property_exists($data, 'channelId') && $pav->get('channelId') == $data->channelId)) {
-                    return $pav;
-                }
+            if ($pav->get('attributeId') == $data->attributeId && $pav->get('language') == $data->language && $pav->get('channelId') == $data->channelId) {
+                return $pav;
             }
         }
 
@@ -679,13 +676,9 @@ class Product extends Hierarchy
 
         $records = [];
 
-        // filtering pavs by scope and channel
         foreach ($collection as $pav) {
             if (!isset($scopeData[$pav->get('id')])) {
                 continue 1;
-            }
-            if ($scopeData[$pav->get('id')]->get('scope') === 'Channel' && empty($scopeData[$pav->get('id')]->get('channelId'))) {
-                continue;
             }
             $records[$pav->get('id')] = $pav;
         }
@@ -727,7 +720,7 @@ class Product extends Hierarchy
         }
 
         foreach ($records as $pav) {
-            if ($pav->get('scope') === 'Global') {
+            if (empty($pav->get('channelId'))) {
                 $pav->set('channelId', null);
                 $pav->set('channelName', 'Global');
             }
@@ -750,7 +743,7 @@ class Product extends Hierarchy
             }
 
             foreach ($collection as $pav) {
-                if ($scopeData[$pav->get('id')]->get('scope') === 'Global' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
+                if ($scopeData[$pav->get('id')]->get('channelId') === '' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
                     $newCollection->append($pav);
                 }
             }
@@ -1018,8 +1011,8 @@ class Product extends Hierarchy
             'where' => [
                 [
                     'type'      => 'in',
-                    'attribute' => 'scope',
-                    'value'     => 'Global'
+                    'attribute' => 'channelId',
+                    'value'     => ''
                 ],
                 [
                     'type'      => 'in',

@@ -47,11 +47,8 @@ class ClassificationAttribute extends Base
             'attributeId' => $classificationAttribute->get('attributeId'),
             'language'    => $classificationAttribute->get('language'),
             'scope'       => $classificationAttribute->get('scope'),
+            'channelId'   => $classificationAttribute->get('channelId')
         ];
-
-        if ($classificationAttribute->get('scope') === 'Channel') {
-            $where['channelId'] = $classificationAttribute->get('channelId');
-        }
 
         $result = $this
             ->getProductAttributeValueRepository()
@@ -87,7 +84,7 @@ class ClassificationAttribute extends Base
     public function save(Entity $entity, array $options = [])
     {
         $attribute = $this->getAttributeRepository()->get($entity->get('attributeId'));
-        if ($entity->get('scope') === 'Channel') {
+        if (!empty($entity->get('channelId'))) {
             $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
         }
 
@@ -102,8 +99,8 @@ class ClassificationAttribute extends Base
             $result = parent::save($entity, $options);
         } catch (UniqueConstraintViolationException $e) {
             $attributeName = !empty($attribute) ? $attribute->get('name') : $entity->get('attributeId');
-            $channelName = $entity->get('scope');
-            if ($channelName === 'Channel') {
+            $channelName = 'Global';
+            if (!empty($entity->get('channelId'))) {
                 $channelName = !empty($channel) ? $channel->get('name') : $entity->get('channelId');
             }
 

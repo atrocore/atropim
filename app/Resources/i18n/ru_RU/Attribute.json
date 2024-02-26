@@ -17,7 +17,6 @@
     "prohibitedEmptyValue": "Запретить пустые значения",
     "measure": "Мера",
     "virtualProductField": "Виртуальное поле продукта",
-    "defaultScope": "Область действия",
     "defaultChannel": "Канал",
     "isRequired": "Обязательно",
     "sortOrderInProduct": "Порядок сортировки в продукте",

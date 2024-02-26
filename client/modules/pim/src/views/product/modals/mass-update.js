@@ -76,7 +76,6 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                 name: name,
                 attributeId: model.get('attributeId'),
                 attributeType: model.get('attributeType'),
-                scope: model.get('scope') || 'Global',
                 channelId: model.get('channelId') || null,
                 channelName: model.get('channelName') || null,
                 language: language
@@ -169,7 +168,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
                     let attribute = {
                         attributeId: item.attributeId,
-                        scope: item.scope,
+                        channelId: item.channelId,
                         language: item.language
                     };
 
@@ -179,8 +178,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         attribute.value = data[name];
                     }
 
-                    if (item.scope === 'Channel') {
-                        attribute.channelId = item.channelId;
+                    if (item.channelId && item.channelId !== '') {
                         attribute.channelName = item.channelName;
                     }
 

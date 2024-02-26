@@ -20,19 +20,6 @@ use Espo\ORM\Entity;
 
 class Classification extends Hierarchy
 {
-    public function getLinkedAttributesIds(string $id, string $scope = 'Global'): array
-    {
-        $data = $this
-            ->getEntityManager()
-            ->getRepository('ClassificationAttribute')
-            ->select(['attributeId'])
-            ->where(['classificationId' => $id, 'scope' => $scope])
-            ->find()
-            ->toArray();
-
-        return array_column($data, 'attributeId');
-    }
-
     public function getLinkedWithAttributeGroup(array $classificationsIds, ?string $attributeGroupId): array
     {
         $data = $this

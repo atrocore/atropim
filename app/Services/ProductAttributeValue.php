@@ -107,7 +107,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $row = [
                 'id'          => $record['id'],
-                'channelName' => $record['scope'] === 'Global' ? '-9999' : $record['channel_name'],
+                'channelName' => empty($record['channel_id']) ? '-9999' : $record['channel_name'],
                 'language'    => $record['language'] === 'main' ? null : $record['language'],
                 'tooltip'     => $tooltip
             ];
@@ -248,7 +248,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         foreach ($collection as $k => $entity) {
             $row = [
                 'entity'      => $entity,
-                'channelName' => $entity->get('scope') === 'Global' ? '-9999' : $entity->get('channelName'),
+                'channelName' => empty($entity->get('channelId')) ? '-9999' : $entity->get('channelName'),
                 'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
             ];
 
@@ -842,6 +842,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
 
+        if ($entity->get('channelId') === '') {
+            $entity->set('channelId', null);
+        }
+
         if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
         }
@@ -855,11 +859,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('channelCode', null);
         if (!empty($entity->get('channelId')) && !empty($channel = $entity->get('channel'))) {
             $entity->set('channelCode', $channel->get('code'));
-        }
-
-        if ($entity->get('scope') === 'Global') {
-            $entity->set('channelId', '');
-            $entity->set('channelName', 'Global');
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId'))) {
@@ -940,14 +939,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
             return;
         }
 
-        if (!property_exists($data, 'scope')) {
-            $data->scope = $attribute->get('defaultScope') ?? 'Global';
-            if ($data->scope === 'Channel') {
-                if (!empty($attribute->get('defaultChannelId'))) {
-                    $data->channelId = $attribute->get('defaultChannelId');
-                } else {
-                    $data->scope = 'Global';
-                }
+        if (!property_exists($data, 'channelId')) {
+            if (!empty($attribute->get('defaultChannelId'))) {
+                $data->channelId = $attribute->get('defaultChannelId');
             }
         }
     }

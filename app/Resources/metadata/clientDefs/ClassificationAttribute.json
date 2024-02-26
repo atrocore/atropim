@@ -15,34 +15,6 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "equals",
-              "attribute": "scope",
-              "value": "Channel"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "attributeId"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "scope",
-              "value": "Channel"
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "attributeId"
-            }
-          ]
-        }
-      },
-      "scope": {
-        "visible": {
-          "conditionGroup": [
-            {
               "type": "isNotEmpty",
               "attribute": "attributeId"
             }

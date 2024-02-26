@@ -31,7 +31,7 @@ class AttributeGroup extends AbstractSelectManager
             ->select(['attributeId'])
             ->where([
                 'productId' => (string)$this->getSelectCondition('withNotLinkedAttributesToProduct'),
-                'scope' => 'Global'
+                'channelId' => ''
             ])
             ->find()
             ->toArray();
@@ -55,7 +55,7 @@ class AttributeGroup extends AbstractSelectManager
             ->select(['attributeId'])
             ->where([
                 'classificationId' => (string)$this->getSelectCondition('withNotLinkedAttributesToClassification'),
-                'scope' => 'Global'
+                'channelId' => ''
             ])
             ->find()
             ->toArray();

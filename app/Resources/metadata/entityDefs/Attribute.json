@@ -191,21 +191,6 @@
       "importDisabled": true,
       "exportDisabled": true
     },
-    "defaultScope": {
-      "type": "enum",
-      "prohibitedEmptyValue": true,
-      "tooltip": true,
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "optionsIds": [
-        "Global",
-        "Channel"
-      ],
-      "default": "Global",
-      "view": "pim:views/attribute/fields/default-scope"
-    },
     "defaultChannel": {
       "type": "link",
       "tooltip": true

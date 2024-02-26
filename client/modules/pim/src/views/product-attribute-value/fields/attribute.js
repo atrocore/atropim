@@ -11,17 +11,11 @@
 Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notLinkedWithProductAttributeValue', 'fromAttributesTab'],
+        selectBoolFilterList: ['fromAttributesTab'],
 
         listTemplate: 'pim:product-attribute-value/fields/attribute',
 
         boolFilterData: {
-            notLinkedWithProductAttributeValue() {
-                return {
-                    productId: this.model.get('productId'),
-                    channelId: this.model.get('channelId')
-                };
-            },
             fromAttributesTab() {
                 if (!this.model.get('productId')) {
                     return;
@@ -35,7 +29,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
         createDisabled: true,
 
         setup() {
-            this.mandatorySelectAttributeList = ['type', 'isMultilang', 'defaultScope', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
+            this.mandatorySelectAttributeList = ['type', 'isMultilang', 'defaultChannelId', 'defaultChannelName', 'isRequired'];
             if (this.model.get('attributeTooltip')) {
                 var $a;
                 this.once('after:render', function () {
@@ -81,7 +75,6 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
                 attributeIsDropdown: model.get('dropdown'),
                 amountOfDigitsAfterComma: model.get('amountOfDigitsAfterComma'),
                 attributeIsMultilang: model.get('isMultilang'),
-                defaultScope: model.get('defaultScope'),
                 defaultChannelId: model.get('defaultChannelId'),
                 defaultChannelName: model.get('defaultChannelName'),
                 isRequired: model.get('isRequired')

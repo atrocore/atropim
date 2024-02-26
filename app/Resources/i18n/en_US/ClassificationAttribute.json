@@ -4,7 +4,6 @@
     "attribute": "Attribute",
     "isRequired": "Required",
     "channel": "Channel",
-    "scope": "Scope",
     "language": "Language",
     "languages": "Languages",
     "maxLength": "Max Length",

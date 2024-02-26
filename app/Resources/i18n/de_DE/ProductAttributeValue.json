@@ -14,7 +14,6 @@
     "valueFrom": "Wert von",
     "valueTo": "Wert auf",
     "valueUnitId": "Werteinheit",
-    "scope": "Scope",
     "varcharValue": "Wert: Einzeiliger Text",
     "referenceValue": "Wert: Referenz",
     "textValue": "Wert: Text",

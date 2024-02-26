@@ -13,9 +13,7 @@
     "notLinkedWithCategory",
     "notLinkedWithAttributesInProduct",
     "notLinkedWithAttributesInClassification",
-    "notLinkedWithCategoriesInProduct",
-    "notLinkedWithClassificationAttribute",
-    "notLinkedWithProductAttributeValue"
+    "notLinkedWithCategoriesInProduct"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
@@ -25,9 +23,7 @@
     "notLinkedWithCategory",
     "notLinkedWithAttributesInProduct",
     "notLinkedWithAttributesInClassification",
-    "notLinkedWithCategoriesInProduct",
-    "notLinkedWithClassificationAttribute",
-    "notLinkedWithProductAttributeValue"
+    "notLinkedWithCategoriesInProduct"
   ],
   "disabledMassActions": [
     "merge"
