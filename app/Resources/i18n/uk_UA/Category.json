@@ -7,7 +7,7 @@
     "mainImage": "Основне зображення",
     "assets": "Асети",
     "parents": "Батьківська категорія",
-    "children": "Категорії",
+    "children": "Дочірні категорії",
     "channels": "Канали",
     "categoryRoute": "Дерево категорій (ID)",
     "categoryRouteName": "Дерево категорій",
