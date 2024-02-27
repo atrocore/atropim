@@ -51,10 +51,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
     {
         parent::prepareEntityForOutput($entity);
 
-        if ($entity->get('channelId') === '') {
-            $entity->set('channelId', null);
-        }
-
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($attribute)) {
@@ -78,6 +74,10 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     'mainField' => 'value'
                 ]);
             }
+        }
+
+        if ($entity->get('channelId') === '') {
+            $entity->set('channelId', null);
         }
     }
 

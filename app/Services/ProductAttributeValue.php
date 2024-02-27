@@ -842,10 +842,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
 
-        if ($entity->get('channelId') === '') {
-            $entity->set('channelId', null);
-        }
-
         if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
         }
@@ -889,6 +885,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
             $entity->set('attributeIsDropdown', $attribute->get('dropdown'));
+        }
+
+        if ($entity->get('channelId') === '') {
+            $entity->set('channelId', null);
         }
     }
 
