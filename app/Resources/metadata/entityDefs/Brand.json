@@ -16,6 +16,12 @@
             "tooltip": false,
             "isMultilang": true
         },
+        "assets": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "massUpdateDisabled": true,
+            "noLoad": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -63,6 +69,13 @@
         }
     },
     "links": {
+        "assets": {
+            "type": "hasMany",
+            "relationName": "brandAsset",
+            "foreign": "brands",
+            "entity": "Asset",
+            "audited": false
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"

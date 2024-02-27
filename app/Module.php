@@ -26,25 +26,6 @@ class Module extends AbstractModule
         return 5120;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function loadMetadata(\stdClass &$data)
-    {
-        parent::loadMetadata($data);
-
-        $data = Json::decode(Json::encode($data), true);
-
-        if ($this->container->get('metadata')->isModuleInstalled('Dam')) {
-            $data['dashlets'] = array_merge_recursive($data['dashlets'], $data['dashletsForDam']);
-            $data['clientDefs'] = array_merge_recursive($data['clientDefs'], $data['clientDefsForDam']);
-            $data['entityDefs'] = array_merge_recursive($data['entityDefs'], $data['entityDefsForDam']);
-            $data['scopes'] = array_merge_recursive($data['scopes'], $data['scopesForDam']);
-        }
-
-        $data = Json::decode(Json::encode($data));
-    }
-
     public function loadLayouts(string $scope, string $name, array &$data)
     {
         if ($scope === 'Product') {

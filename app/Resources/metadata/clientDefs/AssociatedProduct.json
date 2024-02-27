@@ -17,5 +17,29 @@
   },
   "recordViews": {
     "list": "pim:views/record/list"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "mainProductImage": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "relatedProductImage": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
   }
 }
