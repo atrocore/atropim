@@ -7,7 +7,7 @@
     "mainImage": "Main Image",
     "assets": "Assets",
     "parents": "Parent Category",
-    "children": "Categories",
+    "children": "Child Categories",
     "channels": "Channels",
     "categoryRoute": "Сategory Tree (ID)",
     "categoryRouteName": "Сategory Tree",
