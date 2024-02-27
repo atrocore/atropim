@@ -27,6 +27,14 @@
                 "attribute": {
                     "url": "#Attribute"
                 },
+                "productWithoutAssets": {
+                    "url": "#Product",
+                    "options": {
+                        "boolFilterList": [
+                            "withoutImageAssets"
+                        ]
+                    }
+                },
                 "productWithoutAssociatedProduct": {
                     "url": "#Product",
                     "options": {

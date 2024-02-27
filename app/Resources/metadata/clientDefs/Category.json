@@ -26,6 +26,24 @@
     "onlyCatalogCategories",
     "onlyLeafCategories"
   ],
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/fields/main-image"
+      }
+    ],
+    "detail": [
+      {
+        "name": "mainImage",
+        "unshift": true,
+        "label": "mainImage",
+        "view": "pim:views/fields/main-image"
+      }
+    ]
+  },
   "disabledMassActions": [
     "merge"
   ],
@@ -53,6 +71,16 @@
         "notEntity"
       ],
       "view": "pim:views/category/record/panels/channels"
+    },
+    "assets": {
+      "view": "pim:views/record/panels/assets",
+      "rowActionsView": "pim:views/record/row-actions/relationship-asset",
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "category_asset_mm.sorting"
+      },
+      "sortBy": "sorting",
+      "asc": true
     },
     "products": {
       "create": false,

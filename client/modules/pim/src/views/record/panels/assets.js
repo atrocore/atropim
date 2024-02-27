@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/panels/assets', 'dam:views/record/panels/assets',
+Espo.define('pim:views/record/panels/assets', 'views/record/panels/assets',
     Dep => Dep.extend({
 
         actionSetAsMainImage(data) {

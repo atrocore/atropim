@@ -23,6 +23,22 @@
       "view": "pim:views/associated-product/fields/backward-association",
       "filterDisabled": true
     },
+    "mainProductImage": {
+      "type": "image",
+      "previewSize": "small",
+      "readOnly": true,
+      "notStorable": true,
+      "view": "pim:views/fields/full-width-list-image",
+      "importDisabled": true
+    },
+    "relatedProductImage": {
+      "type": "image",
+      "previewSize": "small",
+      "readOnly": true,
+      "notStorable": true,
+      "view": "pim:views/fields/full-width-list-image",
+      "importDisabled": true
+    },
     "backwardAssociatedProduct": {
       "type": "link",
       "readOnly": true,
