@@ -718,13 +718,29 @@ class ProductAttributeValue extends Base
             case 'extensibleEnum':
                 $id = $entity->get('referenceValue');
                 if (!empty($id)) {
-                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-                        ->select(['id'])
-                        ->where([
-                            'id'               => $id,
-                            'extensibleEnumId' => $attribute->get('extensibleEnumId') ?? 'no-such-measure'
-                        ])
-                        ->findOne();
+
+                    $option =$this->getEntityManager()
+                        ->getConnection()
+                        ->createQueryBuilder()
+                        ->from('extensible_enum_option')
+                        ->select('id')
+                        ->where('id IN ( 
+                            SELECT extensible_enum_option_id 
+                                FROM extensible_enum_extensible_enum_option 
+                                WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
+                            )'
+                        )
+                        ->andWhere('id=:id')
+                        ->setParameter(
+                            'extensibleEnumId',
+                            $attribute->get('extensibleEnumId'),
+                            Mapper::getParameterType($attribute->get('extensibleEnumId'))
+                        )
+                        ->setParameter('false',false,Mapper::getParameterType(false))
+                        ->setParameter('id', $id, Mapper::getParameterType($id))
+                        ->fetchOne();
+
+
                     if (empty($option)) {
                         throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
                     }
@@ -733,14 +749,28 @@ class ProductAttributeValue extends Base
             case 'extensibleMultiEnum':
                 $ids = @json_decode((string)$entity->get('textValue'), true);
                 if (!empty($ids)) {
-                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-                        ->select(['id'])
-                        ->where([
-                            'id'               => $ids,
-                            'extensibleEnumId' => $attribute->get('extensibleEnumId') ?? 'no-such-measure'
-                        ])
-                        ->find();
-                    $diff = array_diff($ids, array_column($options->toArray(), 'id'));
+                    $options =$this->getEntityManager()
+                        ->getConnection()
+                        ->createQueryBuilder()
+                        ->from('extensible_enum_option')
+                        ->select('id')
+                        ->where('id IN ( 
+                            SELECT extensible_enum_option_id 
+                                FROM extensible_enum_extensible_enum_option 
+                                WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
+                            )'
+                        )
+                        ->andWhere('id IN (:ids)')
+                        ->setParameter(
+                            'extensibleEnumId',
+                            $attribute->get('extensibleEnumId'),
+                            Mapper::getParameterType($attribute->get('extensibleEnumId'))
+                        )
+                        ->setParameter('false',false,Mapper::getParameterType(false))
+                        ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                        ->fetchAllAssociative();
+
+                    $diff = array_diff($ids, array_column($options, 'id'));
                     foreach ($diff as $id) {
                         throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
                     }

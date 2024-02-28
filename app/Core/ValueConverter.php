@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Pim\Core;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Injectable;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -394,14 +396,27 @@ class ValueConverter extends Injectable
             return null;
         }
 
-        return $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-            ->where([
-                'extensibleEnumId' => $extensibleEnumId,
-                'OR'               => [
-                    ['id' => $value],
-                    ['code' => $value],
-                ]
-            ])
-            ->findOne();
+        $data = $this->getEntityManager()
+            ->getConnection()
+            ->createQueryBuilder()
+            ->from('extensible_enum_option')
+            ->select('*')
+            ->where('id IN ( 
+                SELECT extensible_enum_option_id 
+                    FROM extensible_enum_extensible_enum_option 
+                    WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
+                )'
+            )
+            ->andWhere('id=:value OR code=:value')
+            ->setParameter('extensibleEnumId',$extensibleEnumId, Mapper::getParameterType($extensibleEnumId))
+            ->setParameter('false',false,Mapper::getParameterType(false))
+            ->setParameter('value', $value, Mapper::getParameterType($value))
+            ->fetchAssociative();
+
+        $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->get();
+
+        $option->set(Util::arrayKeysToCamelCase($data));
+
+        return $option;
     }
 }
