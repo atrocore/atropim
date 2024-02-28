@@ -78,7 +78,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
             if (this.getAcl().check('Channel', 'read')) {
                 this.ajaxGetRequest('Channel', {maxSize: 500}, {async: false}).then(data => {
-                    let options = ["linkedChannels", "allChannels", "Global"];
+                    let options = [ "allChannels", "linkedChannels", "Global"];
                     let translatedOptions = {
                         "linkedChannels": this.translate('linkedChannels'),
                         "allChannels": this.translate("allChannels"),
