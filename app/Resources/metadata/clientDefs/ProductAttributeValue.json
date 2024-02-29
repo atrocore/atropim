@@ -8,6 +8,7 @@
   "disabledMassActions": [
     "merge"
   ],
+  "acl": "pim:acl/product-attribute-value",
   "modalViews": {
     "detail": "pim:views/product-attribute-value/modals/detail",
     "edit": "pim:views/product-attribute-value/modals/edit"
