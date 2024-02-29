@@ -190,7 +190,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
                         }
                     }
 
-                    $result[$key]['collection'][] = $pavEntity->toArray();
+                    $result[$key]['collection'][] = array_merge($pavEntity->toArray(), [
+                        'aclEdit'   => $this->getAclManager()->checkEntity($this->getUser(), $pavEntity, 'edit'),
+                        'aclDelete' => $this->getAclManager()->checkEntity($this->getUser(), $pavEntity, 'delete'),
+                    ]);
                 }
             }
 
@@ -961,9 +964,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ->from('classification_attribute', 'ca')
             ->select(['ca.id'])
             ->leftJoin('ca', 'classification', 'c', 'ca.classification_id=c.id and c.deleted=:false')
-            ->leftJoin('c','product_classification','pc','c.id = pc.classification_id and pc.deleted=:false')
-            ->leftJoin('pc','product','p','pc.product_id = p.id and p.deleted=:false')
-            ->leftJoin('p','product_attribute_value','pav','p.id = pav.product_id and pav.deleted=:false')
+            ->leftJoin('c', 'product_classification', 'pc', 'c.id = pc.classification_id and pc.deleted=:false')
+            ->leftJoin('pc', 'product', 'p', 'pc.product_id = p.id and p.deleted=:false')
+            ->leftJoin('p', 'product_attribute_value', 'pav', 'p.id = pav.product_id and pav.deleted=:false')
             ->where('ca.attribute_id = pav.attribute_id')
             ->andWhere('ca.classification_id = pc.classification_id')
             ->andWhere('pav.id=:pavId')
