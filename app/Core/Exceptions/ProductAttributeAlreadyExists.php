@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Core\Exceptions;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 
 /**
  * Class ProductAttributeAlreadyExists
