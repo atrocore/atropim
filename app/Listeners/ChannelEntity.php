@@ -36,7 +36,7 @@ class ChannelEntity extends AbstractEntityListener
             throw new BadRequest($this->translate('channelHasCategory', 'exceptions', 'Channel'));
         }
 
-        if ($entity->get('productChannels')->count() > 0) {
+        if ($entity->get('products')->count() > 0) {
             throw new BadRequest($this->translate('channelHasProducts', 'exceptions', 'Channel'));
         }
     }
