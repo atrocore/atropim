@@ -555,7 +555,6 @@ class Product extends Hierarchy
 
                 foreach ($product->get('productAttributeValues') as $pav) {
                     if ($pav->get('attributeId') == $data->attributeId
-                        && $pav->get('scope') == $data->scope
                         && $pav->get('channelId') == $data->channelId
                         && $pav->get('language') == $data->language) {
                         $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->id, $data, $parentTransactionId);
@@ -652,11 +651,11 @@ class Product extends Hierarchy
         }
 
         $scopeData = [];
-        if (!empty($collection[0]) && empty($collection[0]->has('scope'))) {
+        if (!empty($collection[0]) && empty($collection[0]->has('channelId'))) {
             $pavsData = $this
                 ->getEntityManager()
                 ->getRepository('ProductAttributeValue')
-                ->select(['id', 'scope', 'channelId', 'channelName'])
+                ->select(['id', 'channelId', 'channelName'])
                 ->where(['id' => array_column($collection->toArray(), 'id')])
                 ->find();
             foreach ($pavsData as $v) {
@@ -706,7 +705,6 @@ class Product extends Hierarchy
                                 if (
                                     $pav1->get('language') === $headerLanguage
                                     && $pav1->get('attributeId') == $pav->get('attributeId')
-                                    && $pav1->get('scope') == $pav->get('scope')
                                     && $pav1->get('channelId') == $pav->get('channelId')
                                 ) {
                                     unset($records[$id]);
@@ -918,7 +916,7 @@ class Product extends Hierarchy
         }
 
         // prepare select
-        $select = ['id', 'attributeId', 'attributeName', 'isRequired', 'scope', 'channelId', 'channelName', 'data', 'value'];
+        $select = ['id', 'attributeId', 'attributeName', 'isRequired', 'channelId', 'channelName', 'data', 'value'];
         if ($this->getConfig()->get('isMultilangActive')) {
             foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
                 $select[] = Util::toCamelCase('value_' . strtolower($locale));
