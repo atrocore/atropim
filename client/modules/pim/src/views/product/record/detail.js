@@ -95,6 +95,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         options: options,
                         translatedOptions: translatedOptions,
                     });
+
+                    if(!this.getStorage().get('scopeFilter', 'OverviewFilter')){
+                        this.getStorage().set('scopeFilter', 'OverviewFilter', ['linkedChannels']);
+                    }
                 });
             }
 
