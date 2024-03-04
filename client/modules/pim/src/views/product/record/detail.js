@@ -80,8 +80,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.ajaxGetRequest('Channel', {maxSize: 500}, {async: false}).then(data => {
                     let options = [ "allChannels", "linkedChannels", "Global"];
                     let translatedOptions = {
-                        "linkedChannels": this.translate('linkedChannels'),
                         "allChannels": this.translate("allChannels"),
+                        "linkedChannels": this.translate('linkedChannels'),
                         "Global": this.translate("Global")
                     };
                     if (data.total > 0) {
@@ -95,6 +95,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         options: options,
                         translatedOptions: translatedOptions,
                     });
+
+                    if(!this.getStorage().get('scopeFilter', 'OverviewFilter')){
+                        this.getStorage().set('scopeFilter', 'OverviewFilter', ['linkedChannels']);
+                    }
                 });
             }
 
