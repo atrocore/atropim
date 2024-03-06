@@ -201,7 +201,6 @@ class Product extends Hierarchy
                             $productAttributeValues->{$existPav->get('id')} = $pavData;
                             $pavs->append($existPav);
                         } else {
-                            $isValidChannel = true;
                             $copy = clone $pavData;
 
                             if (property_exists($copy, 'createPavIfNotExists')) {
@@ -211,27 +210,16 @@ class Product extends Hierarchy
                                 unset($copy->createPavIfNotExists);
                             }
 
-                            if (property_exists($copy, 'channelId') && !empty($copy->channelId)) {
-                                $channelIds = $this->getEntityManager()->getRepository('ProductChannel')->select(['channelId'])->where(['productId' => $id])->find()->toArray();
-                                $channelIds = array_column($channelIds, 'channelId');
+                            $copy->productId = $id;
 
-                                if (!in_array($copy->channelId, $channelIds)) {
-                                    $isValidChannel = false;
-                                }
+                            $result = $pavService->createEntity($copy);
+
+                            if (!$result->get('attributeIsMultilang')) {
+                                $existingPavs->append($result);
+                            } else {
+                                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
                             }
 
-                            // Create pav if channel is valid
-                            if ($isValidChannel) {
-                                $copy->productId = $id;
-
-                                $result = $pavService->createEntity($copy);
-
-                                if (!$result->get('attributeIsMultilang')) {
-                                    $existingPavs->append($result);
-                                } else {
-                                    $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
-                                }
-                            }
                         }
                     } catch (Conflict $e) {
                         $conflicts = array_merge($conflicts, $e->getFields());
