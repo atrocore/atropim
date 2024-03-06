@@ -31,6 +31,7 @@ use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 class Product extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['data'];
+    protected $noEditAccessRequiredLinkList = ['categories'];
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
@@ -570,7 +571,7 @@ class Product extends Hierarchy
 
     /**
      * @param string $id
-     * @param array $params
+     * @param array  $params
      *
      * @return array
      * @throws Forbidden
@@ -765,8 +766,8 @@ class Product extends Hierarchy
     {
         $entity = parent::createEntity($attachment);
 
-        if(!empty(($parentsIds = $entity->getLinkMultipleIdList('parents'))[0])){
-            foreach ($parentsIds as $parentsId){
+        if (!empty(($parentsIds = $entity->getLinkMultipleIdList('parents'))[0])) {
+            foreach ($parentsIds as $parentsId) {
                 $this->inheritedAllFromParent($parentsId, $entity);
             }
         }
@@ -1058,13 +1059,14 @@ class Product extends Hierarchy
         }
         $product->attributesFieldsIsSet = true;
     }
-    
-    public  function inheritedAllFromParent($parent, $child){
-        if(is_string($parent)){
+
+    public function inheritedAllFromParent($parent, $child)
+    {
+        if (is_string($parent)) {
             $parent = $this->getRepository()->get($parent);
         }
 
-        if(is_string($child)){
+        if (is_string($child)) {
             $child = $this->getRepository()->get($child);
         }
 

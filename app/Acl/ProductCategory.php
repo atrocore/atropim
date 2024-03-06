@@ -9,17 +9,18 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Pim\Acl;
 
-namespace Pim\Core\Exceptions;
+use Espo\Core\Acl\Base;
 
-use Atro\Core\Exceptions\BadRequest;
-
-/**
- * Class ProductAttributeAlreadyExists
- */
-class ProductAttributeAlreadyExists extends BadRequest
+class ProductCategory extends Base
 {
+    public function isRelationEntity(string $entityName): bool
+    {
+        if ($entityName === 'ProductCategory') {
+            return false;
+        }
+
+        return parent::isRelationEntity($entityName);
+    }
 }
-
-
