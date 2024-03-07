@@ -36,10 +36,6 @@
             <label class="control-label" data-name="assetCategory">{{translate 'AssetCategory' category='scopeNames'}}</label>
             <div class="field" data-name="assetCategory">{{{assetCategory}}}</div>
         </div>
-        <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="assetType">{{translate 'AssetType' category='scopeNames'}}</label>
-            <div class="field" data-name="assetType">{{{assetType}}}</div>
-        </div>
     </div>
 {{/if}}
 {{#if isEnabledAttachments}}
