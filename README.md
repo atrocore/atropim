@@ -85,7 +85,7 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 
 ### Installation
 
-Installation Guide is available [here](https://help.atrocore.com/atrocore/admin-guide/installation/).
+Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ### Demo
 - URL: https://demo.atropim.com/
