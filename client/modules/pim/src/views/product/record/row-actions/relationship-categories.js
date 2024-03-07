@@ -14,7 +14,7 @@ Espo.define('pim:views/product/record/row-actions/relationship-categories', 'vie
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
 
-            if (!this.model.get('ProductCategory__mainCategory') && this.options.acl.edit) {
+            if (!this.model.get('ProductCategory__mainCategory') && this.getAcl().check('ProductCategory', 'edit')) {
                 list.unshift({
                     action: 'setAsMainCategory',
                     label: this.translate('setAsMainCategory'),
@@ -23,7 +23,6 @@ Espo.define('pim:views/product/record/row-actions/relationship-categories', 'vie
                     }
                 });
             }
-
             return list;
         },
 
