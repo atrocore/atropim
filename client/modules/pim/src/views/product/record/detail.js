@@ -96,8 +96,13 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                         translatedOptions: translatedOptions,
                     });
 
-                    if(!this.getStorage().get('scopeFilter', 'OverviewFilter')){
+                    if(
+                        !this.getStorage().get('scopeFilter', 'OverviewFilter')
+                        || !this.getStorage().get('scopeFilter', 'hasDefineDefaultValue')
+                    )
+                    {
                         this.getStorage().set('scopeFilter', 'OverviewFilter', ['linkedChannels']);
+                        this.getStorage().set('scopeFilter', 'hasDefineDefaultValue', true)
                     }
                 });
             }
