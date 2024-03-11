@@ -74,6 +74,10 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 
 - Please visit our Help Center: https://help.atrocore.com/
 
+## Release Notes
+
+- Please visit our Help Center: https://help.atrocore.com/release-notes/pim
+
 ### Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
