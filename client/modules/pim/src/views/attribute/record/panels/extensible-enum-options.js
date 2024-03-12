@@ -29,12 +29,14 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
 
         actionCreateExtensibleEnumOption() {
             this.notify('Loading...');
+            const extensibleEnumsNames = {};
+            extensibleEnumsNames[this.model.attributeModel.get('extensibleEnumId')] = this.model.attributeModel.get('extensibleEnumName')
             this.createView('quickCreate', 'views/modals/edit', {
                 scope: 'ExtensibleEnumOption',
                 fullFormDisabled: true,
                 attributes: {
-                    extensibleEnumId: this.model.attributeModel.get('extensibleEnumId'),
-                    extensibleEnumName: this.model.attributeModel.get('extensibleEnumName')
+                    extensibleEnumsIds: [this.model.attributeModel.get('extensibleEnumId')],
+                    extensibleEnumsNames: extensibleEnumsNames
                 },
             }, view => {
                 view.render();
