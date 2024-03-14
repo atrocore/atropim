@@ -97,6 +97,13 @@ Espo.define('pim:views/catalog/record/panels/categories', ['views/record/panels/
                 });
             }
 
+            let canUnlink = false
+            let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.link, 'relationName']);
+            if (relationName) {
+                let relationEntityName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                canUnlink = this.getAcl().check(relationEntityName, 'delete');
+            }
+
             this.setupActions();
 
             var layoutName = 'listSmall';
@@ -124,6 +131,7 @@ Espo.define('pim:views/catalog/record/panels/categories', ['views/record/panels/
                 }
 
                 collection.url = collection.urlRoot = url;
+                collection.data.select = 'name,isRoot,isActive,code,categoryRouteName';
                 if (sortBy) {
                     collection.sortBy = sortBy;
                 }
@@ -151,7 +159,8 @@ Espo.define('pim:views/catalog/record/panels/categories', ['views/record/panels/
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
-                            el: this.options.el + ' .list-container'
+                            el: this.options.el + ' .list-container',
+                            canUnlink: canUnlink
                         }, function (view) {
                             view.render();
                         });
