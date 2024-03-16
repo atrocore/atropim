@@ -69,13 +69,11 @@ We offer following integrations:
 
 Please [contact us](https://atropim.com/contact), if you want to know more.
 
-## Documentation
+## Ressources
 
 - Please visit our Help Center: https://help.atrocore.com/
-
-## Release Notes
-
-- Please visit our Help Center: https://help.atrocore.com/release-notes/pim
+- Read our Release Notes: https://help.atrocore.com/release-notes/pim
+- Please visit our Community: https://community.atrocore.com
 
 ### Requirements
 
