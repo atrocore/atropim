@@ -69,11 +69,6 @@ We offer following integrations:
 
 Please [contact us](https://atropim.com/contact), if you want to know more.
 
-## Ressources
-
-- Please visit our Help Center: https://help.atrocore.com/
-- Read our Release Notes: https://help.atrocore.com/release-notes/pim
-- Please visit our Community: https://community.atrocore.com
 
 ### Requirements
 
@@ -101,5 +96,7 @@ AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
 - Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg/videos
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
-- Ask the Community - https://github.com/atrocore/atrocore/discussions
+- Please visit our Help Center: https://help.atrocore.com/
+- Read our Release Notes: https://help.atrocore.com/release-notes/pim
+- Please visit our Community: https://community.atrocore.com
 - Сontact us - https://atrocore.com/contact
