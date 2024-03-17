@@ -6,14 +6,13 @@
 
 AtroPIM is an [open-source product information management system (PIM)](https://atropim.com), which is based on [AtroCore](https://github.com/atrocore/atrocore) software platform. AtroPIM (as well as AtroCore) is distributed under GPLv3 License and is free. It has a lot of features right out-of-the-box and thus is an excellent tool for cost-effective and timely application development.
 
-AtroPIM is a single page application (SPA) with an API-centric and service-oriented architecture (SOA). It has a flexible data model based on entities, entity attributes and relations of all kinds among them. AtroPIM allows you to gather and store all your product content in one place, enrich it and spread it to several channels like own online shop, amazon, eBay, online shops of your distributors, on a tablet or mobile application. AtroPIM will help you to structure and organize all your flexible data and get rid of excel mess. 
+AtroPIM is a single page application (SPA) with an API-centric architecture. It has a flexible data model based on entities, entity attributes and relations of all kinds among them. AtroPIM allows you to gather and store all your product content in one place, enrich it and spread it to several channels like own online shop, amazon, eBay, online shops of your distributors, on a tablet or mobile application. AtroPIM will help you to structure and organize all your flexible data and get rid of excel mess. 
 
 ## What Are the Advantages of AtroPIM?
 
 - Many out-of-the-box features;
 - Free – 100% open source, licensed under GPLv3;
 - REST API;
-- Service-oriented architecture (SOA);
 - Responsive and user friendly UI;
 - Configurable (entities, relations, layouts, labels, navigation, dashboards);
 - Extensible with modules;
@@ -41,7 +40,7 @@ AtroPIM comes with a lot of features directly out of the box, including:
 - product and category images;  
 - and much more.
 
-Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](http://atropim.com). Find out more about the AtroDAM module [here](https://atrodam.com).
+Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](http://atropim.com).
 
 ## Technology
 
@@ -55,16 +54,16 @@ Want to know more about AtroPIM technology? Please, visit [our website](http://a
 
 AtroPIM has a REST API and can be integrated with any third-party system, channel or marketplace. 
 
-We offer following integrations:
+We offer the following paid integrations:
 
-- Data synchronisation with over 1000 Channels via channable.com
+- Data synchronisation with over 2000 Channels via channable.com
 - ODOO
 - SAP Business One,
-- Microsoft Dynamics NAV
+- Microsoft Business Central
 - Magento 2
 - Magento 1
-- Shopware 5
-- OXID eShop 6
+- Shopware 6
+- Shopify
 - and others.
 
 Please [contact us](https://atropim.com/contact), if you want to know more.
@@ -96,7 +95,7 @@ AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
 - Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg/videos
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
-- Please visit our Help Center: https://help.atrocore.com/
-- Read our Release Notes: https://help.atrocore.com/release-notes/pim
-- Please visit our Community: https://community.atrocore.com
+- Please visit our Help Center - https://help.atrocore.com/
+- Read our Release Notes - https://help.atrocore.com/release-notes/pim
+- Please visit our Community - https://community.atrocore.com
 - Сontact us - https://atrocore.com/contact
