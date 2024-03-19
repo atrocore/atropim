@@ -62,10 +62,10 @@ class ProductAttributeValue extends Base
             $qb->andWhere('pav.language IN (:languagesFilter)')->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
         }
 
-        if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter) ) {
+        if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter)) {
             $sql = "";
-            if(in_array('linkedChannels', $scopeFilter)){
-                $sql.= "pav.channel_id IN (SELECT channel_id FROM product_channel where product_id =:productId and deleted=:false) OR " ;
+            if (in_array('linkedChannels', $scopeFilter)) {
+                $sql .= "pav.channel_id IN (SELECT channel_id FROM product_channel where product_id =:productId and deleted=:false) OR ";
             }
             $scopeFilter = array_map(function ($v) {
                 if ($v === 'Global' || $v === "linkedChannels") {
@@ -201,7 +201,8 @@ class ProductAttributeValue extends Base
         foreach ($pavs as $pav) {
             if (
                 $pav->get('attributeId') === $entity->get('attributeId')
-                && $pav->get('channelId') === $entity->get('channelId')
+                && ((empty($pav->get('channelId')) && empty($entity->get('channelId'))) ||
+                    $pav->get('channelId') === $entity->get('channelId'))
                 && $pav->get('language') === $entity->get('language')
             ) {
                 return $pav;
@@ -214,10 +215,10 @@ class ProductAttributeValue extends Base
     public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
     {
         $where = [
-            'productId'                  => $childProduct->get('id'),
-            'attributeId'                => $parentPav->get('attributeId'),
-            'language'                   => $parentPav->get('language'),
-            'channelId'                  => $parentPav->get('channelId'),
+            'productId'   => $childProduct->get('id'),
+            'attributeId' => $parentPav->get('attributeId'),
+            'language'    => $parentPav->get('language'),
+            'channelId'   => $parentPav->get('channelId'),
         ];
 
         return $this->where($where)->findOne();
@@ -719,7 +720,7 @@ class ProductAttributeValue extends Base
                 $id = $entity->get('referenceValue');
                 if (!empty($id)) {
 
-                    $option =$this->getEntityManager()
+                    $option = $this->getEntityManager()
                         ->getConnection()
                         ->createQueryBuilder()
                         ->from('extensible_enum_option')
@@ -736,7 +737,7 @@ class ProductAttributeValue extends Base
                             $attribute->get('extensibleEnumId'),
                             Mapper::getParameterType($attribute->get('extensibleEnumId'))
                         )
-                        ->setParameter('false',false,Mapper::getParameterType(false))
+                        ->setParameter('false', false, Mapper::getParameterType(false))
                         ->setParameter('id', $id, Mapper::getParameterType($id))
                         ->fetchOne();
 
@@ -749,7 +750,7 @@ class ProductAttributeValue extends Base
             case 'extensibleMultiEnum':
                 $ids = @json_decode((string)$entity->get('textValue'), true);
                 if (!empty($ids)) {
-                    $options =$this->getEntityManager()
+                    $options = $this->getEntityManager()
                         ->getConnection()
                         ->createQueryBuilder()
                         ->from('extensible_enum_option')
@@ -766,7 +767,7 @@ class ProductAttributeValue extends Base
                             $attribute->get('extensibleEnumId'),
                             Mapper::getParameterType($attribute->get('extensibleEnumId'))
                         )
-                        ->setParameter('false',false,Mapper::getParameterType(false))
+                        ->setParameter('false', false, Mapper::getParameterType(false))
                         ->setParameter('ids', $ids, Mapper::getParameterType($ids))
                         ->fetchAllAssociative();
 
