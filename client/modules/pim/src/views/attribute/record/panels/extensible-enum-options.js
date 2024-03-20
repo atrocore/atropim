@@ -36,7 +36,8 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
                 fullFormDisabled: true,
                 attributes: {
                     extensibleEnumsIds: [this.model.attributeModel.get('extensibleEnumId')],
-                    extensibleEnumsNames: extensibleEnumsNames
+                    extensibleEnumsNames: extensibleEnumsNames,
+                    listMultilingual: this.model.attributeModel.get('listMultilingual')
                 },
             }, view => {
                 view.render();
