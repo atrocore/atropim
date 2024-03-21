@@ -38,22 +38,9 @@ class CatalogCategory extends \Atro\Core\Templates\Repositories\Base
         $categoryId = $entity->get('categoryId');
 
         if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
-            if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-                $this->getPDO()->beginTransaction();
-                $inTransaction = true;
-            }
-            try {
-                foreach ($this->getCategoryRepository()->getChildrenRecursivelyArray($categoryId) as $childId) {
-                    $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $childId, 'catalogs', $catalogId);
-                }
-                if (!empty($inTransaction)) {
-                    $this->getPDO()->commit();
-                }
-            } catch (\Throwable $e) {
-                if (!empty($inTransaction)) {
-                    $this->getPDO()->rollBack();
-                }
-                throw $e;
+
+            foreach ($this->getCategoryRepository()->getChildrenRecursivelyArray($categoryId) as $childId) {
+                $options['pseudoTransactionManager']->pushCreateEntityJob('CatalogCategory', ['categoryId' => $childId, 'catalogId' => $catalogId]);
             }
         }
         parent::afterSave($entity, $options);
@@ -114,35 +101,32 @@ class CatalogCategory extends \Atro\Core\Templates\Repositories\Base
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
         if (empty($options['pseudoTransactionId']) && !empty($options['pseudoTransactionManager'])) {
-            try {
+            $childIds = $this->getCategoryRepository()->getChildrenRecursivelyArray($entity->get('categoryId'));
 
-                foreach ($this->getCategoryRepository()->getChildrenRecursivelyArray($entity->get('categoryId')) as $childId) {
-                    $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $childId, 'catalogs', $entity->get('catalogId'));
+            $ids = $this->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('catalog_category')
+                ->where('catalog_id = :catalogId')
+                ->where('category_id in (:childIds)')
+                ->setParameter('catalogId', $entity->get('catalogId'))
+                ->setParameter('childIds', $childIds, Mapper::getParameterType($childIds))
+                ->fetchFirstColumn();
 
-                    $this->getConnection()->createQueryBuilder()
-                        ->delete('product_category')
-                        ->where('category_id = :childId')
-                        ->andWhere('product_id IN (SELECT id FROM product WHERE catalog_id = :catalogId)')
-                        ->setParameter('childId', $childId)
-                        ->setParameter('catalogId', $entity->get('catalogId'))
-                        ->executeQuery();
-                }
-
-                if (!empty($inTransaction)) {
-                    $this->getPDO()->commit();
-                }
-            } catch (\Throwable $e) {
-                if (!empty($inTransaction)) {
-                    $this->getPDO()->rollBack();
-                }
-                throw $e;
+            foreach ($ids as $id) {
+                $options['pseudoTransactionManager']->pushDeleteEntityJob('CatalogCategory', $id);
             }
+
+            foreach ($childIds as $childId) {
+                $this->getConnection()->createQueryBuilder()
+                    ->delete('product_category')
+                    ->where('category_id = :childId')
+                    ->andWhere('product_id IN (SELECT id FROM product WHERE catalog_id = :catalogId)')
+                    ->setParameter('childId', $childId)
+                    ->setParameter('catalogId', $entity->get('catalogId'))
+                    ->executeQuery();
+            }
+
         }
 
         parent::afterRemove($entity, $options);
