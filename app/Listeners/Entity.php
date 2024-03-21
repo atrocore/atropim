@@ -23,7 +23,7 @@ class Entity extends AbstractEntityListener
         if($entityType === 'ExtensibleEnumOption') {
             if (!empty($params['where']) ) {
                 foreach ($params['where'] as $key => $filter) {
-                    if(!empty($filter['type']) && $filter['type'] === 'bool'){
+                    if(!empty($filter['type']) && $filter['type'] === 'bool' && !empty($filter['value'])){
                         foreach ($filter['value'] as $boolFilter){
                             $method = "boolFilter".ucfirst($boolFilter);
                             if(method_exists($this, $method)){
