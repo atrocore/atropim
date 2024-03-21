@@ -40,5 +40,11 @@
   "completeness": {
     "service": "Completeness\\Services\\ProductCompleteness"
   },
-  "isActiveUnavailable": true
+  "isActiveUnavailable": true,
+  "nonComparableFields": [
+    "associatedRelatedProduct",
+    "associatedMainProducts",
+    "filterCreateImportJob",
+    "filterUpdateImportJob"
+  ]
 }
