@@ -95,130 +95,6 @@ class Category extends Hierarchy
         return array_column($records, 'id');
     }
 
-    public function canUnRelateCatalog(Entity $category, string $catalogId): void
-    {
-        if (!$this->getEntityManager()->getRepository('Catalog')->hasProducts($catalogId)) {
-            return;
-        }
-
-        $categoriesIds = $this->getChildrenRecursivelyArray($category->get('id'));
-        $categoriesIds[] = $category->get('id');
-
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('pc.id')
-            ->from('product_category', 'pc')
-            ->where('pc.deleted = :false')
-            ->andWhere('pc.category_id IN (:categoryIds)')
-            ->andWhere("pc.product_id IN (SELECT p.id FROM {$this->getConnection()->quoteIdentifier('product')} p WHERE p.catalog_id = :catalogId AND p.deleted = :false)")
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('categoryIds', $categoriesIds, Mapper::getParameterType($categoriesIds))
-            ->setParameter('catalogId', $catalogId, Mapper::getParameterType($catalogId))
-            ->setFirstResult(0)
-            ->setMaxResults(1)
-            ->fetchAllAssociative();
-
-        if (!empty($records)) {
-            throw new BadRequest($this->exception('categoryCannotBeUnRelatedFromCatalog'));
-        }
-    }
-
-    public function relateCatalogs(Entity $category, $foreign, $data, $options)
-    {
-        if (is_bool($foreign)) {
-            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
-        }
-
-        $catalogId = $foreign;
-        if ($foreign instanceof Entity) {
-            $catalogId = $foreign->get('id');
-        }
-
-        if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
-            return $this->getMapper()->addRelation($category, 'catalogs', $catalogId);
-        }
-
-        if (!$this->isRoot($category->get('id'))) {
-            throw new BadRequest($this->exception('onlyRootCategoryCanBeLinked'));
-        }
-
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = $this->getMapper()->addRelation($category, 'catalogs', $catalogId);
-            foreach ($this->getChildrenRecursivelyArray($category->get('id')) as $childId) {
-                $options['pseudoTransactionManager']->pushLinkEntityJob('Category', $childId, 'catalogs', $catalogId);
-            }
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
-    }
-
-    public function unrelateCatalogs(Entity $category, $foreign, $options)
-    {
-        if (is_bool($foreign)) {
-            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
-        }
-
-        $catalogId = $foreign;
-        if ($foreign instanceof Entity) {
-            $catalogId = $foreign->get('id');
-        }
-
-        if (!empty($options['pseudoTransactionId']) || empty($options['pseudoTransactionManager'])) {
-            return $this->getMapper()->removeRelation($category, 'catalogs', $catalogId);
-        }
-
-        if (!$this->isRoot($category->get('id'))) {
-            throw new BadRequest($this->exception('onlyRootCategoryCanBeUnLinked'));
-        }
-
-        if ($this->getConfig()->get('behaviorOnCategoryTreeUnlinkFromCatalog', 'cascade') !== 'cascade') {
-            $this->canUnRelateCatalog($category, $catalogId);
-        }
-
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        try {
-            $result = $this->getMapper()->removeRelation($category, 'catalogs', $catalogId);
-
-            foreach ($this->getChildrenRecursivelyArray($category->get('id')) as $childId) {
-                $options['pseudoTransactionManager']->pushUnLinkEntityJob('Category', $childId, 'catalogs', $catalogId);
-
-                $this->getConnection()->createQueryBuilder()
-                    ->delete('product_category')
-                    ->where('category_id = :childId')
-                    ->andWhere('product_id IN (SELECT id FROM product WHERE catalog_id = :catalogId)')
-                    ->setParameter('childId', $childId)
-                    ->setParameter('catalogId', $catalogId)
-                    ->executeQuery();
-            }
-
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
-    }
-
     public function relateChannels(Entity $category, $foreign, $data, $options)
     {
         if (is_bool($foreign)) {
@@ -368,9 +244,8 @@ class Category extends Hierarchy
             $entity->set('code', null);
         }
 
-        if ($entity->isAttributeChanged('parentsIds')) {
-            $parents = $entity->get('parents');
-
+        if ($entity->isAttributeChanged('parentsIds') && !empty($entity->isAttributeChanged('parentsIds'))) {
+            $parents = $this->where(['id'=> $entity->get('parentsIds')])->find();
             if (!empty($parents) && count($parents) > 0) {
                 if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
                     foreach ($parents as $parent) {
