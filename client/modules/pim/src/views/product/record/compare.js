@@ -1,37 +1,16 @@
-/*
- * This file is part of EspoCRM and/or AtroCore.
+/**
+ * AtroCore Software
  *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
  *
- * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
- *
- * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
- * and "AtroCore" word.
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
 Espo.define('pim:views/product/record/compare','views/record/compare',
     Dep => Dep.extend({
+        nonComparableAttributeFields: ['createdAt','modifiedAt','createdById','createdByName','modifiedById','modifiedByName','sortOrder'],
         setup(){
             this.getModelFactory().create('ProductAttributeValue', function(pavModel){
                 this.getModelFactory().create(this.scope, function (model) {
@@ -74,7 +53,6 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
 
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                         this.createView(field + 'Current', viewName, {
-                            el: this.options.el + ' .current',
                             model: modelCurrent,
                             readOnly: true,
                             defs: {
@@ -86,7 +64,6 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
                         });
 
                         this.createView(field + 'Other', viewName, {
-                            el: this.options.el + ' .other',
                             model: modelOther,
                             readOnly: true,
                             defs: {
@@ -133,41 +110,54 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
                     const otherPavAttributeIds =  modelOther.get('productAttributeValues').map(pav =>pav.attributeId)
 
                     const allAttributeIds = Array.from(new Set([...currentAttributeIds, ...otherPavAttributeIds]));
-
+                    if(allAttributeIds.length > 0){
+                        this.fieldsArr.push({
+                           separator:true
+                        });
+                    }
                     allAttributeIds.forEach((attributeId) =>{
                         const pavCurrent = modelCurrent.get('productAttributeValues').filter((v) => v.attributeId === attributeId)[0] ?? {};
                         const pavOther = modelOther.get('productAttributeValues').filter((v) => v.attributeId === attributeId)[0] ?? {};
                         const pavModelCurrent = pavModel.clone();
                         const pavModelOther = pavModel.clone();
                         const attributeName = pavCurrent.attributeName ?? pavOther.attributeName;
+                        const attributeChannel = pavCurrent.channelName ?? pavOther.channelName;
+                        const productAttributeId = pavCurrent.id ?? pavOther.id;
+                        const language = pavCurrent.language ?? pavOther.language;
                         pavModelCurrent.set(pavCurrent);
-                        pavModelCurrent.set(pavOther);
+                        pavModelOther.set(pavOther);
 
                         this.createView( attributeId + 'Current', 'pim:views/product-attribute-value/fields/value-container', {
-                            el: this.options.el + ' .currentAttribute',
-                            name: attributeName,
+                            el: this.options.el + ` [data-id="${attributeId}"]  .current`,
+                            name: "value",
+                            nameName:"valueName",
                             model: pavModelCurrent,
                             readOnly: true,
-                            mode: 'detail',
+                            mode: 'list',
                             inlineEditDisabled: true,
                         });
 
+
                         this.createView(attributeId + 'Other', 'pim:views/product-attribute-value/fields/value-container', {
-                            el: this.options.el + ' .otherAttribute',
-                            name: attributeName,
+                            el: this.options.el + ` [data-id="${attributeId}"]  .other`,
+                            name: "value",
                             model: pavModelOther,
                             readOnly: true,
-                            mode: 'detail',
+                            mode: 'list',
                             inlineEditDisabled: true,
                         });
 
                         this.fieldsArr.push({
                             isField: false,
                             attributeName: attributeName,
+                            attributeChannel: attributeChannel,
+                            language: language,
                             attributeId: attributeId,
+                            productAttributeId: productAttributeId,
+                            canQuickCompare: false,
                             current: attributeId + 'Current',
                             other: attributeId + 'Other',
-                            different:  this.areAttributeEquals(pavCurrent, pavOther)
+                            different:  !this.areAttributeEquals(pavCurrent, pavOther)
                         });
 
                     })
@@ -178,8 +168,12 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
         },
 
         areAttributeEquals(pavCurrent, pavOther){
-            return pavCurrent.toString() === pavOther.toString();
-        }
+            for (const nonComparableAttributeField of this.nonComparableAttributeFields) {
+                delete pavCurrent[nonComparableAttributeField];
+                delete  pavOther[nonComparableAttributeField];
+            }
+            return JSON.stringify(pavCurrent) === JSON.stringify(pavOther);
+        },
 
     })
 )
