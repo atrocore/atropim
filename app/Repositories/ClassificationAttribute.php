@@ -180,9 +180,9 @@ class ClassificationAttribute extends Base
         return $this->getEntityManager()->getRepository('ProductAttributeValue');
     }
 
-    protected function processSpecifiedRelationsSave(Entity $entity)
+    protected function processSpecifiedRelationsSave(Entity $entity, array $options = array())
     {
-        parent::processSpecifiedRelationsSave($entity);
+        parent::processSpecifiedRelationsSave($entity, $options);
 
         $attribute = $entity->get('attribute');
         if (!empty($attribute) && $attribute->get('type') == 'linkMultiple') {
