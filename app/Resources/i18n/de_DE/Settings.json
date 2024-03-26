@@ -4,7 +4,8 @@
     "behaviorOnCatalogChange": "Verhalten beim Entfernen/Ändern eines Katalogs für ein Produkt",
     "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog",
-    "behaviorOnClassificationChange": "Verhalten bei Änderung/Entfernung der Klassifizierung"
+    "behaviorOnClassificationChange": "Verhalten bei Änderung/Entfernung der Klassifizierung",
+    "allowSingleClassificationForProduct": "Nur eine einzige Klassifizierung für ein Produkt zulassen"
   },
   "labels": {
     "retainAllInheritedAttributes": "Alle vererbte Attribute beibehalten",

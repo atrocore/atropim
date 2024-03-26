@@ -4,7 +4,8 @@
     "behaviorOnCatalogChange": "Поведінка при видаленні/зміні каталогу для продукту",
     "behaviorOnCategoryDelete": "Поведінка при видаленні категорії",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведінка під час розриву зв'язку дерева категорій із каталогом",
-    "behaviorOnClassificationChange": "Дії при зміні/видаленні класифікації"
+    "behaviorOnClassificationChange": "Дії при зміні/видаленні класифікації",
+    "allowSingleClassificationForProduct": "Дозволяти лише одну класифікацію для продукту"
   },
   "labels": {
     "retainAllInheritedAttributes": "Зберегти всі успадковані атрибути",
