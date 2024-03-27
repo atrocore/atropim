@@ -46,12 +46,6 @@ class Classification extends Hierarchy
             $entity->set('code', null);
         }
 
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-            && $entity->isAttributeChanged('productsIds') && (count($entity->get('productsIds')) > 1)){
-            $data = $entity->get('productsIds');
-            $entity->set('productsIds', [end($data)]);
-        }
-
         parent::beforeSave($entity, $options);
     }
 
