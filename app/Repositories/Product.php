@@ -343,12 +343,6 @@ class Product extends Hierarchy
             $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
         }
 
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-            && $entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1){
-            $data = $entity->get('classificationsIds');
-            $entity->set('classificationsIds', [end($data)]);
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
