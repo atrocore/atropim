@@ -22,12 +22,11 @@ class ProductClassification extends Relation
         parent::afterSave($entity, $data);
 
         if($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
-            $this->getEntityManager()->getConnection()
-                ->createQueryBuilder()
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->delete('product_classification')
                 ->where('product_id=:productId AND classification_id <> :classificationId')
-                ->setParameter('productId', $value = $entity->get('productId'), Mapper::getParameterType($value))
-                ->setParameter('classificationId', $value = $entity->get('classificationId'), Mapper::getParameterType($value))
+                ->setParameter('productId', $entity->get('productId'))
+                ->setParameter('classificationId', $entity->get('classificationId'))
                 ->executeQuery();
         }
 
