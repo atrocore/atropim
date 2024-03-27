@@ -344,8 +344,7 @@ class Product extends Hierarchy
         }
 
         if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-            && $entity->isAttributeChanged('classificationsIds')
-            && (count($entity->get('classificationsIds')) > 1)){
+            && $entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1){
             $data = $entity->get('classificationsIds');
             $entity->set('classificationsIds', [end($data)]);
         }
