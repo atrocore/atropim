@@ -125,6 +125,7 @@
     "youCantChangeFieldOfTypeInProduct": "You can't change field of Type in Product",
     "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "This category is not available for the catalog of the selected product, and thus cannot be linked.",
-    "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
+    "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first.",
+    "onlySingleClassificationAllow": "Only single classification for a product is allowed."
   }
 }

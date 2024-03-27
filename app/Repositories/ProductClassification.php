@@ -12,6 +12,7 @@
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\ORM\Entity;
 
 class ProductClassification extends Relation
@@ -19,6 +20,15 @@ class ProductClassification extends Relation
     protected function afterSave(Entity $entity, array $data = [])
     {
         parent::afterSave($entity, $data);
+
+        if($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->delete('product_classification')
+                ->where('product_id=:productId AND classification_id <> :classificationId')
+                ->setParameter('productId', $entity->get('productId'))
+                ->setParameter('classificationId', $entity->get('classificationId'))
+                ->executeQuery();
+        }
 
         if ($entity->isNew()) {
             $this->getEntityManager()->getRepository('Product')->relateClassification($entity->get('productId'), $entity->get('classificationId'));
