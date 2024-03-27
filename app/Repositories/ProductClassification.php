@@ -11,44 +11,11 @@
 
 namespace Pim\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Relation;
-use Atro\ORM\DB\RDB\Mapper;
 use Espo\ORM\Entity;
 
 class ProductClassification extends Relation
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('language');
-    }
-
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        parent::beforeSave($entity, $options);
-
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false) &&  $entity->isNew()){
-            $exists = $this->getEntityManager()->getConnection()
-                ->createQueryBuilder()
-                ->from('product_classification')
-                ->select('id')
-                ->where('product_id=:productId AND deleted=:false')
-                ->setParameter('productId', $val = $entity->get('productId'), Mapper::getParameterType($val))
-                ->setParameter('false',false, Mapper::getParameterType(false))
-                ->fetchOne();
-
-            if(!empty($exists)){
-                throw new BadRequest(
-                    $this->getInjection('language')->translate(
-                        'onlySingleClassificationAllow',
-                        'exceptions',
-                        'Product')
-                );
-            }
-        }
-    }
-
     protected function afterSave(Entity $entity, array $data = [])
     {
         parent::afterSave($entity, $data);

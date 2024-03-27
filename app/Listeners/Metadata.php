@@ -71,6 +71,8 @@ class Metadata extends AbstractListener
         $this->addScopeBoolFilters($data);
         $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
+        $this->defineClassificationViewForProduct($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -374,5 +376,11 @@ class Metadata extends AbstractListener
         $metadata['clientDefs']['ExtensibleEnumOption']['boolFilterList'][] = "onlyExtensibleEnumIds";
         $metadata['clientDefs']['ExtensibleEnumOption']['hiddenBoolFilterList'][] = "onlyExtensibleEnumIds";
 
+    }
+
+    protected  function defineClassificationViewForProduct(&$metadata){
+        if($this->getConfig()->get('allowSingleClassificationForProduct', false)){
+            $metadata['entityDefs']['Product']['fields']['classifications']['view'] =  "pim:views/product/fields/classifications";
+        }
     }
 }

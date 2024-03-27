@@ -343,6 +343,17 @@ class Product extends Hierarchy
             $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
         }
 
+        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
+            && $entity->isAttributeChanged('classificationsIds')
+            && (count($entity->get('classificationsIds')) > 1)){
+            throw new \Atro\Core\Exceptions\BadRequest(
+                $this->getInjection('language')->translate(
+                    'onlySingleClassificationAllow',
+                    'exceptions',
+                    'Product')
+            );
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
