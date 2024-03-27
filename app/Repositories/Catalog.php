@@ -58,6 +58,34 @@ class Catalog extends Hierarchy
         return array_column($res, 'id');
     }
 
+    public function relateCategories(Entity $entity, $foreign, $data, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->relateCatalogs($category, $entity, null, $options);
+    }
+
+    public function unrelateCategories(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->unrelateCatalogs($category, $entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);

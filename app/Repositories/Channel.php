@@ -35,6 +35,34 @@ class Channel extends Base
         return array_values(array_unique($locales));
     }
 
+    public function relateCategories(Entity $entity, $foreign, $data, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->relateChannels($category, $entity, null, $options);
+    }
+
+    public function unrelateCategories(Entity $entity, $foreign, $options)
+    {
+        if (is_bool($foreign)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
+        $category = $foreign;
+        if (is_string($foreign)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($foreign);
+        }
+
+        return $this->getEntityManager()->getRepository('Category')->unrelateChannels($category, $entity, $options);
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);

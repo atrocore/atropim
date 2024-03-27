@@ -386,6 +386,38 @@ class Product extends Hierarchy
 
     }
 
+    public function relateCategories(Entity $product, $category, $data, $options)
+    {
+        if (is_bool($category)) {
+            throw new BadRequest($this->getInjection('language')->translate('massRelateBlocked', 'exceptions'));
+        }
+
+        if (is_string($category)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($category);
+        }
+
+        $this->isCategoryFromCatalogTrees($product, $category);
+        $this->isProductCanLinkToNonLeafCategory($category);
+
+        $result = $this->getMapper()->addRelation($product, 'categories', $category->get('id'));
+        $this->updateProductCategorySortOrder($product, $category);
+        return $result;
+    }
+
+    public function unrelateCategories(Entity $product, $category, $options)
+    {
+        if (is_bool($category)) {
+            throw new BadRequest($this->getInjection('language')->translate('massUnRelateBlocked', 'exceptions'));
+        }
+
+        if (is_string($category)) {
+            $category = $this->getEntityManager()->getRepository('Category')->get($category);
+        }
+
+        $result = $this->getMapper()->removeRelation($product, 'categories', $category->get('id'));
+
+        return $result;
+    }
 
     public function getProductsHierarchyMap(array $productIds): array
     {

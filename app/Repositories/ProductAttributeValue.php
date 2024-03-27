@@ -1024,9 +1024,9 @@ class ProductAttributeValue extends Base
         return $result;
     }
 
-    protected function processSpecifiedRelationsSave(Entity $entity, array $options = array())
+    protected function processSpecifiedRelationsSave(Entity $entity)
     {
-        parent::processSpecifiedRelationsSave($entity, $options);
+        parent::processSpecifiedRelationsSave($entity);
 
         if ($entity->get('attributeType') == 'linkMultiple') {
             self::saveLinkMultipleValues($entity, $this);

@@ -22,8 +22,6 @@ class ProductCategory extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $category = $this->getEntityManager()->getRepository('Category')->get($entity->get('categoryId'));
-
         if ($entity->isAttributeChanged('mainCategory') && !empty($entity->get('mainCategory'))) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('pc.id, pc.category_id, c.category_route')
@@ -40,6 +38,7 @@ class ProductCategory extends Relation
                 ->fetchAllAssociative();
 
             if (!empty($res[0])) {
+                $category = $this->getEntityManager()->getRepository('Category')->get($entity->get('categoryId'));
                 $root = $this->getCategoryRoot($category->get('id'), (string)$category->get('categoryRoute'));
                 foreach ($res as $row) {
                     $rowRoot = $this->getCategoryRoot($row['category_id'], (string)$row['category_route']);
@@ -53,20 +52,7 @@ class ProductCategory extends Relation
             }
         }
 
-        $product = $this->getProductRepository()->get($entity->get('productId'));
-        $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
-        $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
         parent::beforeSave($entity, $options);
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        $category = $this->getEntityManager()->getRepository('Category')->get($entity->get('categoryId'));
-        $product = $this->getProductRepository()->get($entity->get('productId'));
-
-        $this->getProductRepository()->updateProductCategorySortOrder($product, $category);
-
-        parent::afterSave($entity, $options);
     }
 
     protected function getCategoryRoot(string $id, string $categoryRoute): string
@@ -79,10 +65,5 @@ class ProductCategory extends Relation
         }
 
         return $root;
-    }
-
-    protected function getProductRepository(): Product
-    {
-        return $this->getEntityManager()->getRepository('Product');
     }
 }
