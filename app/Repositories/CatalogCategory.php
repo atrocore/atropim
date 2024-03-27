@@ -18,6 +18,7 @@ use Espo\ORM\Entity;
 class CatalogCategory extends \Atro\Core\Templates\Repositories\Base
 {
     private Category $categoryRepository;
+    private $a = 0;
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
