@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Atro\Listeners\AbstractListener;
 
@@ -56,6 +56,34 @@ class SettingsController extends AbstractListener
                     throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
                 }
             }
+        }
+
+        if(property_exists($data, 'allowSingleClassificationForProduct') && !empty($data->allowSingleClassificationForProduct)){
+            $res = $this->getEntityManager()
+                ->getConnection()
+                ->createQueryBuilder()
+                ->from('product', 'p')
+                ->select('p.id, COUNT(pc.classification_id)')
+                ->leftJoin('p','product_classification','pc','p.id=pc.product_id')
+                ->groupBy('p.id')
+                ->having('COUNT(pc.classification_id) > 1')
+                ->setMaxResults(100)
+                ->fetchAllAssociative();
+
+            if(count($res) > 0){
+                $message = $this->getLanguage()->translate('someProductsHaveMoreThanOneClassification', 'exceptions', 'Product');
+                if ($this->getConfig()->get('hasQueryBuilderFilter')) {
+                    $rules = [];
+                    foreach ($res as $item) {
+                        $rules[] = ['id' => 'id', 'operator' => 'equal', 'value' => $item['id']];
+                    }
+                    $where = ['condition' => 'OR', 'rules' => $rules];
+                    $url = $this->getConfig()->get('siteUrl') . '/?where=' . htmlspecialchars(json_encode($where), ENT_QUOTES, 'UTF-8') . '#' . 'Product';
+                    $message .= ' <a href="' . $url . '" target="_blank">' . $this->getLanguage()->translate('See more') . '</a>.';
+                }
+                throw new BadRequest($message);
+            }
+
         }
     }
 

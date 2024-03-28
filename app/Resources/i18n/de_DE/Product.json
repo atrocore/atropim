@@ -131,6 +131,6 @@
     "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf.",
-    "onlySingleClassificationAllow": "Nur eine einzige Klassifizierung für ein Produkt ist zulässig."
+    "someProductsHaveMoreThanOneClassification": "Einige Produkte haben mehr als eine Klassifizierung."
   }
 }
