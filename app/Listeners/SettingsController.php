@@ -65,12 +65,13 @@ class SettingsController extends AbstractListener
                 ->createQueryBuilder()
                 ->from('product', 'p')
                 ->select('p.id, COUNT(pc.classification_id)')
-                ->leftJoin('p','product_classification','pc','p.id=pc.product_id')
-                ->where('p.deleted=:false AND pc.deleted=:false')
+                ->join('p','product_classification','pc','p.id=pc.product_id AND pc.deleted=:false')
+                ->join('pc','classification','c', 'c.id=pc.classification_id AND pc.deleted=:false')
+                ->where('p.deleted=:false AND c.deleted=false')
                 ->groupBy('p.id')
                 ->having('COUNT(pc.classification_id) > 1')
                 ->setParameter('false',false, ParameterType::BOOLEAN)
-                ->setMaxResults(100)
+                ->setMaxResults(30)
                 ->fetchAllAssociative();
 
             if(count($res) > 0){
