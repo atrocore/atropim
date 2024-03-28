@@ -15,6 +15,7 @@ namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Atro\Listeners\AbstractListener;
 
@@ -65,8 +66,10 @@ class SettingsController extends AbstractListener
                 ->from('product', 'p')
                 ->select('p.id, COUNT(pc.classification_id)')
                 ->leftJoin('p','product_classification','pc','p.id=pc.product_id')
+                ->where('p.deleted=:false AND pc.deleted=:false')
                 ->groupBy('p.id')
                 ->having('COUNT(pc.classification_id) > 1')
+                ->setParameter('false',false, ParameterType::BOOLEAN)
                 ->setMaxResults(100)
                 ->fetchAllAssociative();
 
