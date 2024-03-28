@@ -16,6 +16,7 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
             this.getModelFactory().create('ProductAttributeValue', function(pavModel){
                 this.pavModel = pavModel;
                 Dep.prototype.setup.call(this)
+                this.fieldsArr = this.fieldsArr.filter((el) => el.field !== 'productAttributeValues');
             }, this)
         },
         addCustomRows(modelCurrent, modelOthers) {
@@ -74,7 +75,7 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
                     language: language,
                     attributeId: attributeId,
                     productAttributeId: productAttributeId,
-                    canQuickCompare: false,
+                    showQuickCompare: true,
                     current: attributeId + 'Current',
                     others: pavModelOthers.map((model,index) => {
                        return { other: attributeId + 'Other'+index, index}
