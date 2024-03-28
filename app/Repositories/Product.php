@@ -347,6 +347,12 @@ class Product extends Hierarchy
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
 
+        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
+            && $entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1){
+            $data = $entity->get('classificationsIds');
+            $entity->set('classificationsIds', [end($data)]);
+        }
+
         parent::beforeSave($entity, $options);
     }
 
