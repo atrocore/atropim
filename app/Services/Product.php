@@ -967,11 +967,11 @@ class Product extends Hierarchy
                             $product->set($fieldName . 'From', $pav->get('From'));
                             $product->set($fieldName . 'To', $pav->get('To'));
                             break;
-                        case 'asset':
-                            if (!empty($attributeField['assetFieldName'])) {
-                                $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
-                                $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
-                                $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                        case 'file':
+                            if (!empty($attributeField['fileFieldName'])) {
+                                $product->set($attributeField['fileFieldName'] . 'Id', $pav->get('valueId'));
+                                $product->set($attributeField['fileFieldName'] . 'Name', $pav->get('valueName'));
+                                $product->set($attributeField['fileFieldName'] . 'PathsData', $pav->get('valuePathsData'));
                             }
                             break;
                     }

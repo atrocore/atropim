@@ -201,18 +201,18 @@ class Metadata extends AbstractListener
             }
 
             switch ($attribute['type']) {
-                case 'asset':
-                    $defs['assetType'] = $attribute['asset_type'];
+                case 'file':
+                    $defs['fileTypeId'] = $attribute['file_type_id'];
                     break;
             }
 
             $metadata['entityDefs']['Product']['fields'][$fieldName] = $defs;
             switch ($attribute['type']) {
-                case 'asset':
+                case 'file':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
                         'attributeId'    => $attribute['id'],
                         'attributeCode'  => $attribute['code'],
-                        'assetFieldName' => $fieldName,
+                        'fileFieldName' => $fieldName,
                     ]);
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
@@ -236,12 +236,12 @@ class Metadata extends AbstractListener
                     $languageFieldName = Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute';
                     $languageDefs['multilangLocale'] = $language;
                     switch ($defs['type']) {
-                        case 'asset':
+                        case 'file':
                             $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Id"] = array_merge($defs, [
                                 'type'            => 'varchar',
                                 'attributeId'     => $attribute['id'],
                                 'attributeCode'   => $attribute['code'],
-                                'assetFieldName'  => $languageFieldName,
+                                'fileFieldName'  => $languageFieldName,
                                 'multilangLocale' => $language,
                             ]);
                             $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Name"] = $additionalFieldDefs;
