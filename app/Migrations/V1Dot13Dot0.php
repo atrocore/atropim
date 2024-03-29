@@ -25,33 +25,31 @@ class V1Dot13Dot0 extends Base
 
     public function up(): void
     {
-        foreach (['product_asset' => 'product_id', 'category_asset' => 'category_id', 'brand_asset' => 'brand_id'] as $table => $column) {
+        foreach (['product', 'category', 'brand'] as $name) {
+            $column = $name . '_id';
             if ($this->isPgSQL()) {
-                $this->exec("DROP INDEX idx_{$table}_asset_id");
-                $this->exec("DROP INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION");
-                $this->exec("ALTER TABLE {$table} ADD file_id VARCHAR(24) DEFAULT NULL");
-                $this->exec("CREATE INDEX IDX_" . strtoupper($table) . "_FILE_ID ON {$table} (file_id, deleted)");
-                if ($table === 'product_asset') {
-                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, product_id, file_id, scope, channel_id)");
-                } else {
-                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, file_id, {$column})");
-                }
+                $this->exec("DROP INDEX idx_{$name}_asset_asset_id");
+                $this->exec("DROP INDEX IDX_" . strtoupper($name) . "_ASSET_UNIQUE_RELATION");
+                $this->exec("ALTER TABLE {$name}_asset ADD file_id VARCHAR(24) DEFAULT NULL");
+                $this->exec("ALTER TABLE {$name}_asset RENAME TO {$name}_file");
+                $this->exec("CREATE INDEX IDX_" . strtoupper($name) . "_FILE_FILE_ID ON {$name}_file (file_id, deleted)");
             } else {
-                $this->exec("DROP INDEX IDX_" . strtoupper($table) . "_ASSET_ID ON {$table}");
-                $this->exec("DROP INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table}");
-                $this->exec("ALTER TABLE {$table} ADD file_id VARCHAR(24) DEFAULT NULL");
-                $this->exec("CREATE INDEX IDX_" . strtoupper($table) . "_FILE_ID ON {$table} (file_id, deleted)");
+                $this->exec("DROP INDEX IDX_" . strtoupper($name) . "_ASSET_ASSET_ID ON {$name}_asset");
+                $this->exec("DROP INDEX IDX_" . strtoupper($name) . "_ASSET_UNIQUE_RELATION ON {$name}_asset");
+                $this->exec("ALTER TABLE {$name}_asset ADD file_id VARCHAR(24) DEFAULT NULL");
+                $this->exec("RENAME TABLE {$name}_asset TO {$name}_file");
+                $this->exec("CREATE INDEX IDX_" . strtoupper($name) . "_FILE_FILE_ID ON {$name}_file (file_id, deleted)");
+            }
 
-                if ($table === 'product_asset') {
-                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, product_id, file_id, scope, channel_id)");
-                } else {
-                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, file_id, {$column})");
-                }
+            if ($name === 'product') {
+                $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($name) . "_FILE_UNIQUE_RELATION ON {$name}_file (deleted, product_id, file_id, scope, channel_id)");
+            } else {
+                $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($name) . "_FILE_UNIQUE_RELATION ON {$name}_file (deleted, file_id, {$column})");
             }
 
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('t1.*, a.file_id')
-                ->from($this->getConnection()->quoteIdentifier($table), 't1')
+                ->from("{$name}_file", 't1')
                 ->join('t1', 'asset', 'a', 't1.asset_id=a.id')
                 ->where('t1.deleted=:false')
                 ->andWhere('a.deleted=:false')
@@ -61,7 +59,7 @@ class V1Dot13Dot0 extends Base
             foreach ($res as $v) {
                 if (!empty($v['file_id'])) {
                     $this->getConnection()->createQueryBuilder()
-                        ->update($this->getConnection()->quoteIdentifier($table))
+                        ->update("{$name}_file")
                         ->set('file_id', ':fileId')
                         ->where('id=:id')
                         ->setParameter('id', $v['id'])
