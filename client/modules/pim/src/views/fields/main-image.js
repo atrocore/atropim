@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/fields/main-image', 'views/fields/image',
+Espo.define('pim:views/fields/main-image', 'views/fields/file',
     Dep => Dep.extend({
 
         setup() {
