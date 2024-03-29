@@ -27,10 +27,55 @@ class V1Dot13Dot0 extends Base
     {
         foreach (['Brand', 'Category', 'Product'] as $v) {
             $path = "custom/Espo/Custom/Resources/layouts/$v/relationships.json";
-            if (file_exists($path)){
+            if (file_exists($path)) {
                 $contents = file_get_contents($path);
                 $contents = str_replace('"assets"', '"files"', $contents);
                 file_put_contents($path, $contents);
+            }
+        }
+
+        $this->exec("ALTER TABLE attribute ADD file_type_id VARCHAR(24) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_ATTRIBUTE_FILE_TYPE_ID ON attribute (file_type_id, deleted)");
+
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from($this->getConnection()->quoteIdentifier('attribute'))
+            ->where('type=:assetType')
+            ->andWhere('deleted=:false')
+            ->setParameter('assetType', 'asset')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        foreach ($res as $v) {
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('attribute'))
+                ->set('type', ':fileType')
+                ->where('id=:id')
+                ->setParameter('fileType', 'file')
+                ->setParameter('id', $v['id'])
+                ->executeQuery();
+
+            if (!empty($v['asset_type'])) {
+                try {
+                    $fileType = $this->getConnection()->createQueryBuilder()
+                        ->select('*')
+                        ->from('file_type')
+                        ->where('deleted=:false')
+                        ->andWhere('name=:name')
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->setParameter('name', $v['asset_type'])
+                        ->fetchAssociative();
+                    if (!empty($fileType)) {
+                        $this->getConnection()->createQueryBuilder()
+                            ->update($this->getConnection()->quoteIdentifier('attribute'))
+                            ->set('file_type_id', ':fileTypeId')
+                            ->where('id=:id')
+                            ->setParameter('fileTypeId', $fileType['id'])
+                            ->setParameter('id', $v['id'])
+                            ->executeQuery();
+                    }
+                } catch (\Throwable $e) {
+                }
             }
         }
 
@@ -51,7 +96,7 @@ class V1Dot13Dot0 extends Base
             }
 
             if ($name === 'product') {
-                $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($name) . "_FILE_UNIQUE_RELATION ON {$name}_file (deleted, product_id, file_id, scope, channel_id)");
+                $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($name) . "_FILE_UNIQUE_RELATION ON {$name}_file (deleted, product_id, file_id, channel_id)");
             } else {
                 $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($name) . "_FILE_UNIQUE_RELATION ON {$name}_file (deleted, file_id, {$column})");
             }
