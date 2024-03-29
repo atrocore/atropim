@@ -1,12 +1,12 @@
 {
   "dynamicLogic": {
     "fields": {
-      "ProductAsset__channel": {
+      "ProductFile__channel": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "ProductAsset__scope",
+              "attribute": "ProductFile__scope",
               "value": "Channel"
             }
           ]
@@ -15,7 +15,7 @@
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "ProductAsset__scope",
+              "attribute": "ProductFile__scope",
               "value": "Channel"
             }
           ]

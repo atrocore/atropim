@@ -24,10 +24,7 @@ Espo.define('pim:views/fields/is-main-image', 'views/fields/bool',
         },
 
         isImage() {
-            const imageExtensions = this.getMetadata().get('dam.image.extensions') || [];
-            const fileExt = (this.model.get('fileName') || '').split('.').pop().toLowerCase();
-
-            return $.inArray(fileExt, imageExtensions) !== -1;
+            return $.inArray(this.model.get('extension'), this.getMetadata().get('app.file.image.extensions') || []) !== -1;
         },
 
     })

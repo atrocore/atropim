@@ -47,26 +47,26 @@ class LayoutController extends AbstractListener
         }
     }
 
-    protected function modifyAssetListSmall(Event $event)
+    protected function modifyFileListSmall(Event $event)
     {
         $result = Json::decode($event->getArgument('result'), true);
 
-        if (!file_exists('custom/Espo/Custom/Resources/layouts/Asset/listSmall.json')) {
-            $result[] = ['name' => 'ProductAsset__channel'];
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/File/listSmall.json')) {
+            $result[] = ['name' => 'ProductFile__channel'];
         }
 
         $event->setArgument('result', Json::encode($result));
     }
 
-    protected function modifyAssetDetailSmall(Event $event)
+    protected function modifyFileDetailSmall(Event $event)
     {
         $result = Json::decode($event->getArgument('result'), true);
 
-        if (!file_exists('custom/Espo/Custom/Resources/layouts/Asset/detailSmall.json')) {
-            $result[0]['rows'][] = [['name' => 'ProductAsset__isMainImage'], ['name' => 'ProductAsset__sorting']];
-            $result[0]['rows'][] = [['name' => 'ProductAsset__scope'], ['name' => 'ProductAsset__channel']];
+        if (!file_exists('custom/Espo/Custom/Resources/layouts/File/detailSmall.json')) {
+            $result[0]['rows'][] = [['name' => 'ProductFile__isMainImage'], ['name' => 'ProductFile__sorting']];
+            $result[0]['rows'][] = [['name' => 'ProductFile__scope'], ['name' => 'ProductFile__channel']];
 
-            $result[0]['rows'][] = [['name' => 'CategoryAsset__isMainImage'], ['name' => 'CategoryAsset__sorting']];
+            $result[0]['rows'][] = [['name' => 'CategoryFile__isMainImage'], ['name' => 'CategoryFile__sorting']];
         }
 
         $event->setArgument('result', Json::encode($result));

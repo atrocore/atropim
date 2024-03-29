@@ -41,14 +41,11 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
             let hashParts = window.location.hash.split('/view/');
             let entityType = hashParts[0].replace('#', '');
 
-            return entityType + 'Asset__';
+            return entityType + 'File__';
         },
 
         isImage() {
-            const imageExtensions = this.getMetadata().get('dam.image.extensions') || [];
-            const fileExt = (this.model.get('fileName') || '').split('.').pop().toLowerCase();
-
-            return $.inArray(fileExt, imageExtensions) !== -1;
+            return $.inArray(this.model.get('extension'), this.getMetadata().get('app.file.image.extensions') || []) !== -1;
         },
 
     })
