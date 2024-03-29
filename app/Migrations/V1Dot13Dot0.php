@@ -31,13 +31,22 @@ class V1Dot13Dot0 extends Base
                 $this->exec("DROP INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION");
                 $this->exec("ALTER TABLE {$table} ADD file_id VARCHAR(24) DEFAULT NULL");
                 $this->exec("CREATE INDEX IDX_" . strtoupper($table) . "_FILE_ID ON {$table} (file_id, deleted)");
-                $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, file_id, {$column})");
+                if ($table === 'product_asset') {
+                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, product_id, file_id, scope, channel_id)");
+                } else {
+                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, file_id, {$column})");
+                }
             } else {
                 $this->exec("DROP INDEX IDX_" . strtoupper($table) . "_ASSET_ID ON {$table}");
                 $this->exec("DROP INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table}");
                 $this->exec("ALTER TABLE {$table} ADD file_id VARCHAR(24) DEFAULT NULL");
                 $this->exec("CREATE INDEX IDX_" . strtoupper($table) . "_FILE_ID ON {$table} (file_id, deleted)");
-                $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, file_id, {$column})");
+
+                if ($table === 'product_asset') {
+                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, product_id, file_id, scope, channel_id)");
+                } else {
+                    $this->exec("CREATE UNIQUE INDEX IDX_" . strtoupper($table) . "_UNIQUE_RELATION ON {$table} (deleted, file_id, {$column})");
+                }
             }
 
             $res = $this->getConnection()->createQueryBuilder()
