@@ -48,7 +48,7 @@
     "unique_relation": [
       "deleted",
       "product_id",
-      "asset_id",
+      "file_id",
       "scope",
       "channel_id"
     ]
