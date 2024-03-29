@@ -15,7 +15,6 @@
     "ProductPrice": "Цена продукта",
     "Tax": "Налоги",
     "ProductSerie": "Серия продукта",
-    "AssetCategory": "Ассет категория",
     "ChannelPricing": "Канал ценообразования",
     "Content": "Контент",
     "ContentGroup": "Група контента"
@@ -31,7 +30,6 @@
     "Association": "Ассоциации",
     "AttributeGroup": "Группы атрибутов",
     "Brand": "Бренды",
-    "AssetCategory": "Ассет категории",
     "Tax": "Налоги",
     "Product": "Продукты",
     "ProductAttributeValue": "Значения атрибутов",

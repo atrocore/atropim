@@ -46,7 +46,7 @@ class Product extends AbstractSelectManager
             foreach ($params['where'] as $row) {
                 if (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
                     $productIds = [];
-                    foreach (['ProductAsset', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
+                    foreach (['ProductFile', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
                         $sp = $this->createSelectManager($entityType)->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
                         $sp['select'] = ['productId'];
                         $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
@@ -245,7 +245,7 @@ class Product extends AbstractSelectManager
      *
      * @param $result
      */
-    protected function boolFilterWithoutImageAssets(&$result)
+    protected function boolFilterWithoutImageFiles(&$result)
     {
         $result['whereClause'][] = [
             'id' => array_column($this->getProductWithoutImageFiles(), 'id')
