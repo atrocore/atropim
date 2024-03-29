@@ -25,6 +25,15 @@ class V1Dot13Dot0 extends Base
 
     public function up(): void
     {
+        foreach (['Brand', 'Category', 'Product'] as $v) {
+            $path = "custom/Espo/Custom/Resources/layouts/$v/relationships.json";
+            if (file_exists($path)){
+                $contents = file_get_contents($path);
+                $contents = str_replace('"assets"', '"files"', $contents);
+                file_put_contents($path, $contents);
+            }
+        }
+
         foreach (['product', 'category', 'brand'] as $name) {
             $column = $name . '_id';
             if ($this->isPgSQL()) {
@@ -68,8 +77,6 @@ class V1Dot13Dot0 extends Base
                 }
             }
         }
-
-        // migrate custom layouts
 
         $this->updateComposer('atrocore/pim', '^1.13.0');
     }
