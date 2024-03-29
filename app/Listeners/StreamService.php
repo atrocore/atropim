@@ -58,7 +58,7 @@ class StreamService extends AbstractEntityListener
                 break;
             case 'valueId':
                 $fieldDefs['type'] = 'link';
-                $fieldDefs['entity'] = 'Asset';
+                $fieldDefs['entity'] = 'File';
                 break;
             case 'valueUnit':
                 $fieldDefs['type'] = 'link';

@@ -32,14 +32,13 @@ class CategoryFile extends Relation
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
-            $categoryAssets = $this
-                ->select(['id', 'isMainImage'])
+            $categoryFiles = $this->select(['id', 'isMainImage'])
                 ->where(['isMainImage' => true, 'categoryId' => $entity->get('categoryId'), 'id!=' => $entity->get('id')])
                 ->find();
 
-            foreach ($categoryAssets as $categoryAsset) {
-                $categoryAsset->set('isMainImage', false);
-                $this->getEntityManager()->saveEntity($categoryAsset);
+            foreach ($categoryFiles as $categoryFile) {
+                $categoryFile->set('isMainImage', false);
+                $this->getEntityManager()->saveEntity($categoryFile);
             }
         }
     }

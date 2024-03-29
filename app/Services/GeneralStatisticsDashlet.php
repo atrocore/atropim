@@ -57,9 +57,9 @@ class GeneralStatisticsDashlet extends AbstractDashletService
 
         if (!empty($this->getInjection('metadata')->get('entityDefs.Product.fields.image'))) {
             $result['list'][] = [
-                'id'     => 'productWithoutAssets',
-                'name'   => 'productWithoutAssets',
-                'amount' => $this->getAmountProductWithoutAssets()
+                'id'     => 'productWithoutFiles',
+                'name'   => 'productWithoutFiles',
+                'amount' => $this->getAmountProductWithoutFiles()
             ];
         }
 
@@ -137,7 +137,7 @@ class GeneralStatisticsDashlet extends AbstractDashletService
                 WHERE p.deleted = :false AND pav.id IS NULL";
     }
 
-    protected function getAmountProductWithoutAssets(): int
+    protected function getAmountProductWithoutFiles(): int
     {
         if (!$this->getInjection('acl')->check('Product', 'read')) {
             return 0;
