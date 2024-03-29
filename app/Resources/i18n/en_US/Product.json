@@ -1,10 +1,8 @@
 {
   "fields": {
     "modifiedAtExpanded": "Modified at (expanded)",
-    "attachments": "Attachments",
     "mainImage": "Main Image",
-    "assets": "Assets",
-    "productAssets": "Product Assets",
+    "files": "Files",
     "data": "Data",
     "categories": "Product Categories",
     "product": "Main Product",
@@ -39,9 +37,7 @@
     "product": "Product",
     "image": "Image",
     "calls": "Calls",
-    "attachments": "Attachments",
-    "assets": "Assets",
-    "productAssets": "Product Assets",
+    "files": "Files",
     "categories": "Categories",
     "products": "Products",
     "productAttributeValues": "Attribute Values",

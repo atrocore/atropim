@@ -4,11 +4,11 @@
     "description": "Description",
     "isActive": "Active",
     "code": "Code",
-    "assets": "Assets"
+    "files": "Files"
   },
   "links": {
     "products": "Products",
-    "assets": "Assets"
+    "files": "Files"
   },
   "labels": {
     "Create Brand": "Create Brand"

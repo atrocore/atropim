@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "ProductAsset": "Product Asset",
-    "CategoryAsset": "Category Asset",
+    "ProductFile": "Product File",
+    "CategoryFile": "Category File",
     "ProductChannel": "Product Channel",
     "Product": "Product",
     "Attribute": "Attribute",
@@ -25,8 +25,8 @@
     "ContentGroup": "Content Group"
   },
   "scopeNamesPlural": {
-    "ProductAsset": "Product Assets",
-    "CategoryAsset": "Category Assets",
+    "ProductFile": "Product Files",
+    "CategoryFile": "Category Files",
     "ProductChannel": "Product Channels",
     "Attribute": "Attributes",
     "Catalog": "Catalogs",
