@@ -50,6 +50,7 @@
     "sortOrderInProduct": "Порядок сортировки значений атрибутов продукта.W"
   },
   "exceptions": {
+    "fileTypeCannotBeDeleted": "Запись не может быть удалена, так как она используется в атрибуте '%s'.",
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",

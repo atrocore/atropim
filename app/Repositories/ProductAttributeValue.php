@@ -693,7 +693,7 @@ class ProductAttributeValue extends Base
     {
         switch ($attribute->get('type')) {
             case 'file':
-                if (!empty($attribute->get('fileTypeId'))) {
+                if (!empty($attribute->get('fileTypeId')) && !empty($entity->get('referenceValue'))) {
                     $file = $this->getEntityManager()->getRepository('File')->get($entity->get('referenceValue'));
                     if (!empty($file) && $file->get('typeId') !== $attribute->get('fileTypeId')) {
                         throw new BadRequest(sprintf($this->getLanguage()->translate('fileIsInvalid', 'exceptions', 'ProductAttributeValue'), $attribute->get('name')));

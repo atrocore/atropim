@@ -87,6 +87,7 @@
     "defaultChannel": "Apply on newly added attribute values only"
   },
   "exceptions": {
+    "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",
     "maxLessThanMin": "Min should be less than Max.",
     "noAttributeConverterFound": "Attribute converting from type '%s' to '%s' is impossible.",
     "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",

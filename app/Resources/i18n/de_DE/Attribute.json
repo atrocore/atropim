@@ -85,6 +85,7 @@
     "defaultChannel": "Nur auf neu hinzugefügte Attributwerte anwenden"
   },
   "exceptions": {
+    "fileTypeCannotBeDeleted": "Der Datensatz kann nicht gelöscht werden, da er in dem Attribut \"%s\" verwendet wird.",
     "maxLessThanMin": "Min sollte kleiner als Max sein.",
     "noAttributeConverterFound": "Attributkonvertierung vom Typ '%s' in '%s' ist nicht möglich.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
