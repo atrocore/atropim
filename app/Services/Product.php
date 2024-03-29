@@ -15,6 +15,7 @@ namespace Pim\Services;
 
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
+use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
@@ -137,19 +138,22 @@ class Product extends Hierarchy
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
 
-            $productAsset = $this
+            $relEntity = $this
                 ->getEntityManager()
-                ->getRepository('ProductAsset')
+                ->getRepository('ProductFile')
                 ->where([
                     'productId'   => $entity->get('id'),
                     'isMainImage' => true
                 ])
                 ->findOne();
 
-            if (!empty($productAsset) && !empty($asset = $this->getServiceFactory()->create('Asset')->getEntity($productAsset->get('assetId')))) {
-                $entity->set('mainImageId', $asset->get('fileId'));
-                $entity->set('mainImageName', $asset->get('fileName'));
-                $entity->set('mainImagePathsData', $asset->get('filePathsData'));
+            if (!empty($relEntity) && !empty($relEntity->get('fileId'))) {
+                /** @var File $file */
+                $file = $this->getEntityManager()->getRepository('File')->get($relEntity->get('fileId'));
+
+                $entity->set('mainImageId', $file->get('id'));
+                $entity->set('mainImageName', $file->get('name'));
+                $entity->set('mainImagePathsData', $file->getPathsData());
             }
         }
     }
@@ -218,7 +222,8 @@ class Product extends Hierarchy
                             if (!$result->get('attributeIsMultilang')) {
                                 $existingPavs->append($result);
                             } else {
-                                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
+                                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])
+                                    ->find();
                             }
 
                         }
@@ -840,7 +845,7 @@ class Product extends Hierarchy
             ->where(['id' => $data->_paAssetsIds])
             ->find();
 
-        /** @var ProductAsset $service */
+        /** @var ProductFile $service */
         $service = $this->getServiceFactory()->create('ProductAsset');
 
         foreach ($assets as $asset) {

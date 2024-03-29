@@ -11,6 +11,7 @@
 
 namespace Pim\Services;
 
+use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Templates\Services\Hierarchy;
 use Espo\ORM\Entity;
@@ -61,9 +62,9 @@ class Category extends Hierarchy
             $conn = $this->getEntityManager()->getConnection();
 
             $res = $conn->createQueryBuilder()
-                ->select('cs.id, a.file_id, a.name, cs.category_id')
-                ->from('category_asset', 'cs')
-                ->innerJoin('cs', 'asset', 'a', 'a.id=cs.asset_id AND a.deleted=:false')
+                ->select('cs.id, a.id as file_id, a.name, cs.category_id')
+                ->from('category_file', 'cs')
+                ->innerJoin('cs', 'file', 'a', 'a.id=cs.file_id AND a.deleted=:false')
                 ->where('cs.category_id IN (:categoriesIds)')
                 ->andWhere('cs.is_main_image = :true')
                 ->andWhere('cs.deleted = :false')
@@ -107,19 +108,23 @@ class Category extends Hierarchy
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
 
-            $productAsset = $this
+            $relEntity = $this
                 ->getEntityManager()
-                ->getRepository('CategoryAsset')
+                ->getRepository('CategoryFile')
                 ->where([
                     'categoryId'  => $entity->get('id'),
                     'isMainImage' => true
                 ])
                 ->findOne();
 
-            if (!empty($productAsset) && !empty($asset = $this->getServiceFactory()->create('Asset')->getEntity($productAsset->get('assetId')))) {
-                $entity->set('mainImageId', $asset->get('fileId'));
-                $entity->set('mainImageName', $asset->get('fileName'));
-                $entity->set('mainImagePathsData', $asset->get('filePathsData'));
+            if (!empty($relEntity) && !empty($relEntity->get('fileId'))) {
+                /** @var File $file */
+                $file = $this->getEntityManager()->getRepository('File')->get($relEntity->get('fileId'));
+                if (!empty($file)) {
+                    $entity->set('mainImageId', $file->get('id'));
+                    $entity->set('mainImageName', $file->get('name'));
+                    $entity->set('mainImagePathsData', $file->getPathsData());
+                }
             }
         }
     }
