@@ -248,7 +248,7 @@ class Product extends AbstractSelectManager
     protected function boolFilterWithoutImageAssets(&$result)
     {
         $result['whereClause'][] = [
-            'id' => array_column($this->getProductWithoutImageAssets(), 'id')
+            'id' => array_column($this->getProductWithoutImageFiles(), 'id')
         ];
     }
 
@@ -257,9 +257,9 @@ class Product extends AbstractSelectManager
      *
      * @return array
      */
-    protected function getProductWithoutImageAssets(): array
+    protected function getProductWithoutImageFiles(): array
     {
-        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutAssets());
+        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutFiles());
     }
 
     /**
