@@ -14,7 +14,7 @@ Espo.define('pim:views/fields/main-image', 'views/fields/image',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'asset:saved after:unrelate', () => {
+            this.listenTo(this.model, 'file:saved after:unrelate', () => {
                 this.model.fetch().then(() => this.reRender());
             });
         },

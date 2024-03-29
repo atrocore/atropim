@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/row-actions/relationship-asset', 'views/record/row-actions/relationship',
+Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-actions/relationship',
     Dep => Dep.extend({
 
         getActionList: function () {

@@ -73,8 +73,8 @@
       "view": "pim:views/category/record/panels/channels"
     },
     "files": {
-      "view": "pim:views/record/panels/assets",
-      "rowActionsView": "pim:views/record/row-actions/relationship-asset",
+      "view": "pim:views/record/panels/files",
+      "rowActionsView": "pim:views/record/row-actions/relationship-file",
       "dragDrop": {
         "isActive": true,
         "sortField": "category_file_mm.sorting"
