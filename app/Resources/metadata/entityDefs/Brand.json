@@ -73,7 +73,7 @@
             "type": "hasMany",
             "relationName": "brandAsset",
             "foreign": "brands",
-            "entity": "Asset",
+            "entity": "File",
             "audited": false
         },
         "createdBy": {
