@@ -36,7 +36,7 @@ class ProductFile extends Relation
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
-            $productAssets = $this
+            $productFiles = $this
                 ->select(['id', 'isMainImage'])
                 ->where([
                     'isMainImage' => true,
@@ -45,9 +45,9 @@ class ProductFile extends Relation
                 ])
                 ->find();
 
-            foreach ($productAssets as $productAsset) {
-                $productAsset->set('isMainImage', false);
-                $this->getEntityManager()->saveEntity($productAsset);
+            foreach ($productFiles as $productFile) {
+                $productFile->set('isMainImage', false);
+                $this->getEntityManager()->saveEntity($productFile);
             }
         }
     }
