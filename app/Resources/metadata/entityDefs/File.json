@@ -28,8 +28,8 @@
     },
     "categories": {
       "type": "hasMany",
-      "relationName": "categoryAsset",
-      "foreign": "assets",
+      "relationName": "categoryFile",
+      "foreign": "files",
       "entity": "Category"
     },
     "brands": {
