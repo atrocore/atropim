@@ -27,7 +27,7 @@
     "linkedWithClassification",
     "notParents",
     "notChildren",
-    "withoutImageAssets"
+    "withoutImageFiles"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
@@ -127,12 +127,12 @@
     "action": "showPdfGenerator"
   },
   "relationshipPanels": {
-    "assets": {
+    "files": {
       "view": "pim:views/record/panels/assets",
       "rowActionsView": "pim:views/record/row-actions/relationship-asset",
       "dragDrop": {
         "isActive": true,
-        "sortField": "product_asset_mm.sorting"
+        "sortField": "product_file_mm.sorting"
       },
       "sortBy": "sorting",
       "asc": true

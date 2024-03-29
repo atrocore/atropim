@@ -105,7 +105,7 @@
     "notLinkedWithProductSerie": "Without Product Serie",
     "linkedWithCategory": "With Category",
     "onlyConfigurableProducts": "Only Configurable Products",
-    "withoutImageAssets": "Without Assets",
+    "withoutImageFiles": "Without Files",
     "withoutMainImage": "Without Main Image"
   },
   "messages": {

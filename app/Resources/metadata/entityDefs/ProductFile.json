@@ -35,12 +35,12 @@
   "links": {
     "product": {
       "type": "belongsTo",
-      "foreign": "productAssets",
+      "foreign": "productFiles",
       "entity": "Product"
     },
     "channel": {
       "type": "belongsTo",
-      "foreign": "productAssets",
+      "foreign": "productFiles",
       "entity": "Channel"
     }
   },
