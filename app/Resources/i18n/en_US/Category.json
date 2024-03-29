@@ -5,7 +5,6 @@
     "code": "Code",
     "isActive": "Active",
     "mainImage": "Main Image",
-    "files": "Files",
     "parents": "Parent Category",
     "children": "Child Categories",
     "channels": "Channels",
@@ -20,7 +19,6 @@
   "links": {
     "parents": "Parent Category",
     "children": "Child Categories",
-    "files": "Files",
     "channels": "Channels",
     "products": "Products",
     "catalogs": "Catalogs",

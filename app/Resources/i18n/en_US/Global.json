@@ -59,6 +59,10 @@
     }
   },
   "fields": {
+    "categories": "Categories",
+    "channels": "Channels",
+    "products": "Products",
+    "catalogs": "Catalogs",
     "Classification": "Classification",
     "productStatus": "Product Status",
     "oneGeoType": "OneGeo Type",
@@ -72,9 +76,14 @@
     "amount": "Amount",
     "mpn": "MPN",
     "productSerie": "Product Serie",
-    "channels": "Channels",
     "scope": "Scope",
     "role": "Role"
+  },
+  "links": {
+    "categories": "Categories",
+    "channels": "Channels",
+    "products": "Products",
+    "catalogs": "Catalogs"
   },
   "labels": {
     "removeHierarchically": "Delete Hierarchically",

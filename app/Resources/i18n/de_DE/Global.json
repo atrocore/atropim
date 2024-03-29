@@ -50,10 +50,19 @@
     "ContentGroup": "Content Gruppen"
   },
   "fields": {
+    "categories": "Kategorien",
     "channels": "Kanäle",
+    "products": "Produkte",
+    "catalogs": "Kataloge",
     "productSerie": "Product Serie",
     "scope": "Scope",
     "role": "Rolle"
+  },
+  "links": {
+    "categories": "Kategorien",
+    "channels": "Kanäle",
+    "products": "Produkte",
+    "catalogs": "Kataloge"
   },
   "options": {
     "searchRanges": {

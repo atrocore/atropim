@@ -63,9 +63,18 @@
     "amount": "Количество",
     "mpn": "MPN",
     "productSerie": "Серия продукта",
+    "categories": "Категории",
     "channels": "Каналы",
+    "products": "Продукты",
+    "catalogs": "Каталоги",
     "scope": "Область применения",
     "role": "Роль"
+  },
+  "links": {
+    "categories": "Категории",
+    "channels": "Каналы",
+    "products": "Продукты",
+    "catalogs": "Каталоги"
   },
   "labels": {
     "setAsMainImage": "Назначить основным изображением",
