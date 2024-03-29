@@ -1,7 +1,5 @@
 {
   "scopeNames": {
-    "ProductAsset": "Ассет продукту",
-    "CategoryAsset": "Асет категорії",
     "ProductChannel": "Канал продукту",
     "AttributeTab": "Вкладка атрибута",
     "Product": "Продукт",
@@ -25,8 +23,6 @@
     "ContentGroup": "Група контенту"
   },
   "scopeNamesPlural": {
-    "ProductAsset": "Асети продукту",
-    "CategoryAsset": "Асети категорії",
     "ProductChannel": "Канали продукту",
     "AttributeTab": "Вкладки атрибутів",
     "Attribute": "Атрибути",

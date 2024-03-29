@@ -1,9 +1,7 @@
 {
   "fields": {
     "modifiedAtExpanded": "Змінено в (розгорнуто)",
-    "attachments": "Вкладення",
     "mainImage": "Основне зображення",
-    "assets": "Асети",
     "productAssets": "Ассети продукту",
     "data": "Дані",
     "categories": "Категорії продукту",
@@ -39,8 +37,6 @@
     "product": "Продукт",
     "image": "Зображення",
     "calls": "Дзвінки",
-    "attachments": "Вкладення",
-    "assets": "Асети",
     "productAssets": "Ассети продукту",
     "categories": "Категорії продукту",
     "products": "Продукти",
