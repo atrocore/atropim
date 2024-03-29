@@ -45,6 +45,7 @@
     "countOfLinkedAttributes": "Count of linked attributes: {count}"
   },
   "exceptions": {
+    "fileIsInvalid": "File for the attribute '%s' is not valid.",
     "attributeUnitValueIsRequired": "Unit for the attribute '%s' is required.",
     "noSuchAttributeUnit": "Unit for the attribute '%s' is not valid.",
     "youHaveNoAclRightsToReadAttributeValues": "You have no rights to read attribute values.",

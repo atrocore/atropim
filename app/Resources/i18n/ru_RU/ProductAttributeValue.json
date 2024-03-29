@@ -30,6 +30,7 @@
     "cannotLinkDefaultChannel": "Канал по умолчанию '{channel}' для выбранного атрибута не связан с этим продуктом."
   },
   "exceptions": {
+    "fileIsInvalid": "Файл для атрибута '%s' не является действительным.",
     "attributeUnitValueIsRequired": "Единица измерения для атрибута '%s' необходима.",
     "noSuchAttributeUnit": "Единица измерения для атрибута '%s' не допустима.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас нет прав на чтение значений атрибутов.",

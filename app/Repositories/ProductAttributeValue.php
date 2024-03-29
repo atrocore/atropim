@@ -692,6 +692,14 @@ class ProductAttributeValue extends Base
     public function validateValue(Entity $attribute, Entity $entity): void
     {
         switch ($attribute->get('type')) {
+            case 'file':
+                if (!empty($attribute->get('fileTypeId'))) {
+                    $file = $this->getEntityManager()->getRepository('File')->get($entity->get('referenceValue'));
+                    if (!empty($file) && $file->get('typeId') !== $attribute->get('fileTypeId')) {
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('fileIsInvalid', 'exceptions', 'ProductAttributeValue'), $attribute->get('name')));
+                    }
+                }
+                break;
             case 'int':
                 if ($entity->get('min') !== null && $entity->get('intValue') !== null && $entity->get('intValue') < $entity->get('min')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');

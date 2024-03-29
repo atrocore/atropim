@@ -45,6 +45,7 @@
     "countOfLinkedAttributes": "Anzahl der verknüpften Attribute: {count}"
   },
   "exceptions": {
+    "fileIsInvalid": "Die Datei für das Attribut \"%s\" ist nicht gültig.",
     "attributeUnitValueIsRequired": "Die Einheit für das Attribut '%s' erforderlich.",
     "noSuchAttributeUnit": "Die Einheit für das Attribut '%s' ist ungültig.",
     "youHaveNoAclRightsToReadAttributeValues": "Sie haben keine Rechte, Attributwerte zu lesen.",
