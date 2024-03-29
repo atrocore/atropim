@@ -64,7 +64,7 @@ class LayoutController extends AbstractListener
 
         if (!file_exists('custom/Espo/Custom/Resources/layouts/File/detailSmall.json')) {
             $result[0]['rows'][] = [['name' => 'ProductFile__isMainImage'], ['name' => 'ProductFile__sorting']];
-            $result[0]['rows'][] = [['name' => 'ProductFile__scope'], ['name' => 'ProductFile__channel']];
+            $result[0]['rows'][] = [['name' => 'ProductFile__channel'], false];
 
             $result[0]['rows'][] = [['name' => 'CategoryFile__isMainImage'], ['name' => 'CategoryFile__sorting']];
         }
