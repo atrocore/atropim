@@ -213,7 +213,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         extendValueData(view, data) {
             data = data || {};
-            if (['asset', 'image'].includes(view.type)) {
+            if (['file'].includes(view.type)) {
                 _.extend(data, {
                     [this.name]: data[`${this.name}Id`]
                 });

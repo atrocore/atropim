@@ -152,7 +152,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     // filter by field filter
                     if (!empty($fieldFilter) && !in_array('allValues', $fieldFilter)) {
                         switch ($pavEntity->get('attributeType')) {
-                            case 'asset':
+                            case 'file':
                             case 'link':
                                 $isEmpty = empty($pavEntity->get('valueId'));
                                 break;

@@ -302,7 +302,7 @@ class ProductAttributeValue extends Base
             case 'datetime':
                 $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
                 break;
-            case 'asset':
+            case 'file':
             case 'link':
             case 'extensibleEnum':
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
@@ -624,7 +624,7 @@ class ProductAttributeValue extends Base
                     $where['varcharValue'] = $entity->get('varcharValue');
                     $where['referenceValue'] = $entity->get('referenceValue');
                     break;
-                case 'asset':
+                case 'file':
                 case 'extensibleEnum':
                 case 'link':
                     $where['referenceValue'] = $entity->get('referenceValue');
@@ -1010,7 +1010,7 @@ class ProductAttributeValue extends Base
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
                 break;
-            case 'asset':
+            case 'file':
                 if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['valueId'] = $wasValue;

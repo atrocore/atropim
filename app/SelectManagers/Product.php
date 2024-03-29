@@ -661,7 +661,7 @@ class Product extends AbstractSelectManager
                     'value'     => 'main',
                 ];
                 break;
-            case 'asset':
+            case 'file':
             case 'link':
                 $row['attribute'] = 'referenceValue';
                 $where['value'][] = $row;

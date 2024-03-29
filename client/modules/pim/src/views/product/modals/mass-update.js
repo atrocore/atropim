@@ -172,7 +172,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         language: item.language
                     };
 
-                    if (item.attributeType === 'asset') {
+                    if (item.attributeType === 'file') {
                         attribute.valueId = data[name + 'Id'];
                     } else {
                         attribute.value = data[name];

@@ -1016,7 +1016,7 @@ class Product extends Hierarchy
                 if ($childPav->get('isPavValueInherited') === false) {
                     $value = $childPav->get('value');
                     $parentValue = $parentPav->get('value');
-                    if ($childPav->get('attributeType') === 'asset') {
+                    if ($childPav->get('attributeType') === 'file') {
                         $value = $childPav->get('valueId');
                         $parentValue = $parentPav->get('valueId');
                     }

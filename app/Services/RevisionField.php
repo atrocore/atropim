@@ -51,7 +51,7 @@ class RevisionField extends \Revisions\Services\RevisionField
 
                             // prepare data
                             $was = $became = [];
-                            if ($attr->get('type') === 'asset') {
+                            if ($attr->get('type') === 'file') {
                                 $was['valueId'] = $data['attributes']['was'][$field];
                                 $became['valueId'] = $data['attributes']['became'][$field];
                             }
