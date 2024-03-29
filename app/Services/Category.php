@@ -44,7 +44,6 @@ class Category extends Hierarchy
         parent::afterCreateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
-        $this->createCategoryAssets($entity, $data);
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
@@ -52,7 +51,6 @@ class Category extends Hierarchy
         parent::afterUpdateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
-        $this->createCategoryAssets($entity, $data);
     }
 
     public function loadPreviewForCollection(EntityCollection $collection): void
@@ -145,104 +143,31 @@ class Category extends Hierarchy
         return $result;
     }
 
-    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
-    {
-        if (property_exists($data, '_caAssetsIds')) {
-            return true;
-        }
-
-        return parent::isEntityUpdated($entity, $data);
-    }
-
-    protected function handleInput(\stdClass $data, ?string $id = null): void
-    {
-        if (property_exists($data, 'assetsNames')) {
-            unset($data->assetsNames);
-        }
-
-        if (property_exists($data, 'assetsIds')) {
-            $data->_caAssetsIds = $data->assetsIds;
-            unset($data->assetsIds);
-        }
-
-        if (property_exists($data, 'assetsAddOnlyMode')) {
-            $data->_caAddMode = $data->assetsAddOnlyMode;
-            unset($data->assetsAddOnlyMode);
-        }
-
-        parent::handleInput($data, $id);
-    }
-
-
     protected function saveMainImage(Entity $entity, $data): void
     {
         if (!property_exists($data, 'mainImageId')) {
             return;
         }
 
-        $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $data->mainImageId])->findOne();
-        if (empty($asset)) {
+        $file = $this->getEntityManager()->getRepository('File')->where(['id' => $data->mainImageId])->findOne();
+        if (empty($file)) {
             return;
         }
 
         $where = [
             'categoryId' => $entity->get('id'),
-            'assetId'    => $asset->get('id')
+            'fileId'    => $file->get('id')
         ];
 
-        $repository = $this->getEntityManager()->getRepository('CategoryAsset');
+        $repository = $this->getEntityManager()->getRepository('CategoryFile');
 
-        $categoryAsset = $repository->where($where)->findOne();
-        if (empty($categoryAsset)) {
-            $categoryAsset = $repository->get();
-            $categoryAsset->set($where);
+        $categoryFile = $repository->where($where)->findOne();
+        if (empty($categoryFile)) {
+            $categoryFile = $repository->get();
+            $categoryFile->set($where);
         }
-        $categoryAsset->set('isMainImage', true);
+        $categoryFile->set('isMainImage', true);
 
-        $this->getEntityManager()->saveEntity($categoryAsset);
+        $this->getEntityManager()->saveEntity($categoryFile);
     }
-
-    /**
-     * This needs for old import feeds. For import assets from product
-     */
-    protected function createCategoryAssets(Entity $entity, \stdClass $data): void
-    {
-        if (!property_exists($data, '_caAssetsIds')) {
-            return;
-        }
-
-        $assets = $this
-            ->getEntityManager()
-            ->getRepository('Asset')
-            ->where(['id' => $data->_caAssetsIds])
-            ->find();
-
-        /** @var CategoryAsset $service */
-        $service = $this->getServiceFactory()->create('CategoryAsset');
-
-        foreach ($assets as $asset) {
-            $input = new \stdClass();
-            $input->categoryId = $entity->get('id');
-            $input->assetId = $asset->get('id');
-
-            try {
-                $service->createEntity($input);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error('CategoryAsset creating failed: ' . $e->getMessage());
-            }
-        }
-
-        if (!property_exists($data, '_caAddMode') || empty($data->_caAddMode)) {
-            $this
-                ->getEntityManager()
-                ->getRepository('CategoryAsset')
-                ->where([
-                    'categoryId' => $entity->get('id'),
-                    'assetId!='  => array_column($assets->toArray(), 'id')
-                ])
-                ->removeCollection();
-        }
-    }
-
-
 }
