@@ -1,14 +1,12 @@
 {
   "fields": {
     "category": "Kategorie",
-    "asset": "Asset",
     "isMainImage": "Hauptbild",
     "tags": "Tags",
     "preview": "Vorschau",
     "sorting": "Sortierreihenfolge"
   },
   "links": {
-    "category": "Kategorie",
-    "asset": "Asset"
+    "category": "Kategorie"
   }
 }
