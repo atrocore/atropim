@@ -16,18 +16,18 @@ namespace Pim\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Listeners\AbstractListener;
 
-class AssetService extends AbstractListener
+class FileService extends AbstractListener
 {
     public function beforeUpdateEntity(Event $event): void
     {
         $data = $event->getArgument('data');
         if (property_exists($data, '_id') && property_exists($data, '_sortedIds') && property_exists($data, '_scope') && !empty($data->_sortedIds)) {
             if ($data->_scope === 'Product') {
-                $this->getEntityManager()->getRepository('ProductAsset')->updateSortOrder($data->_id, $data->_sortedIds);
-                $event->setArgument('result', $this->getService('Asset')->getEntity($data->_itemId));
+                $this->getEntityManager()->getRepository('ProductFile')->updateSortOrder($data->_id, $data->_sortedIds);
+                $event->setArgument('result', $this->getService('File')->getEntity($data->_itemId));
             } elseif ($data->_scope === 'Category') {
-                $this->getEntityManager()->getRepository('CategoryAsset')->updateSortOrder($data->_id, $data->_sortedIds);
-                $event->setArgument('result', $this->getService('Asset')->getEntity($data->_itemId));
+                $this->getEntityManager()->getRepository('CategoryFile')->updateSortOrder($data->_id, $data->_sortedIds);
+                $event->setArgument('result', $this->getService('File')->getEntity($data->_itemId));
             }
         }
     }
