@@ -12,6 +12,7 @@
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -458,8 +459,8 @@ class Product extends AbstractSelectManager
         $res = $connection->createQueryBuilder()
             ->select('p.id')
             ->from($connection->quoteIdentifier('product'), 'p')
-            ->where('p.id NOT IN (SELECT DISTINCT pa.product_id FROM product_asset pa WHERE pa.is_main_image = :true)')
-            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->where('p.id NOT IN (SELECT DISTINCT pa.product_id FROM product_file pa WHERE pa.is_main_image = :true)')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
         $result['whereClause'][] = [

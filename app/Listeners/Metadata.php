@@ -112,7 +112,7 @@ class Metadata extends AbstractListener
             }
         }
 
-        foreach (['ProductAttributeValue', 'ProductAsset'] as $entityType) {
+        foreach (['ProductAttributeValue', 'ProductFile'] as $entityType) {
             $metadata['clientDefs'][$entityType]['channels'] = $channels;
             $callback = '\\Pim\\SelectManagers\\' . $entityType . '::createScopePrismBoolFilterName';
             $metadata['clientDefs'][$entityType]['boolFilterList'][] = call_user_func($callback, 'global');

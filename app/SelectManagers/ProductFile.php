@@ -19,7 +19,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-class ProductAsset extends AbstractSelectManager
+class ProductFile extends AbstractSelectManager
 {
     protected array $filterScopes = [];
 
@@ -41,7 +41,7 @@ class ProductAsset extends AbstractSelectManager
             $this->filterScopes[] = 'global';
         }
 
-        foreach ($this->getMetadata()->get(['clientDefs', 'ProductAsset', 'channels'], []) as $channel) {
+        foreach ($this->getMetadata()->get(['clientDefs', 'ProductFile', 'channels'], []) as $channel) {
             if (self::createScopePrismBoolFilterName($channel['id']) === $filterName) {
                 $this->filterScopes[] = $channel['id'];
             }
@@ -66,7 +66,7 @@ class ProductAsset extends AbstractSelectManager
         }
         $channelsIds[] = '';
 
-        $qb->andWhere("{$tableAlias}.id IN (SELECT ps.id FROM product_asset ps WHERE ps.channel_id IN (:channelsIds) AND ps.deleted=:false)");
+        $qb->andWhere("{$tableAlias}.id IN (SELECT ps.id FROM product_file ps WHERE ps.channel_id IN (:channelsIds) AND ps.deleted=:false)");
         $qb->setParameter('channelsIds', $channelsIds, Mapper::getParameterType($channelsIds));
         $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }

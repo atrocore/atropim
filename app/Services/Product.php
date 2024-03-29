@@ -40,9 +40,9 @@ class Product extends Hierarchy
             $conn = $this->getEntityManager()->getConnection();
 
             $res = $conn->createQueryBuilder()
-                ->select('ps.id, a.file_id, a.name, ps.product_id')
-                ->from('product_asset', 'ps')
-                ->innerJoin('ps', 'asset', 'a', 'a.id=ps.asset_id AND a.deleted=:false')
+                ->select('ps.id, a.id as file_id, a.name, ps.product_id')
+                ->from('product_file', 'ps')
+                ->innerJoin('ps', 'file', 'a', 'a.id=ps.file_id AND a.deleted=:false')
                 ->where('ps.product_id IN (:productsIds)')
                 ->andWhere('ps.is_main_image = :true')
                 ->andWhere('ps.deleted = :false')

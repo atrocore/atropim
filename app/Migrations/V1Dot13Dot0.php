@@ -69,6 +69,8 @@ class V1Dot13Dot0 extends Base
             }
         }
 
+        // migrate custom layouts
+
         $this->updateComposer('atrocore/pim', '^1.13.0');
     }
 
