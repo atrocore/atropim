@@ -16,16 +16,12 @@ namespace Pim\Repositories;
 use Atro\Core\Templates\Repositories\Relation;
 use Espo\ORM\Entity;
 
-class ProductAsset extends Relation
+class CategoryFile extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew() && $entity->get('sorting') === null) {
             $entity->set('sorting', time() - (new \DateTime('2023-01-01'))->getTimestamp());
-        }
-
-        if (empty($entity->get('channelId'))) {
-            $entity->set('channelId', '');
         }
 
         parent::beforeSave($entity, $options);
@@ -36,43 +32,34 @@ class ProductAsset extends Relation
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
-            $productAssets = $this
+            $categoryAssets = $this
                 ->select(['id', 'isMainImage'])
-                ->where([
-                    'isMainImage' => true,
-                    'productId'   => $entity->get('productId'),
-                    'id!='        => $entity->get('id')
-                ])
+                ->where(['isMainImage' => true, 'categoryId' => $entity->get('categoryId'), 'id!=' => $entity->get('id')])
                 ->find();
 
-            foreach ($productAssets as $productAsset) {
-                $productAsset->set('isMainImage', false);
-                $this->getEntityManager()->saveEntity($productAsset);
+            foreach ($categoryAssets as $categoryAsset) {
+                $categoryAsset->set('isMainImage', false);
+                $this->getEntityManager()->saveEntity($categoryAsset);
             }
         }
     }
 
-    public function updateSortOrder(string $productId, array $assetsIds): void
+    public function updateSortOrder(string $categoryId, array $filesIds): void
     {
-        $collection = $this->where(['productId' => $productId, 'assetId' => $assetsIds])->find();
+        $collection = $this->where(['categoryId' => $categoryId, 'fileId' => $filesIds])->find();
         if (empty($collection[0])) {
             return;
         }
 
-        foreach ($assetsIds as $k => $id) {
+        foreach ($filesIds as $k => $id) {
             $sortOrder = (int)$k * 10;
             foreach ($collection as $entity) {
-                if ($entity->get('assetId') !== (string)$id) {
+                if ($entity->get('fileId') !== (string)$id) {
                     continue;
                 }
                 $entity->set('sorting', $sortOrder);
                 $this->save($entity);
             }
         }
-    }
-
-    public function removeByProductId(string $productId): void
-    {
-        $this->where(['productId' => $productId])->removeCollection();
     }
 }
