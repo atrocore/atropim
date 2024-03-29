@@ -100,7 +100,7 @@
       "filterDisabled": true,
       "emHidden": true
     },
-    "assets": {
+    "files": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -266,9 +266,9 @@
     }
   },
   "links": {
-    "assets": {
+    "files": {
       "type": "hasMany",
-      "relationName": "productAsset",
+      "relationName": "productFile",
       "foreign": "products",
       "entity": "File"
     },

@@ -22,8 +22,8 @@
   "links": {
     "products": {
       "type": "hasMany",
-      "relationName": "productAsset",
-      "foreign": "assets",
+      "relationName": "productFile",
+      "foreign": "files",
       "entity": "Product"
     },
     "categories": {
@@ -34,10 +34,9 @@
     },
     "brands": {
       "type": "hasMany",
-      "relationName": "brandAsset",
-      "foreign": "assets",
-      "entity": "Brand",
-      "audited": false
+      "relationName": "brandFile",
+      "foreign": "files",
+      "entity": "Brand"
     }
   }
 }

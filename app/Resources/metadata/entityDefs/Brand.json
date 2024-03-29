@@ -16,7 +16,7 @@
             "tooltip": false,
             "isMultilang": true
         },
-        "assets": {
+        "files": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "massUpdateDisabled": true,
@@ -69,12 +69,11 @@
         }
     },
     "links": {
-        "assets": {
+        "files": {
             "type": "hasMany",
-            "relationName": "brandAsset",
+            "relationName": "brandFile",
             "foreign": "brands",
-            "entity": "File",
-            "audited": false
+            "entity": "File"
         },
         "createdBy": {
             "type": "belongsTo",
