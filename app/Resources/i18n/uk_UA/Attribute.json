@@ -11,7 +11,7 @@
     "productAttributeValues": "Значення атрибутів",
     "isMultilang": "Багатомовність",
     "sortOrderInAttributeGroup": "Порядок сортування в групі атрибута",
-    "assetType": "Тип асета",
+    "fileType": "Тип файлу",
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Заборонити порожні значення",

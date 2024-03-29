@@ -11,7 +11,7 @@
     "productAttributeValues": "Attribute Values",
     "isMultilang": "Multilingual",
     "sortOrderInAttributeGroup": "Sort Order in Attribute Group",
-    "assetType": "Asset Type",
+    "fileType": "File Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Disable empty value",
@@ -67,7 +67,7 @@
       "wysiwyg": "HTML",
       "rangeInt": "Integer Range",
       "rangeFloat": "Float Range",
-      "asset": "Asset"
+      "file": "File"
     }
   },
   "messages": {

@@ -11,7 +11,7 @@
     "attributeTab": "Attributtab",
     "code": "Code",
     "isMultilang": "Mehrsprachig",
-    "assetType": "Asset-Typ",
+    "fileType": "Datei-Typ",
     "name": "Attributname",
     "pattern": "Regex Pattern",
     "unique": "Unique",
@@ -65,7 +65,7 @@
       "url": "Url",
       "varchar": "Einzeiliger Text",
       "wysiwyg": "HTML",
-      "asset": "Asset"
+      "file": "Datei"
     }
   },
   "messages": {
