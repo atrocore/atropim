@@ -116,13 +116,13 @@ class AssociatedProduct extends Base
         if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
             $entity->set('mainProductImageId', $image->get('id'));
             $entity->set('mainProductImageName', $image->get('name'));
-            $entity->set('mainProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+            $entity->set('mainProductImagePathsData', $image->getPathsData());
         }
 
         if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $this->getMainImage($relatedProduct))) {
             $entity->set('relatedProductImageId', $image->get('id'));
             $entity->set('relatedProductImageName', $image->get('name'));
-            $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+            $entity->set('relatedProductImagePathsData', $image->getPathsData());
         }
     }
 
