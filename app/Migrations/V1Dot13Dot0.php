@@ -32,6 +32,10 @@ class V1Dot13Dot0 extends Base
                 $contents = str_replace('"assets"', '"files"', $contents);
                 file_put_contents($path, $contents);
             }
+            $path = "custom/Espo/Custom/Resources/metadata/entityDefs/{$v}Asset.json";
+            if (file_exists($path)) {
+                rename($path, "custom/Espo/Custom/Resources/metadata/entityDefs/{$v}File.json");
+            }
         }
 
         $this->exec("ALTER TABLE attribute ADD file_type_id VARCHAR(24) DEFAULT NULL");
