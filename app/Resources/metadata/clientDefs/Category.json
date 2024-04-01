@@ -62,7 +62,8 @@
         "notEntity"
       ],
       "view": "pim:views/category/record/panels/catalogs",
-      "rowActionsView": "pim:views/category/record/row-actions/catalogs"
+      "rowActionsView": "pim:views/category/record/row-actions/catalogs",
+      "unlinkConfirm": "Category.messages.catalogUnlinkConfirm"
     },
     "channels": {
       "unlinkConfirm": "Category.messages.channelUnlinkConfirm",
