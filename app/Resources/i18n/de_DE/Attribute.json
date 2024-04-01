@@ -82,7 +82,8 @@
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "virtualProductField": "Werte für dieses Attribut werden als virtuelles Feld über das Produktlistenlayout hinzugefügt werden.",
     "sortOrderInProduct": "Sortierreihenfolge für Attributwerte für ein Produkt.",
-    "defaultChannel": "Nur auf neu hinzugefügte Attributwerte anwenden"
+    "defaultChannel": "Nur auf neu hinzugefügte Attributwerte anwenden",
+    "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)"
   },
   "exceptions": {
     "maxLessThanMin": "Min sollte kleiner als Max sein.",
