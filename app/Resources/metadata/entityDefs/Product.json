@@ -129,6 +129,7 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "emHidden": true,
+      "importDisabled": true,
       "exportDisabled": true
     },
     "productSerie": {
