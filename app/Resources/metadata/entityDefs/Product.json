@@ -112,26 +112,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "scope": {
-      "type": "enum",
-      "notStorable": true,
-      "optionsIds": [
-        "Global",
-        "Channel"
-      ],
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "default": "Global",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "emHidden": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "productSerie": {
       "type": "link"
     },
