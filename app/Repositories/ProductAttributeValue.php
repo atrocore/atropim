@@ -58,8 +58,18 @@ class ProductAttributeValue extends Base
             $qb->andWhere('pav.attribute_id IN (SELECT id FROM attribute WHERE attribute_tab_id=:tabId AND deleted=:false)')->setParameter('tabId', $tabId);
         }
 
+
         if (!empty($languageFilter) && !in_array('allLanguages', $languageFilter)) {
-            $qb->andWhere('pav.language IN (:languagesFilter)')->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
+            $query = 'pav.language IN (:languagesFilter)';
+
+            if(in_array('unilingual', $languageFilter)){
+                $languageFilter = array_filter($languageFilter, function($lang){
+                    return $lang !== 'unilingual';
+                });
+                $query .= ' OR pav.attribute_id IN (SELECT id FROM attribute WHERE is_multilang=:false)';
+             }
+
+            $qb->andWhere($query)->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
         }
 
         if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter)) {
