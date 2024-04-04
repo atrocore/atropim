@@ -462,7 +462,47 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             }
 
             return this.getAcl().check('Attribute', 'edit');
-        }
+        },
+
+        actionRemoveRelated: function (data) {
+            let id = data.id;
+
+            let message = 'Global.messages.removeRecordConfirmation';
+            if (this.isHierarchical()) {
+                message = 'Global.messages.removeRecordConfirmationHierarchically';
+            }
+
+            let scopeMessage = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`);
+            if (scopeMessage) {
+                message = scopeMessage;
+            }
+
+            let model = this.collection.get(id);
+
+            let parts = message.split('.');
+
+            this.confirm({
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                confirmText: this.translate('Remove')
+            }, () => {
+                this.notify('removing');
+                model.destroy({
+                    success: () => {
+                        this.notify('Removed', 'success');
+                        if(this.mode !== 'edit'){
+                            this.collection.fetch();
+                            this.model.trigger('after:unrelate', this.link, this.defs);
+                        }else{
+                            this.collection.remove(model);
+                        }
+                    },
+
+                    error: () => {
+                        this.collection.push(model);
+                    }
+                });
+            });
+        },
 
     })
 );
