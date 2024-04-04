@@ -60,7 +60,7 @@ class ProductAttributeValue extends Base
 
 
         if (!empty($languageFilter) && !in_array('allLanguages', $languageFilter)) {
-            $query = 'pav.language IN (:languagesFilter)';
+            $query = '(pav.language IN (:languagesFilter) AND pav.attribute_id IN (SELECT id FROM attribute WHERE is_multilang=:true)) ';
 
             if(in_array('unilingual', $languageFilter)){
                 $languageFilter = array_filter($languageFilter, function($lang){
@@ -69,7 +69,9 @@ class ProductAttributeValue extends Base
                 $query .= ' OR pav.attribute_id IN (SELECT id FROM attribute WHERE is_multilang=:false)';
              }
 
-            $qb->andWhere($query)->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
+            $qb->andWhere($query)
+                ->setParameter('true',true, ParameterType::BOOLEAN)
+                ->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
         }
 
         if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter)) {
