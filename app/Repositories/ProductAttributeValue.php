@@ -1013,8 +1013,18 @@ class ProductAttributeValue extends Base
             case 'file':
                 if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
+
+                    if (!empty($wasValue)) {
+                        $wasFile = $this->getEntityManager()->getRepository('File')->get($wasValue);
+                    }
                     $result['attributes']['was']['valueId'] = $wasValue;
+                    $result['attributes']['was']['valueName'] = !empty($wasFile) ? $wasFile->get('name') : $wasValue;
+
+                    if (!empty($entity->get('valueId'))) {
+                        $file = $this->getEntityManager()->getRepository('File')->get($entity->get('valueId'));
+                    }
                     $result['attributes']['became']['valueId'] = $entity->get('valueId');
+                    $result['attributes']['became']['valueName'] = !empty($file) ? $file->get('name') : $entity->get('valueId');
                 }
                 break;
             default:
