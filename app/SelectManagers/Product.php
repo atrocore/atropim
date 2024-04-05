@@ -570,6 +570,9 @@ class Product extends AbstractSelectManager
 
                     $values = (empty($row['value'])) ? [md5('no-such-value-' . time())] : $row['value'];
                     foreach ($values as $value) {
+                        // escape slashes to search in escaped json
+                        $value = str_replace('\\', '\\\\\\\\', $value);
+                        $value = str_replace("/", "\\\\/", $value);
                         $where['value'][1]['value'][] = [
                             'type'      => 'like',
                             'attribute' => 'textValue',
