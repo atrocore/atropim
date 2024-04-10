@@ -84,7 +84,8 @@
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "virtualProductField": "Values for this attribute will be added as a virtual field via product list layout.",
     "sortOrderInProduct": "Sort order for attribute values for a product.",
-    "defaultChannel": "Apply on newly added attribute values only"
+    "defaultChannel": "Apply on newly added attribute values only",
+    "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)"
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",

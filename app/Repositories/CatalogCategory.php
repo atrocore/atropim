@@ -108,7 +108,7 @@ class CatalogCategory extends \Atro\Core\Templates\Repositories\Base
                 ->select('id')
                 ->from('catalog_category')
                 ->where('catalog_id = :catalogId')
-                ->where('category_id in (:childIds)')
+                ->andWhere('category_id in (:childIds)')
                 ->setParameter('catalogId', $entity->get('catalogId'))
                 ->setParameter('childIds', $childIds, Mapper::getParameterType($childIds))
                 ->fetchFirstColumn();

@@ -178,7 +178,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "tooltip": true
     },
     "defaultValue": {
       "type": "text",
