@@ -1,7 +1,5 @@
 {
   "scopeNames": {
-    "ProductAsset": "Ассет продукту",
-    "CategoryAsset": "Асет категорії",
     "ProductChannel": "Канал продукту",
     "AttributeTab": "Вкладка атрибута",
     "Product": "Продукт",
@@ -18,15 +16,12 @@
     "ProductPrice": "Ціна продукту",
     "Tax": "Податки",
     "ProductSerie": "Серія продукту",
-    "AssetCategory": "Ассет категорія",
     "ChannelPricing": "Канал ціноутворення",
     "ClassificationAttribute": "Атрибут класифікації",
     "Content": "Контент",
     "ContentGroup": "Група контенту"
   },
   "scopeNamesPlural": {
-    "ProductAsset": "Асети продукту",
-    "CategoryAsset": "Асети категорії",
     "ProductChannel": "Канали продукту",
     "AttributeTab": "Вкладки атрибутів",
     "Attribute": "Атрибути",
@@ -38,7 +33,6 @@
     "AttributeGroup": "Групи атрибутів",
     "Brand": "Бренди",
     "Classification": "Класифікації",
-    "AssetCategory": "Ассет категорії",
     "Tax": "Податки",
     "Product": "Продукти",
     "ProductAttributeValue": "Значення атрибутів",
@@ -72,9 +66,18 @@
     "amount": "Кількість",
     "mpn": "MPN",
     "productSerie": "Серія продукту",
+    "categories": "Категорії",
     "channels": "Канали",
+    "products": "Продукти",
+    "catalogs": "Каталоги",
     "scope": "Область застосування",
     "role": "Роль"
+  },
+  "links": {
+    "categories": "Категорії",
+    "channels": "Канали",
+    "products": "Продукти",
+    "catalogs": "Каталоги"
   },
   "labels": {
     "setAsMainImage": "Призначити основним зображенням",

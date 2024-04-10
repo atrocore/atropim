@@ -1,14 +1,14 @@
 [
   {
-    "label": "",
+    "label": "Overview",
     "style": "default",
     "rows": [
       [
         {
-          "name": "category"
+          "name": "product"
         },
         {
-          "name": "asset"
+          "name": "file"
         }
       ],
       [
@@ -24,6 +24,14 @@
           "name": "tags"
         },
         false
+      ],
+      [
+        {
+          "name": "scope"
+        },
+        {
+          "name": "channel"
+        }
       ]
     ]
   }

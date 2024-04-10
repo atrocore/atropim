@@ -314,7 +314,7 @@ class ProductAttributeValue extends Base
             case 'datetime':
                 $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
                 break;
-            case 'asset':
+            case 'file':
             case 'link':
             case 'extensibleEnum':
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
@@ -636,7 +636,7 @@ class ProductAttributeValue extends Base
                     $where['varcharValue'] = $entity->get('varcharValue');
                     $where['referenceValue'] = $entity->get('referenceValue');
                     break;
-                case 'asset':
+                case 'file':
                 case 'extensibleEnum':
                 case 'link':
                     $where['referenceValue'] = $entity->get('referenceValue');
@@ -704,6 +704,14 @@ class ProductAttributeValue extends Base
     public function validateValue(Entity $attribute, Entity $entity): void
     {
         switch ($attribute->get('type')) {
+            case 'file':
+                if (!empty($attribute->get('fileTypeId')) && !empty($entity->get('referenceValue'))) {
+                    $file = $this->getEntityManager()->getRepository('File')->get($entity->get('referenceValue'));
+                    if (!empty($file) && $file->get('typeId') !== $attribute->get('fileTypeId')) {
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('fileIsInvalid', 'exceptions', 'ProductAttributeValue'), $attribute->get('name')));
+                    }
+                }
+                break;
             case 'int':
                 if ($entity->get('min') !== null && $entity->get('intValue') !== null && $entity->get('intValue') < $entity->get('min')) {
                     $message = $this->getLanguage()->translate('fieldShouldBeGreater', 'messages');
@@ -1014,11 +1022,21 @@ class ProductAttributeValue extends Base
                     $result['attributes']['became']['value'] = $entity->get('value');
                 }
                 break;
-            case 'asset':
+            case 'file':
                 if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
+
+                    if (!empty($wasValue)) {
+                        $wasFile = $this->getEntityManager()->getRepository('File')->get($wasValue);
+                    }
                     $result['attributes']['was']['valueId'] = $wasValue;
+                    $result['attributes']['was']['valueName'] = !empty($wasFile) ? $wasFile->get('name') : $wasValue;
+
+                    if (!empty($entity->get('valueId'))) {
+                        $file = $this->getEntityManager()->getRepository('File')->get($entity->get('valueId'));
+                    }
                     $result['attributes']['became']['valueId'] = $entity->get('valueId');
+                    $result['attributes']['became']['valueName'] = !empty($file) ? $file->get('name') : $entity->get('valueId');
                 }
                 break;
             default:

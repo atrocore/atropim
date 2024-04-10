@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/fields/full-width-list-image', 'views/fields/image',
+Espo.define('pim:views/fields/full-width-list-image', 'views/fields/file',
     Dep => Dep.extend({
 
         afterRender() {

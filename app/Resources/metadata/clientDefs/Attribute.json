@@ -190,22 +190,13 @@
           ]
         }
       },
-      "assetType": {
+      "fileType": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "asset"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "asset"
+              "value": "file"
             }
           ]
         }
@@ -228,7 +219,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "asset",
+                "file",
                 "date",
                 "datetime",
                 "float",

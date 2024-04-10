@@ -71,14 +71,10 @@
       "tooltip": false,
       "view": "pim:views/attribute/fields/type"
     },
-    "assetType": {
-      "type": "enum",
+    "fileType": {
+      "type": "link",
       "required": false,
-      "default": null,
-      "options": [],
-      "view": "pim:views/attribute/fields/assetType",
-      "massUpdateDisabled": true,
-      "prohibitedEmptyValue": true
+      "default": null
     },
     "isMultilang": {
       "type": "bool",
@@ -280,6 +276,10 @@
     "assignedUser": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
     },
     "teams": {
       "type": "hasMany",

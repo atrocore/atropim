@@ -11,7 +11,7 @@
     "productAttributeValues": "Значення атрибутів",
     "isMultilang": "Багатомовність",
     "sortOrderInAttributeGroup": "Порядок сортування в групі атрибута",
-    "assetType": "Тип асета",
+    "fileType": "Тип файлу",
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Заборонити порожні значення",
@@ -68,6 +68,7 @@
      "defaultDate": "Модифікатор значення атрибута (наприклад, +5 days, -3 months)"
    },
   "exceptions": {
+    "fileTypeCannotBeDeleted": "Запис не можна видалити, оскільки він використовується в атрибуті '%s'.",
     "maxLessThanMin": "Мінімальне значення повинно бути менше за максимальне значення.",
     "noAttributeConverterFound": "Конвертація атрибуту '%s' в '%s' неможлива.",
     "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",

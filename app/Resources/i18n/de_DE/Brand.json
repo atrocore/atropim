@@ -2,14 +2,12 @@
   "fields": {
     "isActive": "Aktiv",
     "products": "Produkte",
-    "code": "Code",
-    "assets": "Assets"
+    "code": "Code"
   },
   "links": {
     "createdBy": "erstellt von",
     "modifiedBy": "geändert von",
-    "products": "Produkte",
-    "assets": "Assets"
+    "products": "Produkte"
   },
   "labels": {
     "Create Brand": "Marke erstellen"

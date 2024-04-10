@@ -17,7 +17,7 @@
     "locales": {
       "type": "multiLanguage"
     },
-    "productAssets": {
+    "productFiles": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -98,10 +98,10 @@
     }
   },
   "links": {
-    "productAssets": {
+    "productFiles": {
       "type": "hasMany",
       "foreign": "channel",
-      "entity": "ProductAsset"
+      "entity": "ProductFile"
     },
     "createdBy": {
       "type": "belongsTo",

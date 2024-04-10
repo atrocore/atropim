@@ -24,17 +24,17 @@
         <div class="field" data-name="locale">{{{locale}}}</div>
     </div>
 </div>
-{{#if isEnabledAssets}}
+{{#if isEnabledFiles}}
     <div class="row">
         <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="saveAsAsset">{{translate 'saveAsAsset' scope='PdfGenerator' category='labels'}}</label>
-            <div class="field" data-name="saveAsAsset">{{{saveAsAsset}}}</div>
+            <label class="control-label" data-name="saveAsFile">{{translate 'saveAsFile' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="saveAsFile">{{{saveAsFile}}}</div>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="assetCategory">{{translate 'AssetCategory' category='scopeNames'}}</label>
-            <div class="field" data-name="assetCategory">{{{assetCategory}}}</div>
+            <label class="control-label" data-name="folder">{{translate 'Folder' category='scopeNames'}}</label>
+            <div class="field" data-name="folder">{{{folder}}}</div>
         </div>
     </div>
 {{/if}}

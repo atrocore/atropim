@@ -1,12 +1,9 @@
 {
   "scopeNames": {
-    "ProductAsset": "Produkt-Asset",
-    "CategoryAsset": "Kategorie-Asset",
     "ProductChannel": "Produktkanal",
     "AttributeTab": "Attributtab",
     "ProductPrice": "Produktpreis",
     "ChannelPricing": "Kanal Pricing",
-    "AssetCategory": "Asset Kategorie",
     "Catalog": "Kataloge",
     "Product": "Produkt",
     "Classification": "Klassifizierung",
@@ -26,12 +23,9 @@
     "ContentGroup": "Content Gruppe"
   },
   "scopeNamesPlural": {
-    "ProductAsset": "Produkt-Assets",
-    "CategoryAsset": "Kategorie-Assets",
     "ProductChannel": "Produktkanäle",
     "AttributeTab": "Attributtabs",
     "ProductPrice": "Produktpreise",
-    "AssetCategory": "Asset Kategorien",
     "Catalog": "Kataloge",
     "Product": "Produkte",
     "Classification": "Klassifizierungen",
@@ -54,10 +48,19 @@
     "ContentGroup": "Content Gruppen"
   },
   "fields": {
+    "categories": "Kategorien",
     "channels": "Kanäle",
+    "products": "Produkte",
+    "catalogs": "Kataloge",
     "productSerie": "Product Serie",
     "scope": "Scope",
     "role": "Rolle"
+  },
+  "links": {
+    "categories": "Kategorien",
+    "channels": "Kanäle",
+    "products": "Produkte",
+    "catalogs": "Kataloge"
   },
   "options": {
     "searchRanges": {

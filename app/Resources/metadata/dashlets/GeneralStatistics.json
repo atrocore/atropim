@@ -27,11 +27,11 @@
                 "attribute": {
                     "url": "#Attribute"
                 },
-                "productWithoutAssets": {
+                "productWithoutFiles": {
                     "url": "#Product",
                     "options": {
                         "boolFilterList": [
-                            "withoutImageAssets"
+                            "withoutImageFiles"
                         ]
                     }
                 },

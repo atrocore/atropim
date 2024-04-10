@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "ProductAsset": "Product Asset",
-    "CategoryAsset": "Category Asset",
+    "ProductFile": "Product File",
+    "CategoryFile": "Category File",
     "ProductChannel": "Product Channel",
     "Product": "Product",
     "Attribute": "Attribute",
@@ -18,15 +18,14 @@
     "ProductPrice": "Product Price",
     "Tax": "Tax",
     "ProductSerie": "Product Serie",
-    "AssetCategory": "Asset Category",
     "ChannelPricing": "Channel Pricing",
     "ClassificationAttribute": "Classification Attribute",
     "Content": "Content",
     "ContentGroup": "Content Group"
   },
   "scopeNamesPlural": {
-    "ProductAsset": "Product Assets",
-    "CategoryAsset": "Category Assets",
+    "ProductFile": "Product Files",
+    "CategoryFile": "Category Files",
     "ProductChannel": "Product Channels",
     "Attribute": "Attributes",
     "Catalog": "Catalogs",
@@ -38,7 +37,6 @@
     "AttributeTab": "Attribute Tabs",
     "Brand": "Brands",
     "Classification": "Classifications",
-    "AssetCategory": "Asset Categories",
     "Tax": "Taxes",
     "Product": "Products",
     "ProductAttributeValue": "Attribute Values",
@@ -59,6 +57,10 @@
     }
   },
   "fields": {
+    "categories": "Categories",
+    "channels": "Channels",
+    "products": "Products",
+    "catalogs": "Catalogs",
     "Classification": "Classification",
     "productStatus": "Product Status",
     "oneGeoType": "OneGeo Type",
@@ -72,9 +74,14 @@
     "amount": "Amount",
     "mpn": "MPN",
     "productSerie": "Product Serie",
-    "channels": "Channels",
     "scope": "Scope",
     "role": "Role"
+  },
+  "links": {
+    "categories": "Categories",
+    "channels": "Channels",
+    "products": "Products",
+    "catalogs": "Catalogs"
   },
   "labels": {
     "removeHierarchically": "Delete Hierarchically",

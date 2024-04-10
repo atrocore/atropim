@@ -12,6 +12,7 @@
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -45,7 +46,7 @@ class Product extends AbstractSelectManager
             foreach ($params['where'] as $row) {
                 if (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
                     $productIds = [];
-                    foreach (['ProductAsset', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
+                    foreach (['ProductFile', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
                         $sp = $this->createSelectManager($entityType)->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
                         $sp['select'] = ['productId'];
                         $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
@@ -244,10 +245,10 @@ class Product extends AbstractSelectManager
      *
      * @param $result
      */
-    protected function boolFilterWithoutImageAssets(&$result)
+    protected function boolFilterWithoutImageFiles(&$result)
     {
         $result['whereClause'][] = [
-            'id' => array_column($this->getProductWithoutImageAssets(), 'id')
+            'id' => array_column($this->getProductWithoutImageFiles(), 'id')
         ];
     }
 
@@ -256,9 +257,9 @@ class Product extends AbstractSelectManager
      *
      * @return array
      */
-    protected function getProductWithoutImageAssets(): array
+    protected function getProductWithoutImageFiles(): array
     {
-        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutAssets());
+        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutFiles());
     }
 
     /**
@@ -458,8 +459,8 @@ class Product extends AbstractSelectManager
         $res = $connection->createQueryBuilder()
             ->select('p.id')
             ->from($connection->quoteIdentifier('product'), 'p')
-            ->where('p.id NOT IN (SELECT DISTINCT pa.product_id FROM product_asset pa WHERE pa.is_main_image = :true)')
-            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->where('p.id NOT IN (SELECT DISTINCT pa.product_id FROM product_file pa WHERE pa.is_main_image = :true)')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
         $result['whereClause'][] = [
@@ -663,7 +664,7 @@ class Product extends AbstractSelectManager
                     'value'     => 'main',
                 ];
                 break;
-            case 'asset':
+            case 'file':
             case 'link':
                 $row['attribute'] = 'referenceValue';
                 $where['value'][] = $row;

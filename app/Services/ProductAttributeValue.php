@@ -152,7 +152,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     // filter by field filter
                     if (!empty($fieldFilter) && !in_array('allValues', $fieldFilter)) {
                         switch ($pavEntity->get('attributeType')) {
-                            case 'asset':
+                            case 'file':
                             case 'link':
                                 $isEmpty = empty($pavEntity->get('valueId'));
                                 break;
@@ -838,7 +838,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $tooltipFieldName = $locale == 'main' ? 'tooltip' : Util::toCamelCase('tooltip_' . strtolower($locale));
         $entity->set('attributeTooltip', $attribute->get($tooltipFieldName));
         $entity->set('attributeEntityType', $attribute->get('entityType'));
-        $entity->set('attributeAssetType', $attribute->get('assetType'));
+        $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));

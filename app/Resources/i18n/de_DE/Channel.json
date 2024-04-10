@@ -4,7 +4,6 @@
     "channelProducts": "Produkte des Kanals",
     "isActive": "Aktiv",
     "locales": "Sprachen",
-    "assetRelations": "Asset Relationen",
     "productAttributeValues": "Produktattrubitwerte",
     "productCategories": "Produktkategorien",
     "classificationAttributes": "Klassifizierungattribute",
@@ -16,7 +15,6 @@
   "links": {
     "categories": "Kategorien",
     "channelProductAttributeValues": "Produktattributwerte für Kanal",
-    "assetRelations": "Asset Relationen",
     "productAttributeValues": "Produktattributwerte",
     "productCategories": "Produktkategorien",
     "classificationAttributes": "Klassifizierungattribute",

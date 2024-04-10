@@ -8,13 +8,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/panels/assets', 'views/record/panels/assets',
+Espo.define('pim:views/record/panels/files', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
         actionSetAsMainImage(data) {
             this.notify('Saving...');
-            this.ajaxPutRequest(`${this.model.urlRoot}Asset/${data.id}`, {isMainImage: true}).done(entity => {
-                this.model.trigger('asset:saved');
+            this.ajaxPutRequest(`${this.model.urlRoot}File/${data.id}`, {isMainImage: true}).done(entity => {
+                this.model.trigger('file:saved');
                 this.notify('Saved', 'success');
                 this.actionRefresh();
             });

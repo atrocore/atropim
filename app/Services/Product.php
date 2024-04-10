@@ -15,6 +15,7 @@ namespace Pim\Services;
 
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
+use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
@@ -40,9 +41,9 @@ class Product extends Hierarchy
             $conn = $this->getEntityManager()->getConnection();
 
             $res = $conn->createQueryBuilder()
-                ->select('ps.id, a.file_id, a.name, ps.product_id')
-                ->from('product_asset', 'ps')
-                ->innerJoin('ps', 'asset', 'a', 'a.id=ps.asset_id AND a.deleted=:false')
+                ->select('ps.id, a.id as file_id, a.name, ps.product_id')
+                ->from('product_file', 'ps')
+                ->innerJoin('ps', 'file', 'a', 'a.id=ps.file_id AND a.deleted=:false')
                 ->where('ps.product_id IN (:productsIds)')
                 ->andWhere('ps.is_main_image = :true')
                 ->andWhere('ps.deleted = :false')
@@ -137,19 +138,22 @@ class Product extends Hierarchy
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
 
-            $productAsset = $this
+            $relEntity = $this
                 ->getEntityManager()
-                ->getRepository('ProductAsset')
+                ->getRepository('ProductFile')
                 ->where([
                     'productId'   => $entity->get('id'),
                     'isMainImage' => true
                 ])
                 ->findOne();
 
-            if (!empty($productAsset) && !empty($asset = $this->getServiceFactory()->create('Asset')->getEntity($productAsset->get('assetId')))) {
-                $entity->set('mainImageId', $asset->get('fileId'));
-                $entity->set('mainImageName', $asset->get('fileName'));
-                $entity->set('mainImagePathsData', $asset->get('filePathsData'));
+            if (!empty($relEntity) && !empty($relEntity->get('fileId'))) {
+                /** @var File $file */
+                $file = $this->getEntityManager()->getRepository('File')->get($relEntity->get('fileId'));
+
+                $entity->set('mainImageId', $file->get('id'));
+                $entity->set('mainImageName', $file->get('name'));
+                $entity->set('mainImagePathsData', $file->getPathsData());
             }
         }
     }
@@ -218,7 +222,8 @@ class Product extends Hierarchy
                             if (!$result->get('attributeIsMultilang')) {
                                 $existingPavs->append($result);
                             } else {
-                                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
+                                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])
+                                    ->find();
                             }
 
                         }
@@ -762,31 +767,11 @@ class Product extends Hierarchy
         return $entity;
     }
 
-    protected function handleInput(\stdClass $data, ?string $id = null): void
-    {
-        if (property_exists($data, 'assetsNames')) {
-            unset($data->assetsNames);
-        }
-
-        if (property_exists($data, 'assetsIds')) {
-            $data->_paAssetsIds = $data->assetsIds;
-            unset($data->assetsIds);
-        }
-
-        if (property_exists($data, 'assetsAddOnlyMode')) {
-            $data->_paAddMode = $data->assetsAddOnlyMode;
-            unset($data->assetsAddOnlyMode);
-        }
-
-        parent::handleInput($data, $id);
-    }
-
     protected function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
-        $this->createProductAssets($entity, $data);
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
@@ -794,7 +779,6 @@ class Product extends Hierarchy
         parent::afterUpdateEntity($entity, $data);
 
         $this->saveMainImage($entity, $data);
-        $this->createProductAssets($entity, $data);
     }
 
     protected function saveMainImage(Entity $entity, $data): void
@@ -803,68 +787,26 @@ class Product extends Hierarchy
             return;
         }
 
-        $asset = $this->getEntityManager()->getRepository('Asset')->where(['fileId' => $data->mainImageId])->findOne();
-        if (empty($asset)) {
+        $file = $this->getEntityManager()->getRepository('File')->where(['id' => $data->mainImageId])->findOne();
+        if (empty($file)) {
             return;
         }
 
         $where = [
             'productId' => $entity->get('id'),
-            'assetId'   => $asset->get('id')
+            'fileId'   => $file->get('id')
         ];
 
-        $repository = $this->getEntityManager()->getRepository('ProductAsset');
+        $repository = $this->getEntityManager()->getRepository('ProductFile');
 
-        $productAsset = $repository->where($where)->findOne();
-        if (empty($productAsset)) {
-            $productAsset = $repository->get();
-            $productAsset->set($where);
+        $productFile = $repository->where($where)->findOne();
+        if (empty($productFile)) {
+            $productFile = $repository->get();
+            $productFile->set($where);
         }
-        $productAsset->set('isMainImage', true);
+        $productFile->set('isMainImage', true);
 
-        $this->getEntityManager()->saveEntity($productAsset);
-    }
-
-    /**
-     * This needs for old import feeds. For import assets from product
-     */
-    protected function createProductAssets(Entity $entity, \stdClass $data): void
-    {
-        if (!property_exists($data, '_paAssetsIds')) {
-            return;
-        }
-
-        $assets = $this
-            ->getEntityManager()
-            ->getRepository('Asset')
-            ->where(['id' => $data->_paAssetsIds])
-            ->find();
-
-        /** @var ProductAsset $service */
-        $service = $this->getServiceFactory()->create('ProductAsset');
-
-        foreach ($assets as $asset) {
-            $input = new \stdClass();
-            $input->productId = $entity->get('id');
-            $input->assetId = $asset->get('id');
-
-            try {
-                $service->createEntity($input);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error('ProductAsset creating failed: ' . $e->getMessage());
-            }
-        }
-
-        if (!property_exists($data, '_paAddMode') || empty($data->_paAddMode)) {
-            $this
-                ->getEntityManager()
-                ->getRepository('ProductAsset')
-                ->where([
-                    'productId' => $entity->get('id'),
-                    'assetId!=' => array_column($assets->toArray(), 'id')
-                ])
-                ->removeCollection();
-        }
+        $this->getEntityManager()->saveEntity($productFile);
     }
 
     /**
@@ -960,10 +902,6 @@ class Product extends Hierarchy
     {
         $post = clone $data;
 
-        if (property_exists($post, '_paAssetsIds')) {
-            return true;
-        }
-
         if ($this->isProductAttributeUpdating($post)) {
             return true;
         }
@@ -971,11 +909,6 @@ class Product extends Hierarchy
         $this->setProductMainImage($entity);
 
         return parent::isEntityUpdated($entity, $post);
-    }
-
-    protected function getAssets(string $productId): array
-    {
-        return $this->getInjection('serviceFactory')->create('Asset')->getEntityAssets('Product', $productId);
     }
 
     /**
@@ -1034,11 +967,11 @@ class Product extends Hierarchy
                             $product->set($fieldName . 'From', $pav->get('From'));
                             $product->set($fieldName . 'To', $pav->get('To'));
                             break;
-                        case 'asset':
-                            if (!empty($attributeField['assetFieldName'])) {
-                                $product->set($attributeField['assetFieldName'] . 'Id', $pav->get('valueId'));
-                                $product->set($attributeField['assetFieldName'] . 'Name', $pav->get('valueName'));
-                                $product->set($attributeField['assetFieldName'] . 'PathsData', $pav->get('valuePathsData'));
+                        case 'file':
+                            if (!empty($attributeField['fileFieldName'])) {
+                                $product->set($attributeField['fileFieldName'] . 'Id', $pav->get('valueId'));
+                                $product->set($attributeField['fileFieldName'] . 'Name', $pav->get('valueName'));
+                                $product->set($attributeField['fileFieldName'] . 'PathsData', $pav->get('valuePathsData'));
                             }
                             break;
                     }
@@ -1083,7 +1016,7 @@ class Product extends Hierarchy
                 if ($childPav->get('isPavValueInherited') === false) {
                     $value = $childPav->get('value');
                     $parentValue = $parentPav->get('value');
-                    if ($childPav->get('attributeType') === 'asset') {
+                    if ($childPav->get('attributeType') === 'file') {
                         $value = $childPav->get('valueId');
                         $parentValue = $parentPav->get('valueId');
                     }

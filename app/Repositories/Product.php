@@ -360,7 +360,7 @@ class Product extends Hierarchy
     {
         $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
-        $this->getEntityManager()->getRepository('ProductAsset')->removeByProductId($entity->get('id'));
+        $this->getEntityManager()->getRepository('ProductFile')->removeByProductId($entity->get('id'));
 
         parent::afterRemove($entity, $options);
     }

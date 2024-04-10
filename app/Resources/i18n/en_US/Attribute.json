@@ -11,7 +11,7 @@
     "productAttributeValues": "Attribute Values",
     "isMultilang": "Multilingual",
     "sortOrderInAttributeGroup": "Sort Order in Attribute Group",
-    "assetType": "Asset Type",
+    "fileType": "File Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Disable empty value",
@@ -67,7 +67,7 @@
       "wysiwyg": "HTML",
       "rangeInt": "Integer Range",
       "rangeFloat": "Float Range",
-      "asset": "Asset"
+      "file": "File"
     }
   },
   "messages": {
@@ -88,6 +88,7 @@
     "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)"
   },
   "exceptions": {
+    "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",
     "maxLessThanMin": "Min should be less than Max.",
     "noAttributeConverterFound": "Attribute converting from type '%s' to '%s' is impossible.",
     "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",

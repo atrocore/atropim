@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Entities\File;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
@@ -115,13 +116,13 @@ class AssociatedProduct extends Base
         if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
             $entity->set('mainProductImageId', $image->get('id'));
             $entity->set('mainProductImageName', $image->get('name'));
-            $entity->set('mainProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+            $entity->set('mainProductImagePathsData', $image->getPathsData());
         }
 
         if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $this->getMainImage($relatedProduct))) {
             $entity->set('relatedProductImageId', $image->get('id'));
             $entity->set('relatedProductImageName', $image->get('name'));
-            $entity->set('relatedProductImagePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($image));
+            $entity->set('relatedProductImagePathsData', $image->getPathsData());
         }
     }
 
@@ -197,19 +198,12 @@ class AssociatedProduct extends Base
         return $result;
     }
 
-    /**
-     * @param \Pim\Entities\Product $product
-     *
-     * @return Entity|null
-     */
-    protected function getMainImage(\Pim\Entities\Product $product): ?Attachment
+    protected function getMainImage(\Pim\Entities\Product $product): ?File
     {
-        if ($product->hasRelation('productAssets')) {
-            foreach ($product->get('productAssets') as $productAsset) {
-                if ($productAsset->get('isMainImage')) {
-                    if (!empty($asset = $productAsset->get('asset'))) {
-                        return $asset->get('file');
-                    }
+        if ($product->hasRelation('productFiles')) {
+            foreach ($product->get('productFiles') as $productFile) {
+                if ($productFile->get('isMainImage')) {
+                    return $productFile->get('file');
                 }
             }
         }

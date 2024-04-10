@@ -7,26 +7,11 @@
     "sorting": {
       "type": "int"
     },
-    "scope": {
-      "type": "enum",
-      "required": false,
-      "prohibitedEmptyValue": true,
-      "options": [
-        "Global",
-        "Channel"
-      ],
-      "optionsIds": [
-        "Global",
-        "Channel"
-      ],
-      "default": "Global"
-    },
     "channel": {
       "type": "link",
       "required": false,
       "notNull": true,
-      "default": "",
-      "view": "pim:views/product-asset/fields/channel"
+      "default": ""
     },
     "tags": {
       "type": "array"
@@ -35,12 +20,12 @@
   "links": {
     "product": {
       "type": "belongsTo",
-      "foreign": "productAssets",
+      "foreign": "productFiles",
       "entity": "Product"
     },
     "channel": {
       "type": "belongsTo",
-      "foreign": "productAssets",
+      "foreign": "productFiles",
       "entity": "Channel"
     }
   },
@@ -48,8 +33,7 @@
     "unique_relation": [
       "deleted",
       "product_id",
-      "asset_id",
-      "scope",
+      "file_id",
       "channel_id"
     ]
   }

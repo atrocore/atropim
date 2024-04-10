@@ -37,6 +37,7 @@
     "countOfLinkedAttributes": "Кількість пов’язаних атрибутів: {count}"
   },
   "exceptions": {
+    "fileIsInvalid": "Файл для атрибуту '%s' не є дійсним.",
     "attributeUnitValueIsRequired": "Одиниця виміру для атрибута '%s' необхідна.",
     "noSuchAttributeUnit": "Одиниця виміру для атрибута '%s' не допустима.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас немає прав на читання значень атрибутів.",

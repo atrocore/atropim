@@ -18,7 +18,7 @@
       "unique": true
     },
     "mainImage": {
-      "type": "image",
+      "type": "file",
       "previewSize": "medium",
       "notStorable": true,
       "readOnly": true,
@@ -26,7 +26,7 @@
       "filterDisabled": true,
       "emHidden": true
     },
-    "assets": {
+    "files": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -169,16 +169,11 @@
     }
   },
   "links": {
-    "mainImage": {
-      "type": "belongsTo",
-      "entity": "Attachment",
-      "skipOrmDefs": true
-    },
-    "assets": {
+    "files": {
       "type": "hasMany",
-      "relationName": "categoryAsset",
+      "relationName": "categoryFile",
       "foreign": "categories",
-      "entity": "Asset"
+      "entity": "File"
     },
     "createdBy": {
       "type": "belongsTo",

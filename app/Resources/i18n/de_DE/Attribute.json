@@ -11,7 +11,7 @@
     "attributeTab": "Attributtab",
     "code": "Code",
     "isMultilang": "Mehrsprachig",
-    "assetType": "Asset-Typ",
+    "fileType": "Datei-Typ",
     "name": "Attributname",
     "pattern": "Regex Pattern",
     "unique": "Unique",
@@ -65,7 +65,7 @@
       "url": "Url",
       "varchar": "Einzeiliger Text",
       "wysiwyg": "HTML",
-      "asset": "Asset"
+      "file": "Datei"
     }
   },
   "messages": {
@@ -86,6 +86,7 @@
     "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)"
   },
   "exceptions": {
+    "fileTypeCannotBeDeleted": "Der Datensatz kann nicht gelöscht werden, da er in dem Attribut \"%s\" verwendet wird.",
     "maxLessThanMin": "Min sollte kleiner als Max sein.",
     "noAttributeConverterFound": "Attributkonvertierung vom Typ '%s' in '%s' ist nicht möglich.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",

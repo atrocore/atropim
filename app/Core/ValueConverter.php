@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pim\Core;
 
+use Atro\Entities\File;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Injectable;
@@ -151,7 +152,7 @@ class ValueConverter extends Injectable
                     unset($data->value);
                 }
                 break;
-            case 'asset':
+            case 'file':
             case 'link':
                 if (property_exists($data, 'value')) {
                     $data->referenceValue = $data->value;
@@ -324,14 +325,16 @@ class ValueConverter extends Injectable
                     }
                 }
                 break;
-            case 'asset':
+            case 'file':
                 if ($entity->has('referenceValue')) {
                     $entity->set('value', $entity->get('referenceValue'));
                     $entity->set('valueId', $entity->get('referenceValue'));
                     if (!$this->isExport() && !empty($entity->get('valueId'))) {
-                        if (!empty($attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('valueId')))) {
-                            $entity->set('valueName', $attachment->get('name'));
-                            $entity->set('valuePathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($attachment));
+                        /** @var File $file */
+                        $file = $this->getEntityManager()->getEntity('File', $entity->get('valueId'));
+                        if (!empty($file)) {
+                            $entity->set('valueName', $file->get('name'));
+                            $entity->set('valuePathsData', $file->getPathsData());
                         }
                     }
                 }

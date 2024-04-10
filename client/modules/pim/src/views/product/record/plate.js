@@ -110,7 +110,7 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
         },
 
         getItemView() {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.plateItem') || 'views/asset/record/plate-item';
+            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.plateItem') || 'views/file/record/plate-item';
         },
 
         getRowSelector(id) {

@@ -8,7 +8,6 @@
     "markupType": "Typ",
     "markupValue": "Wert",
     "mainImage": "Hauptbild",
-    "assets": "Assets",
     "categoryRoute": "Kategoriebaum (ID)",
     "childrenCount": "Anzahl Kinderelemente",
     "hasChildren": "hat untergeordnete Elemente",
@@ -23,7 +22,6 @@
   "links": {
     "categoryRoot": "Stammkategorie",
     "products": "Produkte",
-    "assets": "Assets",
     "rootCategories": "Stammkategorien",
     "image": "Bild",
     "children": "Untergeordnete Kategorien",

@@ -57,9 +57,9 @@ class GeneralStatisticsDashlet extends AbstractDashletService
 
         if (!empty($this->getInjection('metadata')->get('entityDefs.Product.fields.image'))) {
             $result['list'][] = [
-                'id'     => 'productWithoutAssets',
-                'name'   => 'productWithoutAssets',
-                'amount' => $this->getAmountProductWithoutAssets()
+                'id'     => 'productWithoutFiles',
+                'name'   => 'productWithoutFiles',
+                'amount' => $this->getAmountProductWithoutFiles()
             ];
         }
 
@@ -68,13 +68,13 @@ class GeneralStatisticsDashlet extends AbstractDashletService
         return $result;
     }
 
-    public function getQueryProductWithoutAssets($count = false): string
+    public function getQueryProductWithoutFiles($count = false): string
     {
         $select = $count ? 'COUNT(p.id)' : 'p.id AS id';
         $sql
             = "SELECT " . $select . " 
                 FROM product as p 
-                WHERE p.id NOT IN (SELECT product_id FROM product_asset WHERE deleted=:false) 
+                WHERE p.id NOT IN (SELECT product_id FROM product_file WHERE deleted=:false) 
                   AND p.deleted=:false";
 
         return $sql;
@@ -137,13 +137,13 @@ class GeneralStatisticsDashlet extends AbstractDashletService
                 WHERE p.deleted = :false AND pav.id IS NULL";
     }
 
-    protected function getAmountProductWithoutAssets(): int
+    protected function getAmountProductWithoutFiles(): int
     {
         if (!$this->getInjection('acl')->check('Product', 'read')) {
             return 0;
         }
 
-        $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutAssets(false));
+        $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutFiles(false));
         $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
         $sth->execute();
 

@@ -3,12 +3,10 @@
     "products": "Продукты",
     "description": "Описание",
     "isActive": "Активный",
-    "code": "Код",
-    "assets": "Ассеты"
+    "code": "Код"
   },
   "links": {
-    "products": "Продукты",
-    "assets": "Ассеты"
+    "products": "Продукты"
   },
   "labels": {
     "Create Brand": "Создать бренд"

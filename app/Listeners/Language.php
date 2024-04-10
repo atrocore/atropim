@@ -69,7 +69,7 @@ class Language extends AbstractListener
                 }
             }
 
-            foreach (['ProductAttributeValue', 'ProductAsset'] as $entityType) {
+            foreach (['ProductAttributeValue', 'ProductFile'] as $entityType) {
                 $callback = '\\Pim\\SelectManagers\\' . $entityType . '::createScopePrismBoolFilterName';
                 $data[$l][$entityType]['boolFilters'][call_user_func($callback, 'global')] = $channelLabel . ': Global';
                 foreach ($this->getMetadata()->get(['clientDefs', $entityType, 'channels'], []) as $channel) {

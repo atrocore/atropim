@@ -1,14 +1,12 @@
 {
   "fields": {
     "category": "Категория",
-    "asset": "Ассет",
     "isMainImage": "Основное изображение",
     "tags": "Теги",
     "preview": "Предпросмотр",
     "sorting": "Порядок сортировки"
   },
   "links": {
-    "category": "Category",
-    "asset": "Категория"
+    "category": "Category"
   }
 }

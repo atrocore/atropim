@@ -3,12 +3,10 @@
     "products": "Products",
     "description": "Description",
     "isActive": "Active",
-    "code": "Code",
-    "assets": "Assets"
+    "code": "Code"
   },
   "links": {
-    "products": "Products",
-    "assets": "Assets"
+    "products": "Products"
   },
   "labels": {
     "Create Brand": "Create Brand"
