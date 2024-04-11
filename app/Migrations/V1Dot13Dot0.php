@@ -127,6 +127,72 @@ class V1Dot13Dot0 extends Base
             }
         }
 
+        foreach (['Brand', 'Category', 'Product'] as $row) {
+            // migrate import
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->select('t1.*')
+                ->from('import_configurator_item', 't1')
+                ->innerJoin('t1', 'import_feed', 't2', 't2.id=t1.import_feed_id')
+                ->where('t2.data LIKE :str')
+                ->andWhere('t1.deleted = :false')
+                ->andWhere('t2.deleted = :false')
+                ->andWhere('t1.name = :name')
+                ->setParameter('name', 'assets')
+                ->setParameter('str', '%"entity":"' . $row . '"%')
+                ->setParameter('false', false, ParameterType::BOOLEAN);
+            try {
+                foreach ($qb->fetchAllAssociative() as $v) {
+                    $this->getConnection()->createQueryBuilder()
+                        ->update('import_configurator_item')
+                        ->set('name', ':name')
+                        ->where('id = :id')
+                        ->setParameter('id', $v['id'])
+                        ->setParameter('name', 'files')
+                        ->executeQuery();
+                }
+            } catch (\Throwable $e) {
+            }
+
+            // migrate export
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->select('t1.*')
+                ->from('export_configurator_item', 't1')
+                ->innerJoin('t1', 'export_feed', 't2', 't2.id=t1.export_feed_id')
+                ->where('t2.data LIKE :str')
+                ->andWhere('t1.deleted = :false')
+                ->andWhere('t2.deleted = :false')
+                ->setParameter('str', '%"entity":"' . $row . '"%')
+                ->setParameter('false', false, ParameterType::BOOLEAN);
+            try {
+                foreach ($qb->fetchAllAssociative() as $v) {
+                    $toUpdate = false;
+                    if ($v['name'] === 'assets') {
+                        $v['name'] = 'files';
+                        $toUpdate = true;
+                    }
+
+                    $exportBy = @json_decode((string)$v['export_by'], true);
+                    if (is_array($exportBy) && !empty($exportBy) && in_array('url', $exportBy)) {
+                        $v['export_by'] = str_replace('"url"', '"downloadUrl"', $v['export_by']);
+                        $toUpdate = true;
+                    }
+
+                    if ($toUpdate) {
+                        $this->getConnection()->createQueryBuilder()
+                            ->update('export_configurator_item')
+                            ->set('name', ':name')
+                            ->set('export_by', ':exportBy')
+                            ->where('id = :id')
+                            ->setParameter('id', $v['id'])
+                            ->setParameter('name', $v['name'])
+                            ->setParameter('exportBy', $v['export_by'])
+                            ->executeQuery();
+                    }
+                }
+            } catch (\Throwable $e) {
+            }
+        }
+
         $this->updateComposer('atrocore/pim', '^1.13.0');
     }
 
