@@ -32,7 +32,8 @@
     "classifications": "Classifications",
     "extensibleEnum": "List",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "disableNullValue": "Disable Null Value"
   },
   "links": {
     "measure": "Measure",

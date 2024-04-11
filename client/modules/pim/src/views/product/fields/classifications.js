@@ -11,9 +11,9 @@
 Espo.define('pim:views/product/fields/classifications', 'views/fields/link',
     Dep => Dep.extend({
         setup() {
-            let classificationId = this.model.get('classificationsIds').at(-1)
+            let classificationId = this.model.get('classificationsIds')?.at(-1)
             this.model.set('classificationsId',  classificationId ?? null);
-            this.model.set('classificationsName', this.model.get('classificationsNames')[classificationId] ?? null);
+            this.model.set('classificationsName', (this.model.get('classificationsNames') ?? [])[classificationId] ?? null);
             Dep.prototype.setup.call(this);
              this.listenTo(this.model, 'change:classificationsId', () => {
                  let name = {}

@@ -299,6 +299,19 @@
             }
           ]
         }
+      },
+      "disableNullValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "bool"
+              ]
+            }
+          ]
+        }
       }
     }
   }
