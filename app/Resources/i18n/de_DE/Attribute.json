@@ -33,7 +33,9 @@
     "extensibleEnum": "Liste",
     "min": "Min",
     "max": "Max",
-    "disableNullValue": "Nullwert deaktivieren"
+    "disableNullValue": "Nullwert deaktivieren",
+    "disableEmptyValue": "Leeren Wert deaktivieren",
+    "trim": "Führende und nachfolgende Whitespaces entfernen"
   },
   "links": {
     "measure": "Maß",

@@ -312,6 +312,32 @@
             }
           ]
         }
+      },
+      "disableEmptyValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar"
+              ]
+            }
+          ]
+        }
+      },
+      "trim": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar"
+              ]
+            }
+          ]
+        }
       }
     }
   }

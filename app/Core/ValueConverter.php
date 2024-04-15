@@ -172,7 +172,11 @@ class ValueConverter extends Injectable
                 break;
             case 'varchar':
                 if (property_exists($data, 'value')) {
-                    $data->varcharValue = $data->value;
+                    if($attribute->get('disableEmptyValue') && $data->value === "" ){
+                        $data->varcharValue = null;
+                    }else{
+                        $data->varcharValue = $data->value;
+                    }
                     unset($data->value);
                 } else {
                     if (empty($data->varcharValue) && !empty($default = $attribute->get('defaultValue'))) {

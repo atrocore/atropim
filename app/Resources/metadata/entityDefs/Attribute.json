@@ -263,6 +263,14 @@
       "type": "bool",
       "default": true,
       "tooltip": true
+    },
+    "disableEmptyValue": {
+      "type": "bool",
+      "default": true
+    },
+    "trim": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

@@ -87,6 +87,14 @@
       ],
       [
         {
+          "name": "trim"
+        },
+        {
+          "name": "disableEmptyValue"
+        }
+      ],
+      [
+        {
           "name": "sortOrderInProduct"
         },
         false
