@@ -58,6 +58,10 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 let fieldView = this.getFieldManager().getViewName(attributeType);
 
+                if(attributeType === 'bool' && !this.model.get('attributeDisableNullValue')){
+                    fieldView = 'views/fields/bool-enum';
+                }
+
                 let params = {
                     required: !!this.model.get('isRequired'),
                     readOnly: !!this.model.get('isValueReadOnly')

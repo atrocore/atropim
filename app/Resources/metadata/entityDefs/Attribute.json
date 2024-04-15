@@ -258,6 +258,11 @@
       "filterDisabled": true,
       "default": false,
       "emHidden": true
+    },
+    "disableNullValue": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true
     }
   },
   "links": {

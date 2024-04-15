@@ -42,6 +42,9 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
 
             if (type) {
                 let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+                if(type === "bool" && this.options.params.disableNullValue === false){
+                    viewName = 'views/fields/bool-enum';
+                }
                 let params = {};
 
                 if (type === 'unit') {

@@ -88,7 +88,11 @@ class ValueConverter extends Injectable
                 break;
             case 'bool':
                 if (property_exists($data, 'value')) {
-                    $data->boolValue = !empty($data->value);
+                    if(!$attribute->get('disableNullValue') && $data->value ===  null){
+                        $data->boolValue = null;
+                    }else{
+                        $data->boolValue = !empty($data->value);
+                    }
                     unset($data->value);
                 }
                 break;
@@ -260,7 +264,11 @@ class ValueConverter extends Injectable
                 break;
             case 'bool':
                 if ($entity->has('boolValue')) {
-                    $entity->set('value', !empty($entity->get('boolValue')));
+                    if(!$attribute->get('disableNullValue') && $entity->get('boolValue') === null){
+                        $entity->set('value', null);
+                    }else{
+                        $entity->set('value', !empty($entity->get('boolValue')));
+                    }
                 }
                 break;
             case 'int':

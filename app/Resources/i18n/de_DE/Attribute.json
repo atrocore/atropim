@@ -32,7 +32,8 @@
     "description": "Beschreibung",
     "extensibleEnum": "Liste",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "disableNullValue": "Nullwert deaktivieren"
   },
   "links": {
     "measure": "Maß",
