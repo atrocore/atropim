@@ -81,12 +81,6 @@
       ],
       [
         {
-          "name": "disableNullValue"
-        },
-        false
-      ],
-      [
-        {
           "name": "sortOrderInProduct"
         },
         false
