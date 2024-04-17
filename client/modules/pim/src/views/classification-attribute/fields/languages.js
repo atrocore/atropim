@@ -12,13 +12,23 @@ Espo.define('pim:views/classification-attribute/fields/languages', 'views/fields
     return Dep.extend({
 
         setup() {
-            this.params.options = ['main'].concat(this.getConfig().get('inputLanguageList'));
-
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:attribute', () => {
                 this.reRender();
             });
+        },
+
+        setupOptions(){
+            this.params.options = ['main']
+            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
+
+            if (this.getConfig().get('isMultilangActive')) {
+                (this.getConfig().get('inputLanguageList') || []).forEach(language => {
+                    this.params.options.push(language);
+                    this.translatedOptions[language] = language;
+                });
+            }
         },
 
         afterRender() {
