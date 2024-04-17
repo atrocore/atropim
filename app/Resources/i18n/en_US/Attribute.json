@@ -33,7 +33,6 @@
     "extensibleEnum": "List",
     "min": "Min",
     "max": "Max",
-    "disableNullValue": "Disable Null Value",
     "disableEmptyValue": "Disable Empty Value",
     "trim": "Remove leading and trailing whitespaces"
   },

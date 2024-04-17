@@ -81,17 +81,15 @@
       ],
       [
         {
-          "name": "disableNullValue"
+          "name": "trim"
         },
         false
       ],
       [
         {
-          "name": "trim"
-        },
-        {
           "name": "disableEmptyValue"
-        }
+        },
+        false
       ],
       [
         {

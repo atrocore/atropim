@@ -35,7 +35,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'attributeId',
             'attributeName',
             'attributeType',
-            'attributeDisableNullValue',
             'attributeDisableEmptyValue',
             'attributeTrim',
             'attributeTooltip',
@@ -847,9 +846,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-        $entity->set('attributeDisableNullValue', $attribute->get('disableNullValue'));
         $entity->set('attributeDisableEmptyValue', $attribute->get('disableEmptyValue'));
         $entity->set('attributeTrim', $attribute->get('trim'));
+
 
         if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
@@ -959,11 +958,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         $fetched = property_exists($entity, '_fetchedEntity') ? $entity->_fetchedEntity : $this->getRepository()->where(['id' => $entity->get('id')])->findOne(["noCache" => true]);
         return parent::isEntityUpdated($fetched, $data);
-    }
-
-    protected  function customBoolConditionForIsEntityUpdate($data){
-        $attribute  = $this->getAttributeViaInputData($data);
-        return $attribute->get('disableNullValue');
     }
 
     public function getClassificationAttributesFromPavId(string $pavId): array

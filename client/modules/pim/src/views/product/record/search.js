@@ -45,10 +45,6 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                                 fieldParams.extensibleEnumId = attribute.get('extensibleEnumId');
                             }
 
-                            if(attribute.get('type') === 'bool' && !attribute.get('disableNullValue')){
-                                fieldParams.disableNullValue = false;
-                            }
-
                             this.addFilter(attribute.id, {fieldParams: fieldParams});
                         });
                     });
