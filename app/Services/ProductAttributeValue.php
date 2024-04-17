@@ -35,6 +35,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'attributeId',
             'attributeName',
             'attributeType',
+            'attributeDisableEmptyValue',
+            'attributeTrim',
             'attributeTooltip',
             'intValue',
             'intValue1',
@@ -846,6 +848,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
         $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
         $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+        $entity->set('attributeDisableEmptyValue', $attribute->get('disableEmptyValue'));
+        $entity->set('attributeTrim', $attribute->get('trim'));
+
 
         if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));

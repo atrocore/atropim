@@ -32,7 +32,9 @@
     "classifications": "Classifications",
     "extensibleEnum": "List",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "disableEmptyValue": "Disable Empty Value",
+    "trim": "Remove leading and trailing whitespaces"
   },
   "links": {
     "measure": "Measure",

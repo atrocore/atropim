@@ -258,6 +258,14 @@
       "filterDisabled": true,
       "default": false,
       "emHidden": true
+    },
+    "disableEmptyValue": {
+      "type": "bool",
+      "default": false
+    },
+    "trim": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {
