@@ -361,7 +361,7 @@ class Product extends AbstractSelectManager
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
         if (str_contains($query, ':zero')) {
-            $sth->bindValue(':zero', false, \PDO::PARAM_INT);
+            $sth->bindValue(':zero', 0, \PDO::PARAM_INT);
         }
         $sth->execute();
 
