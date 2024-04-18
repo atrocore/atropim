@@ -101,7 +101,7 @@ class GeneralStatisticsDashlet extends AbstractDashletService
                         ON p_main.id = ap.related_product_id AND p_main.deleted = :false
                       JOIN association 
                         ON association.id = ap.association_id AND association.deleted = :false
-                    WHERE ap.deleted = :false AND  ap.main_product_id = p.id) = :false 
+                    WHERE ap.deleted = :false AND  ap.main_product_id = p.id) = :zero 
                 AND p.deleted = :false";
 
         return $sql;
@@ -170,6 +170,7 @@ class GeneralStatisticsDashlet extends AbstractDashletService
 
         $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutAssociatedProduct(false));
         $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $sth->bindValue(':zero', 0, \PDO::PARAM_INT);
         $sth->execute();
 
         $ids = $sth->fetchAll(\PDO::FETCH_COLUMN);
