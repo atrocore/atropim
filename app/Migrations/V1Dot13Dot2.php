@@ -25,10 +25,10 @@ class V1Dot13Dot2 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE attribute ADD disable_empty_value BOOLEAN DEFAULT 'true' NOT NULL");
+            $this->exec("ALTER TABLE attribute ADD disable_empty_value BOOLEAN DEFAULT 'false' NOT NULL");
             $this->exec("ALTER TABLE attribute ADD trim BOOLEAN DEFAULT 'false' NOT NULL");
         } else {
-            $this->exec("ALTER TABLE attribute ADD disable_empty_value TINYINT(1) DEFAULT '1' NOT NULL;");
+            $this->exec("ALTER TABLE attribute ADD disable_empty_value TINYINT(1) DEFAULT '0' NOT NULL;");
             $this->exec("ALTER TABLE attribute ADD trim TINYINT(1) DEFAULT '0' NOT NULL;");
         }
     }
