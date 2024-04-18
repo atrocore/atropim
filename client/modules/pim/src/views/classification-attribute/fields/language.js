@@ -19,6 +19,18 @@ Espo.define('pim:views/classification-attribute/fields/language', 'views/fields/
             });
         },
 
+        setupOptions(){
+            this.params.options = ['main']
+            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
+
+            if (this.getConfig().get('isMultilangActive')) {
+                (this.getConfig().get('inputLanguageList') || []).forEach(language => {
+                    this.params.options.push(language);
+                    this.translatedOptions[language] = language;
+                });
+            }
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 

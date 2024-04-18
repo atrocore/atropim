@@ -56,6 +56,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             throw new NotFound();
         }
 
+        $this->getPseudoTransactionManager()->runForEntity('Product', $productId);
+
         if ($language === null) {
             $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
         }
