@@ -170,7 +170,7 @@ class GeneralStatisticsDashlet extends AbstractDashletService
 
         $sth = $this->getEntityManager()->getPDO()->prepare($this->getQueryProductWithoutAssociatedProduct(false));
         $sth->bindValue(':false', false, \PDO::PARAM_BOOL);
-        $sth->bindValue(':zero', false, \PDO::PARAM_INT);
+        $sth->bindValue(':zero', 0, \PDO::PARAM_INT);
         $sth->execute();
 
         $ids = $sth->fetchAll(\PDO::FETCH_COLUMN);
