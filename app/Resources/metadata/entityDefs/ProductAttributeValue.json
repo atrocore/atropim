@@ -660,7 +660,7 @@
       "exportDisabled": true,
       "importDisabled": true
     },
-    "attributeDisableEmptyValue": {
+    "attributeNotNull": {
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,
