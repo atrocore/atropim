@@ -168,8 +168,8 @@ class ValueConverter extends Injectable
                 break;
             case 'varchar':
                 if (property_exists($data, 'value')) {
-                    if($attribute->get('disableEmptyValue') && $data->value === "" ){
-                        $data->varcharValue = null;
+                    if(!empty($attribute->get('notNull')) && $data->value === null ){
+                        $data->varcharValue = "";
                     }else{
                         $data->varcharValue = $data->value;
                     }

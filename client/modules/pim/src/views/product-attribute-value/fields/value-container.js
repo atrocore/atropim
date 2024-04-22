@@ -145,7 +145,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 }
 
                 if(this.model.get('attributeType') === 'varchar'){
-                    params.disableEmptyValue = this.model.get('attributeDisableEmptyValue');
+                    params.notNull = this.model.get('attributeNotNull');
                     params.trim = this.model.get('attributeTrim');
                     params.attributeName = this.model.get('attributeName')
                 }
