@@ -87,7 +87,7 @@
       ],
       [
         {
-          "name": "disableEmptyValue"
+          "name": "notNull"
         },
         false
       ],

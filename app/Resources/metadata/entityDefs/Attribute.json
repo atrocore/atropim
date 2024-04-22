@@ -259,7 +259,7 @@
       "default": false,
       "emHidden": true
     },
-    "disableEmptyValue": {
+    "notNull": {
       "type": "bool",
       "default": false
     },
