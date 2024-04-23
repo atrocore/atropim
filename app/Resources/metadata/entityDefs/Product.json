@@ -77,7 +77,7 @@
       "type": "varchar",
       "trim": true
     },
-    "uvp": {
+    "rrp": {
       "type": "float",
       "min": 0,
       "default": 0

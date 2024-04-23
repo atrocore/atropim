@@ -28,7 +28,7 @@
     "amount": "Menge",
     "tax": "MwSt.",
     "ean": "GTIN/EAN",
-    "uvp": "UVP",
+    "rrp": "Unverbindliche Preisempfehlung (UVP)",
     "image": "Hauptbild",
     "tag": "Etikett",
     "longDescription": "Lange Beschreibung",

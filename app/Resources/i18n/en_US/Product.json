@@ -19,7 +19,7 @@
     "tax": "Tax",
     "ean": "GTIN/EAN",
     "mpn": "MPN",
-    "uvp": "UVP",
+    "rrp": "Recommended Retail Price (RRP)",
     "image": "Main Image",
     "tag": "Tag",
     "productSerie": "Product Serie",
