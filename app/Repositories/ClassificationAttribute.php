@@ -15,7 +15,7 @@ namespace Pim\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -119,7 +119,6 @@ class ClassificationAttribute extends Base
                 'id!='             => $entity->get('id'),
                 'classificationId' => $entity->get('classificationId'),
                 'attributeId'      => $entity->get('attributeId'),
-                'scope'            => $entity->get('scope'),
                 'channelId'        => $entity->get('channelId'),
                 'language'         => $entity->get('language'),
                 'deleted'          => $deleted,
