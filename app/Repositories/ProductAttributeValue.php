@@ -704,6 +704,11 @@ class ProductAttributeValue extends Base
     public function validateValue(Entity $attribute, Entity $entity): void
     {
         switch ($attribute->get('type')) {
+            case 'varchar':
+                if(!empty($attribute->get('notNull')) && $entity->get('varcharValue') === null){
+                    $entity->set('varcharValue', '');
+                }
+                break;
             case 'file':
                 if (!empty($attribute->get('fileTypeId')) && !empty($entity->get('referenceValue'))) {
                     $file = $this->getEntityManager()->getRepository('File')->get($entity->get('referenceValue'));
