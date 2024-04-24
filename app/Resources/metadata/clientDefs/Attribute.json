@@ -307,7 +307,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "varchar"
+                "varchar",
+                "bool"
               ]
             }
           ]

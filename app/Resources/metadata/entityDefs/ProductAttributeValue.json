@@ -142,6 +142,7 @@
     },
     "boolValue": {
       "type": "bool",
+      "notNull": false,
       "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
