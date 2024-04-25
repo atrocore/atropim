@@ -263,24 +263,7 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        $dataManager = $this->getContainer()->get('dataManager');
-
-        $tabs = $dataManager->getCacheData('attribute_tabs');
-        if ($tabs === null) {
-            $connection = $this->getEntityManager()->getConnection();
-            try {
-                $tabs = $connection->createQueryBuilder()
-                    ->select('t.id, t.name')
-                    ->from($connection->quoteIdentifier('attribute_tab'), 't')
-                    ->where('t.deleted = :false')
-                    ->setParameter('false', false, Mapper::getParameterType(false))
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                $tabs = [];
-            }
-            $dataManager->setCacheData('attribute_tabs', $tabs);
-        }
-
+        $tabs = $this->getEntityManager()->getRepository('AttributeTab')->getSimplifyTabs();
         foreach ($tabs as $tab) {
             $data['clientDefs']['Product']['bottomPanels']['detail'][] = [
                 'name'                 => "tab_{$tab['id']}",
@@ -302,7 +285,6 @@ class Metadata extends AbstractListener
                 "asc"                  => true
             ];
         }
-
         return $data;
     }
 
