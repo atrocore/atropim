@@ -60,7 +60,9 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 let params = {
                     required: !!this.model.get('isRequired'),
-                    readOnly: !!this.model.get('isValueReadOnly')
+                    readOnly: !!this.model.get('isValueReadOnly'),
+                    notNull: !!this.model.get('attributeNotNull'),
+                    attributeName: this.model.get('attributeName')
                 };
 
                 if (this.model.get('attributeIsMultilang')) {
@@ -145,9 +147,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 }
 
                 if(this.model.get('attributeType') === 'varchar'){
-                    params.notNull = this.model.get('attributeNotNull');
                     params.trim = this.model.get('attributeTrim');
-                    params.attributeName = this.model.get('attributeName')
                 }
 
                 let options = {

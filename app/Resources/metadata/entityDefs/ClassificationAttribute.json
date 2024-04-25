@@ -50,6 +50,32 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "attributeFileTypeId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeNotNull": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "attributeGroupName": {
       "type": "varchar",
       "notStorable": true,
@@ -84,6 +110,7 @@
     },
     "boolValue": {
       "type": "bool",
+      "notNull": false,
       "aclFieldDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
