@@ -237,17 +237,28 @@ class Attribute extends Hierarchy
 
         if (!$entity->isNew() && $entity->isAttributeChanged('notNull') && !empty($entity->get('notNull'))) {
             $attributeId = $entity->get('id');
-            $this->getEntityManager()
+            $query = $this->getEntityManager()
                 ->getConnection()->createQueryBuilder()
                 ->update('product_attribute_value')
-                ->set('varchar_value', ':empty')
-                ->where("varchar_value is NULL")
-                ->andWhere("attribute_id=:attributeId")
+                ->where("attribute_id=:attributeId")
                 ->andWhere('deleted=:false')
-                ->setParameter('empty', '', ParameterType::STRING)
                 ->setParameter('attributeId', $attributeId, Mapper::getParameterType($attributeId))
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->executeQuery();
+                ->setParameter('false', false, ParameterType::BOOLEAN);
+
+            if($entity->get('type') === 'varchar'){
+                $query
+                    ->set('varchar_value', ':empty')
+                    ->andWhere("varchar_value is NULL")
+                    ->setParameter('empty', '', ParameterType::STRING)
+                    ->executeQuery();
+            }
+
+            if($entity->get('type') === 'bool'){
+                $query->set('bool_value', ':defaultBool')
+                    ->where("bool_value is NULL")
+                    ->setParameter('defaultBool', false, ParameterType::BOOLEAN)
+                    ->executeQuery();
+            }
         }
     }
 
