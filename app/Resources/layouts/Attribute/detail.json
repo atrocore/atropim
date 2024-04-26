@@ -75,6 +75,12 @@
       ],
       [
         {
+          "name": "notNull"
+        },
+        false
+      ],
+      [
+        {
           "name": "isRequired"
         },
         false
@@ -82,12 +88,6 @@
       [
         {
           "name": "trim"
-        },
-        false
-      ],
-      [
-        {
-          "name": "notNull"
         },
         false
       ],

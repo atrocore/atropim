@@ -195,7 +195,8 @@
     "isRequired": {
       "type": "bool",
       "default": false,
-      "tooltip": true
+      "tooltip": true,
+      "view": "pim:views/attribute/fields/required"
     },
     "children": {
       "type": "linkMultiple",
