@@ -269,9 +269,11 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
                 this.model.set('attributeIsDropdown', attr.dropdown);
                 this.model.set('maxLength', attr.maxLength);
+                this.model.set('attributeTrim', !!attr.trim);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('useDisabledTextareaInViewMode', attr.useDisabledTextareaInViewMode);
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
+                this.model.set('attributeNotNull', !!attr.notNull);
                 this.reRender();
                 if (attr.defaultValue && !this.model.get('id')) {
                     if (attr.defaultValue.includes('{{') && attr.defaultValue.includes('}}')) {
