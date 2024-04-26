@@ -8,6 +8,7 @@
     "allowSingleClassificationForProduct": "Nur eine einzige Klassifizierung für ein Produkt zulassen"
   },
   "labels": {
+    "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder und Attributwerte für dieses Gebietsschema eingegeben haben, automatisch entfernt.",
     "retainAllInheritedAttributes": "Alle vererbte Attribute beibehalten",
     "removeAllInheritedAttributes": "Alle vererbte Attribute entfernen",
     "removeOnlyInheritedAttributesWithNoValue": "Nur vererbte Attribute ohne Wert entfernen"
