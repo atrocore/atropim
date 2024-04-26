@@ -91,6 +91,27 @@ class Language extends AbstractListener
             }
         }
 
+        $this->addTabTranslations($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected  function addTabTranslations(&$data){
+        $tabs = $this->getEntityManager()->getRepository('AttributeTab')->getSimplifyTabs();
+        $locales[] = 'main';
+        $locales = array_merge($locales, $this->getConfig()->get('inputLanguageList', []));
+
+        foreach ($tabs as $tab){
+            foreach ($locales as $locale) {
+                if($locale === 'main'){
+                    $mainLocal = $this->getConfig()->get('mainLanguage');
+                    $data[$mainLocal]['Global']['labels']['tab_'.$tab['id']] = $tab['name'];
+                    continue;
+                }
+
+                $nameColumn = 'name_'.strtolower($locale);
+                $data[$locale]['Global']['labels']['tab_'.$tab['id']] = $tab[$nameColumn];
+            }
+        }
     }
 }
