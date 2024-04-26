@@ -14,5 +14,9 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
-  "hasActive": true
+  "hasActive": true,
+  "duplicatableRelations": [
+    "classificationAttributes"
+  ],
+  "inheritedRelations": ["classificationAttributes"]
 }
