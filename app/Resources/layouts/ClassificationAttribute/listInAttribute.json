@@ -1,8 +1,7 @@
 [
   {
-    "name": "attribute",
-    "notSortable": true,
-    "view": "pim:views/classification-attribute/fields/attribute-with-inheritance-sign"
+    "name": "classification",
+    "notSortable": true
   },
   {
     "name": "language"
