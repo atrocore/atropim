@@ -34,7 +34,8 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                                 filterView: 'pim:views/product/search/filter',
                                 isAttribute: true,
                                 label: attribute.get('name'),
-                                type: attribute.get('type')
+                                type: attribute.get('type'),
+                                notNull: !!attribute.get('notNull')
                             };
 
                             if (['link', 'linkMultiple'].indexOf(attribute.get('type')) >= 0) {
