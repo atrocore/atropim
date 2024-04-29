@@ -339,8 +339,7 @@
     "classificationAttributes": {
       "type": "hasMany",
       "foreign": "attribute",
-      "entity": "ClassificationAttribute",
-      "layoutRelationshipsDisabled": true
+      "entity": "ClassificationAttribute"
     },
     "defaultChannel": {
       "type": "belongsTo",
