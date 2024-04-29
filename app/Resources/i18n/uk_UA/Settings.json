@@ -8,6 +8,7 @@
     "allowSingleClassificationForProduct": "Дозволяти лише одну класифікацію для продукту"
   },
   "labels": {
+    "confirmLocaleChanges": "Якщо мову видалено, всі ваші дані, раніше введені в багатомовні поля, а також значення атрибутів для цієї локалі, автоматично видаляються.",
     "retainAllInheritedAttributes": "Зберегти всі успадковані атрибути",
     "removeAllInheritedAttributes": "Видалити всі успадковані атрибути",
     "removeOnlyInheritedAttributesWithNoValue": "Видалити лише успадковані атрибути без значення"

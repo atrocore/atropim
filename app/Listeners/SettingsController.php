@@ -15,6 +15,8 @@ namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Atro\Listeners\AbstractListener;
@@ -89,6 +91,8 @@ class SettingsController extends AbstractListener
             }
 
         }
+
+        $this->deleteMultiLangAttributeOnInputLanguageChange($data);
     }
 
     public function afterActionPatch(Event $event): void
@@ -131,5 +135,40 @@ class SettingsController extends AbstractListener
     protected function isExistsProductsLinkedWithNonLeafCategories(): bool
     {
         return $this->getEntityManager()->getRepository('Product')->isExistsProductsLinkedWithNonLeafCategories();
+    }
+
+    protected function deleteMultiLangAttributeOnInputLanguageChange($data){
+        if(!isset($data->inputLanguageList)){
+            return;
+        }
+
+        /** @var Connection $conn */
+        $conn = $this->getContainer()->get('connection');
+        $result = [true];
+        $limit = 30000;
+        $offset = 0;
+        while(!empty($result)){
+            $result = $conn->createQueryBuilder()
+                ->from('product_attribute_value')
+                ->select('id')
+                ->where('language NOT IN (:languages) AND language <> :main')
+                ->setParameter('languages', $data->inputLanguageList, Mapper::getParameterType($data->inputLanguageList))
+                ->setParameter('main', 'main', ParameterType::STRING)
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->fetchAllAssociative();
+
+            if(!empty($result)){
+                $this->getService('ProductAttributeValue')->massRemove([
+                    "ids" => array_column($result, 'id')
+                ]);
+            }
+
+            if(count($result) < $limit){
+                break;
+            }
+
+            $offset += $limit;
+        }
     }
 }
