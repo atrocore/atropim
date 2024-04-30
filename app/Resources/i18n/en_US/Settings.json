@@ -19,9 +19,6 @@
   "exceptions": {
     "languageUsedInChannel": "Language, used in some channel, cannot be removed."
   },
-  "queueManager": {
-    "updatingOwnershipInformation": "Updating the owner information"
-  },
   "tooltips": {
     "productCanLinkedWithNonLeafCategories": "If set you will be able to link products with categories, which have child categories.",
     "behaviorOnCatalogChange": "In case of \"Cascade\" all the categories linked with the product will be automatically unlinked.",

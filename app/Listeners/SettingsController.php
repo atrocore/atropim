@@ -144,19 +144,31 @@ class SettingsController extends AbstractListener
 
         /** @var Connection $conn */
         $conn = $this->getContainer()->get('connection');
-        $result = $conn->createQueryBuilder()
-            ->from('product_attribute_value')
-            ->select('id')
-            ->where('language NOT IN (:languages) AND language <> :main')
-            ->setParameter('languages', $data->inputLanguageList, Mapper::getParameterType($data->inputLanguageList))
-            ->setParameter('main', 'main', ParameterType::STRING)
-            ->fetchAllAssociative();
+        $result = [true];
+        $limit = 30000;
+        $offset = 0;
+        while(!empty($result)){
+            $result = $conn->createQueryBuilder()
+                ->from('product_attribute_value')
+                ->select('id')
+                ->where('language NOT IN (:languages) AND language <> :main')
+                ->setParameter('languages', $data->inputLanguageList, Mapper::getParameterType($data->inputLanguageList))
+                ->setParameter('main', 'main', ParameterType::STRING)
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->fetchAllAssociative();
 
-        if(!empty($result)){
-            $this->getService('ProductAttributeValue')->massRemove([
-                "ids" => array_column($result, 'id')
-            ]);
+            if(!empty($result)){
+                $this->getService('ProductAttributeValue')->massRemove([
+                    "ids" => array_column($result, 'id')
+                ]);
+            }
+
+            if(count($result) < $limit){
+                break;
+            }
+
+            $offset += $limit;
         }
-
     }
 }

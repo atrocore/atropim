@@ -11,9 +11,6 @@
   "disabledMassActions": [
     "merge"
   ],
-  "views": {
-    "detail": "pim:views/classification/detail"
-  },
   "relationshipPanels": {
     "classificationAttributes": {
       "selectAction": "selectRelatedEntity",
