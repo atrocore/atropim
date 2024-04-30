@@ -316,6 +316,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 return _.isEqual(fetchedData.valueId, initialData.valueId);
             }
 
+            if (typeof fetchedData.valueIds !== 'undefined') {
+                return _.isEqual((fetchedData.valueIds || []).sort(), (initialData.valueIds || []).sort());
+            }
+
             if (typeof fetchedData.valueUnitId !== 'undefined') {
                 return _.isEqual(fetchedData.valueUnitId, initialData.valueUnitId) && _.isEqual(fetchedData.value, initialData.value);
             }
