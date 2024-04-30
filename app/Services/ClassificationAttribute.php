@@ -23,6 +23,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 {
     protected $mandatorySelectAttributeList
         = [
+            'classificationId',
             'scope',
             'isRequired',
             'productName',
@@ -74,6 +75,12 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     'mainField' => 'value'
                 ]);
             }
+        }
+
+        $entity->set('isCaRelationInherited', $this->getRepository()->isClassificationAttributeRelationInherited($entity));
+
+        if ($entity->get('isCaRelationInherited')) {
+            $entity->set('isCaValueInherited', $this->getRepository()->isClassificationAttributeValueInherited($entity));
         }
 
         if ($entity->get('channelId') === '') {
@@ -223,7 +230,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return $result;
     }
 
-    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data): void
+    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, $parentTransactionId = null): void
     {
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $inputData = new \stdClass();
@@ -236,6 +243,33 @@ class ClassificationAttribute extends AbstractProductAttributeService
             if (!empty((array)$inputData)) {
                 $parentId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->get('id'), $inputData);
                 $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
+            }
+        }
+
+        $children = $this->getRepository()->getChildrenArray($id);
+
+        $ca1 = $this->getRepository()->get($id);
+        foreach ($children as $child) {
+            $ca2 = $this->getRepository()->get($child['id']);
+
+            $inputData = new \stdClass();
+            if ($this->getRepository()->areCaValuesEqual($ca1, $ca2)) {
+                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'channelId','isRequired'] as $key) {
+                    if (property_exists($data, $key)) {
+                        $inputData->$key = $data->$key;
+                    }
+                }
+            }
+
+            if (!empty((array)$inputData)) {
+                if (in_array($ca1->get('attributeType'), ['extensibleMultiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
+                    $inputData->value = @json_decode($inputData->value, true);
+                }
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Classification', $ca2->get('classificationId'), null, $transactionId);
+                if ($child['childrenCount'] > 0) {
+                    $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
+                }
             }
         }
     }
@@ -349,11 +383,53 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return true;
     }
 
-    protected function createPseudoTransactionDeleteJobs(string $id): void
+    protected function createPseudoTransactionDeleteJobs(string $id, $parentTransactionId = null): void
     {
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
             $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
         }
+
+        $children = $this->getRepository()->getChildrenArray($id);
+
+        foreach ($children as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
+            if (!empty($childPav = $this->getRepository()->get($child['id']))) {
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Classification', $childPav->get('classificationId'), null, $transactionId);
+            }
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
+            }
+        }
+    }
+
+    public function inheritCa($ca): bool
+    {
+        if (is_string($ca)) {
+            $ca = $this->getEntity($ca);
+        }
+
+        if (!($ca instanceof \Pim\Entities\ClassificationAttribute)) {
+            return false;
+        }
+
+        $parentCa = $this->getRepository()->getParentClassificationAttribute($ca);
+        if (empty($parentCa)) {
+            return false;
+        }
+
+        $this->getInjection(ValueConverter::class)->convertFrom($parentCa, $parentCa->get('attribute'));
+
+        $input = new \stdClass();
+        foreach ($parentCa->toArray() as $name => $v) {
+            if (substr($name, 0, 5) === 'value') {
+                $input->$name = $v;
+            }
+        }
+        $input->isRequired = $parentCa->get('isRequired');
+
+        $this->updateEntity($ca->get('id'), $input);
+
+        return true;
     }
 }
