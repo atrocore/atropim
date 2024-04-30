@@ -34,7 +34,8 @@
     "min": "Min",
     "max": "Max",
     "notNull": "Disable Null Value",
-    "trim": "Remove leading and trailing whitespaces"
+    "trim": "Remove leading and trailing whitespaces",
+    "classificationAttributes": "Classification Attributes"
   },
   "links": {
     "measure": "Measure",
@@ -45,7 +46,8 @@
     "products": "Products",
     "productAttributeValues": "Attribute Values",
     "classifications": "Classifications",
-    "extensibleEnum": "List"
+    "extensibleEnum": "List",
+    "classificationAttributes": "Classification Attributes"
   },
   "labels": {
     "Create Attribute": "Create Attribute",
