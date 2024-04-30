@@ -39,7 +39,6 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
             this.clearedName = name;
             let type = this.model.getFieldType(name) || this.options.params.type;
             this.pinned = this.options.pinned;
-
             if (type) {
                 let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
@@ -53,6 +52,8 @@ Espo.define('pim:views/product/search/filter', 'views/search/filter', function (
                 if (type === 'extensibleEnum' || type === 'extensibleMultiEnum') {
                     params.extensibleEnumId = this.options.params.extensibleEnumId;
                 }
+
+                params.notNull = this.options.searchParams?.fieldParams?.notNull
 
                 let options = {
                     mode: 'search',
