@@ -76,11 +76,12 @@ class Attribute extends Hierarchy
     {
         parent::prepareEntityForOutput($entity);
 
-        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('dropdown') === null) {
+        $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
+        if (in_array($entity->get('type'), array_keys($dropdownTypes)) && $entity->get('dropdown') === null) {
             $entity->set('dropdown', false);
         }
 
-        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum')!==null ) {
+        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
             $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
     }

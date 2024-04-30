@@ -892,7 +892,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ]);
         }
 
-        if (in_array($entity->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
+        $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
+        if (in_array($entity->get('attributeType'), array_keys($dropdownTypes))) {
             $entity->set('attributeIsDropdown', $attribute->get('dropdown'));
         }
 

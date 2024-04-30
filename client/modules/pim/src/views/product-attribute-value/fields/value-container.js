@@ -109,17 +109,15 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.fileTypeId = this.model.get('attributeFileTypeId');
                 }
 
+                const dropdownTypes = this.getMetadata().get(['app', 'attributeDropdownTypes'], {});
+                if (this.model.get('attributeIsDropdown') && dropdownTypes[attributeType]) {
+                    fieldView = dropdownTypes[attributeType];
+                }
+
                 let customOptions = {}
                 if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
-                    if (this.model.get('attributeIsDropdown')) {
-                        if (attributeType === 'extensibleMultiEnum') {
-                            fieldView = 'views/fields/extensible-multi-enum-dropdown';
-                        } else {
-                            fieldView = 'views/fields/extensible-enum-dropdown';
-                        }
-                    }
 
                     if(this.model.urlRoot === 'ClassificationAttribute'
                         && this.model.get('extensibleEnumOptionsIds')

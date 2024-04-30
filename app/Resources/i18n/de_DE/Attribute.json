@@ -34,7 +34,8 @@
     "min": "Min",
     "max": "Max",
     "notNull": "Deaktivieren Nullwert",
-    "trim": "Führende und nachfolgende Whitespaces entfernen"
+    "trim": "Führende und nachfolgende Whitespaces entfernen",
+    "classificationAttributes": "Klassifizierungattribute"
   },
   "links": {
     "measure": "Maß",
@@ -45,7 +46,8 @@
     "productAttributeValues": "Attributwerte",
     "attributeGroup": "Attributgruppe",
     "classifications": "Klassifizierungen",
-    "extensibleEnum": "Liste"
+    "extensibleEnum": "Liste",
+    "classificationAttributes": "Klassifizierungattribute"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",

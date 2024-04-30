@@ -386,7 +386,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return true;
     }
 
-    protected function createPseudoTransactionDeleteJobs(string $id): void
+    protected function createPseudoTransactionDeleteJobs(string $id, $parentTransactionId = null): void
     {
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
