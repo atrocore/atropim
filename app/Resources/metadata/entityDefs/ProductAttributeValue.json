@@ -582,6 +582,19 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "attributeEntityField": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "attributeMeasureId": {
       "type": "varchar",
       "notStorable": true,
