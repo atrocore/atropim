@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Atro\Core\Templates\Entities\Base;
 use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
 
-class ProductAttributeValue extends Base
+class ProductAttributeValue extends AbstractAttributeValue
 {
     protected $entityType = "ProductAttributeValue";
 

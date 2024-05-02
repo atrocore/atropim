@@ -97,6 +97,6 @@ class ClassificationAttribute extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->inheritCa((string)$data->id);
+        return $this->getRecordService()->inheritPav((string)$data->id);
     }
 }
