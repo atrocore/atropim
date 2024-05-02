@@ -20,6 +20,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Atro\Listeners\AbstractListener;
+use Espo\Core\Utils\Util;
 
 /**
  * Class SettingsController
@@ -44,22 +45,6 @@ class SettingsController extends AbstractListener
             $this->getEntityManager()->getRepository('Product')->unlinkProductsFromNonLeafCategories();
         }
 
-        $channelsLocales = $this
-            ->getEntityManager()
-            ->getRepository('Channel')
-            ->getUsedLocales();
-
-        if (property_exists($data, 'isMultilangActive') && empty($data->isMultilangActive) && count($channelsLocales) > 1) {
-            throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
-        }
-
-        if (!empty($data->inputLanguageList)) {
-            foreach ($channelsLocales as $locale) {
-                if ($locale !== 'main' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
-                    throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
-                }
-            }
-        }
 
         if(property_exists($data, 'allowSingleClassificationForProduct') && !empty($data->allowSingleClassificationForProduct)){
             $res = $this->getEntityManager()
@@ -92,7 +77,8 @@ class SettingsController extends AbstractListener
 
         }
 
-        $this->deleteMultiLangAttributeOnInputLanguageChange($data);
+        $this->deleteMultiLangAttributeOnInputLanguageChange($data, 'ProductAttributeValue');
+        $this->deleteMultiLangAttributeOnInputLanguageChange($data, 'ClassificationAttribute');
     }
 
     public function afterActionPatch(Event $event): void
@@ -137,7 +123,7 @@ class SettingsController extends AbstractListener
         return $this->getEntityManager()->getRepository('Product')->isExistsProductsLinkedWithNonLeafCategories();
     }
 
-    protected function deleteMultiLangAttributeOnInputLanguageChange($data){
+    protected function deleteMultiLangAttributeOnInputLanguageChange($data, $entityName){
         if(!isset($data->inputLanguageList)){
             return;
         }
@@ -148,8 +134,9 @@ class SettingsController extends AbstractListener
         $limit = 30000;
         $offset = 0;
         while(!empty($result)){
+            $table = Util::toUnderScore($entityName);
             $result = $conn->createQueryBuilder()
-                ->from('product_attribute_value')
+                ->from($conn->quoteIdentifier($table))
                 ->select('id')
                 ->where('language NOT IN (:languages) AND language <> :main')
                 ->setParameter('languages', $data->inputLanguageList, Mapper::getParameterType($data->inputLanguageList))
@@ -159,7 +146,7 @@ class SettingsController extends AbstractListener
                 ->fetchAllAssociative();
 
             if(!empty($result)){
-                $this->getService('ProductAttributeValue')->massRemove([
+                $this->getService($entityName)->massRemove([
                     "ids" => array_column($result, 'id')
                 ]);
             }
@@ -167,7 +154,6 @@ class SettingsController extends AbstractListener
             if(count($result) < $limit){
                 break;
             }
-
             $offset += $limit;
         }
     }
