@@ -161,6 +161,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 if (attributeType === 'link' || attributeType === 'linkMultiple') {
                     options.foreignScope = this.model.get('attributeEntityType');
+                    options.params.foreignName = this.model.get('attributeEntityField');
                 }
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
@@ -263,6 +264,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
             this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                 this.model.set('attributeType', attr.type);
                 this.model.set('attributeEntityType', attr.entityType);
+                this.model.set('attributeEntityField', attr.entityField);
                 this.model.set('attributeFileTypeId', attr.fileTypeId);
                 this.model.set('attributeExtensibleEnumId', attr.extensibleEnumId);
                 this.model.set('attributeIsDropdown', attr.dropdown);
