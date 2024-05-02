@@ -69,7 +69,7 @@ class Product extends Hierarchy
         $data = $this->getConnection()->createQueryBuilder()
             ->select('product_id, category_id')
             ->from('product_category')
-            ->where('category_id IN (SELECT DISTINCT parent_id FROM category_hierarchy deleted=:false)')
+            ->where('category_id IN (SELECT DISTINCT parent_id FROM category_hierarchy where deleted=:false)')
             ->andWhere('deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->fetchAllAssociative();
