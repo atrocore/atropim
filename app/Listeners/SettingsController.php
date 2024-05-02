@@ -139,8 +139,10 @@ class SettingsController extends AbstractListener
                 ->from($conn->quoteIdentifier($table))
                 ->select('id')
                 ->where('language NOT IN (:languages) AND language <> :main')
+                ->andWhere('deleted=:false')
                 ->setParameter('languages', $data->inputLanguageList, Mapper::getParameterType($data->inputLanguageList))
                 ->setParameter('main', 'main', ParameterType::STRING)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
                 ->fetchAllAssociative();
