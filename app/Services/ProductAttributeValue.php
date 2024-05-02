@@ -207,41 +207,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         return array_values($result);
     }
 
-    /**
-     * @param string|\Pim\Entities\ProductAttributeValue $pav
-     *
-     * @return bool
-     */
-    public function inheritPav($pav): bool
-    {
-        if (is_string($pav)) {
-            $pav = $this->getEntity($pav);
-        }
-
-        if (!($pav instanceof \Pim\Entities\ProductAttributeValue)) {
-            return false;
-        }
-
-        $parentPav = $this->getRepository()->getParentPav($pav);
-        if (empty($parentPav)) {
-            return false;
-        }
-
-        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($parentPav, $parentPav->get('attribute'));
-
-        $input = new \stdClass();
-        $input->isVariantSpecificAttribute = $parentPav->get('isVariantSpecificAttribute');
-        foreach ($parentPav->toArray() as $name => $v) {
-            if (substr($name, 0, 5) === 'value') {
-                $input->$name = $v;
-            }
-        }
-
-        $this->updateEntity($pav->get('id'), $input);
-
-        return true;
-    }
-
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         /**
@@ -408,25 +373,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
     }
 
-    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
-    {
-        if (!property_exists($data, 'productId')) {
-            return;
-        }
-
-        $children = $this->getEntityManager()->getRepository('Product')->getChildrenArray($data->productId);
-        foreach ($children as $child) {
-            $inputData = clone $data;
-            $inputData->productId = $child['id'];
-            $inputData->productName = $child['name'];
-            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
-            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $transactionId);
-            if ($child['childrenCount'] > 0) {
-                $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
-            }
-        }
-    }
-
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
@@ -460,40 +406,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->createPseudoTransactionUpdateJobs($id, clone $data);
         return Record::updateEntity($id, $data);
-    }
-
-    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
-    {
-        $children = $this->getRepository()->getChildrenArray($id);
-
-        $pav1 = $this->getRepository()->get($id);
-        foreach ($children as $child) {
-            $pav2 = $this->getRepository()->get($child['id']);
-
-            $inputData = new \stdClass();
-            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
-                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'channelId'] as $key) {
-                    if (property_exists($data, $key)) {
-                        $inputData->$key = $data->$key;
-                    }
-                }
-            }
-
-            if (property_exists($data, 'isVariantSpecificAttribute')) {
-                $inputData->isVariantSpecificAttribute = $data->isVariantSpecificAttribute;
-            }
-
-            if (!empty((array)$inputData)) {
-                if (in_array($pav1->get('attributeType'), ['extensibleMultiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
-                    $inputData->value = @json_decode($inputData->value, true);
-                }
-                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav2->get('productId'), null, $transactionId);
-                if ($child['childrenCount'] > 0) {
-                    $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
-                }
-            }
-        }
     }
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
@@ -654,28 +566,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         return true;
-    }
-
-    protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
-    {
-        $children = $this->getRepository()->getChildrenArray($id);
-        foreach ($children as $child) {
-            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
-            if (!empty($childPav = $this->getRepository()->get($child['id']))) {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $childPav->get('productId'), null, $transactionId);
-            }
-            if ($child['childrenCount'] > 0) {
-                $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
-            }
-        }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('container');
     }
 
     public function removeByTabAllNotInheritedAttributes(string $productId, string $tabId): bool

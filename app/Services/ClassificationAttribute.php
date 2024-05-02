@@ -65,6 +65,18 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
                 }
             }
+
+            if (empty($this->getMemoryStorage()->get('exportJobId'))
+                && empty($this->getMemoryStorage()->get('importJobId'))
+                && $this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'
+            ) {
+                $entity->set('isCaRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
+
+                if ($entity->get('isCaRelationInherited')) {
+                    $entity->set('isCaValueInherited', $this->getRepository()->isPavValueInherited($entity));
+                }
+            }
+
             $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
 
             if ($attribute->get('measureId')) {
@@ -75,12 +87,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     'mainField' => 'value'
                 ]);
             }
-        }
-
-        $entity->set('isCaRelationInherited', $this->getRepository()->isClassificationAttributeRelationInherited($entity));
-
-        if ($entity->get('isCaRelationInherited')) {
-            $entity->set('isCaValueInherited', $this->getRepository()->isClassificationAttributeValueInherited($entity));
         }
 
         if ($entity->get('channelId') === '') {
@@ -191,7 +197,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
     }
 
-    protected function createPseudoTransactionCreateJobs(\stdClass $data): void
+    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
         if (!property_exists($data, 'classificationId')) {
             return;
@@ -204,6 +210,10 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
             $parentId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
             $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $parentId);
+        }
+
+        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
+            parent::createPseudoTransactionCreateJobs($data,$parentTransactionId);
         }
     }
 
@@ -246,31 +256,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
         }
 
-        $children = $this->getRepository()->getChildrenArray($id);
-
-        $ca1 = $this->getRepository()->get($id);
-        foreach ($children as $child) {
-            $ca2 = $this->getRepository()->get($child['id']);
-
-            $inputData = new \stdClass();
-            if ($this->getRepository()->areCaValuesEqual($ca1, $ca2)) {
-                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'channelId','isRequired'] as $key) {
-                    if (property_exists($data, $key)) {
-                        $inputData->$key = $data->$key;
-                    }
-                }
-            }
-
-            if (!empty((array)$inputData)) {
-                if (in_array($ca1->get('attributeType'), ['extensibleMultiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
-                    $inputData->value = @json_decode($inputData->value, true);
-                }
-                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Classification', $ca2->get('classificationId'), null, $transactionId);
-                if ($child['childrenCount'] > 0) {
-                    $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
-                }
-            }
+        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
+            parent::createPseudoTransactionUpdateJobs($id, $data, $parentTransactionId);
         }
     }
 
@@ -343,13 +330,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency(ValueConverter::class);
-    }
-
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         $this->sortCollection($collection);
@@ -390,46 +370,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
             $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
         }
 
-        $children = $this->getRepository()->getChildrenArray($id);
-
-        foreach ($children as $child) {
-            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
-            if (!empty($childPav = $this->getRepository()->get($child['id']))) {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Classification', $childPav->get('classificationId'), null, $transactionId);
-            }
-            if ($child['childrenCount'] > 0) {
-                $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
-            }
+        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
+            parent::createPseudoTransactionDeleteJobs($id, $parentTransactionId);
         }
-    }
-
-    public function inheritCa($ca): bool
-    {
-        if (is_string($ca)) {
-            $ca = $this->getEntity($ca);
-        }
-
-        if (!($ca instanceof \Pim\Entities\ClassificationAttribute)) {
-            return false;
-        }
-
-        $parentCa = $this->getRepository()->getParentClassificationAttribute($ca);
-        if (empty($parentCa)) {
-            return false;
-        }
-
-        $this->getInjection(ValueConverter::class)->convertFrom($parentCa, $parentCa->get('attribute'));
-
-        $input = new \stdClass();
-        foreach ($parentCa->toArray() as $name => $v) {
-            if (substr($name, 0, 5) === 'value') {
-                $input->$name = $v;
-            }
-        }
-        $input->isRequired = $parentCa->get('isRequired');
-
-        $this->updateEntity($ca->get('id'), $input);
-
-        return true;
     }
 }
