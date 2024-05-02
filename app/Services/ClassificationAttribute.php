@@ -30,6 +30,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
             'attributeName',
             'attributeType',
             'attributeEntityType',
+            'attributeEntityField',
             'attributeTooltip',
             'intValue',
             'intValue1',
@@ -57,6 +58,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
             $entity->set('attributeEntityType', $attribute->get('entityType'));
+            $entity->set('attributeEntityField', $attribute->get('entityField'));
             $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
             $entity->set('attributeNotNull', $attribute->get('notNull'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));

@@ -841,6 +841,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $tooltipFieldName = $locale == 'main' ? 'tooltip' : Util::toCamelCase('tooltip_' . strtolower($locale));
         $entity->set('attributeTooltip', $attribute->get($tooltipFieldName));
         $entity->set('attributeEntityType', $attribute->get('entityType'));
+        $entity->set('attributeEntityField', $attribute->get('entityField'));
         $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
         $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
         $entity->set('attributeCode', $attribute->get('code'));
