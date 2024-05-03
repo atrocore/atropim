@@ -42,23 +42,6 @@ class SettingsController extends AbstractListener
             $this->getEntityManager()->getRepository('Product')->unlinkProductsFromNonLeafCategories();
         }
 
-        $channelsLocales = $this
-            ->getEntityManager()
-            ->getRepository('Channel')
-            ->getUsedLocales();
-
-        if (property_exists($data, 'isMultilangActive') && empty($data->isMultilangActive) && count($channelsLocales) > 1) {
-            throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
-        }
-
-        if (!empty($data->inputLanguageList)) {
-            foreach ($channelsLocales as $locale) {
-                if ($locale !== 'main' && !in_array($locale, $event->getArgument('data')->inputLanguageList)) {
-                    throw new BadRequest($this->getLanguage()->translate('languageUsedInChannel', 'exceptions', 'Settings'));
-                }
-            }
-        }
-
         if(property_exists($data, 'allowSingleClassificationForProduct') && !empty($data->allowSingleClassificationForProduct)){
             $res = $this->getEntityManager()
                 ->getConnection()
