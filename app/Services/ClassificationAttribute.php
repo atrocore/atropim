@@ -23,6 +23,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 {
     protected $mandatorySelectAttributeList
         = [
+            'classificationId',
             'scope',
             'isRequired',
             'productName',
@@ -68,6 +69,18 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     $entity->set('attributeName' . $preparedLocale, $attribute->get('name' . $preparedLocale));
                 }
             }
+
+            if (empty($this->getMemoryStorage()->get('exportJobId'))
+                && empty($this->getMemoryStorage()->get('importJobId'))
+                && $this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'
+            ) {
+                $entity->set('isCaRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
+
+                if ($entity->get('isCaRelationInherited')) {
+                    $entity->set('isCaValueInherited', $this->getRepository()->isPavValueInherited($entity));
+                }
+            }
+
             $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
 
             if ($attribute->get('measureId')) {
@@ -188,7 +201,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
     }
 
-    protected function createPseudoTransactionCreateJobs(\stdClass $data): void
+    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
         if (!property_exists($data, 'classificationId')) {
             return;
@@ -201,6 +214,10 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
             $parentId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
             $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $parentId);
+        }
+
+        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
+            parent::createPseudoTransactionCreateJobs($data,$parentTransactionId);
         }
     }
 
@@ -227,7 +244,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return $result;
     }
 
-    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data): void
+    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, $parentTransactionId = null): void
     {
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $inputData = new \stdClass();
@@ -241,6 +258,10 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 $parentId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->get('id'), $inputData);
                 $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
             }
+        }
+
+        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
+            parent::createPseudoTransactionUpdateJobs($id, $data, $parentTransactionId);
         }
     }
 
@@ -313,13 +334,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency(ValueConverter::class);
-    }
-
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         $this->sortCollection($collection);
@@ -353,11 +367,15 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return true;
     }
 
-    protected function createPseudoTransactionDeleteJobs(string $id): void
+    protected function createPseudoTransactionDeleteJobs(string $id, $parentTransactionId = null): void
     {
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
             $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
+        }
+
+        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
+            parent::createPseudoTransactionDeleteJobs($id, $parentTransactionId);
         }
     }
 }

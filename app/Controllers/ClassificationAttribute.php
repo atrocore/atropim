@@ -86,4 +86,17 @@ class ClassificationAttribute extends Base
 
         return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->classificationId);
     }
+
+    public function actionInheritCa($params, $data, $request)
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->inheritPav((string)$data->id);
+    }
 }

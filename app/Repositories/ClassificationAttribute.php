@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
 
-class ClassificationAttribute extends Base
+class ClassificationAttribute extends AbstractAttributeValue
 {
     public function getInheritedPavs(string $id): EntityCollection
     {

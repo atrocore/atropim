@@ -16,9 +16,18 @@ namespace Pim\Services;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
+use Pim\Core\ValueConverter;
 
 class AbstractProductAttributeService extends Base
 {
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+        $this->addDependency('container');
+        $this->addDependency(ValueConverter::class);
+    }
     protected function prepareDefaultLanguages(\stdClass $attachment): void
     {
         if (
@@ -73,5 +82,129 @@ class AbstractProductAttributeService extends Base
         }
 
         return $attribute;
+    }
+
+    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
+    {
+        if($this->entityType === 'ProductAttributeValue'){
+            $foreignEntity = "Product";
+            $foreignFieldId = "productId";
+
+        } else {
+            $foreignEntity = "Classification";
+            $foreignFieldId = "classificationId";
+        }
+
+        if (!property_exists($data, $foreignFieldId)) {
+            return;
+        }
+
+        $children = $this->getEntityManager()->getRepository($foreignEntity)->getChildrenArray($data->$foreignFieldId);
+        foreach ($children as $child) {
+            $inputData = clone $data;
+            $inputData->productId = $child['id'];
+            $inputData->productName = $child['name'];
+            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob($foreignEntity, $inputData->$foreignFieldId, null, $transactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
+            }
+        }
+    }
+
+    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
+    {
+        if($this->entityType === 'ProductAttributeValue'){
+            $foreignEntity = "Product";
+            $foreignFieldId = "productId";
+
+        } else {
+            $foreignEntity = "Classification";
+            $foreignFieldId = "classificationId";
+        }
+        $children = $this->getRepository()->getChildrenArray($id);
+
+        $pav1 = $this->getRepository()->get($id);
+        foreach ($children as $child) {
+            $pav2 = $this->getRepository()->get($child['id']);
+
+            $inputData = new \stdClass();
+            if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
+                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'channelId', 'isRequired'] as $key) {
+                    if (property_exists($data, $key)) {
+                        $inputData->$key = $data->$key;
+                    }
+                }
+            }
+
+            if (property_exists($data, 'isVariantSpecificAttribute')) {
+                $inputData->isVariantSpecificAttribute = $data->isVariantSpecificAttribute;
+            }
+
+            if (!empty((array)$inputData)) {
+                if (in_array($pav1->get('attributeType'), ['extensibleMultiEnum', 'array']) && property_exists($inputData, 'value') && is_string($inputData->value)) {
+                    $inputData->value = @json_decode($inputData->value, true);
+                }
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($foreignEntity, $pav2->get($foreignFieldId), null, $transactionId);
+                if ($child['childrenCount'] > 0) {
+                    $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
+                }
+            }
+        }
+    }
+
+    protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
+    {
+        if($this->entityType === 'ProductAttributeValue'){
+            $foreignEntity = "Product";
+            $foreignFieldId = "productId";
+
+        } else {
+            $foreignEntity = "Classification";
+            $foreignFieldId = "classificationId";
+        }
+
+        $children = $this->getRepository()->getChildrenArray($id);
+        foreach ($children as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
+            if (!empty($childPav = $this->getRepository()->get($child['id']))) {
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($foreignEntity, $childPav->get($foreignFieldId), null, $transactionId);
+            }
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);
+            }
+        }
+    }
+
+    public function inheritPav($pav): bool
+    {
+        if (is_string($pav)) {
+            $pav = $this->getEntity($pav);
+        }
+
+        if (!($pav instanceof \Pim\Entities\AbstractAttributeValue)) {
+            return false;
+        }
+
+        $parentPav = $this->getRepository()->getParentPav($pav);
+        if (empty($parentPav)) {
+            return false;
+        }
+
+        $this->getInjection(ValueConverter::class)->convertFrom($parentPav, $parentPav->get('attribute'));
+
+        $input = new \stdClass();
+        $input->isVariantSpecificAttribute = $parentPav->get('isVariantSpecificAttribute');
+        $input->isRequired = $parentPav->get('isRequired');
+        foreach ($parentPav->toArray() as $name => $v) {
+            if (substr($name, 0, 5) === 'value') {
+                $input->$name = $v;
+            }
+        }
+
+        $this->updateEntity($pav->get('id'), $input);
+
+        return true;
     }
 }

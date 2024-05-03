@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Atro\Core\Templates\Repositories\Base;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -26,13 +25,12 @@ use Espo\ORM\Repositories\RDB;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 use Pim\Core\ValueConverter;
 
-class ProductAttributeValue extends Base
+class ProductAttributeValue extends AbstractAttributeValue
 {
     protected static $beforeSaveData = [];
 
     protected array $channelLanguages = [];
     protected array $productCa = [];
-    protected array $productPavs = [];
 
     public function isInherited(Entity $entity): ?bool
     {
@@ -160,70 +158,6 @@ class ProductAttributeValue extends Base
         return $attribute;
     }
 
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
-    {
-        $pav = $this->get($parentId);
-        if (empty($pav) || empty($pav->get('productId'))) {
-            return [];
-        }
-
-        $products = $this->getEntityManager()->getRepository('Product')->getChildrenArray($pav->get('productId'));
-
-        if (empty($products)) {
-            return [];
-        }
-
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->select('pav.*')
-            ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
-            ->where('pav.deleted = :false')
-            ->andWhere('pav.product_id IN (:productsIds)')
-            ->andWhere('pav.attribute_id = :attributeId')
-            ->andWhere('pav.language = :language')
-            ->andWhere('pav.channel_id = :channelId')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('productsIds', array_column($products, 'id'), Connection::PARAM_STR_ARRAY)
-            ->setParameter('attributeId', $pav->get('attributeId'))
-            ->setParameter('language', $pav->get('language'))
-            ->setParameter('channelId', $pav->get('channelId'));
-
-        $pavs = $qb->fetchAllAssociative();
-
-        $result = [];
-        foreach ($pavs as $record) {
-            foreach ($products as $product) {
-                if ($product['id'] === $record['product_id']) {
-                    $record['childrenCount'] = $product['childrenCount'];
-                    break 1;
-                }
-            }
-            $result[] = $record;
-        }
-
-        return $result;
-    }
-
-    public function getParentPav(Entity $entity): ?Entity
-    {
-        $pavs = $this->getParentsPavs($entity);
-        if ($pavs === null) {
-            return null;
-        }
-
-        foreach ($pavs as $pav) {
-            if (
-                $pav->get('attributeId') === $entity->get('attributeId')
-                && ((empty($pav->get('channelId')) && empty($entity->get('channelId'))) ||
-                    $pav->get('channelId') === $entity->get('channelId'))
-                && $pav->get('language') === $entity->get('language')
-            ) {
-                return $pav;
-            }
-        }
-
-        return null;
-    }
-
     public function getChildPavForProduct(Entity $parentPav, Entity $childProduct): ?Entity
     {
         $where = [
@@ -234,127 +168,6 @@ class ProductAttributeValue extends Base
         ];
 
         return $this->where($where)->findOne();
-    }
-
-    public function isPavRelationInherited(Entity $entity): bool
-    {
-        return !empty($this->getParentPav($entity));
-    }
-
-    public function isPavValueInherited(Entity $entity): ?bool
-    {
-        $pavs = $this->getParentsPavs($entity);
-        if ($pavs === null) {
-            return null;
-        }
-
-        foreach ($pavs as $pav) {
-            if (
-                $pav->get('attributeId') === $entity->get('attributeId')
-                && $pav->get('channelId') === $entity->get('channelId')
-                && $pav->get('language') === $entity->get('language')
-                && $this->arePavsValuesEqual($pav, $entity)
-            ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function arePavsValuesEqual(Entity $pav1, Entity $pav2): bool
-    {
-        switch ($pav1->get('attributeType')) {
-            case 'array':
-            case 'extensibleMultiEnum':
-                $val1 = @json_decode((string)$pav1->get('textValue'), true);
-                $val2 = @json_decode((string)$pav2->get('textValue'), true);
-                $result = Entity::areValuesEqual(Entity::TEXT, json_encode($val1 ?? []), json_encode($val2 ?? []));
-                break;
-            case 'text':
-            case 'wysiwyg':
-                $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
-                break;
-            case 'bool':
-                $result = Entity::areValuesEqual(Entity::BOOL, $pav1->get('boolValue'), $pav2->get('boolValue'));
-                break;
-            case 'int':
-                $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
-                break;
-            case 'rangeInt':
-                $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue'), $pav2->get('intValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::INT, $pav1->get('intValue1'), $pav2->get('intValue1'));
-                }
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
-                break;
-            case 'float':
-                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
-                break;
-            case 'rangeFloat':
-                $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue'), $pav2->get('floatValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::FLOAT, $pav1->get('floatValue1'), $pav2->get('floatValue1'));
-                }
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
-                break;
-            case 'date':
-                $result = Entity::areValuesEqual(Entity::DATE, $pav1->get('dateValue'), $pav2->get('dateValue'));
-                break;
-            case 'datetime':
-                $result = Entity::areValuesEqual(Entity::DATETIME, $pav1->get('datetimeValue'), $pav2->get('datetimeValue'));
-                break;
-            case 'file':
-            case 'link':
-            case 'extensibleEnum':
-                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                break;
-            case 'varchar':
-                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
-                if ($result) {
-                    $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
-                }
-                break;
-            default:
-                $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));
-                break;
-        }
-
-        return $result;
-    }
-
-    public function getParentsPavs(Entity $entity): ?EntityCollection
-    {
-        if (isset($this->productPavs[$entity->get('productId')])) {
-            return $this->productPavs[$entity->get('productId')];
-        }
-
-        $res = $this->getConnection()->createQueryBuilder()
-            ->select('pav.id')
-            ->from($this->getConnection()->quoteIdentifier('product_attribute_value'), 'pav')
-            ->where(
-                "pav.product_id IN (SELECT ph.parent_id FROM {$this->getConnection()->quoteIdentifier('product_hierarchy')} ph WHERE ph.deleted = :false AND ph.entity_id = :productId)"
-            )
-            ->andWhere('pav.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('productId', $entity->get('productId'), Mapper::getParameterType($entity->get('productId')))
-            ->fetchAllAssociative();
-
-        $ids = array_column($res, 'id');
-
-        $this->productPavs[$entity->get('productId')] = empty($ids) ? null : $this->where(['id' => $ids])->find();
-
-        return $this->productPavs[$entity->get('productId')];
     }
 
     public function findClassificationAttribute(Entity $pav): ?array
