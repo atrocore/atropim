@@ -296,4 +296,16 @@ class Attribute extends Hierarchy
     {
         return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
     }
+
+    public function find(array $params = [])
+    {
+        $this->where(['type' => array_keys($this->getMetadata()->get(['attributes']))]);
+        return parent::find($params);
+    }
+
+    public function findOne(array $params = [])
+    {
+        $this->where(['type' => array_keys($this->getMetadata()->get(['attributes']))]);
+        return parent::findOne($params);
+    }
 }

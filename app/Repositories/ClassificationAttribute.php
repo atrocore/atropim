@@ -17,8 +17,11 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
 
 class ClassificationAttribute extends AbstractAttributeValue
@@ -197,5 +200,18 @@ class ClassificationAttribute extends AbstractAttributeValue
             'entityId'   => $entity->get('id'),
             'changedBy'  => $this->getEntityManager()->getUser()->get('id')
         ];
+    }
+
+    public function find(array $params = [])
+    {
+        $params['callbacks'][] =[$this, 'applyFilterByAttributeType'];
+        return parent::find($params);
+    }
+
+    public  function applyFilterByAttributeType(QueryBuilder  $qb, IEntity $relEntity, array $params, Mapper $mapper){
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $qb->andWhere("$tableAlias.attribute_id IN (SELECT id FROM attribute WHERE type IN (:types) AND deleted=:false)");
+        $qb->setParameter('types', array_keys($this->getMetadata()->get(['attributes'])), Connection::PARAM_STR_ARRAY);
+        $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
 }

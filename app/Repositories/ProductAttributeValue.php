@@ -916,4 +916,16 @@ class ProductAttributeValue extends AbstractAttributeValue
             }
         }
     }
+
+    public function find(array $params = [])
+    {
+        $this->where(['attributeType' => array_keys($this->getMetadata()->get(['attributes']))]);
+        return parent::find($params);
+    }
+
+    public function findOne(array $params = [])
+    {
+        $this->where(['attributeType' => array_keys($this->getMetadata()->get(['attributes']))]);
+        return parent::findOne($params);
+    }
 }
