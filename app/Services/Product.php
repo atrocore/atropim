@@ -238,6 +238,10 @@ class Product extends Hierarchy
                 $productAttributeValues = $data->panelsData->productAttributeValues;
             }
 
+            $pavs = $this
+                ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $id, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
+                ->getArgument('pavs');
+
             foreach ($pavs as $pav) {
                 if (!empty($this->getMetadata()->get(['attributes', $pav->get('attributeType'), 'isValueReadOnly']))) {
                     continue;
@@ -794,7 +798,7 @@ class Product extends Hierarchy
 
         $where = [
             'productId' => $entity->get('id'),
-            'fileId'   => $file->get('id')
+            'fileId'    => $file->get('id')
         ];
 
         $repository = $this->getEntityManager()->getRepository('ProductFile');
