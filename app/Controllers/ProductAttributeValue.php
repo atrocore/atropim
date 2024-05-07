@@ -36,9 +36,9 @@ class ProductAttributeValue extends Base
                 (string)$request->get('productId'),
                 (string)$request->get('tabId'),
                 null,
-                $request->get('fieldFilter'),
-                $request->get('languageFilter'),
-                $request->get('scopeFilter')
+                $request->get('fieldFilter') ?? [],
+                $request->get('languageFilter') ?? [],
+                $request->get('scopeFilter') ?? []
             );
     }
 
