@@ -98,7 +98,7 @@ Installation Guide is available [here](https://help.atrocore.com/installation-an
 
 AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
-## Ressources
+## Resources
 
 - Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg/videos
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
