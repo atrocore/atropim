@@ -1,5 +1,12 @@
 ![Logo](_assets/atropim-logo.svg)
 
+This repository is hosted on: https://gitlab.atrocore.com/atrocore/atropim
+
+GitHub mirror: https://github.com/atrocore/atropim
+
+> This repository is hosted by GitLab, we use GitHub to host its mirror. 
+
+
 ## What Is AtroPIM?
 
 ![anne](_assets/atropim-banner.png)
