@@ -60,7 +60,7 @@ class RevisionField extends \Revisions\Services\RevisionField
                             $became['value'] = $data['attributes']['became'][$field];
 
                             if (isset($data['attributes']['was'][$field . 'UnitId'])) {
-                                $was['valueUnitId'] = $data['attributes']['was'][$field . 'Unit'];
+                                $was['valueUnitId'] = $data['attributes']['was'][$field . 'UnitId'];
                                 $became['valueUnitId'] = null;
                             }
                             if (isset($data['attributes']['became'][$field . 'UnitId'])) {
@@ -81,15 +81,22 @@ class RevisionField extends \Revisions\Services\RevisionField
                                 continue;
                             }
 
-                            $result['list'][] = [
+                            $item = [
                                 "id"       => $note->get('id'),
                                 "date"     => $note->get('createdAt'),
                                 "userId"   => $note->get('createdById'),
                                 "userName" => empty($createdBy) ? $note->get('createdById') : $createdBy->get('name'),
                                 "was"      => $was,
                                 "became"   => $became,
-                                "field"    => 'value'
+                                "field"    => 'value',
+                                "type"     => $attr->get('type')
                             ];
+
+                            if (!empty($attr->get('measureId'))) {
+                                $item['measureId'] = $attr->get('measureId');
+                            }
+
+                            $result['list'][] = $item;
 
                             $result['total'] = $result['total'] + 1;
                         }
