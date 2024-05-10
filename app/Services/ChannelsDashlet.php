@@ -38,8 +38,8 @@ class ChannelsDashlet extends AbstractDashletService
             ->select([
                 "c.id",
                 "c.name",
-                "(SELECT COUNT(p.id) AS total FROM {$connection->quoteIdentifier('product')} p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=:true) AS total_active",
-                "(SELECT COUNT(p.id) AS total FROM {$connection->quoteIdentifier('product')} p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=0 AND p.is_active=:false) AS total_inactive"
+                "(SELECT COUNT(p.id) AS total FROM {$connection->quoteIdentifier('product')} p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=:false AND p.is_active=:true) AS total_active",
+                "(SELECT COUNT(p.id) AS total FROM {$connection->quoteIdentifier('product')} p JOIN product_channel pc ON p.id=pc.product_id WHERE pc.channel_id=c.id AND p.deleted=:false AND p.is_active=:false) AS total_inactive"
             ])
             ->from($connection->quoteIdentifier('channel'), 'c')
             ->where('c.deleted = :false')

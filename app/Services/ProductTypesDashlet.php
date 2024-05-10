@@ -44,8 +44,8 @@ class ProductTypesDashlet extends AbstractDashletService
                     'id'        => $type,
                     'name'      => $this->getInjection('language')->translate($type),
                     'total'     => array_sum($data),
-                    'active'    => $data[1] ? (int)$data[1] : 0,
-                    'notActive' => $data[0] ? (int)$data[0] : 0,
+                    'active'    => isset($data[1]) ? (int)$data[1] : 0,
+                    'notActive' => isset($data[0]) ? (int)$data[0] : 0,
                 ];
             }
         }
