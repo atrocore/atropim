@@ -134,6 +134,11 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                     options.params.multilangLocale = language
                 }
 
+                if (type === 'link' || type === 'linkMultiple') {
+                    options.foreignScope = attr.entityType;
+                    options.params.foreignName = attr.entityField;
+                }
+
                 this.createView(name, viewName, options, view => {
                     view.listenTo(view, 'after:render', () => {
                         let name = data.channelName ? data.channelName : 'Global';
@@ -172,8 +177,10 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         language: item.language
                     };
 
-                    if (item.attributeType === 'file') {
+                    if (item.attributeType === 'file' || item.attributeType === 'link') {
                         attribute.valueId = data[name + 'Id'];
+                    } else if(item.attributeType === 'linkMultiple'){
+                        attribute.valueIds = data[name+ 'Ids']
                     } else {
                         attribute.value = data[name];
                     }
