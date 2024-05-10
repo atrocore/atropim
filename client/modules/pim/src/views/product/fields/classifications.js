@@ -25,6 +25,15 @@ Espo.define('pim:views/product/fields/classifications', 'views/fields/link',
             });
         },
 
+        clearLink: function () {
+            if (this.mode === 'search') {
+                this.searchData.idValue = null;
+                this.searchData.nameValue = null;
+            }
+
+            Dep.prototype.clearLink.call(this);
+        },
+
         fetchSearch: function () {
             const type = this.$el.find('select.search-type').val();
 
@@ -37,7 +46,9 @@ Espo.define('pim:views/product/fields/classifications', 'views/fields/link',
                     nameHash: this.searchData.nameValue,
                     subQuery: this.searchData.subQuery,
                     data: {
-                        type: type
+                        type: type,
+                        idValue: this.searchData.idValue,
+                        nameValue: this.searchData.nameValue
                     }
                 };
             } else if (type === 'isOneOf' || type === 'isNotOneOf') {
@@ -47,6 +58,8 @@ Espo.define('pim:views/product/fields/classifications', 'views/fields/link',
                     type: searchType,
                     value: this.searchData.oneOfIdList,
                     nameHash: this.searchData.oneOfNameHash,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
                     subQuery: this.searchData.subQuery,
                     data: {
                         type: type
