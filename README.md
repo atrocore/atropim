@@ -1,5 +1,12 @@
 ![Logo](_assets/atropim-logo.svg)
 
+This repository is hosted on: https://gitlab.atrocore.com/atrocore/atropim
+
+GitHub mirror: https://github.com/atrocore/atropim
+
+> This repository is hosted by GitLab, we use GitHub to host its mirror. 
+
+
 ## What Is AtroPIM?
 
 ![anne](_assets/atropim-banner.png)
@@ -91,7 +98,7 @@ Installation Guide is available [here](https://help.atrocore.com/installation-an
 
 AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
-## Ressources
+## Resources
 
 - Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg/videos
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
