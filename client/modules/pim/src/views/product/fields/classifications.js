@@ -10,19 +10,36 @@
 
 Espo.define('pim:views/product/fields/classifications', 'views/fields/link',
     Dep => Dep.extend({
+
+        idName: 'classificationsId',
+
+        nameName: 'classificationsName',
+
+        originalIdName: 'classificationsIds',
+
+        originalNameName: 'classificationsNames',
+
         setup() {
-            let classificationId = this.model.get('classificationsIds')?.at(-1)
-            this.model.set('classificationsId', classificationId ?? null);
-            this.model.set('classificationsName', (this.model.get('classificationsNames') ?? [])[classificationId] ?? null);
+            this.setupTempFields();
             Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change:classificationsId', () => {
+
+            this.listenTo(this.model, 'change:' + this.idName, () => {
                 let name = {}
-                if (this.model.get('classificationsId')) {
-                    name[this.model.get('classificationsId')] = this.model.get('classificationsName')
+                if (this.model.get(this.idName)) {
+                    name[this.model.get(this.idName)] = this.model.get(this.nameName);
                 }
-                this.model.set('classificationsIds', this.model.get('classificationsId') ? [this.model.get('classificationsId')] : []);
-                this.model.set('classificationsNames', name);
+
+                this.model.set(this.originalIdName, this.model.get(this.idName) ? [this.model.get(this.idName)] : []);
+                this.model.set(this.originalNameName, name);
             });
+
+            this.listenTo(this.model, 'change:' + this.originalIdName, this.setupTempFields);
+        },
+
+        setupTempFields: function () {
+            const classificationId = this.model.get(this.originalIdName)?.at(-1);
+            this.model.set(this.idName, classificationId ?? null, {silent: true});
+            this.model.set(this.nameName, (this.model.get(this.originalNameName) ?? [])[classificationId] ?? null, {silent: true});
         },
 
         clearLink: function () {
@@ -32,6 +49,22 @@ Espo.define('pim:views/product/fields/classifications', 'views/fields/link',
             }
 
             Dep.prototype.clearLink.call(this);
+        },
+
+        fetch: function () {
+            const data = Dep.prototype.fetch.call(this);
+            const ids = [];
+            const names = {};
+
+            if (data[this.idName]) {
+                ids.push(data[this.idName]);
+                names[data[this.idName]] = data[this.nameName]
+            }
+
+            data[this.originalIdName] = ids;
+            data[this.originalNameName] = names;
+
+            return data;
         },
 
         fetchSearch: function () {
