@@ -118,7 +118,7 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
         },
 
         getSelectAttributeList(callback) {
-            callback(this.modifyAttributeList(['name', 'productStatus', 'type', 'mainImageId', 'imageName']));
+            callback(this.modifyAttributeList(['name', 'productStatus', 'mainImageId']));
         },
 
         getRowContainerHtml(id) {
