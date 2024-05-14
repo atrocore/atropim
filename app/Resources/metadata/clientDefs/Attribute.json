@@ -314,7 +314,12 @@
               "attribute": "type",
               "value": [
                 "varchar",
-                "bool"
+                "bool",
+                "text",
+                "wysiwyg",
+                "url",
+                "int",
+                "float"
               ]
             }
           ]

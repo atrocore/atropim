@@ -253,6 +253,30 @@ class Attribute extends Hierarchy
                     ->executeQuery();
             }
 
+            if(in_array($entity->get('type'), ['text', 'wysiwyg', 'url'])){
+                $query
+                    ->set('text_value', ':empty')
+                    ->andWhere("text_value is NULL")
+                    ->setParameter('empty', '', ParameterType::STRING)
+                    ->executeQuery();
+            }
+
+            if($entity->get('type') === 'int'){
+                $query
+                    ->set('int_value', ':zero')
+                    ->andWhere("int_value is NULL")
+                    ->setParameter('zero', 0, ParameterType::INTEGER)
+                    ->executeQuery();
+            }
+
+            if($entity->get('type') === 'float'){
+                $query
+                    ->set('float_value', ':zero')
+                    ->andWhere("float_value is NULL")
+                    ->setParameter('zero', 0, ParameterType::INTEGER)
+                    ->executeQuery();
+            }
+
             if($entity->get('type') === 'bool'){
                 $query->set('bool_value', ':defaultBool')
                     ->where("bool_value is NULL")
