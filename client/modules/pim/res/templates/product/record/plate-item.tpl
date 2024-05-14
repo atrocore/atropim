@@ -1,6 +1,5 @@
 <div class="plate-item">
 	<div class="plate-item-header">
-		<div class="field-type" title="{{translateOption model.attributes.type scope=model.name field='type'}}">{{translateOption model.attributes.type scope=model.name field='type'}}</div>
 		<div class="field-status" data-name="productStatus">
 			{{{productStatusField}}}
 		</div>
