@@ -522,6 +522,14 @@ class ProductAttributeValue extends AbstractAttributeValue
                     $entity->set('varcharValue', '');
                 }
                 break;
+
+            case 'wysiwyg':
+            case 'url':
+            case 'text':
+                if(!empty($attribute->get('notNull')) && $entity->get('textValue') === null){
+                    $entity->set('textValue', '');
+                }
+                break;
             case 'bool':
                 if(!empty($attribute->get('notNull')) && $entity->get('boolValue') === null){
                     $entity->set('boolValue', false);
@@ -545,6 +553,9 @@ class ProductAttributeValue extends AbstractAttributeValue
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
                 }
+                if(!empty($attribute->get('notNull')) && $entity->get('intValue') === null){
+                    $entity->set('intValue', 0);
+                }
                 break;
             case 'float':
                 if ($entity->get('min') !== null && $entity->get('floatValue') !== null && $entity->get('floatValue') < $entity->get('min')) {
@@ -556,6 +567,9 @@ class ProductAttributeValue extends AbstractAttributeValue
                     $message = $this->getLanguage()->translate('fieldShouldBeLess', 'messages');
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
+                }
+                if(!empty($attribute->get('notNull')) && $entity->get('floatValue') === null){
+                    $entity->set('floatValue', 0);
                 }
                 break;
             case 'extensibleEnum':
