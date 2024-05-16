@@ -15,6 +15,7 @@ namespace Pim\Services;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -206,6 +207,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
             unset($result[$key]['pavs']);
         }
+
+        $result = $this
+            ->dispatchEvent('afterGetGroupPav', new Event(['result' => $result]))
+            ->getArgument('result');
 
         return array_values($result);
     }
