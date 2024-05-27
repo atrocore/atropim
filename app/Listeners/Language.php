@@ -109,6 +109,11 @@ class Language extends AbstractListener
                     continue;
                 }
 
+                if(empty($this->getConfig()->get('isMultilangActive'))){
+                    $data[$locale]['Global']['labels']['tab_'.$tab['id']] = $tab['name'];
+                    continue;
+                }
+
                 $nameColumn = 'name_'.strtolower($locale);
                 $data[$locale]['Global']['labels']['tab_'.$tab['id']] = $tab[$nameColumn];
             }
