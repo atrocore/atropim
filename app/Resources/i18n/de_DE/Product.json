@@ -36,7 +36,8 @@
     "catalog": "Katalog",
     "packedAmount": "Gepackte Menge",
     "contents": "Contents",
-    "taskStatus": "Task status"
+    "taskStatus": "Task status",
+    "files": "Dateien"
   },
   "links": {
     "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
@@ -57,7 +58,8 @@
     "catalog": "Katalog",
     "channels": "Kanäle",
     "productChannels": "Produktkanäle",
-    "contents": "Contents"
+    "contents": "Contents",
+    "files": "Dateien"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
