@@ -29,7 +29,8 @@
     "basePriceAmount": "Базова ціна",
     "packedAmount": "Кількість в упаковці",
     "contents": "Контент",
-    "taskStatus": "Статус завдання"
+    "taskStatus": "Статус завдання",
+    "files": "Файли"
   },
   "links": {
     "productSerie": "Серії продукту",
@@ -47,7 +48,8 @@
     "catalog": "Каталог",
     "channels": "Канали",
     "productChannels": "Канали продукту",
-    "contents": "Контент"
+    "contents": "Контент",
+    "files": "Файли"
   },
   "labels": {
     "Product Attributes": "Атрибути",
