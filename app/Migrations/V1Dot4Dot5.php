@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Espo\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
 
 class V1Dot4Dot5 extends Base
@@ -80,6 +79,6 @@ class V1Dot4Dot5 extends Base
 
     public function down(): void
     {
-        throw new Error('Downgrade is prohibited!');
+        throw new \Error('Downgrade is prohibited!');
     }
 }
