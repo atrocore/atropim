@@ -32,9 +32,8 @@ class CategoryHierarchy extends \Atro\Core\Templates\Repositories\Relation
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchFirstColumn();
 
-            $categoryRepository = $this->getEntityManager()->getRepository('Category');
 
-            $childIds = array_merge([$categoryId], $categoryRepository->getChildrenRecursivelyArray($categoryId));
+            $childIds = array_merge([$categoryId], $this->getCategoryRepository()->getChildrenRecursivelyArray($categoryId));
 
             $this->getEntityManager()->getRepository('CatalogCategory')->where(['categoryId' => $childIds])
                 ->removeCollection();
@@ -46,7 +45,29 @@ class CategoryHierarchy extends \Atro\Core\Templates\Repositories\Relation
             }
         }
 
+        //rebuild tree
+        if($entity->isNew() || $entity->isAttributeChanged('parentId')){
+            $category = $this->getCategoryRepository()->get($entity->get('entityId'));
+            $this->updateCategoryTree($category);
+        }
+
         parent::afterSave($entity, $options);
+    }
+
+    protected function updateCategoryTree(Entity $entity): void
+    {
+        $this->getCategoryRepository()->updateRoute($entity);
+
+        $ids = $this->getCategoryRepository()->getChildrenRecursivelyArray($entity->get('id'));
+
+        foreach ($ids as $id) {
+            $child = $this->getCategoryRepository()->get($id);
+            $this->getCategoryRepository()->updateRoute($child);
+        }
+    }
+
+    protected function getCategoryRepository() : Category {
+        return $this->getEntityManager()->getRepository('Category');
     }
 
 }

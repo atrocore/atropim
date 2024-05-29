@@ -143,9 +143,6 @@ class Category extends Hierarchy
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        // build tree
-        $this->updateCategoryTree($entity);
-
         // relate parent channels
         $parents = $entity->get('parents');
         if ($entity->isNew() && !empty($parents) && count($parents) > 0) {
@@ -286,7 +283,7 @@ class Category extends Hierarchy
         $this->getEntityManager()->saveEntity($entity);
     }
 
-    protected function updateRoute(Entity $entity): void
+    public function updateRoute(Entity $entity): void
     {
         $this->getConnection()->createQueryBuilder()
             ->update($this->getConnection()->quoteIdentifier('category'), 'c')
@@ -299,20 +296,4 @@ class Category extends Hierarchy
             ->executeQuery();
     }
 
-    protected function updateCategoryTree(Entity $entity): void
-    {
-        if (!empty($entity->recursiveSave)) {
-            return;
-        }
-
-        $this->updateRoute($entity);
-
-        if (!$entity->isNew()) {
-            $ids = $this->getChildrenRecursivelyArray($entity->get('id'));
-            foreach ($ids as $id) {
-                $child = $this->get($id);
-                $this->updateRoute($child);
-            }
-        }
-    }
 }
