@@ -15,6 +15,7 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
@@ -68,7 +69,7 @@ class Catalog extends Hierarchy
             ->update($connection->quoteIdentifier('product'), 'p')
             ->set('deleted', ':false')
             ->where('p.catalog_id = :id')
-            ->setParameter('false', false, Mapper::getParameterType('false'))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $entity->get('id'))
             ->executeQuery();
     }
