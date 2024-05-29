@@ -43,18 +43,18 @@ class V1Dot13Dot15 extends Base
                 }
             }
 
-            $fileName = "custom/Espo/Custom/Resources/layouts/$entity/relationships.json";
-            if (file_exists($fileName)) {
-                $data = @json_decode(file_get_contents($fileName), true);
-                $newData = [];
-                foreach ($data as $row) {
-                    if (isset($row['name']) && $row['name'] === 'parents') {
-                        continue;
-                    }
-                    $newData[] = $row;
-                }
-                file_put_contents($fileName, json_encode($newData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            }
+//            $fileName = "custom/Espo/Custom/Resources/layouts/$entity/relationships.json";
+//            if (file_exists($fileName)) {
+//                $data = @json_decode(file_get_contents($fileName), true);
+//                $newData = [];
+//                foreach ($data as $row) {
+//                    if (isset($row['name']) && $row['name'] === 'parents') {
+//                        continue;
+//                    }
+//                    $newData[] = $row;
+//                }
+//                file_put_contents($fileName, json_encode($newData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+//            }
         }
     }
 
