@@ -49,6 +49,10 @@ class AbstractProductAttributeService extends Base
             }
         }
 
+        if (empty($attachment->languages)) {
+            throw new BadRequest('There is no available language in selected channel that correspond to selected ones.');
+        }
+
         foreach ($attachment->languages as $language) {
             $attach = clone $attachment;
             unset($attach->languages);
