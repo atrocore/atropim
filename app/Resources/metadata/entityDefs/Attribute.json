@@ -77,8 +77,7 @@
       "default": null,
       "options": [],
       "view": "pim:views/attribute/fields/assetType",
-      "massUpdateDisabled": true,
-      "prohibitedEmptyValue": true
+      "massUpdateDisabled": true
     },
     "isMultilang": {
       "type": "bool",
