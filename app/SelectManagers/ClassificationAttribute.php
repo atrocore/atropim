@@ -18,42 +18,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-class ClassificationAttribute extends AbstractSelectManager
+class ClassificationAttribute extends AbstractClassificationAttribute
 {
-    public function filterByAttributeType(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
-    {
-        $connection = $this->getEntityManager()->getConnection();
 
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-        $attributeTypes = array_keys($this->getMetadata()->get('attributes'));
-
-        $qb->andWhere("{$tableAlias}.attribute_id IN (SELECT a.id FROM {$connection->quoteIdentifier('attribute')} a WHERE a.type IN (:attributeTypes) AND deleted=:false)");
-        $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
-        $qb->setParameter('false', false, Mapper::getParameterType(false));
-    }
-
-    public function applyAdditional(array &$result, array $params)
-    {
-        parent::applyAdditional($result, $params);
-
-        $result['callbacks'][] = [$this, 'filterByAttributeType'];
-    }
-
-    /**
-     * @param array $result
-     */
-    protected function boolFilterLinkedWithAttributeGroup(array &$result)
-    {
-        $data = (array)$this->getSelectCondition('linkedWithAttributeGroup');
-
-        if (isset($data['classificationId'])) {
-            // prepare data
-            $ids = [$data['classificationId']];
-            $attributeGroupId = ($data['attributeGroupId'] != '') ? $data['attributeGroupId'] : null;
-
-            $result['whereClause'][] = [
-                'id' => $this->getEntityManager()->getRepository('Classification')->getLinkedWithAttributeGroup($ids, $attributeGroupId)
-            ];
-        }
-    }
 }

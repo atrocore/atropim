@@ -14,44 +14,12 @@ declare(strict_types=1);
 namespace Pim\Controllers;
 
 use Espo\Core\Exceptions\Error;
-use Atro\Core\Templates\Controllers\Base;
 use Slim\Http\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
-class ClassificationAttribute extends Base
+class ClassificationAttribute extends AbstractEntityAttributeController
 {
-    public function actionCreate($params, $data, $request)
-    {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden();
-        }
-
-        $service = $this->getRecordService();
-
-        if (property_exists($data, 'attributesIds')) {
-            foreach ($data->attributesIds as $attributeId) {
-                $data->attributeId = $attributeId;
-                try {
-                    $createdEntity = $service->createEntity(clone $data);
-                    $entity = $createdEntity;
-                } catch (\Throwable $e) {
-                }
-            }
-        } else {
-            $entity = $service->createEntity($data);
-        }
-
-        if (!empty($entity)) {
-            return $entity->getValueMap();
-        }
-
-        throw new Error();
-    }
 
     public function actionDelete($params, $data, $request)
     {

@@ -218,11 +218,11 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             });
         },
 
-        actionUnlinkRelatedAttribute(data) {
+        actionUnlinkRelatedAttribute(data, message = null) {
             var id = data.id;
 
             this.confirm({
-                message: this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
+                message: message ?? this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 let model = this.collection.get(id);
@@ -247,11 +247,11 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             }, this);
         },
 
-        actionCascadeUnlinkRelatedAttribute(data) {
+        actionCascadeUnlinkRelatedAttribute(data, message = null) {
             var id = data.id;
 
             this.confirm({
-                message: this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
+                message: message ?? this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 let model = this.collection.get(id);
