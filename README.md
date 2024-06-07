@@ -51,7 +51,7 @@ Want to know more about AtroPIM functions and its advantages for you? Please, vi
 
 ## Technology
 
-AtroPIM is based on EspoCRM and uses PHP7, backbone.js, composer and some Zend Framework 3 libraries.
+AtroPIM uses PHP7.4, backbone.js, composer and some Symfony Framework libraries.
 
 ![image](https://github.com/atrocore/atropim/assets/33658481/d6fa31af-54fe-48a8-80bb-f8d05572b765)
 
