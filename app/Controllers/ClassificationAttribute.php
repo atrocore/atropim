@@ -18,7 +18,7 @@ use Slim\Http\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
-class ClassificationAttribute extends AbstractEntityAttributeController
+class ClassificationAttribute extends AbstractAttributeValueController
 {
 
     public function actionDelete($params, $data, $request)
