@@ -9,7 +9,7 @@
         "description": {
             "type": "text",
             "required": false,
-            "rows": 4,
+            "rowsMax": 4,
             "lengthOfCut": 400,
             "seeMoreDisabled": false,
             "readOnly": false,

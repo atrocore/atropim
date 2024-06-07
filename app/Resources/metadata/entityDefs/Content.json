@@ -43,7 +43,7 @@
       "type": "text",
       "maxLength": 158,
       "default": "",
-      "rows": 2,
+      "rowsMax": 2,
       "trim": true
     },
     "products": {
