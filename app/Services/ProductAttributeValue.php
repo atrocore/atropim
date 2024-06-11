@@ -16,9 +16,9 @@ namespace Pim\Services;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
@@ -28,6 +28,7 @@ use Espo\Services\Record;
 
 class ProductAttributeValue extends AbstractProductAttributeService
 {
+    protected $foreignEntity = 'Product';
     protected $mandatorySelectAttributeList
         = [
             'language',

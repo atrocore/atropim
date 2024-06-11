@@ -14,12 +14,13 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Atro\Core\Templates\Services\Base;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Pim\Core\ValueConverter;
 
 class AbstractProductAttributeService extends Base
 {
+    protected $foreignEntity;
     protected function init()
     {
         parent::init();
@@ -90,26 +91,20 @@ class AbstractProductAttributeService extends Base
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
-        if($this->entityType === 'ProductAttributeValue'){
-            $foreignEntity = "Product";
-            $foreignFieldId = "productId";
 
-        } else {
-            $foreignEntity = "Classification";
-            $foreignFieldId = "classificationId";
-        }
+        $foreignFieldId = strtolower($this->foreignEntity).'Id';
 
         if (!property_exists($data, $foreignFieldId)) {
             return;
         }
 
-        $children = $this->getEntityManager()->getRepository($foreignEntity)->getChildrenArray($data->$foreignFieldId);
+        $children = $this->getEntityManager()->getRepository($this->foreignEntity)->getChildrenArray($data->$foreignFieldId);
         foreach ($children as $child) {
             $inputData = clone $data;
             $inputData->productId = $child['id'];
             $inputData->productName = $child['name'];
             $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
-            $this->getPseudoTransactionManager()->pushUpdateEntityJob($foreignEntity, $inputData->$foreignFieldId, null, $transactionId);
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->foreignEntity, $inputData->$foreignFieldId, null, $transactionId);
             if ($child['childrenCount'] > 0) {
                 $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
             }
@@ -118,14 +113,7 @@ class AbstractProductAttributeService extends Base
 
     protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
     {
-        if($this->entityType === 'ProductAttributeValue'){
-            $foreignEntity = "Product";
-            $foreignFieldId = "productId";
-
-        } else {
-            $foreignEntity = "Classification";
-            $foreignFieldId = "classificationId";
-        }
+        $foreignFieldId = strtolower($this->foreignEntity).'Id';
         $children = $this->getRepository()->getChildrenArray($id);
 
         $pav1 = $this->getRepository()->get($id);
@@ -150,7 +138,7 @@ class AbstractProductAttributeService extends Base
                     $inputData->value = @json_decode($inputData->value, true);
                 }
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob($foreignEntity, $pav2->get($foreignFieldId), null, $transactionId);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->foreignEntity, $pav2->get($foreignFieldId), null, $transactionId);
                 if ($child['childrenCount'] > 0) {
                     $this->createPseudoTransactionUpdateJobs($child['id'], clone $inputData, $transactionId);
                 }
@@ -160,20 +148,12 @@ class AbstractProductAttributeService extends Base
 
     protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
     {
-        if($this->entityType === 'ProductAttributeValue'){
-            $foreignEntity = "Product";
-            $foreignFieldId = "productId";
-
-        } else {
-            $foreignEntity = "Classification";
-            $foreignFieldId = "classificationId";
-        }
-
+        $foreignFieldId = strtolower($this->foreignEntity).'Id';
         $children = $this->getRepository()->getChildrenArray($id);
         foreach ($children as $child) {
             $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
             if (!empty($childPav = $this->getRepository()->get($child['id']))) {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob($foreignEntity, $childPav->get($foreignFieldId), null, $transactionId);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->foreignEntity, $childPav->get($foreignFieldId), null, $transactionId);
             }
             if ($child['childrenCount'] > 0) {
                 $this->createPseudoTransactionDeleteJobs($child['id'], $transactionId);

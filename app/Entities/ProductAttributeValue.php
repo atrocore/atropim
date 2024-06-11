@@ -84,7 +84,10 @@ class ProductAttributeValue extends AbstractAttributeValue
         return parent::__get($name);
     }
 
-    protected function getRepository(): \Pim\Repositories\ProductAttributeValue
+    /**
+     * @return \Pim\Repositories\ProductAttributeValue
+     */
+    protected function getRepository(): \Pim\Repositories\AbstractAttributeValue
     {
         return $this->entityManager->getRepository('ProductAttributeValue');
     }
