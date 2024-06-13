@@ -158,17 +158,6 @@ class Product extends Hierarchy
         }
     }
 
-    protected function getProductAttributeForUpdating(EntityCollection $pavs, \stdClass $data): ?Entity
-    {
-        foreach ($pavs as $pav) {
-            if ($pav->get('attributeId') == $data->attributeId && $pav->get('language') == $data->language && $pav->get('channelId') == $data->channelId) {
-                return $pav;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * @inheritDoc
      */
@@ -181,89 +170,26 @@ class Product extends Hierarchy
             return $this->getEntity($id);
         }
 
-        if ($this->isProductAttributeUpdating($data)) {
+        if ($this->isPanelsUpdating($data)) {
             if (!$this->getEntityManager()->getPDO()->inTransaction()) {
                 $this->getEntityManager()->getPDO()->beginTransaction();
                 $inTransaction = true;
             }
-
-            $pavService = $this->getInjection('serviceFactory')->create('ProductAttributeValue');
-
-            // input data
-            $productAttributeValues = new \stdClass();
-            // pavs to update
-            $pavs = new EntityCollection();
-
-            // For Mass Update
-            if (property_exists($data, '_isMassUpdate')) {
-                $attributeIds = array_column((array)$data->panelsData->productAttributeValues, 'attributeId');
-                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])->find();
-
-                foreach ($data->panelsData->productAttributeValues as $pavData) {
-                    $existPav = $this->getProductAttributeForUpdating($existingPavs, $pavData);
-                    try {
-                        if (!is_null($existPav)) {
-                            $productAttributeValues->{$existPav->get('id')} = $pavData;
-                            $pavs->append($existPav);
-                        } else {
-                            $copy = clone $pavData;
-
-                            if (property_exists($copy, 'createPavIfNotExists')) {
-                                if (empty($copy->createPavIfNotExists)) {
-                                    continue 1;
-                                }
-                                unset($copy->createPavIfNotExists);
-                            }
-
-                            $copy->productId = $id;
-
-                            $result = $pavService->createEntity($copy);
-
-                            if (!$result->get('attributeIsMultilang')) {
-                                $existingPavs->append($result);
-                            } else {
-                                $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])
-                                    ->find();
-                            }
-
-                        }
-                    } catch (Conflict $e) {
-                        $conflicts = array_merge($conflicts, $e->getFields());
-                    }
+            $panelsData = json_decode(json_encode($data->panelsData), true);
+            foreach ($panelsData as $link => $linkData){
+                if(empty($linkData)){
+                    continue;
                 }
-            } // For Single Product Update
-            else {
-                $ids = array_keys((array)$data->panelsData->productAttributeValues);
-                $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['id' => $ids])->find();
-                $productAttributeValues = $data->panelsData->productAttributeValues;
-            }
+                $entityType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']);
 
-            $pavs = $this
-                ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $id, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
-                ->getArgument('pavs');
-
-            foreach ($pavs as $pav) {
-                if (!empty($this->getMetadata()->get(['attributes', $pav->get('attributeType'), 'isValueReadOnly']))) {
+                if(empty($entityType)){
                     continue;
                 }
 
-                // prepare input
-                $input = clone $productAttributeValues->{$pav->get('id')};
-                if (property_exists($data, '_ignoreConflict') && !empty($data->_ignoreConflict) && property_exists($data, '_prev')) {
-                    unset($input->_prev);
-                }
-                foreach (['attributeId', 'channelId', 'language'] as $field) {
-                    if (property_exists($input, $field)) {
-                        unset($input->$field);
-                    }
-                }
-                $input->isProductUpdate = true;
-                try {
-                    $pavService->updateEntity($pav->get('id'), $input);
-                } catch (Conflict $e) {
-                    $conflicts = array_merge($conflicts, $e->getFields());
-                } catch (NotModified $e) {
-                    // ignore
+                $service = $this->getInjection('serviceFactory')->create($entityType);
+                $method = 'updatePanelFrom'.$this->entityType;
+                if(method_exists($service, $method)){
+                    $conflicts = $service->$method($id, $data);
                 }
             }
         }
@@ -886,17 +812,25 @@ class Product extends Hierarchy
         return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
     }
 
-    protected function isProductAttributeUpdating(\stdClass $data): bool
+    protected function isPanelsUpdating(\stdClass $data): bool
     {
         if (!property_exists($data, 'panelsData')) {
             return false;
         }
 
-        if (!is_object($data->panelsData) || !property_exists($data->panelsData, 'productAttributeValues')) {
+        if (!is_object($data->panelsData)) {
             return false;
         }
 
-        return !empty($data->panelsData->productAttributeValues);
+        $panelsData = json_decode(json_encode($data->panelsData), true);
+        foreach ($panelsData as $link => $linkData){
+            $linkDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link]);
+            if(!empty($linkDefs) && !empty($linkData)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -906,7 +840,7 @@ class Product extends Hierarchy
     {
         $post = clone $data;
 
-        if ($this->isProductAttributeUpdating($post)) {
+        if ($this->isPanelsUpdating($post)) {
             return true;
         }
 
