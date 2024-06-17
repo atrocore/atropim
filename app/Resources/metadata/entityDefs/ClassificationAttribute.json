@@ -235,7 +235,7 @@
       "notStorable": true,
       "aclFieldDisabled": false,
       "filterDisabled": true,
-      "rows": 4,
+      "rowsMax": 4,
       "lengthOfCut": 400,
       "view": "pim:views/product-attribute-value/fields/value-container",
       "hasCompleteValidation": true,

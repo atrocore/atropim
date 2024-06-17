@@ -8,7 +8,7 @@
     },
     "description": {
       "type": "text",
-      "rows": 4,
+      "rowsMax": 4,
       "lengthOfCut": 400,
       "isMultilang": true
     },
