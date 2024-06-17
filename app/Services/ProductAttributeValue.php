@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\NotModified;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
@@ -881,5 +883,99 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ->fetchAllAssociative();
 
         return array_column($values, 'id');
+    }
+
+    public function updatePanelFromProduct(string $productId, \stdClass  $data)
+    {
+        // input data
+        $productAttributeValues = new \stdClass();
+        // pavs to update
+        $pavs = new EntityCollection();
+
+        // For Mass Update
+        if (property_exists($data, '_isMassUpdate')) {
+            $attributeIds = array_column((array)$data->panelsData->productAttributeValues, 'attributeId');
+            $existingPavs = $this->getRepository()->where(['productId' => $productId, 'attributeId' => $attributeIds])->find();
+
+            foreach ($data->panelsData->productAttributeValues as $pavData) {
+                $existPav = $this->getProductAttributeForUpdating($existingPavs, $pavData);
+                try {
+                    if (!is_null($existPav)) {
+                        $productAttributeValues->{$existPav->get('id')} = $pavData;
+                        $pavs->append($existPav);
+                    } else {
+                        $copy = clone $pavData;
+
+                        if (property_exists($copy, 'createPavIfNotExists')) {
+                            if (empty($copy->createPavIfNotExists)) {
+                                continue 1;
+                            }
+                            unset($copy->createPavIfNotExists);
+                        }
+
+                        $copy->productId = $productId;
+
+                        $result = $this->createEntity($copy);
+
+                        if (!$result->get('attributeIsMultilang')) {
+                            $existingPavs->append($result);
+                        } else {
+                            $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])
+                                ->find();
+                        }
+
+                    }
+                } catch (Conflict $e) {
+                    $conflicts = array_merge($conflicts, $e->getFields());
+                }
+            }
+        } // For Single Product Update
+        else {
+            $ids = array_keys((array)$data->panelsData->productAttributeValues);
+            $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['id' => $ids])->find();
+            $productAttributeValues = $data->panelsData->productAttributeValues;
+        }
+
+        $pavs = $this
+            ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $id, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
+            ->getArgument('pavs');
+
+        foreach ($pavs as $pav) {
+            if (!empty($this->getMetadata()->get(['attributes', $pav->get('attributeType'), 'isValueReadOnly']))) {
+                continue;
+            }
+
+            // prepare input
+            $input = clone $productAttributeValues->{$pav->get('id')};
+            if (property_exists($data, '_ignoreConflict') && !empty($data->_ignoreConflict) && property_exists($data, '_prev')) {
+                unset($input->_prev);
+            }
+            foreach (['attributeId', 'channelId', 'language'] as $field) {
+                if (property_exists($input, $field)) {
+                    unset($input->$field);
+                }
+            }
+            $input->isProductUpdate = true;
+            try {
+                $this->updateEntity($pav->get('id'), $input);
+            } catch (Conflict $e) {
+                $conflicts = array_merge($conflicts, $e->getFields());
+            } catch (NotModified $e) {
+                // ignore
+            }
+        }
+
+        return $conflicts;
+    }
+
+    protected function getProductAttributeForUpdating(EntityCollection $pavs, \stdClass $data): ?Entity
+    {
+        foreach ($pavs as $pav) {
+            if ($pav->get('attributeId') == $data->attributeId && $pav->get('language') == $data->language && $pav->get('channelId') == $data->channelId) {
+                return $pav;
+            }
+        }
+
+        return null;
     }
 }
