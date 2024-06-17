@@ -21,6 +21,7 @@ use Pim\Core\ValueConverter;
 
 class ClassificationAttribute extends AbstractProductAttributeService
 {
+    protected $foreignEntity = 'Classification';
     protected $mandatorySelectAttributeList
         = [
             'classificationId',
