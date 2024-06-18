@@ -222,7 +222,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
             var id = data.id;
 
             this.confirm({
-                message: message ?? this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
+                message: typeof(message) === 'string' ? message : this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 let model = this.collection.get(id);
@@ -249,9 +249,9 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
 
         actionCascadeUnlinkRelatedAttribute(data, message = null) {
             var id = data.id;
-
+            debugger
             this.confirm({
-                message: message ?? this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
+                message: typeof(message) === 'string' ? message : this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 let model = this.collection.get(id);
