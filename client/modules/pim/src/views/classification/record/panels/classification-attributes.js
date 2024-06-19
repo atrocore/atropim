@@ -249,7 +249,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
 
         actionCascadeUnlinkRelatedAttribute(data, message = null) {
             var id = data.id;
-            debugger
             this.confirm({
                 message: typeof(message) === 'string' ? message : this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
