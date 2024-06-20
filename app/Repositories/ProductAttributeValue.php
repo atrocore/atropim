@@ -31,6 +31,7 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     protected array $channelLanguages = [];
     protected array $productCa = [];
+    protected array $lastProductModifiedAt = [];
 
     public function isInherited(Entity $entity): ?bool
     {
@@ -485,17 +486,22 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function updateProductModifiedData(Entity $entity): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->update('product', 'p')
-            ->set('modified_at', ':modifiedAt')
-            ->set('modified_by_id', ':modifiedById')
-            ->where('p.id = :productId')
-            ->setParameters([
-                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
-                'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
-                'productId'    => $entity->get('productId')
-            ])
-            ->executeQuery();
+        $modifiedAt = (new \DateTime())->format('Y-m-d H:i:s');
+
+        if (!isset($this->lastProductModifiedAt[$entity->get('productId')]) || $this->lastProductModifiedAt[$entity->get('productId')] !== $modifiedAt) {
+            $this->getConnection()->createQueryBuilder()
+                ->update('product', 'p')
+                ->set('modified_at', ':modifiedAt')
+                ->set('modified_by_id', ':modifiedById')
+                ->where('p.id = :productId')
+                ->setParameters([
+                    'modifiedAt'   => $modifiedAt,
+                    'modifiedById' => $this->getEntityManager()->getUser()->get('id'),
+                    'productId'    => $entity->get('productId')
+                ])
+                ->executeQuery();
+            $this->lastProductModifiedAt[$entity->get('productId')] = $modifiedAt;
+        }
     }
 
     /**
