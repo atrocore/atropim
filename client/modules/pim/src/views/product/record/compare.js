@@ -10,8 +10,10 @@
 
 Espo.define('pim:views/product/record/compare','views/record/compare',
     Dep => Dep.extend({
+        attributesPanelsView: 'pim:views/product/record/compare/attributes-panels',
         pavModel: null,
         nonComparableAttributeFields: ['createdAt','modifiedAt','createdById','createdByName','modifiedById','modifiedByName','sortOrder'],
+        attributesArr:[],
         setup(){
             this.getModelFactory().create('ProductAttributeValue', function(pavModel){
                 this.pavModel = pavModel;
@@ -19,17 +21,23 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
                 this.fieldsArr = this.fieldsArr.filter((el) => el.field !== 'productAttributeValues');
             }, this)
         },
-        addCustomRows(modelCurrent, modelOthers) {
+
+        setupAttributesPanels() {
+            this.createView('attributesPanels', this.attributesPanelsView, {
+                scope: this.scope,
+                attributesArr: this.attributesArr,
+                distantModels: this.distantModelsAttribute,
+                model: this.model,
+                el: `${this.options.el} .compare-panel[data-name="attributesPanels"]`
+            }, view => view.render())
+        },
+        afterModelsLoading(modelCurrent, modelOthers) {
+
             this.notify(true)
             const currentAttributeIds =  modelCurrent.get('productAttributeValues').map(pav =>pav.attributeId)
             const otherPavAttributeIds =  modelOthers.map(model => model.get('productAttributeValues').map(pav =>pav.attributeId)).flat(1)
 
             const allAttributeIds = Array.from(new Set([...currentAttributeIds, ...otherPavAttributeIds]));
-            if(allAttributeIds.length > 0){
-                this.fieldsArr.push({
-                    separator:true
-                });
-            }
             allAttributeIds.forEach((attributeId) =>{
                 const pavCurrent = modelCurrent.get('productAttributeValues').filter((v) => v.attributeId === attributeId)[0] ?? {};
                 const pavOthers = modelOthers.map(modelOther => modelOther.get('productAttributeValues').filter((v) => v.attributeId === attributeId)[0] ?? {});
@@ -46,30 +54,7 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
 
                 pavModelCurrent.set(pavCurrent);
 
-                this.createView( attributeId + 'Current', 'pim:views/product-attribute-value/fields/value-container', {
-                    el: this.options.el + ` [data-id="${attributeId}"]  .current`,
-                    name: "value",
-                    nameName:"valueName",
-                    model: pavModelCurrent,
-                    readOnly: true,
-                    mode: 'list',
-                    inlineEditDisabled: true,
-                });
-
-
-              pavModelOthers.forEach((pavModelOther,index) => {
-                  this.createView(attributeId + 'Other'+index, 'pim:views/product-attribute-value/fields/value-container', {
-                      el: this.options.el + ` [data-id="${attributeId}"]  .other`+index,
-                      name: "value",
-                      model: pavModelOther,
-                      readOnly: true,
-                      mode: 'list',
-                      inlineEditDisabled: true,
-                  });
-              })
-
-                this.fieldsArr.push({
-                    isField: false,
+                this.attributesArr.push({
                     attributeName: attributeName,
                     attributeChannel: attributeChannel,
                     language: language,
@@ -80,12 +65,17 @@ Espo.define('pim:views/product/record/compare','views/record/compare',
                     others: pavModelOthers.map((model,index) => {
                        return { other: attributeId + 'Other'+index, index}
                     }),
-                    different:  !this.areAttributeEquals(pavCurrent, pavOthers)
+                    different:  !this.areAttributeEquals(pavCurrent, pavOthers),
+                    pavModelCurrent: pavModelCurrent,
+                    pavModelOthers: pavModelOthers
                 });
 
               this.notify(false)
-
             })
+
+            this.listenTo(this, 'after:render', () => {
+                this.setupAttributesPanels();
+            });
         },
 
         areAttributeEquals(pavCurrent, pavOthers){
