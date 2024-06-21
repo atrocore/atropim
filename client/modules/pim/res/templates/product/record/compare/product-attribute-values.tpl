@@ -8,7 +8,7 @@
         </th>
         {{#each instanceNames}}
         <th>
-            {{this}}
+            {{name}}
         </th>
         {{/each}}
         <th width="25"></th>

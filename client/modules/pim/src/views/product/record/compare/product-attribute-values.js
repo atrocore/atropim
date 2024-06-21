@@ -13,7 +13,62 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
         template:'pim:product/record/compare/product-attribute-values',
         attributesArr: [],
         attributeList:[],
+        tabId:null,
+        model: null,
+        groupPavsData: [],
         nonComparableAttributeFields: ['createdAt','modifiedAt','createdById','createdByName','modifiedById','modifiedByName','sortOrder'],
+        setup(){
+            this.tabId = this.options.defs?.tabId;
+            Dep.prototype.setup.call(this);
+            this.attributeList = [];
+            this.groupPavsData = [];
+        },
+        fetchModelsAndSetup(){
+            this.wait(true)
+            this.getModelFactory().create('ProductAttributeValue', function (model) {
+                let param = {
+                    tabId: this.tabId,
+                    productId: this.baseModel.get('id'),
+                    fieldFilter: ['allValues'],
+                    languageFilter: ['allLanguages'],
+                    scopeFilter: ['allChannels']
+                };
+                this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param).success(res => {
+                    let currentGroupPavs = res;
+                    this.ajaxGetRequest('Synchronization/action/distantInstanceRequest',{
+                        'uri': 'ProductAttributeValue/action/groupsPavs?'+ $.param(param)
+                    }).success(res => {
+                        let otherGroupPavsPerInstances = res;
+                        currentGroupPavs.forEach((group) => {
+                            let data = {
+                                id: group.id,
+                                key: group.key,
+                                label: group.label,
+                                currentCollection: group.collection.map(p => {
+                                    let pav = model.clone();
+                                    pav.set(p)
+                                    return pav
+                                })
+                            };
+                            data.othersCollectionPerInstance = otherGroupPavsPerInstances
+                                .map(otherGroupPavs => {
+                                    let otherGroup = otherGroupPavs.find(g => g.id === group.id)
+                                    if(otherGroup){
+                                        return otherGroup.collection.map(p => {
+                                            let pav = model.clone();
+                                            pav.set(p)
+                                            return pav
+                                        })
+                                    }
+                                    return [];
+                                })
+                            this.groupPavsData.push(data)
+                        })
+                        this.setupRelationship(() => this.wait(false));
+                    })
+                });
+            }, this);
+        },
         data(){
             let data = Dep.prototype.data.call(this);
             data['attributeList'] = this.attributeList;
@@ -21,47 +76,28 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
         },
         setupRelationship(callback){
             this.buildAttributesData();
-            this.ajaxGetRequest('AttributeGroup',{
-                sortBy:'sortOrder',
-                where:[
-                    {
-                        "type": "isLinked",
-                        "attribute":"attributes"
-                    }
-                ]
-            }).success(res => {
-                this.attributeList = [];
-                let groups =  res.list;
-
-                groups.push({
-                    "id": null,
-                    "name": this.translate("No Group", 'Product')
-                })
-
-                groups.forEach(group => {
-                    let groupPav = {
-                        label: group.name,
-                        attributes: []
-                    }
-                    this.attributesArr.forEach(attrData => {
-                        if(group.id === attrData.pavModelCurrent.get('attributeGroupId')){
-                            groupPav.attributes.push(attrData)
-                        }
-                    });
-                    this.attributeList.push(groupPav)
-                });
-
-                this.attributeList = this.attributeList.filter(p => p.attributes.length)
-                this.listenTo(this, 'after:render', () => {
-                    this.setupAttributeRecordViews();
-                })
-                if(callback){
-                    callback();
+            this.groupPavsData.forEach(group => {
+                let groupPav = {
+                    label: group.label,
+                    attributes: []
                 }
+                this.attributesArr.forEach(attrData => {
+                    if(group.id === attrData.pavModelCurrent.get('attributeGroupId')){
+                        groupPav.attributes.push(attrData)
+                    }
+                });
+                this.attributeList.push(groupPav)
             });
+
+            this.attributeList = this.attributeList.filter(p => p.attributes.length)
+            this.listenTo(this, 'after:render', () => {
+                this.setupAttributeRecordViews();
+            })
+            if(callback){
+                callback();
+            }
         },
         setupAttributeRecordViews(){
-
             this.attributeList.forEach( group => {
                 group.attributes.forEach(attrData => {
                     let attributeId = attrData.attributeId;
@@ -92,14 +128,25 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
             })
         },
         buildAttributesData(){
-            const currentAttributeIds =  this.currentItemModels.map(pav =>pav.get('attributeId'))
-            const otherPavAttributeIds =  this.otherItemModels.map(instancePavs => instancePavs.map(pav =>pav.get('attributeId'))).flat(1)
+            let currentItemsModels = this.groupPavsData
+                .map(group => group.currentCollection)
+                .flat(1);
+
+            let currentAttributeIds =  currentItemsModels
+                .map(pav =>pav.get('attributeId'))
+
+            let  otherItemModels = this.groupPavsData
+                .map(group => group.othersCollectionPerInstance)
+                .flat(1)
+            let otherPavAttributeIds =  otherItemModels
+                .map(instancePavs => instancePavs.map(pav =>pav.get('attributeId')))
+                .flat(1)
 
             const allAttributeIds = Array.from(new Set([...currentAttributeIds, ...otherPavAttributeIds]))
             allAttributeIds.forEach((attributeId) =>{
                 if(!attributeId) return;
-                const pavCurrent =  this.currentItemModels.filter((v) => v.get('attributeId') === attributeId)[0] ?? {};
-                const pavOthers = this.otherItemModels.map(instancePavs => instancePavs.filter((v) => v.get('attributeId') === attributeId)[0] ?? {});
+                const pavCurrent =  currentItemsModels.filter((v) => v.get('attributeId') === attributeId)[0] ?? {};
+                const pavOthers = otherItemModels.map(instancePavs => instancePavs.find((v) => v.get('attributeId') === attributeId)).filter(i => i);
                 const attributeName = pavCurrent.get('attributeName') ?? pavOthers.map(pav => pav.get('attributeName')).reduce((prev, curr)  => prev ?? curr);
                 const attributeChannel = pavCurrent.get('attributeName') ?? pavOthers.map(pav => pav.get('channelName')).reduce((prev, curr)  => prev ?? curr);
                 const productAttributeId = pavCurrent.get('id') ?? pavOthers.map(pav => pav.get('id')).reduce((prev, curr)  => prev ?? curr);
@@ -113,7 +160,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                     productAttributeId: productAttributeId,
                     showQuickCompare: true,
                     current: attributeId + 'Current',
-                    others: this.otherItemModels.map((model,index) => {
+                    others: pavOthers.map((model,index) => {
                         return { other: attributeId + 'Other'+index, index}
                     }),
                     different:  !this.areAttributeEquals(pavCurrent, pavOthers),
@@ -122,7 +169,6 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                 });
 
             })
-
         },
         areAttributeEquals(pavCurrent, pavOthers){
             for (const nonComparableAttributeField of this.nonComparableAttributeFields) {
