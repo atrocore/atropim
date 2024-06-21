@@ -22,6 +22,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
             Dep.prototype.setup.call(this);
             this.attributeList = [];
             this.groupPavsData = [];
+            this.attributesArr = [];
         },
         fetchModelsAndSetup(){
             this.wait(true)
