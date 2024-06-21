@@ -10,8 +10,9 @@
 
 Espo.define('pim:views/product/record/compare/attributes-panels','view', function (Dep) {
     return Dep.extend({
-        template: 'pim:record/compare/attributes-panels',
+        template: 'pim:product/record/compare/attributes-panels',
         attributeList: [],
+
         setup(){
             Dep.prototype.setup.call(this)
             this.attributesArr = this.options.attributesArr;
@@ -34,7 +35,6 @@ Espo.define('pim:views/product/record/compare/attributes-panels','view', functio
                 })
 
                 groups.forEach(group => {
-                    console.log(group)
                     let groupPav = {
                         label: group.name,
                         attributes: []
@@ -51,6 +51,7 @@ Espo.define('pim:views/product/record/compare/attributes-panels','view', functio
                 this.wait(false)
             });
         },
+
         data(){
             return {
                 scope: this.options.scope,
@@ -58,8 +59,8 @@ Espo.define('pim:views/product/record/compare/attributes-panels','view', functio
                 distantModels: this.options.distantModels
             }
         },
-        setupAttributeList(){
 
+        setupAttributeList(){
             this.attributeList.forEach( group => {
                 group.attributes.forEach(attrData => {
                     let attributeId = attrData.attributeId;

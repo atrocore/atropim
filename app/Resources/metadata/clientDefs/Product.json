@@ -165,6 +165,7 @@
       "tabId": null,
       "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
       "view": "pim:views/product/record/panels/product-attribute-values",
+      "compareRecordsView": "pim:views/product/record/compare/product-attribute-values",
       "aclScopesList": [
         "Attribute",
         "AttributeGroup",
