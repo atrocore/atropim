@@ -451,6 +451,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
      */
     protected function validateRequired(Entity $entity): void
     {
+        if($this->isPseudoTransaction()){
+            return;
+        }
+
         if ($this->hasCompleteness($entity) || empty($entity->get('isRequired'))) {
             return;
         }
