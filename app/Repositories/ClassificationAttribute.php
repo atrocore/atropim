@@ -46,7 +46,6 @@ class ClassificationAttribute extends AbstractAttributeValue
             'productId'   => $productsIds,
             'attributeId' => $classificationAttribute->get('attributeId'),
             'language'    => $classificationAttribute->get('language'),
-            'scope'       => $classificationAttribute->get('scope'),
             'channelId'   => $classificationAttribute->get('channelId')
         ];
 
