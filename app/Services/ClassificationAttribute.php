@@ -211,6 +211,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
         foreach ($this->getRepository()->getProductChannelsViaClassificationId($data->classificationId) as $id) {
             $inputData = clone $data;
             $inputData->productId = $id;
+            $inputData->_isCreateFromClassificationAttribute = true;
             unset($inputData->classificationId);
 
             $parentId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
