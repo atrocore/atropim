@@ -276,6 +276,7 @@ class Metadata extends AbstractListener
                 'view'                 => 'pim:views/product/record/panels/product-attribute-values',
                 "rowActionsView"       => "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
                 "recordListView"       => "pim:views/record/list-in-groups",
+                "compareRecordsView"   => "pim:views/product/record/compare/product-attribute-values",
                 "aclScopesList"        => [
                     "Attribute",
                     "AttributeGroup",
