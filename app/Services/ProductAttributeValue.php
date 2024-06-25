@@ -624,31 +624,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
     }
 
     /**
-     * @param Entity $entity
-     * @param string $field
-     * @param array  $defs
-     */
-    protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
-    {
-        if ($field == 'value' || ((!empty($defs['multilangField']) && $defs['multilangField'] == 'value'))) {
-            $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-            $typesWithPattern = ['varchar'];
-
-            if (in_array($attribute->get('type'), $typesWithPattern)
-                && !empty($pattern = $attribute->get('pattern'))
-                && !preg_match($pattern, $entity->get($field))) {
-                $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', $entity->getEntityType());
-                $message = str_replace('{attribute}', $attribute->get('name'), $message);
-                $message = str_replace('{pattern}', $pattern, $message);
-
-                throw new BadRequest($message);
-            }
-        } else {
-            parent::validateFieldWithPattern($entity, $field, $defs);
-        }
-    }
-
-    /**
      * @return array
      */
     protected function getInputLanguageList(): array
@@ -887,7 +862,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         return array_column($values, 'id');
     }
 
-    public function updatePanelFromProduct(string $productId, \stdClass  $data)
+    public function updatePanelFromProduct(string $productId, \stdClass $data)
     {
         // input data
         $productAttributeValues = new \stdClass();
