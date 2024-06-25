@@ -388,7 +388,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
     {
         parent::beforeCreateEntity($entity, $data);
 
-        $this->validateRequired($entity);
+        if(empty($data->_isCreateFromClassificationAttribute)){
+            $this->validateRequired($entity);
+        }
     }
 
     /**
