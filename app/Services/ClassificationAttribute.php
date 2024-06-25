@@ -249,7 +249,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
     {
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $inputData = new \stdClass();
-            foreach (['scope', 'channelId', 'language'] as $key) {
+            foreach (['channelId', 'language'] as $key) {
                 if (property_exists($data, $key)) {
                     $inputData->$key = $data->$key;
                 }
