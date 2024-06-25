@@ -621,24 +621,6 @@ class ProductAttributeValue extends AbstractProductAttributeService
         return true;
     }
 
-    protected function checkFieldsWithPattern(Entity $entity): void
-    {
-        $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
-        $typesWithPattern = ['varchar'];
-
-        if (in_array($attribute->get('type'), $typesWithPattern)
-            && !empty($pattern = $attribute->get('pattern'))
-            && !preg_match($pattern, $entity->get('varcharValue'))) {
-            $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', $entity->getEntityType());
-            $message = str_replace('{attribute}', $attribute->get('name'), $message);
-            $message = str_replace('{pattern}', $pattern, $message);
-
-            throw new BadRequest($message);
-        }
-
-        parent::checkFieldsWithPattern($entity);
-    }
-
     /**
      * @return array
      */

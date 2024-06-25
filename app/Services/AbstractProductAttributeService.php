@@ -21,6 +21,7 @@ use Pim\Core\ValueConverter;
 class AbstractProductAttributeService extends Base
 {
     protected $foreignEntity;
+
     protected function init()
     {
         parent::init();
@@ -29,6 +30,7 @@ class AbstractProductAttributeService extends Base
         $this->addDependency('container');
         $this->addDependency(ValueConverter::class);
     }
+
     protected function prepareDefaultLanguages(\stdClass $attachment): void
     {
         if (
@@ -92,7 +94,7 @@ class AbstractProductAttributeService extends Base
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
 
-        $foreignFieldId = strtolower($this->foreignEntity).'Id';
+        $foreignFieldId = strtolower($this->foreignEntity) . 'Id';
 
         if (!property_exists($data, $foreignFieldId)) {
             return;
@@ -113,7 +115,7 @@ class AbstractProductAttributeService extends Base
 
     protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, string $parentTransactionId = null): void
     {
-        $foreignFieldId = strtolower($this->foreignEntity).'Id';
+        $foreignFieldId = strtolower($this->foreignEntity) . 'Id';
         $children = $this->getRepository()->getChildrenArray($id);
 
         $pav1 = $this->getRepository()->get($id);
@@ -148,7 +150,7 @@ class AbstractProductAttributeService extends Base
 
     protected function createPseudoTransactionDeleteJobs(string $id, string $parentTransactionId = null): void
     {
-        $foreignFieldId = strtolower($this->foreignEntity).'Id';
+        $foreignFieldId = strtolower($this->foreignEntity) . 'Id';
         $children = $this->getRepository()->getChildrenArray($id);
         foreach ($children as $child) {
             $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child['id'], $parentTransactionId);
@@ -190,5 +192,23 @@ class AbstractProductAttributeService extends Base
         $this->updateEntity($pav->get('id'), $input);
 
         return true;
+    }
+
+    protected function checkFieldsWithPattern(Entity $entity): void
+    {
+        $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
+        $typesWithPattern = ['varchar'];
+
+        if (in_array($attribute->get('type'), $typesWithPattern)
+            && !empty($pattern = $attribute->get('pattern'))
+            && !preg_match($pattern, $entity->get('varcharValue'))) {
+            $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', 'ProductAttributeValue');
+            $message = str_replace('{attribute}', $attribute->get('name'), $message);
+            $message = str_replace('{pattern}', $pattern, $message);
+
+            throw new BadRequest($message);
+        }
+
+        parent::checkFieldsWithPattern($entity);
     }
 }
