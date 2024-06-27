@@ -6,7 +6,7 @@
             <th>
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
-            {{#each instanceNames}}
+            {{#each instances}}
             <th>
                 {{name}}
             </th>
@@ -15,11 +15,16 @@
         </tr>
         </thead>
         <tbody>
+        {{#if noData }}
+        <tr>
+            <td colspan="4"> {{ translate 'No Data' }} <td>
+        </tr>
+        {{else}}
         {{#each attributeList}}
         <tr><td colspan="4"><h5>{{label}}</h5></td></tr>
         {{#each attributes }}
         <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{attributeId}}">
-            <td class="cell"><a href="#Attribute/view/{{attributeId}}"> {{attributeName}} ({{attributeChannel}}, {{language}})</a></td>
+            <td class="cell"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{attributeName}} ({{attributeChannel}}, {{language}})</a></td>
             <td class="cell current">
                 Loading...
             </td>
@@ -57,6 +62,7 @@
         </tr>
         {{/each}}
         {{/each}}
+        {{/if}}
         </tbody>
     </table>
 </div>
