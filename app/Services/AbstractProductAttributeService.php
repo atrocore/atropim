@@ -199,7 +199,8 @@ class AbstractProductAttributeService extends Base
         $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
         $typesWithPattern = ['varchar'];
 
-        if (in_array($attribute->get('type'), $typesWithPattern)
+        if (!empty($entity->get('varcharValue')) &&
+            in_array($attribute->get('type'), $typesWithPattern)
             && !empty($pattern = $attribute->get('pattern'))
             && !preg_match($pattern, $entity->get('varcharValue'))) {
             $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', 'ProductAttributeValue');
