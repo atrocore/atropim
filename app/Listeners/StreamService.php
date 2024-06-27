@@ -21,15 +21,17 @@ class StreamService extends AbstractEntityListener
     {
         $entity = $event->getArgument('entity');
 
-        if (empty($entity->get('attributeId'))) {
+        $attributeId = $entity->get('data')->attributeId ?? null;
+
+        if (empty($attributeId)) {
             return;
         }
 
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
 
         // for backward compatibility
         if (empty($attribute)) {
-            $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($entity->get('attributeId'));
+            $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($attributeId);
             if (!empty($pav)) {
                 $attribute = $pav->get('attribute');
             }

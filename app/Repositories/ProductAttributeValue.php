@@ -762,8 +762,6 @@ class ProductAttributeValue extends AbstractAttributeValue
         $note->set('parentId', $entity->get('productId'));
         $note->set('parentType', 'Product');
         $note->set('data', $data);
-        $note->set('attributeId', $entity->get('attributeId'));
-        $note->set('pavId', $entity->get('id'));
 
         $this->getEntityManager()->saveEntity($note);
     }
@@ -891,6 +889,9 @@ class ProductAttributeValue extends AbstractAttributeValue
         if (empty($result['fields'])) {
             return [];
         }
+
+        $result['attributeId'] = $entity->get('attributeId');
+        $result['pavId'] = $entity->get('id');
 
         return $result;
     }
