@@ -62,6 +62,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                         otherGroupPavsPerInstances
                             .forEach((otherGroupPavs,index) => {
                                 if('_error' in otherGroupPavs){
+                                    this.instances[index]['_error'] = otherGroupPavs['_error'];
                                     return;
                                 }
                                otherGroupPavs.forEach((otherGroup) => {
@@ -81,7 +82,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                                                let el = p[key];
                                                let instanceUrl = this.instances[index].atrocoreUrl;
                                                if(key.includes('PathsData')){
-                                                   if(el['thumbnails']){
+                                                   if( el && ('thumbnails' in el)){
                                                        for (let size in el['thumbnails']){
                                                            p[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
                                                        }
