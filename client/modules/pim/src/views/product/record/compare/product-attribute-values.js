@@ -16,13 +16,17 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
         tabId:null,
         model: null,
         groupPavsData: [],
-        nonComparableAttributeFields: ['createdAt','modifiedAt','createdById','createdByName','modifiedById','modifiedByName','sortOrder'],
+        defaultPavModel: null,
+        noData : false,
+        comparableAttributeFields: ['value','valueId', 'attributeId', 'channel'],
         setup(){
             this.tabId = this.options.defs?.tabId;
             Dep.prototype.setup.call(this);
             this.attributeList = [];
             this.groupPavsData = [];
             this.attributesArr = [];
+            this.noData = false;
+            this.defaultPavModel = null;
         },
         fetchModelsAndSetup(){
             this.wait(true)
@@ -36,44 +40,83 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                 };
                 this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param).success(res => {
                     let currentGroupPavs = res;
+                    let tmp = {}
                     this.ajaxGetRequest('Synchronization/action/distantInstanceRequest',{
                         'uri': 'ProductAttributeValue/action/groupsPavs?'+ $.param(param)
                     }).success(res => {
                         let otherGroupPavsPerInstances = res;
                         currentGroupPavs.forEach((group) => {
-                            let data = {
+                            tmp[group.key] = {
                                 id: group.id,
                                 key: group.key,
                                 label: group.label,
+                                othersCollectionItemsPerInstance:[],
                                 currentCollection: group.collection.map(p => {
                                     let pav = model.clone();
                                     pav.set(p)
                                     return pav
                                 })
                             };
-                            data.othersCollectionPerInstance = otherGroupPavsPerInstances
-                                .map(otherGroupPavs => {
-                                    let otherGroup = otherGroupPavs.find(g => g.id === group.id)
-                                    if(otherGroup){
-                                        return otherGroup.collection.map(p => {
-                                            let pav = model.clone();
-                                            pav.set(p)
-                                            return pav
-                                        })
-                                    }
-                                    return [];
-                                })
-                            this.groupPavsData.push(data)
                         })
+
+                        otherGroupPavsPerInstances
+                            .forEach((otherGroupPavs,index) => {
+                                if('_error' in otherGroupPavs){
+                                    return;
+                                }
+                               otherGroupPavs.forEach((otherGroup) => {
+                                   if(!tmp[otherGroup.key]){
+                                       tmp[otherGroup.key] = {
+                                           id: otherGroup.id,
+                                           key: otherGroup.key,
+                                           label: otherGroup.label,
+                                           othersCollectionItemsPerInstance:[],
+                                           currentCollection:[]
+                                       };
+                                   }
+
+                                   tmp[otherGroup.key].othersCollectionItemsPerInstance[index] = otherGroup.collection
+                                       .map(p => {
+                                           for(let key in p){
+                                               let el = p[key];
+                                               let instanceUrl = this.instances[index].atrocoreUrl;
+                                               if(key.includes('PathsData')){
+                                                   if(el['thumbnails']){
+                                                       for (let size in el['thumbnails']){
+                                                           p[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                                       }
+                                                   }
+                                               }
+                                           }
+                                           let pav = model.clone();
+                                           pav.set(p)
+                                           return pav
+                                       }
+                                   )
+                               })
+                            })
+                        this.groupPavsData = Object.values(tmp);
+                        this.groupPavsData.map((groupPav, index) =>{
+                            this.instances.forEach((instance, key) => {
+                                if(!groupPav.othersCollectionItemsPerInstance[key]){
+                                    this.groupPavsData[index].othersCollectionItemsPerInstance[key] = [];
+                                }
+                            })
+                        })
+                        this.defaultPavModel = model;
                         this.setupRelationship(() => this.wait(false));
                     })
                 });
             }, this);
         },
         data(){
-            let data = Dep.prototype.data.call(this);
-            data['attributeList'] = this.attributeList;
-            return data;
+            return  {
+                name: this.relationship.name,
+                scope: this.relationship.scope,
+                instances: this.instances,
+                attributeList: this.attributeList,
+                noData: this.noData
+            };
         },
         setupRelationship(callback){
             this.buildAttributesData();
@@ -83,15 +126,20 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                     attributes: []
                 }
                 this.attributesArr.forEach(attrData => {
-                    if(group.id === attrData.pavModelCurrent.get('attributeGroupId')){
+                    if(group.id ===  attrData.attributeGroupId){
                         groupPav.attributes.push(attrData)
                     }
                 });
+
                 this.attributeList.push(groupPav)
             });
 
             this.attributeList = this.attributeList.filter(p => p.attributes.length)
             this.listenTo(this, 'after:render', () => {
+                if(!this.noData && !this.attributeList.length){
+                    this.noData = true;
+                    this.reRender();
+                }
                 this.setupAttributeRecordViews();
             })
             if(callback){
@@ -123,70 +171,91 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                             readOnly: true,
                             mode: 'list',
                             inlineEditDisabled: true,
-                        }, view => view.render());
+                        }, view => {
+                            view.render()
+                            this.updateBaseUrl(view, attrData.instanceUrl)
+                        });
                     })
                 })
             })
         },
         buildAttributesData(){
-            let currentItemsModels = this.groupPavsData
-                .map(group => group.currentCollection)
-                .flat(1);
+            let result = {};
 
-            let currentAttributeIds =  currentItemsModels
-                .map(pav =>pav.get('attributeId'))
+            this.groupPavsData.forEach(groupPav => {
+                groupPav.currentCollection.forEach(pav => {
+                    let pavOthers = [];
+                    let attributeId = pav.get('attributeId')
+                    this.instances.forEach((i, key) => {
+                        pavOthers.push(groupPav.othersCollectionItemsPerInstance[key].find(item =>item.get('attributeId') === attributeId) ?? this.defaultPavModel.clone())
+                    })
+                    result[attributeId] =  {
+                        attributeGroupId: groupPav.id,
+                        attributeName: pav.get('attributeName'),
+                        attributeChannel: pav.get('channelName') ?? this.translate('Global'),
+                        language: pav.get('language'),
+                        attributeId: attributeId,
+                        productAttributeId: pav.get('id'),
+                        showQuickCompare: true,
+                        current: attributeId + 'Current',
+                        others: pavOthers.map((model,index) => {
+                            return { other: attributeId + 'Other'+index, index}
+                        }),
+                        different:  !this.areAttributeEquals(pav, pavOthers),
+                        pavModelCurrent: pav,
+                        pavModelOthers: pavOthers,
+                    }
+                })
 
-            let  otherItemModels = this.groupPavsData
-                .map(group => group.othersCollectionPerInstance)
-                .flat(1)
-            let otherPavAttributeIds =  otherItemModels
-                .map(instancePavs => instancePavs.map(pav =>pav.get('attributeId')))
-                .flat(1)
-
-            const allAttributeIds = Array.from(new Set([...currentAttributeIds, ...otherPavAttributeIds]))
-            allAttributeIds.forEach((attributeId) =>{
-                if(!attributeId) return;
-                const pavCurrent =  currentItemsModels.filter((v) => v.get('attributeId') === attributeId)[0] ?? {};
-                const pavOthers = otherItemModels.map(instancePavs => instancePavs.find((v) => v.get('attributeId') === attributeId)).filter(i => i);
-                const attributeName = pavCurrent.get('attributeName') ?? pavOthers.map(pav => pav.get('attributeName')).reduce((prev, curr)  => prev ?? curr);
-                const attributeChannel = pavCurrent.get('attributeName') ?? pavOthers.map(pav => pav.get('channelName')).reduce((prev, curr)  => prev ?? curr);
-                const productAttributeId = pavCurrent.get('id') ?? pavOthers.map(pav => pav.get('id')).reduce((prev, curr)  => prev ?? curr);
-                const language = pavCurrent.language ?? pavOthers.map(pav => pav.get('language')).reduce((prev, curr)  => prev ?? curr);
-
-                this.attributesArr.push({
-                    attributeName: attributeName,
-                    attributeChannel: attributeChannel,
-                    language: language,
-                    attributeId: attributeId,
-                    productAttributeId: productAttributeId,
-                    showQuickCompare: true,
-                    current: attributeId + 'Current',
-                    others: pavOthers.map((model,index) => {
-                        return { other: attributeId + 'Other'+index, index}
-                    }),
-                    different:  !this.areAttributeEquals(pavCurrent, pavOthers),
-                    pavModelCurrent: pavCurrent,
-                    pavModelOthers: pavOthers
+                groupPav.othersCollectionItemsPerInstance.forEach((pavsInInstance, index) => {
+                    pavsInInstance.forEach(pav => {
+                        let attributeId = pav.get('attributeId')
+                        if(result[attributeId]){
+                            return;
+                        }
+                        let pavCurrent = this.defaultPavModel.clone();
+                        let pavOthers = [];
+                        this.instances.forEach((i, key) => {
+                            pavOthers.push(groupPav.othersCollectionItemsPerInstance[key].find(item =>item.get('attributeId') === attributeId) ?? this.defaultPavModel.clone())
+                        })
+                        result[attributeId] =  {
+                            attributeGroupId: groupPav.id,
+                            attributeName: pav.get('attributeName'),
+                            attributeChannel: pav.get('channelName') ?? this.translate('Global'),
+                            language: pav.get('language'),
+                            attributeId: attributeId,
+                            productAttributeId: pav.get('id'),
+                            showQuickCompare: true,
+                            current: attributeId + 'Current',
+                            others: pavOthers.map((model,index) => {
+                                return { other: attributeId + 'Other'+index, index}
+                            }),
+                            different:  !this.areAttributeEquals(pavCurrent, pavOthers),
+                            pavModelCurrent: this.defaultPavModel.clone(),
+                            pavModelOthers: pavOthers,
+                            instanceUrl: this.instances[index].atrocoreUrl
+                        }
+                    });
                 });
-
-            })
+            });
+            this.attributesArr = Object.values(result);
         },
         areAttributeEquals(pavCurrent, pavOthers){
-            for (const nonComparableAttributeField of this.nonComparableAttributeFields) {
-                delete pavCurrent[nonComparableAttributeField];
-                for (let i = 0; i < pavOthers.length; i++) {
-                    delete  pavOthers[i][nonComparableAttributeField];
-                }
-
-            }
             let compareResult = true;
             for (const pavOther of pavOthers) {
-                compareResult = compareResult && JSON.stringify(pavCurrent) === JSON.stringify(pavOther);
+                compareResult = compareResult && JSON.stringify(this.getComparableAttributeData(pavCurrent)) === JSON.stringify(this.getComparableAttributeData(pavOther));
                 if(!compareResult){
                     break;
                 }
             }
             return compareResult;
+        },
+        getComparableAttributeData(model){
+            let attributes = {};
+            for (let comparableAttribute of this.comparableAttributeFields){
+                attributes[comparableAttribute] = model.get(comparableAttribute)
+            }
+            return attributes;
         }
     })
 })
