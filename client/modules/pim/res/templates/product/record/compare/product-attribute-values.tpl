@@ -2,12 +2,12 @@
     <table class="table full-table table-striped table-fixed table-bordered-inside" data-name="{{name}}">
         <thead>
         <tr>
-            <th>{{ translate 'instance' scope='Synchronization' }}</th>
-            <th>
+            <th style="width:20%">{{ translate 'instance' scope='Synchronization' }}</th>
+            <th style="width: 40%;">
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
             {{#each instances}}
-            <th>
+            <th style="width: 40%">
                 {{name}}
                 {{#if _error}}
                 <br>
