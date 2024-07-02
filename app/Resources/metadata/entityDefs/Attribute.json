@@ -46,7 +46,6 @@
       "type": "link",
       "view": "pim:views/attribute/fields/attribute-group",
       "required": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -66,7 +65,6 @@
       "default": "text",
       "massUpdateDisabled": true,
       "isSorted": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false,
       "view": "pim:views/attribute/fields/type"
@@ -312,14 +310,12 @@
     "attributeGroup": {
       "type": "belongsTo",
       "foreign": "attributes",
-      "entity": "AttributeGroup",
-      "audited": false
+      "entity": "AttributeGroup"
     },
     "attributeTab": {
       "type": "belongsTo",
       "foreign": "attributes",
-      "entity": "AttributeTab",
-      "audited": false
+      "entity": "AttributeTab"
     },
     "extensibleEnum": {
       "type": "belongsTo",
@@ -351,7 +347,6 @@
       "relationName": "AttributeHierarchy",
       "foreign": "parents",
       "entity": "Attribute",
-      "audited": false,
       "midKeys": [
         "entityId",
         "parentId"
@@ -362,7 +357,6 @@
       "relationName": "AttributeHierarchy",
       "foreign": "children",
       "entity": "Attribute",
-      "audited": false,
       "midKeys": [
         "parentId",
         "entityId"

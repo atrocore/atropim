@@ -202,7 +202,6 @@
       "relationName": "CategoryHierarchy",
       "foreign": "parents",
       "entity": "Category",
-      "audited": false,
       "midKeys": [
         "entityId",
         "parentId"
@@ -213,7 +212,6 @@
       "relationName": "CategoryHierarchy",
       "foreign": "children",
       "entity": "Category",
-      "audited": false,
       "midKeys": [
         "parentId",
         "entityId"
@@ -229,8 +227,7 @@
       "type": "hasMany",
       "relationName": "productCategory",
       "foreign": "categories",
-      "entity": "Product",
-      "audited": false
+      "entity": "Product"
     },
     "channels": {
       "type": "hasMany",

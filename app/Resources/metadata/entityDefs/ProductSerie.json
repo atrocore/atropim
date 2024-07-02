@@ -66,8 +66,7 @@
     "products": {
       "type": "hasMany",
       "foreign": "productSerie",
-      "entity": "Product",
-      "audited": false
+      "entity": "Product"
     }
   },
   "collection": {

@@ -100,8 +100,7 @@
         "products": {
             "type": "hasMany",
             "foreign": "brand",
-            "entity": "Product",
-            "audited": false
+            "entity": "Product"
         }
     },
     "collection": {

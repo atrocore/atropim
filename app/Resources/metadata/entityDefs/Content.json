@@ -3,7 +3,6 @@
     "tags": {
       "type": "multiEnum",
       "optionColors": {},
-      "audited": true,
       "default": []
     },
     "name": {

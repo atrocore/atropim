@@ -69,7 +69,6 @@
       "required": false,
       "default": 0,
       "disableFormatting": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     }
@@ -100,8 +99,7 @@
     "attributes": {
       "type": "hasMany",
       "foreign": "attributeGroup",
-      "entity": "Attribute",
-      "audited": false
+      "entity": "Attribute"
     }
   },
   "collection": {

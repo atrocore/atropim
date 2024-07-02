@@ -6,7 +6,6 @@
   "customizable": false,
   "importable": true,
   "notifications": true,
-  "stream": false,
   "disabled": false,
   "type": "Base",
   "module": "Pim",
