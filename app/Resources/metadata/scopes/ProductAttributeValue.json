@@ -6,7 +6,6 @@
   "customizable": false,
   "importable": true,
   "notifications": true,
-  "stream": false,
   "disabled": false,
   "type": "Base",
   "module": "Pim",
@@ -16,6 +15,7 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hideLastViewed": true,
+  "streamDisabled": true,
   "completeness": {
     "replacement": "Product",
     "service": "Completeness\\Services\\ProductCompleteness"

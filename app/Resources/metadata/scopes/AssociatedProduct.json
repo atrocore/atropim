@@ -7,5 +7,6 @@
   "customizable": true,
   "type": "Base",
   "module": "Pim",
-  "importable": true
+  "importable": true,
+  "streamDisabled": true
 }

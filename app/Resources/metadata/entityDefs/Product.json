@@ -87,7 +87,6 @@
     "tag": {
       "type": "multiEnum",
       "optionColors": {},
-      "audited": true,
       "default": []
     },
     "image": {
@@ -310,14 +309,12 @@
       "type": "hasChildren",
       "entity": "Call",
       "foreign": "parent",
-      "layoutRelationshipsDisabled": true,
-      "audited": true
+      "layoutRelationshipsDisabled": true
     },
     "productSerie": {
       "type": "belongsTo",
       "foreign": "products",
-      "entity": "ProductSerie",
-      "audited": false
+      "entity": "ProductSerie"
     },
     "channels": {
       "type": "hasMany",
@@ -348,8 +345,7 @@
       "type": "hasMany",
       "relationName": "productCategory",
       "foreign": "products",
-      "entity": "Category",
-      "audited": false
+      "entity": "Category"
     },
     "contents": {
       "type": "hasMany",

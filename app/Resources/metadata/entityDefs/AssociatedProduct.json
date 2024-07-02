@@ -78,25 +78,21 @@
     "association": {
       "type": "belongsTo",
       "foreign": "associatedProducts",
-      "entity": "Association",
-      "audited": false
+      "entity": "Association"
     },
     "mainProduct": {
       "type": "belongsTo",
       "foreign": "associatedMainProducts",
-      "entity": "Product",
-      "audited": false
+      "entity": "Product"
     },
     "relatedProduct": {
       "type": "belongsTo",
       "foreign": "associatedRelatedProduct",
-      "entity": "Product",
-      "audited": false
+      "entity": "Product"
     },
     "backwardAssociatedProduct": {
       "type": "belongsTo",
-      "entity": "AssociatedProduct",
-      "audited": false
+      "entity": "AssociatedProduct"
     },
     "createdBy": {
       "type": "belongsTo",

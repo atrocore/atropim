@@ -25,7 +25,6 @@
             "notNull": true,
             "type": "bool",
             "default": false,
-            "audited": false,
             "readOnly": false,
             "tooltip": false
         },
@@ -111,20 +110,17 @@
             "type": "hasMany",
             "foreign": "association",
             "entity": "AssociatedProduct",
-            "layoutRelationshipsDisabled": true,
-            "audited": false
+            "layoutRelationshipsDisabled": true
         },
         "backwardAssociation": {
             "type": "belongsTo",
             "foreign": "associations",
-            "entity": "Association",
-            "audited": false
+            "entity": "Association"
         },
         "associations": {
             "type": "hasMany",
             "foreign": "backwardAssociation",
-            "entity": "Association",
-            "audited": false,
+            "entity": "Association"
             "layoutRelationshipsDisabled": true
         }
     },

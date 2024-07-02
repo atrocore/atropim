@@ -6,7 +6,6 @@
   "customizable": false,
   "importable": true,
   "notifications": true,
-  "stream": false,
   "disabled": false,
   "type": "Base",
   "module": "Pim",
@@ -14,5 +13,6 @@
   "overviewFilters": false,
   "hasOwner": true,
   "hasAssignedUser": true,
-  "hasTeam": true
+  "hasTeam": true,
+  "streamDisabled": true
 }
