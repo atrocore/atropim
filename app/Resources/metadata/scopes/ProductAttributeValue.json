@@ -16,6 +16,7 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hideLastViewed": true,
+  "streamDisabled": true,
   "completeness": {
     "replacement": "Product",
     "service": "Completeness\\Services\\ProductCompleteness"

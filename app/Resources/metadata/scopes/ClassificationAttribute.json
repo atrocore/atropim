@@ -14,5 +14,6 @@
   "overviewFilters": false,
   "hasOwner": true,
   "hasAssignedUser": true,
-  "hasTeam": true
+  "hasTeam": true,
+  "streamDisabled": true
 }
