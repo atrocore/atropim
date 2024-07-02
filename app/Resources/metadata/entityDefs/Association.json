@@ -120,7 +120,7 @@
         "associations": {
             "type": "hasMany",
             "foreign": "backwardAssociation",
-            "entity": "Association"
+            "entity": "Association",
             "layoutRelationshipsDisabled": true
         }
     },
