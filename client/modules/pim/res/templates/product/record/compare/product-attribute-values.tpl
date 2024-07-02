@@ -2,24 +2,33 @@
     <table class="table full-table table-striped table-fixed table-bordered-inside" data-name="{{name}}">
         <thead>
         <tr>
-            <th>{{ translate 'instance' scope='Synchronization' }}</th>
-            <th>
+            <th style="width:20%">{{ translate 'instance' scope='Synchronization' }}</th>
+            <th style="width: 40%;">
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
-            {{#each instanceNames}}
-            <th>
+            {{#each instances}}
+            <th style="width: 40%">
                 {{name}}
+                {{#if _error}}
+                <br>
+                <span class="danger"> ({{_error}})</span>
+                {{/if}}
             </th>
             {{/each}}
             <th width="25"></th>
         </tr>
         </thead>
         <tbody>
+        {{#if noData }}
+        <tr>
+            <td colspan="4"> {{ translate 'No Data' }} <td>
+        </tr>
+        {{else}}
         {{#each attributeList}}
         <tr><td colspan="4"><h5>{{label}}</h5></td></tr>
         {{#each attributes }}
         <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{attributeId}}">
-            <td class="cell"><a href="#Attribute/view/{{attributeId}}"> {{attributeName}} ({{attributeChannel}}, {{language}})</a></td>
+            <td class="cell"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{attributeName}} ({{attributeChannel}}, {{language}})</a></td>
             <td class="cell current">
                 Loading...
             </td>
@@ -57,6 +66,7 @@
         </tr>
         {{/each}}
         {{/each}}
+        {{/if}}
         </tbody>
     </table>
 </div>
