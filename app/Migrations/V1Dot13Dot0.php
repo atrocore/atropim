@@ -116,13 +116,16 @@ class V1Dot13Dot0 extends Base
 
             foreach ($res as $v) {
                 if (!empty($v['file_id'])) {
-                    $this->getConnection()->createQueryBuilder()
-                        ->update("{$name}_file")
-                        ->set('file_id', ':fileId')
-                        ->where('id=:id')
-                        ->setParameter('id', $v['id'])
-                        ->setParameter('fileId', $v['file_id'])
-                        ->executeQuery();
+                    try {
+                        $this->getConnection()->createQueryBuilder()
+                            ->update("{$name}_file")
+                            ->set('file_id', ':fileId')
+                            ->where('id=:id')
+                            ->setParameter('id', $v['id'])
+                            ->setParameter('fileId', $v['file_id'])
+                            ->executeQuery();
+                    } catch (\Throwable $e) {
+                    }
                 }
             }
         }
