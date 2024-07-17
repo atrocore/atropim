@@ -33,6 +33,19 @@ class AssociatedProduct extends Base
         }
     }
 
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        // Roman associated <a>Product 2</a> as <a>qweqweqwe</a>
+        // Roman removed association to <a>Product 2</a> as <a>qweqweqwe</a>
+
+        // Roman associated <a>Product 1</a> with <a>Product 2</a>
+        // Roman removed association from <a>Product 1</a> with <a>Product 2</a>
+
+        $this->createNote($entity, 'CreateProductAssociation');
+    }
+
     public function removeByProductId(string $productId): void
     {
         $this->where(['mainProductId' => $productId])->removeCollection();
@@ -70,10 +83,32 @@ class AssociatedProduct extends Base
         }
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->createNote($entity, 'DeleteProductAssociation');
+    }
+
     protected function init()
     {
         parent::init();
 
         $this->addDependency('language');
+    }
+
+    protected function createNote(Entity $entity, string $type): void
+    {
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => $type,
+            'parentType' => 'Product',
+            'parentId'   => $entity->get('mainProductId'),
+            'data'       => [
+                'associationId'    => $entity->get('associationId'),
+                'relatedProductId' => $entity->get('relatedProductId'),
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($note);
     }
 }
