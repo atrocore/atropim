@@ -17,8 +17,8 @@ Espo.define('pim:views/stream/notes/create-product-association', 'views/stream/n
         setup: function () {
             let data = this.model.get('data') || {};
 
-            this.messageData['relatedProduct'] = '<a href="#' + this.entityType + '/view/Product/' + data.relatedProductId + '">' + data.relatedProductName + '</a>';
-            this.messageData['association'] = '<a href="#' + this.entityType + '/view/Association/' + data.associationId + '">' + data.associationName + '</a>';
+            this.messageData['relatedProduct'] = '<a href="#Product/view/' + data.relatedProductId + '">' + data.relatedProductName + '</a>';
+            this.messageData['association'] = '<a href="#Association/view/' + data.associationId + '">' + data.associationName + '</a>';
 
             this.createMessage();
         }
