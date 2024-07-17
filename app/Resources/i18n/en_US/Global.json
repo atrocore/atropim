@@ -110,7 +110,9 @@
   },
   "streamMessages": {
     "createProductAssociationThis": "{user} associated {relatedProduct} as {association}",
-    "deleteProductAssociationThis": "{user} removed association to {relatedProduct} as {association}"
+    "deleteProductAssociationThis": "{user} removed association to {relatedProduct} as {association}",
+    "createAssociationProductThis": "{user} associated {mainProduct} with {relatedProduct}",
+    "deleteAssociationProductThis": "{user} removed association from {mainProduct} with {relatedProduct}"
   },
   "dashlets": {
     "GeneralStatistics": "PIM General Statistics",

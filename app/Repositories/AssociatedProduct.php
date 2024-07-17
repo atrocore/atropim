@@ -37,13 +37,8 @@ class AssociatedProduct extends Base
     {
         parent::afterSave($entity, $options);
 
-        // Roman associated <a>Product 2</a> as <a>qweqweqwe</a>
-        // Roman removed association to <a>Product 2</a> as <a>qweqweqwe</a>
-
-        // Roman associated <a>Product 1</a> with <a>Product 2</a>
-        // Roman removed association from <a>Product 1</a> with <a>Product 2</a>
-
-        $this->createNote($entity, 'CreateProductAssociation');
+        $this->createNoteInProduct('CreateProductAssociation', $entity);
+        $this->createNoteInAssociation('CreateAssociationProduct', $entity);
     }
 
     public function removeByProductId(string $productId): void
@@ -87,7 +82,8 @@ class AssociatedProduct extends Base
     {
         parent::afterRemove($entity, $options);
 
-        $this->createNote($entity, 'DeleteProductAssociation');
+        $this->createNoteInProduct('DeleteProductAssociation', $entity);
+        $this->createNoteInAssociation('DeleteAssociationProduct', $entity);
     }
 
     protected function init()
@@ -97,7 +93,7 @@ class AssociatedProduct extends Base
         $this->addDependency('language');
     }
 
-    protected function createNote(Entity $entity, string $type): void
+    protected function createNoteInProduct(string $type, Entity $entity): void
     {
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
@@ -106,6 +102,21 @@ class AssociatedProduct extends Base
             'parentId'   => $entity->get('mainProductId'),
             'data'       => [
                 'associationId'    => $entity->get('associationId'),
+                'relatedProductId' => $entity->get('relatedProductId'),
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($note);
+    }
+
+    protected function createNoteInAssociation(string $type, Entity $entity): void
+    {
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => $type,
+            'parentType' => 'Association',
+            'parentId'   => $entity->get('associationId'),
+            'data'       => [
+                'mainProductId'    => $entity->get('mainProductId'),
                 'relatedProductId' => $entity->get('relatedProductId'),
             ],
         ]);

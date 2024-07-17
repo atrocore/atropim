@@ -27,8 +27,17 @@ class StreamService extends AbstractEntityListener
         $products = [];
 
         foreach ($collection as $entity) {
-            if (in_array($entity->get('type'), ['CreateProductAssociation', 'DeleteProductAssociation'])) {
+            if (empty($entity->get('data'))) {
+                continue;
+            }
+
+            if (!empty($entity->get('data')->associationId)) {
                 $associations[$entity->get('data')->associationId] = null;
+            }
+            if (!empty($entity->get('data')->mainProductId)) {
+                $products[$entity->get('data')->mainProductId] = null;
+            }
+            if (!empty($entity->get('data')->relatedProductId)) {
                 $products[$entity->get('data')->relatedProductId] = null;
             }
         }
@@ -42,15 +51,17 @@ class StreamService extends AbstractEntityListener
         }
 
         foreach ($collection as $entity) {
-            if (in_array($entity->get('type'), ['CreateProductAssociation', 'DeleteProductAssociation'])) {
-                $entity->get('data')->associationName = $entity->get('data')->associationId;
-                if (!empty($associations[$entity->get('data')->associationId])) {
-                    $entity->get('data')->associationName = $associations[$entity->get('data')->associationId]->get('name');
-                }
-                $entity->get('data')->relatedProductName = $entity->get('data')->relatedProductId;
-                if (!empty($products[$entity->get('data')->relatedProductId])) {
-                    $entity->get('data')->relatedProductName = $products[$entity->get('data')->relatedProductId]->get('name');
-                }
+            if (empty($entity->get('data'))) {
+                continue;
+            }
+            if (!empty($entity->get('data')->associationId) && !empty($associations[$entity->get('data')->associationId])) {
+                $entity->get('data')->associationName = $associations[$entity->get('data')->associationId]->get('name');
+            }
+            if (!empty($entity->get('data')->mainProductId) && !empty($products[$entity->get('data')->mainProductId])) {
+                $entity->get('data')->mainProductName = $products[$entity->get('data')->mainProductId]->get('name');
+            }
+            if (!empty($entity->get('data')->relatedProductId) && !empty($products[$entity->get('data')->relatedProductId])) {
+                $entity->get('data')->relatedProductName = $products[$entity->get('data')->relatedProductId]->get('name');
             }
         }
     }
