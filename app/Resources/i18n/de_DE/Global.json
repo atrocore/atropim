@@ -121,6 +121,12 @@
     "productPreview": "Produktvorschau",
     "classificationSettings": "Einstellungen für die Klassifizierung"
   },
+  "streamMessages": {
+    "createProductAssociationThis": "{user} hat {relatedProduct} als {association} assoziiert",
+    "deleteProductAssociationThis": "{user} hat die Assoziation zu {relatedProduct} als {association} entfernt",
+    "createAssociationProductThis": "{user} hat {mainProduct} mit {relatedProduct} assoziiert",
+    "deleteAssociationProductThis": "{user} hat die Assoziation von {mainProduct} mit {relatedProduct} entfernt"
+  },
   "dashlets": {
     "ProductsByTag": "Produkte nach Tag",
     "ProductTypes": "Produkt typen",

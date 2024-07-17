@@ -14,9 +14,58 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Espo\ORM\EntityCollection;
 
 class StreamService extends AbstractEntityListener
 {
+    public function prepareCollectionForOutput(Event $event): void
+    {
+        /** @var EntityCollection $collection */
+        $collection = $event->getArgument('collection');
+
+        $associations = [];
+        $products = [];
+
+        foreach ($collection as $entity) {
+            if (empty($entity->get('data'))) {
+                continue;
+            }
+
+            if (!empty($entity->get('data')->associationId)) {
+                $associations[$entity->get('data')->associationId] = null;
+            }
+            if (!empty($entity->get('data')->mainProductId)) {
+                $products[$entity->get('data')->mainProductId] = null;
+            }
+            if (!empty($entity->get('data')->relatedProductId)) {
+                $products[$entity->get('data')->relatedProductId] = null;
+            }
+        }
+
+        foreach ($this->getEntityManager()->getRepository('Association')->where(['id' => array_keys($associations)])->find() as $association) {
+            $associations[$association->get('id')] = $association;
+        }
+
+        foreach ($this->getEntityManager()->getRepository('Product')->where(['id' => array_keys($products)])->find() as $product) {
+            $products[$product->get('id')] = $product;
+        }
+
+        foreach ($collection as $entity) {
+            if (empty($entity->get('data'))) {
+                continue;
+            }
+            if (!empty($entity->get('data')->associationId) && !empty($associations[$entity->get('data')->associationId])) {
+                $entity->get('data')->associationName = $associations[$entity->get('data')->associationId]->get('name');
+            }
+            if (!empty($entity->get('data')->mainProductId) && !empty($products[$entity->get('data')->mainProductId])) {
+                $entity->get('data')->mainProductName = $products[$entity->get('data')->mainProductId]->get('name');
+            }
+            if (!empty($entity->get('data')->relatedProductId) && !empty($products[$entity->get('data')->relatedProductId])) {
+                $entity->get('data')->relatedProductName = $products[$entity->get('data')->relatedProductId]->get('name');
+            }
+        }
+    }
+
     public function prepareNoteFieldDefs(Event $event): void
     {
         $entity = $event->getArgument('entity');

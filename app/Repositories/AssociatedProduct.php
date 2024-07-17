@@ -33,6 +33,14 @@ class AssociatedProduct extends Base
         }
     }
 
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->createNoteInProduct('CreateProductAssociation', $entity);
+        $this->createNoteInAssociation('CreateAssociationProduct', $entity);
+    }
+
     public function removeByProductId(string $productId): void
     {
         $this->where(['mainProductId' => $productId])->removeCollection();
@@ -70,10 +78,48 @@ class AssociatedProduct extends Base
         }
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->createNoteInProduct('DeleteProductAssociation', $entity);
+        $this->createNoteInAssociation('DeleteAssociationProduct', $entity);
+    }
+
     protected function init()
     {
         parent::init();
 
         $this->addDependency('language');
+    }
+
+    protected function createNoteInProduct(string $type, Entity $entity): void
+    {
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => $type,
+            'parentType' => 'Product',
+            'parentId'   => $entity->get('mainProductId'),
+            'data'       => [
+                'associationId'    => $entity->get('associationId'),
+                'relatedProductId' => $entity->get('relatedProductId'),
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($note);
+    }
+
+    protected function createNoteInAssociation(string $type, Entity $entity): void
+    {
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => $type,
+            'parentType' => 'Association',
+            'parentId'   => $entity->get('associationId'),
+            'data'       => [
+                'mainProductId'    => $entity->get('mainProductId'),
+                'relatedProductId' => $entity->get('relatedProductId'),
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($note);
     }
 }

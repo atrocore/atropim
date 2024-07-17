@@ -108,6 +108,12 @@
     "productPreview": "Product Preview",
     "classificationSettings": "Classification Settings"
   },
+  "streamMessages": {
+    "createProductAssociationThis": "{user} associated {relatedProduct} as {association}",
+    "deleteProductAssociationThis": "{user} removed association to {relatedProduct} as {association}",
+    "createAssociationProductThis": "{user} associated {mainProduct} with {relatedProduct}",
+    "deleteAssociationProductThis": "{user} removed association of {mainProduct} with {relatedProduct}"
+  },
   "dashlets": {
     "GeneralStatistics": "PIM General Statistics",
     "Channels": "Channels",
