@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Espo\ORM\Entity;
-use Espo\Core\Templates\Services\Hierarchy;
+use Atro\Core\Templates\Services\Hierarchy;
 
 class Classification extends Hierarchy
 {

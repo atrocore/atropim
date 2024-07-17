@@ -102,9 +102,10 @@ class AbstractProductAttributeService extends Base
 
         $children = $this->getEntityManager()->getRepository($this->foreignEntity)->getChildrenArray($data->$foreignFieldId);
         foreach ($children as $child) {
+            $foreignFieldName = strtolower($this->foreignEntity) . 'Name';
             $inputData = clone $data;
-            $inputData->productId = $child['id'];
-            $inputData->productName = $child['name'];
+            $inputData->$foreignFieldId = $child['id'];
+            $inputData->$foreignFieldName = $child['name'];
             $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
             $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->foreignEntity, $inputData->$foreignFieldId, null, $transactionId);
             if ($child['childrenCount'] > 0) {
