@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
@@ -26,7 +25,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\Services\MassActions;
+use Atro\Services\MassActions;
 use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 
 class Product extends Hierarchy
