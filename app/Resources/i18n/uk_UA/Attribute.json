@@ -34,7 +34,8 @@
     "max": "Максимальне значення",
     "notNull": "Вимкнути Нульове значення",
     "trim": "Видалення початкових і кінцевих пробілів",
-    "classificationAttributes": "Класифікаційні атрибути"
+    "classificationAttributes": "Класифікаційні атрибути",
+    "preparedName": "Ім'я"
   },
   "links": {
     "measure": "Міра",

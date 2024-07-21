@@ -278,6 +278,19 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
+    },
+    "preparedName": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     }
   },
   "links": {
