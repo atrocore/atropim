@@ -12,8 +12,7 @@
         "detail": "pim:views/detail"
     },
     "recordViews": {
-        "detail": "pim:views/brand/record/detail",
-        "list": "pim:views/brand/record/list"
+        "detail": "pim:views/brand/record/detail"
     },
     "relationshipPanels": {
         "products": {
