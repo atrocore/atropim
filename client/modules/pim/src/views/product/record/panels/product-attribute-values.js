@@ -75,7 +75,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 success: (resp) => {
                     this.notify(resp.message, 'success');
                     this.collection.fetch();
-                    this.model.trigger('after:unrelate', this.link, this.defs);
+                    if(this.mode !== 'edit'){
+                        this.model.trigger('after:unrelate', this.link, this.defs);
+                    }
                 }
             });
         },
@@ -131,7 +133,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                         success: (resp) => {
                             this.notify(resp.message, 'success');
                             this.collection.fetch();
-                            this.model.trigger('after:unrelate', this.link, this.defs);
+                            if(this.mode !== 'edit'){
+                                this.model.trigger('after:unrelate', this.link, this.defs);
+                            }
                         }
                     });
                 });
