@@ -83,8 +83,6 @@ class Attribute extends Hierarchy
         if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
             $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
-
-        $entity->set('preparedName', $entity->get($this->getTranslatedNameField()));
     }
 
     /**
@@ -98,6 +96,41 @@ class Attribute extends Hierarchy
         }
 
         return parent::updateEntity($id, $data);
+    }
+
+    public function getChildren(string $parentId, array $params): array
+    {
+        $result = [];
+        $selectParams = $this->getSelectParams($params);
+        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
+        if (empty($records)) {
+            return $result;
+        }
+
+        $offset = $params['offset'];
+        $total = $this->getRepository()->getChildrenCount($parentId, $selectParams);
+        $ids = [];
+        foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
+            if ($this->getAcl()->check($entity, 'read')) {
+                $ids[] = $entity->get('id');
+            }
+        }
+
+        foreach ($records as $k => $record) {
+            $result[] = [
+                'id'             => $record['id'],
+                'name'           => $record[$this->getTranslatedNameField()] ?? $record['name'],
+                'offset'         => $offset + $k,
+                'total'          => $total,
+                'disabled'       => !in_array($record['id'], $ids),
+                'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
+            ];
+        }
+
+        return [
+            'list'  => $result,
+            'total' => $total
+        ];
     }
 
     protected function duplicateProductAttributeValues(Entity $entity, Entity $duplicatingEntity)
@@ -227,8 +260,21 @@ class Attribute extends Hierarchy
 
     public function findEntities($params)
     {
-        if(!empty($params['select'] && in_array('preparedName', $params['select']))){
-            $params['select'][] = $this->getTranslatedNameField();
+        if(!empty(\Espo\Core\Services\Base::getLanguagePrism())){
+            return parent::findEntities($params);
+        }
+        $shouldUseLanguagePrizm = true;
+        if(!empty( $params['select']) && $this->getConfig()->get('isMultilangActive')){
+            foreach ($this->getConfig()->get('inputLanguageList') as $language){
+                if($language === 'main' || $language == $this->getConfig()->get('mainLanguage')) continue;
+                if(in_array(Util::toCamelCase('name_'.strtolower($language)), $params['select'])){
+                    $shouldUseLanguagePrizm = false;
+                }
+            }
+        }
+
+        if($shouldUseLanguagePrizm){
+            $GLOBALS['languagePrism'] = $this->getInjection('preferences')->get('language');
         }
         return parent::findEntities($params);
     }
