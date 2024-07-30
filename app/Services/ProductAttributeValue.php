@@ -711,7 +711,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if ($entity->get('language') !== 'main') {
             $nameField = Util::toCamelCase('name_' . strtolower($entity->get('language')));
 
-            if ($attribute->has($nameField) && !empty($attribute->get($nameField))) {
+            if ($attribute->has($nameField) && !empty($attribute->get($nameField)) && $attribute->get($nameField) !== $attribute->get('name')) {
                 $entity->set('attributeName', $attribute->get($nameField));
             } else {
                 $attributeName = !empty($attribute->get('name')) ? $attribute->get('name') : $attribute->get('id');

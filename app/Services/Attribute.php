@@ -263,19 +263,27 @@ class Attribute extends Hierarchy
         if(!empty(\Espo\Core\Services\Base::getLanguagePrism())){
             return parent::findEntities($params);
         }
-        $shouldUseLanguagePrizm = true;
+
+        $shouldUseLanguagePrism = true;
+
         if(!empty( $params['select']) && $this->getConfig()->get('isMultilangActive')){
-            foreach ($this->getConfig()->get('inputLanguageList') as $language){
-                if($language === 'main' || $language == $this->getConfig()->get('mainLanguage')) continue;
-                if(in_array(Util::toCamelCase('name_'.strtolower($language)), $params['select'])){
-                    $shouldUseLanguagePrizm = false;
+            $userLanguage = $this->getInjection('preferences')->get('language');
+            if(in_array($userLanguage, $this->getConfig()->get('inputLanguageList'))) {
+                foreach ($this->getConfig()->get('inputLanguageList') as $language){
+                    if($language === 'main' || $language == $this->getConfig()->get('mainLanguage')) continue;
+                    if(in_array(Util::toCamelCase('name_'.strtolower($language)), $params['select'])){
+                        $shouldUseLanguagePrism = false;
+                    }
                 }
+            }else{
+                $shouldUseLanguagePrism = false;
+            }
+
+            if($shouldUseLanguagePrism){
+                $GLOBALS['languagePrism'] = $userLanguage;
             }
         }
 
-        if($shouldUseLanguagePrizm){
-            $GLOBALS['languagePrism'] = $this->getInjection('preferences')->get('language');
-        }
         return parent::findEntities($params);
     }
 
