@@ -418,11 +418,15 @@ class ValueConverter extends Injectable
                     WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
                 )'
             )
-            ->andWhere('id=:value OR code=:value')
+            ->andWhere('id=:value OR code=:value OR name=:value')
             ->setParameter('extensibleEnumId',$extensibleEnumId, Mapper::getParameterType($extensibleEnumId))
             ->setParameter('false',false,Mapper::getParameterType(false))
             ->setParameter('value', $value, Mapper::getParameterType($value))
             ->fetchAssociative();
+
+        if (!$data) {
+            return null;
+        }
 
         $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->get();
 
