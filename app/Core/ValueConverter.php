@@ -424,6 +424,10 @@ class ValueConverter extends Injectable
             ->setParameter('value', $value, Mapper::getParameterType($value))
             ->fetchAssociative();
 
+        if (!$data) {
+            return null;
+        }
+
         $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->get();
 
         $option->set(Util::arrayKeysToCamelCase($data));
