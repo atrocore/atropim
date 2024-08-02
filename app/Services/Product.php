@@ -149,10 +149,11 @@ class Product extends Hierarchy
             if (!empty($relEntity) && !empty($relEntity->get('fileId'))) {
                 /** @var File $file */
                 $file = $this->getEntityManager()->getRepository('File')->get($relEntity->get('fileId'));
-
-                $entity->set('mainImageId', $file->get('id'));
-                $entity->set('mainImageName', $file->get('name'));
-                $entity->set('mainImagePathsData', $file->getPathsData());
+                if (!empty($file)){
+                    $entity->set('mainImageId', $file->get('id'));
+                    $entity->set('mainImageName', $file->get('name'));
+                    $entity->set('mainImagePathsData', $file->getPathsData());
+                }
             }
         }
     }
