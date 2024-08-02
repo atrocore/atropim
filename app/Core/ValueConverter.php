@@ -418,7 +418,7 @@ class ValueConverter extends Injectable
                     WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
                 )'
             )
-            ->andWhere('id=:value OR code=:value OR name=:value')
+            ->andWhere('id=:value OR code=:value')
             ->setParameter('extensibleEnumId',$extensibleEnumId, Mapper::getParameterType($extensibleEnumId))
             ->setParameter('false',false,Mapper::getParameterType(false))
             ->setParameter('value', $value, Mapper::getParameterType($value))
