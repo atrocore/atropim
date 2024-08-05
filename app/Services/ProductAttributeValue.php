@@ -21,6 +21,7 @@ use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
@@ -344,6 +345,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (
             !property_exists($data, 'value')
             && !property_exists($data, 'valueId')
+            && !property_exists($data, 'valueIds')
             && !property_exists($data, 'valueUnitId')
             && !property_exists($data, 'valueCurrency')
             && !property_exists($data, 'valueFrom')
@@ -424,6 +426,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         parent::handleInput($data, $id);
+
+        if (property_exists($data, '_virtualValue') && is_object($data->_virtualValue)) {
+            $data->_virtualValue = Json::decode(Json::encode($data->_virtualValue), true);
+        }
 
         $this->getInjection('container')->get(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
     }
