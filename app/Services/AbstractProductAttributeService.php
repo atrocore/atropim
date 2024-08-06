@@ -125,7 +125,7 @@ class AbstractProductAttributeService extends Base
 
             $inputData = new \stdClass();
             if ($this->getRepository()->arePavsValuesEqual($pav1, $pav2)) {
-                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'channelId', 'isRequired'] as $key) {
+                foreach (['value', 'valueUnitId', 'valueCurrency', 'valueFrom', 'valueTo', 'valueId', 'valueIds', 'channelId', 'isRequired'] as $key) {
                     if (property_exists($data, $key)) {
                         $inputData->$key = $data->$key;
                     }
