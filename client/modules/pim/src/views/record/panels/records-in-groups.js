@@ -13,6 +13,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         template: 'pim:record/panels/records-in-groups',
 
+        editableFields: [],
+
         data() {
             return _.extend({
                 groups: this.groups,
@@ -127,7 +129,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.layoutName = layoutName;
             this.listLayout = listLayout;
-
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
@@ -164,6 +165,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                     this.wait(false);
                 });
             });
+
+            this.editableFields = [];
         },
         afterRender() {
             Dep.prototype.afterRender.call(this);
@@ -226,6 +229,9 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
                             view.render(() => {
                                 count++;
+                                if(!this.editableFields.length){
+                                    this.editableFields = view.getEditableFields()
+                                }
                                 if (count === this.groups.length) {
                                     this.afterGroupRender()
                                     this.trigger('groups-rendered');
@@ -339,6 +345,11 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         actionDeleteAllRelationshipEntities(data) {
 
         },
+
+        getEditableFields(){
+             return this.editableFields;
+        },
+
 
 
     })

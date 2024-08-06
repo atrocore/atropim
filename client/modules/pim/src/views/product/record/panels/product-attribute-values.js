@@ -199,16 +199,19 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 if (groupView) {
                     (groupView.rowList || []).forEach(id => {
                         const row = groupView.getView(id);
-                        const value = row.getView('valueField');
-                        if (value && value.mode === 'edit') {
-                            const fetchedData = value.fetch();
-                            const initialData = this.initialAttributes[id];
-                            value.model.set(fetchedData);
-
-                            if (!this.equalityValueCheck(fetchedData, initialData)) {
-                                fetchedData['_prev'] = initialData;
-                                data = _.extend(data || {}, {[id]: fetchedData});
+                        if(!row) return;
+                        let fetchedData = {}
+                        const initialData = this.initialAttributes[id];
+                        this.editableFields.forEach(field => {
+                            const value = row.getView(field + 'Field');
+                            if (value && value.mode === 'edit') {
+                                fetchedData = _.extend(fetchedData, value.fetch());
                             }
+                        });
+                        row.model.set(fetchedData);
+                        if (!this.equalityValueCheck(fetchedData, initialData)) {
+                            fetchedData['_prev'] = initialData;
+                            data = _.extend(data || {}, {[id]: fetchedData});
                         }
                     });
                 }
@@ -287,6 +290,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 const modelData = {
                     value: model.get('value')
                 };
+                this.editableFields.forEach(field => modelData[field] = model.get(field))
+
                 const actualFields = this.getFieldManager().getActualAttributeList(model.get('attributeType'), 'value');
                 actualFields.forEach(field => {
                     if (model.has(field)) {
@@ -316,6 +321,17 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         equalityValueCheck(fetchedData, initialData) {
+            let result = true;
+
+            this.editableFields.forEach(field => {
+                if(field === 'value') return;
+                result = result && _.isEqual(fetchedData[field], initialData[field])
+            })
+
+            if(!result){
+                return false;
+            }
+
             if (typeof fetchedData.valueId !== 'undefined') {
                 return _.isEqual(fetchedData.valueId, initialData.valueId);
             }

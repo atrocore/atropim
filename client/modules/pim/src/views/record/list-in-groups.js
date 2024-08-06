@@ -110,19 +110,28 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             Object.keys(this.nestedViews).forEach(row => {
                 let rowView = this.nestedViews[row];
                 if (rowView) {
-                    let fieldView = rowView.getView('valueField');
-                    if (
-                        fieldView
-                        && fieldView.model
-                        && !fieldView.model.getFieldParam(fieldView.name, 'readOnly')
-                        && typeof fieldView.setMode === 'function'
-                    ) {
-                        fieldView.setMode(mode);
-                        fieldView.reRender();
-                    }
+                    this.getEditableFields().forEach(field => {
+                        let fieldView = rowView.getView(field + 'Field');
+                        if (
+                            fieldView
+                            && fieldView.model
+                            && !fieldView.model.getFieldParam(fieldView.name, 'readOnly')
+                            && typeof fieldView.setMode === 'function'
+                        ) {
+                            fieldView.setMode(mode);
+                            fieldView.reRender();
+                        }
+                    })
                 }
             });
-        }
+        },
 
+        getEditableFields(){
+            let fields = this.listLayout.filter(p => p.editable).map(p => p.name);
+            if(!fields.includes('value')){
+                fields.push('value')
+            }
+            return fields;
+        },
     })
 );
