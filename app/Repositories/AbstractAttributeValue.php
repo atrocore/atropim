@@ -20,6 +20,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Pim\Core\ValueConverter;
 
 abstract  class AbstractAttributeValue extends Base
 {
@@ -161,6 +162,11 @@ abstract  class AbstractAttributeValue extends Base
             case 'link':
             case 'extensibleEnum':
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('referenceValue'), $pav2->get('referenceValue'));
+                break;
+            case 'linkMultiple':
+                $this->getInjection(ValueConverter::class)->convertFrom($pav1, $attribute, false);
+                $this->getInjection(ValueConverter::class)->convertFrom($pav2, $attribute, false);
+                $result = Entity::areValuesEqual(Entity::JSON_ARRAY, $pav1->get('valueIds'), $pav2->get('valueIds'), true);
                 break;
             case 'varchar':
                 $result = Entity::areValuesEqual(Entity::VARCHAR, $pav1->get('varcharValue'), $pav2->get('varcharValue'));

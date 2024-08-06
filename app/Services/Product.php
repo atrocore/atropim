@@ -953,10 +953,8 @@ class Product extends Hierarchy
                 $pavService->prepareEntityForOutput($childPav);
                 if ($childPav->get('isPavValueInherited') === false) {
                     $value = $childPav->get('value');
-                    $parentValue = $parentPav->get('value');
                     if ($childPav->get('attributeType') === 'file') {
                         $value = $childPav->get('valueId');
-                        $parentValue = $parentPav->get('valueId');
                     }
 
                     if ($value === null) {
