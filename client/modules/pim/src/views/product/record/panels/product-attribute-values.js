@@ -290,6 +290,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 const modelData = {
                     value: model.get('value')
                 };
+
                 this.editableFields.forEach(field => modelData[field] = model.get(field))
 
                 const actualFields = this.getFieldManager().getActualAttributeList(model.get('attributeType'), 'value');

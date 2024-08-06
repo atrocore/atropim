@@ -11,12 +11,6 @@
     "width": "55"
   },
   {
-    "name": "testBoolean",
-    "notSortable": true,
-    "width": "10",
-    "editable": true
-  },
-  {
     "name": "icons",
     "notSortable": true,
     "customLabel": "",

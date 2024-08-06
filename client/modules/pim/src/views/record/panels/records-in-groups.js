@@ -13,7 +13,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         template: 'pim:record/panels/records-in-groups',
 
-        editableFields: [],
+        editableFields: ['value'],
 
         data() {
             return _.extend({
@@ -129,6 +129,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.layoutName = layoutName;
             this.listLayout = listLayout;
+
             var sortBy = this.defs.sortBy || null;
             var asc = this.defs.asc || null;
 
@@ -166,7 +167,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 });
             });
 
-            this.editableFields = [];
+            this.editableFields = ['value'];
         },
         afterRender() {
             Dep.prototype.afterRender.call(this);
@@ -229,8 +230,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
                             view.render(() => {
                                 count++;
-                                if(!this.editableFields.length){
-                                    this.editableFields = view.getEditableFields()
+                                if(typeof view.getEditableFields === 'function'){
+                                    this.editableFields = view.getEditableFields() ?? ['value']
                                 }
                                 if (count === this.groups.length) {
                                     this.afterGroupRender()
@@ -348,9 +349,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         getEditableFields(){
              return this.editableFields;
-        },
-
-
-
+        }
     })
 );

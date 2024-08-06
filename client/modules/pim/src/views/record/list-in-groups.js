@@ -127,7 +127,7 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
         },
 
         getEditableFields(){
-            let fields = this.listLayout.filter(p => p.editable).map(p => p.name);
+            let fields = (this.listLayout ?? []).filter(p => p.editable).map(p => p.name);
             if(!fields.includes('value')){
                 fields.push('value')
             }
