@@ -2,24 +2,28 @@
   "fields": {
     "product": {
       "type": "link",
-      "required": true
+      "required": true,
+      "emHidden": true
     },
     "attribute": {
       "type": "link",
       "required": true,
-      "view": "pim:views/product-attribute-value/fields/attribute"
+      "view": "pim:views/product-attribute-value/fields/attribute",
+      "emHidden": true
     },
     "language": {
       "type": "language",
       "default": "main",
       "view": "pim:views/classification-attribute/fields/language",
-      "prohibitedEmptyValue": true
+      "prohibitedEmptyValue": true,
+      "emHidden": true
     },
     "channel": {
       "type": "link",
       "notNull": true,
       "default": "",
-      "required": false
+      "required": false,
+      "emHidden": true
     },
     "isRequired": {
       "type": "bool",
@@ -59,7 +63,8 @@
     "isVariantSpecificAttribute": {
       "type": "bool",
       "default": false,
-      "tooltip": true
+      "tooltip": true,
+      "emHidden": true
     },
     "icons": {
       "type": "varchar",
@@ -303,12 +308,22 @@
     },
     "countBytesInsteadOfCharacters": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "emHidden": true
     },
     "amountOfDigitsAfterComma": {
       "type": "int",
       "min": 0,
-      "notStorable": true
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "emHidden": true
     },
     "useDisabledTextareaInViewMode": {
       "type": "bool",
@@ -347,7 +362,8 @@
       "lengthOfCut": 400,
       "view": "pim:views/product-attribute-value/fields/value-container",
       "hasCompleteValidation": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "emHidden": true
     },
     "valueFrom": {
       "type": "float",
@@ -541,7 +557,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "emHidden": true
     },
     "attributeIsMultilang": {
       "type": "bool",
@@ -672,7 +689,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "emHidden": true
     },
     "attributeNotNull": {
       "type": "bool",
@@ -736,17 +754,20 @@
     "product": {
       "type": "belongsTo",
       "entity": "Product",
-      "foreign": "productAttributeValues"
+      "foreign": "productAttributeValues",
+      "emHidden": true
     },
     "attribute": {
       "type": "belongsTo",
       "entity": "Attribute",
-      "foreign": "productAttributeValues"
+      "foreign": "productAttributeValues",
+      "emHidden": true
     },
     "channel": {
       "type": "belongsTo",
       "foreign": "productAttributeValues",
-      "entity": "Channel"
+      "entity": "Channel",
+      "emHidden": true
     },
     "createdBy": {
       "type": "belongsTo",

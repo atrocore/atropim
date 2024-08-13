@@ -2,5 +2,10 @@
   "views/fields/user-with-avatar": [
     "__APPEND__",
     "pim"
+  ],
+
+  "views/admin/layouts/list-small": [
+    "__APPEND__",
+    "pim"
   ]
 }
