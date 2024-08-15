@@ -394,6 +394,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         afterGroupRender() {
+            Dep.prototype.afterGroupRender.call(this)
             this.initialAttributes = this.getInitialAttributes();
         },
         setEditMode() {
