@@ -153,6 +153,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.listenTo(this.model, 'change:classificationId update-all after:relate after:unrelate', link => {
                     if (!link || link === this.link) {
                         this.getCollectionFactory().create(this.scope, collection => {
+                            collection.totalIsLenght = true
                             this.collection = collection;
                             this.actionRefresh();
                         });
