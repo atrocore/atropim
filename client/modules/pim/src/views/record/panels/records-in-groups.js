@@ -145,7 +145,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, collection => {
-                collection.totalIsLenght = true
                 this.collection = collection;
 
                 this.setFilter(this.filter);
@@ -246,6 +245,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
 
         afterGroupRender() {
+            this.collection.total = this.collection.length
+            this.collection.trigger('update-total',this.collection)
         },
 
         applyOverviewFilters() {
