@@ -15,7 +15,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class CatalogCategory extends \Atro\Core\Templates\Repositories\Base
+class CatalogCategory extends \Atro\Core\Templates\Repositories\Relation
 {
     private Category $categoryRepository;
 
