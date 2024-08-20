@@ -116,6 +116,7 @@ abstract  class AbstractAttributeValue extends Base
                 $result = Entity::areValuesEqual(Entity::TEXT, json_encode($val1 ?? []), json_encode($val2 ?? []));
                 break;
             case 'text':
+            case 'markdown':
             case 'wysiwyg':
                 $result = Entity::areValuesEqual(Entity::TEXT, $pav1->get('textValue'), $pav2->get('textValue'));
                 break;

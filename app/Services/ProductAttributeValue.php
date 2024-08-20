@@ -282,7 +282,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 throw new BadRequest("Attribute '$attachment->attributeId' does not exist.");
             }
 
-            if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])
+            if (!property_exists($attachment, 'maxLength') && in_array($attribute->get('type'), ['varchar', 'text', 'markdown', 'wysiwyg'])
                 && $attribute->get('maxLength') !== null) {
                 $attachment->maxLength = $attribute->get('maxLength');
                 $attachment->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');

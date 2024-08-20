@@ -50,6 +50,7 @@
               "value": [
                 "varchar",
                 "text",
+                "markdown",
                 "wysiwyg"
               ]
             }
@@ -65,6 +66,7 @@
               "value": [
                 "varchar",
                 "text",
+                "markdown",
                 "wysiwyg"
               ]
             }

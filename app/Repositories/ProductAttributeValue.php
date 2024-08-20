@@ -425,6 +425,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                     $where['textValue'] = @json_encode($entity->get('textValue'));
                     break;
                 case 'text':
+                case 'markdown':
                 case 'wysiwyg':
                     $where['textValue'] = $entity->get('textValue');
                     break;
@@ -529,6 +530,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                 break;
 
             case 'wysiwyg':
+            case 'markdown':
             case 'url':
             case 'text':
                 if(!empty($attribute->get('notNull')) && $entity->get('textValue') === null){
@@ -657,7 +659,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         /**
          * Text length validation
          */
-        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg'])) {
+        if (in_array($attribute->get('type'), ['varchar', 'text', 'wysiwyg', 'markdown'])) {
             $fieldValue = $attribute->get('type') === 'varchar' ? $entity->get('varcharValue') : $entity->get('textValue');
             if ($fieldValue !== null) {
                 $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
