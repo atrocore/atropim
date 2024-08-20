@@ -18,7 +18,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         data() {
             return _.extend({
                 groups: this.groups,
-                groupScope: this.groupScope
+                groupScope: this.groupScope,
+                loadingGroups: this.loadingGroups
             }, Dep.prototype.data.call(this));
         },
 
@@ -162,9 +163,10 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                     this.applyOverviewFilters();
                 });
 
-                this.loading = true
+                this.loadingGroups = true
                 this.once('after:render', () => {
                     this.fetchCollectionGroups(() => {
+                        this.loadingGroups = false
                         this.reRender()
                     })
                 })

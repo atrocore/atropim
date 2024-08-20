@@ -1,3 +1,6 @@
+{{#if loadingGroups}}
+Loading...
+{{else}}
 {{#if groups.length}}
 <div class="group-container">
     {{#each groups}}
@@ -8,4 +11,5 @@
 </div>
 {{else}}
 <div class="list-container">{{translate 'No Data'}}</div>
+{{/if}}
 {{/if}}
