@@ -586,6 +586,7 @@ class Product extends AbstractSelectManager
                 }
                 break;
             case 'text':
+            case 'markdown':
             case 'wysiwyg':
                 $row['attribute'] = 'textValue';
                 $where['value'][] = $row;
@@ -824,7 +825,7 @@ class Product extends AbstractSelectManager
                 [
                     'type'      => 'in',
                     'attribute' => 'attributeType',
-                    'value'     => ['varchar', 'text', 'wysiwyg', 'extensibleEnum']
+                    'value'     => ['varchar', 'text', 'wysiwyg', 'markdown', 'extensibleEnum']
                 ],
                 [
                     'type'  => 'or',

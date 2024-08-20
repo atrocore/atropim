@@ -67,6 +67,7 @@
       "int": "Integer",
       "extensibleMultiEnum": "Multi-value list",
       "text": "Text",
+      "markdown": "Markdown",
       "url": "Url",
       "varchar": "String",
       "wysiwyg": "HTML",
