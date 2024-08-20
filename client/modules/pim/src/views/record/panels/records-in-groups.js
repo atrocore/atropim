@@ -162,9 +162,14 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                     this.applyOverviewFilters();
                 });
 
-                this.fetchCollectionGroups(() => {
-                    this.wait(false);
-                });
+                this.loading = true
+                this.once('after:render', () => {
+                    this.fetchCollectionGroups(() => {
+                        this.reRender()
+                    })
+                })
+
+                this.wait(false);
             });
 
             this.editableFields = ['value'];
@@ -172,6 +177,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         afterRender() {
             Dep.prototype.afterRender.call(this);
             Dep.prototype.setupTotal.call(this)
+
             this.buildGroups();
 
             if (this.mode === 'edit') {
@@ -230,7 +236,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
                             view.render(() => {
                                 count++;
-                                if(typeof view.getEditableFields === 'function'){
+                                if (typeof view.getEditableFields === 'function') {
                                     this.editableFields = view.getEditableFields() ?? ['value']
                                 }
                                 if (count === this.groups.length) {
@@ -246,7 +252,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         afterGroupRender() {
             this.collection.total = this.collection.length
-            this.collection.trigger('update-total',this.collection)
+            this.collection.trigger('update-total', this.collection)
         },
 
         applyOverviewFilters() {
@@ -349,8 +355,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         },
 
-        getEditableFields(){
-             return this.editableFields;
+        getEditableFields() {
+            return this.editableFields;
         }
     })
 );
