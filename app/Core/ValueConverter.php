@@ -80,6 +80,7 @@ class ValueConverter extends Injectable
                 break;
             case 'array':
             case 'text':
+            case 'markdown':
             case 'wysiwyg':
                 if (property_exists($data, 'value')) {
                     $data->textValue = $data->value;
@@ -260,6 +261,7 @@ class ValueConverter extends Injectable
                     }
                 }
                 break;
+            case 'markdown':
             case 'text':
             case 'wysiwyg':
                 if ($entity->has('textValue')) {

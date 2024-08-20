@@ -253,7 +253,7 @@ class Attribute extends Hierarchy
                     ->executeQuery();
             }
 
-            if(in_array($entity->get('type'), ['text', 'wysiwyg', 'url'])){
+            if(in_array($entity->get('type'), ['text', 'markdown', 'wysiwyg', 'url'])){
                 $query
                     ->set('text_value', ':empty')
                     ->andWhere("text_value is NULL")

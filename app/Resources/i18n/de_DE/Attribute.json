@@ -67,6 +67,7 @@
       "int": "Ganzzahl",
       "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
       "text": "Text",
+      "markdown": "Markdown",
       "url": "Url",
       "varchar": "Einzeiliger Text",
       "wysiwyg": "HTML",
