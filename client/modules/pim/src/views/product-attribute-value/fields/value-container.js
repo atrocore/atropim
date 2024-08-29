@@ -155,6 +155,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
+                    labelText: this.translate('value', 'fields', 'ProductAttributeValue'),
                     inlineEditDisabled: true,
                     ...customOptions
                 };
