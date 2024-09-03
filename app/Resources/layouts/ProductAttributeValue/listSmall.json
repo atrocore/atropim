@@ -2,8 +2,7 @@
   {
     "name": "attribute",
     "notSortable": true,
-    "width": "30",
-    "view": "pim:views/product-attribute-value/fields/attribute-with-required-sign"
+    "width": "30"
   },
   {
     "name": "value",
