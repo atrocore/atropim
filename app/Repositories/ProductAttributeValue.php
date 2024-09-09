@@ -60,15 +60,15 @@ class ProductAttributeValue extends AbstractAttributeValue
         if (!empty($languageFilter) && !in_array('allLanguages', $languageFilter)) {
             $query = '(pav.language IN (:languagesFilter) AND pav.attribute_id IN (SELECT id FROM attribute WHERE is_multilang=:true)) ';
 
-            if(in_array('unilingual', $languageFilter)){
-                $languageFilter = array_filter($languageFilter, function($lang){
+            if (in_array('unilingual', $languageFilter)) {
+                $languageFilter = array_filter($languageFilter, function ($lang) {
                     return $lang !== 'unilingual';
                 });
                 $query .= ' OR pav.attribute_id IN (SELECT id FROM attribute WHERE is_multilang=:false)';
-             }
+            }
 
             $qb->andWhere($query)
-                ->setParameter('true',true, ParameterType::BOOLEAN)
+                ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
         }
 
@@ -474,7 +474,7 @@ class ProductAttributeValue extends AbstractAttributeValue
 
         parent::afterSave($entity, $options);
 
-        $this->createNote($entity);
+        $this->createUpdateNote($entity);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
@@ -482,6 +482,8 @@ class ProductAttributeValue extends AbstractAttributeValue
         $this->updateProductModifiedData($entity);
 
         parent::afterRemove($entity, $options);
+
+        $this->createDeleteNote($entity);
     }
 
     public function updateProductModifiedData(Entity $entity): void
@@ -524,7 +526,7 @@ class ProductAttributeValue extends AbstractAttributeValue
     {
         switch ($attribute->get('type')) {
             case 'varchar':
-                if(!empty($attribute->get('notNull')) && $entity->get('varcharValue') === null){
+                if (!empty($attribute->get('notNull')) && $entity->get('varcharValue') === null) {
                     $entity->set('varcharValue', '');
                 }
                 break;
@@ -533,12 +535,12 @@ class ProductAttributeValue extends AbstractAttributeValue
             case 'markdown':
             case 'url':
             case 'text':
-                if(!empty($attribute->get('notNull')) && $entity->get('textValue') === null){
+                if (!empty($attribute->get('notNull')) && $entity->get('textValue') === null) {
                     $entity->set('textValue', '');
                 }
                 break;
             case 'bool':
-                if(!empty($attribute->get('notNull')) && $entity->get('boolValue') === null){
+                if (!empty($attribute->get('notNull')) && $entity->get('boolValue') === null) {
                     $entity->set('boolValue', false);
                 }
             case 'file':
@@ -560,7 +562,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
                 }
-                if(!empty($attribute->get('notNull')) && $entity->get('intValue') === null){
+                if (!empty($attribute->get('notNull')) && $entity->get('intValue') === null) {
                     $entity->set('intValue', 0);
                 }
                 break;
@@ -575,7 +577,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                     $valueField = $this->getLanguage()->translate('value', 'fields', 'ProductAttributeValue');
                     throw new BadRequest(str_replace(['{field}', '{value}'], [$valueField, $entity->get('max')], $message));
                 }
-                if(!empty($attribute->get('notNull')) && $entity->get('floatValue') === null){
+                if (!empty($attribute->get('notNull')) && $entity->get('floatValue') === null) {
                     $entity->set('floatValue', 0);
                 }
                 break;
@@ -750,7 +752,7 @@ class ProductAttributeValue extends AbstractAttributeValue
     {
     }
 
-    protected function createNote(Entity $entity): void
+    protected function createUpdateNote(Entity $entity): void
     {
         $this->getValueConverter()->convertFrom($entity, $entity->get('attribute'), false);
 
@@ -761,6 +763,27 @@ class ProductAttributeValue extends AbstractAttributeValue
 
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set('type', 'Update');
+        $note->set('parentId', $entity->get('productId'));
+        $note->set('parentType', 'Product');
+        $note->set('data', $data);
+
+        $this->getEntityManager()->saveEntity($note);
+    }
+
+    protected function createDeleteNote(Entity $entity): void
+    {
+        $this->getValueConverter()->convertFrom($entity, $entity->get('attribute'), false);
+
+        $data = [
+            'relatedType' => 'Attribute',
+            'relatedId'   => $entity->get('attributeId'),
+            'pavId'       => $entity->get('id'),
+            'locale'      => $entity->get('language') !== 'main' ? $entity->get('language') : '',
+            'channelId'   => $entity->get('channelId'),
+        ];
+
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set('type', 'Unrelate');
         $note->set('parentId', $entity->get('productId'));
         $note->set('parentType', 'Product');
         $note->set('data', $data);
