@@ -880,6 +880,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $productAttributeValues = new \stdClass();
         // pavs to update
         $pavs = new EntityCollection();
+        $conflicts = [];
 
         // For Mass Update
         if (property_exists($data, '_isMassUpdate')) {
