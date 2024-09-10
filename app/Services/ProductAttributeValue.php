@@ -926,7 +926,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         $pavs = $this
-            ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $id, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
+            ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $productId, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
             ->getArgument('pavs');
 
         foreach ($pavs as $pav) {
