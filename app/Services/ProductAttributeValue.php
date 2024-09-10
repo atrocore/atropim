@@ -880,6 +880,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $productAttributeValues = new \stdClass();
         // pavs to update
         $pavs = new EntityCollection();
+        $conflicts = [];
 
         // For Mass Update
         if (property_exists($data, '_isMassUpdate')) {
@@ -926,7 +927,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         $pavs = $this
-            ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $id, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
+            ->dispatchEvent('beforeUpdatePavs', new Event(['id' => $productId, 'pavsData' => $productAttributeValues, 'pavs' => $pavs, 'service' => $this]))
             ->getArgument('pavs');
 
         foreach ($pavs as $pav) {
