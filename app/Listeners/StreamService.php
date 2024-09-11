@@ -27,10 +27,6 @@ class StreamService extends AbstractEntityListener
             $selectParams['whereClause']['type'] = array_merge($selectParams['whereClause']['type'], [
                 'CreatePav',
                 'DeletePav',
-//                'CreateProductAssociation',
-//                'DeleteProductAssociation',
-//                'CreateAssociationProduct',
-//                'DeleteAssociationProduct'
             ]);
             $event->setArgument('selectParams', $selectParams);
         }
