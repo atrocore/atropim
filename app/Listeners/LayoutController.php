@@ -47,6 +47,33 @@ class LayoutController extends AbstractListener
         }
     }
 
+    protected function modifyProductAttributeValueListSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+        foreach ($result as &$item) {
+            if (!empty($item['name'])) {
+                if ($item['name'] === 'attribute') {
+                    $item['view'] = 'pim:views/product-attribute-value/fields/attribute-with-required-sign';
+                }
+                if ($item['name'] === 'icons') {
+                    $item['customLabel'] = '';
+                }
+            }
+        }
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyClassificationAttributeListSmall(Event $event)
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+        foreach ($result as &$item) {
+            if (!empty($item['name']) && $item['name'] === 'attribute') {
+                $item['view'] = 'pim:views/classification-attribute/fields/attribute-with-inheritance-sign';
+            }
+        }
+        $event->setArgument('result', Json::encode($result));
+    }
+
     protected function modifyFileListSmall(Event $event)
     {
         $result = Json::decode($event->getArgument('result'), true);
@@ -165,8 +192,8 @@ class LayoutController extends AbstractListener
             }
 
             foreach ($result as $row) {
-                if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-                    && $row['name'] === 'classifications'){
+                if ($this->getConfig()->get('allowSingleClassificationForProduct', false)
+                    && $row['name'] === 'classifications') {
                     continue;
                 }
 

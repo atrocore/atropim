@@ -1,3 +1,4 @@
 {
-  "module": "Pim"
+  "module": "Pim",
+  "streamDisabled": false
 }

@@ -59,12 +59,14 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 let fieldView = this.getFieldManager().getViewName(attributeType);
 
                 let params = {
-                    required: !!this.model.get('isRequired'),
                     readOnly: !!this.model.get('isValueReadOnly'),
                     notNull: !!this.model.get('attributeNotNull'),
                     attributeName: this.model.get('attributeName')
                 };
 
+                if (this.model.name !== 'ClassificationAttribute') {
+                    params.required = !!this.model.get('isRequired')
+                }
                 if (this.model.get('attributeIsMultilang')) {
                     params.multilangLocale = this.model.get('language')
                 }
@@ -119,23 +121,23 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
 
-                    if(this.model.urlRoot === 'ClassificationAttribute'
+                    if (this.model.urlRoot === 'ClassificationAttribute'
                         && this.model.get('extensibleEnumOptionsIds')
                         && this.model.get('extensibleEnumOptionsIds').length > 0
                     ) {
                         customOptions = {
                             customSelectBoolFilters: ['onlyExtensibleEnumIds'],
-                            customBoolFilterData:{
-                                onlyExtensibleEnumIds(){
+                            customBoolFilterData: {
+                                onlyExtensibleEnumIds() {
                                     return this.model.get('extensibleEnumOptionsIds')
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         customOptions = {
                             customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
-                            customBoolFilterData:{
-                                onlyForClassificationAttributesUsingPavId(){
+                            customBoolFilterData: {
+                                onlyForClassificationAttributesUsingPavId() {
                                     return this.model.get('id')
                                 }
 
@@ -144,7 +146,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     }
                 }
 
-                if(this.model.get('attributeType') === 'varchar'){
+                if (this.model.get('attributeType') === 'varchar') {
                     params.trim = this.model.get('attributeTrim');
                 }
 
@@ -155,6 +157,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
+                    labelText: this.translate('value', 'fields', 'ProductAttributeValue'),
                     inlineEditDisabled: true,
                     ...customOptions
                 };
@@ -166,32 +169,34 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
 
-                    this.listenTo(this.model, 'change:isRequired', () => {
-                        if (this.model.get('isRequired')) {
-                            view.setRequired();
-                        } else {
-                            view.setNotRequired();
-                        }
-                    });
+                    if (this.model.name !== 'ClassificationAttribute') {
+                        this.listenTo(this.model, 'change:isRequired', () => {
+                            if (this.model.get('isRequired')) {
+                                view.setRequired();
+                            } else {
+                                view.setNotRequired();
+                            }
+                        });
+                    }
 
-                    if(this.model.urlRoot === 'ClassificationAttribute'){
+                    if (this.model.urlRoot === 'ClassificationAttribute') {
                         this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
 
-                            if(attributeType === 'extensibleEnum'
-                                && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))){
-                                try{
+                            if (attributeType === 'extensibleEnum'
+                                && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))) {
+                                try {
                                     view.clearLink()
-                                }catch (e) {
+                                } catch (e) {
 
                                 }
                             }
 
-                            if(attributeType === 'extensibleMultiEnum') {
-                                (this.model.get('value') ?? []).forEach(v =>{
-                                    if(!this.model.get('extensibleEnumOptionsIds').includes(v)){
-                                        try{
+                            if (attributeType === 'extensibleMultiEnum') {
+                                (this.model.get('value') ?? []).forEach(v => {
+                                    if (!this.model.get('extensibleEnumOptionsIds').includes(v)) {
+                                        try {
                                             view.deleteLink(v)
-                                        }catch (e) {
+                                        } catch (e) {
                                         }
                                     }
                                 })
