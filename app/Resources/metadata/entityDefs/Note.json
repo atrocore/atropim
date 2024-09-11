@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "type": {
+      "options": [
+        "__APPEND__",
+        "CreatePav",
+        "DeletePav",
+        "CreateProductAssociation",
+        "DeleteProductAssociation",
+        "CreateAssociationProduct",
+        "DeleteAssociationProduct"
+      ]
+    }
+  }
+}

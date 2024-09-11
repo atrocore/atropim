@@ -18,6 +18,24 @@ use Espo\ORM\EntityCollection;
 
 class StreamService extends AbstractEntityListener
 {
+    public function getSelectParams(Event $event): void
+    {
+        $params = $event->getArgument('params');
+        $selectParams = $event->getArgument('selectParams');
+
+        if (!empty($params['filter']) && $params['filter'] === 'updates') {
+            $selectParams['whereClause']['type'] = array_merge($selectParams['whereClause']['type'], [
+                'CreatePav',
+                'DeletePav',
+//                'CreateProductAssociation',
+//                'DeleteProductAssociation',
+//                'CreateAssociationProduct',
+//                'DeleteAssociationProduct'
+            ]);
+            $event->setArgument('selectParams', $selectParams);
+        }
+    }
+
     public function prepareCollectionForOutput(Event $event): void
     {
         /** @var EntityCollection $collection */

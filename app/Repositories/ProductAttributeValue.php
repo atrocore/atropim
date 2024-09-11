@@ -757,12 +757,25 @@ class ProductAttributeValue extends AbstractAttributeValue
         $this->getValueConverter()->convertFrom($entity, $entity->get('attribute'), false);
 
         $data = $this->getNoteData($entity);
+        $type = 'Update';
+        if ($entity->isNew()) {
+            $type = 'CreatePav';
+            $data = [
+                'relatedType' => 'Attribute',
+                'relatedId'   => $entity->get('attributeId'),
+                'pavId'       => $entity->get('id'),
+                'locale'      => $entity->get('language') !== 'main' ? $entity->get('language') : '',
+                'channelId'   => $entity->get('channelId'),
+                'fields'      => $data['fields'],
+                'attributes'  => $data['attributes']
+            ];
+        }
         if (empty($data)) {
             return;
         }
 
         $note = $this->getEntityManager()->getEntity('Note');
-        $note->set('type', 'Update');
+        $note->set('type', $type);
         $note->set('parentId', $entity->get('productId'));
         $note->set('parentType', 'Product');
         $note->set('data', $data);
@@ -783,7 +796,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         ];
 
         $note = $this->getEntityManager()->getEntity('Note');
-        $note->set('type', 'Unrelate');
+        $note->set('type', 'DeletePav');
         $note->set('parentId', $entity->get('productId'));
         $note->set('parentType', 'Product');
         $note->set('data', $data);
