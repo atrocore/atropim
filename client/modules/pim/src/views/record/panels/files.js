@@ -16,7 +16,6 @@ Espo.define('pim:views/record/panels/files', 'views/record/panels/relationship',
 
             this.listenTo(this.model, 'after:relate after:unrelate', () => {
                 this.collection.reset();
-                this.reRender();
             })
 
             this.listenTo(this.collection, 'sync', function (c, r, options) {
