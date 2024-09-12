@@ -73,6 +73,8 @@ class Metadata extends AbstractListener
 
         $this->defineClassificationViewForProduct($data);
 
+        $data['clientDefs']['File']['recordViews']['list'] = 'pim:views/file/record/list';
+
         $event->setArgument('data', $data);
     }
 

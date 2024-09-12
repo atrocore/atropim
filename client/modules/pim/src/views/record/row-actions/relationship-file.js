@@ -13,6 +13,9 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
 
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
+            list.forEach((item, index) => {
+                list[index].data.file = this.model.get('ProductFile__id');
+            });
 
             let prefix = this.getRelationFieldPrefix();
             if (this.isImage() && !this.model.get(prefix + 'isMainImage') && this.options.acl.edit) {
