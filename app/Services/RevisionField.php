@@ -41,10 +41,9 @@ class RevisionField extends \Revisions\Services\RevisionField
             }
 
             foreach ($notes as $note) {
-                if (!empty($note->get('pavId')) && $note->get('pavId') == $pav->get('id')) {
+                $data = $this->prepareNoteData($note->get('data'));
+                if (!empty($data['pavId']) && $data['pavId'] == $pav->get('id')) {
                     // prepare data
-                    $data = $this->prepareNoteData($note->get('data'));
-
                     foreach ($data['fields'] as $field) {
                         if ($max > count($result['list']) && $result['total'] >= $offset) {
                             $attr = $pav->get('attribute');
