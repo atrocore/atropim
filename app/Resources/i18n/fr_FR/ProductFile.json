@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "scope": "Champ d'application",
+    "channel": "Canal",
+    "isMainImage": "Image principale",
+    "tags": "Tags",
+    "sorting": "Ordre de tri"
+  },
+  "options": {
+    "scope": {
+      "Global": "Mondial",
+      "Channel": "Canal"
+    }
+  }
+}

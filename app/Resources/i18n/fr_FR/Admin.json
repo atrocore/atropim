@@ -1,0 +1,12 @@
+{
+  "fieldTypes": {
+    "available-currency": "Liste des devises"
+  },
+  "labels": {
+    "pim": "PIM",
+    "pimSettings": "Paramètres généraux"
+  },
+  "descriptions": {
+    "pimSettings": "Paramètres du système PIM"
+  }
+}

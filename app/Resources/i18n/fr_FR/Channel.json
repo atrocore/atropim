@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "description": "Description",
+    "isActive": "Actif",
+    "categories": "Catégories",
+    "locales": "Langues",
+    "code": "Code",
+    "products": "Produits",
+    "type": "Type"
+  },
+  "links": {
+    "categories": "Catégories",
+    "products": "Produits"
+  },
+  "labels": {
+    "unLinkCategoryFromChannel": "Détachez la catégorie \"%s\" du canal \"%s\".",
+    "linkCategoryWithChannel": "Lien entre la catégorie '%s' et le canal '%s'",
+    "changeCategoryForChannel": "Changer la catégorie en '%s' pour le canal '%s'",
+    "Create Channel": "Créer un canal",
+    "main": "Langue principale"
+  },
+  "options": {
+    "template": {
+      "default": "Défaut"
+    },
+    "type": {
+      "general": "Général"
+    }
+  },
+  "messages": {
+    "categoryChangeConfirm": "Êtes-vous sûr de vouloir dissocier (ou modifier) l'arborescence des catégories pour ce canal ? Tous les produits liés à l'arborescence originale seront dissociés de ce canal (et les produits de la nouvelle arborescence y seront liés)."
+  },
+  "exceptions": {
+    "channelWithSuchCodeAlreadyExist": "Il existe déjà des chaînes dotées d'un tel CODE",
+    "channelHasProducts": "Les canaux avec des produits apparentés ne peuvent pas être supprimés.",
+    "channelHasCategory": "Les chaînes avec une arborescence de catégories apparentées ne peuvent pas être supprimées."
+  }
+}

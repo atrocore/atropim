@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "isActive": "Actif",
+    "products": "Produits",
+    "categories": "Catégories",
+    "code": "Code"
+  },
+  "links": {
+    "channels": "Canaux",
+    "products": "Produits",
+    "categories": "Catégories"
+  },
+  "labels": {
+    "Create Catalog": "Créer un catalogue"
+  },
+  "options": {
+    "template": {
+      "default": "Défaut"
+    }
+  },
+  "queueManager": {
+    "createProductForCatalog": "Créer le produit \"%s\" pour le catalogue \"%s\"."
+  },
+  "exceptions": {
+    "catalogCannotBeDeleted": "Le catalogue ne peut pas être supprimé. Peu de chaînes utilisent le catalogue actuel."
+  }
+}

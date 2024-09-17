@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "attributes": "Attributs"
+  },
+  "links": {
+    "attributes": "Attributs"
+  },
+  "exceptions": {
+    "extensibleEnumIsUsedOnAttribute": "La liste \"%s\" est utilisée par l'attribut \"%s\"."
+  }
+}
