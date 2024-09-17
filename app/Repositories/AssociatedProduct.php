@@ -37,7 +37,6 @@ class AssociatedProduct extends Relation
     {
         parent::afterSave($entity, $options);
 
-//        $this->createNoteInProduct('CreateProductAssociation', $entity);
         $this->createNoteInAssociation('CreateAssociationProduct', $entity);
     }
 
@@ -82,7 +81,6 @@ class AssociatedProduct extends Relation
     {
         parent::afterRemove($entity, $options);
 
-//        $this->createNoteInProduct('DeleteProductAssociation', $entity);
         $this->createNoteInAssociation('DeleteAssociationProduct', $entity);
     }
 
