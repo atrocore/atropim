@@ -11,11 +11,12 @@
 
 namespace Pim\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Controllers\Relation;
+use Atro\Core\Exceptions\BadRequest;
+use ATro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
 
-class AssociatedProduct extends Base
+class AssociatedProduct extends Relation
 {
     public function actionRemoveFromProduct($params, $data, $request)
     {
