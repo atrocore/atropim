@@ -134,6 +134,7 @@
         "isActive": true,
         "sortField": "product_file_mm.sorting"
       },
+      "recordListView": "pim:views/file/record/list",
       "sortBy": "sorting",
       "asc": true
     },

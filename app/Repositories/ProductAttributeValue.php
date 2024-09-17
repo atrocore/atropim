@@ -766,8 +766,8 @@ class ProductAttributeValue extends AbstractAttributeValue
                 'pavId'       => $entity->get('id'),
                 'locale'      => $entity->get('language') !== 'main' ? $entity->get('language') : '',
                 'channelId'   => $entity->get('channelId'),
-                'fields'      => $data['fields'] ?? [],
-                'attributes'  => $data['attributes'] ?? []
+                'fields'      => $data['fields'] ?? null,
+                'attributes'  => $data['attributes'] ?? null
             ];
         }
         if (empty($data)) {

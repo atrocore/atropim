@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Pim\Core\Exceptions\ClassificationAttributeAlreadyExists;
+use Pim\Core\ValueConverter;
 
 class ClassificationAttribute extends AbstractAttributeValue
 {
@@ -144,6 +145,7 @@ class ClassificationAttribute extends AbstractAttributeValue
     protected function init()
     {
         $this->addDependency('language');
+        $this->addDependency(ValueConverter::class);
     }
 
     /**
