@@ -1,0 +1,136 @@
+{
+  "scopeNames": {
+    "CategoryFile": "Catégorie de fichier",
+    "ProductFile": "Fiche produit",
+    "ProductChannel": "Canal de produits",
+    "Product": "Produit",
+    "Attribute": "Attribut",
+    "Catalog": "Catalogue",
+    "Category": "Catégorie",
+    "Channel": "Canal",
+    "Association": "Association",
+    "AttributeGroup": "Groupe d'attributs",
+    "AttributeTab": "Onglet Attributs",
+    "Brand": "Marque",
+    "Classification": "Classification",
+    "ProductPrice": "Prix du produit",
+    "Tax": "Impôts",
+    "Content": "Contenu",
+    "ContentGroup": "Groupe de contenu",
+    "ClassificationAttribute": "Attribut de classification",
+    "AssociatedProduct": "Produit associé",
+    "ProductSerie": "Série de produits",
+    "ProductAttributeValue": "Valeur de l'attribut",
+    "ChannelPricing": "Tarification par canal"
+  },
+  "fields": {
+    "amount": "Montant",
+    "products": "Produits",
+    "scope": "Champ d'application",
+    "categories": "Catégories",
+    "channels": "Canaux",
+    "catalogs": "Catalogues",
+    "productStatus": "Statut du produit",
+    "tax": "Impôts",
+    "ean": "GTIN/EAN",
+    "mpn": "MPN",
+    "tag": "Étiquette",
+    "productSerie": "Série de produits",
+    "Classification": "Classification",
+    "oneGeoType": "Type OneGeo",
+    "priceCurrency": "Prix Monnaie",
+    "price": "Prix",
+    "sku": "SKU",
+    "uvp": "UVP",
+    "role": "Rôle"
+  },
+  "links": {
+    "products": "Produits",
+    "channels": "Canaux",
+    "categories": "Catégories",
+    "catalogs": "Catalogues"
+  },
+  "options": {
+    "scope": {
+      "Global": "Mondial",
+      "Channel": "Canal"
+    },
+    "channelsFilter": {
+      "": "Toutes les lunettes",
+      "onlyGlobalScope": "Uniquement le champ d'application mondial"
+    }
+  },
+  "scopeNamesPlural": {
+    "ProductFile": "Fiches produits",
+    "CategoryFile": "Fichiers de catégorie",
+    "ProductChannel": "Canaux de produits",
+    "Attribute": "Attributs",
+    "Category": "Catégories",
+    "Channel": "Canaux",
+    "AssociatedProduct": "Produits associés",
+    "Association": "Associations",
+    "AttributeTab": "Onglets d'attributs",
+    "Brand": "Marques",
+    "Tax": "Impôts",
+    "ProductPrice": "Prix des produits",
+    "ProductSerie": "Série de produits",
+    "Content": "Contenu",
+    "ContentGroup": "Groupes de contenu",
+    "ProductAttributeValue": "Valeurs des attributs",
+    "Catalog": "Catalogues",
+    "Classification": "Classification",
+    "Product": "Produits",
+    "AttributeGroup": "Groupes d'attributs",
+    "ClassificationAttribute": "Attributs de la classification"
+  },
+  "labels": {
+    "removeHierarchically": "Supprimer de façon hiérarchique",
+    "setAsMainImage": "Image principale",
+    "setAsMainCategory": "Définir comme catégorie principale",
+    "setAsMainVariant": "Défini comme variante principale",
+    "allChannels": "Toutes les chaînes",
+    "linkedChannels": "Chaînes liées",
+    "productHierarchies": "Hiérarchies de produits",
+    "lowestLevelProducts": "Produits du niveau le plus bas",
+    "bundleProducts": "Produits de l'offre groupée",
+    "productSettings": "Paramètres du produit",
+    "typeToSearch": "Tapez et appuyez sur Entrée...",
+    "categorySettings": "Paramètres de catégorie",
+    "cascade": "Cascade",
+    "restrict": "Restreindre",
+    "Add Field": "Ajouter un filtre",
+    "removeHint": "Lorsque vous supprimez le catalogue, les produits qui en font partie sont supprimés.",
+    "categoryPreview": "Aperçu de la catégorie",
+    "productPreview": "Aperçu du produit",
+    "Reset selection": "Remise à zéro de la sélection",
+    "bundledProducts": "Produits groupés",
+    "classificationSettings": "Paramètres de classification",
+    "nonHierarchicalProducts": "Produits non hiérarchisés",
+    "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer."
+  },
+  "streamMessages": {
+    "createProductAssociationThis": "{utilisateur} a associé {relatedProduct} en tant que {association}",
+    "createAssociationProductThis": "{user} a associé {mainProduct} à {relatedProduct}",
+    "deleteAssociationProductThis": "{user} a supprimé l'association de {mainProduct} avec {relatedProduct}",
+    "deleteProductAssociationThis": "{utilisateur} a supprimé l'association à {relatedProduct} en tant que {association}"
+  },
+  "dashlets": {
+    "GeneralStatistics": "Statistiques générales des PIM",
+    "Channels": "Canaux",
+    "ProductsByStatus": "Produits par statut",
+    "ProductTypes": "Types de produits",
+    "ProductsByTag": "Produits par étiquette",
+    "ProductStatusOverview": "Aperçu de l'état des produits",
+    "ProductsByTaskStatus": "Produits par statut de la tâche"
+  },
+  "exceptions": {
+    "massRelateBlocked": "Les relations de masse de ce type sont bloquées.",
+    "massUnRelateBlocked": "Les déliaisons de masse de ce type sont bloquées.",
+    "onlyForceDeletingAvailable": "Seule la suppression forcée est disponible",
+    "notValid": "Les données ne sont pas valides",
+    "attributeRecordAlreadyExists": "L'attribut \"%s\" du canal %s est déjà lié."
+  },
+  "messages": {
+    "fieldHasPattern": "{field} ne doit contenir que des traits de soulignement, des chiffres et des lettres en minuscules."
+  }
+}

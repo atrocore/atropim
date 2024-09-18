@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "associatedProducts": "Produits associés",
+    "description": "Description",
+    "isActive": "Actif",
+    "backwardAssociation": "Association des arriérés",
+    "code": "Code"
+  },
+  "links": {
+    "associatedProducts": "Produits associés",
+    "backwardAssociation": "Association des arriérés"
+  },
+  "labels": {
+    "Create Association": "Créer une association"
+  },
+  "exceptions": {
+    "associationIsLinkedWithProducts": "L'association est liée au(x) produit(s). Veuillez d'abord dissocier le(s) produit(s)",
+    "youCanNotDeactivateAssociationWithActiveProducts": "Vous ne pouvez pas désactiver l'association avec le(s) produit(s) actif(s)"
+  }
+}

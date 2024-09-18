@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "category": "Catégorie",
+    "isMainImage": "Image principale",
+    "tags": "Tags",
+    "preview": "Aperçu",
+    "sorting": "Ordre de tri"
+  },
+  "links": {
+    "category": "Catégorie"
+  }
+}

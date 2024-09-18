@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "name": "Nom",
+    "contents": "Contenu"
+  },
+  "links": {
+    "contents": "Contenu"
+  },
+  "labels": {
+    "Create ContentGroup": "Créer un groupe de contenu"
+  }
+}

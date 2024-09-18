@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "tags": "Tags",
+    "name": "Titre",
+    "status": "Statut",
+    "type": "Type",
+    "description": "Description",
+    "text": "Texte",
+    "metaTitle": "Méta Titre",
+    "metaDescription": "Méta description",
+    "contentGroup": "Groupe de contenu",
+    "products": "Produits"
+  },
+  "links": {
+    "contentGroup": "Groupe de contenu",
+    "products": "Produits"
+  },
+  "labels": {
+    "Create Content": "Créer du contenu",
+    "draft": "Projet",
+    "written": "Écrites",
+    "reviewed": "Examiné",
+    "published": "Publié",
+    "review": "Révision",
+    "news": "Actualités",
+    "promotional": "Promotionnel"
+  }
+}
