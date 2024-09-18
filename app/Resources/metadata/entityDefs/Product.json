@@ -284,6 +284,29 @@
       "foreign": "products",
       "entity": "Brand"
     },
+    "associatedProducts": {
+      "type": "hasMany",
+      "relationName": "AssociatedProduct",
+      "entity": "Product",
+      "midKeys": [
+        "mainProductId",
+        "relatedProductId"
+      ],
+      "layoutRelationshipsDisabled": true,
+      "disableMassRelation": true
+    },
+    "relatedProducts": {
+      "type": "hasMany",
+      "relationName": "AssociatedProduct",
+      "entity": "Product",
+      "midKeys": [
+        "relatedProductId",
+        "mainProductId"
+      ],
+      "layoutRelationshipsDisabled": true,
+      "disableMassRelation": true
+    },
+
     "associatedMainProducts": {
       "type": "hasMany",
       "foreign": "mainProduct",

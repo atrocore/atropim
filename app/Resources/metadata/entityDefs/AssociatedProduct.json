@@ -8,11 +8,13 @@
     "mainProduct": {
       "required": true,
       "type": "link",
+      "relationField": true,
       "view": "pim:views/associated-product/fields/main-product"
     },
     "relatedProduct": {
       "required": true,
       "type": "link",
+      "relationField": true,
       "view": "pim:views/associated-product/fields/related-product",
       "noLoad": false
     },
@@ -104,7 +106,7 @@
     }
   },
   "uniqueIndexes": {
-    "unique_relationship": [
+    "unique_relation": [
       "deleted",
       "association_id",
       "main_product_id",

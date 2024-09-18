@@ -5,8 +5,8 @@
   "acl": true,
   "disabled": false,
   "customizable": true,
-  "type": "Base",
+  "type": "Relation",
   "module": "Pim",
   "importable": true,
-  "streamDisabled": true
+  "streamDisabled": false
 }

@@ -13,17 +13,14 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\Templates\Services\Relation;
 use Atro\Entities\File;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Services\Base;
-use Espo\Core\Utils\Language;
-use Espo\Entities\Attachment;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
-class AssociatedProduct extends Base
+class AssociatedProduct extends Relation
 {
     protected $mandatorySelectAttributeList = ['backwardAssociatedProductId', 'relatedProductId', 'relatedProductName'];
 

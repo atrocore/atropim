@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Relation;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class AssociatedProduct extends Base
+class AssociatedProduct extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -37,7 +37,6 @@ class AssociatedProduct extends Base
     {
         parent::afterSave($entity, $options);
 
-        $this->createNoteInProduct('CreateProductAssociation', $entity);
         $this->createNoteInAssociation('CreateAssociationProduct', $entity);
     }
 
@@ -82,7 +81,6 @@ class AssociatedProduct extends Base
     {
         parent::afterRemove($entity, $options);
 
-        $this->createNoteInProduct('DeleteProductAssociation', $entity);
         $this->createNoteInAssociation('DeleteAssociationProduct', $entity);
     }
 
@@ -91,21 +89,6 @@ class AssociatedProduct extends Base
         parent::init();
 
         $this->addDependency('language');
-    }
-
-    protected function createNoteInProduct(string $type, Entity $entity): void
-    {
-        $note = $this->getEntityManager()->getEntity('Note');
-        $note->set([
-            'type'       => $type,
-            'parentType' => 'Product',
-            'parentId'   => $entity->get('mainProductId'),
-            'data'       => [
-                'associationId'    => $entity->get('associationId'),
-                'relatedProductId' => $entity->get('relatedProductId'),
-            ],
-        ]);
-        $this->getEntityManager()->saveEntity($note);
     }
 
     protected function createNoteInAssociation(string $type, Entity $entity): void

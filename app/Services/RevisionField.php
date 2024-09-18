@@ -13,13 +13,32 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\Note;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Slim\Http\Request;
 
 class RevisionField extends \Revisions\Services\RevisionField
 {
+    public function restoreRecordForCreatePav(Note $note): bool
+    {
+        if (!empty($pavId = $note->get('data')->pavId)) {
+            return $this->getInjection('serviceFactory')->create('ProductAttributeValue')->deleteEntity($pavId);
+        }
+        return true;
+    }
+
+    public function restoreRecordForDeletePav(Note $note): bool
+    {
+        if (!empty($pavId = $note->get('data')->pavId)) {
+            return !empty($this->getInjection('serviceFactory')->create('ProductAttributeValue')->restoreEntity($pavId));
+        }
+        return true;
+    }
+
+
     protected function prepareData(array $params, EntityCollection $notes, Request $request): array
     {
         if (!empty($request->get('isAttribute'))) {
@@ -111,8 +130,8 @@ class RevisionField extends \Revisions\Services\RevisionField
 
     protected function getEntity(Entity $note): ?Entity
     {
-        if (!empty($note->get('pavId'))) {
-            return $this->getEntityManager()->getEntity('ProductAttributeValue', $note->get('pavId'));
+        if ($note->get('type') === 'Update' && !empty($pavId = $note->get('data')->pavId)) {
+            return $this->getEntityManager()->getEntity('ProductAttributeValue', $pavId);
         }
 
         return parent::getEntity($note);
