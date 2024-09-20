@@ -43,27 +43,9 @@ class Product extends AbstractSelectManager
             $this->mutateWhereAttributeQuery($params['where']);
 
             $where = [];
-            foreach ($params['where'] as $row) {
+            foreach ($params['where'] as $k => $row) {
                 if (!empty($row['attribute']) && $row['attribute'] === 'modifiedAtExpanded') {
-                    $productIds = [];
-                    foreach (['ProductFile', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
-                        $sp = $this->createSelectManager($entityType)->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
-                        $sp['select'] = ['productId'];
-                        $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
-                        $productIds = array_merge($productIds, array_column($collection->toArray(), 'productId'));
-                    }
-
-                    $where[] = [
-                        'type'  => 'or',
-                        'value' => [
-                            array_merge($row, ['attribute' => 'modifiedAt']),
-                            [
-                                'type'      => 'in',
-                                'attribute' => 'id',
-                                'value'     => array_values(array_unique($productIds))
-                            ]
-                        ]
-                    ];
+                    $where[$k] = $this->prepareWhereForModifiedAtExpanded($row);
                 } else if (!empty($row['type']) && $row['type'] == 'textFilter') {
                     $this->textFilterParams[] = $row;
                 } else {
@@ -89,6 +71,30 @@ class Product extends AbstractSelectManager
         }
 
         return $selectParams;
+    }
+
+    public function prepareWhereForModifiedAtExpanded(array $row): array
+    {
+        $productIds = [];
+        foreach (['ProductFile', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
+            $sp = $this->createSelectManager($entityType)
+                ->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
+            $sp['select'] = ['productId'];
+            $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
+            $productIds = array_merge($productIds, array_column($collection->toArray(), 'productId'));
+        }
+
+        return [
+            'type'  => 'or',
+            'value' => [
+                array_merge($row, ['attribute' => 'modifiedAt']),
+                [
+                    'type'      => 'in',
+                    'attribute' => 'id',
+                    'value'     => array_values(array_unique($productIds))
+                ]
+            ]
+        ];
     }
 
     public function mutateWhereAttributeQuery(array &$where): void
