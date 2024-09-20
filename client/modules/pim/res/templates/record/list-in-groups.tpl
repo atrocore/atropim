@@ -9,16 +9,16 @@
                 <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
                     <div>
                         {{#if this.sortable}}
-                            <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{translate this.name scope=../../../collection.name category='fields'}}{{/if}}</a>
+                            <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{translate this.name scope=../collection.name category='fields'}}{{/if}}</a>
                             {{#if this.sorted}}{{#if this.asc}}<span>&#8593;</span>{{else}}<span>&#8595;</span>{{/if}}{{/if}}
                         {{else}}
                             {{#if this.hasCustomLabel}}
                                 {{this.customLabel}}
                             {{else}}
                                 {{#if this.id}}
-                                    <a href="#{{../../../../groupScope}}/view/{{this.id}}">{{this.name}}</a>
+                                    <a href="#{{../groupScope}}/view/{{this.id}}">{{this.name}}</a>
                                 {{else}}
-                                    {{translate this.name scope=../../../../collection.name category='fields'}}
+                                    {{translate this.name scope=../collection.name category='fields'}}
                                 {{/if}}
                             {{/if}}
                         {{/if}}

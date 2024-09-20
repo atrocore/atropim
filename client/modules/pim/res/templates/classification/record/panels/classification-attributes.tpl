@@ -4,7 +4,7 @@
     <div class="group" data-name="{{key}}">
         <div class="group-name">
             {{#if id}}
-            <a href="#{{../../groupScope}}/view/{{id}}"><strong>{{label}}</strong></a>
+            <a href="#{{../groupScope}}/view/{{id}}"><strong>{{label}}</strong></a>
             {{#if editable}}
             <div class="pull-right btn-group">
 	            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
