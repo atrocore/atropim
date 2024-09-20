@@ -130,8 +130,9 @@ class RevisionField extends \Revisions\Services\RevisionField
 
     protected function getEntity(Entity $note): ?Entity
     {
-        if ($note->get('type') === 'Update' && !empty($pavId = $note->get('data')->pavId)) {
-            return $this->getEntityManager()->getEntity('ProductAttributeValue', $pavId);
+        $data = $note->get('data');
+        if ($note->get('type') === 'Update' && !empty($data->pavId)) {
+            return $this->getEntityManager()->getEntity('ProductAttributeValue', $data->pavId);
         }
 
         return parent::getEntity($note);
