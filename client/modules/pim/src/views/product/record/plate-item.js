@@ -46,7 +46,7 @@ Espo.define('pim:views/product/record/plate-item', 'view',
 
         data() {
             return {
-
+                scope: this.model.name
             };
         },
 

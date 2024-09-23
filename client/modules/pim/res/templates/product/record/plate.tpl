@@ -35,7 +35,7 @@
     {{/if}}
 
     {{#each buttonList}}
-        {{button name scope=../../scope label=label style=style}}
+        {{button name scope=../scope label=label style=style}}
     {{/each}}
 
     <div class="sort-container">
