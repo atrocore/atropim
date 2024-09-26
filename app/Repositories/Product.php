@@ -149,7 +149,7 @@ class Product extends Hierarchy
         }
 
         $children = $category->get('children');
-        if (!empty($chidren) && $children->count() > 0) {
+        if (!empty($children) && $children->count() > 0) {
             throw new BadRequest($this->translate("productCanNotLinkToNonLeafCategory", 'exceptions', 'Product'));
         }
 
