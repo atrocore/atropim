@@ -11,6 +11,12 @@
 Espo.define('pim:views/record/panels/files', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
+        boolFilterData: {
+            notEntity() {
+                return this.collection.map(model => model.id);
+            }
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 
