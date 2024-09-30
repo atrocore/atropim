@@ -13,6 +13,7 @@
     },
     "classifications": {
       "type": "linkMultiple",
+      "view": "pim:views/product/fields/classifications",
       "noLoad": false
     },
     "brand": {
@@ -306,7 +307,6 @@
       "layoutRelationshipsDisabled": true,
       "disableMassRelation": true
     },
-
     "associatedMainProducts": {
       "type": "hasMany",
       "foreign": "mainProduct",

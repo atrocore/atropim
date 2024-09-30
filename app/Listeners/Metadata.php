@@ -363,7 +363,7 @@ class Metadata extends AbstractListener
 
     protected  function defineClassificationViewForProduct(&$metadata){
         if($this->getConfig()->get('allowSingleClassificationForProduct', false)){
-            $metadata['entityDefs']['Product']['fields']['classifications']['view'] =  "pim:views/product/fields/classifications";
+            $metadata['entityDefs']['Product']['fields']['classifications']['view'] =  "pim:views/product/fields/classifications-single";
         }
     }
 }
