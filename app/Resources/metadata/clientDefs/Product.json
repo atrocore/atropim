@@ -136,7 +136,11 @@
       },
       "recordListView": "pim:views/file/record/list",
       "sortBy": "sorting",
-      "asc": true
+      "asc": true,
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notEntity"
+      ]
     },
     "parents": {
       "selectAction": "selectRelatedEntity",

@@ -81,7 +81,11 @@
         "sortField": "category_file_mm.sorting"
       },
       "sortBy": "sorting",
-      "asc": true
+      "asc": true,
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notEntity"
+      ]
     },
     "products": {
       "create": false,

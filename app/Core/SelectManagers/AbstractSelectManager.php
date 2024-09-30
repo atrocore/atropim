@@ -42,27 +42,6 @@ abstract class AbstractSelectManager extends \Espo\Core\SelectManagers\Base
     }
 
     /**
-     * NotEntity filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotEntity(&$result)
-    {
-        foreach ($this->getSelectData('where') as $key => $row) {
-            if ($row['type'] == 'bool' && !empty($row['data']['notEntity'])) {
-                // prepare value
-                $value = (array)$row['data']['notEntity'];
-                // prepare where clause
-                foreach ($value as $id) {
-                    $result['whereClause'][] = [
-                        'id!=' => (string)$id
-                    ];
-                }
-            }
-        }
-    }
-
-    /**
      * Get select data
      *
      * @param string $key
