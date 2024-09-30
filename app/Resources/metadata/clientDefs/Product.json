@@ -196,7 +196,8 @@
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "availableForProduct"
-      ]
+      ],
+      "view": "pim:views/product/record/panels/classifications"
     }
   },
   "dynamicLogic": {

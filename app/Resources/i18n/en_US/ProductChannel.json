@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create ProductChannel": "Create Product Channel"
+  },
+  "exceptions": {
+    "cannotUnlinkClassificationChannel": "The product is linked to a classification linked to this channel"
   }
 }
