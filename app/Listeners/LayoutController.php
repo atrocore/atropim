@@ -55,7 +55,7 @@ class LayoutController extends AbstractListener
         /** @var string $name */
         $name = $event->getArgument('params')['name'];
 
-        return $this->getContainer()->get('layout')->isCustomLayout($scope, $name);
+        return $this->getContainer()->get('layout')->isCustom($scope, $name);
     }
 
     protected function modifyProductAttributeValueListSmall(Event $event)
@@ -87,11 +87,11 @@ class LayoutController extends AbstractListener
 
     protected function modifyFileListSmall(Event $event)
     {
-        $result = Json::decode($event->getArgument('result'), true);
         if ($this->isCustomLayout($event)) {
             return;
         }
 
+        $result = Json::decode($event->getArgument('result'), true);
         $result[] = ['name' => 'ProductFile__channel'];
 
         $event->setArgument('result', Json::encode($result));
