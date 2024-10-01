@@ -93,6 +93,12 @@
       "type": "hasMany",
       "foreign": "classification",
       "entity": "ClassificationAttribute"
+    },
+    "channels": {
+      "type": "hasMany",
+      "entity": "Channel",
+      "relationName": "ChannelClassification",
+      "foreign": "classifications"
     }
   },
   "collection": {

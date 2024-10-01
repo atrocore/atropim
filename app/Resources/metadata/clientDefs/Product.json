@@ -191,6 +191,13 @@
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
       "view": "pim:views/product/record/panels/associated-main-products"
+    },
+    "classifications": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "availableForProduct"
+      ],
+      "view": "pim:views/product/record/panels/classifications"
     }
   },
   "dynamicLogic": {
