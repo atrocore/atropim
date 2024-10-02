@@ -11,17 +11,55 @@
 
 namespace Pim\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ProductClassification extends Relation
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew()) {
+            $product = $entity->get('product');
+            $classification = $entity->get('classification');
+            if (empty($product) || empty($classification)) {
+                throw new BadRequest();
+            }
+
+            $channels = $product->get('channels');
+            if (!empty($channels)) {
+                $channelIds = [];
+                foreach ($channels as $channel) {
+                    $channelIds[] = $channel->get('id');
+                }
+
+                $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select('c.id')
+                    ->from('classification', 'c')
+                    ->leftJoin('c', 'channel_classification', 'cc', "c.id = cc.classification_id and cc.deleted = :false")
+                    ->where('c.id = :id')
+                    ->andwhere("cc.channel_id IS NULL OR cc.channel_id IN (:channelIds)")
+                    ->setParameter('channelIds', $channelIds, Mapper::getParameterType($channelIds))
+                    ->setParameter('id', $entity->get('classificationId'))
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchFirstColumn();
+
+                if (empty($res)) {
+                    throw new BadRequest(str_replace(':name', $classification->get('name'), "The classification ':name' is linked to a channel not linked to this product"));
+                }
+            }
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function afterSave(Entity $entity, array $data = [])
     {
         parent::afterSave($entity, $data);
 
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
+        if ($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->delete('product_classification')
                 ->where('product_id=:productId AND classification_id <> :classificationId')
