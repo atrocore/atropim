@@ -47,7 +47,7 @@ class ProductClassification extends Relation
                     ->fetchFirstColumn();
 
                 if (empty($res)) {
-                    throw new BadRequest(str_replace(':name', $classification->get('name'), "The classification ':name' is linked to a channel not linked to this product"));
+                    throw new BadRequest(str_replace(':name', $classification->get('name'), $this->getLanguage()->translate('classificationCannotBeLinked', 'exceptions', 'Product')));
                 }
             }
         }
