@@ -22,21 +22,17 @@ class ProductClassification extends Relation
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
-            $product = $entity->get('product');
-            $classification = $entity->get('classification');
-            if (empty($product) || empty($classification)) {
-                throw new BadRequest();
-            }
+            $channelIds = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('channel_id')
+                ->from('product_channel', 'pc')
+                ->where('product_id = :productId and deleted=:false')
+                ->setParameter('productId', $entity->get('productId'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchFirstColumn();
 
-            $channels = $product->get('channels');
-            if (!empty($channels)) {
-                $channelIds = [];
-                foreach ($channels as $channel) {
-                    $channelIds[] = $channel->get('id');
-                }
-
+            if (!empty($channelIds)) {
                 $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                    ->select('c.id')
+                    ->select('c.id', 'c.name')
                     ->from('classification', 'c')
                     ->leftJoin('c', 'channel_classification', 'cc', "c.id = cc.classification_id and cc.deleted = :false")
                     ->where('c.id = :id')
@@ -47,6 +43,7 @@ class ProductClassification extends Relation
                     ->fetchFirstColumn();
 
                 if (empty($res)) {
+                    $classification = $entity->get('classification', ['select' => ['id','name']]);
                     throw new BadRequest(str_replace(':name', $classification->get('name'), $this->getLanguage()->translate('classificationCannotBeLinked', 'exceptions', 'Product')));
                 }
             }
