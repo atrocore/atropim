@@ -52,7 +52,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.filter = this.getStoredFilter();
             }
 
-            if (this.getAcl().check(this.scope, 'create')) {
+            if (this.checkAclAction('create')) {
                 this.buttonList.push({
                     title: 'Create',
                     action: this.defs.createAction || 'createRelated',
@@ -67,7 +67,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 });
             }
 
-            if (!this.disableSelect && this.getAcl().check(this.scope, 'create')) {
+            if (!this.disableSelect && this.checkAclAction('create')) {
                 var data = {link: this.defs.name};
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
@@ -96,7 +96,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 }
             }
 
-            if (!this.disableDeleteAll && this.getAcl().check(this.scope, 'delete')) {
+            if (!this.disableDeleteAll && this.checkAclAction('delete')) {
                 this.actionList.push({
                     label: 'deleteAll',
                     action: 'deleteAllRelationshipEntities',
@@ -359,6 +359,10 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         getEditableFields() {
             return this.editableFields;
+        },
+
+        checkAclAction(action) {
+            return this.getAcl().check(this.scope, action);
         }
     })
 );
