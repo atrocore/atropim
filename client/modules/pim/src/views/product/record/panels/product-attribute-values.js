@@ -194,28 +194,31 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
 
         panelFetch() {
             let data = false;
-            this.groups.forEach(group => {
-                const groupView = this.getView(group.key);
-                if (groupView) {
-                    (groupView.rowList || []).forEach(id => {
-                        const row = groupView.getView(id);
-                        if(!row) return;
-                        let fetchedData = {}
-                        const initialData = this.initialAttributes[id];
-                        this.editableFields.forEach(field => {
-                            const value = row.getView(field + 'Field');
-                            if (value && value.mode === 'edit') {
-                                fetchedData = _.extend(fetchedData, value.fetch());
+
+            if (this.checkAclEdit()) {
+                this.groups.forEach(group => {
+                    const groupView = this.getView(group.key);
+                    if (groupView) {
+                        (groupView.rowList || []).forEach(id => {
+                            const row = groupView.getView(id);
+                            if (!row) return;
+                            let fetchedData = {}
+                            const initialData = this.initialAttributes[id];
+                            this.editableFields.forEach(field => {
+                                const value = row.getView(field + 'Field');
+                                if (value && value.mode === 'edit') {
+                                    fetchedData = _.extend(fetchedData, value.fetch());
+                                }
+                            });
+                            row.model.set(fetchedData);
+                            if (!this.equalityValueCheck(fetchedData, initialData)) {
+                                fetchedData['_prev'] = initialData;
+                                data = _.extend(data || {}, {[id]: fetchedData});
                             }
                         });
-                        row.model.set(fetchedData);
-                        if (!this.equalityValueCheck(fetchedData, initialData)) {
-                            fetchedData['_prev'] = initialData;
-                            data = _.extend(data || {}, {[id]: fetchedData});
-                        }
-                    });
-                }
-            });
+                    }
+                });
+            }
             return data;
         },
 
