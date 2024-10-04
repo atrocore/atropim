@@ -10,10 +10,6 @@
 
 Espo.define('pim:views/product/record/panels/classifications', 'views/record/panels/relationship',
     Dep => Dep.extend({
-        boolFilterData: {
-            availableForProduct() {
-                return this.model.id;
-            }
-        }
+
     })
 );

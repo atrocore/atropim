@@ -3,12 +3,10 @@
   "iconClass": "fas fa-sitemap",
   "boolFilterList": [
     "onlyMy",
-    "notEntity",
-    "availableForProduct"
+    "notEntity"
   ],
   "hiddenBoolFilterList": [
-    "notEntity",
-    "availableForProduct"
+    "notEntity"
   ],
   "disabledMassActions": [
     "merge"
