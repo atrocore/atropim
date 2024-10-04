@@ -20,13 +20,12 @@ Espo.define('pim:views/product/fields/classifications-single', 'views/fields/lin
         originalNameName: 'classificationsNames',
 
         getSelectFilters: function () {
-            if (!this.channels) {
-                try {
-                    const resp = this.ajaxGetRequest(`Product/${this.model.id}/channels`, {maxSize: 500}, {async: false})
-                    this.channels = resp.responseJSON.list
-                } catch (e) {
-                }
+            try {
+                const resp = this.ajaxGetRequest(`Product/${this.model.id}/channels`, {maxSize: 500}, {async: false})
+                this.channels = resp.responseJSON.list
+            } catch (e) {
             }
+
 
             if (this.channels && this.channels.length > 0) {
                 return {
