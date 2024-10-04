@@ -195,7 +195,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         panelFetch() {
             let data = false;
 
-            if (this.checkAclEdit()) {
+            if (this.checkAclAction('edit')) {
                 this.groups.forEach(group => {
                     const groupView = this.getView(group.key);
                     if (groupView) {
@@ -401,7 +401,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             this.initialAttributes = this.getInitialAttributes();
         },
         setEditMode() {
-            if (!this.checkAclEdit()) {
+            if (!this.checkAclAction('edit')) {
                 return;
             }
 
@@ -486,12 +486,12 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 });
             });
         },
-        checkAclEdit() {
+        checkAclAction(action) {
             if (this.defs.tabId) {
-                return this.getAcl().check('AttributeTab', 'edit') && this.getAcl().check('Attribute', 'edit');
+                return this.getAcl().check('AttributeTab', 'edit') && this.getAcl().check('Attribute', action);
             }
 
-            return this.getAcl().check('Attribute', 'edit');
+            return this.getAcl().check('Attribute', action);
         }
     })
 );
