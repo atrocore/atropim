@@ -19,39 +19,6 @@ use Espo\ORM\Entity;
 
 class ProductClassification extends Relation
 {
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->isNew()) {
-            $channelIds = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('channel_id')
-                ->from('product_channel', 'pc')
-                ->where('product_id = :productId and deleted=:false')
-                ->setParameter('productId', $entity->get('productId'))
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchFirstColumn();
-
-            if (!empty($channelIds)) {
-                $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                    ->select('c.id', 'c.name')
-                    ->from('classification', 'c')
-                    ->leftJoin('c', 'channel_classification', 'cc', "c.id = cc.classification_id and cc.deleted = :false")
-                    ->where('c.id = :id')
-                    ->andwhere("cc.channel_id IS NULL OR cc.channel_id IN (:channelIds)")
-                    ->setParameter('channelIds', $channelIds, Mapper::getParameterType($channelIds))
-                    ->setParameter('id', $entity->get('classificationId'))
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchFirstColumn();
-
-                if (empty($res)) {
-                    $classification = $entity->get('classification', ['select' => ['id','name']]);
-                    throw new BadRequest(str_replace(':name', $classification->get('name'), $this->getLanguage()->translate('classificationCannotBeLinked', 'exceptions', 'Product')));
-                }
-            }
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
     protected function afterSave(Entity $entity, array $data = [])
     {
         parent::afterSave($entity, $data);
