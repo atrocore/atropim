@@ -72,6 +72,10 @@
     },
     "assignedUser": {
       "required": false
+    },
+    "channels": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {

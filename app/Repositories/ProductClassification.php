@@ -11,8 +11,10 @@
 
 namespace Pim\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ProductClassification extends Relation
@@ -21,7 +23,7 @@ class ProductClassification extends Relation
     {
         parent::afterSave($entity, $data);
 
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
+        if ($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->delete('product_classification')
                 ->where('product_id=:productId AND classification_id <> :classificationId')

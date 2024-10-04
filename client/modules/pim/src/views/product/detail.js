@@ -8,10 +8,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product/detail', 'pim:views/detail',
-    Dep => Dep.extend({
+Espo.define('pim:views/product/detail', ['pim:views/detail', 'pim:views/product/fields/classifications-single'],
+    (Dep, ClassificationSingle) => Dep.extend({
 
-        selectRelatedFilters: {},
+        selectRelatedFilters: {
+            classifications: function () {
+                return ClassificationSingle.prototype.getSelectFilters.call(this)
+            }
+        },
 
         selectBoolFilterLists: {
             attributes: ['notLinkedWithProduct'],
@@ -42,7 +46,7 @@ Espo.define('pim:views/product/detail', 'pim:views/detail',
             this.getRouter().checkConfirmLeaveOut(function () {
                 const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
                 if (rootUrl !== `#${this.scope}`) {
-                    this.getRouter().navigate(rootUrl,  {trigger: true});
+                    this.getRouter().navigate(rootUrl, {trigger: true});
                 } else {
                     const options = {
                         isReturn: true
