@@ -115,7 +115,7 @@ class Product extends AbstractSelectManager
                     $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
 
                     $operator = 'IN';
-                    if ($item['type'] === 'arrayNoneOf') {
+                    if (isset($item['type']) && $item['type'] === 'arrayNoneOf') {
                         $operator = 'NOT IN';
                     }
 
@@ -502,7 +502,7 @@ class Product extends AbstractSelectManager
 
     protected function convertAttributeWhere(array $row): array
     {
-        if (in_array($row['type'], ['or', 'and']) && !empty($row['value'])) {
+        if (isset($row['type']) && in_array($row['type'], ['or', 'and']) && !empty($row['value'])) {
             foreach ($row['value'] as $k => $v) {
                 $row['value'][$k] = $this->convertAttributeWhere($v);
             }
