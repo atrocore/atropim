@@ -141,10 +141,6 @@ class LayoutController extends AbstractListener
      */
     protected function modifyAttributeDetail(Event $event)
     {
-        if ($this->isCustomLayout($event)) {
-            return;
-        }
-
         /** @var array $result */
         $result = Json::decode($event->getArgument('result'), true);
 
