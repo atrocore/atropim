@@ -532,6 +532,10 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function validateValue(Entity $attribute, Entity $entity): void
     {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+            return;
+        }
+
         switch ($attribute->get('type')) {
             case 'varchar':
                 if (!empty($attribute->get('notNull')) && $entity->get('varcharValue') === null) {
@@ -591,9 +595,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                 break;
             case 'extensibleEnum':
                 $id = $entity->get('referenceValue');
-                $importCreatedOptions = $this->getMemoryStorage()->get('import_created_extensible_enum_options_ids') ?? [];
-
-                if (!empty($id) && !in_array($id, $importCreatedOptions)) {
+                if (!empty($id)) {
 
                     $option = $this->getEntityManager()
                         ->getConnection()
@@ -623,10 +625,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                 }
                 break;
             case 'extensibleMultiEnum':
-                $importCreatedOptions = $this->getMemoryStorage()->get('import_created_extensible_enum_options_ids') ?? [];
                 $ids = @json_decode((string)$entity->get('textValue'), true);
-                $ids = array_diff($ids, $importCreatedOptions);
-
                 if (!empty($ids)) {
                     $options = $this->getEntityManager()
                         ->getConnection()
@@ -651,9 +650,7 @@ class ProductAttributeValue extends AbstractAttributeValue
 
                     $diff = array_diff($ids, array_column($options, 'id'));
                     foreach ($diff as $id) {
-                        if (!in_array($id, $importCreatedOptions)) {
-                            throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
-                        }
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
                     }
                 }
                 break;
