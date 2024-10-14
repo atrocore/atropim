@@ -591,7 +591,9 @@ class ProductAttributeValue extends AbstractAttributeValue
                 break;
             case 'extensibleEnum':
                 $id = $entity->get('referenceValue');
-                if (!empty($id)) {
+                $importCreatedOptions = $this->getMemoryStorage()->get('import_created_extensible_enum_options_ids') ?? [];
+
+                if (!empty($id) && !in_array($id, $importCreatedOptions)) {
 
                     $option = $this->getEntityManager()
                         ->getConnection()
@@ -621,7 +623,10 @@ class ProductAttributeValue extends AbstractAttributeValue
                 }
                 break;
             case 'extensibleMultiEnum':
+                $importCreatedOptions = $this->getMemoryStorage()->get('import_created_extensible_enum_options_ids') ?? [];
                 $ids = @json_decode((string)$entity->get('textValue'), true);
+                $ids = array_diff($ids, $importCreatedOptions);
+
                 if (!empty($ids)) {
                     $options = $this->getEntityManager()
                         ->getConnection()
@@ -646,7 +651,9 @@ class ProductAttributeValue extends AbstractAttributeValue
 
                     $diff = array_diff($ids, array_column($options, 'id'));
                     foreach ($diff as $id) {
-                        throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                        if (!in_array($id, $importCreatedOptions)) {
+                            throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                        }
                     }
                 }
                 break;
