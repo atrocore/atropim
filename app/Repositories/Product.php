@@ -377,7 +377,8 @@ class Product extends Hierarchy
             ->andWhere('deleted = :true')
             ->setParameter('false',false, ParameterType::BOOLEAN)
             ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true',true, ParameterType::BOOLEAN);
+            ->setParameter('true',true, ParameterType::BOOLEAN)
+            ->executeStatement();
 
         $this->getConnection()
             ->createQueryBuilder()
@@ -388,8 +389,8 @@ class Product extends Hierarchy
             ->andWhere('deleted = :true')
             ->setParameter('false',false, ParameterType::BOOLEAN)
             ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true',true, ParameterType::BOOLEAN);
-
+            ->setParameter('true',true, ParameterType::BOOLEAN)
+            ->executeStatement();
     }
 
 
