@@ -532,10 +532,6 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function validateValue(Entity $attribute, Entity $entity): void
     {
-        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
-            return;
-        }
-
         switch ($attribute->get('type')) {
             case 'varchar':
                 if (!empty($attribute->get('notNull')) && $entity->get('varcharValue') === null) {
@@ -594,63 +590,67 @@ class ProductAttributeValue extends AbstractAttributeValue
                 }
                 break;
             case 'extensibleEnum':
-                $id = $entity->get('referenceValue');
-                if (!empty($id)) {
+                if (empty($this->getMemoryStorage()->get('importJobId'))) {
+                    $id = $entity->get('referenceValue');
+                    if (!empty($id)) {
 
-                    $option = $this->getEntityManager()
-                        ->getConnection()
-                        ->createQueryBuilder()
-                        ->from('extensible_enum_option')
-                        ->select('id')
-                        ->where('id IN ( 
+                        $option = $this->getEntityManager()
+                            ->getConnection()
+                            ->createQueryBuilder()
+                            ->from('extensible_enum_option')
+                            ->select('id')
+                            ->where('id IN ( 
                             SELECT extensible_enum_option_id 
                                 FROM extensible_enum_extensible_enum_option 
                                 WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
                             )'
-                        )
-                        ->andWhere('id=:id')
-                        ->setParameter(
-                            'extensibleEnumId',
-                            $attribute->get('extensibleEnumId'),
-                            Mapper::getParameterType($attribute->get('extensibleEnumId'))
-                        )
-                        ->setParameter('false', false, Mapper::getParameterType(false))
-                        ->setParameter('id', $id, Mapper::getParameterType($id))
-                        ->fetchOne();
+                            )
+                            ->andWhere('id=:id')
+                            ->setParameter(
+                                'extensibleEnumId',
+                                $attribute->get('extensibleEnumId'),
+                                Mapper::getParameterType($attribute->get('extensibleEnumId'))
+                            )
+                            ->setParameter('false', false, Mapper::getParameterType(false))
+                            ->setParameter('id', $id, Mapper::getParameterType($id))
+                            ->fetchOne();
 
 
-                    if (empty($option)) {
-                        throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                        if (empty($option)) {
+                            throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                        }
                     }
                 }
                 break;
             case 'extensibleMultiEnum':
-                $ids = @json_decode((string)$entity->get('textValue'), true);
-                if (!empty($ids)) {
-                    $options = $this->getEntityManager()
-                        ->getConnection()
-                        ->createQueryBuilder()
-                        ->from('extensible_enum_option')
-                        ->select('id')
-                        ->where('id IN ( 
+                if (empty($this->getMemoryStorage()->get('importJobId'))) {
+                    $ids = @json_decode((string)$entity->get('textValue'), true);
+                    if (!empty($ids)) {
+                        $options = $this->getEntityManager()
+                            ->getConnection()
+                            ->createQueryBuilder()
+                            ->from('extensible_enum_option')
+                            ->select('id')
+                            ->where('id IN ( 
                             SELECT extensible_enum_option_id 
                                 FROM extensible_enum_extensible_enum_option 
                                 WHERE extensible_enum_id=:extensibleEnumId AND deleted=:false
                             )'
-                        )
-                        ->andWhere('id IN (:ids)')
-                        ->setParameter(
-                            'extensibleEnumId',
-                            $attribute->get('extensibleEnumId'),
-                            Mapper::getParameterType($attribute->get('extensibleEnumId'))
-                        )
-                        ->setParameter('false', false, Mapper::getParameterType(false))
-                        ->setParameter('ids', $ids, Mapper::getParameterType($ids))
-                        ->fetchAllAssociative();
+                            )
+                            ->andWhere('id IN (:ids)')
+                            ->setParameter(
+                                'extensibleEnumId',
+                                $attribute->get('extensibleEnumId'),
+                                Mapper::getParameterType($attribute->get('extensibleEnumId'))
+                            )
+                            ->setParameter('false', false, Mapper::getParameterType(false))
+                            ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                            ->fetchAllAssociative();
 
-                    $diff = array_diff($ids, array_column($options, 'id'));
-                    foreach ($diff as $id) {
-                        throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                        $diff = array_diff($ids, array_column($options, 'id'));
+                        foreach ($diff as $id) {
+                            throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions'), $id, $attribute->get('name')));
+                        }
                     }
                 }
                 break;
