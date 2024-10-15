@@ -547,6 +547,7 @@ class Product extends Hierarchy
                             continue 1;
                         }
                     }
+                    $pav->clearCompletenessFields = true;
                     $this->getEntityManager()->removeEntity($pav);
                 }
             }
