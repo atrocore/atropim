@@ -10,5 +10,6 @@
     "type": "Base",
     "module": "Pim",
     "object": true,
-    "hasActive": true
+    "hasActive": true,
+    "hideFieldTypeFilters": true
 }
