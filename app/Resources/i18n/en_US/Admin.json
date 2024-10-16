@@ -8,5 +8,9 @@
   },
   "descriptions": {
     "pimSettings": "PIM system settings"
+  },
+  "layouts": {
+    "listAttributesInAttrGroup": "List In Attribute Group",
+    "listForAssociatedProductsInProduct": "List in Product"
   }
 }
