@@ -17,6 +17,9 @@
   "disabledMassActions": [
     "merge"
   ],
+  "additionalLayouts": {
+    "listAttributesInAttrGroup": "listSmall"
+  },
   "views": {
     "list": "views/list-tree",
     "detail": "views/detail-tree"
