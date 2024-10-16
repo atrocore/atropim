@@ -721,7 +721,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 $entity->set('attributeName', $attribute->get($nameField));
             } else {
                 $attributeName = !empty($attribute->get('name')) ? $attribute->get('name') : $attribute->get('id');
-                $entity->set('attributeName', $attributeName . ' / ' . $entity->get('language'));
+                $languageName = $this->getConfig()->get("referenceData.Language.{$entity->get('language')}.name") ?? $entity->get('language');
+                $entity->set('attributeName', $attributeName . ' / ' . $languageName);
             }
         }
 

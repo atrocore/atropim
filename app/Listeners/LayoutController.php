@@ -141,12 +141,16 @@ class LayoutController extends AbstractListener
      */
     protected function modifyAttributeDetail(Event $event)
     {
-        if ($this->isCustomLayout($event)) {
-            return;
-        }
-
         /** @var array $result */
         $result = Json::decode($event->getArgument('result'), true);
+
+        foreach ($result as $panel) {
+            foreach ($panel['rows'] as $row) {
+                if (in_array('isMultilang', array_column($row, 'name'))) {
+                    return;
+                }
+            }
+        }
 
         if ($this->getConfig()->get('isMultilangActive', false)) {
             $multilangField = ['name' => 'isMultilang', 'inlineEditDisabled' => false];
