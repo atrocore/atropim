@@ -13,6 +13,8 @@
     "valueFrom": "Value From",
     "valueTo": "Value To",
     "valueUnitId": "Value Unit",
+    "valueId": "Value Link",
+    "valueIds": "Value Multiple Link",
     "channel": "Channel",
     "varcharValue": "Value: String",
     "referenceValue": "Value: Reference",

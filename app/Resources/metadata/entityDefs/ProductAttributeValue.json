@@ -399,7 +399,7 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": false,
+      "exportDisabled": true,
       "importDisabled": false,
       "emHidden": true
     },
@@ -477,7 +477,7 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": false,
+      "exportDisabled": true,
       "importDisabled": false,
       "emHidden": true
     },
@@ -503,7 +503,7 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "exportDisabled": false,
+      "exportDisabled": true,
       "importDisabled": false,
       "emHidden": true
     },
