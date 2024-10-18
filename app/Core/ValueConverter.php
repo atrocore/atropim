@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pim\Core;
 
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\File;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
@@ -16,6 +17,7 @@ class ValueConverter extends Injectable
     public function __construct()
     {
         $this->addDependency('entityManager');
+        $this->addDependency('memoryStorage');
         $this->addDependency('twig');
     }
 
@@ -362,7 +364,7 @@ class ValueConverter extends Injectable
                 break;
         }
 
-        if ($clear) {
+        if ($clear && empty($this->getMemoryStorage()->get('exportJobId'))) {
             $entity->_technicalFieldValues = [
                 "boolValue" => $entity->get('boolValue'),
                 "dateValue" => $entity->get('dateValue'),
@@ -391,6 +393,11 @@ class ValueConverter extends Injectable
     protected function getEntityManager(): EntityManager
     {
         return $this->getInjection('entityManager');
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getInjection('memoryStorage');
     }
 
     protected function isExport(): bool
