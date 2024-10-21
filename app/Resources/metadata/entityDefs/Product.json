@@ -8,7 +8,7 @@
       "layoutListSmallDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true,
+      "exportDisabled": false,
       "noLoad": true
     },
     "classifications": {
