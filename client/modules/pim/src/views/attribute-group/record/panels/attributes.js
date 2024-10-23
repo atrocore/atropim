@@ -167,7 +167,6 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
                     }, this);
                     collection.fetch();
                     Dep.prototype.setupTotal.call(this)
-                    Dep.prototype.setupLayoutEditor.call(this, layoutName)
                 }, this);
 
                 this.wait(false);
