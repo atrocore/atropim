@@ -27,11 +27,11 @@
                 {{/each}}
                 {{#if editable}}
                     <th width="{{rowActionsColumnWidth}}" class="context-menu">
-                        <div class="pull-right btn-group">
+                        <div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="javascript:" class="action" data-action="unlinkGroup" data-id="{{groupId}}">{{translate 'Remove'}}</a></li>
                                 {{#if hierarchyEnabled }}
                                 <li><a href="javascript:" class="action" data-action="unlinkGroupHierarchy" data-id="{{groupId}}">{{translate 'removeHierarchically'}}</a></li>
@@ -81,6 +81,7 @@
 
     .group-records-list .context-menu {
         padding: 0;
-        vertical-align: middle
+        vertical-align: middle;
+        text-align: center;
     }
 </style>
