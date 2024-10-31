@@ -775,13 +775,12 @@ class ProductAttributeValue extends AbstractAttributeValue
             return;
         }
 
-        $note = $this->getEntityManager()->getEntity('Note');
-        $note->set('type', $type);
-        $note->set('parentId', $entity->get('productId'));
-        $note->set('parentType', 'Product');
-        $note->set('data', $data);
-
-        $this->getEntityManager()->saveEntity($note);
+        $this->getPseudoTransactionManager()->pushCreateEntityJob('Note', [
+            'type'       => $type,
+            'parentId'   => $entity->get('productId'),
+            'parentType' => 'Product',
+            'data'       => $data,
+        ]);
     }
 
     protected function createDeleteNote(Entity $entity): void
