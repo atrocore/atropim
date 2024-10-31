@@ -18,7 +18,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
-use Pim\Services\GeneralStatisticsDashlet;
 use Pim\Entities\Attribute;
 
 class Product extends AbstractSelectManager
@@ -169,18 +168,6 @@ class Product extends AbstractSelectManager
     }
 
     /**
-     * Products without associated products filter
-     *
-     * @param $result
-     */
-    protected function boolFilterWithoutAssociatedProducts(&$result)
-    {
-        $result['whereClause'][] = [
-            'id' => array_column($this->getProductWithoutAssociatedProduct(), 'id')
-        ];
-    }
-
-    /**
      * @param array $result
      */
     protected function boolFilterOnlyCatalogProducts(&$result)
@@ -212,60 +199,6 @@ class Product extends AbstractSelectManager
                 'id' => $ids
             ];
         }
-    }
-
-    /**
-     * Get product without AssociatedProduct
-     *
-     * @return array
-     */
-    protected function getProductWithoutAssociatedProduct(): array
-    {
-        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutAssociatedProduct());
-    }
-
-    /**
-     * Products without Category filter
-     *
-     * @param $result
-     */
-    protected function boolFilterWithoutAnyCategory(&$result)
-    {
-        $result['whereClause'][] = [
-            'id' => array_column($this->getProductWithoutCategory(), 'id')
-        ];
-    }
-
-    /**
-     * Get product without Category
-     *
-     * @return array
-     */
-    protected function getProductWithoutCategory(): array
-    {
-        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutCategory());
-    }
-
-    /**
-     * Products without Image filter
-     *
-     * @param $result
-     */
-    protected function boolFilterWithoutImageFiles(&$result)
-    {
-        $result['whereClause'][] = [
-            'id' => array_column($this->getProductWithoutImageFiles(), 'id')
-        ];
-    }
-
-    /**
-     * Get products without Image
-     *
-     * @return array
-     */
-    protected function getProductWithoutImageFiles(): array
-    {
-        return $this->fetchAll($this->getGeneralStatisticService()->getQueryProductWithoutFiles());
     }
 
     /**
@@ -372,16 +305,6 @@ class Product extends AbstractSelectManager
         $sth->execute();
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Create dashlet service
-     *
-     * @return GeneralStatisticsDashlet
-     */
-    protected function getGeneralStatisticService(): GeneralStatisticsDashlet
-    {
-        return $this->createService('GeneralStatisticsDashlet');
     }
 
     /**

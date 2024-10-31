@@ -17,8 +17,6 @@
     "notAssociatedProducts",
     "onlyCategoryCatalogsProducts",
     "notLinkedWithBrand",
-    "withoutAssociatedProducts",
-    "withoutAnyCategory",
     "withoutProductAttributes",
     "withoutMainImage",
     "notLinkedWithProductSerie",
@@ -26,8 +24,7 @@
     "linkedWithCategory",
     "linkedWithClassification",
     "notParents",
-    "notChildren",
-    "withoutImageFiles"
+    "notChildren"
   ],
   "hiddenBoolFilterList": [
     "notEntity",

@@ -68,7 +68,6 @@
     "Channels": "Kanäle",
     "itemsInRow": "Anzahl Elemente in der Reihe",
     "thereIsNoValidAttributesForChannel": "Es gibt keine gültigen Attribute für Kanal",
-    "withoutAnyCategory": "Ohne Kategorie",
     "typeCategoryToSearch": "Kategorie zum Suchen eingeben...",
     "Package Details": "Paketdetails",
     "noGroup": "Keine Gruppe",
@@ -104,9 +103,6 @@
     }
   },
   "boolFilters": {
-    "withoutAnyCategory": "ohne Kategorie",
-    "withoutAssociatedProducts": "ohne zugehörige Produkte",
-    "withoutImageFiles": "ohne Bilddateien",
     "withoutProductAttributes": "ohne Produktattribute",
     "notAssociatedProducts": "Ohne assoziierte Produkte",
     "notLinkedWithBrand": "Ohne Marke",

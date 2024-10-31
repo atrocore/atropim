@@ -61,7 +61,6 @@
     "Channels": "Каналы",
     "Product Channel Attributes": "Атрибуты канала",
     "associatedProducts": "Ассоциированные продукты",
-    "withoutAnyCategory": "Без категории",
     "typeCategoryToSearch": "Введите категорию для поиска...",
     "noGroup": "Нет группы",
     "sort": "Сортировать",
@@ -100,15 +99,12 @@
     }
   },
   "boolFilters": {
-    "withoutAssociatedProducts": "Без ассоциированных продуктов",
-    "withoutAnyCategory": "Без категории",
     "withoutProductAttributes": "Без атрибутов продукта",
     "notAssociatedProducts": "Не ассоциированные продукты",
     "notLinkedWithBrand": "Не связан с брендом",
     "notLinkedWithProductSerie": "Не связан с серией продукта",
     "linkedWithCategory": "Связан с категорией",
-    "onlyConfigurableProducts": "Только конфигурируемые продукты",
-    "withoutImageFiles": "Без файлов"
+    "onlyConfigurableProducts": "Только конфигурируемые продукты"
   },
   "messages": {
     "productCatalogChangeConfirm": "Вы уверены, что хотите установить/удалить/изменить каталог для продукта? Все категории разрешенные для оригинального(предыдущего) каталога потеряют связь с продуктом."

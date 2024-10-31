@@ -95,7 +95,6 @@
     "productPreview": "Предпросмотр продукта"
   },
   "dashlets": {
-    "GeneralStatistics": "PIM общая статистика",
     "Channels": "Каналы",
     "ProductsByStatus": "Продукты по статусам",
     "ProductTypes": "Продукты по типам",
