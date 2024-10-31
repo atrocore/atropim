@@ -58,7 +58,6 @@
     "Channels": "Канали",
     "Product Channel Attributes": "Атрибути каналу",
     "associatedProducts": "Асоційовані продукти",
-    "withoutAnyCategory": "Без категорії",
     "typeCategoryToSearch": "Введіть категорію для пошуку...",
     "noGroup": "Немає групи",
     "sort": "Сортувати",
@@ -97,15 +96,12 @@
     }
   },
   "boolFilters": {
-    "withoutAssociatedProducts": "Без асоційованих продуктів",
-    "withoutAnyCategory": "Без категорії",
     "withoutProductAttributes": "Без атрибутів продукту",
     "notAssociatedProducts": "Не асоційовані продукти",
     "notLinkedWithBrand": "Не пов'язаний із брендом",
     "notLinkedWithProductSerie": "Не пов'язаний із серією продукту",
     "linkedWithCategory": "Пов'язаний із категорією",
     "onlyConfigurableProducts": "Тільки продукти, які моуть бути конфігуровані",
-    "withoutImageFiles": "Без файлів",
     "withoutMainImage": "Без основного зображення"
   },
   "messages": {

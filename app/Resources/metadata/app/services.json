@@ -1,6 +1,5 @@
 {
   "ChannelsDashlet": "\\Pim\\Services\\ChannelsDashlet",
-  "GeneralStatisticsDashlet": "\\Pim\\Services\\GeneralStatisticsDashlet",
   "ProductsByStatusDashlet": "\\Pim\\Services\\ProductsByStatusDashlet",
   "ProductsByTagDashlet": "\\Pim\\Services\\ProductsByTagDashlet",
   "ProductsByTaskStatusDashlet": "\\Pim\\Services\\ProductsByTaskStatusDashlet",

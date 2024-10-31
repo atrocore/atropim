@@ -115,7 +115,6 @@
     "deleteProductAssociationThis": "{utilisateur} a supprimé l'association à {relatedProduct} en tant que {association}"
   },
   "dashlets": {
-    "GeneralStatistics": "Statistiques générales des PIM",
     "Channels": "Canaux",
     "ProductsByStatus": "Produits par statut",
     "ProductTypes": "Types de produits",

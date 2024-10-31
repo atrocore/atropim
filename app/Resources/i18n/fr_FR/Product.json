@@ -58,7 +58,6 @@
     "Channels": "Canaux",
     "Product Channel Attributes": "Attributs du canal",
     "associatedProducts": "Associés",
-    "withoutAnyCategory": "Sans catégorie",
     "typeCategoryToSearch": "Tapez la catégorie à rechercher...",
     "noGroup": "Pas de groupe",
     "sort": "Trier",
@@ -97,15 +96,12 @@
     }
   },
   "boolFilters": {
-    "withoutAssociatedProducts": "Sans produits associés",
-    "withoutAnyCategory": "Sans catégorie",
     "withoutProductAttributes": "Sans attributs de produit",
     "notAssociatedProducts": "Sans produits associés",
     "notLinkedWithBrand": "Sans marque",
     "notLinkedWithProductSerie": "Sans série de produits",
     "linkedWithCategory": "Avec catégorie",
     "onlyConfigurableProducts": "Uniquement les produits configurables",
-    "withoutImageFiles": "Sans fichiers",
     "withoutMainImage": "Sans Image principale"
   },
   "messages": {

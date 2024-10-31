@@ -104,7 +104,6 @@
     "classificationSettings": "Налаштування класифікації"
   },
   "dashlets": {
-    "GeneralStatistics": "PIM загальна статистика",
     "Channels": "Канали",
     "ProductsByStatus": "Продукти за статусами",
     "ProductTypes": "Продукти за типами",

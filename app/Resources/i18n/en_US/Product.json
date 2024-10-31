@@ -58,7 +58,6 @@
     "Channels": "Channels",
     "Product Channel Attributes": "Channel Attributes",
     "associatedProducts": "Associates",
-    "withoutAnyCategory": "Without Category",
     "typeCategoryToSearch": "Type category to search...",
     "noGroup": "No Group",
     "sort": "Sort",
@@ -97,15 +96,12 @@
     }
   },
   "boolFilters": {
-    "withoutAssociatedProducts": "Without Associated Products",
-    "withoutAnyCategory": "Without Category",
     "withoutProductAttributes": "Without Product Attributes",
     "notAssociatedProducts": "Without Associated Products",
     "notLinkedWithBrand": "Without Brand",
     "notLinkedWithProductSerie": "Without Product Serie",
     "linkedWithCategory": "With Category",
     "onlyConfigurableProducts": "Only Configurable Products",
-    "withoutImageFiles": "Without Files",
     "withoutMainImage": "Without Main Image"
   },
   "messages": {
