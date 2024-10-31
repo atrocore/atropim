@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Espo\Core\Templates\Entities\Hierarchy;
+use Atro\Core\Templates\Entities\Hierarchy;
 
 class Classification extends Hierarchy
 {
