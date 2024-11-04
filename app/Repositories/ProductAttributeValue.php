@@ -891,7 +891,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                 }
                 break;
             case 'array':
-                if ($this->notEqualAndNotEmpty($wasValue, $entity->get('textValue'))) {
+                if ($wasValue !== $entity->get('textValue')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('textValue');
@@ -899,7 +899,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                 break;
             case 'extensibleEnum':
             case 'extensibleMultiEnum':
-                if ($this->notEqualAndNotEmpty($wasValue, $entity->get('value'))) {
+            if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
