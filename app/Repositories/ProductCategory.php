@@ -53,18 +53,13 @@ class ProductCategory extends Relation
             }
         }
 
-        $product = $this->getProductRepository()->get($entity->get('productId'));
-        $this->getProductRepository()->isCategoryFromCatalogTrees($product, $category);
-        $this->getProductRepository()->isProductCanLinkToNonLeafCategory($category);
+        $this->getProductRepository()->isProductCanLinkToNonLeafCategory($entity->get('categoryId'));
         parent::beforeSave($entity, $options);
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
-        $category = $this->getEntityManager()->getRepository('Category')->get($entity->get('categoryId'));
-        $product = $this->getProductRepository()->get($entity->get('productId'));
-
-        $this->getProductRepository()->updateProductCategorySortOrder($product, $category);
+        $this->getProductRepository()->updateProductCategorySortOrder($entity->get('productId'), $entity->get('categoryId'));
 
         parent::afterSave($entity, $options);
     }

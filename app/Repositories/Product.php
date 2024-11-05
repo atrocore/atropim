@@ -17,9 +17,7 @@ use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Util;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Pim\Core\ValueConverter;
 
@@ -134,22 +132,13 @@ class Product extends Hierarchy
      * @return bool
      * @throws BadRequest
      */
-    public function isProductCanLinkToNonLeafCategory($category): bool
+    public function isProductCanLinkToNonLeafCategory(string $categoryId): bool
     {
         if ($this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
             return true;
         }
 
-        if (is_bool($category)) {
-            throw new BadRequest($this->translate('massUnRelateBlocked', 'exceptions'));
-        }
-
-        if (is_string($category)) {
-            $category = $this->getEntityManager()->getEntity('Category', $category);
-        }
-
-        $children = $category->get('children');
-        if (!empty($children) && $children->count() > 0) {
+        if ($this->getEntityManager()->getRepository('Category')->hasChildren($categoryId)) {
             throw new BadRequest($this->translate("productCanNotLinkToNonLeafCategory", 'exceptions', 'Product'));
         }
 
@@ -167,6 +156,7 @@ class Product extends Hierarchy
             ->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds))
             ->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds))
             ->setParameter('false', false, Mapper::getParameterType(false))
+            ->orderBy('sorting','DESC')
             ->fetchAllAssociative();
     }
 
@@ -242,21 +232,6 @@ class Product extends Hierarchy
                 }
             }
         }
-    }
-
-    public function isCategoryFromCatalogTrees(Entity $product, Entity $category): bool
-    {
-        if (!empty($catalog = $product->get('catalog'))) {
-            $treesIds = array_column($catalog->get('categories')->toArray(), 'id');
-        } else {
-            $treesIds = $this->getEntityManager()->getRepository('Category')->getNotRelatedWithCatalogsTreeIds();
-        }
-
-        if (!in_array($category->getRoot()->get('id'), $treesIds)) {
-            throw new BadRequest($this->translate("youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog", 'exceptions', 'Product'));
-        }
-
-        return true;
     }
 
     public function onCatalogCascadeChange(Entity $product, ?Entity $catalog): void
