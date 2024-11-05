@@ -116,7 +116,6 @@
     "youCantChangeClassificationInProduct": "Vous ne pouvez pas modifier la classification dans le produit",
     "youCantChangeFieldOfTypeInProduct": "Vous ne pouvez pas modifier le champ Type dans Produit",
     "productCanNotLinkToNonLeafCategory": "Les produits ne peuvent pas être liés à une catégorie non feuilletée.",
-    "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Cette catégorie n'est pas disponible dans le catalogue du produit sélectionné et ne peut donc pas être liée.",
     "productCatalogChangeException": "Le catalogue ne peut pas être supprimé/modifié, le produit utilise des catégories autorisées pour ce catalogue. Veuillez d'abord les dissocier.",
     "someProductsHaveMoreThanOneClassification": "Certains produits ont plus d'une classification."
   }
