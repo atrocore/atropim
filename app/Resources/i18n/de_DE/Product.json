@@ -122,7 +122,6 @@
     "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
     "youCantChangeClassificationInProduct": "Sie können die Klassifizierung in Product nicht ändern.",
     "youCantChangeFieldOfTypeInProduct": "Sie können das Feld Typ in Produkt nicht ändern",
-    "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Diese Kategorie ist für den Katalog des ausgewählten Produktes nicht verfügbar, und kann daher nicht gesetzt werden.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf.",
     "someProductsHaveMoreThanOneClassification": "Einige Produkte haben mehr als eine Klassifizierung."

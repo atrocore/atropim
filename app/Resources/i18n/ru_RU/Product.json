@@ -117,7 +117,6 @@
     "productAssociationAlreadyExists": "Такая продуктовая ассоциация уже существует.",
     "youCantChangeFieldOfTypeInProduct": "Вы не можете изменить поле тип продукта",
     "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
-    "youShouldUseCategoriesFromThoseTreesThatLinkedWithProductCatalog": "Эта категория недоступна для каталога выбранного продукта и, следовательно, не может быть связана.",
     "productCatalogChangeException": "Вы не можете удалить/изменить каталог продукта, продукт использует категории которые разрешены для оригинального(предыдущего) каталога. Пожалуйста, сначала удалите связь с этими категориями."
   }
 }
