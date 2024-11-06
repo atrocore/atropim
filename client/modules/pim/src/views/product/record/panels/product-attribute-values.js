@@ -324,15 +324,29 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             return data;
         },
 
+        isEmptyValue(value) {
+            return (
+                value === null ||
+                value === undefined ||
+                value === '' ||
+                (Array.isArray(value) && value.length === 0) ||
+                (typeof value === 'object' && Object.keys(value).length === 0)
+            );
+        },
+
         equalityValueCheck(fetchedData, initialData) {
             let result = true;
 
             this.editableFields.forEach(field => {
-                if(field === 'value') return;
+                if (field === 'value') return;
+                if (this.isEmptyValue(fetchedData.value) && this.isEmptyValue(initialData.value)) {
+                    result = result && true;
+                    return;
+                }
                 result = result && _.isEqual(fetchedData[field], initialData[field])
             })
 
-            if(!result){
+            if (!result) {
                 return false;
             }
 
@@ -372,6 +386,10 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 if (_.isEqual(fetchedData.valueNotTranslateTo, initialData.valueNotTranslateTo) === false) {
                     return false
                 }
+            }
+
+            if (this.isEmptyValue(fetchedData.value) && this.isEmptyValue(initialData.value)) {
+                return true;
             }
 
             return _.isEqual(fetchedData.value, initialData.value);
