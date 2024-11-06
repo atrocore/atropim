@@ -892,17 +892,29 @@ class ProductAttributeValue extends AbstractAttributeValue
                 break;
             case 'array':
                 if ($wasValue !== $entity->get('textValue')) {
+                    $becameValue = $entity->get('textValue');
+                    $becameValue = (is_array($becameValue) && count($becameValue)) ? $becameValue : null;
+
                     $result['fields'][] = 'value';
-                    $result['attributes']['was']['value'] = $wasValue;
-                    $result['attributes']['became']['value'] = $entity->get('textValue');
+                    $result['attributes']['was']['value'] = (is_array($wasValue) && count($wasValue)) ? $wasValue : null;
+                    $result['attributes']['became']['value'] = $becameValue;
                 }
                 break;
             case 'extensibleEnum':
-            case 'extensibleMultiEnum':
-            if ($wasValue !== $entity->get('value')) {
+                if ($wasValue !== $entity->get('value')) {
                     $result['fields'][] = 'value';
                     $result['attributes']['was']['value'] = $wasValue;
                     $result['attributes']['became']['value'] = $entity->get('value');
+                }
+                break;
+            case 'extensibleMultiEnum':
+                if ($wasValue !== $entity->get('value')) {
+                    $becameValue = $entity->get('value');
+                    $becameValue = (is_array($becameValue) && count($becameValue)) ? $becameValue : null;
+
+                    $result['fields'][] = 'value';
+                    $result['attributes']['was']['value'] = (is_array($wasValue) && count($wasValue)) ? $wasValue : null;
+                    $result['attributes']['became']['value'] = $becameValue;
                 }
                 break;
             case 'file':
