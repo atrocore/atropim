@@ -76,7 +76,7 @@ class ValueConverter extends Injectable
                         }
                     }
 
-                    $data->textValue = json_encode($values);
+                    $data->textValue = count($values) ? json_encode($values) : null;
                     unset($data->value);
                 }
                 break;
