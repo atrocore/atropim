@@ -100,6 +100,9 @@ class Product extends Hierarchy
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        if (!empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
+            return;
+        }
         // set global main image
         $this->setProductMainImage($entity);
 
@@ -128,7 +131,7 @@ class Product extends Hierarchy
 
     public function setProductMainImage(Entity $entity): void
     {
-        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+        if (!empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
             return;
         }
 
@@ -149,7 +152,7 @@ class Product extends Hierarchy
             if (!empty($relEntity) && !empty($relEntity->get('fileId'))) {
                 /** @var File $file */
                 $file = $this->getEntityManager()->getRepository('File')->get($relEntity->get('fileId'));
-                if (!empty($file)){
+                if (!empty($file)) {
                     $entity->set('mainImageId', $file->get('id'));
                     $entity->set('mainImageName', $file->get('name'));
                     $entity->set('mainImagePathsData', $file->getPathsData());
@@ -176,19 +179,19 @@ class Product extends Hierarchy
                 $inTransaction = true;
             }
             $panelsData = json_decode(json_encode($data->panelsData), true);
-            foreach ($panelsData as $link => $linkData){
-                if(empty($linkData)){
+            foreach ($panelsData as $link => $linkData) {
+                if (empty($linkData)) {
                     continue;
                 }
                 $entityType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']);
 
-                if(empty($entityType)){
+                if (empty($entityType)) {
                     continue;
                 }
 
                 $service = $this->getInjection('serviceFactory')->create($entityType);
-                $method = 'updatePanelFrom'.$this->entityType;
-                if(method_exists($service, $method)){
+                $method = 'updatePanelFrom' . $this->entityType;
+                if (method_exists($service, $method)) {
                     $conflicts = $service->$method($id, $data);
                 }
             }
@@ -823,9 +826,9 @@ class Product extends Hierarchy
         }
 
         $panelsData = json_decode(json_encode($data->panelsData), true);
-        foreach ($panelsData as $link => $linkData){
+        foreach ($panelsData as $link => $linkData) {
             $linkDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link]);
-            if(!empty($linkDefs) && !empty($linkData)){
+            if (!empty($linkDefs) && !empty($linkData)) {
                 return true;
             }
         }
