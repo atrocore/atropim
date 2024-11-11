@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Atro\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Entities\Note;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -100,14 +99,15 @@ class RevisionField extends \Revisions\Services\RevisionField
                             }
 
                             $item = [
-                                "id"       => $note->get('id'),
-                                "date"     => $note->get('createdAt'),
-                                "userId"   => $note->get('createdById'),
-                                "userName" => empty($createdBy) ? $note->get('createdById') : $createdBy->get('name'),
-                                "was"      => $was,
-                                "became"   => $became,
-                                "field"    => 'value',
-                                "type"     => $attr->get('type')
+                                "id"         => $note->get('id'),
+                                "date"       => $note->get('createdAt'),
+                                "userId"     => $note->get('createdById'),
+                                "parentType" => $note->get('parentType'),
+                                "userName"   => empty($createdBy) ? $note->get('createdById') : $createdBy->get('name'),
+                                "was"        => $was,
+                                "became"     => $became,
+                                "field"      => 'value',
+                                "type"       => $attr->get('type')
                             ];
 
                             if (!empty($attr->get('measureId'))) {
