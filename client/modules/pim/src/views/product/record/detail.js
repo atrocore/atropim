@@ -141,6 +141,9 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 view.listenTo(view, 'tree-load', treeData => {
                     this.treeLoad(view, treeData);
                 });
+                view.listenTo(view, 'tree-refresh', () => {
+                    view.treeRefresh();
+                });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
                 });
@@ -194,6 +197,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         treeLoad(view, treeData) {
+            view.clearStorage();
 
             if (view.treeScope === 'Classification' ) {
                 $.ajax({url: `Product/${view.model.get('id')}/classifications`, type: 'GET'}).done(response => {
@@ -223,7 +227,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (view.treeScope === 'Product' && view.model && view.model.get('id')) {
                 let route = [];
                 view.prepareTreeRoute(treeData, route);
-                view.selectTreeNode(view.model.get('id'), route);
             }
         },
 
