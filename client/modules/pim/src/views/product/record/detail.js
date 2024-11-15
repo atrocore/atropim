@@ -219,7 +219,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 $.ajax({url: `Product/${view.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
                     if (response.total && response.total > 0) {
                         let opened = {};
-                        this.selectCategoryNode(response.list, view, opened);
+                        this.selectCategoryNode(response.list, view, treeData, opened);
                     }
                 });
             }
@@ -230,7 +230,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
         },
 
-        selectCategoryNode(categories, view, opened) {
+        selectCategoryNode(categories, view, treeData, opened) {
             if (categories.length > 0) {
                 let category = categories.shift();
                 let route = [];
@@ -240,14 +240,38 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                     }
                 });
 
-                let $tree = view.getTreeEl();
-                this.openCategoryNodes($tree, route, opened, () => {
-                    this.selectCategoryNode(categories, view, opened);
-                    let node = $tree.tree('getNodeById', category.id);
-                    if (node && node.element) {
-                        $(node.element).addClass('jqtree-selected');
-                    }
-                });
+                let $tree = view.getTreeEl(),
+                    firstInNode = route.length > 0 ? route[0] : category.id;
+                if (treeData.findIndex(i => i.id === firstInNode) === -1) {
+                    this.ajaxGetRequest('Category/action/TreeData', {ids: category.id}).then(response => {
+                        if (response.total && response.total > 0) {
+                            (response.tree || []).forEach(node => {
+                                let treeNode = treeData.slice().reverse().find(item => !item.id.includes('show-more'));
+
+                                if (treeNode) {
+                                    let a = $tree.tree('getNodeById', treeNode.id);
+                                    $tree.tree('addNodeAfter', node, a);
+
+                                    this.openCategoryNodes($tree, route, opened, () => {
+                                        this.selectCategoryNode(categories, view, treeData, opened);
+                                        let node = $tree.tree('getNodeById', category.id);
+                                        if (node && node.element) {
+                                            $(node.element).addClass('jqtree-selected');
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    });
+                } else {
+                    this.openCategoryNodes($tree, route, opened, () => {
+                        this.selectCategoryNode(categories, view, treeData, opened);
+                        let node = $tree.tree('getNodeById', category.id);
+                        if (node && node.element) {
+                            $(node.element).addClass('jqtree-selected');
+                        }
+                    });
+                }
             }
         },
 
