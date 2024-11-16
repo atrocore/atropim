@@ -232,46 +232,42 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         selectCategoryNode(categories, view, treeData, opened) {
             if (categories.length > 0) {
-                let category = categories.shift();
-                let route = [];
-                this.parseRoute(category.categoryRoute).forEach(id => {
-                    if (!opened[id]) {
-                        route.push(id);
-                    }
+                let categoriesRoutes = {};
+                categories.forEach(category => {
+                    let route = [];
+                    this.parseRoute(category.categoryRoute).forEach(id => {
+                        if (!opened[id]) {
+                            route.push(id);
+                        }
+                    });
+
+                    categoriesRoutes[category.id] = route;
                 });
 
-                let $tree = view.getTreeEl(),
-                    firstInNode = route.length > 0 ? route[0] : category.id;
-                if (treeData.findIndex(i => i.id === firstInNode) === -1) {
-                    this.ajaxGetRequest('Category/action/TreeData', {ids: category.id}).then(response => {
-                        if (response.total && response.total > 0) {
-                            (response.tree || []).forEach(node => {
-                                let treeNode = treeData.slice().reverse().find(item => !item.id.includes('show-more'));
+                let $tree = view.getTreeEl();
+                this.ajaxGetRequest('Category/action/TreeData', {ids: Object.keys(categoriesRoutes)}).then(response => {
+                    if (response.total && response.total > 0) {
+                        (response.tree || []).forEach(node => {
+                            if (treeData.findIndex(item => item.id === node.id) === -1) {
+                                let lastTreeNode = treeData.slice().reverse().find(item => !item.id.includes('show-more'));
 
-                                if (treeNode) {
-                                    let a = $tree.tree('getNodeById', treeNode.id);
-                                    $tree.tree('addNodeAfter', node, a);
-
-                                    this.openCategoryNodes($tree, route, opened, () => {
-                                        this.selectCategoryNode(categories, view, treeData, opened);
-                                        let node = $tree.tree('getNodeById', category.id);
-                                        if (node && node.element) {
-                                            $(node.element).addClass('jqtree-selected');
-                                        }
-                                    });
+                                if (lastTreeNode) {
+                                    let lastNode = $tree.tree('getNodeById', lastTreeNode.id);
+                                    $tree.tree('addNodeAfter', node, lastNode);
                                 }
-                            })
-                        }
-                    });
-                } else {
-                    this.openCategoryNodes($tree, route, opened, () => {
-                        this.selectCategoryNode(categories, view, treeData, opened);
-                        let node = $tree.tree('getNodeById', category.id);
-                        if (node && node.element) {
-                            $(node.element).addClass('jqtree-selected');
-                        }
-                    });
-                }
+                            }
+                        });
+
+                        Object.keys(categoriesRoutes).forEach(categoryId => {
+                            this.openCategoryNodes($tree, categoriesRoutes[categoryId], opened, () => {
+                                let node = $tree.tree('getNodeById', categoryId);
+                                if (node) {
+                                    $tree.tree('addToSelection', node, false);
+                                }
+                            });
+                        });
+                    }
+                });
             }
         },
 
