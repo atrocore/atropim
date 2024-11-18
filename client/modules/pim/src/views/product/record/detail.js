@@ -219,7 +219,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 $.ajax({url: `Product/${view.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
                     if (response.total && response.total > 0) {
                         let opened = {};
-                        this.selectCategoryNode(response.list, view, treeData, opened);
+                        this.selectCategoryNode(response.list, view, opened);
                     }
                 });
             }
@@ -230,7 +230,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
         },
 
-        selectCategoryNode(categories, view, treeData, opened) {
+        selectCategoryNode(categories, view, opened) {
             if (categories.length > 0) {
                 let categoriesRoutes = {};
                 categories.forEach(category => {
@@ -248,6 +248,8 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.ajaxGetRequest('Category/action/TreeData', {ids: Object.keys(categoriesRoutes)}).then(response => {
                     if (response.total && response.total > 0) {
                         (response.tree || []).forEach(node => {
+                            let treeData = $tree.tree('getTree').children || [];
+
                             if (treeData.findIndex(item => item.id === node.id) === -1) {
                                 let lastTreeNode = treeData.slice().reverse().find(item => !item.id.includes('show-more'));
 
