@@ -248,7 +248,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 this.ajaxGetRequest('Category/action/TreeData', {ids: Object.keys(categoriesRoutes)}).then(response => {
                     if (response.total && response.total > 0) {
                         (response.tree || []).forEach(node => {
-                            debugger
                             let treeData = $tree.tree('getTree').children || [];
 
                             if (treeData.findIndex(item => item.id === node.id) === -1) {
