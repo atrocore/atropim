@@ -23,7 +23,7 @@ Espo.define('pim:views/dashlets/fields/colored-varchar-with-url', 'pim:views/das
                 optionColors = this.getMetadata().get(['entityDefs', 'Product', 'fields', fieldName, 'optionColors']) || {};
 
             const index = options.findIndex(elem => elem === name),
-                  color = index !== -1 ? optionColors[index].replace(/^(#+)/, '') : this.defaultColor;
+                color = index !== -1 ? (optionColors[index]?.replace(/^(#+)/, '') ?? this.defaultColor) : this.defaultColor;
 
             return _.extend({
                 backgroundColor: color,
@@ -37,7 +37,7 @@ Espo.define('pim:views/dashlets/fields/colored-varchar-with-url', 'pim:views/das
                 let r = parseInt(backgroundColor.substr(0, 2), 16);
                 let g = parseInt(backgroundColor.substr(2, 2), 16);
                 let b = parseInt(backgroundColor.substr(4, 2), 16);
-                let l = 1 - ( 0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                let l = 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255;
                 l < 0.5 ? color = '000' : color = 'fff';
                 return color;
             }
