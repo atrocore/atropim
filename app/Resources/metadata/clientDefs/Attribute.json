@@ -343,7 +343,19 @@
             }
           ]
         }
-      }
+      },
+      "htmlSanitizer": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "wysiwyg"
+              ]
+            }
+          ]
+        }}
     }
   }
 }

@@ -36,7 +36,8 @@
     "notNull": "Disable Null Value",
     "trim": "Remove leading and trailing whitespaces",
     "classificationAttributes": "Classification Attributes",
-    "preparedName": "Name"
+    "preparedName": "Name",
+    "htmlSanitizer": "HTML Sanitizer"
   },
   "links": {
     "measure": "Measure",

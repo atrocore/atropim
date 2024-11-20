@@ -83,6 +83,13 @@ class Attribute extends Hierarchy
         if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
             $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
+
+        if (!empty($entity->get('htmlSanitizerId'))) {
+            $htmlSanitizer = $this->getEntityManager()->getRepository('HtmlSanitizer')->get($entity->get('htmlSanitizerId'));
+            if (!empty($htmlSanitizer)) {
+                $entity->set('htmlSanitizerName', $htmlSanitizer->get('name'));
+            }
+        }
     }
 
     /**
