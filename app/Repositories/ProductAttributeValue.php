@@ -265,9 +265,9 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function save(Entity $entity, array $options = [])
     {
-        if ($entity->get('attributeType') == 'wysiwyg' && ($entity->isNew() || $entity->isAttributeChanged('value'))) {
-            $attribute = $entity->get('attribute');
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
+        if ($entity->get('attributeType') == 'wysiwyg' && ($entity->isNew() || $entity->isAttributeChanged('value'))) {
             if (!empty($attribute)) {
                 $htmlSanitizerId = $attribute->get('htmlSanitizerId');
 
@@ -280,8 +280,7 @@ class ProductAttributeValue extends AbstractAttributeValue
                 }
             }
         }
-
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+        
         if (!empty($entity->get('channelId'))) {
             $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
         }
