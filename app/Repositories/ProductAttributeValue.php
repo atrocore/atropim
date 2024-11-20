@@ -465,6 +465,18 @@ class ProductAttributeValue extends AbstractAttributeValue
             }
         }
 
+        if ($entity->get('attributeType') == 'wysiwyg' && ($entity->isNew() || $entity->isAttributeChanged('value'))) {
+            $htmlSanitizerId = $attribute->get('htmlSanitizerId');
+
+            if (!empty($htmlSanitizerId)) {
+                /** @var \Atro\Services\HtmlSanitizer $service */
+                $service = $this->getInjection('container')->get('serviceFactory')->create('HtmlSanitizer');
+
+                $safeHtml = $service->sanitize($htmlSanitizerId, $entity->get('textValue'));
+                $entity->set('textValue', $safeHtml);
+            }
+        }
+
         parent::beforeSave($entity, $options);
     }
 

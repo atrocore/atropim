@@ -132,6 +132,12 @@
           "name": "description"
         },
         false
+      ],
+      [
+        {
+          "name": "htmlSanitizer"
+        },
+        false
       ]
     ]
   }

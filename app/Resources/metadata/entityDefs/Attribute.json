@@ -278,6 +278,13 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
+    },
+    "htmlSanitizer": {
+      "type": "link",
+      "entity": "HtmlSanitizer",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true
     }
   },
   "links": {

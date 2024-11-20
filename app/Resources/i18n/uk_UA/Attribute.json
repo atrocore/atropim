@@ -35,7 +35,8 @@
     "notNull": "Вимкнути Нульове значення",
     "trim": "Видалення початкових і кінцевих пробілів",
     "classificationAttributes": "Класифікаційні атрибути",
-    "preparedName": "Ім'я"
+    "preparedName": "Ім'я",
+    "htmlSanitizer": "HTML Sanitizer"
   },
   "links": {
     "measure": "Міра",

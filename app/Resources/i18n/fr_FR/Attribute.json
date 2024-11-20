@@ -36,7 +36,8 @@
     "notNull": "Désactiver la valeur nulle",
     "trim": "Supprimez les espaces blancs de début et de fin",
     "classificationAttributes": "Attributs de la classification",
-    "preparedName": "Nom"
+    "preparedName": "Nom",
+    "htmlSanitizer": "HTML Sanitizer"
   },
   "links": {
     "measure": "Mesure",
