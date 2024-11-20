@@ -265,6 +265,22 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function save(Entity $entity, array $options = [])
     {
+        if ($entity->get('attributeType') == 'wysiwyg' && ($entity->isNew() || $entity->isAttributeChanged('value'))) {
+            $attribute = $entity->get('attribute');
+
+            if (!empty($attribute)) {
+                $htmlSanitizerId = $attribute->get('htmlSanitizerId');
+
+                if (!empty($htmlSanitizerId)) {
+                    /** @var \Atro\Services\HtmlSanitizer $service */
+                    $service = $this->getInjection('container')->get('serviceFactory')->create('HtmlSanitizer');
+
+                    $safeHtml = $service->sanitize($htmlSanitizerId, $entity->get('textValue'));
+                    $entity->set('textValue', $safeHtml);
+                }
+            }
+        }
+
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
         if (!empty($entity->get('channelId'))) {
             $channel = $this->getEntityManager()->getRepository('Channel')->get($entity->get('channelId'));
@@ -462,18 +478,6 @@ class ProductAttributeValue extends AbstractAttributeValue
 
             if (!empty($this->select(['id'])->join(['product'])->where($where)->findOne())) {
                 throw new BadRequest(sprintf($this->exception("attributeShouldHaveBeUnique"), $attribute->get('name')));
-            }
-        }
-
-        if ($entity->get('attributeType') == 'wysiwyg' && ($entity->isNew() || $entity->isAttributeChanged('value'))) {
-            $htmlSanitizerId = $attribute->get('htmlSanitizerId');
-
-            if (!empty($htmlSanitizerId)) {
-                /** @var \Atro\Services\HtmlSanitizer $service */
-                $service = $this->getInjection('container')->get('serviceFactory')->create('HtmlSanitizer');
-
-                $safeHtml = $service->sanitize($htmlSanitizerId, $entity->get('textValue'));
-                $entity->set('textValue', $safeHtml);
             }
         }
 
