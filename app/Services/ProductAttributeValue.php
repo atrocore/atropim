@@ -27,7 +27,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Pim\Core\ValueConverter;
-use Espo\Services\Record;
+use Atro\Services\Record;
 
 class ProductAttributeValue extends AbstractProductAttributeService
 {
@@ -911,7 +911,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                         if (!$result->get('attributeIsMultilang')) {
                             $existingPavs->append($result);
                         } else {
-                            $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $id, 'attributeId' => $attributeIds])
+                            $existingPavs = $this->getEntityManager()->getRepository('ProductAttributeValue')->where(['productId' => $productId, 'attributeId' => $attributeIds])
                                 ->find();
                         }
 

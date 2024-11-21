@@ -195,6 +195,7 @@ class Product extends Hierarchy
                     $conflicts = $service->$method($id, $data);
                 }
             }
+            $data->_skipIsEntityUpdated = true;
         }
 
         try {
