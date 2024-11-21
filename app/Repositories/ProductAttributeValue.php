@@ -511,6 +511,12 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function updateProductModifiedData(Entity $entity): void
     {
+        if (property_exists($entity, '_input') && !empty($entity->_input)) {
+            if (property_exists($entity->_input, 'isProductUpdate') && !empty($entity->_input->isProductUpdate)) {
+                return;
+            }
+        }
+
         $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $entity->get('productId'), [
             'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
             'modifiedById' => $this->getEntityManager()->getUser()->get('id')
