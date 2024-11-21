@@ -801,12 +801,13 @@ class ProductAttributeValue extends AbstractAttributeValue
             'channelId'   => $entity->get('channelId'),
         ];
 
-        $this->getPseudoTransactionManager()->pushCreateEntityJob('Note', [
-            'type'       => 'DeletePav',
-            'parentId'   => $entity->get('productId'),
-            'parentType' => 'Product',
-            'data'       => $data,
-        ]);
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set('type', 'DeletePav');
+        $note->set('parentId', $entity->get('productId'));
+        $note->set('parentType', 'Product');
+        $note->set('data', $data);
+
+        $this->getEntityManager()->saveEntity($note);
     }
 
     protected function notEqualAndNotEmpty($val1, $val2): bool
