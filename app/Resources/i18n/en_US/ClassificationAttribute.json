@@ -21,13 +21,13 @@
     "boolValue": "Default Value: Boolean",
     "min": "Min",
     "max": "Max",
-    "extensibleEnumOptions": "List Options"
+    "extensibleEnumOptions": "Allow options"
   },
   "links": {
     "classification": "Classification",
     "attribute": "Attribute",
     "channel": "Channel",
-    "extensibleEnumOptions": "List Options"
+    "extensibleEnumOptions": "Allow options"
   },
   "labels": {
     "Create ClassificationAttribute": "Create Classification Attribute",

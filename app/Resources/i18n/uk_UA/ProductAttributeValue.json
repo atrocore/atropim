@@ -42,7 +42,9 @@
     "noSuchAttributeUnit": "Одиниця виміру для атрибута '%s' не допустима.",
     "youHaveNoAclRightsToReadAttributeValues": "У вас немає прав на читання значень атрибутів.",
     "attributeDontMatchToPattern": "Значення атрибута \"{attribute}\" не відповідає патерну \"{pattern}\".",
-    "attributeShouldHaveBeUnique": "Атрибут %s повинен мати унікальне значення."
+    "attributeShouldHaveBeUnique": "Атрибут %s повинен мати унікальне значення.",
+    "optionNotAllowed": "Вибрана опція '%s' не допускається",
+    "optionsNotAllowed": "Вибрані опції '%s' не допускаються"
   },
   "messages": {
     "removeRelatedAttributeGroup": "Ви впевнені, що хочете видалити всі атрибути з їхніми значеннями для обраної групи атрибутів з поточного продукту? Усі атрибути та їхні значення для дочірніх продуктів будуть збережені.",

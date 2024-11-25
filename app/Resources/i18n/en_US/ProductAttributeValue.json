@@ -54,7 +54,9 @@
     "noSuchAttributeUnit": "Unit for the attribute '%s' is not valid.",
     "youHaveNoAclRightsToReadAttributeValues": "You have no rights to read attribute values.",
     "attributeDontMatchToPattern": "The value of the attribute \"{attribute}\" does not correspond to the pattern \"{pattern}\".",
-    "attributeShouldHaveBeUnique": "%s attribute should have unique value."
+    "attributeShouldHaveBeUnique": "%s attribute should have unique value.",
+    "optionNotAllowed": "The selected option '%s' is not allowed",
+    "optionsNotAllowed": "The selected options '%s' are not allowed"
   },
   "messages": {
     "removeRelatedAttributeGroup": "Are you sure you want to delete all the attributes with their values for the selected Attribute Group from the current product? All attributes and their values for the child products will be retained.",
