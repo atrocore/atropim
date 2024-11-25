@@ -1045,6 +1045,10 @@ class ProductAttributeValue extends AbstractAttributeValue
             return;
         }
 
+        if(!$pav->isAttributeChanged('value') && !$pav->isAttributeChanged('channelId')) {
+            return;
+        }
+
         if ($pav->isAttributeChanged('value') && (empty($pav->get('referenceValue')) && empty($pav->get('textValue')))) {
             return;
         }
