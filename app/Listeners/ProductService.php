@@ -26,4 +26,9 @@ class ProductService extends AbstractListener
 
         $this->getService('Product')->inheritedAllFromParent($parent, $child);
     }
+
+    public function inheritAllFromParent(Event $event): void
+    {
+        $this->inheritAllForChild($event);
+    }
 }
