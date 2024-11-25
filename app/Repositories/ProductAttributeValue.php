@@ -1067,6 +1067,7 @@ class ProductAttributeValue extends AbstractAttributeValue
 
         $key = "list_options_" . $classificationAttributeIds[0];
         $options = $this->getMemoryStorage()->get($key);
+
         if ($options === null) {
             $options = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('extensible_enum_option_id')
