@@ -1019,16 +1019,13 @@ class ProductAttributeValue extends AbstractAttributeValue
     public function getClassificationAttributesFromPavId(string|Entity $pavId, ?string $channelId): array
     {
         $pav = is_string($pavId) ? $this->get($pavId) : $pavId;
-
-        /** @var Connection $connection */
-        $connection = $this->getInjection('container')->get('connection');
-        $values = $connection->createQueryBuilder()
-            ->from('classification_attribute', 'ca')
+        $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('distinct ca.id')
+            ->from('classification_attribute', 'ca')
             ->join('ca', 'classification', 'c', 'ca.classification_id=c.id and c.deleted=:false')
             ->join('c', 'product_classification', 'pc', 'c.id = pc.classification_id and pc.deleted=:false')
             ->join('pc', 'product', 'p', 'pc.product_id = p.id and p.deleted=:false')
-            ->andWhere('ca.classification_id = pc.classification_id')
+            ->where('ca.classification_id = pc.classification_id')
             ->andWhere('ca.attribute_id = :attributeId')
             ->andWhere('ca.deleted = :false')
             ->andWhere('p.id = :productId')
