@@ -15,7 +15,9 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "type"
+        }
       ],
       [
         {

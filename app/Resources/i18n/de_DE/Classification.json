@@ -7,13 +7,19 @@
     "products": "Produkte",
     "synonyms": "Synonyme",
     "release": "Freigeben",
-    "code": "Code"
+    "code": "Code",
+    "type": "Typ"
   },
   "links": {
     "classifications": "Klassifizierungen",
     "classificationAttributes": "Klassifizierungattribute",
     "products": "Produkte",
     "attributes": "Attribute"
+  },
+  "options": {
+    "type": {
+      "general": "Allgemein"
+    }
   },
   "labels": {
     "selectAttributeGroup": "Attributgruppe auswählen",

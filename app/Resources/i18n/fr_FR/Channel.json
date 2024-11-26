@@ -5,8 +5,7 @@
     "categories": "Catégories",
     "locales": "Langues",
     "code": "Code",
-    "products": "Produits",
-    "type": "Type"
+    "products": "Produits"
   },
   "links": {
     "categories": "Catégories",
@@ -22,9 +21,6 @@
   "options": {
     "template": {
       "default": "Défaut"
-    },
-    "type": {
-      "general": "Général"
     }
   },
   "messages": {
