@@ -74,26 +74,39 @@ class Product extends AbstractSelectManager
 
     public function prepareWhereForModifiedAtExpanded(array $row): array
     {
-        $productIds = [];
-        foreach (['ProductFile', 'ProductAttributeValue', 'ProductChannel'] as $entityType) {
+        $result = [
+            'type'  => 'innerSql',
+            'value' => [
+                "sql"        => "",
+                "parameters" => []
+            ]
+        ];
+
+        $entitiesTypeList = ['ProductFile', 'ProductAttributeValue', 'ProductChannel'];
+        foreach ($entitiesTypeList as $key => $entityType) {
             $sp = $this->createSelectManager($entityType)
                 ->getSelectParams(['where' => [array_merge($row, ['attribute' => 'modifiedAt'])]], true, true);
             $sp['select'] = ['productId'];
-            $collection = $this->getEntityManager()->getRepository($entityType)->find($sp);
-            $productIds = array_merge($productIds, array_column($collection->toArray(), 'productId'));
+
+            $repository = $this->getEntityManager()->getRepository($entityType);
+
+            $qb1 = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
+
+            $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+
+            $innerSql = str_replace($mainTableAlias, "t_modified_at", $qb1->getSql());
+
+            $result['value']['sql'] .= $innerSql;
+            if ($key != count($entitiesTypeList) - 1) {
+                $result['value']['sql'] .= " UNION ";
+            }
+
+            $result['value']['parameters'] = array_merge($result['value']['parameters'], $qb1->getParameters());
         }
 
-        return [
-            'type'  => 'or',
-            'value' => [
-                array_merge($row, ['attribute' => 'modifiedAt']),
-                [
-                    'type'      => 'in',
-                    'attribute' => 'id',
-                    'value'     => array_values(array_unique($productIds))
-                ]
-            ]
-        ];
+        $result['value']['sql'] = "$mainTableAlias.id IN ({$result['value']['sql']})";
+
+        return $result;
     }
 
     public function mutateWhereAttributeQuery(array &$where): void
