@@ -22,13 +22,13 @@
     "boolValue": "Standardwert: Boolesch",
     "min": "Min",
     "max": "Max",
-    "extensibleEnumOptions": "Auswahloptionen"
+    "extensibleEnumOptions": "Optionen zulassen"
   },
   "links": {
     "classification": "Klassifizierung",
     "attribute": "Attribute",
     "channel": "Kanal",
-    "extensibleEnumOptions": "Auswahloptionen"
+    "extensibleEnumOptions": "Optionen zulassen"
   },
   "labels": {
     "Create ClassificationAttribute": "Attribut der Klassifizierung erstellen",

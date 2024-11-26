@@ -480,6 +480,8 @@ class ProductAttributeValue extends AbstractAttributeValue
             }
         }
 
+        $this->validateAllowOptions($entity);
+
         parent::beforeSave($entity, $options);
     }
 
@@ -1012,6 +1014,126 @@ class ProductAttributeValue extends AbstractAttributeValue
                 }
             }
         }
+    }
+
+    public function getClassificationAttributesFromPavId(string|Entity $pavId, ?string $channelId): ?string
+    {
+        $pav = is_string($pavId) ? $this->get($pavId) : $pavId;
+        $value = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('distinct ca.id')
+            ->from('classification_attribute', 'ca')
+            ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id')
+            ->join('ca', 'classification', 'c', 'ca.classification_id=c.id and c.deleted=:false')
+            ->join('c', 'product_classification', 'pc', 'c.id = pc.classification_id and pc.deleted=:false')
+            ->join('pc', 'product', 'p', 'pc.product_id = p.id and p.deleted=:false')
+            ->where('ca.classification_id = pc.classification_id')
+            ->andWhere('ca.attribute_id = :attributeId')
+            ->andWhere('ca.deleted = :false')
+            ->andWhere('p.id = :productId')
+            ->andWhere('ca.channel_id = :channelId')
+            ->setParameter('attributeId', $pav->get('attributeId'))
+            ->setParameter('productId', $pav->get('productId'))
+            ->setParameter('channelId', $channelId, Mapper::getParameterType($channelId))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAssociative();
+
+        return !empty($value['id']) ? $value['id'] : null;
+    }
+
+    protected function validateAllowOptions(Entity $pav): void
+    {
+        if (!in_array($pav->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
+            return;
+        }
+
+
+        if(!$pav->isAttributeChanged('value') && !$pav->isAttributeChanged('channelId')) {
+            return;
+        }
+
+        if ($pav->isAttributeChanged('value') && empty($pav->get('referenceValue')) && empty($pav->get('textValue'))) {
+            return;
+        }
+
+        $attributeWithActiveAllowOptions = $this->getMemoryStorage()->get('ca_with_active_allow_options');
+        if ($attributeWithActiveAllowOptions === null) {
+            $attributeWithActiveAllowOptions = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('ca.id, ca.attribute_id, ca.classification_id, ca.channel_id, caeeo.extensible_enum_option_id')
+                ->from('classification_attribute', 'ca')
+                ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id and caeeo.deleted = :false')
+                ->where('ca.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+            $this->getMemoryStorage()->set('ca_with_active_allow_options', $attributeWithActiveAllowOptions);
+        }
+
+        if(!in_array($pav->get('attributeId'), array_column($attributeWithActiveAllowOptions, 'attribute_id'))) {
+            return;
+        }
+
+        $productClassifications = $this->getMemoryStorage()->get('allows_options_product_classifications');
+        if(!isset($productClassifications[$pav->get('productId')])) {
+            $productClassification = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('classification_id')
+                ->from('product_classification')
+                ->where('product_id = :productId')
+                ->andWhere('deleted = :false')
+                ->setParameter('productId', $pav->get('productId'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+            $productClassifications[$pav->get('productId')] =  array_column($productClassification, 'classification_id');
+            $this->getMemoryStorage()->set('allows_options_product_classifications', $productClassifications);
+        }
+
+        if(empty($productClassifications[$pav->get('productId')])) {
+            return;
+        }
+
+        $allowOptions = null;
+        foreach ($attributeWithActiveAllowOptions as $attributeWithActiveAllowOption) {
+            if($attributeWithActiveAllowOption['attribute_id'] === $pav->get('attributeId')
+            && $attributeWithActiveAllowOption['classification_id'] === $productClassifications[$pav->get('productId')][0]
+            && $attributeWithActiveAllowOption['channel_id'] === $pav->get('channelId')) {
+                $allowOptions[] = $attributeWithActiveAllowOption['extensible_enum_option_id'];
+            }
+        }
+
+        if(empty($allowOptions)){
+            return;
+        }
+
+        if ($pav->isAttributeChanged('value')) {
+            $data = $pav->get('attributeType') === 'extensibleEnum' ? [$pav->get('referenceValue')] : (@json_decode($pav->get('textValue'), true) ?? []);
+        } else {
+            $data = $pav->get('attributeType') === 'extensibleEnum' ? [$pav->get('value')] : $pav->get('value');
+        }
+
+        $notAllowOptions = array_diff($data, $allowOptions);
+
+        if (empty($notAllowOptions)) {
+            return;
+        }
+
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+            $names = $notAllowOptions;
+        } else {
+            $result = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('name')
+                ->from('extensible_enum_option')
+                ->where('id IN (:ids)')
+                ->andWhere('deleted = :false')
+                ->setParameter('ids', $notAllowOptions, Connection::PARAM_STR_ARRAY)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            $names = array_column($result, 'name');
+        }
+
+        $exceptionMessage = count($names) > 1 ? 'optionsNotAllowed' : 'optionNotAllowed';
+
+        throw new BadRequest(
+            sprintf($this->getInjection('language')->translate($exceptionMessage, 'exceptions', 'ProductAttributeValue'), join(', ', $names))
+        );
     }
 
     protected function getPseudoTransactionManager(): PseudoTransactionManager

@@ -38,23 +38,22 @@ class Entity extends AbstractEntityListener
         $event->setArgument("params", $params);
     }
 
-    protected  function boolFilterOnlyForClassificationAttributesUsingPavId(&$params, ?string $pavId)
+    protected  function boolFilterOnlyForClassificationAttributesUsingPavId(&$params,  $data)
     {
-        if(empty($pavId)){
+        if(empty($data['pavId']) || !isset($data['channelId'])){
             return $params;
         }
-        $pavService = $this->getService('ProductAttributeValue');
-        $classificationAttributeIds = $pavService->getClassificationAttributesFromPavId($pavId);
 
-        if($this->getEntityManager()
-            ->getRepository('ClassificationAttributeExtensibleEnumOption')
-            ->where(['classificationAttributeId' => $classificationAttributeIds])
-            ->count() > 0){
+        $classificationAttributeId = $this->getEntityManager()
+            ->getRepository('ProductAttributeValue')
+            ->getClassificationAttributesFromPavId($data['pavId'], $data['channelId']);
+
+        if(!empty($classificationAttributeId)) {
 
             $params['where'][] = [
                 "type" => "linkedWith",
                 "attribute" => "classificationAttributes",
-                "value" =>  $classificationAttributeIds
+                "value" =>  [$classificationAttributeId]
             ];
 
         }

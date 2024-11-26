@@ -138,9 +138,11 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                             customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
                             customBoolFilterData: {
                                 onlyForClassificationAttributesUsingPavId() {
-                                    return this.model.get('id')
+                                    return {
+                                        'pavId' : this.model.get('id'),
+                                        'channelId': this.model.get('channelId')
+                                    }
                                 }
-
                             }
                         }
                     }
