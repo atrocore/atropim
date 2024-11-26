@@ -1016,12 +1016,13 @@ class ProductAttributeValue extends AbstractAttributeValue
         }
     }
 
-    public function getClassificationAttributesFromPavId(string|Entity $pavId, ?string $channelId): array
+    public function getClassificationAttributesFromPavId(string|Entity $pavId, ?string $channelId): ?string
     {
         $pav = is_string($pavId) ? $this->get($pavId) : $pavId;
-        $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
+        $value = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('distinct ca.id')
             ->from('classification_attribute', 'ca')
+            ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id')
             ->join('ca', 'classification', 'c', 'ca.classification_id=c.id and c.deleted=:false')
             ->join('c', 'product_classification', 'pc', 'c.id = pc.classification_id and pc.deleted=:false')
             ->join('pc', 'product', 'p', 'pc.product_id = p.id and p.deleted=:false')
@@ -1034,9 +1035,9 @@ class ProductAttributeValue extends AbstractAttributeValue
             ->setParameter('productId', $pav->get('productId'))
             ->setParameter('channelId', $channelId, Mapper::getParameterType($channelId))
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
+            ->fetchAssociative();
 
-        return array_column($values, 'id');
+        return !empty($value['id']) ? $value['id'] : null;
     }
 
     protected function validateAllowOptions(Entity $pav): void
@@ -1044,6 +1045,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         if (!in_array($pav->get('attributeType'), ['extensibleEnum', 'extensibleMultiEnum'])) {
             return;
         }
+
 
         if(!$pav->isAttributeChanged('value') && !$pav->isAttributeChanged('channelId')) {
             return;
@@ -1053,28 +1055,70 @@ class ProductAttributeValue extends AbstractAttributeValue
             return;
         }
 
+        $attributeWithActiveAllowOptions = $this->getMemoryStorage()->get('ca_with_active_allow_options');
+        if ($attributeWithActiveAllowOptions === null) {
+            $attributeWithActiveAllowOptions = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('DISTINCT ca.id, ca.attribute_id, ca.classification_id, ca.channel_id')
+                ->from('classification_attribute', 'ca')
+                ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id')
+                ->where('ca.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+            $this->getMemoryStorage()->set('ca_with_active_allow_options', $attributeWithActiveAllowOptions);
+        }
+
+        if(!in_array($pav->get('attributeId'), array_column($attributeWithActiveAllowOptions, 'attribute_id'))) {
+            return;
+        }
+
+        $productClassifications = $this->getMemoryStorage()->get('allows_options_product_classifications');
+        if(!isset($productClassifications[$pav->get('productId')])) {
+            $productClassification = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('classification_id')
+                ->from('product_classification')
+                ->where('product_id = :productId')
+                ->andWhere('deleted = :false')
+                ->setParameter('productId', $pav->get('productId'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+            $productClassifications[$pav->get('productId')] =  array_column($productClassification, 'classification_id');
+            $this->getMemoryStorage()->set('allows_options_product_classifications', $productClassifications);
+        }
+
+        if(empty($productClassifications[$pav->get('productId')])) {
+            return;
+        }
+
+        $classificationAttributeId = null;
+
+        foreach ($attributeWithActiveAllowOptions as $attributeWithActiveAllowOption) {
+            if($attributeWithActiveAllowOption['attribute_id'] === $pav->get('attributeId')
+            && in_array($attributeWithActiveAllowOption['classification_id'], $productClassifications[$pav->get('productId')])
+            && $attributeWithActiveAllowOption['channel_id'] === $pav->get('channelId')) {
+                $classificationAttributeId = $attributeWithActiveAllowOption['id'];
+                break;
+            }
+        }
+
+        if(empty($classificationAttributeId)){
+            return;
+        }
+
         if ($pav->isAttributeChanged('value')) {
             $data = $pav->get('attributeType') === 'extensibleEnum' ? [$pav->get('referenceValue')] : (@json_decode($pav->get('textValue'), true) ?? []);
         } else {
             $data = $pav->get('attributeType') === 'extensibleEnum' ? [$pav->get('value')] : $pav->get('value');
         }
 
-        $classificationAttributeIds = $this->getClassificationAttributesFromPavId($pav, $pav->get('channelId'));
-
-        if (empty($classificationAttributeIds)) {
-            return;
-        }
-
-        $key = "list_options_" . $classificationAttributeIds[0];
+        $key = 'list_option_fo_ca_'. $classificationAttributeId;
         $options = $this->getMemoryStorage()->get($key);
-
-        if ($options === null) {
+        if($options === null){
             $options = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('extensible_enum_option_id')
                 ->from('classification_attribute_extensible_enum_option')
-                ->where('classification_attribute_id IN (:caIds)')
+                ->where('classification_attribute_id = :caId')
                 ->andWhere('deleted = :false')
-                ->setParameter('caIds', $classificationAttributeIds, Connection::PARAM_STR_ARRAY)
+                ->setParameter('caId', $classificationAttributeId)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
             $this->getMemoryStorage()->set($key, $options);

@@ -44,19 +44,19 @@ class Entity extends AbstractEntityListener
             return $params;
         }
 
-        $classificationAttributeIds = $this->getEntityManager()
+        $classificationAttributeId = $this->getEntityManager()
             ->getRepository('ProductAttributeValue')
             ->getClassificationAttributesFromPavId($data['pavId'], $data['channelId']);
 
-        if(!empty($classificationAttributeIds) && $this->getEntityManager()
+        if(!empty($classificationAttributeId) && $this->getEntityManager()
             ->getRepository('ClassificationAttributeExtensibleEnumOption')
-            ->where(['classificationAttributeId' => $classificationAttributeIds])
+            ->where(['classificationAttributeId' => $classificationAttributeId])
             ->count() > 0){
 
             $params['where'][] = [
                 "type" => "linkedWith",
                 "attribute" => "classificationAttributes",
-                "value" =>  $classificationAttributeIds
+                "value" =>  [$classificationAttributeId]
             ];
 
         }
