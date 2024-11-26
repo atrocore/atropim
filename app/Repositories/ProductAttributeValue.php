@@ -1060,7 +1060,7 @@ class ProductAttributeValue extends AbstractAttributeValue
             $attributeWithActiveAllowOptions = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('ca.id, ca.attribute_id, ca.classification_id, ca.channel_id, caeeo.extensible_enum_option_id')
                 ->from('classification_attribute', 'ca')
-                ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id')
+                ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id and caeeo.deleted = :false')
                 ->where('ca.deleted = :false')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
