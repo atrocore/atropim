@@ -15,9 +15,6 @@ namespace Pim\Services;
 
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\NotModified;
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
