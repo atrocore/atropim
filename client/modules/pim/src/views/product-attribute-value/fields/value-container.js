@@ -109,6 +109,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
                 if (this.model.get('attributeFileTypeId')) {
                     params.fileTypeId = this.model.get('attributeFileTypeId');
+                    params.hideTypeField = !!params.fileTypeId;
                 }
 
                 const dropdownTypes = this.getMetadata().get(['app', 'attributeDropdownTypes'], {});
