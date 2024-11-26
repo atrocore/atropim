@@ -1090,7 +1090,6 @@ class ProductAttributeValue extends AbstractAttributeValue
         }
 
         $allowOptions = null;
-
         foreach ($attributeWithActiveAllowOptions as $attributeWithActiveAllowOption) {
             if($attributeWithActiveAllowOption['attribute_id'] === $pav->get('attributeId')
             && in_array($attributeWithActiveAllowOption['classification_id'], $productClassifications[$pav->get('productId')])
