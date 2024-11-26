@@ -73,8 +73,16 @@
     "assignedUser": {
       "required": false
     },
-    "channels": {
-      "type": "linkMultiple"
+    "type": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "general"
+      ],
+      "optionsIds": [
+        "general"
+      ],
+      "default": "general"
     }
   },
   "links": {
@@ -96,12 +104,6 @@
       "type": "hasMany",
       "foreign": "classification",
       "entity": "ClassificationAttribute"
-    },
-    "channels": {
-      "type": "hasMany",
-      "entity": "Channel",
-      "relationName": "ChannelClassification",
-      "foreign": "classifications"
     }
   },
   "collection": {

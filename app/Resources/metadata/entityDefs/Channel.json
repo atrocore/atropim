@@ -84,17 +84,6 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
-    },
-    "type": {
-      "type": "enum",
-      "prohibitedEmptyValue": true,
-      "options": [
-        "general"
-      ],
-      "optionsIds": [
-        "general"
-      ],
-      "default": "general"
     }
   },
   "links": {
@@ -137,12 +126,6 @@
       "type": "hasMany",
       "foreign": "channel",
       "entity": "Attribute"
-    },
-    "classifications": {
-      "type": "hasMany",
-      "entity": "Classification",
-      "relationName": "ChannelClassification",
-      "foreign": "channels"
     }
   },
   "collection": {

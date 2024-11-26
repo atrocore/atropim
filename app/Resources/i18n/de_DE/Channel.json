@@ -9,8 +9,7 @@
     "classificationAttributes": "Klassifizierungattribute",
     "categories": "Kategorien",
     "code": "Code",
-    "products": "Produkte",
-    "type": "Typ"
+    "products": "Produkte"
   },
   "links": {
     "categories": "Kategorien",
@@ -30,9 +29,6 @@
   "options": {
     "template": {
       "default": "Standard"
-    },
-    "type": {
-      "general": "Allgemein"
     }
   },
   "messages": {
