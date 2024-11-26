@@ -1058,7 +1058,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         $attributeWithActiveAllowOptions = $this->getMemoryStorage()->get('ca_with_active_allow_options');
         if ($attributeWithActiveAllowOptions === null) {
             $attributeWithActiveAllowOptions = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('DISTINCT ca.id, ca.attribute_id, ca.classification_id, ca.channel_id')
+                ->select('ca.id, ca.attribute_id, ca.classification_id, ca.channel_id, caeeo.extensible_enum_option_id')
                 ->from('classification_attribute', 'ca')
                 ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id')
                 ->where('ca.deleted = :false')
@@ -1089,18 +1089,17 @@ class ProductAttributeValue extends AbstractAttributeValue
             return;
         }
 
-        $classificationAttributeId = null;
+        $allowOptions = null;
 
         foreach ($attributeWithActiveAllowOptions as $attributeWithActiveAllowOption) {
             if($attributeWithActiveAllowOption['attribute_id'] === $pav->get('attributeId')
             && in_array($attributeWithActiveAllowOption['classification_id'], $productClassifications[$pav->get('productId')])
             && $attributeWithActiveAllowOption['channel_id'] === $pav->get('channelId')) {
-                $classificationAttributeId = $attributeWithActiveAllowOption['id'];
-                break;
+                $allowOptions[] = $attributeWithActiveAllowOption['extensible_enum_option_id'];
             }
         }
 
-        if(empty($classificationAttributeId)){
+        if(empty($allowOptions)){
             return;
         }
 
@@ -1110,21 +1109,7 @@ class ProductAttributeValue extends AbstractAttributeValue
             $data = $pav->get('attributeType') === 'extensibleEnum' ? [$pav->get('value')] : $pav->get('value');
         }
 
-        $key = 'list_options_fo_ca_'. $classificationAttributeId;
-        $options = $this->getMemoryStorage()->get($key);
-        if($options === null){
-            $options = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('extensible_enum_option_id')
-                ->from('classification_attribute_extensible_enum_option')
-                ->where('classification_attribute_id = :caId')
-                ->andWhere('deleted = :false')
-                ->setParameter('caId', $classificationAttributeId)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
-            $this->getMemoryStorage()->set($key, $options);
-        }
-
-        $notAllowOptions = array_diff($data, array_column($options, 'extensible_enum_option_id'));
+        $notAllowOptions = array_diff($data, $allowOptions);
 
         if (empty($notAllowOptions)) {
             return;
