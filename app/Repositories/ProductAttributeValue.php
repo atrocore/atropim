@@ -1110,7 +1110,7 @@ class ProductAttributeValue extends AbstractAttributeValue
             $data = $pav->get('attributeType') === 'extensibleEnum' ? [$pav->get('value')] : $pav->get('value');
         }
 
-        $key = 'list_option_fo_ca_'. $classificationAttributeId;
+        $key = 'list_options_fo_ca_'. $classificationAttributeId;
         $options = $this->getMemoryStorage()->get($key);
         if($options === null){
             $options = $this->getEntityManager()->getConnection()->createQueryBuilder()
