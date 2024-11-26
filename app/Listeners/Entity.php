@@ -48,10 +48,7 @@ class Entity extends AbstractEntityListener
             ->getRepository('ProductAttributeValue')
             ->getClassificationAttributesFromPavId($data['pavId'], $data['channelId']);
 
-        if(!empty($classificationAttributeId) && $this->getEntityManager()
-            ->getRepository('ClassificationAttributeExtensibleEnumOption')
-            ->where(['classificationAttributeId' => $classificationAttributeId])
-            ->count() > 0){
+        if(!empty($classificationAttributeId)) {
 
             $params['where'][] = [
                 "type" => "linkedWith",
