@@ -126,7 +126,7 @@ class Attribute extends Hierarchy
         foreach ($records as $k => $record) {
             $result[] = [
                 'id'             => $record['id'],
-                'name'           => $record[$this->getTranslatedNameField()] ?? $record['name'],
+                'name'           =>  $record['name'],
                 'offset'         => $offset + $k,
                 'total'          => $total,
                 'disabled'       => !in_array($record['id'], $ids),
