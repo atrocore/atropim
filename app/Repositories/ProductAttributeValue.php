@@ -272,10 +272,13 @@ class ProductAttributeValue extends AbstractAttributeValue
                 $htmlSanitizerId = $attribute->get('htmlSanitizerId');
 
                 if (!empty($htmlSanitizerId)) {
-                    /** @var \Atro\Services\HtmlSanitizer $service */
-                    $service = $this->getInjection('container')->get('serviceFactory')->create('HtmlSanitizer');
+                    /** @var \Atro\Core\Templates\Entities\ReferenceData $htmlSanitizer */
+                    $htmlSanitizer = $this->getEntityManager()->getRepository('HtmlSanitizer')->get($htmlSanitizerId);
 
-                    $safeHtml = $service->sanitize($htmlSanitizerId, $entity->get('textValue'));
+                    /** @var \Atro\Core\Utils\HtmlSanitizer $htmlSanitizerUtil */
+                    $htmlSanitizerUtil = $this->getInjection('container')->get('htmlSanitizer');
+
+                    $safeHtml = $htmlSanitizerUtil->sanitize($entity->get('textValue'), $htmlSanitizer->get('configuration'));
                     $entity->set('textValue', $safeHtml);
                 }
             }
