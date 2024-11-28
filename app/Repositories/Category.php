@@ -59,12 +59,13 @@ class Category extends Hierarchy
 
     protected function getParents(Entity $entity): ?EntityCollection
     {
-        $parents = $entity->get('parents');
-        if (empty($parents[0]) && !empty($entity->get('parentsIds'))) {
-            $parents = $this->where(['id' => $entity->get('parentsIds')])->find();
+        if(!empty($entity->get('parentsIds'))) {
+            $parents =  $this->where(['id' => $entity->get('parentsIds')])->find();
+            $entity->set('parents', $parents);
+            return $parents;
         }
 
-        return $parents;
+        return $entity->get('parents');
     }
 
     public function getParentChannelsIds(string $categoryId): array
