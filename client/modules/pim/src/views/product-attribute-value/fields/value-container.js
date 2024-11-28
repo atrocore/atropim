@@ -127,9 +127,9 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                         && this.model.get('extensibleEnumOptionsIds').length > 0
                     ) {
                         customOptions = {
-                            customSelectBoolFilters: ['onlyExtensibleEnumIds'],
+                            customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
                             customBoolFilterData: {
-                                onlyExtensibleEnumIds() {
+                                onlyExtensibleEnumOptionIds() {
                                     return this.model.get('extensibleEnumOptionsIds')
                                 }
                             }

@@ -1025,7 +1025,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         $value = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('distinct ca.id')
             ->from('classification_attribute', 'ca')
-            ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id')
+            ->join('ca', 'classification_attribute_extensible_enum_option', 'caeeo', 'ca.id = caeeo.classification_attribute_id and caeeo.deleted = :false')
             ->join('ca', 'classification', 'c', 'ca.classification_id=c.id and c.deleted=:false')
             ->join('c', 'product_classification', 'pc', 'c.id = pc.classification_id and pc.deleted=:false')
             ->join('pc', 'product', 'p', 'pc.product_id = p.id and p.deleted=:false')
