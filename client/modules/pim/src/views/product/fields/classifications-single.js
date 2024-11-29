@@ -19,37 +19,6 @@ Espo.define('pim:views/product/fields/classifications-single', 'views/fields/lin
 
         originalNameName: 'classificationsNames',
 
-        getSelectFilters: function () {
-            try {
-                const resp = this.ajaxGetRequest(`Product/${this.model.id}/channels`, {maxSize: 500}, {async: false})
-                this.channels = resp.responseJSON.list
-            } catch (e) {
-            }
-
-
-            if (this.channels && this.channels.length > 0) {
-                return {
-                    "channels-1": {
-                        "type": "isNotLinked",
-                        "data": {
-                            "type": "isEmpty"
-                        }
-                    },
-                    "channels-2": {
-                        "type": "linkedWith",
-                        "value": this.channels.map(c => c.id),
-                        "nameHash": this.channels.reduce((acc, item) => {
-                            acc[item.id] = item.name
-                            return acc
-                        }, {}),
-                        "data": {
-                            "type": "anyOf"
-                        }
-                    }
-                }
-            }
-        },
-
         setup() {
             this.setupTempFields();
             Dep.prototype.setup.call(this);

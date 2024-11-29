@@ -8,10 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product/fields/classifications', ['views/fields/link-multiple', 'pim:views/product/fields/classifications-single'],
-    (Dep, ClassificationSingle) => Dep.extend({
-        getSelectFilters() {
-           return ClassificationSingle.prototype.getSelectFilters.call(this)
-        }
+Espo.define('pim:views/product/fields/classifications', 'views/fields/link-multiple',
+    Dep => Dep.extend({
+
     })
 );
