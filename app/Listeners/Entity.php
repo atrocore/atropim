@@ -61,9 +61,9 @@ class Entity extends AbstractEntityListener
         return $params;
     }
 
-    protected  function boolFilterOnlyExtensibleEnumIds(&$params, ?array $ids){
+    protected  function boolFilterOnlyExtensibleEnumOptionIds(&$params, $ids){
 
-        if(empty($ids)){
+        if(!is_array($ids) || empty($ids)){
             return $params;
         }
 

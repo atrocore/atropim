@@ -127,9 +127,9 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                         && this.model.get('extensibleEnumOptionsIds').length > 0
                     ) {
                         customOptions = {
-                            customSelectBoolFilters: ['onlyExtensibleEnumIds'],
+                            customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
                             customBoolFilterData: {
-                                onlyExtensibleEnumIds() {
+                                onlyExtensibleEnumOptionIds() {
                                     return this.model.get('extensibleEnumOptionsIds')
                                 }
                             }
@@ -205,6 +205,18 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                                 })
                             }
                         });
+                    }
+
+
+                    if(this.model.urlRoot === 'ProductAttributeValue'
+                        && ['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('attributeType'))
+                        && this.model.get('attributeIsDropdown')
+                    ) {
+                        view.listenTo(this.model, 'change:channelId', () => {
+                            // we rebuild the list of options according to the new channelId
+                            view.setup();
+                            view.reRender()
+                        })
                     }
 
                 });
