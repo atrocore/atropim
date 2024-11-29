@@ -122,10 +122,7 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
 
-                    if (this.model.urlRoot === 'ClassificationAttribute'
-                        && this.model.get('extensibleEnumOptionsIds')
-                        && this.model.get('extensibleEnumOptionsIds').length > 0
-                    ) {
+                    if (this.model.urlRoot === 'ClassificationAttribute') {
                         customOptions = {
                             customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
                             customBoolFilterData: {
