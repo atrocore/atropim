@@ -1022,6 +1022,9 @@ class ProductAttributeValue extends AbstractAttributeValue
     public function getClassificationAttributesFromPavId(string|Entity $pavId, ?string $channelId): ?string
     {
         $pav = is_string($pavId) ? $this->get($pavId) : $pavId;
+        if(empty($pav)) {
+            return null;
+        }
         $value = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('distinct ca.id')
             ->from('classification_attribute', 'ca')
