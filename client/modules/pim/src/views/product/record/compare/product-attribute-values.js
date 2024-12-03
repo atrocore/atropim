@@ -41,7 +41,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values','views/r
                 this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param).success(res => {
                     let currentGroupPavs = res;
                     let tmp = {}
-                    this.ajaxGetRequest('Synchronization/action/distantInstanceRequest',{
+                    this.ajaxPostRequest('Synchronization/action/distantInstanceRequest',{
                         'uri': 'ProductAttributeValue/action/groupsPavs?'+ $.param(param)
                     }).success(res => {
                         let otherGroupPavsPerInstances = res;
