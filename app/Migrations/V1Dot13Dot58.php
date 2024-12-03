@@ -20,64 +20,68 @@ class V1Dot13Dot58 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-12-03 12:00:00');
+        return new \DateTime('2024-12-04 08:00:00');
     }
 
     public function up(): void
     {
-        $row = $this->getConnection()->createQueryBuilder()
-            ->select('id')
-            ->from('catalog_category')
-            ->setMaxResults(1)
-            ->fetchAssociative();
+        try {
+            $row = $this->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('catalog_category')
+                ->setMaxResults(1)
+                ->fetchAssociative();
 
-        if (!empty($row)) {
-            $path = "data/metadata/entityDefs/Category.json";
-            if (file_exists($path)) {
-                $defs = @json_decode(file_get_contents($path), true);
-            }
-            if (empty($defs)) {
-                $defs = [];
-            }
-            $defs['fields']['catalogs'] = [
-                "type"     => "linkMultiple",
-                "noLoad"   => true,
-                "isCustom" => true
-            ];
-            $defs['links']['catalogs'] = [
-                "type"         => "hasMany",
-                "relationName" => "catalogCategory",
-                "foreign"      => "categories",
-                "entity"       => "Catalog",
-                "isCustom"     => true
-            ];
+            if (!empty($row)) {
+                $path = "data/metadata/entityDefs/Category.json";
+                if (file_exists($path)) {
+                    $defs = @json_decode(file_get_contents($path), true);
+                }
+                if (empty($defs)) {
+                    $defs = [];
+                }
+                $defs['fields']['catalogs'] = [
+                    "type"     => "linkMultiple",
+                    "noLoad"   => true,
+                    "isCustom" => true
+                ];
+                $defs['links']['catalogs'] = [
+                    "type"         => "hasMany",
+                    "relationName" => "catalogCategory",
+                    "foreign"      => "categories",
+                    "entity"       => "Catalog",
+                    "isCustom"     => true
+                ];
 
-            file_put_contents($path, json_encode($defs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                file_put_contents($path, json_encode($defs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-            $path = "data/metadata/entityDefs/Catalog.json";
-            $defs = null;
-            if (file_exists($path)) {
-                $defs = @json_decode(file_get_contents($path), true);
-            }
-            if (empty($defs)) {
-                $defs = [];
-            }
-            $defs['fields']['categories'] = [
-                "type"     => "linkMultiple",
-                "noLoad"   => true,
-                "isCustom" => true
-            ];
-            $defs['links']['categories'] = [
-                "type"         => "hasMany",
-                "relationName" => "catalogCategory",
-                "foreign"      => "catalogs",
-                "entity"       => "Category",
-                "isCustom"     => true
-            ];
+                $path = "data/metadata/entityDefs/Catalog.json";
+                $defs = null;
+                if (file_exists($path)) {
+                    $defs = @json_decode(file_get_contents($path), true);
+                }
+                if (empty($defs)) {
+                    $defs = [];
+                }
+                $defs['fields']['categories'] = [
+                    "type"     => "linkMultiple",
+                    "noLoad"   => true,
+                    "isCustom" => true
+                ];
+                $defs['links']['categories'] = [
+                    "type"         => "hasMany",
+                    "relationName" => "catalogCategory",
+                    "foreign"      => "catalogs",
+                    "entity"       => "Category",
+                    "isCustom"     => true
+                ];
 
-            file_put_contents($path, json_encode($defs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        } else {
-            $this->exec("Drop Table catalog_category;");
+                file_put_contents($path, json_encode($defs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            } else {
+                $this->exec("Drop Table catalog_category;");
+            }
+        } catch (Exception $e) {
+
         }
     }
 
