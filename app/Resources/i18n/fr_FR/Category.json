@@ -13,7 +13,6 @@
     "scope": "Champ d'application",
     "productCategories": "Produits de la catégorie",
     "products": "Produits",
-    "catalogs": "Catalogues",
     "sortOrder": "Ordre de tri"
   },
   "links": {
@@ -21,7 +20,6 @@
     "children": "Catégories d'enfants",
     "channels": "Canaux",
     "products": "Produits",
-    "catalogs": "Catalogues",
     "productCategories": "Produits de la catégorie"
   },
   "labels": {

@@ -2,13 +2,11 @@
   "fields": {
     "isActive": "Активний",
     "products": "Продукти",
-    "categories": "Категорії",
     "code": "Код"
   },
   "links": {
     "channels": "Канали",
-    "products": "Продукти",
-    "categories": "Категорії"
+    "products": "Продукти"
   },
   "labels": {
     "withoutCatalog": "Без каталогу",
