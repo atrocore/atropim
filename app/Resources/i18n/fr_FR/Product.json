@@ -104,9 +104,6 @@
     "onlyConfigurableProducts": "Uniquement les produits configurables",
     "withoutMainImage": "Sans Image principale"
   },
-  "messages": {
-    "productCatalogChangeConfirm": "Êtes-vous sûr de vouloir définir/dissocier/modifier le catalogue pour le produit actuel ? Toutes les catégories autorisées pour le catalogue d'origine seront également dissociées pour le produit."
-  },
   "exceptions": {
     "backwardAssociationError": "Erreur d'association à rebours : %s",
     "wrongInputData": "La validation a échoué. Données d'entrée incorrectes.",

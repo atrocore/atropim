@@ -4,20 +4,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "behaviorOnCatalogChange": {
-      "type": "enum",
-      "tooltip": true,
-      "required": true,
-      "options": [
-        "cascade",
-        "restrict"
-      ],
-      "optionsIds": [
-        "cascade",
-        "restrict"
-      ],
-      "default": "cascade"
-    },
     "behaviorOnCategoryDelete": {
       "type": "enum",
       "tooltip": true,
