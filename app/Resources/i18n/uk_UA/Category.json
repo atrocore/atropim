@@ -13,7 +13,6 @@
     "scope": "Область застосування",
     "products": "Продукти",
     "productCategories": "Категорії продукту",
-    "catalogs": "Каталоги",
     "sortOrder": "Порядок сортування"
   },
   "links": {
@@ -21,7 +20,6 @@
     "children": "Дочірні категорії",
     "channels": "Канали",
     "products": "Продукти",
-    "catalogs": "Каталоги",
     "productCategories": "Категорії продукту"
   },
   "labels": {

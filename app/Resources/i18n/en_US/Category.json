@@ -13,7 +13,6 @@
     "scope": "Scope",
     "productCategories": "Category Products",
     "products": "Products",
-    "catalogs": "Catalogs",
     "sortOrder": "Sort Order"
   },
   "links": {
@@ -21,7 +20,6 @@
     "children": "Child Categories",
     "channels": "Channels",
     "products": "Products",
-    "catalogs": "Catalogs",
     "productCategories": "Category Products"
   },
   "labels": {

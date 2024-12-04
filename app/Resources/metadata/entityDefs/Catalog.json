@@ -56,12 +56,6 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "massUpdateDisabled": true
-    },
-    "categories": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "noLoad": true
     }
   },
   "links": {
@@ -87,12 +81,6 @@
       "type": "hasMany",
       "foreign": "catalog",
       "entity": "Product"
-    },
-    "categories": {
-      "type": "hasMany",
-      "relationName": "catalogCategory",
-      "foreign": "catalogs",
-      "entity": "Category"
     }
   },
   "collection": {

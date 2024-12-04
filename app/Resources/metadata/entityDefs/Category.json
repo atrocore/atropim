@@ -139,13 +139,6 @@
       "importDisabled": true,
       "exportDisabled": true
     },
-    "catalogs": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "importDisabled": true,
-      "noLoad": true
-    },
     "products": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -216,12 +209,6 @@
         "parentId",
         "entityId"
       ]
-    },
-    "catalogs": {
-      "type": "hasMany",
-      "relationName": "catalogCategory",
-      "foreign": "categories",
-      "entity": "Catalog"
     },
     "products": {
       "type": "hasMany",

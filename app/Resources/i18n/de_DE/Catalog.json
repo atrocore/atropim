@@ -2,14 +2,12 @@
   "fields": {
     "isActive": "Aktiv",
     "products": "Produkte",
-    "categories": "Kategorien",
     "code": "Code",
     "productsCount": "Anzahl Produkte"
   },
   "links": {
     "channels": "Kanäle",
-    "products": "Produkte",
-    "categories": "Kategorien"
+    "products": "Produkte"
   },
   "labels": {
     "Create Catalog": "Katalog erstellen"
