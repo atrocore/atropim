@@ -92,7 +92,8 @@
     "virtualProductField": "Values for this attribute will be added as a virtual field via product list layout.",
     "sortOrderInProduct": "Sort order for attribute values for a product.",
     "defaultChannel": "Apply on newly added attribute values only",
-    "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)"
+    "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
+    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",

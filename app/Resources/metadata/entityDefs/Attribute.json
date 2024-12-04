@@ -256,7 +256,8 @@
       "virtualField": true,
       "filterDisabled": true,
       "default": false,
-      "emHidden": true
+      "emHidden": true,
+      "tooltip": true
     },
     "notNull": {
       "type": "bool",
