@@ -10,11 +10,9 @@
       ],
       [
         {
-          "name": "behaviorOnCatalogChange"
-        },
-        {
           "name": "behaviorOnCategoryDelete"
-        }
+        },
+        false
       ],
       [
         {

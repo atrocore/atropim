@@ -234,48 +234,6 @@ class Product extends Hierarchy
         }
     }
 
-    public function onCatalogCascadeChange(Entity $product, ?Entity $catalog): void
-    {
-        $categories = $product->get('categories');
-        if (count($categories) == 0) {
-            return;
-        }
-
-        foreach ($categories as $category) {
-            $rootCatalogsIds = $category->getRoot()->getLinkMultipleIdList('catalogs');
-            if (empty($catalog)) {
-                if (!empty($rootCatalogsIds)) {
-                    $this->unrelate($product, 'categories', $category);
-                }
-            } else {
-                if (!in_array($catalog->get('id'), $rootCatalogsIds)) {
-                    $this->unrelate($product, 'categories', $category);
-                }
-            }
-        }
-    }
-
-    public function onCatalogRestrictChange(Entity $product, ?Entity $catalog): void
-    {
-        $categories = $product->get('categories');
-        if (count($categories) == 0) {
-            return;
-        }
-
-        foreach ($categories as $category) {
-            $rootCatalogsIds = $category->getRoot()->getLinkMultipleIdList('catalogs');
-            if (empty($catalog)) {
-                if (!empty($rootCatalogsIds)) {
-                    throw new BadRequest($this->translate("productCatalogChangeException", 'exceptions', 'Product'));
-                }
-            } else {
-                if (!in_array($catalog->get('id'), $rootCatalogsIds)) {
-                    throw new BadRequest($this->translate("productCatalogChangeException", 'exceptions', 'Product'));
-                }
-            }
-        }
-    }
-
     /**
      * @param string $categoryId
      * @param array  $ids
@@ -313,11 +271,6 @@ class Product extends Hierarchy
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('catalogId')) {
-            $mode = ucfirst($this->getConfig()->get('behaviorOnCatalogChange', 'cascade'));
-            $this->{"onCatalog{$mode}Change"}($entity, $entity->get('catalog'));
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
             throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
         }
