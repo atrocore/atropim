@@ -87,7 +87,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "emHidden": true
     },
     "_target": {
       "type": "varchar",
@@ -99,7 +100,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "emHidden": true
     },
     "childrenCount": {
       "type": "int",
