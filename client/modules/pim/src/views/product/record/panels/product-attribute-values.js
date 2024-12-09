@@ -504,6 +504,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                 });
             });
         },
+
         checkAclAction(action) {
             if (this.defs.tabId) {
                 return this.getAcl().check('AttributeTab', 'edit') && this.getAcl().check('Attribute', action);
