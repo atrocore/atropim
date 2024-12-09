@@ -10,11 +10,6 @@
     "width": "55"
   },
   {
-    "name": "icons",
-    "notSortable": true,
-    "width": "5"
-  },
-  {
     "name": "channel",
     "notSortable": true,
     "width": "10"
