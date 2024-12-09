@@ -45,5 +45,11 @@
     "associatedMainProducts",
     "filterCreateImportJob",
     "filterUpdateImportJob"
+  ],
+  "duplicatableRelations": [
+    "productAttributeValues",
+    "files",
+    "categories",
+    "teams"
   ]
 }
