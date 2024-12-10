@@ -19,7 +19,6 @@
     "virtualProductField": "Виртуальное поле продукта",
     "defaultChannel": "Канал",
     "isRequired": "Обязательно",
-    "sortOrder": "Порядок сортировки в продукте",
     "tooltip": "Текст подсказки",
     "maxLength": "Максимальная длина"
   },

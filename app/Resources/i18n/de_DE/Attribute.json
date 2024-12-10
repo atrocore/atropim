@@ -23,7 +23,6 @@
     "virtualProductField": "Virtuelles Produktfeld",
     "defaultChannel": "Standardkanal",
     "isRequired": "erforderlich",
-    "sortOrder": "Sortierreihenfolge für Produkt",
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",

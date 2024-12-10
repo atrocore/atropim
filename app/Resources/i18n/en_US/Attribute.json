@@ -22,7 +22,6 @@
     "virtualProductField": "Virtual product field",
     "defaultChannel": "Default channel",
     "isRequired": "Required",
-    "sortOrder": "Sort Order for Product",
     "tooltip": "Tooltip",
     "maxLength": "Max Length",
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",

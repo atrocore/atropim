@@ -22,7 +22,6 @@
     "virtualProductField": "Champ de produits virtuels",
     "defaultChannel": "Canal par défaut",
     "isRequired": "Exigée",
-    "sortOrder": "Ordre de tri des produits",
     "tooltip": "Bulle d'aide",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",

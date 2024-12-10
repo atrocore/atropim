@@ -22,7 +22,6 @@
     "virtualProductField": "Віртуальне поле продукту",
     "defaultChannel": "Канал за замовчуванням",
     "isRequired": "Обов'язково",
-    "sortOrder": "Порядок сортування в продукті",
     "tooltip": "Текст підказки",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",

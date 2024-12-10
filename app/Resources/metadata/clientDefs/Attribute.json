@@ -38,22 +38,6 @@
     ]
   },
   "relationshipPanels": {
-    "parents": {
-      "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "notChildren"
-      ]
-    },
-    "children": {
-      "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "notParents"
-      ],
-      "dragDrop": {
-        "isActive": true,
-        "sortField": "sortOrder"
-      }
-    },
     "productAttributeValues": {
       "create": false,
       "select": false,
@@ -183,16 +167,6 @@
                 "rangeFloat",
                 "varchar"
               ]
-            }
-          ]
-        }
-      },
-      "sortOrder": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isRoot"
             }
           ]
         }
