@@ -45,9 +45,13 @@ class Catalog extends Base
                     'catalogId' => $entity->get('id')
                 ];
 
-                $this
-                    ->getInjection('queueManager')
-                    ->push($name, 'QueueManagerDuplicateProduct', $data);
+                $jobEntity = $this->getEntityManager()->getEntity('Job');
+                $jobEntity->set([
+                    'name'        => $name,
+                    'type'        => 'DuplicateProduct',
+                    'payload'     => $data
+                ]);
+                $this->getEntityManager()->saveEntity($jobEntity);
             }
         }
     }
@@ -56,7 +60,6 @@ class Catalog extends Base
     {
         parent::init();
 
-        $this->addDependency('queueManager');
         $this->addDependency('language');
     }
 }

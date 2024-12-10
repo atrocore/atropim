@@ -11,26 +11,23 @@
 
 declare(strict_types=1);
 
-namespace Pim\Services;
+namespace Pim\Jobs;
 
-use Espo\Services\QueueManagerBase;
+use Atro\Entities\Job;
+use Atro\Jobs\AbstractJob;
+use Atro\Jobs\JobInterface;
 
-/**
- * Class QueueManagerDuplicateProduct
- */
-class QueueManagerDuplicateProduct extends QueueManagerBase
+class DuplicateProduct extends AbstractJob implements JobInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function run(array $data = []): bool
+    public function run(Job $job): void
     {
+        $data = $job->getPayload();
         if (empty($data['productId']) || empty($data['catalogId'])) {
-            return false;
+            return;
         }
 
         // get service
-        $service = $this->getContainer()->get('serviceFactory')->create('Product');
+        $service = $this->getServiceFactory()->create('Product');
 
         // prepare product data
         $productData = $service->getDuplicateAttributes($data['productId']);
@@ -38,7 +35,5 @@ class QueueManagerDuplicateProduct extends QueueManagerBase
 
         // create entity
         $service->createEntity($productData);
-
-        return true;
     }
 }
