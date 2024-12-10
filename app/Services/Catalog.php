@@ -39,17 +39,14 @@ class Catalog extends Base
                     $entity->get('name')
                 );
 
-                // prepare data
-                $data = [
-                    'productId' => $product->get('id'),
-                    'catalogId' => $entity->get('id')
-                ];
-
                 $jobEntity = $this->getEntityManager()->getEntity('Job');
                 $jobEntity->set([
                     'name'        => $name,
                     'type'        => 'DuplicateProduct',
-                    'payload'     => $data
+                    'payload'     => [
+                        'productId' => $product->get('id'),
+                        'catalogId' => $entity->get('id')
+                    ]
                 ]);
                 $this->getEntityManager()->saveEntity($jobEntity);
             }
