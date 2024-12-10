@@ -91,8 +91,7 @@
       "create": false,
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
-        "notEntity",
-        "onlyCategoryCatalogsProducts"
+        "notEntity"
       ],
       "dragDrop": {
         "isActive": true,

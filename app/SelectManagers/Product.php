@@ -234,21 +234,6 @@ class Product extends AbstractSelectManager
         }
     }
 
-    protected function boolFilterOnlyCategoryCatalogsProducts(array &$result): void
-    {
-        $categoryId = $this->getSelectCondition('onlyCategoryCatalogsProducts');
-        if (empty($categoryId) || empty($category = $this->getEntityManager()->getEntity('Category', $categoryId))) {
-            throw new BadRequest('No such category');
-        }
-
-        $catalogs = $category->getRoot()->get('catalogs');
-        if (count($catalogs) > 0) {
-            $result['whereClause'][] = ['catalogId' => array_column($catalogs->toArray(), 'id')];
-        } else {
-            $result['whereClause'][] = ['catalogId' => null];
-        }
-    }
-
     /**
      * Get assiciated products
      *
