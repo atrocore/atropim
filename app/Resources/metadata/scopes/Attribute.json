@@ -7,7 +7,7 @@
   "importable": true,
   "notifications": true,
   "disabled": false,
-  "type": "Hierarchy",
+  "type": "Base",
   "multiParents": true,
   "dragAndDrop": true,
   "module": "Pim",

@@ -22,7 +22,7 @@
     "virtualProductField": "Champ de produits virtuels",
     "defaultChannel": "Canal par défaut",
     "isRequired": "Exigée",
-    "sortOrderInProduct": "Ordre de tri des produits",
+    "sortOrder": "Ordre de tri des produits",
     "tooltip": "Bulle d'aide",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
@@ -90,7 +90,7 @@
     "isRequired": "Il s'agit d'une valeur par défaut, qui sera appliquée lors de l'ajout de cet attribut à un produit ou à une classification.",
     "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
     "virtualProductField": "Les valeurs de cet attribut seront ajoutées en tant que champ virtuel dans la présentation de la liste des produits.",
-    "sortOrderInProduct": "Ordre de tri des valeurs des attributs d'un produit.",
+    "sortOrder": "Ordre de tri des valeurs des attributs d'un produit.",
     "defaultChannel": "Appliquer uniquement aux valeurs d'attributs nouvellement ajoutées",
     "defaultDate": "Modificateur de la valeur de l'attribut (par exemple +5 jours, -3 mois)"
   },

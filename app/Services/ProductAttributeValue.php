@@ -235,7 +235,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             if (!empty($attribute->get('attributeGroupId'))) {
                 $row['sortOrder'] = empty($attribute->get('sortOrderInAttributeGroup')) ? 0 : (int)$attribute->get('sortOrderInAttributeGroup');
             } else {
-                $row['sortOrder'] = empty($attribute->get('sortOrderInProduct')) ? 0 : (int)$attribute->get('sortOrderInProduct');
+                $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
             }
 
             $pavs[$k] = $row;
@@ -739,7 +739,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if (!empty($attribute->get('attributeGroupId'))) {
             $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
         } else {
-            $entity->set('sortOrder', $attribute->get('sortOrderInProduct'));
+            $entity->set('sortOrder', $attribute->get('sortOrder'));
         }
 
         $entity->set('channelCode', null);

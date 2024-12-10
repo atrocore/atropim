@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Templates\Repositories\Base;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
-class Attribute extends Hierarchy
+class Attribute extends Base
 {
     protected function init()
     {
@@ -76,8 +76,8 @@ class Attribute extends Hierarchy
             $entity->set('isMultilang', false);
         }
 
-        if ($entity->get('sortOrderInProduct') === null) {
-            $entity->set('sortOrderInProduct', time());
+        if ($entity->get('sortOrder') === null) {
+            $entity->set('sortOrder', time());
         }
 
         if ($entity->get('sortOrderInAttributeGroup') === null) {

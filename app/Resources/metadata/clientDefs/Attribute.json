@@ -20,10 +20,6 @@
   "additionalLayouts": {
     "listAttributesInAttrGroup": "listSmall"
   },
-  "views": {
-    "list": "views/list-tree",
-    "detail": "views/detail-tree"
-  },
   "recordViews": {
     "detail": "pim:views/attribute/record/detail",
     "editSmall": "pim:views/attribute/record/edit-small",

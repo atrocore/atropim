@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/attribute/record/detail', 'views/record/detail-tree',
+Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
         sideView: "pim:views/attribute/record/detail-side",

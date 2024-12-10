@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Atro\Core\Templates\Entities\Hierarchy;
+use Atro\Core\Templates\Entities\Base;
 
-class Attribute extends Hierarchy
+class Attribute extends Base
 {
     protected $entityType = "Attribute";
 
