@@ -73,17 +73,17 @@ class ProductAttributeValue extends AbstractProductAttributeService
         foreach ($data as $record) {
             if (!empty($record['attribute_data']['attribute_group_id'])) {
                 $groups[] = [
-                    'id' => $record['attribute_data']['attribute_group_id'],
-                    'key' => $record['attribute_data']['attribute_group_id'],
-                    'label' => $record['attribute_data']['attribute_group_name'],
+                    'id'        => $record['attribute_data']['attribute_group_id'],
+                    'key'       => $record['attribute_data']['attribute_group_id'],
+                    'label'     => $record['attribute_data']['attribute_group_name'],
                     'sortOrder' => $record['attribute_data']['attribute_group_sort_order']
                 ];
             }
         }
         $groups['no_group'] = [
-            'id' => null,
-            'key' => 'no_group',
-            'label' => (new Language($this->getInjection('container'), $language))->translate('noGroup', 'labels', 'Product'),
+            'id'        => null,
+            'key'       => 'no_group',
+            'label'     => (new Language($this->getInjection('container'), $language))->translate('noGroup', 'labels', 'Product'),
             'sortOrder' => PHP_INT_MAX
         ];
         usort($groups, function ($a, $b) {
@@ -112,10 +112,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
             }
 
             $row = [
-                'id' => $record['id'],
+                'id'          => $record['id'],
                 'channelName' => empty($record['channel_id']) ? '-9999' : $record['channel_name'],
-                'language' => $record['language'] === 'main' ? null : $record['language'],
-                'tooltip' => $tooltip
+                'language'    => $record['language'] === 'main' ? null : $record['language'],
+                'tooltip'     => $tooltip
             ];
 
             if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
@@ -146,9 +146,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $pavsRes = $this->findEntities([
                 'where' => [
                     [
-                        'type' => 'in',
+                        'type'      => 'in',
                         'attribute' => 'id',
-                        'value' => array_column($pavs, 'id')
+                        'value'     => array_column($pavs, 'id')
                     ]
                 ]
             ]);
@@ -197,7 +197,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     }
 
                     $result[$key]['collection'][] = array_merge($pavEntity->toArray(), [
-                        'aclEdit' => $this->getAclManager()->checkEntity($this->getUser(), $pavEntity, 'edit'),
+                        'aclEdit'   => $this->getAclManager()->checkEntity($this->getUser(), $pavEntity, 'edit'),
                         'aclDelete' => $this->getAclManager()->checkEntity($this->getUser(), $pavEntity, 'delete'),
                     ]);
                 }
@@ -225,9 +225,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $pavs = [];
         foreach ($collection as $k => $entity) {
             $row = [
-                'entity' => $entity,
+                'entity'      => $entity,
                 'channelName' => empty($entity->get('channelId')) ? '-9999' : $entity->get('channelName'),
-                'language' => $entity->get('language') === 'main' ? null : $entity->get('language')
+                'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
             ];
 
             $attribute = $this->getRepository()->getPavAttribute($entity);
@@ -540,9 +540,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
         }
 
         $params['attributeWhere'][] = [
-            'type' => 'in',
+            'type'      => 'in',
             'attribute' => 'attributeGroupId',
-            'value' => $ids
+            'value'     => $ids
         ];
 
         return $this->linkAttribute(['where' => $params['attributeWhere']], $productId);
@@ -563,7 +563,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ->join('attribute')
             ->where([
                 'attribute.attributeGroupId' => $attributeGroupId,
-                'productId' => $productId
+                'productId'                  => $productId
             ])
             ->find()
             ->toArray();
@@ -608,7 +608,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             ->getRepository('ProductAttributeValue')
             ->where(
                 [
-                    'productId' => $productId,
+                    'productId'   => $productId,
                     'attributeId' => array_column($attributes->toArray(), 'id')
                 ]
             )
@@ -705,28 +705,21 @@ class ProductAttributeValue extends AbstractProductAttributeService
             throw new NotFound();
         }
 
-        if (!empty($userLanguage = $this->getInjection('preferences')->get('language')) && !$attribute->get('isMultilang')) {
+        if (!empty($userLanguage = $this->getInjection('preferences')->get('language'))) {
             $nameField = Util::toCamelCase('name_' . strtolower($userLanguage));
             if ($attribute->has($nameField) && !empty($attribute->get($nameField))) {
                 $entity->set('attributeName', $attribute->get($nameField));
             }
-        }
-
-        if ($entity->get('language') !== 'main') {
-            $nameField = Util::toCamelCase('name_' . strtolower($entity->get('language')));
-
-            if ($attribute->has($nameField) && !empty($attribute->get($nameField)) && $attribute->get($nameField) !== $attribute->get('name')) {
-                $entity->set('attributeName', $attribute->get($nameField));
-            } else {
-                $attributeName = !empty($attribute->get('name')) ? $attribute->get('name') : $attribute->get('id');
-                $languageName = $this->getConfig()->get("referenceData.Language.{$entity->get('language')}.name") ?? $entity->get('language');
-                $entity->set('attributeName', $attributeName . ' / ' . $languageName);
+            $tooltipFieldName = Util::toCamelCase('tooltip_' . strtolower($userLanguage));
+            if ($attribute->has($tooltipFieldName) && !empty($attribute->get($tooltipFieldName))) {
+                $tooltip = $attribute->get($tooltipFieldName);
             }
         }
 
-        $locale = $entity->get('language');
-        $tooltipFieldName = $locale == 'main' ? 'tooltip' : Util::toCamelCase('tooltip_' . strtolower($locale));
-        $entity->set('attributeTooltip', $attribute->get($tooltipFieldName));
+        if (empty($tooltip)) {
+            $tooltip = $attribute->get('tooltip');
+        }
+        $entity->set('attributeTooltip', $tooltip);
         $entity->set('attributeEntityType', $attribute->get('entityType'));
         $entity->set('attributeEntityField', $attribute->get('entityField'));
         $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
@@ -775,7 +768,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('attributeMeasureId', $attribute->get('measureId'));
             $this->prepareUnitFieldValue($entity, 'value', [
                 'measureId' => $attribute->get('measureId'),
-                'type' => $attribute->get('type'),
+                'type'      => $attribute->get('type'),
                 'mainField' => 'value'
             ]);
         }

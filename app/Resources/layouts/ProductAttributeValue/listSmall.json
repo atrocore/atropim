@@ -5,9 +5,14 @@
     "width": "30"
   },
   {
+    "name": "language",
+    "notSortable": true,
+    "width": "10"
+  },
+  {
     "name": "value",
     "notSortable": true,
-    "width": "55"
+    "width": "45"
   },
   {
     "name": "channel",

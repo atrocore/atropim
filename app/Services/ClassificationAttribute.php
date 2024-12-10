@@ -63,6 +63,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
             $entity->set('attributeEntityField', $attribute->get('entityField'));
             $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
             $entity->set('attributeNotNull', $attribute->get('notNull'));
+            $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));
             if (!empty($this->getConfig()->get('isMultilangActive'))) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {

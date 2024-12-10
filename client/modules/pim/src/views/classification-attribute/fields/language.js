@@ -19,23 +19,39 @@ Espo.define('pim:views/classification-attribute/fields/language', 'views/fields/
             });
         },
 
-        setupOptions(){
-            this.params.options = ['main']
-            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
+        setupOptions() {
+            this.params.options = []
+            this.translatedOptions = {}
 
-            if (this.getConfig().get('isMultilangActive')) {
-                (this.getConfig().get('inputLanguageList') || []).forEach(language => {
-                    this.params.options.push(language);
-                    this.translatedOptions[language] = language;
-                });
-            }
+            const languages = Object.values(this.getConfig().get('referenceData').Language)
+            languages.forEach(language => {
+                if (language.role === 'main') {
+                    this.params.options.unshift('main')
+                    this.translatedOptions['main'] = language.name;
+                } else if (language.role === 'additional') {
+                    this.params.options.push(language.code)
+                    this.translatedOptions[language.code] = language.name;
+                }
+            })
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            if(this.mode === 'list'){
+                if (!this.model.get('attributeIsMultilang')) {
+                    this.$el.addClass('invisible')
+                }
+            }
+
             if (this.mode === 'edit' || this.mode === 'detail') {
                 this.hide();
+                if (!this.model.isNew() && this.model.has('attributeIsMultilang')) {
+                    if (this.model.get('attributeIsMultilang')) {
+                        this.show()
+                    }
+                    return
+                }
                 if ((!this.model.isNew() || this.model.urlRoot === 'ProductAttributeValue') && this.model.get('attributeId')) {
                     this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                         if (attr.isMultilang) {

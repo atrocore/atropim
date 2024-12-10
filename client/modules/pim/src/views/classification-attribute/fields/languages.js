@@ -19,16 +19,20 @@ Espo.define('pim:views/classification-attribute/fields/languages', 'views/fields
             });
         },
 
-        setupOptions(){
-            this.params.options = ['main']
-            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
-
-            if (this.getConfig().get('isMultilangActive')) {
-                (this.getConfig().get('inputLanguageList') || []).forEach(language => {
-                    this.params.options.push(language);
-                    this.translatedOptions[language] = language;
-                });
-            }
+        setupOptions() {
+            this.params.options = []
+            this.translatedOptions = {}
+            
+            const languages = Object.values(this.getConfig().get('referenceData').Language)
+            languages.forEach(language => {
+                if (language.role === 'main') {
+                    this.params.options.unshift('main')
+                    this.translatedOptions['main'] = language.name;
+                } else if (language.role === 'additional') {
+                    this.params.options.push(language.code)
+                    this.translatedOptions[language.code] = language.name;
+                }
+            })
         },
 
         afterRender() {
