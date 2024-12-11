@@ -15,7 +15,6 @@
     "assignedToMe",
     "notEntity",
     "notAssociatedProducts",
-    "onlyCategoryCatalogsProducts",
     "notLinkedWithBrand",
     "withoutProductAttributes",
     "withoutMainImage",
@@ -29,7 +28,6 @@
   "hiddenBoolFilterList": [
     "notEntity",
     "notAssociatedProducts",
-    "onlyCategoryCatalogsProducts",
     "notLinkedWithBrand",
     "notLinkedWithProductSerie",
     "onlyCatalogProducts",

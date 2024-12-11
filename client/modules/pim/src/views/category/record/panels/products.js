@@ -14,9 +14,6 @@ Espo.define('pim:views/category/record/panels/products', 'views/record/panels/re
         boolFilterData: {
             notEntity() {
                 return this.collection.map(model => model.id);
-            },
-            onlyCategoryCatalogsProducts() {
-                return this.model.get('id');
             }
         },
 
