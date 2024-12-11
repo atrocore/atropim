@@ -207,22 +207,35 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
         },
 
         relateAttributes(selectObj) {
-            this.ajaxPostRequest('ClassificationAttribute', {
-                classificationId: this.model.get('id'),
-                attributesIds: selectObj.map(item => item.id),
-                assignedUserId: this.getUser().id,
-                assignedUserName: this.getUser().get('name')
-            }).then(res => {
-                this.notify('Linked', 'success');
-                this.actionRefresh();
-            });
+            new Promise((resolve) => {
+                if (Array.isArray(selectObj)) {
+                    resolve(selectObj.map(item => item.id))
+                } else {
+                    this.getFullEntityList('Attribute', {
+                        select: 'id',
+                        where: selectObj.where
+                    }, list => {
+                        resolve(list.map(item => item.id))
+                    })
+                }
+            }).then(attributeIds => {
+                this.ajaxPostRequest('ClassificationAttribute', {
+                    classificationId: this.model.get('id'),
+                    attributesIds: attributeIds,
+                    assignedUserId: this.getUser().id,
+                    assignedUserName: this.getUser().get('name')
+                }).then(res => {
+                    this.notify('Linked', 'success');
+                    this.actionRefresh();
+                });
+            })
         },
 
         actionUnlinkRelatedAttribute(data, message = null) {
             var id = data.id;
 
             this.confirm({
-                message: typeof(message) === 'string' ? message : this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
+                message: typeof (message) === 'string' ? message : this.translate('unlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 let model = this.collection.get(id);
@@ -250,7 +263,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
         actionCascadeUnlinkRelatedAttribute(data, message = null) {
             var id = data.id;
             this.confirm({
-                message: typeof(message) === 'string' ? message : this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
+                message: typeof (message) === 'string' ? message : this.translate('cascadeUnlinkRelatedAttribute', 'messages', 'ClassificationAttribute'),
                 confirmText: this.translate('Remove')
             }, function () {
                 let model = this.collection.get(id);
