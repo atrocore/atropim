@@ -20,10 +20,6 @@
   "additionalLayouts": {
     "listAttributesInAttrGroup": "listSmall"
   },
-  "views": {
-    "list": "views/list-tree",
-    "detail": "views/detail-tree"
-  },
   "recordViews": {
     "detail": "pim:views/attribute/record/detail",
     "editSmall": "pim:views/attribute/record/edit-small",
@@ -42,22 +38,6 @@
     ]
   },
   "relationshipPanels": {
-    "parents": {
-      "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "notChildren"
-      ]
-    },
-    "children": {
-      "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "notParents"
-      ],
-      "dragDrop": {
-        "isActive": true,
-        "sortField": "sortOrder"
-      }
-    },
     "productAttributeValues": {
       "create": false,
       "select": false,
@@ -187,16 +167,6 @@
                 "rangeFloat",
                 "varchar"
               ]
-            }
-          ]
-        }
-      },
-      "sortOrder": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isRoot"
             }
           ]
         }

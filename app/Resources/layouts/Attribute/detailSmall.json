@@ -81,7 +81,7 @@
       ],
       [
         {
-          "name": "sortOrderInProduct"
+          "name": "sortOrder"
         },
         false
       ],

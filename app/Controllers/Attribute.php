@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Atro\Core\Templates\Controllers\Hierarchy;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Controllers\Base;
 
-class Attribute extends Hierarchy
+class Attribute extends Base
 {
 
     public function actionDefaultValue($params, $data, $request)

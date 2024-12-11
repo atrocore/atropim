@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Services\Hierarchy;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-class Attribute extends Hierarchy
+class Attribute extends Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
 
@@ -103,41 +103,6 @@ class Attribute extends Hierarchy
         }
 
         return parent::updateEntity($id, $data);
-    }
-
-    public function getChildren(string $parentId, array $params): array
-    {
-        $result = [];
-        $selectParams = $this->getSelectParams($params);
-        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
-        if (empty($records)) {
-            return $result;
-        }
-
-        $offset = $params['offset'];
-        $total = $this->getRepository()->getChildrenCount($parentId, $selectParams);
-        $ids = [];
-        foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
-            if ($this->getAcl()->check($entity, 'read')) {
-                $ids[] = $entity->get('id');
-            }
-        }
-
-        foreach ($records as $k => $record) {
-            $result[] = [
-                'id'             => $record['id'],
-                'name'           =>  $record['name'],
-                'offset'         => $offset + $k,
-                'total'          => $total,
-                'disabled'       => !in_array($record['id'], $ids),
-                'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
-            ];
-        }
-
-        return [
-            'list'  => $result,
-            'total' => $total
-        ];
     }
 
     protected function duplicateProductAttributeValues(Entity $entity, Entity $duplicatingEntity)

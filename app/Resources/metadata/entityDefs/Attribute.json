@@ -196,16 +196,6 @@
       "tooltip": true,
       "view": "pim:views/attribute/fields/required"
     },
-    "children": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "noLoad": true
-    },
-    "parents": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "noLoad": true
-    },
     "sortOrderInAttributeGroup": {
       "type": "int",
       "default": null,
@@ -213,12 +203,6 @@
       "filterDisabled": true
     },
     "sortOrder": {
-      "type": "int",
-      "default": null,
-      "massUpdateDisabled": true,
-      "filterDisabled": true
-    },
-    "sortOrderInProduct": {
       "type": "int",
       "default": null,
       "massUpdateDisabled": true,
@@ -349,26 +333,6 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "Channel"
-    },
-    "children": {
-      "type": "hasMany",
-      "relationName": "AttributeHierarchy",
-      "foreign": "parents",
-      "entity": "Attribute",
-      "midKeys": [
-        "entityId",
-        "parentId"
-      ]
-    },
-    "parents": {
-      "type": "hasMany",
-      "relationName": "AttributeHierarchy",
-      "foreign": "children",
-      "entity": "Attribute",
-      "midKeys": [
-        "parentId",
-        "entityId"
-      ]
     }
   },
   "collection": {
