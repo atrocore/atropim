@@ -10,8 +10,8 @@
   "type": "Base",
   "module": "Pim",
   "object": true,
-  "hasOwner": true,
-  "hasAssignedUser": true,
-  "hasTeam": true,
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false,
   "hasActive": true
 }
