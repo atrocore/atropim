@@ -1,0 +1,6 @@
+{
+  "DuplicateProduct": {
+    "scheduledJob": false,
+    "handler": "\\Pim\\Jobs\\DuplicateProduct"
+  }
+}
