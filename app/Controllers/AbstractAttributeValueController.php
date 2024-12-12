@@ -38,6 +38,7 @@ class AbstractAttributeValueController extends Base
                     $createdEntity = $service->createEntity(clone $data);
                     $entity = $createdEntity;
                 } catch (\Throwable $e) {
+                    $GLOBALS['log']->error($e->getMessage());
                 }
             }
         } else {

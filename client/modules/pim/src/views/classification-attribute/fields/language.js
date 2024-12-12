@@ -35,14 +35,15 @@ Espo.define('pim:views/classification-attribute/fields/language', 'views/fields/
             })
         },
 
+        getValueForDisplay() {
+            if (this.mode === 'list' && !this.model.get('attributeIsMultilang')) {
+                return ''
+            }
+            return Dep.prototype.getValueForDisplay.call(this)
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
-
-            if(this.mode === 'list'){
-                if (!this.model.get('attributeIsMultilang')) {
-                    this.$el.addClass('invisible')
-                }
-            }
 
             if (this.mode === 'edit' || this.mode === 'detail') {
                 this.hide();
