@@ -73,7 +73,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                             otherGroupPavsPerModels.push(modelPavs[model.get('id')]);
                         }
                     });
-                    
+
                     currentGroupPavs.forEach((group) => {
                         tmp[group.key] = {
                             id: group.id,
@@ -130,7 +130,6 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         },
 
         data() {
-
             return {
                 scope: this.scope,
                 name: this.relationship.name,
@@ -253,7 +252,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                         let pavOthers = [];
                         this.getOthersList().forEach((i, key) => {
                             pavOthers.push(groupPav.othersRelationItemsPerModels[key].find(item =>
-                                item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
+                                    item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
                                 )
                                 ?? this.defaultPavModel.clone())
                         })
