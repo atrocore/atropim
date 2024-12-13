@@ -44,11 +44,6 @@ class Classification extends Hierarchy
         return [];
     }
 
-    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
-    {
-        return true;
-    }
-
     protected function init()
     {
         parent::init();
