@@ -8,8 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/classification/record/panels/classification-attributes', ['views/record/panels/relationship', 'views/record/panels/bottom', 'search-manager'],
-    (Dep, BottomPanel, SearchManager) => Dep.extend({
+Espo.define('pim:views/classification/record/panels/classification-attributes',
+    ['views/record/panels/relationship', 'views/record/panels/bottom', 'pim:views/record/panels/records-in-groups', 'search-manager'],
+    (Dep, BottomPanel, RecordInGroup, SearchManager) => Dep.extend({
 
         template: 'pim:classification/record/panels/classification-attributes',
 
@@ -363,8 +364,10 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-
             this.buildGroups();
+            this.listenTo(this, 'after-groupPanels-rendered', () => {
+                this.regulateTableSizes()
+            });
         },
 
         fetchCollectionGroups(callback) {
@@ -491,6 +494,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
         },
 
         buildGroups() {
+            let areRendered = [];
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
@@ -506,6 +510,12 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                             showMore: false
                         }, view => {
                             view.render();
+                            view.once('after:render', () => {
+                                areRendered.push(group.key);
+                                if(areRendered.length === this.groups.length) {
+                                    this.trigger('after-groupPanels-rendered');
+                                }
+                            });
                         });
                     });
                 });
@@ -648,6 +658,10 @@ Espo.define('pim:views/classification/record/panels/classification-attributes', 
                     }.bind(this),
                 });
             }, this);
+        },
+
+        regulateTableSizes() {
+            RecordInGroup.prototype.regulateTableSizes.call(this);
         }
     })
 );

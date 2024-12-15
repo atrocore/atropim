@@ -363,6 +363,36 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
         checkAclAction(action) {
             return this.getAcl().check(this.scope, action);
+        },
+
+
+        regulateTableSizes() {
+            let thAndMawWidths = [];
+            this.groups.forEach(group => {
+                let $baseSelector = `.group[data-name="${group.key}"] .list-container table:not(".hidden")`;
+                this.$el.find($baseSelector).find('th')
+                    .each(function () {
+                        let index = $(this).index();
+                        let width = $(this).width();
+
+                        if (!thAndMawWidths[index]) {
+                            thAndMawWidths[index] = {
+                                elements: [$(this)],
+                                maxWidth: width
+                            }
+                        } else {
+                            if (thAndMawWidths[index].maxWidth < width) {
+                                thAndMawWidths[index].maxWidth = width;
+                            }
+                            thAndMawWidths[index].elements.push($(this));
+                        }
+                    });
+            });
+            thAndMawWidths.forEach((el, key) => {
+                el.elements.forEach(th => {
+                    th.width(el.maxWidth)
+                });
+            });
         }
     })
 );
