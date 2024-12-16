@@ -33,7 +33,7 @@ class V1Dot13Dot62 extends Base
                 ->set('sort_order', 'sort_order_in_product')
                 ->where('id is not null')
                 ->executeStatement();
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
         }
 
         $this->exec("ALTER TABLE attribute DROP sort_order_in_product");
