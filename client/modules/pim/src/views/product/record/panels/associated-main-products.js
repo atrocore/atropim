@@ -8,8 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product/record/panels/associated-main-products', ['views/record/panels/relationship', 'views/record/panels/bottom'],
-    (Dep, BottomPanel) => Dep.extend({
+Espo.define('pim:views/product/record/panels/associated-main-products',
+    ['views/record/panels/relationship', 'views/record/panels/bottom', 'pim:views/record/panels/records-in-groups'],
+    (Dep, BottomPanel, RecordInGroup) => Dep.extend({
         groupScope: 'Association',
 
         disableSelect: true,
@@ -87,7 +88,14 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
             this.buildGroups();
+
+            this.listenTo(this, 'after-groupPanels-rendered', () => {
+                setTimeout(() => {
+                    this.regulateTableSizes()
+                },500)
+            });
         },
 
         actionRefresh() {
@@ -100,6 +108,8 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
             if (!this.groups || this.groups.length < 1) {
                 return;
             }
+
+            let areRendered = [];
 
             this.groups.forEach((group, key) => {
                 this.getHelper().layoutManager.get('Product', this.layoutName, layout => {
@@ -135,6 +145,18 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
 
                                 this.createView('associatedProduct' + group.key, viewName, options, view => {
                                     view.render();
+                                    if(view.isRendered()) {
+                                        areRendered.push(group.key);
+                                        if(areRendered.length === this.groups.length) {
+                                            this.trigger('after-groupPanels-rendered');
+                                        }
+                                    }
+                                    view.once('after:render', () => {
+                                        areRendered.push(group.key);
+                                        if(areRendered.length === this.groups.length) {
+                                            this.trigger('after-groupPanels-rendered');
+                                        }
+                                    })
                                 });
                             });
                         });
@@ -254,7 +276,10 @@ Espo.define('pim:views/product/record/panels/associated-main-products', ['views/
 
         checkAclAction(action) {
             return this.getAcl().check(this.scope, action);
-        }
+        },
 
+        regulateTableSizes() {
+            RecordInGroup.prototype.regulateTableSizes.call(this);
+        }
     })
 );
