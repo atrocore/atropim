@@ -104,50 +104,6 @@ class Category extends AbstractSelectManager
 
     /**
      * @param array $result
-     *
-     * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function boolFilterOnlyCatalogCategories(array &$result)
-    {
-        $catalogId = $this->getSelectCondition('onlyCatalogCategories');
-
-        if ($catalogId === false) {
-            return;
-        }
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        if (empty($catalogId)) {
-            $rows = $connection->createQueryBuilder()
-                ->select('category_id')
-                ->from('catalog_category')
-                ->where('deleted = :false')
-                ->setParameter('false', false, Mapper::getParameterType(false))
-                ->fetchAllAssociative();
-
-            $result['whereClause'][] = [
-                'id!=' => array_column($rows, 'category_id')
-            ];
-            return;
-        }
-
-        $rows = $connection->createQueryBuilder()
-            ->select('category_id')
-            ->from('catalog_category')
-            ->where('deleted = :false')
-            ->andWhere('catalog_id = :catalogId')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->setParameter('catalogId', $catalogId)
-            ->fetchAllAssociative();
-
-        $result['whereClause'][] = [
-            'id' => array_column($rows, 'category_id')
-        ];
-    }
-
-    /**
-     * @param array $result
      */
     protected function boolFilterOnlyLeafCategories(array &$result)
     {
