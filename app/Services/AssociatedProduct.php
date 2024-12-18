@@ -197,12 +197,10 @@ class AssociatedProduct extends Relation
 
     protected function getMainImage(\Pim\Entities\Product $product): ?File
     {
-        if ($product->hasRelation('productFiles')) {
-            foreach ($product->get('productFiles') as $productFile) {
-                if ($productFile->get('isMainImage')) {
-                    return $productFile->get('file');
-                }
-            }
+        $mainImage = $this->getEntityManager()->getRepository('ProductFile')->where(['productId' => $product->get('id'), 'isMainImage' => true])->findOne();
+
+        if (!empty($mainImage)) {
+            return $mainImage->get('file');
         }
 
         return null;
