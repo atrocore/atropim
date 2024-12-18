@@ -121,7 +121,8 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "duplicateIgnore": true
     },
     "productSerie": {
       "type": "link"
