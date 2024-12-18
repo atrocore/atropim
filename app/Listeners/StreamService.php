@@ -15,6 +15,8 @@ namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
+use Pim\Entities\Attribute;
 
 class StreamService extends AbstractEntityListener
 {
@@ -77,17 +79,39 @@ class StreamService extends AbstractEntityListener
             if (!empty($entity->get('data')->relatedProductId) && !empty($products[$entity->get('data')->relatedProductId])) {
                 $entity->get('data')->relatedProductName = $products[$entity->get('data')->relatedProductId]->get('name');
             }
+
+            if (in_array($entity->get('type'), ['DeletePav', 'CreatePav'])) {
+                $language = $this->getNoteLanguage($entity);
+                if (!empty($language)) {
+                    $entity->set('language', $language);
+                }
+            }
         }
     }
 
-    public function prepareNoteFieldDefs(Event $event): void
+    public function getNoteLanguage(IEntity $entity): ?string
     {
-        $entity = $event->getArgument('entity');
+        $languages = $this->getConfig()->get('referenceData.Language');
+        $attribute = $this->getAttribute($entity);
+        if (!empty($attribute) && !empty($attribute->get('isMultilang'))) {
+            $language = $entity->get('data')->locale ?? null;
+            if (empty($language) || $language == 'main') {
+                $language = $this->getConfig()->get('mainLanguage');
+            }
+            if (!empty($languages[$language])) {
+                $language = $languages[$language]['name'];
+            }
+            return $language;
+        }
+        return null;
+    }
 
-        $attributeId = $entity->get('data')->attributeId ?? null;
+    public function getAttribute(IEntity $note): ?Attribute
+    {
+        $attributeId = $note->get('data')->attributeId ?? ($note->get('data')->relatedId ?? null);
 
         if (empty($attributeId)) {
-            return;
+            return null;
         }
 
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
@@ -100,13 +124,29 @@ class StreamService extends AbstractEntityListener
             }
         }
 
+        return $attribute;
+    }
+
+    public function prepareNoteFieldDefs(Event $event): void
+    {
+        $entity = $event->getArgument('entity');
+
+        $attribute = $this->getAttribute($entity);
+
         if (empty($attribute)) {
             return;
         }
 
+        $language = $this->getNoteLanguage($entity);
+        $label = $attribute->get('name');
+
+        if (!empty($language)) {
+            $label = $label . ' / ' . $language;
+        }
+
         $fieldDefs = [
             'type'  => $attribute->get('type'),
-            'label' => $attribute->get('name'),
+            'label' => $label,
         ];
         if (!empty($attribute->get('extensibleEnumId'))) {
             $fieldDefs['extensibleEnumId'] = $attribute->get('extensibleEnumId');
