@@ -77,6 +77,12 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
                 this.collection = collection;
                 this.fetchCollectionGroups(() => this.wait(false));
             });
+
+            this.listenTo(this, 'after-groupPanels-rendered', () => {
+                setTimeout(() => {
+                    this.regulateTableSizes()
+                },500)
+            });
         },
 
         data() {
@@ -90,12 +96,6 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             Dep.prototype.afterRender.call(this);
 
             this.buildGroups();
-
-            this.listenTo(this, 'after-groupPanels-rendered', () => {
-                setTimeout(() => {
-                    this.regulateTableSizes()
-                },500)
-            });
         },
 
         actionRefresh() {

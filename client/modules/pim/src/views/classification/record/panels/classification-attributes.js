@@ -61,6 +61,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             let bottomPanel = new BottomPanel();
             bottomPanel.setup.call(this);
 
+
             this.link = this.link || this.defs.link || this.panelName;
 
             if (!this.scope && !(this.link in this.model.defs.links)) {
@@ -205,6 +206,10 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             }, this);
 
             this.setupFilterActions();
+
+            this.listenTo(this, 'after-groupPanels-rendered', () => {
+                setTimeout(() =>  this.regulateTableSizes(), 500)
+            });
         },
 
         relateAttributes(selectObj) {
@@ -365,9 +370,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
         afterRender() {
             Dep.prototype.afterRender.call(this);
             this.buildGroups();
-            this.listenTo(this, 'after-groupPanels-rendered', () => {
-                setTimeout(() =>  this.regulateTableSizes(), 300)
-            });
         },
 
         fetchCollectionGroups(callback) {
@@ -510,16 +512,10 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                             showMore: false
                         }, view => {
                             view.render();
-                            if(view.isRendered()) {
+                            this.listenTo(view, 'after:render', () => {
                                 areRendered.push(group.key);
                                 if(areRendered.length === this.groups.length) {
-                                    this.trigger('after-groupPanels-rendered');
-                                }
-                            }
-
-                            view.once('after:render', () => {
-                                areRendered.push(group.key);
-                                if(areRendered.length === this.groups.length) {
+                                    areRendered = []
                                     this.trigger('after-groupPanels-rendered');
                                 }
                             });
