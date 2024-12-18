@@ -79,9 +79,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             });
 
             this.listenTo(this, 'after-groupPanels-rendered', () => {
-                setTimeout(() => {
-                    this.regulateTableSizes()
-                },500)
+                setTimeout(() => this.regulateTableSizes(),500)
             });
         },
 

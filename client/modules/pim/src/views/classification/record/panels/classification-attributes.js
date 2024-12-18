@@ -61,7 +61,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             let bottomPanel = new BottomPanel();
             bottomPanel.setup.call(this);
 
-
             this.link = this.link || this.defs.link || this.panelName;
 
             if (!this.scope && !(this.link in this.model.defs.links)) {
