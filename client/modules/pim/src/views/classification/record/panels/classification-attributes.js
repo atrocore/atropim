@@ -366,7 +366,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             Dep.prototype.afterRender.call(this);
             this.buildGroups();
             this.listenTo(this, 'after-groupPanels-rendered', () => {
-                this.regulateTableSizes()
+                setTimeout(() =>  this.regulateTableSizes(), 300)
             });
         },
 
@@ -510,6 +510,13 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                             showMore: false
                         }, view => {
                             view.render();
+                            if(view.isRendered()) {
+                                areRendered.push(group.key);
+                                if(areRendered.length === this.groups.length) {
+                                    this.trigger('after-groupPanels-rendered');
+                                }
+                            }
+
                             view.once('after:render', () => {
                                 areRendered.push(group.key);
                                 if(areRendered.length === this.groups.length) {
