@@ -37,7 +37,8 @@
     "packedAmount": "Gepackte Menge",
     "contents": "Contents",
     "taskStatus": "Task status",
-    "files": "Dateien"
+    "files": "Dateien",
+    "components": "Produkt-Komponenten"
   },
   "links": {
     "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
@@ -122,5 +123,8 @@
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf.",
     "someProductsHaveMoreThanOneClassification": "Einige Produkte haben mehr als eine Klassifizierung."
+  },
+  "messages": {
+    "componentsNotInstalled": "Installieren Sie das Modul Product Components, um die Komponentenvorschau zu verwenden."
   }
 }

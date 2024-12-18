@@ -15,6 +15,7 @@ namespace Pim;
 
 use Espo\Core\Utils\Config;
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
+use Pim\Migrations\V1Dot13Dot66;
 
 /**
  * Class Event
@@ -63,6 +64,8 @@ class Event extends AfterInstallAfterDelete
 
         // add menu items
         $this->addMenuItems();
+
+        V1Dot13Dot66::createExamplePreviews($this->getContainer()->get('connection'));
     }
 
     /**

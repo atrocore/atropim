@@ -1,4 +1,6 @@
 {
   "getProductAttributeValue": "\\Pim\\TwigFunction\\GetProductAttributeValue",
-  "pav": "\\Pim\\TwigFunction\\GetProductAttributeValue"
+  "pav": "\\Pim\\TwigFunction\\GetProductAttributeValue",
+  "formatProductAttributeValue": "\\Pim\\TwigFunction\\FormatProductAttributeValue",
+  "formatPAV": "\\Pim\\TwigFunction\\FormatProductAttributeValue"
 }
