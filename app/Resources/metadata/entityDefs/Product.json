@@ -138,28 +138,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "productChannels": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
-    },
-    "productChannels_channel": {
-      "type": "linkMultiple",
-      "entity": "Channel",
-      "relationshipFilterField": "productChannels",
-      "relationshipFilterForeignField": "channel",
-      "notStorable": true,
-      "filterDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "modifiedAtExpanded": {
       "type": "datetime",
       "notStorable": true,
@@ -333,11 +311,6 @@
       "relationName": "productChannel",
       "foreign": "products",
       "entity": "Channel"
-    },
-    "productChannels": {
-      "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductChannel"
     },
     "ownerUser": {
       "type": "belongsTo",

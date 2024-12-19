@@ -20,7 +20,6 @@
   "links": {
     "product": {
       "type": "belongsTo",
-      "foreign": "productFiles",
       "entity": "Product"
     },
     "channel": {

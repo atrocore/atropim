@@ -4,7 +4,7 @@
     "mainImage": "Main Image",
     "files": "Files",
     "data": "Data",
-    "categories": "Product Categories",
+    "categories": "Categories",
     "product": "Main Product",
     "products": "Products",
     "productAttributeValues": "Attribute Values",
@@ -26,7 +26,6 @@
     "association": "Association",
     "catalog": "Catalog",
     "channels": "Channels",
-    "productChannels": "Product Channels",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
     "contents": "Contents",
@@ -49,7 +48,6 @@
     "tax": "Tax",
     "catalog": "Catalog",
     "channels": "Channels",
-    "productChannels": "Product Channels",
     "contents": "Contents"
   },
   "labels": {
