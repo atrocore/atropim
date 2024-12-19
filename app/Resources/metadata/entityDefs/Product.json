@@ -117,12 +117,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "productFiles": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
-    },
     "productSerie": {
       "type": "link"
     },
@@ -263,11 +257,6 @@
       "relationName": "productFile",
       "foreign": "products",
       "entity": "File"
-    },
-    "productFiles": {
-      "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductFile"
     },
     "classifications": {
       "type": "hasMany",

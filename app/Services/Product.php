@@ -452,6 +452,26 @@ class Product extends Hierarchy
         }
     }
 
+    protected function duplicateFiles(Entity $product, Entity $duplicatingProduct)
+    {
+        $productFiles = $this
+            ->getEntityManager()
+            ->getRepository('ProductFile')
+            ->where(['productId' => $duplicatingProduct->get('id')])
+            ->find();
+
+        foreach ($productFiles as $productFile) {
+            $item = $productFile->toArray();
+            $item['id'] = Util::generateId();
+            $item['productId'] = $product->get('id');
+
+            $entity = $this->getEntityManager()->getEntity('ProductFile');
+            $entity->set($item);
+
+            $this->getEntityManager()->saveEntity($entity);
+        }
+    }
+
     public function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
         if (!property_exists($data, 'productId')) {

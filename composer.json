@@ -8,7 +8,7 @@
   },
   "conflict": {
     "atrocore/product-variants": "*",
-    "atrocore/pdf-generator": "<1.4.44",
+    "atrocore/pdf-generator": "<1.7.22",
     "atrocore/etim-classification": "<1.0.6"
   },
   "autoload": {
