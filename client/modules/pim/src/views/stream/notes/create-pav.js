@@ -11,6 +11,13 @@
 Espo.define('pim:views/stream/notes/create-pav', 'views/stream/notes/relate', function (Dep) {
 
     return Dep.extend({
+        getEntityName() {
+            let name = Dep.prototype.getEntityName.call(this);
+            if (this.model.get('language')) {
+                name += ' / ' + this.model.get('language')
+            }
+            return name
+        },
     });
 });
 
