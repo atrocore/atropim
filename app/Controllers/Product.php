@@ -16,7 +16,7 @@ namespace Pim\Controllers;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
 
-class Product extends \Espo\Core\Templates\Controllers\Hierarchy
+class Product extends \Atro\Core\Templates\Controllers\Hierarchy
 {
     /**
      * Action add associated products

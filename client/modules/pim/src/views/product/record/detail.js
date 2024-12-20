@@ -42,11 +42,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
-                this.isCatalogTreePanel = this.isTreeAllowed();
-                this.setupCatalogTreePanel();
-            }
-
             this.listenTo(this.model, 'after:save', () => {
                 // refresh attributes panels after any saving
                 $(".panel-productAttributeValues button[data-action='refresh']").click();
@@ -105,74 +100,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return result;
         },
 
-        isTreeAllowed() {
-            let result = false;
-
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [this.scope];
-
-            treeScopes.forEach(scope => {
-                if (this.getAcl().check(scope, 'read')) {
-                    result = true;
-                    if (!this.getStorage().get('treeScope', this.scope)) {
-                        this.getStorage().set('treeScope', this.scope, scope);
-                    }
-                }
-            })
-
-            return result;
-        },
-
-        setupCatalogTreePanel() {
-            if (!this.isTreeAllowed()) {
-                return;
-            }
-
-            this.createView('catalogTreePanel', 'views/record/panels/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: this.scope,
-                model: this.model
-            }, view => {
-                this.listenTo(this.model, 'after:save', () => {
-                    view.rebuildTree();
-                });
-                view.listenTo(view, 'select-node', data => {
-                    this.selectNode(data);
-                });
-                view.listenTo(view, 'tree-load', treeData => {
-                    this.treeLoad(view, treeData);
-                });
-                view.listenTo(view, 'tree-refresh', () => {
-                    view.treeRefresh();
-                });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
-                this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
-                    if (['parents', 'children'].includes(link)) {
-                        view.rebuildTree();
-                    }
-                });
-                view.listenTo(view, 'tree-width-changed', width => {
-                    this.onTreeResize(width);
-                });
-                view.listenTo(view, 'tree-width-unset', function () {
-                    if ($('.catalog-tree-panel').length) {
-                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview-filters-container').css({'width': 'unset', 'marginLeft': 'unset'})
-                        $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
-                    }
-                })
-            });
-        },
-
         data() {
             let data = Dep.prototype.data.call(this);
             this.beforeSaveModel = this.model.getClonedAttributes();
 
-            return _.extend({
-                isCatalogTreePanel: this.isCatalogTreePanel
-            }, data)
+            return  data;
         },
 
         selectNode(data) {
