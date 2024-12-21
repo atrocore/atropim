@@ -29,7 +29,7 @@
         </tr>
         {{#each attributes }}
         <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{key}}">
-            <td class="cell"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{{label}}}</a></td>
+            <td class="cell" title="{{label}}"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{{label}}}</a></td>
             <td class="cell current text-center">
                 Loading...
             </td>
@@ -44,5 +44,4 @@
         {{/if}}
         </tbody>
     </table>
-    <div class="panel-scroll hidden" style="display: block;"><div></div></div>
 </div>

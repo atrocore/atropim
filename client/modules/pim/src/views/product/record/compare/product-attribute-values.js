@@ -221,12 +221,12 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
                     let label = pav.get('attributeName');
 
-                    if(pav.get('channelId')) {
-                        label += ' / '+ pav.get('channelName');
-                    }
-
                     if(pav.get('language') && pav.get('language') !== 'main') {
                         label += ' / '+ this.translate(pav.get('language'))
+                    }
+
+                    if(pav.get('channelId')) {
+                        label += ' / '+ pav.get('channelName');
                     }
 
                     result[attrKey] = {
@@ -267,12 +267,12 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
                         let label = pav.get('attributeName');
 
-                        if(pav.get('channelId')) {
-                            label += ' / '+ pav.get('channelName');
-                        }
-
                         if(pav.get('language') && pav.get('language') !== 'main') {
                             label += ' / '+ this.translate(pav.get('language'))
+                        }
+
+                        if(pav.get('channelId')) {
+                            label += ' / '+ pav.get('channelName');
                         }
 
                         result[attrKey] = {
