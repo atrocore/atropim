@@ -123,7 +123,6 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
                     this.defaultPavModel = pavModel;
                     this.setupRelationship(() => this.wait(false));
-
                 });
 
             }, this);
@@ -219,14 +218,23 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                             item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
                         ) ?? this.defaultPavModel.clone())
                     })
+
+                    let label = pav.get('attributeName');
+
+                    if(pav.get('channelId')) {
+                        label += ' / '+ pav.get('channelName');
+                    }
+
+                    if(pav.get('language') && pav.get('language') !== 'main') {
+                        label += ' / '+ this.translate(pav.get('language'))
+                    }
+
                     result[attrKey] = {
                         key: attrKey,
                         attributeGroupId: groupPav.id,
-                        attributeName: pav.get('attributeName'),
-                        attributeChannel: pav.get('channelName') ?? this.translate('Global'),
+                        label: label,
                         language: pav.get('language'),
                         attributeId: attributeId,
-                        channelId: pav.get('channelId'),
                         productAttributeId: pav.get('id'),
                         showQuickCompare: true,
                         current: attrKey + 'Current',
@@ -255,13 +263,22 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                                     item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
                                 )
                                 ?? this.defaultPavModel.clone())
-                        })
+                        });
+
+                        let label = pav.get('attributeName');
+
+                        if(pav.get('channelId')) {
+                            label += ' / '+ pav.get('channelName');
+                        }
+
+                        if(pav.get('language') && pav.get('language') !== 'main') {
+                            label += ' / '+ this.translate(pav.get('language'))
+                        }
+
                         result[attrKey] = {
                             key: attrKey,
+                            label:label,
                             attributeGroupId: groupPav.id,
-                            attributeName: pav.get('attributeName'),
-                            attributeChannel: pav.get('channelName') ?? this.translate('Global'),
-                            language: pav.get('language'),
                             attributeId: attributeId,
                             channelId: pav.get('channelId'),
                             productAttributeId: pav.get('id'),
