@@ -236,6 +236,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                         language: pav.get('language'),
                         attributeId: attributeId,
                         productAttributeId: pav.get('id'),
+                        isTextAttribute: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')),
                         showQuickCompare: true,
                         current: attrKey + 'Current',
                         others: pavOthers.map((model, index) => {
@@ -282,6 +283,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                             attributeId: attributeId,
                             channelId: pav.get('channelId'),
                             productAttributeId: pav.get('id'),
+                            isTextAttribute: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')),
                             showQuickCompare: true,
                             current: attrKey + 'Current',
                             others: pavOthers.map((model, index) => {
