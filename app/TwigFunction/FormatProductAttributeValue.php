@@ -84,7 +84,7 @@ class FormatProductAttributeValue extends AbstractTwigFunction
                 break;
             case 'file':
                 $valuePathData = $entity->get('valuePathsData');
-                $value = $valuePathData['thumbnails']['medium'] ?? $entity->get('valueName') ?? $entity->get('valueId');
+                $value = $valuePathData['thumbnails']['large'] ?? $entity->get('valueName') ?? $entity->get('valueId');
 
                 break;
             default:
@@ -95,12 +95,12 @@ class FormatProductAttributeValue extends AbstractTwigFunction
 
         if (in_array($entity->get('attributeType'), ['int', 'float', 'rangeInt', 'rangeFloat']) && $entity->get('referenceValue')) {
             if ($unit = $this->entityManager->getEntity('Unit', $entity->get('referenceValue'))) {
-                $value .= ' ' . $unit->get('symbol') ?? $unit->get('name');
+                $value .= ' ' . ($unit->get('symbol') ?: $unit->get('name'));
             }
         }
 
         if (is_array($value)) {
-            $value = implode(', ', $value);
+            $value = implode(', ', $value) ?: null;
         }
 
         return $value;
