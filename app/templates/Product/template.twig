@@ -279,7 +279,7 @@
 </head>
 <body>
 <header>
-    <h1 class="value-container" {{ editable(product, ['name', 'nameDeDe', 'nameFrFr']) }}>{{ product.name }}</h1>
+    <h1 class="value-container" {{ editable(product, ['name', 'nameDeDe', 'nameFrFr', 'nameUkUa']) }}>{{ product.name }}</h1>
     <div class="row status-info">
         <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translate(product.productStatus, language, scope: 'Product') }}</div>
         {% if product.tag is not empty %}
