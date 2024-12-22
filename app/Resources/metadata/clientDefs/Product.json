@@ -186,7 +186,8 @@
     "associatedMainProducts": {
       "layout": "listForAssociatedProductsInProduct",
       "label": "associatedProducts",
-      "view": "pim:views/product/record/panels/associated-main-products"
+      "view": "pim:views/product/record/panels/associated-main-products",
+      "compareRecordsView": "pim:views/product/record/compare/associated-main-product"
     },
     "classifications": {
       "selectAction": "selectRelatedEntity",

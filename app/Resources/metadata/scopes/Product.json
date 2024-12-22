@@ -42,7 +42,6 @@
   "isActiveUnavailable": true,
   "nonComparableFields": [
     "associatedRelatedProduct",
-    "associatedMainProducts",
     "filterCreateImportJob",
     "filterUpdateImportJob"
   ],
