@@ -1,8 +1,5 @@
-{# Language code of the whole preview template #}
-{% set langCode = 'en_US' %}
-
 {# List of fields to display on overview table after description #}
-{% set tableFields = ['id', 'sku', 'ean', 'mpn', 'price', 'rrp', 'quantity'] %}
+{% set tableFields = ['id', 'sku', 'ean', 'mpn', 'price', 'rrp', 'quantity', 'taskStatus'] %}
 
 {# List of fields to be displayed as badges after overview table #}
 {% set badgeFields = ['sku', 'brand', 'catalog', 'productSerie'] %}
@@ -13,19 +10,17 @@
 {# If set to false, badges with empty values will be skipped #}
 {% set displayEmptyBadgeFields = false %}
 
-{% set product = entities[0] %}
-{% set language = 'main' %}
+{% set product = entities[0]|prepareEntity %}
 
 {% set mainImage = null %}
+{% set mainImageWrapper = findRecord('ProductFile', { 'productId': product.id, 'isMainImage': true }) %}
+{% set files = product.files|filter(file => file.mimeType in ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] ) %}
 {% set images = [] %}
-{% for productFile in product.productFiles %}
-    {% set file = productFile.file %}
-    {% if file.mimeType in ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}
-        {% if productFile.isMainImage %}
-            {% set mainImage = file %}
-        {% else %}
-            {% set images = images|merge([file]) %}
-        {% endif %}
+{% for file in files %}
+    {% if file.id == mainImageWrapper.fileId %}
+        {% set mainImage = file|prepareEntity %}
+    {% else %}
+        {% set images = images|merge([file|prepareEntity]) %}
     {% endif %}
 {% endfor %}
 
@@ -248,10 +243,21 @@
             margin-top: 2em;
         }
 
-        section.attributes table td > span:empty:before {
+        section.attributes table td > *:empty {
+            display: inline;
+        }
+
+        section.attributes table td > *:empty:before,
+        section.overview table td > *:empty:before,
+        .value-container:empty:before {
             content: 'Null';
             font-style: italic;
             opacity: .5;
+        }
+
+        .value-container {
+            min-width: 1em;
+            display: inline-block;
         }
 
         @media screen and (max-width: 640px) {
@@ -273,11 +279,11 @@
 </head>
 <body>
 <header>
-    <h1 {{ product|editable }}>{{ product.name }}</h1>
+    <h1 class="value-container" {{ editable(product, ['name', 'nameDeDe', 'nameFrFr', 'nameUkUa']) }}>{{ product.name }}</h1>
     <div class="row status-info">
-        <div class="item product-status">{{ translate(product.productStatus, langCode, scope: 'Product') }}</div>
+        <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translate(product.productStatus, language, scope: 'Product') }}</div>
         {% if product.tag is not empty %}
-            <div class="row tags">
+            <div class="row tags" {{ editable(product, ['tag']) }}>
                 {% for tag in product.tag %}
                     <div class="item">{{ tag }}</div>
                 {% endfor %}
@@ -286,19 +292,20 @@
     </div>
     <div class="row">
         <div class="fields">
-            <section class="description">
-                {{ product.longDescription|raw }}
-            </section>
+            <section class="description value-container" {{ editable(product, ['longDescription']) }}>{{ product.longDescription|raw }}</section>
             <section class="overview">
                 {% if tableFields is not empty %}
                     <table>
                         <tbody>
                         {% for field in tableFields %}
-                            {% set value = get(product, field) %}
-                            {% set displayValue = value is iterable ? value.name ?? value.id ?? value|map(v => translateOption(v, langCode, field, 'Product'))|join(', ') : value %}
+                            {% set displayValue = formatField(product, field) %}
+                            {% set label = translate('unit' ~ field|capitalize, language, 'fields', 'Product') %}
+                            {% if label == 'unit' ~ field|capitalize %}
+                                {% set label = translate(field, language, 'fields', 'Product') %}
+                            {% endif %}
                             <tr>
-                                <td>{{ translate(field, langCode, 'fields', 'Product') }}</td>
-                                <td>{{ displayValue }}</td>
+                                <td>{{ label }}</td>
+                                <td><span class="value-container" {{ editable(product, [field]) }}>{% if displayValue is same as ('') %}&nbsp;{% else %}{{ displayValue }}{% endif %}</span></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -307,11 +314,15 @@
             </section>
             <section class="branding">
                 {% for field in badgeFields %}
-                    {% set value = get(product, field) %}
-                    {% if value is not empty or displayEmptyBadgeFields %}
-                        {% set displayValue = value is iterable ? value.name ?? value.id ?? value|map(v => translateOption(v, langCode, field, 'Product'))|join(', ') : value %}
-                        <div class="item" {{ value|editable }}>
-                            <span class="name">{{ translate(field, langCode, 'fields', 'Product') }}: </span>{{ displayValue ?? 'Null' }}
+                    {% set displayValue = formatField(product, field) %}
+                    {% set label = translate('unit' ~ field|capitalize, language, 'fields', 'Product') %}
+                    {% if label == 'unit' ~ field|capitalize %}
+                        {% set label = translate(field, language, 'fields', 'Product') %}
+                    {% endif %}
+                    {% if displayValue is not empty or displayEmptyBadgeFields %}
+                        {% set value = get(product, field) %}
+                        <div class="item" {{ editable(value) }}>
+                            <span class="name">{{ translate(field, language, 'fields', 'Product') }}: </span>{{ displayValue ?? 'Null' }}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -320,8 +331,7 @@
         <div class="main-image">
             {% if mainImage is not null %}
                 <picture>
-                    <img src="data:{{ mainImage.mimeType }};base64,{{ convertFileToBase64(mainImage) }}"
-                         alt="Main image">
+                    <img src="{{ mainImage.downloadUrl }}" alt="{{ mainImage.name }}">
                 </picture>
             {% endif %}
         </div>
@@ -330,13 +340,12 @@
 <main>
     {% if images is not empty %}
         <section class="gallery">
-            <h2>{{ translate('files', langCode, 'fields', 'Product') }}</h2>
+            <h2>{{ translate('files', language, 'fields', 'Product') }}</h2>
             <div class="row">
                 {% for image in images %}
                     <div class="item">
                         <picture>
-                            <img src="data:{{ image.mimeType }};base64,{{ convertFileToBase64(image) }}"
-                                 alt="Main image">
+                            <img src="{{ image.mediumThumbnailUrl }}" alt="{{ image.name }}">
                         </picture>
                     </div>
                 {% endfor %}
@@ -346,56 +355,57 @@
 
     <section class="attributes">
         {% set attributeGroups = {} %}
+        {% set pavLanguage = language == mainLanguage ? 'main' : language %}
 
-        {% if product.productAttributeValues %}
-            {% for pav in product.productAttributeValues %}
-                {% if pav.language == language %}
-                    {% set attribute = pav.attribute %}
+        {% for pav in product.productAttributeValues ?? [] %}
+            {% set attribute = pav.attribute %}
 
-                    {% set data = {
-                        'attribute': attribute,
-                        'pav': pav,
-                        'displayValue': formatPAV(pav)
-                    } %}
+            {% if not attribute.isMultilang or (attribute.isMultilang and pav.language == pavLanguage) %}
+                {% set data = {
+                    'attribute': attribute,
+                    'pav': pav,
+                    'displayValue': formatPAV(pav)
+                } %}
 
-                    {% if pav.attributeType == 'file' and pav.valuePathsData['thumbnails'] is not empty %}
-                        {% set data = data|merge({ 'media': true }) %}
-                    {% endif %}
-
-                    {% set tab = attributeGroups[attribute.attributeTabName] ?? {} %}
-                    {% if tab[attribute.attributeGroupName] %}
-                        {% set tmp = tab[attribute.attributeGroupName]|merge({(attribute.name): data}) %}
-                    {% else %}
-                        {% set tmp = {(attribute.name): data} %}
-                    {% endif %}
-
-                    {% set tab = tab|merge({(attribute.attributeGroupName): tmp}) %}
-                    {% set attributeGroups = attributeGroups|merge({(attribute.attributeTabName): tab}) %}
+                {% if pav.attributeType == 'file' and pav.valuePathsData['thumbnails'] is not empty %}
+                    {% set data = data|merge({ 'media': true }) %}
                 {% endif %}
-            {% endfor %}
-        {% endif %}
+
+                {% set tab = attributeGroups[attribute.attributeTabName] ?? {} %}
+                {% if tab[attribute.attributeGroupName] %}
+                    {% set tmp = tab[attribute.attributeGroupName]|merge({(attribute.name): data}) %}
+                {% else %}
+                    {% set tmp = {(attribute.name): data} %}
+                {% endif %}
+
+                {% set tab = tab|merge({(attribute.attributeGroupName): tmp}) %}
+                {% set attributeGroups = attributeGroups|merge({(attribute.attributeTabName): tab}) %}
+            {% endif %}
+        {% endfor %}
 
         {% for tabName, tab in attributeGroups %}
-            <h2>{{ tabName ?: translate('productAttributeValues', langCode, 'fields', 'Product') }}</h2>
+            <h2>{{ tabName ?: translate('productAttributeValues', language, 'fields', 'Product') }}</h2>
 
             <table>
                 <tbody>
                 {% for key, attribute in tab %}
                     <tr>
-                        <td colspan="2">{{ key ?: translate('noGroup', langCode, scope: 'Product') }}</td>
+                        <td colspan="2">{{ key ?: translate('noGroup', language, scope: 'Product') }}</td>
                     </tr>
                     {% for name, data in attribute %}
                         <tr>
-                            <td width="50%"><span {{ data.attribute|editable }}>{{ data.attribute.name }}</span></td>
+                            <td width="50%"><span {{ editable(data.attribute) }}>{{ data.attribute.name }}</span></td>
                             <td width="50%">
                                 {% if data.media %}
-                                    <picture {{ data.pav|editable }} style="max-width: 300px">
+                                    <picture {{ editable(data.pav) }} style="max-width: 300px">
                                         <img src="{{ data.displayValue }}" alt="">
                                     </picture>
                                 {% elseif data.pav.attributeType in ['wysiwyg', 'markdown'] %}
-                                    <div {{ data.pav|editable }}>{{ data.displayValue|raw }}</div>
+                                    <div class="value-container" {{ editable(data.pav) }}>{{ data.displayValue|raw }}</div>
+                                {% elseif data.displayValue is same as('') %}
+                                     <span class="value-container" {{ editable(data.pav) }}>&nbsp;</span>
                                 {% else %}
-                                    <span {{ data.pav|editable }}>{{ data.displayValue is iterable ? data.displayValue|join(', ') : data.displayValue }}</span>
+                                    <span class="value-container" {{ editable(data.pav) }}>{{ data.displayValue }}</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -407,9 +417,9 @@
     </section>
 
     <section class="components">
-        <h2>{{ translate('components', langCode, 'fields', 'Product') }}</h2>
+        <h2>{{ translate('components', language, 'fields', 'Product') }}</h2>
         {% if product.components is not defined %}
-            {{ translate('componentsNotInstalled', langCode, 'messages', 'Product') }}
+            {{ translate('componentsNotInstalled', language, 'messages', 'Product') }}
         {% elseif product.components is not empty %}
             <div class="component">
                 {% for component in product.components %}
@@ -418,7 +428,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            {{ translate('emptyComponents', langCode, 'messages', 'Product') }}
+            {{ translate('emptyComponents', language, 'messages', 'Product') }}
         {% endif %}
     </section>
 </main>
