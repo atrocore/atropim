@@ -279,7 +279,7 @@
 </head>
 <body>
 <header>
-    <h1 class="value-container" {{ editable(product, ['name', 'nameDeDe', 'nameFrFr', 'nameUkUa']) }}>{{ product.name }}</h1>
+    <h1 class="value-container" {{ editable(product, getAllLanguageFields('Product', 'name')) }}>{{ product.name }}</h1>
     <div class="row status-info">
         <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translate(product.productStatus, language, scope: 'Product') }}</div>
         {% if product.tag is not empty %}
@@ -292,7 +292,7 @@
     </div>
     <div class="row">
         <div class="fields">
-            <section class="description value-container" {{ editable(product, ['longDescription']) }}>{{ product.longDescription|raw }}</section>
+            <section class="description value-container" {{ editable(product, getAllLanguageFields('Product', 'longDescription')) }}>{{ product.longDescription|raw }}</section>
             <section class="overview">
                 {% if tableFields is not empty %}
                     <table>
