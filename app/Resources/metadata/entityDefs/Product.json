@@ -278,7 +278,7 @@
     "associatedMainProducts": {
       "type": "hasMany",
       "foreign": "mainProduct",
-      "layoutRelationshipsDisabled": true,
+      "layoutRelationshipsDisabled": false,
       "entity": "AssociatedProduct",
       "addRelationCustomDefs": {
         "link": "products",

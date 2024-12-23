@@ -28,7 +28,7 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
         },
 
         isComparableLink(link) {
-            if(link === 'productAttributeValues') {
+            if(['productAttributeValues', 'associatedMainProducts'].includes(link)) {
                 return true;
             }
 
