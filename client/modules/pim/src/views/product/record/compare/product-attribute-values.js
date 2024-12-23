@@ -114,12 +114,12 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                     this.groupPavsData = Object.values(tmp);
 
                     this.groupPavsData.map((groupPav, index) => {
-                        this.getOthersList().forEach((m, key) => {
+                        for (let key = 0; key < this.getOtherModelsCount(); key++) {
                             if (!groupPav.othersRelationItemsPerModels[key]) {
                                 this.groupPavsData[index].othersRelationItemsPerModels[key] = [];
                             }
-                        })
-                    })
+                        }
+                    });
 
                     this.defaultPavModel = pavModel;
                     this.setupRelationship(() => this.wait(false));
@@ -207,17 +207,16 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
         buildAttributesData() {
             let result = {};
-
             this.groupPavsData.forEach(groupPav => {
                 groupPav.currentCollection.forEach(pav => {
                     let pavOthers = [];
                     let attributeId = pav.get('attributeId')
                     let attrKey = pav.get('attributeId') + pav.get('channelId') + pav.get('language')
-                    this.getOthersList().forEach((i, key) => {
-                        pavOthers.push(groupPav.othersRelationItemsPerModels[key].find(item =>
+                    for (let i = 0; i < this.getOtherModelsCount(); i++) {
+                        pavOthers.push(groupPav.othersRelationItemsPerModels[i].find(item =>
                             item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
                         ) ?? this.defaultPavModel.clone())
-                    })
+                    }
 
                     let label = pav.get('attributeName');
 
@@ -259,12 +258,11 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
                         let pavCurrent = this.defaultPavModel.clone();
                         let pavOthers = [];
-                        this.getOthersList().forEach((i, key) => {
-                            pavOthers.push(groupPav.othersRelationItemsPerModels[key].find(item =>
-                                    item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
-                                )
-                                ?? this.defaultPavModel.clone())
-                        });
+                        for (let i = 0; i < this.getOtherModelsCount(); i++) {
+                            pavOthers.push(groupPav.othersRelationItemsPerModels[i].find(item =>
+                                item.get('attributeId') === attributeId && item.get('channelId') === pav.get('channelId') && item.get('language') === pav.get('language')
+                            ) ?? this.defaultPavModel.clone())
+                        }
 
                         let label = pav.get('attributeName');
 
@@ -319,8 +317,8 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
             return attributes;
         },
 
-        getOthersList() {
-            return this.collection.filter(m => m.id !== this.baseModel.id);
+        getOtherModelsCount() {
+            return this.collection.models.length - 1;
         }
     })
 })
