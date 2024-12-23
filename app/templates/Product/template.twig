@@ -305,7 +305,7 @@
                             {% endif %}
                             <tr>
                                 <td>{{ label }}</td>
-                                <td><span class="value-container" {{ editable(product, [field]) }}>{% if displayValue is same as ('') %}&nbsp;{% else %}{{ displayValue }}{% endif %}</span></td>
+                                <td><span class="value-container" {{ editable(product, getAllLanguageFields('Product', field)) }}>{% if displayValue is same as ('') %}&nbsp;{% else %}{{ displayValue }}{% endif %}</span></td>
                             </tr>
                         {% endfor %}
                         </tbody>
