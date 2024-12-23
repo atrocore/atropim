@@ -109,7 +109,8 @@
     "detail": "pim:views/product/record/detail",
     "search": "pim:views/product/record/search",
     "plate": "pim:views/product/record/plate",
-    "plateItem": "pim:views/product/record/plate-item"
+    "plateItem": "pim:views/product/record/plate-item",
+    "compare": "pim:views/product/record/compare"
   },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
   "massUpdateView": "pim:views/product/modals/mass-update",
