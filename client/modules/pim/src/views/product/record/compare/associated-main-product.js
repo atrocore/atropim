@@ -70,14 +70,15 @@ Espo.define('pim:views/product/record/compare/associated-main-product', 'views/r
                         let uniqueList = {};
                         results[0].list.forEach(v => uniqueList[v.id] = v);
                         list = Object.values(uniqueList)
-                        this.linkedEntities = list;
-                        list.forEach(item => {
+                        let hasRelation = {};
+                        this.linkedEntities.forEach(item => {
                             this.relationModels[item.id] = [];
                             this.collection.models.forEach((model, key) => {
                                 let m = relationModel.clone()
                                 m.set(this.isLinkedColumns, false);
                                 relationList.forEach(relationItem => {
                                     if (item.id === relationItem['relatedProductId'] && model.id === relationItem['mainProductId']) {
+                                        hasRelation[item.id] = true
                                         m.set(relationItem);
                                         m.set(this.isLinkedColumns, true);
                                     }
@@ -86,6 +87,8 @@ Espo.define('pim:views/product/record/compare/associated-main-product', 'views/r
                                 this.relationModels[item.id].push(m);
                             })
                         });
+
+                        this.linkedEntities = this.linkedEntities.filter(item => hasRelation[item.id]);
 
                         callback();
                     });
