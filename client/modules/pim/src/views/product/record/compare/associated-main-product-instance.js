@@ -107,6 +107,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                         relationEntities.push(...resultPerInstance.list)
                     })
                     let models = [this.model, ...this.distantModels]
+                    let hasRelation = {};
 
                     this.linkedEntities.forEach(item => {
                         this.relationModels[item.id] = [];
@@ -115,6 +116,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                             m.set(this.isLinkedColumns, false);
                             relationEntities.forEach(relationItem => {
                                 if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
+                                    hasRelation[item.id] = true
                                     m.set(relationItem);
                                     m.set(this.isLinkedColumns, true);
                                 }
@@ -122,6 +124,8 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                             this.relationModels[item.id].push(m);
                         })
                     });
+
+                    this.linkedEntities = this.linkedEntities.filter(item => hasRelation[item.id]);
                     callback();
                 });
             });
