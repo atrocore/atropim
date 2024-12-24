@@ -11,6 +11,16 @@
 Espo.define('pim:views/product/record/compare/product-attribute-values-instance',
     ['pim:views/product/record/compare/product-attribute-values', 'views/record/compare/relationship-instance'], function (Dep, Relationship) {
         return Dep.extend({
+            setup() {
+                Dep.prototype.setup.call(this);
+                Relationship.prototype.setup.call(this);
+            },
+
+            data() {
+                let data = Dep.prototype.data.call(this);
+                data.columns = Relationship.prototype.buildComparisonTableHeaderColumn.call(this);
+                return data;
+            },
 
             fetchModelsAndSetup() {
                 this.wait(true)
@@ -22,83 +32,84 @@ Espo.define('pim:views/product/record/compare/product-attribute-values-instance'
                         languageFilter: ['allLanguages'],
                         scopeFilter: ['allChannels']
                     };
-                    this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param).success(res => {
-                        let currentGroupPavs = res;
-                        let tmp = {}
 
+                    Promise.all([
+                        this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param),
                         this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
                             'uri': 'ProductAttributeValue/action/groupsPavs?' + $.param(param)
-                        }).success(res => {
-                            let otherGroupPavsPerInstances = res;
-                            currentGroupPavs.forEach((group) => {
-                                tmp[group.key] = {
-                                    id: group.id,
-                                    key: group.key,
-                                    label: group.label,
-                                    othersRelationItemsPerModels: [],
-                                    currentCollection: group.collection.map(p => {
-                                        let pav = model.clone();
-                                        pav.set(p)
-                                        return pav
-                                    })
-                                };
-                            })
+                        })
+                    ]).then(results => {
+                        let currentGroupPavs = results[0];
+                        let otherGroupPavsPerInstances = results[1];
+                        let tmp = {}
+                        currentGroupPavs.forEach((group) => {
+                            tmp[group.key] = {
+                                id: group.id,
+                                key: group.key,
+                                label: group.label,
+                                othersRelationItemsPerModels: [],
+                                currentCollection: group.collection.map(p => {
+                                    let pav = model.clone();
+                                    pav.set(p)
+                                    return pav
+                                })
+                            };
+                        });
 
-                            otherGroupPavsPerInstances
-                                .forEach((otherGroupPavs, index) => {
-                                    if ('_error' in otherGroupPavs) {
-                                        this.instances[index]['_error'] = otherGroupPavs['_error'];
-                                        return;
+                        otherGroupPavsPerInstances
+                            .forEach((otherGroupPavs, index) => {
+                                if ('_error' in otherGroupPavs) {
+                                    this.instances[index]['_error'] = otherGroupPavs['_error'];
+                                    return;
+                                }
+                                otherGroupPavs.forEach((otherGroup) => {
+                                    if (!tmp[otherGroup.key]) {
+                                        tmp[otherGroup.key] = {
+                                            id: otherGroup.id,
+                                            key: otherGroup.key,
+                                            label: otherGroup.label,
+                                            othersRelationItemsPerModels: [],
+                                            currentCollection: []
+                                        };
                                     }
-                                    otherGroupPavs.forEach((otherGroup) => {
-                                        if (!tmp[otherGroup.key]) {
-                                            tmp[otherGroup.key] = {
-                                                id: otherGroup.id,
-                                                key: otherGroup.key,
-                                                label: otherGroup.label,
-                                                othersRelationItemsPerModels: [],
-                                                currentCollection: []
-                                            };
-                                        }
 
-                                        tmp[otherGroup.key].othersRelationItemsPerModels[index] = otherGroup.collection
-                                            .map(p => {
-                                                    for (let key in p) {
-                                                        let el = p[key];
-                                                        let instanceUrl = this.instances[index].atrocoreUrl;
-                                                        if (key.includes('PathsData')) {
-                                                            if (el && ('thumbnails' in el)) {
-                                                                for (let size in el['thumbnails']) {
-                                                                    p[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
-                                                                }
+                                    tmp[otherGroup.key].othersRelationItemsPerModels[index] = otherGroup.collection
+                                        .map(p => {
+                                                for (let key in p) {
+                                                    let el = p[key];
+                                                    let instanceUrl = this.instances[index].atrocoreUrl;
+                                                    if (key.includes('PathsData')) {
+                                                        if (el && ('thumbnails' in el)) {
+                                                            for (let size in el['thumbnails']) {
+                                                                p[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
                                                             }
                                                         }
                                                     }
-                                                    let pav = model.clone();
-                                                    pav.set(p)
-                                                    return pav
                                                 }
-                                            )
-                                    })
-                                })
-                            this.groupPavsData = Object.values(tmp);
-                            this.groupPavsData.map((groupPav, index) => {
-                                this.instances.forEach((instance, key) => {
-                                    if (!groupPav.othersRelationItemsPerModels[key]) {
-                                        this.groupPavsData[index].othersRelationItemsPerModels[key] = [];
-                                    }
+                                                let pav = model.clone();
+                                                pav.set(p)
+                                                return pav
+                                            }
+                                        )
                                 })
                             })
-                            this.defaultPavModel = model;
-
-                            this.setupRelationship(() => this.wait(false));
+                        this.groupPavsData = Object.values(tmp);
+                        this.groupPavsData.map((groupPav, index) => {
+                            this.instances.forEach((instance, key) => {
+                                if (!groupPav.othersRelationItemsPerModels[key]) {
+                                    this.groupPavsData[index].othersRelationItemsPerModels[key] = [];
+                                }
+                            })
                         })
-                    });
+                        this.defaultPavModel = model;
+
+                        this.setupRelationship(() => this.wait(false));
+                    })
                 }, this);
             },
 
-            getOthersList() {
-                return this.instances;
+            getOtherModelsCount() {
+                return this.instances.length;
             },
 
             updateBaseUrl(view, instanceUrl) {
