@@ -69,7 +69,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product', 'views/r
                         let relationList = results[1].list;
                         let uniqueList = {};
                         results[0].list.forEach(v => uniqueList[v.id] = v);
-                        list = Object.values(uniqueList)
+                        this.linkedEntities = Object.values(uniqueList);
                         let hasRelation = {};
                         this.linkedEntities.forEach(item => {
                             this.relationModels[item.id] = [];
