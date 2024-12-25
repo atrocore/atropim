@@ -22,7 +22,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                 let modelRelationColumnId = this.getModelRelationColumnId();
                 let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
                 let relationFilter = {
-                    maxSize: 250,
+                    maxSize: this.maxTobeshown,
                     where: [
                         {
                             type: 'equals',
@@ -37,7 +37,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                 }
 
                 let entityFilter = {
-                    max: 250,
+                    max: this.maxTobeshown,
                     select: this.selectFields.join(','),
                     where: [
                         {
@@ -66,14 +66,14 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                         type: 'list'
                     }),
                 ]).then(results => {
-                    if (results[0].total > 250) {
+                    if (results[0].total > this.maxTobeshown) {
                         this.hasToManyRecords = true;
                         callback();
                         return;
                     }
 
                     for (const result of results[1]) {
-                        if (results.total > 250) {
+                        if (results.total > this.maxTobeshown) {
                             this.hasToManyRecords = true;
                             callback();
                             return;
@@ -86,7 +86,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                         entities[item.id] = item;
                     });
 
-                    results[1].forEach((resultPerInstance,index) => {
+                    results[1].forEach((resultPerInstance, index) => {
                         return resultPerInstance.list.forEach(item => {
                             if (!entities[item.id]) {
                                 item['isDistant'] = true;
@@ -99,33 +99,28 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
 
                     this.linkedEntities = Object.values(entities);
 
-                    let relationEntities = [...results[2].list];
-                    results[3].forEach((resultPerInstance, index) => {
-                        if ('_error' in resultPerInstance) {
-                            this.instances[index]['_error'] = resultPerInstance['_error'];
-                        }
-                        relationEntities.push(...resultPerInstance.list)
-                    })
-                    let models = [this.model, ...this.distantModels]
+                    let allRelationEntities = results[3].map(item => item.list);
+
+                    allRelationEntities.unshift(results[2].list);
                     let hasRelation = {};
 
-                    this.linkedEntities.forEach(item => {
-                        this.relationModels[item.id] = [];
-                        models.forEach((model, key) => {
-                            let m = relationModel.clone()
+                    this.linkedEntities.forEach(entity => {
+                        this.relationModels[entity.id] = [];
+                        allRelationEntities.forEach(relationList => {
+                            let m = relationModel.clone();
                             m.set(this.isLinkedColumns, false);
-                            relationEntities.forEach(relationItem => {
-                                if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
-                                    hasRelation[item.id] = true
-                                    m.set(relationItem);
-                                    m.set(this.isLinkedColumns, true);
-                                }
-                            });
-                            this.relationModels[item.id].push(m);
-                        })
+                            let relData = relationList.find(relationItem => entity.id === relationItem[relationshipRelationColumnId] && this.model.id === relationItem[modelRelationColumnId]);
+                            if (relData) {
+                                m.set(relData);
+                                m.set(this.isLinkedColumns, true);
+                                hasRelation[entity.id] = true
+                            }
+                            this.relationModels[entity.id].push(m);
+                        });
                     });
 
                     this.linkedEntities = this.linkedEntities.filter(item => hasRelation[item.id]);
+
                     callback();
                 });
             });
