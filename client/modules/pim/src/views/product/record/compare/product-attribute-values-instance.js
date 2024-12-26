@@ -16,12 +16,6 @@ Espo.define('pim:views/product/record/compare/product-attribute-values-instance'
                 Relationship.prototype.setup.call(this);
             },
 
-            data() {
-                let data = Dep.prototype.data.call(this);
-                data.columns = Relationship.prototype.buildComparisonTableHeaderColumn.call(this);
-                return data;
-            },
-
             fetchModelsAndSetup() {
                 this.wait(true)
                 this.getModelFactory().create('ProductAttributeValue', function (model) {

@@ -14,6 +14,7 @@ Espo.define('pim:views/product/record/compare/associated-main-product', 'views/r
             this.relationName = 'AssociatedProduct';
             this.selectFields = ['id', 'name', 'mainImageId', 'mainImageName'];
             Dep.prototype.setup.call(this);
+            this.relationship.scope = 'Product';
         },
 
         prepareModels(callback) {

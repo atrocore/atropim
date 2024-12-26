@@ -135,7 +135,6 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                 relationScope: this.relationship.scope,
                 columns: this.columns,
                 columnLength: this.columns.length,
-                columnLength1: this.columns.length - 1,
                 attributeList: this.attributeList,
                 noData: this.noData
             };
@@ -235,11 +234,15 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                         language: pav.get('language'),
                         attributeId: attributeId,
                         productAttributeId: pav.get('id'),
-                        isTextAttribute: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')),
+                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')) && pav.get('value'),
                         showQuickCompare: true,
                         current: attrKey + 'Current',
                         others: pavOthers.map((model, index) => {
-                            return {other: attrKey + 'Other' + index, index}
+                            return {
+                                other: attrKey + 'Other' + index,
+                                shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')) && model.get('value'),
+                                index,
+                            }
                         }),
                         different: !this.areAttributeEquals(pav, pavOthers),
                         pavModelCurrent: pav,
@@ -281,11 +284,15 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                             attributeId: attributeId,
                             channelId: pav.get('channelId'),
                             productAttributeId: pav.get('id'),
-                            isTextAttribute: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')),
+                            shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')) && pav.get('value'),
                             showQuickCompare: true,
                             current: attrKey + 'Current',
                             others: pavOthers.map((model, index) => {
-                                return {other: attrKey + 'Other' + index, index}
+                                return {
+                                    other: attrKey + 'Other' + index,
+                                    shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(pav.get('attributeType')) && model.get('value'),
+                                    index
+                                }
                             }),
                             different: !this.areAttributeEquals(pavCurrent, pavOthers),
                             pavModelCurrent: this.defaultPavModel.clone(),
