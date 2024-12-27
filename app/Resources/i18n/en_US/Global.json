@@ -21,7 +21,8 @@
     "ChannelPricing": "Channel Pricing",
     "ClassificationAttribute": "Classification Attribute",
     "Content": "Content",
-    "ContentGroup": "Content Group"
+    "ContentGroup": "Content Group",
+    "ContentItem": "Content Item"
   },
   "scopeNamesPlural": {
     "ProductFile": "Product Files",
@@ -44,7 +45,8 @@
     "ProductSerie": "Product Series",
     "ClassificationAttribute": "Classification Attributes",
     "Content": "Contents",
-    "ContentGroup": "Content Groups"
+    "ContentGroup": "Content Groups",
+    "ContentItem": "Content Items"
   },
   "options": {
     "channelsFilter": {

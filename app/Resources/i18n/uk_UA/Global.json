@@ -19,7 +19,8 @@
     "ChannelPricing": "Канал ціноутворення",
     "ClassificationAttribute": "Атрибут класифікації",
     "Content": "Контент",
-    "ContentGroup": "Група контенту"
+    "ContentGroup": "Група контенту",
+    "ContentItem": "Елемент вмісту"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Канали продукту",
@@ -40,7 +41,8 @@
     "ProductSerie": "Серії продукту",
     "ClassificationAttribute": "Атрибути класифікації",
     "Content": "Контент",
-    "ContentGroup": "Групи контенту"
+    "ContentGroup": "Групи контенту",
+    "ContentItem": "Елементи вмісту"
   },
   "options": {
     "channelsFilter": {

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "description"
+  },
+  {
+    "name": "richText"
+  },
+  {
+    "name": "image"
+  },
+  {
+    "name": "modifiedAt"
+  }
+]
