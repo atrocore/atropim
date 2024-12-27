@@ -5,6 +5,9 @@
             {{#if isFirst }}
             <col style="width: 250px;">
             {{else}}
+            {{#if ../merging}}
+            <col style="width: 50px">
+            {{/if}}
             <col class="col-min-width">
             {{/if}}
             {{/each}}
@@ -12,7 +15,12 @@
         <thead>
         <tr>
             {{#each columns}}
-            <th colspan="{{itemColumnCount}}" class="text-center">
+                {{#unless isFirst }}
+                    {{#if ../merging }}
+                        <th></th>
+                    {{/if}}
+                {{/unless}}
+            <th class="text-center">
                 {{{name}}}
                 {{#if _error}}
                 <br>
@@ -35,13 +43,27 @@
             {{#each attributes }}
             <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{key}}">
                 <td class="cell" title="{{label}}"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{{label}}}</a></td>
-                <td class="cell current {{#unless shouldNotCenter}} text-center{{/unless}}">
-                    Loading...
+                {{#if ../../merging}}
+                <td>
+                    <div class="center-child" >
+                        <input type="radio" name="{{key}}" value="{{modelId}}" data-id="{{modelId}}" data-attribute_id="{{attributeId}}" data-channel_id="{{channelId}}"  data-language="{{language}}" class="field-radio">
+                    </div>
+                </td>
+                {{/if}}
+                <td class="cell  {{#unless shouldNotCenter}} text-center{{/unless}}">
+                   <div class="field current">Loading...</div>
                 </td>
                 {{#each others}}
-                <td class="cell other{{index}} {{#unless shouldNotCenter}} text-center{{/unless}}">
-                    Loading...
-                </td>
+                    {{#if ../../../merging}}
+                        <td>
+                            <div class="center-child" >
+                                <input type="radio" name="{{../key}}" value="{{modelId}}" data-id="{{modelId}}"  data-attribute_id="{{../attributeId}}" data-channel_id="{{../channelId}}"  data-language="{{../language}}"  class="field-radio">
+                            </div>
+                        </td>
+                    {{/if}}
+                    <td class="cell other{{index}} {{#unless shouldNotCenter}} text-center{{/unless}}">
+                       <div class="field other{{index}}">Loading...</div>
+                    </td>
                 {{/each}}
             </tr>
             {{/each}}
