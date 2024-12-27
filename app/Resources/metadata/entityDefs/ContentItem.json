@@ -1,0 +1,99 @@
+{
+  "fields": {
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "description": {
+      "type": "text",
+      "isMultilang": true
+    },
+    "image": {
+      "type": "file",
+      "previewSize": "small"
+    },
+    "isActive": {
+      "type": "bool"
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "name": {
+      "type": "varchar",
+      "isMultilang": true,
+      "required": true,
+      "trim": true
+    },
+    "products": {
+      "type": "linkMultiple",
+      "noLoad": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "richText": {
+      "type": "markdown",
+      "isMultilang": true,
+      "lengthOfCut": 400,
+      "maxHeight": 400,
+      "minHeight": 250
+    },
+    "type": {
+      "type": "extensibleEnum",
+      "dropdown": true,
+      "prohibitedEmptyValue": true,
+      "extensibleEnumId": "content_items",
+      "defaultId": "highlight"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "products": {
+      "type": "hasMany",
+      "relationName": "productContentItem",
+      "foreign": "contentItems",
+      "entity": "Product"
+    }
+  },
+  "collection": {
+    "sortBy": "isActive",
+    "asc": false
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

@@ -21,7 +21,8 @@
     "AssociatedProduct": "Produit associé",
     "ProductSerie": "Série de produits",
     "ProductAttributeValue": "Valeur de l'attribut",
-    "ChannelPricing": "Tarification par canal"
+    "ChannelPricing": "Tarification par canal",
+    "ContentItem": "Élément de contenu"
   },
   "fields": {
     "amount": "Montant",
@@ -81,7 +82,8 @@
     "Classification": "Classification",
     "Product": "Produits",
     "AttributeGroup": "Groupes d'attributs",
-    "ClassificationAttribute": "Attributs de la classification"
+    "ClassificationAttribute": "Attributs de la classification",
+    "ContentItem": "Éléments de contenu"
   },
   "labels": {
     "removeHierarchically": "Supprimer de façon hiérarchique",

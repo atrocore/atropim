@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "description": "Beschreibung",
+    "image": "Bild",
+    "name": "Name",
+    "plainText": "Klartext",
+    "products": "Produkte",
+    "richText": "Reichhaltiger Text",
+    "type": "Typ"
+  },
+  "labels": {
+    "Create ContentItem": "Inhaltselement erstellen"
+  },
+  "links": {
+    "products": "Produkte"
+  }
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "richText"
+        },
+        false
+      ],
+      [
+        {
+          "name": "image"
+        },
+        false
+      ]
+    ]
+  }
+]

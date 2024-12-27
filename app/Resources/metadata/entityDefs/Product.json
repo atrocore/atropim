@@ -170,9 +170,6 @@
       "layoutDetailDisabled": true,
       "noLoad": true
     },
-    "contents": {
-      "type": "linkMultiple"
-    },
     "isInheritAssignedUser": {
       "type": "bool",
       "layoutListDisabled": true,
@@ -228,6 +225,12 @@
         "pr"
       ],
       "default": []
+    },
+    "contentItems": {
+      "type": "linkMultiple",
+      "noLoad": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true
     }
   },
   "links": {
@@ -333,17 +336,17 @@
       "foreign": "products",
       "entity": "Category"
     },
-    "contents": {
-      "type": "hasMany",
-      "entity": "Content",
-      "relationName": "productContents",
-      "foreign": "products"
-    },
     "productAttributeValues": {
       "type": "hasMany",
       "foreign": "product",
       "entity": "ProductAttributeValue",
       "disableMassRelation": true
+    },
+    "contentItems": {
+      "type": "hasMany",
+      "relationName": "productContentItem",
+      "foreign": "products",
+      "entity": "ContentItem"
     }
   },
   "collection": {

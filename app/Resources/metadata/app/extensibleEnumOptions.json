@@ -1,0 +1,23 @@
+[
+  {
+    "id": "highlight",
+    "extensibleEnumId": "content_items",
+    "name": "Highlight",
+    "code": "highlight",
+    "sortOrder": 0
+  },
+  {
+    "id": "top_features_list",
+    "extensibleEnumId": "content_items",
+    "name": "Top Features List",
+    "code": "topFeaturesList",
+    "sortOrder": 10
+  },
+  {
+    "id": "story",
+    "extensibleEnumId": "content_items",
+    "name": "Story",
+    "code": "story",
+    "sortOrder": 20
+  }
+]

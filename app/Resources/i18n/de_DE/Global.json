@@ -20,7 +20,8 @@
     "Settings": "Administration",
     "ClassificationAttribute": "Klassifizierungattribut",
     "Content": "Content",
-    "ContentGroup": "Content Gruppe"
+    "ContentGroup": "Content Gruppe",
+    "ContentItem": "Inhalt Artikel"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Produktkanäle",
@@ -45,7 +46,8 @@
     "EmailAddress": "E-Mail Addresse",
     "ClassificationAttribute": "Klassifizierungattribute",
     "Content": "Contents",
-    "ContentGroup": "Content Gruppen"
+    "ContentGroup": "Content Gruppen",
+    "ContentItem": "Inhalte"
   },
   "fields": {
     "categories": "Kategorien",
