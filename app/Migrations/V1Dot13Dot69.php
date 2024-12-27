@@ -128,7 +128,15 @@ class V1Dot13Dot69 extends Base
         if (file_exists($productCustomPath)) {
             $data = json_decode(file_get_contents($productCustomPath), true);
         }
-        $data = array_merge_recursive(json_decode($this->productCustomEntityDefs, true), $data);
+        $data['fields']['contents'] = [
+            'type' => 'linkMultiple'
+        ];
+        $data['links']['contents'] = [
+            'type'          => 'hasMany',
+            'entity'        => 'Content',
+            'relationName'  => 'productContents',
+            'foreign'       => 'products'
+        ];
         file_put_contents($productCustomPath, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
@@ -522,24 +530,6 @@ class V1Dot13Dot69 extends Base
 ] 
 '
     ];
-
-    protected string $productCustomEntityDefs = '
-    {
-        "fields": {
-            "contents": {
-                "type": "linkMultiple"
-            }
-        },
-        "links": {
-            "contents": {
-                "type": "hasMany",
-                "entity": "Content",
-                "relationName": "productContents",
-                "foreign": "products"
-            }
-        }
-    }
-    ';
 
     protected string $contentGroupClientDefs = '{
   "controller": "controllers/record",
