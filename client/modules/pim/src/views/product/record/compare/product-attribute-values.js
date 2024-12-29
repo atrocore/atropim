@@ -49,12 +49,13 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
             Dep.prototype.setup.call(this);
 
+            this.deferRendering = true;
             this.attributeList = [];
             this.groupPavsData = [];
             this.attributesArr = [];
             this.noData = false;
             this.defaultPavModel = null;
-
+            this.selectedModelId = this.models[0].id;
             this.listenTo(this.model, 'select-model', (modelId) => {
                 this.selectedModelId = modelId;
                 this.attributeList.forEach(group => {
@@ -189,6 +190,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                     this.noData = true;
                     this.reRender();
                 }
+                this.renderedFields = [];
                 this.setupAttributeRecordViews();
             })
             if (callback) {
@@ -197,34 +199,47 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         },
 
         setupAttributeRecordViews() {
+            let totalAttributes = 0;
             this.attributeList.forEach(group => {
-                group.attributes.forEach(attrData => {
-                    let attrKey = attrData.key;
-                    let pavModel = attrData.pavModel;
+                group.attributes.forEach( attrData => {
+                    totalAttributes += attrData.others.length + 1;
+                });
+            });
 
+            this.attributeList.forEach(group => {
+                let createView = (attrData, className, callback) => {
                     this.createView(attrData.viewKey, 'pim:views/product-attribute-value/fields/value-container', {
-                        el: this.options.el + ` [data-id="${attrKey}"]  .current`,
+                        el: this.options.el + ` [data-id="${attrData.key}"]  .${className}`,
                         name: "value",
                         nameName: "valueName",
-                        model: pavModel.clone(),
+                        model: attrData.pavModel.clone(),
                         mode: (this.merging && (!this.selectedModelId || this.selectedModelId === attrData.modelId)) ? 'edit' : 'detail',
                         inlineEditDisabled: true,
-                    }, view => view.render());
+                    }, view => {
+                        view.render();
+                        if(view.isRendered()) {
+                            this.handleAllFieldRender(attrData.key + className, totalAttributes);
+                        }
 
-                    attrData.others.forEach((data, index) => {
-                        this.createView(data.viewKey, 'pim:views/product-attribute-value/fields/value-container', {
-                            el: this.options.el + ` [data-id="${attrKey}"]  .other` + index,
-                            name: "value",
-                            model: data.pavModel.clone(),
-                            mode: (this.merging && (!this.selectedModelId === data.modelId)) ? 'edit' : 'detail',
-                            inlineEditDisabled: true,
-                        }, view => {
-                            view.render()
-                            this.updateBaseUrl(view, attrData.instanceUrl)
+                        view.once('after:render', () => {
+                            this.handleAllFieldRender(attrData.key + className, totalAttributes);
                         });
-                    })
-                })
-            })
+
+                        this.listenTo(view, 'after:render', () => {
+                            if(callback){
+                                callback(view);
+                            }
+                        });
+                    });
+                }
+                group.attributes.forEach(attrData => {
+                    createView(attrData, 'current');
+                    attrData.others.forEach((data, index) => {
+                        data.key =attrData.key;
+                        createView(data, 'other'+index, (view) => this.updateBaseUrl(view, attrData.instanceUrl));
+                    });
+                });
+            });
         },
 
         buildAttributesData() {
@@ -260,6 +275,10 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
 
                 if (pav.get('channelId')) {
                     label += ' / ' + pav.get('channelName');
+                }
+
+                if(pav.get('isRequired')) {
+                    label += '*';
                 }
 
                 return {
@@ -344,9 +363,8 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         },
 
         afterRender() {
-            Dep.prototype.afterRender.call(this);
             if (this.merging) {
-                $('input[data-id="' + this.models[0].id + '"]').prop('checked', true);
+                $('input[data-id="' + (this.selectedModelId ?? this.models[0].id) + '"]').prop('checked', true);
             }
         },
 
@@ -369,13 +387,24 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
             });
         },
 
+        handleAllFieldRender(key, totalAttributes) {
+            if(!this.renderedFields.includes(key)){
+                this.renderedFields.push(key);
+
+                if (this.renderedFields.length === totalAttributes) {
+                    this.trigger('all-fields-rendered');
+                    this.$el.find('input[type="radio"]').prop('disabled', false);
+                }
+            }
+        },
+
         fetch() {
            let toUpsert = []
-            let fetchData = (attrData, viewKey, productId) => {
+            let fetchData = (attrData, viewKey) => {
                 let pavAttr = {
-                    productId: productId,
+                    productId: this.selectedModelId,
                     attributeId: attrData.attributeId,
-                    channelId: attrData.channelId,
+                    channelId: attrData.channelId ?? '',
                     language: attrData.language
                 }
                 let view = this.getView(viewKey);
@@ -394,13 +423,13 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                     let modelId = this.$el.find(`input.field-radio[name=${attrData.key}]:checked`).val();
 
                     if(modelId === attrData.modelId) {
-                        fetchData(attrData , attrData.viewKey, modelId);
+                        fetchData(attrData , attrData.viewKey);
                         return;
                     }
 
                     attrData.others.forEach(data => {
                         if(data.modelId === modelId) {
-                            fetchData(attrData, data.viewKey, modelId);
+                            fetchData(attrData, data.viewKey);
                         }
                     });
                 });
@@ -411,6 +440,39 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                 scope: 'ProductAttributeValue',
                 toDelete: []
             };
+        },
+
+        validate() {
+            let validate = false;
+            let checkValidate = (attrData, viewKey) => {
+
+                let view = this.getView(viewKey);
+
+                if(!view){
+                    return;
+                }
+
+               validate = validate || view.validate();
+            };
+
+            this.attributeList.forEach(group => {
+                group.attributes.forEach(attrData => {
+                    let modelId = this.$el.find(`input.field-radio[name=${attrData.key}]:checked`).val();
+
+                    if(modelId === attrData.modelId) {
+                        checkValidate(attrData , attrData.viewKey);
+                        return;
+                    }
+
+                    attrData.others.forEach(data => {
+                        if(data.modelId === modelId) {
+                            checkValidate(attrData, data.viewKey);
+                        }
+                    });
+                });
+            });
+
+            return validate;
         }
     })
 })
