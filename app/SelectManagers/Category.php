@@ -147,7 +147,9 @@ class Category extends AbstractSelectManager
 
                 foreach ($list as $category) {
                     $ids[] = $category['id'];
-
+                    if(empty($category['categoryRoute'])){
+                        continue;
+                    }
                     $parentCategoriesIds = explode("|", trim($category['categoryRoute'], "|"));
                     $ids = array_merge($ids, $parentCategoriesIds);
                 }
