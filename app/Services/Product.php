@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Services;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\Base;
 use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -990,6 +991,48 @@ class Product extends Hierarchy
                     }
                 }
             }
+        }
+    }
+
+    protected function getMandatoryLinksToMerge(): array
+    {
+        $links = parent::getMandatoryLinksToMerge();
+        $links[] = 'associatedRelatedProduct';
+
+        return $links;
+    }
+
+    protected  function getForbiddenLinksToMerge(): array {
+        $links = parent::getForbiddenLinksToMerge();
+        if($this->getConfig()->get('allowSingleClassificationForProduct')){
+            $links[] = 'classifications';
+        }
+
+        return  $links;
+    }
+
+    protected  function applyMergeForAssociatedRelatedProduct(Entity $target, array $sourceList): void
+    {
+        $sourceIds = [];
+
+        foreach ($sourceList as $source) {
+            $sourceIds[] = $source->get('id');
+        }
+
+        /** @var Base $repository */
+        $repository = $this->getEntityManager()->getRepository('AssociatedProduct');
+
+        $associatedProducts = $repository
+            ->where(['relatedProductId' => $sourceIds])
+            ->find();
+
+        foreach ($associatedProducts as $associatedProduct) {
+            if($associatedProduct->get('mainProductId') === $target->get('id')){
+                $associatedProduct->delete();
+                continue;
+            }
+            $associatedProduct->set('relatedProductId', $target->get('id'));
+            $repository->save($associatedProduct);
         }
     }
 }

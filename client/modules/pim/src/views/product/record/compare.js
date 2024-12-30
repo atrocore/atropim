@@ -24,7 +24,7 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
             if(name === 'classifications' && this.getConfig().get('allowSingleClassificationForProduct')) {
                 return false;
             }
-            return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
+            return Dep.prototype.isLinkEnabled.call(this, model, name);
         },
 
         isComparableLink(link) {

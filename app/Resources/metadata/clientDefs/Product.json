@@ -97,7 +97,6 @@
     }
   },
   "disabledMassActions": [
-    "merge"
   ],
   "views": {
     "list": "pim:views/product/list",

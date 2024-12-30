@@ -126,5 +126,13 @@ Espo.define('pim:views/product/record/compare/associated-main-product', 'views/r
 
             return data;
         },
+
+        getModelRelationColumnId() {
+            return 'mainProductId';
+        },
+
+        getRelationshipRelationColumnId() {
+            return 'relatedProductId';
+        },
     });
 });
