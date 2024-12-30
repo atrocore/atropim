@@ -50,32 +50,25 @@ Espo.define('pim:views/classification/record/compare/classification-attributes',
                             name += ' / ' + attr.language;
                         }
 
-                        uniqueList[key] = {
-                            id: attr.id,
-                            name: name,
-                            channelId: attr.channelId,
-                            language: attr.language,
-                            attributeId: attr.attributeId
+                        attr.name = name;
+                        uniqueList[key] = attr;
+                        delete uniqueList[key]['classificationId'];
+                        delete uniqueList[key]['isRequired'];
+                        for (const key in attr) {
+                            if(key.includes('value')) {
+                                attr[key] = null;
+                            }
                         }
                     });
 
                     this.linkedEntities = Object.values(uniqueList);
-                    relationModel.set(this.linkedEntities[0]);
                     this.linkedEntities.forEach(item => {
                         this.relationModels[item.id] = [];
                         this.models.forEach((model, key) => {
                             let m = relationModel.clone()
+                            m.set(item);
                             m.set(this.isLinkedColumns, false);
-                            m.set('id', null);
-                            m.set('value', null);
-                            m.set('valueId', null);
-                            m.set('valueName', null);
-                            m.set('valueIds', null);
-                            m.set('valueTo', null);
-                            m.set('valueFrom', null);
-                            m.set('valueNames', null);
-                            m.set('valueUnitId', null);
-                            m.set('valueUnitName', null);
+
                             relationList.forEach(relationItem => {
                                 if (item.attributeId === relationItem['attributeId']
                                     && item.channelId === relationItem['channelId']
@@ -137,8 +130,6 @@ Espo.define('pim:views/classification/record/compare/classification-attributes',
                 attr['attributeId'] = linkedEntity.attributeId;
                 attr['channelId'] = linkedEntity.channelId ?? '';
                 attr['language'] = linkedEntity.language;
-
-
 
                 let otherRows = this.tableRows.filter(row => {
                     return row.field && row.linkedEntityId === linkedEntity.id && row.field !== this.isLinkedColumns;
