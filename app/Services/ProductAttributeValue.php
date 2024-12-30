@@ -115,7 +115,8 @@ class ProductAttributeValue extends AbstractProductAttributeService
                 'id'          => $record['id'],
                 'channelName' => empty($record['channel_id']) ? '-9999' : $record['channel_name'],
                 'language'    => $record['language'] === 'main' ? null : $record['language'],
-                'tooltip'     => $tooltip
+                'tooltip'     => $tooltip,
+                'attributeId' => $record['attribute_id'],
             ];
 
             if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
@@ -137,10 +138,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $pavs = $group['pavs'];
             array_multisort(
                 array_column($pavs, 'sortOrder'), SORT_ASC,
+                array_column($pavs, 'attributeId'), SORT_ASC,
                 array_column($pavs, 'channelName'), SORT_ASC,
                 array_column($pavs, 'language'), SORT_ASC,
                 $pavs
             );
+            $pavsSortedIds = array_column($pavs, 'id');
             $result[$key]['collection'] = [];
 
             $pavsRes = $this->findEntities([
@@ -148,7 +151,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     [
                         'type'      => 'in',
                         'attribute' => 'id',
-                        'value'     => array_column($pavs, 'id')
+                        'value'     => $pavsSortedIds
                     ]
                 ]
             ]);
@@ -202,6 +205,12 @@ class ProductAttributeValue extends AbstractProductAttributeService
                     ]);
                 }
             }
+
+            usort($result[$key]['collection'], function ($a, $b) use ($pavsSortedIds) {
+                $posA = array_search($a['id'], $pavsSortedIds);
+                $posB = array_search($b['id'], $pavsSortedIds);
+                return $posA - $posB;
+            });
 
             $result[$key]['rowList'] = array_column($result[$key]['collection'], 'id');
             if (empty($result[$key]['rowList'])) {
