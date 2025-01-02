@@ -260,6 +260,8 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                         pavModel.set('valueId', null);
                         pavModel.set('valueName', null);
                         pavModel.set('valueIds', null);
+                        pavModel.set('valueTo', null);
+                        pavModel.set('valueFrom', null);
                         pavModel.set('valueNames', null);
                         pavModel.set('valueUnitId', null);
                         pavModel.set('valueUnitName', null);

@@ -20,7 +20,13 @@
         "Attribute",
         "AttributeGroup",
         "ClassificationAttribute"
-      ]
+      ],
+      "compareRecordsView": "pim:views/classification/record/compare/classification-attributes",
+      "compareInstanceRecordsView": "pim:views/classification/record/compare/classification-attributes"
     }
+  },
+  "recordViews": {
+    "compare": "pim:views/classification/record/compare",
+    "compareInstance": "pim:views/classification/record/compare-instance"
   }
 }
