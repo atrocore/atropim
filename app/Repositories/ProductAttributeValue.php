@@ -346,7 +346,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         }
 
         if ($entity->isNew()) {
-            if (!empty($attribute->get('measureId')) && empty($entity->get('referenceValue')) && !empty($attribute->get('defaultUnit'))) {
+            if (!empty($attribute->get('measureId')) && empty($entity->get('referenceValue')) && !empty($attribute->get('defaultUnit')) && empty($this->getMemoryStorage()->get('importJobId'))) {
                 $entity->set('referenceValue', $attribute->get('defaultUnit'));
             }
         }
