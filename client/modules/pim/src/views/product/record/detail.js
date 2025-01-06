@@ -107,16 +107,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return  data;
         },
 
-        selectNode(data) {
-            if (this.getStorage().get('treeScope', this.scope) === 'Product') {
-                window.location.href = `/#Product/view/${data.id}`;
-            } else {
-                this.getStorage().set('selectedNodeId', this.scope, data.id);
-                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
-                window.location.href = `/#Product`;
-            }
-        },
-
         parseRoute(routeStr) {
             let route = [];
             (routeStr || '').split('|').forEach(item => {
@@ -156,7 +146,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (view.treeScope === 'Product' && view.model && view.model.get('id')) {
+            if (['Product','Bookmark'].includes(view.treeScope) && view.model && view.model.get('id')) {
                 let route = [];
                 view.prepareTreeRoute(treeData, route);
             }
