@@ -52,8 +52,6 @@ Espo.define('pim:views/classification/record/compare/classification-attributes',
 
                         attr.name = name;
                         uniqueList[key] = attr;
-                        delete uniqueList[key]['classificationId'];
-                        delete uniqueList[key]['isRequired'];
                         for (const key in attr) {
                             if(key.includes('value')) {
                                 attr[key] = null;
