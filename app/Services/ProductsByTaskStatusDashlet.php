@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Espo\Core\Utils\Metadata;
+
 /**
  * Class ProductsByTaskStatusDashlet
  */
@@ -38,19 +40,26 @@ class ProductsByTaskStatusDashlet extends AbstractDashletService
     {
         $result = ['total' => 0, 'list' => []];
 
-        $taskStatuses = $this->getInjection('metadata')->get('entityDefs.Product.fields.taskStatus.options');
-        $taskStatuses = is_array($taskStatuses) ? $taskStatuses : [];
+        $taskStatusDefs = $this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'taskStatus'], []);
 
-        $result['total'] = count($taskStatuses);
+        $taskStatusesIds = $taskStatusDefs['optionsIds'] ?? [];
+        $taskStatusesNames = $taskStatusDefs['options'] ?? [];
 
-        foreach ($taskStatuses as $status) {
+        $result['total'] = count($taskStatusesIds);
+
+        foreach ($taskStatusesIds as $key => $status) {
             $result['list'][] = [
                 'id'     => $status,
-                'name'   => $status,
+                'name'   => $taskStatusesNames[$key],
                 'amount' => $this->getRepository('Product')->where(['taskStatus*' => "%\"$status\"%"])->count()
             ];
         }
 
         return $result;
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getInjection('metadata');
     }
 }
