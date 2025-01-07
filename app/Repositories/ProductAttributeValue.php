@@ -346,8 +346,12 @@ class ProductAttributeValue extends AbstractAttributeValue
         }
 
         if ($entity->isNew()) {
-            if (!empty($attribute->get('measureId')) && empty($entity->get('referenceValue')) && !empty($attribute->get('defaultUnit')) && empty($this->getMemoryStorage()->get('importJobId'))) {
-                $entity->set('referenceValue', $attribute->get('defaultUnit'));
+            if (!empty($attribute->get('measureId')) && empty($entity->get('referenceValue')) && !empty($attribute->get('defaultUnit'))) {
+                if (!property_exists($entity, '_input')
+                    || !property_exists($entity->_input, '_virtualValue')
+                    || !(is_array($entity->_input->_virtualValue) && array_key_exists('valueUnitId', $entity->_input->_virtualValue))) {
+                    $entity->set('referenceValue', $attribute->get('defaultUnit'));
+                }
             }
         }
     }
