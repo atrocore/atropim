@@ -473,8 +473,8 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
         },
 
         hasCompleteness() {
-            return this.getMetadata().get(['scopes', 'Product', 'hasCompleteness'])
-                && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
+            return this.getMetadata().get(['scopes.Product.hasCompleteness'])
+                && this.getMetadata().get(['entityDefs.Entity.fields.hasCompleteness']);
         },
 
         actionRemoveRelatedHierarchically: function (data) {

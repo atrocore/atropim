@@ -476,7 +476,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         hasCompleteness() {
             return this.getMetadata().get(['scopes', this.scope, 'hasCompleteness'])
-                && this.getMetadata().get(['app', 'additionalEntityParams', 'hasCompleteness']);
+                && this.getMetadata().get(['entityDefs.Entity.fields.hasCompleteness']);
         },
 
         onTreeResize(width) {
