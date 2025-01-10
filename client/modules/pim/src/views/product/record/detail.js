@@ -208,20 +208,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
         },
 
-        treeReset(view) {
-            this.getStorage().clear('selectedNodeId', this.scope);
-            this.getStorage().clear('selectedNodeRoute', this.scope);
-
-            this.getStorage().clear('treeSearchValue', view.treeScope);
-            this.getStorage().clear('treeWhereData', view.treeScope);
-
-            this.getStorage().clear('listSearch', view.treeScope);
-            this.getStorage().set('reSetupSearchManager', view.treeScope, true);
-
-            view.toggleVisibilityForResetButton();
-            view.rebuildTree();
-        },
-
         hotKeySave: function (e) {
             e.preventDefault();
             if (this.mode === 'edit') {
