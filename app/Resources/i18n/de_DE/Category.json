@@ -16,16 +16,8 @@
     "children": "Kategorien",
     "channels": "Kanäle",
     "parents": "Hauptkategorie",
-    "categoryRouteName": "Kategoriebaum"
-  },
-  "links": {
-    "categoryRoot": "Stammkategorie",
-    "products": "Produkte",
-    "rootCategories": "Stammkategorien",
-    "image": "Bild",
-    "children": "Untergeordnete Kategorien",
-    "channels": "Kanäle",
-    "parents": "Hauptkategorie"
+    "categoryRouteName": "Kategoriebaum",
+    "image": "Bild"
   },
   "labels": {
     "withoutCatalog": "Ohne Katalogg",

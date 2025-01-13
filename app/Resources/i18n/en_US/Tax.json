@@ -4,9 +4,6 @@
         "isActive": "Active",
         "products": "Products"
     },
-    "links": {
-        "products": "Products"
-    },
     "labels": {
         "Create Tax": "Create Tax"
     }

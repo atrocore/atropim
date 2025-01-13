@@ -8,14 +8,6 @@
     "mainProductImage": "Hauptproduktbild",
     "sorting": "Sortierreihenfolge"
   },
-  "links": {
-    "association": "Assoziation",
-    "mainProduct": "Hauptprodukt",
-    "relatedProduct": "Verwandtes Produkt",
-    "backwardAssociation": "Rückwärts-Assoziation",
-    "mainProductImage": "Hauptproduktbild",
-    "relatedProductImage": "Assoziiertes Produktbild"
-  },
   "labels": {
     "Create AssociatedProduct": "Assoziiertes Produkt erstellen"
   },

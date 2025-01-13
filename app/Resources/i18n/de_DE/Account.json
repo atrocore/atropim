@@ -1,8 +1,5 @@
 {
   "fields": {
     "channel": "Kanal"
-  },
-  "links": {
-    "channel": "Kanal"
   }
 }

@@ -2,11 +2,8 @@
   "fields": {
     "isActive": "Active",
     "products": "Products",
-    "code": "Code"
-  },
-  "links": {
     "channels": "Channels",
-    "products": "Products"
+    "code": "Code"
   },
   "labels": {
     "Create Catalog": "Create Catalog"

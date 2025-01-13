@@ -30,25 +30,8 @@
     "packedAmount": "Packed Amount",
     "contents": "Contents",
     "taskStatus": "Task status",
-    "components": "Product Components"
-  },
-  "links": {
-    "productSerie": "Product Series",
-    "product": "Product",
-    "image": "Image",
-    "calls": "Calls",
-    "files": "Files",
-    "categories": "Categories",
-    "products": "Products",
-    "productAttributeValues": "Attribute Values",
-    "classifications": "Classifications",
-    "brand": "Brand",
-    "associatedMainProducts": "Associated Products: Related",
-    "associatedRelatedProduct": "Associated Products: Main",
-    "tax": "Tax",
-    "catalog": "Catalog",
-    "channels": "Channels",
-    "contents": "Contents"
+    "components": "Product Components",
+    "calls": "Calls"
   },
   "labels": {
     "Product Attributes": "Attributes",

@@ -32,12 +32,6 @@
     "useDisabledTextareaInViewMode": "Use disabled text area in view mode",
     "isVariantSpecificAttribute": "Variant-specific"
   },
-  "links": {
-    "productAttribute": "Product attribute",
-    "product": "Product",
-    "attribute": "Attribute",
-    "channel": "Channel"
-  },
   "options": {
     "language": {
       "main": "Main Language"

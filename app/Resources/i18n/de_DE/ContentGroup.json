@@ -2,9 +2,6 @@
   "fields": {
     "contents": "Contents"
   },
-  "links": {
-    "contents": "Contents"
-  },
   "labels": {
     "Create ContentGroup": "Contentgruppe erstellen"
   }

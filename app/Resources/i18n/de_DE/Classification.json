@@ -8,12 +8,7 @@
     "synonyms": "Synonyme",
     "release": "Freigeben",
     "code": "Code",
-    "type": "Typ"
-  },
-  "links": {
-    "classifications": "Klassifizierungen",
-    "classificationAttributes": "Klassifizierungattribute",
-    "products": "Produkte",
+    "type": "Typ",
     "attributes": "Attribute"
   },
   "options": {

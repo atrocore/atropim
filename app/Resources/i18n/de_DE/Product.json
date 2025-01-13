@@ -38,29 +38,8 @@
     "contents": "Contents",
     "taskStatus": "Task status",
     "files": "Dateien",
-    "components": "Produkt-Komponenten"
-  },
-  "links": {
-    "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
-    "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
-    "attachments": "Zubehör",
-    "channelProductAttributeValues": "Attributwerte vom Kanalprodukt",
-    "product": "Produkt",
-    "productAttributeValues": "Attributwerte",
-    "classifications": "Klassifizierungen",
-    "products": "Produkte",
-    "calls": "Anrufe",
-    "image": "Bild",
-    "productCategories": "Produktkategorien",
-    "productSerie": "Produktserie",
-    "categories": "Kategorien",
-    "brand": "Marke",
-    "tax": "MwSt.",
-    "catalog": "Katalog",
-    "channels": "Kanäle",
-    "productChannels": "Produktkanäle",
-    "contents": "Contents",
-    "files": "Dateien"
+    "components": "Produkt-Komponenten",
+    "calls": "Anrufe"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",

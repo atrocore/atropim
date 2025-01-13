@@ -10,11 +10,6 @@
     "backwardAssociation": "Umgekehrte Assoziation",
     "code": "Code"
   },
-  "links": {
-    "associatedProducts": "Zugehörige Produkte",
-    "associations": "Assoziationen",
-    "backwardAssociation": "Umgekehrte Assoziation"
-  },
   "labels": {
     "Create Association": "Assoziation erstellen"
   },

@@ -7,10 +7,6 @@
     "code": "Code",
     "products": "Products"
   },
-  "links": {
-    "categories": "Categories",
-    "products": "Products"
-  },
   "labels": {
     "unLinkCategoryFromChannel": "Unlink category '%s' from channel '%s'",
     "linkCategoryWithChannel": "Link category '%s' with channel '%s'",

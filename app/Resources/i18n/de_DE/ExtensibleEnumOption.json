@@ -2,9 +2,6 @@
   "fields": {
     "classificationAttributes": "Klassifizierungattribute"
   },
-  "links": {
-    "classificationAttributes": "Klassifizierungattribute"
-  },
   "exceptions": {
     "extensibleEnumOptionIsUsedOnProductAttribute": "Die Auswahloption '%s' wird im Attribut '%s' aus dem Produkt '%s' verwendet.",
     "extensibleEnumOptionIsUsedOnClassificationAttribute": "Die Auswahloption '%s' wird im Attribut '%s' aus der Klassifizierung '%s' verwendet."

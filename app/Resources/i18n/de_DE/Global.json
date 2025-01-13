@@ -58,12 +58,6 @@
     "scope": "Scope",
     "role": "Rolle"
   },
-  "links": {
-    "categories": "Kategorien",
-    "channels": "Kanäle",
-    "products": "Produkte",
-    "catalogs": "Kataloge"
-  },
   "options": {
     "searchRanges": {
       "isNot": "Ist kein",

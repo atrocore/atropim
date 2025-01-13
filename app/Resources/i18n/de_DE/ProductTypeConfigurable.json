@@ -3,10 +3,6 @@
     "configurableProduct": "konfigurierbares Produkt",
     "product": "Produkt"
   },
-  "links": {
-    "configurableProduct": "konfigurierbares Produkt",
-    "product": "Produkt"
-  },
   "labels": {
     "Create ProductTypeConfigurable": "Konfigurierbares Produkt erstellen"
   }

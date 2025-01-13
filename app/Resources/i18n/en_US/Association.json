@@ -6,10 +6,6 @@
     "backwardAssociation": "Backward Association",
     "code": "Code"
   },
-  "links": {
-    "associatedProducts": "Associated products",
-    "backwardAssociation": "Backward Association"
-  },
   "labels": {
     "Create Association": "Create Association"
   },

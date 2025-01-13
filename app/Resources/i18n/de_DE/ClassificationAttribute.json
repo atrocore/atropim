@@ -24,12 +24,6 @@
     "max": "Max",
     "extensibleEnumOptions": "Optionen zulassen"
   },
-  "links": {
-    "classification": "Klassifizierung",
-    "attribute": "Attribute",
-    "channel": "Kanal",
-    "extensibleEnumOptions": "Optionen zulassen"
-  },
   "labels": {
     "Create ClassificationAttribute": "Attribut der Klassifizierung erstellen",
     "unlinkRelatedAttribute": "Hier löschen und für Produkte behalten",

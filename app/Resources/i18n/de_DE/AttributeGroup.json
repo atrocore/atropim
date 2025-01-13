@@ -6,9 +6,6 @@
     "code": "Code",
     "attributes": "Attribute"
   },
-  "links": {
-    "attributes": "Attribute"
-  },
   "labels": {
     "Create AttributeGroup": "Attributgruppe erstellen"
   },

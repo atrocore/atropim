@@ -10,11 +10,6 @@
     "classificationAttributes": "Classification Attributes",
     "type": "Type"
   },
-  "links": {
-    "products": "Products",
-    "classifications": "Classifications",
-    "classificationAttributes": "Classification Attributes"
-  },
   "options": {
     "type": {
       "general": "General"

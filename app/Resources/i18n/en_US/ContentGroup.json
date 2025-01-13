@@ -3,9 +3,6 @@
     "name": "Name",
     "contents": "Contents"
   },
-  "links": {
-    "contents": "Contents"
-  },
   "labels": {
     "Create ContentGroup": "Create Content Group"
   }

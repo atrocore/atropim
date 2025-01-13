@@ -4,10 +4,6 @@
     "product": "Produkt",
     "channel": "Kanal"
   },
-  "links": {
-    "product": "Produkt",
-    "channel": "Kanal"
-  },
   "labels": {
     "Create ProductChannel": "Produktkanal erstellen"
   }

@@ -36,19 +36,8 @@
     "trim": "Führende und nachfolgende Whitespaces entfernen",
     "classificationAttributes": "Klassifizierungattribute",
     "preparedName": "Name",
-    "htmlSanitizer": "HTML Sanitizer"
-  },
-  "links": {
-    "measure": "Maß",
-    "parents": "Assoziierende Attribute",
-    "children": "Assoziierte Attribute",
-    "attributeTab": "Attributtab",
-    "products": "Produkte",
-    "productAttributeValues": "Attributwerte",
-    "attributeGroup": "Attributgruppe",
-    "classifications": "Klassifizierungen",
-    "extensibleEnum": "Liste",
-    "classificationAttributes": "Klassifizierungattribute"
+    "htmlSanitizer": "HTML Sanitizer",
+    "classifications": "Klassifizierungen"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",

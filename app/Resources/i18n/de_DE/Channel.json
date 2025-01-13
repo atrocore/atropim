@@ -11,14 +11,6 @@
     "code": "Code",
     "products": "Produkte"
   },
-  "links": {
-    "categories": "Kategorien",
-    "channelProductAttributeValues": "Produktattributwerte für Kanal",
-    "productAttributeValues": "Produktattributwerte",
-    "productCategories": "Produktkategorien",
-    "classificationAttributes": "Klassifizierungattribute",
-    "products": "Produkte"
-  },
   "labels": {
     "unLinkCategoryFromChannel": "Verknüpfung der Kategorie '%s' mit Kanal '%s' aufgeben",
     "linkCategoryWithChannel": "Kategorie '%s' mit Kanal '%s' verknüpfen",
