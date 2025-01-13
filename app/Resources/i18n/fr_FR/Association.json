@@ -6,10 +6,6 @@
     "backwardAssociation": "Association des arriérés",
     "code": "Code"
   },
-  "links": {
-    "associatedProducts": "Produits associés",
-    "backwardAssociation": "Association des arriérés"
-  },
   "labels": {
     "Create Association": "Créer une association"
   },

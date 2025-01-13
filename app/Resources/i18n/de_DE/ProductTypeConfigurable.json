@@ -1,9 +1,0 @@
-{
-  "fields": {
-    "configurableProduct": "konfigurierbares Produkt",
-    "product": "Produkt"
-  },
-  "labels": {
-    "Create ProductTypeConfigurable": "Konfigurierbares Produkt erstellen"
-  }
-}

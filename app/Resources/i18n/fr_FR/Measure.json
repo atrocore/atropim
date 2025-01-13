@@ -2,9 +2,6 @@
   "fields": {
     "attributes": "Attributs"
   },
-  "links": {
-    "attributes": "Attributs"
-  },
   "exceptions": {
     "measureIsUsedOnAttribute": "La mesure \"%s\" est utilisée par l'attribut \"%s\"."
   }

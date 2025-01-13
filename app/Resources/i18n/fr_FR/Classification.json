@@ -9,11 +9,6 @@
     "classifications": "Classification",
     "classificationAttributes": "Attributs de la classification"
   },
-  "links": {
-    "products": "Produits",
-    "classifications": "Classification",
-    "classificationAttributes": "Attributs de la classification"
-  },
   "labels": {
     "Create Classification": "Créer une classification",
     "selectAttributeGroup": "Sélectionnez le groupe d'attributs"

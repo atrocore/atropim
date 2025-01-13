@@ -79,12 +79,6 @@
     "scope": "Scope",
     "role": "Role"
   },
-  "links": {
-    "categories": "Categories",
-    "channels": "Channels",
-    "products": "Products",
-    "catalogs": "Catalogs"
-  },
   "labels": {
     "removeHierarchically": "Delete Hierarchically",
     "setAsMainImage": "Set as Main Image",

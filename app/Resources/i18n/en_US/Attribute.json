@@ -38,18 +38,6 @@
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer"
   },
-  "links": {
-    "measure": "Measure",
-    "parents": "Associating Attributes",
-    "children": "Associated Attributes",
-    "attributeTab": "Attribute Tab",
-    "attributeGroup": "Attribute Group",
-    "products": "Products",
-    "productAttributeValues": "Attribute Values",
-    "classifications": "Classifications",
-    "extensibleEnum": "List",
-    "classificationAttributes": "Classification Attributes"
-  },
   "labels": {
     "Create Attribute": "Create Attribute",
     "Classification": "Classification",

@@ -8,13 +8,6 @@
     "relatedProductImage": "Image du produit apparenté",
     "sorting": "Ordre de tri"
   },
-  "links": {
-    "association": "Association",
-    "mainProduct": "Produit principal",
-    "mainProductImage": "Image du produit principal",
-    "relatedProduct": "Produit connexe",
-    "relatedProductImage": "Image du produit apparenté"
-  },
   "labels": {
     "Create AssociatedProduct": "Créer un produit associé"
   },

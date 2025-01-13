@@ -7,9 +7,6 @@
     "attributes": "Attributs",
     "sortOrder": "Ordre de tri"
   },
-  "links": {
-    "attributes": "Attributs"
-  },
   "labels": {
     "Create AttributeGroup": "Créer un groupe d'attributs"
   },

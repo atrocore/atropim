@@ -15,13 +15,6 @@
     "products": "Produits",
     "sortOrder": "Ordre de tri"
   },
-  "links": {
-    "parents": "Catégorie de parents",
-    "children": "Catégories d'enfants",
-    "channels": "Canaux",
-    "products": "Produits",
-    "productCategories": "Produits de la catégorie"
-  },
   "labels": {
     "withoutCatalog": "Sans catalogue",
     "Create Category": "Créer une catégorie"
