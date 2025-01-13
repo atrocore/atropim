@@ -23,12 +23,6 @@
     "max": "Max",
     "extensibleEnumOptions": "Liste des options"
   },
-  "links": {
-    "classification": "Classification",
-    "attribute": "Attribut",
-    "channel": "Canal",
-    "extensibleEnumOptions": "Liste des options"
-  },
   "labels": {
     "Create ClassificationAttribute": "Créer un attribut de classification",
     "unlinkRelatedAttribute": "Supprimer ici et conserver pour les produits",

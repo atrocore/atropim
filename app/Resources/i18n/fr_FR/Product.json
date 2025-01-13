@@ -30,26 +30,8 @@
     "basePriceAmount": "Prix de base Montant",
     "packedAmount": "Quantité emballée",
     "contents": "Contenu",
-    "taskStatus": "Statut de la tâche"
-  },
-  "links": {
-    "productSerie": "Série de produits",
-    "product": "Produit",
-    "image": "Image",
-    "calls": "Appels",
-    "files": "Fichiers",
-    "categories": "Catégories",
-    "products": "Produits",
-    "productAttributeValues": "Valeurs des attributs",
-    "classifications": "Classification",
-    "brand": "Marque",
-    "associatedMainProducts": "Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés",
-    "associatedRelatedProduct": "Produits associés : Principaux",
-    "tax": "Impôts",
-    "catalog": "Catalogue",
-    "channels": "Canaux",
-    "productChannels": "Canaux de produits",
-    "contents": "Contenu"
+    "taskStatus": "Statut de la tâche",
+    "calls": "Appels"
   },
   "labels": {
     "Product Attributes": "Attributs",

@@ -28,12 +28,6 @@
     "useDisabledTextareaInViewMode": "Utiliser la zone de texte désactivée en mode affichage",
     "isVariantSpecificAttribute": "Spécifique à une variante"
   },
-  "links": {
-    "productAttribute": "Attribut du produit",
-    "product": "Produit",
-    "attribute": "Attribut",
-    "channel": "Canal"
-  },
   "options": {
     "language": {
       "main": "Langue principale"

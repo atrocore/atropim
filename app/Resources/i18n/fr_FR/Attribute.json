@@ -38,18 +38,6 @@
     "preparedName": "Nom",
     "htmlSanitizer": "HTML Sanitizer"
   },
-  "links": {
-    "measure": "Mesure",
-    "parents": "Associer des attributs",
-    "children": "Attributs associés",
-    "attributeTab": "Onglet Attributs",
-    "attributeGroup": "Groupe d'attributs",
-    "products": "Produits",
-    "productAttributeValues": "Valeurs des attributs",
-    "classifications": "Classification",
-    "extensibleEnum": "Liste",
-    "classificationAttributes": "Attributs de la classification"
-  },
   "labels": {
     "Create Attribute": "Créer un attribut",
     "Classification": "Classification",

@@ -2,9 +2,6 @@
   "fields": {
     "attributes": "Attributs"
   },
-  "links": {
-    "attributes": "Attributs"
-  },
   "labels": {
     "selectAttributeGroup": "Sélectionnez le groupe d'attributs",
     "Create AttributeTab": "Onglet Créer un attribut"

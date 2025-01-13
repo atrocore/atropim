@@ -45,12 +45,6 @@
     "uvp": "UVP",
     "role": "Rôle"
   },
-  "links": {
-    "products": "Produits",
-    "channels": "Canaux",
-    "categories": "Catégories",
-    "catalogs": "Catalogues"
-  },
   "options": {
     "scope": {
       "Global": "Mondial",
