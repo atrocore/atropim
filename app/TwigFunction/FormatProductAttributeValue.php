@@ -25,8 +25,12 @@ class FormatProductAttributeValue extends AbstractTwigFunction
     {
     }
 
-    public function run(ProductAttributeValue $entity): string|null
+    public function run(?ProductAttributeValue $entity): string|null
     {
+        if (!$entity) {
+            return null;
+        }
+
         $attributeType = $entity->get('attributeType');
         $value = null;
 
