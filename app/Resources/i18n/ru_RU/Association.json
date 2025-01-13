@@ -6,10 +6,6 @@
     "backwardAssociation": "Обратная связь",
     "code": "Код"
   },
-  "links": {
-    "associatedProducts": "Связанные продукты",
-    "backwardAssociation": "Обратная связь"
-  },
   "labels": {
     "Create Association": "Создать связь"
   },

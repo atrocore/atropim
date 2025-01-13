@@ -14,12 +14,6 @@
     "valueTo": "Значение до",
     "channel": "Канал"
   },
-  "links": {
-    "productAttribute": "Атрибут продукта",
-    "product": "Продукт",
-    "attribute": "Атрибут",
-    "channel": "Канал"
-  },
   "options": {
     "language": {
       "main": "Основной язык"

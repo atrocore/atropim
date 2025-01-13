@@ -22,15 +22,6 @@
     "tooltip": "Текст подсказки",
     "maxLength": "Максимальная длина"
   },
-  "links": {
-    "measure": "Мера",
-    "parents": "Связывающие атрибуты",
-    "children": "Связанные атрибуты",
-    "attributeGroup": "Группа атрибутов",
-    "attributeTab": "Вкладка атрибутов",
-    "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов"
-  },
   "labels": {
     "Create Attribute": "Создать атрибут",
     "addNewValue": "Добавить новое значение"

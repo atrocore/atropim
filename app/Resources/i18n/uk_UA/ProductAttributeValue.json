@@ -20,12 +20,6 @@
     "useDisabledTextareaInViewMode": "Використовуйте відключену текстову область у режимі перегляду",
     "isVariantSpecificAttribute": "Варіантно-специфічний"
   },
-  "links": {
-    "productAttribute": "Атрибут продукту",
-    "product": "Продукт",
-    "attribute": "Атрибут",
-    "channel": "Канал"
-  },
   "options": {
     "language": {
       "main": "Основна мова"

@@ -68,12 +68,6 @@
     "scope": "Область применения",
     "role": "Роль"
   },
-  "links": {
-    "categories": "Категории",
-    "channels": "Каналы",
-    "products": "Продукты",
-    "catalogs": "Каталоги"
-  },
   "labels": {
     "setAsMainImage": "Назначить основным изображением",
     "allChannels": "Все каналы",

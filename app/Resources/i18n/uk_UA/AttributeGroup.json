@@ -7,9 +7,6 @@
         "attributes": "Атрибути",
         "sortOrder": "Порядок сортування"
     },
-    "links": {
-        "attributes": "Атрибут"
-    },
     "labels": {
         "Create AttributeGroup": "Створити групу атрибутів"
     },

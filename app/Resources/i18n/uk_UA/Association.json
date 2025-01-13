@@ -6,10 +6,6 @@
     "backwardAssociation": "Зворотній зв'язок",
     "code": "Код"
   },
-  "links": {
-    "associatedProducts": "Пов'язані продукти",
-    "backwardAssociation": "Зворотній зв'язок"
-  },
   "labels": {
     "Create Association": "Створити зв'язок"
   },

@@ -30,27 +30,8 @@
     "packedAmount": "Кількість в упаковці",
     "contents": "Контент",
     "taskStatus": "Статус завдання",
-    "files": "Файли"
-  },
-  "links": {
-    "productSerie": "Серії продукту",
-    "product": "Продукт",
-    "image": "Зображення",
-    "calls": "Дзвінки",
-    "categories": "Категорії продукту",
-    "products": "Продукти",
-    "productAttributeValues": "Значення атрибутів",
-    "classifications": "Класифікації",
-    "brand": "Бренд",
-    "associatedMainProducts": "Асоційовані продукти: Пов'язані",
-    "associatedRelatedProduct": "Асоційовані продукти: Основні",
-    "tax": "Податок",
-    "catalog": "Каталог",
-    "channels": "Канали",
-    "productChannels": "Канали продукту",
-    "contents": "Контент",
     "files": "Файли",
-    "components": "Компоненти продукту"
+    "calls": "Дзвінки"
   },
   "labels": {
     "Product Attributes": "Атрибути",

@@ -2,11 +2,8 @@
   "fields": {
     "isActive": "Активний",
     "products": "Продукти",
-    "code": "Код"
-  },
-  "links": {
-    "channels": "Канали",
-    "products": "Продукти"
+    "code": "Код",
+    "channels": "Канали"
   },
   "labels": {
     "withoutCatalog": "Без каталогу",

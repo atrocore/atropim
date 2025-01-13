@@ -9,11 +9,6 @@
     "classifications": "Класифікації",
     "classificationAttributes": "Атрибути класифікації"
   },
-  "links": {
-    "products": "Продукти",
-    "classifications": "Класифікації",
-    "classificationAttributes": "Атрибути класифікації"
-  },
   "labels": {
     "Create Classification": "Створити класифікацію",
     "selectAttributeGroup": "Вибрати групу атрибутів"

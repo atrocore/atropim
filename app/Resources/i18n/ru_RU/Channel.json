@@ -7,10 +7,6 @@
     "code": "Код",
     "products": "Продукты"
   },
-  "links": {
-    "categories": "Категории",
-    "products": "Продукты"
-  },
   "labels": {
     "unLinkCategoryFromChannel": "Разорвать связь категории '%s' с каналом '%s'",
     "linkCategoryWithChannel": "Связать категорию '%s' с каналом '%s'",

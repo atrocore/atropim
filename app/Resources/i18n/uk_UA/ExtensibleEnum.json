@@ -2,9 +2,6 @@
   "fields": {
     "attributes": "Атрибути"
   },
-  "links": {
-    "attributes": "Атрибути"
-  },
   "exceptions": {
     "extensibleEnumIsUsedOnAttribute": "Список '%s' використовується атрибутом '%s'."
   }

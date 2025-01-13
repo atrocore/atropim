@@ -37,18 +37,6 @@
     "preparedName": "Ім'я",
     "htmlSanitizer": "HTML Sanitizer"
   },
-  "links": {
-    "measure": "Міра",
-    "parents": "Пов'язуючі атрибути",
-    "children": "Пов'язані атрибути",
-    "attributeGroup": "Група атрибутів",
-    "attributeTab": "Вкладка атрибутів",
-    "products": "Продукти",
-    "productAttributeValues": "Значення атрибутів",
-    "classifications": "Класифікації",
-    "extensibleEnum": "Список",
-    "classificationAttributes": "Класифікаційні атрибути"
-  },
   "labels": {
     "Create Attribute": "Створити атрибут",
     "classification": "Класифікація",

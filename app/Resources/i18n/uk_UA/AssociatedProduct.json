@@ -8,13 +8,6 @@
     "relatedProductImage": "Зображення пов'язаного продукту",
     "sorting": "Порядок сортування"
   },
-  "links": {
-    "association": "Зв'язок",
-    "mainProduct": "Головний продукт",
-    "mainProductImage": "Зображення головного продукту",
-    "relatedProduct": "Пов'язаний продукт",
-    "relatedProductImage": "Зображення пов'язаного продукту"
-  },
   "labels": {
     "Create AssociatedProduct": "Створити пов'язаний продукт"
   },

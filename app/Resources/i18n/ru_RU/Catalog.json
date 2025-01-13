@@ -3,12 +3,8 @@
     "isActive": "Активный",
     "products": "Продукты",
     "categories": "Категории",
-    "code": "Код"
-  },
-  "links": {
-    "channels": "Каналы",
-    "products": "Продукты",
-    "categories": "Категории"
+    "code": "Код",
+    "channels": "Каналы"
   },
   "labels": {
     "withoutCatalog": "Без каталога",

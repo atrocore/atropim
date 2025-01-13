@@ -15,12 +15,6 @@
     "max": "Максимальне значення",
     "extensibleEnumOptions": "Дозволити параметри"
   },
-  "links": {
-    "classification": "Класифікація",
-    "attribute": "Атрибут",
-    "channel": "Канал",
-    "extensibleEnumOptions": "Дозволити параметриу"
-  },
   "labels": {
     "Create ClassificationAttribute": "Створити атрибут класифікації",
     "unlinkRelatedAttribute": "Видалити тут і зберегти для продуктів",

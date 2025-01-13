@@ -4,9 +4,6 @@
         "isActive": "Активный",
         "products": "Продукты"
     },
-    "links": {
-        "products": "Продукты"
-    },
     "labels": {
         "Create Tax": "Создать налог"
     }

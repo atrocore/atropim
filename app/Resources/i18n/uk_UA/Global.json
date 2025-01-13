@@ -75,12 +75,6 @@
     "scope": "Область застосування",
     "role": "Роль"
   },
-  "links": {
-    "categories": "Категорії",
-    "channels": "Канали",
-    "products": "Продукти",
-    "catalogs": "Каталоги"
-  },
   "labels": {
     "setAsMainImage": "Призначити основним зображенням",
     "setAsMainCategory": "Встановити як основну категорію",

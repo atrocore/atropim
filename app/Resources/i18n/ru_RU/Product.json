@@ -32,26 +32,8 @@
     "contents": "Контент",
     "taskStatus": "Статус задачи",
     "children": "Дочерние продукты",
-    "parents": "Родительские продукты"
-  },
-  "links": {
-    "productSerie": "Серии продукта",
-    "product": "Продукт",
-    "image": "Изображение",
-    "calls": "Звонки",
-    "categories": "Категории продукта",
-    "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов",
-    "brand": "Бренд",
-    "associatedMainProducts": "Ассоциированные продукты: Связанные",
-    "associatedRelatedProduct": "Ассоциированные продукты: Основные",
-    "tax": "Налог",
-    "catalog": "Каталог",
-    "channels": "Каналы",
-    "productChannels": "Каналы продукта",
-    "contents": "Контент",
-    "children": "Дочерние продукты",
-    "parents": "Родительские продукты"
+    "parents": "Родительские продукты",
+    "calls": "Звонки"
   },
   "labels": {
     "Create Product": "Создать продукт",

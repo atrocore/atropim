@@ -15,13 +15,6 @@
     "productCategories": "Категорії продукту",
     "sortOrder": "Порядок сортування"
   },
-  "links": {
-    "parents": "Батьківська категорія",
-    "children": "Дочірні категорії",
-    "channels": "Канали",
-    "products": "Продукти",
-    "productCategories": "Категорії продукту"
-  },
   "labels": {
     "Create Category": "Створити категорії"
   },

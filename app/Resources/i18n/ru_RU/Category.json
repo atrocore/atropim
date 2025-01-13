@@ -16,14 +16,6 @@
     "catalogs": "Каталоги",
     "sortOrder": "Порядок сортировки"
   },
-  "links": {
-    "parents": "Родительская категория",
-    "categories": "Дочерние Категории",
-    "channels": "Каналы",
-    "products": "Продукты",
-    "catalogs": "Каталоги",
-    "productCategories": "Категории продукта"
-  },
   "labels": {
     "Create Category": "Создать категории"
   },
