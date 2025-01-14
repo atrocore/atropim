@@ -8,22 +8,22 @@
           "name": "attribute"
         },
         {
-          "name": "channel"
+          "name": "language"
         }
       ],
       [
         {
-          "name": "language"
+          "name": "value",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+        "name": "channel"
         },
         {
           "name": "isVariantSpecificAttribute"
         }
-      ],
-      [
-        {
-          "name": "value"
-        },
-        false
       ]
     ]
   }
