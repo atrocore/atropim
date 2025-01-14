@@ -358,7 +358,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     container = container.concat(response.list || []);
                     options.offset = container.length;
                     if (response.total > container.length || response.total === -1) {
-                        this.getFullEntity(url, options, callback, container);
+                        this.getFullEntityList(url, options, callback, container);
                     } else {
                         callback(container);
                     }
