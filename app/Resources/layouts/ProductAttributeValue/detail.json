@@ -14,15 +14,7 @@
           "name": "attribute"
         },
         {
-          "name": "channel"
-        }
-      ],
-      [
-        {
           "name": "language"
-        },
-        {
-          "name": "isVariantSpecificAttribute"
         }
       ],
       [
@@ -30,6 +22,14 @@
           "name": "value"
         },
         false
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        {
+          "name": "isVariantSpecificAttribute"
+        }
       ]
     ]
   }
