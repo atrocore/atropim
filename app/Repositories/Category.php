@@ -82,20 +82,6 @@ class Category extends Hierarchy
         return array_column($records, 'channel_id');
     }
 
-    public function getNotRelatedWithCatalogsTreeIds(): array
-    {
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('c.id')
-            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
-            ->where('c.deleted = :false')
-            ->andWhere("c.id NOT IN (SELECT DISTINCT c.entity_id FROM {$this->getConnection()->quoteIdentifier('category_hierarchy')} c WHERE c.deleted = :false)")
-            ->andWhere('c.id NOT IN (SELECT cc.category_id FROM catalog_category cc WHERE cc.deleted = :false)')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->fetchAllAssociative();
-
-        return array_column($records, 'id');
-    }
-
     /**
      * @param Entity $entity
      * @param array $options
@@ -122,7 +108,13 @@ class Category extends Hierarchy
 
                 $catalogIds = [];
                 foreach ($parents as $parent) {
-                    foreach ($parent->getLinkMultipleIdList('catalogs') as $catalogId) {
+                    $linkMultipleIdList = $parent->getLinkMultipleIdList('catalogs');
+
+                    if (!is_array($linkMultipleIdList)) {
+                        continue;
+                    }
+
+                    foreach ($linkMultipleIdList as $catalogId) {
                         if (!in_array($catalogId, $catalogIds)) {
                             $catalogIds[] = $catalogId;
                         }

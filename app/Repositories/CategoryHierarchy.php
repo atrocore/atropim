@@ -20,31 +20,6 @@ class CategoryHierarchy extends \Atro\Core\Templates\Repositories\Relation
 {
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if (!empty($options['pseudoTransactionManager']) && ($entity->isAttributeChanged('entityId') || $entity->isAttributeChanged('parentId'))) {
-            $categoryId = $entity->get('entityId');
-            $parentId = $entity->get('parentId');
-            $catalogIds = $this->getConnection()->createQueryBuilder()
-                ->select('catalog_id')
-                ->from('catalog_category')
-                ->where('category_id=:categoryId')
-                ->andWhere('deleted=:false')
-                ->setParameter('categoryId', $parentId)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchFirstColumn();
-
-
-            $childIds = array_merge([$categoryId], $this->getCategoryRepository()->getChildrenRecursivelyArray($categoryId));
-
-            $this->getEntityManager()->getRepository('CatalogCategory')->where(['categoryId' => $childIds])
-                ->removeCollection();
-
-            foreach ($catalogIds as $catalogId) {
-                foreach ($childIds as $childId) {
-                    $options['pseudoTransactionManager']->pushCreateEntityJob('CatalogCategory', ['categoryId' => $childId, 'catalogId' => $catalogId]);
-                }
-            }
-        }
-
         //rebuild tree
         if($entity->isNew() || $entity->isAttributeChanged('parentId')){
             $category = $this->getCategoryRepository()->get($entity->get('entityId'));
