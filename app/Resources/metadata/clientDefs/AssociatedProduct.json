@@ -18,9 +18,6 @@
   "recordViews": {
     "list": "pim:views/record/list"
   },
-  "additionalLayouts": {
-    "listForAssociatedProductsInProduct": "listSmall"
-  },
   "dynamicLogic": {
     "fields": {
       "mainProductImage": {

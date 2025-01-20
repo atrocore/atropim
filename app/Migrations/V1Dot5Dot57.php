@@ -32,7 +32,7 @@ class V1Dot5Dot57 extends Base
         $this->exec("ALTER TABLE product_channel RENAME INDEX idx_732095f772f5a1aa TO IDX_CHANNEL_ID");
 
         try {
-            /** @var \Espo\Core\Utils\Layout $layoutManager */
+            /** @var \Atro\Core\Utils\Layout $layoutManager */
             $layoutManager = (new \Espo\Core\Application())->getContainer()->get('layout');
 
             $layoutManager->set(json_decode(str_replace('"channels"', '"productChannels"', $layoutManager->get('Product', 'relationships'))), 'Product', 'relationships');

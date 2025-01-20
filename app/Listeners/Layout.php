@@ -12,55 +12,17 @@
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Listeners\AbstractLayoutListener;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
 
-/**
- * Class LayoutController
- */
-class LayoutController extends AbstractListener
+class Layout extends AbstractLayoutListener
 {
-    /**
-     * @param Event $event
-     */
-    public function afterActionRead(Event $event)
-    {
-        /** @var string $scope */
-        $scope = $event->getArgument('params')['scope'];
-
-        /** @var string $name */
-        $name = $event->getArgument('params')['name'];
-
-        /** @var bool $isAdminPage */
-        $isAdminPage = $event->getArgument('request')->get('isAdminPage') === 'true';
-
-        $method = 'modify' . $scope . ucfirst($name);
-        $methodAdmin = $method . 'Admin';
-
-        if (!$isAdminPage && method_exists($this, $method)) {
-            $this->{$method}($event);
-        } else {
-            if ($isAdminPage && method_exists($this, $methodAdmin)) {
-                $this->{$methodAdmin}($event);
-            }
-        }
-    }
-
-    public function isCustomLayout(Event $event)
-    {
-        /** @var string $scope */
-        $scope = $event->getArgument('params')['scope'];
-
-        /** @var string $name */
-        $name = $event->getArgument('params')['name'];
-
-        return $this->getContainer()->get('layout')->isCustom($scope, $name);
-    }
-
+    
     protected function modifyProductAttributeValueListSmall(Event $event)
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
         foreach ($result as &$item) {
             if (!empty($item['name'])) {
                 if ($item['name'] === 'attribute') {
@@ -71,18 +33,18 @@ class LayoutController extends AbstractListener
                 }
             }
         }
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyClassificationAttributeListSmall(Event $event)
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
         foreach ($result as &$item) {
             if (!empty($item['name']) && $item['name'] === 'attribute') {
                 $item['view'] = 'pim:views/classification-attribute/fields/attribute-with-inheritance-sign';
             }
         }
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyFileListSmall(Event $event)
@@ -91,10 +53,10 @@ class LayoutController extends AbstractListener
             return;
         }
 
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
         $result[] = ['name' => 'ProductFile__channel'];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyFileDetailSmall(Event $event)
@@ -102,14 +64,14 @@ class LayoutController extends AbstractListener
         if ($this->isCustomLayout($event)) {
             return;
         }
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         $result[0]['rows'][] = [['name' => 'ProductFile__isMainImage'], ['name' => 'ProductFile__sorting']];
         $result[0]['rows'][] = [['name' => 'ProductFile__channel'], false];
 
         $result[0]['rows'][] = [['name' => 'CategoryFile__isMainImage'], ['name' => 'CategoryFile__sorting']];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyChannelListSmall(Event $event)
@@ -118,10 +80,10 @@ class LayoutController extends AbstractListener
             return;
         }
 
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
         $result[] = ['name' => 'ProductChannel__isActive'];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyChannelDetailSmall(Event $event)
@@ -130,10 +92,10 @@ class LayoutController extends AbstractListener
             return;
         }
 
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
         $result[0]['rows'][] = [['name' => 'ProductChannel__isActive'], false];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     /**
@@ -142,7 +104,7 @@ class LayoutController extends AbstractListener
     protected function modifyAttributeDetail(Event $event)
     {
         /** @var array $result */
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         foreach ($result as $panel) {
             foreach ($panel['rows'] as $row) {
@@ -158,7 +120,7 @@ class LayoutController extends AbstractListener
             $result[0]['rows'][] = [$multilangField, false];
         }
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     /**
@@ -175,7 +137,7 @@ class LayoutController extends AbstractListener
         }
 
         /** @var array $result */
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         foreach ($result as $k => $panel) {
             foreach ($panel['rows'] as $k1 => $row) {
@@ -190,26 +152,19 @@ class LayoutController extends AbstractListener
             }
         }
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     /**
      * @param Event $event
      */
-    protected function modifyAttributeDetailSmall(Event $event)
+    protected function modifyProductRelationships(Event $event)
     {
-        $this->modifyAttributeDetail($event);
-    }
-
-    /**
-     * @param Event $event
-     */
-    protected function modifyProductRelationshipsLayout(Event $event, bool $isAdmin)
-    {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
+        $isAdmin = $this->isAdminPage($event);
         $newResult = [];
 
-        if ($this->getContainer()->get('layout')->isCustom('Product', 'relationships')) {
+        if ($this->isCustomLayout($event)) {
             if ($isAdmin) {
                 return;
             }
@@ -250,28 +205,9 @@ class LayoutController extends AbstractListener
             }
         }
 
-        $event->setArgument('result', Json::encode($newResult));
+        $event->setArgument('result', $newResult);
     }
 
-    /**
-     * @param Event $event
-     */
-    protected function modifyProductRelationships(Event $event)
-    {
-        $this->modifyProductRelationshipsLayout($event, false);
-    }
-
-    protected function modifyProductRelationshipsAdmin(Event $event)
-    {
-        $this->modifyProductRelationshipsLayout($event, true);
-    }
-
-    /**
-     * @param Event $event
-     */
-    protected function modifyCategoryRelationshipsAdmin(Event $event)
-    {
-    }
 
     /**
      * @return array
