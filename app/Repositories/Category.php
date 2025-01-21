@@ -14,11 +14,9 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -80,20 +78,6 @@ class Category extends Hierarchy
             ->fetchAllAssociative();
 
         return array_column($records, 'channel_id');
-    }
-
-    public function getNotRelatedWithCatalogsTreeIds(): array
-    {
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('c.id')
-            ->from($this->getConnection()->quoteIdentifier('category'), 'c')
-            ->where('c.deleted = :false')
-            ->andWhere("c.id NOT IN (SELECT DISTINCT c.entity_id FROM {$this->getConnection()->quoteIdentifier('category_hierarchy')} c WHERE c.deleted = :false)")
-            ->andWhere('c.id NOT IN (SELECT cc.category_id FROM catalog_category cc WHERE cc.deleted = :false)')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->fetchAllAssociative();
-
-        return array_column($records, 'id');
     }
 
     /**
