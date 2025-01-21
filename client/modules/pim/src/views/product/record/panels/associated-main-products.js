@@ -110,9 +110,9 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             let areRendered = [];
 
             this.groups.forEach((group, key) => {
-                this.getHelper().layoutManager.get('Product', this.layoutName, layout => {
+                this.getHelper().layoutManager.get('Product', this.layoutName, data => {
                     let list = [];
-                    layout.forEach(item => {
+                    data.layout.forEach(item => {
                         if (item.name) {
                             let field = item.name;
                             let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'type']);
