@@ -106,7 +106,13 @@ class Category extends Hierarchy
 
                 $catalogIds = [];
                 foreach ($parents as $parent) {
-                    foreach ($parent->getLinkMultipleIdList('catalogs') as $catalogId) {
+                    $linkMultipleIdList = $parent->getLinkMultipleIdList('catalogs');
+
+                    if (!is_array($linkMultipleIdList)) {
+                        continue;
+                    }
+
+                    foreach ($linkMultipleIdList as $catalogId) {
                         if (!in_array($catalogId, $catalogIds)) {
                             $catalogIds[] = $catalogId;
                         }
