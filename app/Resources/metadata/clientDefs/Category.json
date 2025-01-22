@@ -8,7 +8,6 @@
     "onlyMy",
     "notEntity",
     "notLinkedWithProduct",
-    "linkedWithCatalog",
     "onlyRootCategory",
     "notParents",
     "notChildren",
@@ -18,7 +17,6 @@
   "hiddenBoolFilterList": [
     "notEntity",
     "notLinkedWithProduct",
-    "linkedWithCatalog",
     "onlyRootCategory",
     "notParents",
     "notChildren",
