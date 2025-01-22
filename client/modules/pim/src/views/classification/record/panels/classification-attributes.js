@@ -39,15 +39,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                 e.stopPropagation();
                 let data = $(e.currentTarget).data();
                 this.unlinkAttributeGroupHierarchy(data);
-            },
-            'click a[data-action="setCaAsInherited"]': function (e) {
-                let $a = $(e.currentTarget);
-                this.ajaxPostRequest(`ClassificationAttribute/action/inheritCa`, {id: $a.data('caid')}).then(response => {
-                    this.notify('Saved', 'success');
-                    this.model.trigger('after:attributesSave');
-                    $a.parents('.panel').find('.action[data-action=refresh]').click();
-                });
-            },
+            }
         }, Dep.prototype.events),
 
         data() {
@@ -234,6 +226,19 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     this.actionRefresh();
                 });
             })
+        },
+
+        actionSetCaAsInherited(data) {
+            let model = null;
+            if (this.collection) {
+                model = this.collection.get(data.id);
+            }
+
+            this.ajaxPostRequest(`ClassificationAttribute/action/inheritCa`, {id: data.id}).then(response => {
+                this.notify('Saved', 'success');
+                model?.trigger('after:attributesSave');
+                this.$el.parents('.panel').find('.action[data-action=refresh]').click();
+            });
         },
 
         actionUnlinkRelatedAttribute(data, message = null) {
