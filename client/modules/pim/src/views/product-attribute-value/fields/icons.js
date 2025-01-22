@@ -22,11 +22,15 @@ Espo.define('pim:views/product-attribute-value/fields/icons', 'views/fields/varc
         getIcons() {
             let html = '';
 
-            html += this.inheritedIcon();
+            if (this.model.get('isRequired')) {
+                html += `<span class="pull-right fas fa-sm fa-exclamation required-sign" title="${this.translate('Required')}"></span>`;
+            }
 
             if (this.model.get('isVariantSpecificAttribute')) {
-                html += `<a href="javascript:" class="action unlock-link" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"><span class="fas fa-star fa-sm"></span></a>`;
+                html += `<span class="fas fa-star fa-sm" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></span>`;
             }
+
+            html += this.inheritedIcon();
 
             return html;
         },
@@ -40,9 +44,9 @@ Espo.define('pim:views/product-attribute-value/fields/icons', 'views/fields/varc
 
             let isPavValueInherited = this.model.get('isPavValueInherited');
             if (isPavValueInherited === true) {
-                html = `<a href="javascript:" data-pavid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`;
+                html = `<span title="${this.translate('inherited')}" class="fas fa-link fa-sm"></span>`;
             } else if (isPavValueInherited === false) {
-                html = `<a href="javascript:" data-pavid="${this.model.get('id')}" data-action="setPavAsInherited" class="action lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`;
+                html = `<span title="${this.translate('notInherited')}" class="fas fa-unlink fa-sm"></span>`;
             }
 
             return html;

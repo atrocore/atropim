@@ -66,12 +66,49 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             return result;
         },
 
+        getStatusIcons: function (model) {
+            const htmlIcons = Dep.prototype.getStatusIcons.call(this, model) || [];
+
+            if (model.get('isRequired')) {
+                htmlIcons.push(`<span class="pull-right fas fa-sm fa-exclamation required-sign" title="${this.translate('Required')}"></span>`)
+            }
+
+            if (model.urlRoot === 'ProductAttributeValue') {
+                const isPavValueInherited = model.get('isPavValueInherited');
+
+                if (model.get('isVariantSpecificAttribute')) {
+                    htmlIcons.push(`<span class="fas fa-star fa-sm" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></span>`);
+                }
+
+                if (isPavValueInherited === true) {
+                    htmlIcons.push(`<span title="${this.translate('inherited')}" class="fas fa-link fa-sm"></span>`);
+                } else if (isPavValueInherited === false) {
+                    htmlIcons.push(`<span title="${this.translate('notInherited')}" class="fas fa-unlink fa-sm"></span>`);
+                }
+            }
+
+            return htmlIcons;
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
                 this.setEditMode();
             }
+        },
+
+        actionSetPavAsInherited(data) {
+            let model = null;
+            if (this.collection) {
+                model = this.collection.get(data.id);
+            }
+
+            this.ajaxPostRequest(`ProductAttributeValue/action/inheritPav`, {id: data.id}).then(response => {
+                this.notify('Saved', 'success');
+                model?.trigger('after:attributesSave');
+                this.$el.parents('.panel').find('.action[data-action=refresh]').click();
+            });
         },
 
         updateHeaderDefs(defs) {
