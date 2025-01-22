@@ -19,10 +19,6 @@ Espo.define('pim:views/classification-attribute/fields/attribute-with-inheritanc
             if (this.model.get('isInherited')) {
                 $a.attr('style', 'font-style: italic');
             }
-
-            if (this.model.get('isRequired')) {
-                $a.html($a.html() + ' *');
-            }
         },
 
     })

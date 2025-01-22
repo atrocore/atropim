@@ -19,10 +19,6 @@ Espo.define('pim:views/product-attribute-value/fields/attribute-with-required-si
             if (this.model.get('isPavRelationInherited')) {
                 $a.css("font-style", "italic");
             }
-
-            if (this.model.get('isRequired')) {
-                $a.html($a.html() + ' *');
-            }
         },
 
     })
