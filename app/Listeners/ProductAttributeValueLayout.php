@@ -20,7 +20,7 @@ use Atro\Listeners\AbstractLayoutListener;
 
 class ProductAttributeValueLayout extends AbstractLayoutListener
 {
-    protected function list(Event $event)
+    public function list(Event $event)
     {
         if($this->isRelatedLayout($event)){
             $result = $event->getArgument('result');
@@ -41,7 +41,7 @@ class ProductAttributeValueLayout extends AbstractLayoutListener
     /**
      * @param Event $event
      */
-    protected function detail(Event $event)
+    public function detail(Event $event)
     {
         if (empty($this->getConfig()->get('isMultilangActive'))) {
             return;

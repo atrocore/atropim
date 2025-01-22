@@ -20,7 +20,7 @@ use Atro\Listeners\AbstractLayoutListener;
 
 class ProductLayout extends AbstractLayoutListener
 {
-    protected function relationships(Event $event)
+    public function relationships(Event $event)
     {
         $result = $event->getArgument('result');
         $isAdmin = $this->isAdminPage($event);

@@ -20,7 +20,7 @@ use Atro\Listeners\AbstractLayoutListener;
 
 class ClassificationAttributeLayout extends AbstractLayoutListener
 {
-    protected function list(Event $event)
+    public function list(Event $event)
     {
         if ($this->isRelatedLayout($event)) {
             $result = $event->getArgument('result');

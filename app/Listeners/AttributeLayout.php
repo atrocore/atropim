@@ -23,7 +23,7 @@ class AttributeLayout extends AbstractLayoutListener
     /**
      * @param Event $event
      */
-    protected function detail(Event $event)
+    public function detail(Event $event)
     {
         /** @var array $result */
         $result = $event->getArgument('result');

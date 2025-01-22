@@ -20,7 +20,7 @@ use Atro\Listeners\AbstractLayoutListener;
 
 class ChannelLayout extends AbstractLayoutListener
 {
-    protected function list(Event $event)
+    public function list(Event $event)
     {
         if (!$this->isCustomLayout($event) && $this->isRelatedLayout($event)) {
             $result = $event->getArgument('result');
@@ -30,7 +30,7 @@ class ChannelLayout extends AbstractLayoutListener
         }
     }
 
-    protected function detail(Event $event)
+    public function detail(Event $event)
     {
         if (!$this->isCustomLayout($event) && $this->isRelatedLayout($event)) {
             $result = $event->getArgument('result');
