@@ -372,7 +372,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
         },
 
         fetchCollectionGroups(callback) {
-            this.getHelper().layoutManager.get(this.scope, this.layoutName,null, data => {
+            this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
                 let list = [];
                 data.layout.forEach(item => {
                     if (item.name) {
@@ -499,7 +499,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-                    this.getHelper().layoutManager.get(this.scope, this.layoutName,null, data => {
+                    this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
                         this.createView(group.key, viewName, {
                             collection: this.prepareGroupCollection(group, collection),
                             layoutName: this.layoutName,
