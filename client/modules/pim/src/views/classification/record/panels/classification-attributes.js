@@ -134,7 +134,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
 
             this.setupActions();
 
-            var layoutName = 'listSmall';
+            var layoutName = 'list';
             this.setupListLayout();
 
             if (this.listLayoutName) {

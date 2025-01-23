@@ -5,17 +5,17 @@
     "rows": [
       [
         {
-          "name": "product"
-        },
-        false
-      ],
-      [
-        {
           "name": "attribute"
         },
         {
-          "name": "language"
+          "name": "product"
         }
+      ],
+      [
+        {
+          "name": "language"
+        },
+        false
       ],
       [
         {

@@ -32,7 +32,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             }
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
-            this.layoutName = 'listSmall';
+            this.layoutName = 'list';
             if (this.checkAclAction('create')) {
                 this.buttonList.push({
                     title: 'Create',

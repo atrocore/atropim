@@ -87,7 +87,7 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
 
             this.setupActions();
 
-            var layoutName = 'listSmall';
+            var layoutName = 'list';
             this.setupListLayout();
 
             if (this.listLayoutName) {
@@ -156,6 +156,7 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
                         this.createView('list', viewName, {
                             collection: collection,
                             layoutName: layoutName,
+                            layoutRelatedScope: this.model.name,
                             listLayout: listLayout,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
