@@ -52,6 +52,16 @@
             }
           ]
         }
+      },
+      "product": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
       }
     }
   }

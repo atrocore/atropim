@@ -8,8 +8,14 @@
           "name": "attribute"
         },
         {
-          "name": "language"
+          "name": "product"
         }
+      ],
+      [
+        {
+          "name": "language"
+        },
+        false
       ],
       [
         {
