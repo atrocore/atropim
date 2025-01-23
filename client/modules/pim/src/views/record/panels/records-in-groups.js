@@ -221,6 +221,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                             collection: groupCollection,
                             layoutName: this.layoutName,
                             listLayout: this.listLayout,
+                            layoutRelatedScope: this.model.name,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
