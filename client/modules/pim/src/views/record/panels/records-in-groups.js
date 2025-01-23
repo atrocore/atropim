@@ -110,7 +110,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.setupActions();
 
-            var layoutName = 'listSmall';
+            var layoutName = 'list';
             this.setupListLayout();
 
             if (this.listLayoutName) {

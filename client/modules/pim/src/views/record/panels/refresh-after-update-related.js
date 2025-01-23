@@ -82,7 +82,7 @@ Espo.define('pim:views/record/panels/refresh-after-update-related',  ['views/rec
                 });
             }
 
-            var layoutName = 'listSmall';
+            var layoutName = 'list';
             var listLayout = null;
             var layout = this.defs.layout || null;
             if (layout) {
@@ -129,6 +129,7 @@ Espo.define('pim:views/record/panels/refresh-after-update-related',  ['views/rec
                     this.createView('list', viewName, {
                         collection: collection,
                         layoutName: layoutName,
+                        layoutRelatedScope: this.model.name,
                         listLayout: listLayout,
                         checkboxes: false,
                         rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
