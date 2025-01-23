@@ -14,18 +14,22 @@ Espo.define('pim:views/classification-attribute/fields/icons', 'views/fields/var
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'list') {
-                this.$el.html(this.inheritedIcon());
+                this.$el.html(this.getIcons());
             }
         },
 
-        inheritedIcon() {
+        getIcons() {
             let html = '';
+
+            if (this.model.get('isRequired')) {
+                html += `<span class="pull-right fas fa-sm fa-exclamation required-sign" title="${this.translate('Required')}"></span>`;
+            }
 
             let isCaValueInherited = this.model.get('isCaValueInherited');
             if (isCaValueInherited === true) {
-                html = `<a href="javascript:" data-caid="${this.model.get('id')}" class="action unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`;
+                html += `<span data-caid="${this.model.get('id')}" class="fas fa-link fa-sm" title="${this.translate('inherited')}"></span>`;
             } else if (isCaValueInherited === false) {
-                html = `<a href="javascript:" data-caid="${this.model.get('id')}" data-action="setCaAsInherited" class="action lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`;
+                html += `<span data-caid="${this.model.get('id')}" class="fas fa-unlink fa-sm" title="${this.translate('notInherited')}"></span>`;
             }
 
             return html;

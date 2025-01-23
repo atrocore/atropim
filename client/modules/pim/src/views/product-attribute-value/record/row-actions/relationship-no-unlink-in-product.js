@@ -23,8 +23,12 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
         },
 
         setupIcons() {
-            let iconContainer = $("<div class='icons-container'> </div>")
-            this.$el.find('.list-row-buttons').prepend(iconContainer)
+            let iconContainer = this.$el.find('.list-row-buttons .icons-container');
+            if (iconContainer.size() === 0) {
+                iconContainer = $("<div class='icons-container'> </div>")
+                this.$el.find('.list-row-buttons').prepend(iconContainer)
+            }
+
             this.createView('icons', 'pim:views/product-attribute-value/fields/icons', {
                 el: this.options.el + '.list-row-buttons .icons-container',
                 scope: 'ProductAttributeValue',
@@ -42,7 +46,7 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.getAcl().checkModel(this.model ,'edit')) {
+            if (this.getAcl().checkModel(this.model, 'edit')) {
                 list = list.concat([
                     {
                         action: 'quickEdit',
@@ -53,9 +57,19 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                         link: '#' + this.model.name + '/edit/' + this.model.id
                     }
                 ]);
+
+                if (this.model.get('language') === 'main' && this.model.get('isPavValueInherited') === false) {
+                    list.push({
+                        action: 'setPavAsInherited',
+                        label: 'inherit',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
 
-            if (this.getAcl().checkModel(this.model ,'delete')) {
+            if (this.getAcl().checkModel(this.model, 'delete')) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',

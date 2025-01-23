@@ -80,8 +80,8 @@
     }
 
     .group-records-list .context-menu {
-        padding: 0;
+        padding: 0 3px 0 0;
         vertical-align: middle;
-        text-align: center;
+        text-align: right;
     }
 </style>

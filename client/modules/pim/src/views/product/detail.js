@@ -29,17 +29,6 @@ Espo.define('pim:views/product/detail', ['pim:views/detail', 'pim:views/product/
             },
         },
 
-        events: _.extend({
-            'click a[data-action="setPavAsInherited"]': function (e) {
-                let $a = $(e.currentTarget);
-                this.ajaxPostRequest(`ProductAttributeValue/action/inheritPav`, {id: $a.data('pavid')}).then(response => {
-                    this.notify('Saved', 'success');
-                    this.model.trigger('after:attributesSave');
-                    $a.parents('.panel').find('.action[data-action=refresh]').click();
-                });
-            },
-        }, Dep.prototype.events),
-
         actionNavigateToRoot(data, e) {
             e.stopPropagation();
 

@@ -436,7 +436,7 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
                     let groupView = this.getView(group.key);
                     if (groupView) {
                         groupView.setEditMode();
-                        $(groupView.options.el +' div.list-row-buttons').hide()
+                        $(groupView.options.el +' div.list-row-buttons .dropdown-toggle').hide()
                     }
                 });
             };
