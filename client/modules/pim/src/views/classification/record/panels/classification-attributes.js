@@ -372,9 +372,9 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
         },
 
         fetchCollectionGroups(callback) {
-            this.getHelper().layoutManager.get(this.scope, this.layoutName, layout => {
+            this.getHelper().layoutManager.get(this.scope, this.layoutName,null, data => {
                 let list = [];
-                layout.forEach(item => {
+                data.layout.forEach(item => {
                     if (item.name) {
                         let field = item.name;
                         let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
@@ -499,11 +499,11 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-                    this.getHelper().layoutManager.get(this.scope, this.layoutName, layout => {
+                    this.getHelper().layoutManager.get(this.scope, this.layoutName,null, data => {
                         this.createView(group.key, viewName, {
                             collection: this.prepareGroupCollection(group, collection),
                             layoutName: this.layoutName,
-                            listLayout: this.prepareListLayout(layout),
+                            listLayout: this.prepareListLayout(data.layout),
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,

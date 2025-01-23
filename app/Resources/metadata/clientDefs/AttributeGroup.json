@@ -24,7 +24,6 @@
   "relationshipPanels": {
     "attributes": {
       "view": "pim:views/attribute-group/record/panels/attributes",
-      "layout": "listAttributesInAttrGroup",
       "dragDrop": {
         "isActive": true,
         "sortField": "sortOrderInAttributeGroup"

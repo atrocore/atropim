@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Pim\Migrations;
 
-use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Migration\Base;
+use Espo\Core\Exceptions\BadRequest;
 
 class V1Dot7Dot0 extends Base
 {
@@ -66,7 +66,7 @@ class V1Dot7Dot0 extends Base
         $this->getPDO()->exec("CREATE INDEX IDX_ASSET_ID ON category_asset (asset_id)");
 
         try {
-            /** @var \Espo\Core\Utils\Layout $layoutManager */
+            /** @var \Atro\Core\Utils\Layout $layoutManager */
             $layoutManager = (new \Espo\Core\Application())->getContainer()->get('layout');
             $layoutManager->set(json_decode(str_replace('"assets"', '"productAssets"', $layoutManager->get('Product', 'relationships'))), 'Product', 'relationships');
             $layoutManager->set(json_decode(str_replace('"products"', '"productAssets"', $layoutManager->get('Asset', 'relationships'))), 'Asset', 'relationships');
