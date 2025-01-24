@@ -1,6 +1,6 @@
 [
   {
-    "label": "Overview",
+    "label": "Details",
     "style": "default",
     "rows": [
       [
@@ -24,12 +24,6 @@
         {
           "name": "code"
         }
-      ],
-      [
-        {
-          "name": "popular"
-        },
-        false
       ]
     ]
   }

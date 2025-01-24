@@ -70,5 +70,18 @@ class ProductLayout extends AbstractLayoutListener
         $event->setArgument('result', $newResult);
     }
 
+    public function detail(Event $event)
+    {
+        $relatedEntity = $this->getRelatedEntity($event);
+        $result = $event->getArgument('result');
 
+        if ($relatedEntity === 'Category' && !str_contains(json_encode($result), 'ProductCategory__mainCategory')) {
+            $result[0]['rows'][] = [['name' => 'ProductCategory__mainCategory'], false];
+        }
+        if ($relatedEntity === 'Product' && !str_contains(json_encode($result), 'ProductHierarchy__mainChild')) {
+            $result[0]['rows'][] = [['name' => 'ProductHierarchy__mainChild'], false];
+        }
+
+        $event->setArgument('result', $result);
+    }
 }

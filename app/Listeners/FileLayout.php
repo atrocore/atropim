@@ -32,15 +32,18 @@ class FileLayout extends AbstractLayoutListener
 
     public function detail(Event $event)
     {
-        if (!$this->isCustomLayout($event) && !$this->isRelatedLayout($event)) {
-            $result = $event->getArgument('result');
+        $relatedEntity = $this->getRelatedEntity($event);
+        $result = $event->getArgument('result');
 
+        if ($relatedEntity === 'Product' && !str_contains(json_encode($result), '"ProductFile__isMainImage"')) {
             $result[0]['rows'][] = [['name' => 'ProductFile__isMainImage'], ['name' => 'ProductFile__sorting']];
             $result[0]['rows'][] = [['name' => 'ProductFile__channel'], false];
-
-            $result[0]['rows'][] = [['name' => 'CategoryFile__isMainImage'], ['name' => 'CategoryFile__sorting']];
-
-            $event->setArgument('result', $result);
         }
+
+        if ($relatedEntity === 'Category' && !str_contains(json_encode($result), '"CategoryFile__isMainImage"')) {
+            $result[0]['rows'][] = [['name' => 'CategoryFile__isMainImage'], ['name' => 'CategoryFile__sorting']];
+        }
+
+        $event->setArgument('result', $result);
     }
 }
