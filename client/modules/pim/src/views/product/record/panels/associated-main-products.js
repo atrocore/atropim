@@ -110,7 +110,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             let areRendered = [];
 
             this.groups.forEach((group, key) => {
-                this.getHelper().layoutManager.get('Product', this.layoutName, data => {
+                this.getHelper().layoutManager.get('Product', this.layoutName, null, function(data) {
                     let list = [];
                     data.layout.forEach(item => {
                         if (item.name) {
@@ -133,7 +133,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
                                     scope: 'Product',
                                     collection: groupCollection,
                                     layoutName: this.layoutName,
-                                    listLayout: this.prepareListLayout(layout),
+                                    listLayout: this.prepareListLayout(data.layout),
                                     rowActionsView: 'views/record/row-actions/relationship-no-unlink',
                                     checkboxes: false,
                                     buttonsDisabled: true,
@@ -159,7 +159,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
                             });
                         });
                     });
-                });
+                }.bind(this));
             });
         },
 
