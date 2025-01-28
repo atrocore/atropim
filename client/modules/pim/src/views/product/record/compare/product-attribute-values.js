@@ -390,6 +390,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         },
 
         handleAllFieldRender(key, totalAttributes) {
+            $('tr .status-container').remove();
             if(!this.renderedFields.includes(key)){
                 this.renderedFields.push(key);
 
@@ -475,6 +476,41 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
             });
 
             return validate;
-        }
+        },
+        changeViewMode(newMode) {
+            this.merging = newMode === 'edit';
+            this.reRender();
+            // let changeView = (attrData, viewKey) => {
+            //
+            //     let view = this.getView(viewKey);
+            //
+            //     if(!view){
+            //         return;
+            //     }
+            //
+            //     if(view.mode !== newMode) {
+            //         view.setMode(newMode);
+            //         view.reRender();
+            //     }
+            // };
+            //
+            // this.attributeList.forEach(group => {
+            //     group.attributes.forEach(attrData => {
+            //         let modelId = this.$el.find(`input.field-radio[name=${attrData.key}]:checked`).val();
+            //
+            //         if(modelId === attrData.modelId) {
+            //             changeView(attrData , attrData.viewKey);
+            //             return;
+            //         }
+            //
+            //         attrData.others.forEach(data => {
+            //             if(data.modelId === modelId) {
+            //                 changeView(attrData, data.viewKey);
+            //             }
+            //         });
+            //     });
+            // });
+        },
+
     })
 })
