@@ -8,12 +8,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
+Espo.define('pim:views/attribute/fields/type', 'views/fields/grouped-enum',
     (Dep) => Dep.extend({
 
         inlineEditDisabled: true,
 
         setup: function () {
+            this.params.groupTranslation = 'EntityField.groups.type'
             Dep.prototype.setup.call(this);
 
             this.updateOptions();
@@ -25,6 +26,7 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
 
         updateOptions() {
             this.params.options = ['']
+            this.params.groups = {};
             this.translatedOptions = {'': ''};
 
             if (this.model.isNew()) {
@@ -40,6 +42,33 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
                     this.translatedOptions[attributeType] = this.getLanguage().translateOption(attributeType, 'type', 'Attribute');
                 });
             }
+
+            this.params.options.forEach(attributeType => {
+                if (!attributeType) {
+                    return
+                }
+                const group = this.getMetadata().get(['fields', attributeType])?.group || 'other'
+                if (!this.params.groups[group]) {
+                    this.params.groups[group] = []
+                }
+                this.params.groups[group].push(attributeType)
+            })
+
+            this.params.groups = Object.fromEntries(
+                Object.entries(this.params.groups).sort(([v1], [v2]) => {
+                    if (v1 === 'other') return 1;
+                    if (v2 === 'other') return -1;
+                    const order = {numeric: 1, character: 2, date: 3, reference: 4};
+                    return (order[v1] || 999) - (order[v2] || 999) ||
+                        (this.translatedGroups[v1] || v1).localeCompare((this.translatedGroups[v2] || v2));
+                })
+            );
+
+            Object.keys(this.params.groups).forEach(group => {
+                this.params.groups[group] = this.params.groups[group].sort((v1, v2) => {
+                    return this.translate(v1, 'type', 'Attribute').localeCompare(this.translate(v2, 'type', 'Attribute'));
+                });
+            })
         },
 
     })
