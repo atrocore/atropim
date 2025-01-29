@@ -30,7 +30,6 @@
             {{/if}}
         </div>
         <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
-        <div class="layout-editor-container btn-group"></div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
