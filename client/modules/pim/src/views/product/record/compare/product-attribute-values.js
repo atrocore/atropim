@@ -47,6 +47,8 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         setup() {
             this.tabId = this.options.defs?.tabId;
 
+            this.selectedFilters = this.options.selectedFilters ?? {};
+
             Dep.prototype.setup.call(this);
 
             this.deferRendering = true;
@@ -77,9 +79,9 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                     let param = {
                         tabId: this.tabId,
                         productId: model.get('id'),
-                        fieldFilter: ['allValues'],
-                        languageFilter: ['allLanguages'],
-                        scopeFilter: ['allChannels']
+                        fieldFilter: this.selectedFilters['fieldFilter'] || ['allValues'],
+                        languageFilter:this.selectedFilters['languageFilter'] || ['allLanguages'],
+                        scopeFilter: this.selectedFilters['scopeFilter'] || ['allChannels']
                     };
                     promises.push(new Promise(resolve => {
                         this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param).success(res => {
@@ -480,37 +482,6 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         changeViewMode(newMode) {
             this.merging = newMode === 'edit';
             this.reRender();
-            // let changeView = (attrData, viewKey) => {
-            //
-            //     let view = this.getView(viewKey);
-            //
-            //     if(!view){
-            //         return;
-            //     }
-            //
-            //     if(view.mode !== newMode) {
-            //         view.setMode(newMode);
-            //         view.reRender();
-            //     }
-            // };
-            //
-            // this.attributeList.forEach(group => {
-            //     group.attributes.forEach(attrData => {
-            //         let modelId = this.$el.find(`input.field-radio[name=${attrData.key}]:checked`).val();
-            //
-            //         if(modelId === attrData.modelId) {
-            //             changeView(attrData , attrData.viewKey);
-            //             return;
-            //         }
-            //
-            //         attrData.others.forEach(data => {
-            //             if(data.modelId === modelId) {
-            //                 changeView(attrData, data.viewKey);
-            //             }
-            //         });
-            //     });
-            // });
-        },
-
+        }
     })
 })
