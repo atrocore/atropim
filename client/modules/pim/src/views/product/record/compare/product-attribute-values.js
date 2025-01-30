@@ -47,6 +47,8 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         setup() {
             this.tabId = this.options.defs?.tabId;
 
+            this.selectedFilters = this.options.selectedFilters ?? {};
+
             Dep.prototype.setup.call(this);
 
             this.deferRendering = true;
@@ -77,9 +79,9 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
                     let param = {
                         tabId: this.tabId,
                         productId: model.get('id'),
-                        fieldFilter: ['allValues'],
-                        languageFilter: ['allLanguages'],
-                        scopeFilter: ['allChannels']
+                        fieldFilter: this.selectedFilters['fieldFilter'] || ['allValues'],
+                        languageFilter:this.selectedFilters['languageFilter'] || ['allLanguages'],
+                        scopeFilter: this.selectedFilters['scopeFilter'] || ['allChannels']
                     };
                     promises.push(new Promise(resolve => {
                         this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', param).success(res => {
@@ -390,6 +392,7 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
         },
 
         handleAllFieldRender(key, totalAttributes) {
+            $('tr .status-container').remove();
             if(!this.renderedFields.includes(key)){
                 this.renderedFields.push(key);
 
@@ -475,6 +478,10 @@ Espo.define('pim:views/product/record/compare/product-attribute-values', 'views/
             });
 
             return validate;
+        },
+        changeViewMode(newMode) {
+            this.merging = newMode === 'edit';
+            this.reRender();
         }
     })
 })

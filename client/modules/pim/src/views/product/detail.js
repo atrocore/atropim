@@ -47,7 +47,6 @@ Espo.define('pim:views/product/detail', ['pim:views/detail', 'pim:views/product/
         },
 
         getOverviewFiltersList() {
-
             let result = Dep.prototype.getOverviewFiltersList.call(this);
             if(this.overviewFilterList.find(v => v.name === 'scopeFilter'))  {
                 return this.overviewFilterList;

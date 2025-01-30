@@ -42,7 +42,7 @@
         </tr>
             {{#each attributes }}
             <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{key}}">
-                <td class="cell" title="{{label}}"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{{label}}}</a></td>
+                <td  title="{{label}}"><a href="{{# if instanceUrl}} {{instanceUrl}}/{{/if}}#Attribute/view/{{attributeId}}" {{# if instanceUrl}}target="_blank"{{/if}}> {{{label}}}</a></td>
                 {{#if ../../merging}}
                 <td>
                     <div class="center-child" >
@@ -50,8 +50,10 @@
                     </div>
                 </td>
                 {{/if}}
-                <td class="cell  {{#unless shouldNotCenter}} text-center{{/unless}}">
-                   <div class="field current">Loading...</div>
+                <td class="{{#unless shouldNotCenter}} text-center{{/unless}}">
+                  <div class="field">
+                      <div class="current">Loading...</div>
+                  </div>
                 </td>
                 {{#each others}}
                     {{#if ../../../merging}}
@@ -61,8 +63,10 @@
                             </div>
                         </td>
                     {{/if}}
-                    <td class="cell other{{index}} {{#unless shouldNotCenter}} text-center{{/unless}}">
-                       <div class="field other{{index}}">Loading...</div>
+                    <td class="other{{index}} {{#unless shouldNotCenter}} text-center{{/unless}}">
+                       <div class="field">
+                           <div class="other{{index}}">Loading...</div>
+                       </div>
                     </td>
                 {{/each}}
             </tr>
