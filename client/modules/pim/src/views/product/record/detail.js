@@ -466,31 +466,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         },
 
         onTreeResize(width) {
-            if ($('.catalog-tree-panel').length) {
-                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
 
-                const content = $('#content');
-                const main = content.find('#main');
-
-                const header = content.find('.page-header');
-                const btnContainer = content.find('.detail-button-container');
-                const filters = content.find('.overview-filters-container');
-                const overview = content.find('.overview');
-                const side = content.find('.side');
-
-                header.outerWidth(Math.floor(main.width() - width));
-                header.css('marginLeft', width + 'px');
-
-                filters.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width));
-                filters.css('marginLeft', width + 'px');
-
-                btnContainer.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width - 1));
-                btnContainer.addClass('detail-tree-button-container');
-                btnContainer.css('marginLeft', width + 1 + 'px');
-
-                overview.outerWidth(Math.floor(content.outerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', width + 'px');
-            }
         }
     })
 );
