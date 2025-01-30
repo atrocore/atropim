@@ -14,6 +14,7 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
         inlineEditDisabled: true,
 
         setup: function () {
+            this.params.groupTranslation = 'EntityField.groupOptions.type'
             Dep.prototype.setup.call(this);
 
             this.updateOptions();
@@ -25,6 +26,7 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
 
         updateOptions() {
             this.params.options = ['']
+            this.params.groupOptions = [];
             this.translatedOptions = {'': ''};
 
             if (this.model.isNew()) {
@@ -40,6 +42,34 @@ Espo.define('pim:views/attribute/fields/type', 'views/fields/enum',
                     this.translatedOptions[attributeType] = this.getLanguage().translateOption(attributeType, 'type', 'Attribute');
                 });
             }
+
+            this.params.options.forEach(attributeType => {
+                if (!attributeType) {
+                    return
+                }
+                const group = this.getMetadata().get(['fields', attributeType])?.group || 'other'
+                let groupObject = this.params.groupOptions.find(go => go.name === group)
+                if (!groupObject) {
+                    groupObject = {name: group, options: []}
+                    this.params.groupOptions.push(groupObject)
+                }
+
+                groupObject.options.push(attributeType)
+            })
+
+            this.params.groupOptions = this.params.groupOptions.sort((v1, v2) => {
+                if (v1.name === 'other') return 1;
+                if (v2.name === 'other') return -1;
+                const order = {numeric: 1, character: 2, date: 3, reference: 4};
+                return (order[v1.name] || 999) - (order[v2.name] || 999) ||
+                    (this.translatedGroups[v1.name] || v1.name).localeCompare((this.translatedGroups[v2.name] || v2.name));
+            })
+
+            this.params.groupOptions.forEach(group => {
+                group.options = group.options.sort((v1, v2) => {
+                    return this.translate(v1, 'fieldTypes', 'Admin').localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
+                });
+            })
         },
 
     })
