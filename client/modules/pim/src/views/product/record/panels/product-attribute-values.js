@@ -146,9 +146,9 @@ Espo.define('pim:views/product/record/panels/product-attribute-values', ['pim:vi
             this.ajaxGetRequest('ProductAttributeValue/action/groupsPavs', {
                 tabId: this.defs.tabId,
                 productId: this.model.get('id'),
-                fieldFilter: this.getStorage().get('fieldFilter', 'OverviewFilter') || ['allValues'],
-                languageFilter: this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'],
-                scopeFilter: this.getStorage().get('scopeFilter', 'OverviewFilter') || ['linkedChannels']
+                fieldFilter: this.getStorage().get('fieldFilter', 'Product') || ['allValues'],
+                languageFilter: this.getStorage().get('languageFilter', 'Product') || ['allLanguages'],
+                scopeFilter: this.getStorage().get('scopeFilter', 'Product') || ['linkedChannels']
             }).then(data => {
                 this.groups = data;
                 callback();
