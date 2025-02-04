@@ -994,7 +994,7 @@ class ProductAttributeValue extends AbstractAttributeValue
     public static function saveLinkMultipleValues(Entity $entity, RDB $repository)
     {
         if ($entity->has('valueIds')) {
-            $specifiedIds = $entity->get('valueIds');
+            $specifiedIds = $entity->get('valueIds') ?? [];
             $linkName = $entity->get('attribute')->getLinkMultipleLinkName();
             $existingIds = [];
 
