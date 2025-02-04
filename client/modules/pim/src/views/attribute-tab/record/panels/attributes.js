@@ -10,6 +10,8 @@
 Espo.define('pim:views/attribute-tab/record/panels/attributes', 'pim:views/classification/record/panels/classification-attributes',
     Dep => Dep.extend({
 
+        template: 'pim:attribute-tab/record/panels/attributes',
+
         prepareGroupCollection(group, collection) {
             group.rowList.forEach(id => {
                 collection.add(this.collection.get(id));
