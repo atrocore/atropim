@@ -215,7 +215,7 @@ Espo.define('pim:views/product/record/search', 'views/record/search', Dep => Dep
                         this.addFilter(unit, paramsUnit)
                     }
                 } else {
-                    if (!this.filterAdded(name)) {
+                    if (!this.filterAdded(name) || fieldType === 'varchar') {
                         this.addFilter(name, params, () => {
                             if (measureId && !this.filterAdded(unit)) {
                                 this.addFilter(unit, paramsUnit)
