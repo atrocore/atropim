@@ -8,5 +8,5 @@
   "type": "Relation",
   "module": "Pim",
   "importable": true,
-  "streamDisabled": false
+  "streamDisabled": true
 }

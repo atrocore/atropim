@@ -7,6 +7,7 @@
   "importable": true,
   "notifications": true,
   "disabled": false,
+  "streamDisabled": true,
   "type": "Base",
   "multiParents": true,
   "dragAndDrop": true,

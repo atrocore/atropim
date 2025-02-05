@@ -1,13 +1,14 @@
 {
-    "entity": true,
-    "layouts": true,
-    "tab": true,
-    "acl": true,
-    "customizable": true,
-    "importable": true,
-    "notifications": true,
-    "disabled": false,
-    "type": "Base",
-    "module": "Pim",
-    "object": true
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "customizable": true,
+  "importable": true,
+  "notifications": true,
+  "streamDisabled": true,
+  "disabled": false,
+  "type": "Base",
+  "module": "Pim",
+  "object": true
 }
