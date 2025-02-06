@@ -76,6 +76,7 @@ class Event extends AfterInstallAfterDelete
      */
     public function afterDelete(): void
     {
+        $this->removeMenuItems($this->menuItems);
     }
 
     /**
