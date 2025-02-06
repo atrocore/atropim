@@ -66,7 +66,7 @@ class Event extends AfterInstallAfterDelete
         $this->addGlobalSearchEntities();
 
         // add menu items
-        $this->addMenuItems($this->menuItems);
+        $this->addNavigationItems($this->menuItems);
 
         V1Dot13Dot66::createExamplePreviews($this->getContainer()->get('connection'));
     }
@@ -76,7 +76,7 @@ class Event extends AfterInstallAfterDelete
      */
     public function afterDelete(): void
     {
-        $this->removeMenuItems($this->menuItems);
+        $this->removeNavigationItems($this->menuItems);
     }
 
     /**
