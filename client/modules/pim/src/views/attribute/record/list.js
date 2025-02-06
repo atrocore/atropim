@@ -60,7 +60,6 @@ Espo.define('pim:views/attribute/record/list', 'pim:views/record/list',
                                 }
                                 Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
                             }, this);
-                            this.collection.fetch();
                             Espo.Ui.notify(false);
                         } else {
                             Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
@@ -85,6 +84,10 @@ Espo.define('pim:views/attribute/record/list', 'pim:views/record/list',
                         } else {
                             Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
                         }
+                    }
+
+                    if ('sync' in result && result.sync === true) {
+                        this.collection.fetch();
                     }
                 }.bind(this));
             }, this);
