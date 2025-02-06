@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Pim;
 
+use Atro\Repositories\LayoutProfile;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
 use Pim\Migrations\V1Dot13Dot66;
@@ -63,7 +66,7 @@ class Event extends AfterInstallAfterDelete
         $this->addGlobalSearchEntities();
 
         // add menu items
-        $this->addMenuItems();
+        $this->addMenuItems($this->menuItems);
 
         V1Dot13Dot66::createExamplePreviews($this->getContainer()->get('connection'));
     }
@@ -94,49 +97,6 @@ class Event extends AfterInstallAfterDelete
 
         // set to config
         $config->set('globalSearchEntityList', $globalSearchEntityList);
-
-        // save
-        $config->save();
-    }
-
-    /**
-     * Add menu items
-     */
-    protected function addMenuItems()
-    {
-        /** @var Config $config */
-        $config = $this->getContainer()->get('config');
-
-        // get config data
-        $tabList = $config->get("tabList", []);
-        $quickCreateList = $config->get("quickCreateList", []);
-        $twoLevelTabList = $config->get("twoLevelTabList", []);
-
-        $twoLevelTabListItems = [];
-        foreach ($twoLevelTabList as $item) {
-            if (is_string($item)) {
-                $twoLevelTabListItems[] = $item;
-            } else {
-                $twoLevelTabListItems = array_merge($twoLevelTabListItems, $item->items);
-            }
-        }
-
-        foreach ($this->menuItems as $item) {
-            if (!in_array($item, $tabList)) {
-                $tabList[] = $item;
-            }
-            if (!in_array($item, $quickCreateList)) {
-                $quickCreateList[] = $item;
-            }
-            if (!in_array($item, $twoLevelTabListItems)) {
-                $twoLevelTabList[] = $item;
-            }
-        }
-
-        // set to config
-        $config->set('tabList', $tabList);
-        $config->set('quickCreateList', $quickCreateList);
-        $config->set('twoLevelTabList', $twoLevelTabList);
 
         // save
         $config->save();
