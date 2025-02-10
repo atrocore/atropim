@@ -696,6 +696,10 @@ class Product extends AbstractSelectManager
             }
         }
 
+        if (!empty($params['withDeleted'])) {
+            $textFilterParams['withDeleted'] = true;
+        }
+
         $textFilterQuery = $mapper->createSelectQueryBuilder($relEntity, $textFilterParams);
 
         if (empty($this->textFilter)) {
@@ -740,6 +744,10 @@ class Product extends AbstractSelectManager
 
         $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$where]], true, true);
         $sp['select'] = ['productId'];
+
+        if (!empty($params['withDeleted'])) {
+            $sp['withDeleted'] = true;
+        }
 
         $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
         $qb->andWhere(
