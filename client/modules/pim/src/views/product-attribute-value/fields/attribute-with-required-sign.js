@@ -39,7 +39,7 @@ Espo.define('pim:views/product-attribute-value/fields/attribute-with-required-si
             }
 
             if (this.model.get('isPavRelationInherited')) {
-                iconsContainer.append(`<span class="fa fa-clone fa-sm" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></span>`);
+                iconsContainer.append(`<span class="fa fa-clone fa-sm" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"></span>`);
             }
         },
 
