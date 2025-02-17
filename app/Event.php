@@ -53,7 +53,6 @@ class Event extends AfterInstallAfterDelete
             'Category',
             'Catalog',
             'Channel',
-            'Product',
             'Classification'
         ];
 

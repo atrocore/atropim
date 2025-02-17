@@ -34,9 +34,15 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
                 var $a;
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
-                    var $label = this.$el.find('a[data-tooltip="'+this.model.get('attributeId')+'"]');
-                    $label.append(' ');
-                    $label.append($a);
+                    const $label = this.$el.find('a[data-tooltip="'+this.model.get('attributeId')+'"]');
+                    const icons = $label.find('.icons-container');
+                    if (icons.size() > 0) {
+                        icons.append($a);
+                    } else {
+                        $label.append(' ');
+                        $label.append($a);
+                    }
+
                     $a.popover({
                         placement: 'bottom',
                         container: 'body',
