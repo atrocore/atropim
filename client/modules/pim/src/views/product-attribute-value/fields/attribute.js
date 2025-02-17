@@ -30,40 +30,16 @@ Espo.define('pim:views/product-attribute-value/fields/attribute', 'views/fields/
 
         setup() {
             this.mandatorySelectAttributeList = ['type', 'isMultilang', 'defaultChannelId', 'defaultChannelName', 'isRequired', 'notNull', 'trim'];
-            if (this.model.get('attributeTooltip')) {
-                var $a;
-                this.once('after:render', function () {
-                    $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
-                    const $label = this.$el.find('a[data-tooltip="'+this.model.get('attributeId')+'"]');
-                    const icons = $label.find('.icons-container');
-                    if (icons.size() > 0) {
-                        icons.append($a);
-                    } else {
-                        $label.append(' ');
-                        $label.append($a);
-                    }
-
-                    $a.popover({
-                        placement: 'bottom',
-                        container: 'body',
-                        html: true,
-                        content: this.model.get('attributeTooltip').replace(/\n/g, "<br />"),
-                        trigger: 'click',
-                    }).on('shown.bs.popover', function () {
-                        $('body').one('click', function () {
-                            $a.popover('hide');
-                        });
-                    });
-                }, this);
-                this.on('remove', function () {
-                    if ($a) {
-                        $a.popover('destroy')
-                    }
-                }, this);
-            }
-
 
             Dep.prototype.setup.call(this);
+
+            if (this.model.get('attributeTooltip')) {
+                this.once('after:render', function () {
+                    const $label = this.$el.find('a[data-tooltip="'+this.model.get('attributeId')+'"]');
+                    $label.attr('title', this.model.get('attributeTooltip').replace(/\n/g, "<br />"));
+                    $label.attr('data-attr-tooltip', true);
+                }, this);
+            }
         },
 
         select(model) {
