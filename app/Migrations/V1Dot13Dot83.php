@@ -71,18 +71,18 @@ class V1Dot13Dot83 extends Base
         }
 
         if ($this->isPgSQL()) {
-            $this->execute("DROP INDEX idx_product_file_channel_id;");
-            $this->execute("DROP INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION;");
             if (empty($result)) {
+                $this->execute("DROP INDEX idx_product_file_channel_id;");
                 $this->execute("ALTER TABLE product_file DROP channel_id;");
             }
+            $this->execute("DROP INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION;");
             $this->execute("CREATE UNIQUE INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file (deleted, product_id, file_id)");
         } else {
-            $this->execute("DROP INDEX IDX_PRODUCT_FILE_CHANNEL_ID ON product_file;");
-            $this->execute("DROP INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file;");
             if (empty($result)) {
+                $this->execute("DROP INDEX IDX_PRODUCT_FILE_CHANNEL_ID ON product_file;");
                 $this->execute("ALTER TABLE product_file DROP channel_id;");
             }
+            $this->execute("DROP INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file;");
             $this->execute("CREATE UNIQUE INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file (deleted, product_id, file_id)");
         }
 
