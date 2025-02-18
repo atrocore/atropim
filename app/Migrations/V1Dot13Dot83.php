@@ -70,15 +70,21 @@ class V1Dot13Dot83 extends Base
             file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         }
 
-        if($this->isPgSQL()){
+        if ($this->isPgSQL()) {
             $this->execute("DROP INDEX idx_product_file_channel_id;");
             $this->execute("DROP INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION;");
-            $this->execute("ALTER TABLE product_file DROP channel_id;");
+            if (empty($result)) {
+                $this->execute("ALTER TABLE product_file DROP channel_id;");
+            }
             $this->execute("CREATE UNIQUE INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file (deleted, product_id, file_id)");
-        }else{
-
+        } else {
+            $this->execute("DROP INDEX IDX_PRODUCT_FILE_CHANNEL_ID ON product_file;");
+            $this->execute("DROP INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file;");
+            if (empty($result)) {
+                $this->execute("ALTER TABLE product_file DROP channel_id;");
+            }
+            $this->execute("CREATE UNIQUE INDEX IDX_PRODUCT_FILE_UNIQUE_RELATION ON product_file (deleted, product_id, file_id)");
         }
-
 
     }
 
