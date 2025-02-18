@@ -24,10 +24,6 @@ class ProductFile extends Relation
             $entity->set('sorting', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
-        if (empty($entity->get('channelId'))) {
-            $entity->set('channelId', '');
-        }
-
         parent::beforeSave($entity, $options);
     }
 

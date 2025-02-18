@@ -7,12 +7,6 @@
     "sorting": {
       "type": "int"
     },
-    "channel": {
-      "type": "link",
-      "required": false,
-      "notNull": true,
-      "default": ""
-    },
     "tags": {
       "type": "array"
     }
@@ -21,19 +15,13 @@
     "product": {
       "type": "belongsTo",
       "entity": "Product"
-    },
-    "channel": {
-      "type": "belongsTo",
-      "foreign": "productFiles",
-      "entity": "Channel"
     }
   },
   "uniqueIndexes": {
     "unique_relation": [
       "deleted",
       "product_id",
-      "file_id",
-      "channel_id"
+      "file_id"
     ]
   }
 }

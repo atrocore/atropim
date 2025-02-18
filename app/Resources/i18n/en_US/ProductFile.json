@@ -1,7 +1,6 @@
 {
   "fields": {
     "scope": "Scope",
-    "channel": "Channel",
     "isMainImage": "Main Image",
     "tags": "Tags",
     "sorting": "Sort Order"

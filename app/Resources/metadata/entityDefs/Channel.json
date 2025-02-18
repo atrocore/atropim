@@ -17,12 +17,6 @@
     "locales": {
       "type": "multiLanguage"
     },
-    "productFiles": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -87,11 +81,6 @@
     }
   },
   "links": {
-    "productFiles": {
-      "type": "hasMany",
-      "foreign": "channel",
-      "entity": "ProductFile"
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
