@@ -24,14 +24,6 @@
           "name": "tags"
         },
         false
-      ],
-      [
-        {
-          "name": "scope"
-        },
-        {
-          "name": "channel"
-        }
       ]
     ]
   }
