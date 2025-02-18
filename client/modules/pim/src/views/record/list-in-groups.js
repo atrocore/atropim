@@ -70,7 +70,7 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             const htmlIcons = Dep.prototype.getStatusIcons.call(this, model) || [];
 
             if (model.get('isRequired')) {
-                htmlIcons.push(`<span class="pull-right fas fa-sm fa-exclamation required-sign" title="${this.translate('Required')}"></span>`)
+                htmlIcons.push(`<span class="fas fa-sm fa-asterisk required-sign" title="${this.translate('Required')}"></span>`)
             }
 
             if (model.urlRoot === 'ProductAttributeValue') {
@@ -84,6 +84,10 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
                     htmlIcons.push(`<span title="${this.translate('inherited')}" class="fas fa-link fa-sm"></span>`);
                 } else if (isPavValueInherited === false) {
                     htmlIcons.push(`<span title="${this.translate('notInherited')}" class="fas fa-unlink fa-sm"></span>`);
+                }
+
+                if (model.get('isPavRelationInherited')) {
+                    htmlIcons.push(`<span class="fa fa-clone fa-sm" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"></span>`);
                 }
             }
 

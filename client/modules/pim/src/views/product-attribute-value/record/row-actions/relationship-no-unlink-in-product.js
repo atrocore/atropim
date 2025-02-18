@@ -15,28 +15,6 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
             actionListPipe: ['clientDefs', 'ProductAttributeValue', 'actionListPipe']
         },
 
-        setup() {
-            Dep.prototype.setup.call(this);
-            this.once('after:render', () => {
-                this.setupIcons()
-            });
-        },
-
-        setupIcons() {
-            let iconContainer = this.$el.find('.list-row-buttons .icons-container');
-            if (iconContainer.size() === 0) {
-                iconContainer = $("<div class='icons-container'> </div>")
-                this.$el.find('.list-row-buttons').prepend(iconContainer)
-            }
-
-            this.createView('icons', 'pim:views/product-attribute-value/fields/icons', {
-                el: this.options.el + '.list-row-buttons .icons-container',
-                scope: 'ProductAttributeValue',
-                model: this.model,
-                mode: 'list'
-            }, (view) => view.render())
-        },
-
         getActionList() {
             let list = [{
                 action: 'quickView',
