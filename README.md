@@ -78,7 +78,7 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 
 * Dedicated (virtual) Linux-based server with root permissions. 
 * Ubuntu as Operating System is recommended but not required.
-* PHP 8.1 (or above).
+* PHP 8.1 - 8.4
 * MySQL 5.5.3 (or above) or PostgreSQL 14.9 (or above).
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
