@@ -87,7 +87,7 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
                 }
 
                 if (model.get('isPavRelationInherited')) {
-                    htmlIcons.push(`<span class="fa fa-clone fa-sm" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></span>`);
+                    htmlIcons.push(`<span class="fa fa-clone fa-sm" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"></span>`);
                 }
             }
 

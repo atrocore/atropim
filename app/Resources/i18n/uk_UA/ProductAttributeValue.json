@@ -18,7 +18,8 @@
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
     "amountOfDigitsAfterComma": "Кількість цифр після коми",
     "useDisabledTextareaInViewMode": "Використовуйте відключену текстову область у режимі перегляду",
-    "isVariantSpecificAttribute": "Варіантно-специфічний"
+    "isVariantSpecificAttribute": "Варіантно-специфічний",
+    "isPavRelationInherited": "Унаслідувано від класифікації"
   },
   "options": {
     "language": {
