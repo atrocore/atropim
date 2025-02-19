@@ -35,7 +35,7 @@ Espo.define('pim:views/classification-attribute/fields/attribute-with-inheritanc
             }
 
             if (this.model.get('isInherited')) {
-                iconsContainer.append(`<span class="fa fa-clone fa-sm" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></span>`);
+                iconsContainer.append(`<span class="fa fa-sitemap fa-sm" title="${this.translate('inherited')}"></span>`);
             }
         },
 
