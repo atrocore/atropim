@@ -21,53 +21,5 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 class ProductFile extends AbstractSelectManager
 {
-    protected array $filterScopes = [];
 
-    public static function createScopePrismBoolFilterName(string $id): string
-    {
-        return ProductAttributeValue::createScopePrismBoolFilterName($id);
-    }
-
-    public function applyAdditional(array &$result, array $params)
-    {
-        parent::applyAdditional($result, $params);
-
-        $result['callbacks'][] = [$this, 'filterByChannel'];
-    }
-
-    public function applyBoolFilter($filterName, &$result)
-    {
-        if (self::createScopePrismBoolFilterName('global') === $filterName) {
-            $this->filterScopes[] = 'global';
-        }
-
-        foreach ($this->getMetadata()->get(['clientDefs', 'ProductFile', 'channels'], []) as $channel) {
-            if (self::createScopePrismBoolFilterName($channel['id']) === $filterName) {
-                $this->filterScopes[] = $channel['id'];
-            }
-        }
-
-        parent::applyBoolFilter($filterName, $result);
-    }
-
-    public function filterByChannel(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper)
-    {
-        if (empty($this->filterScopes)) {
-            return;
-        }
-
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        $channelsIds = [];
-        foreach ($this->filterScopes as $channelId) {
-            if ($channelId !== 'global') {
-                $channelsIds[] = $channelId;
-            }
-        }
-        $channelsIds[] = '';
-
-        $qb->andWhere("{$tableAlias}.id IN (SELECT ps.id FROM product_file ps WHERE ps.channel_id IN (:channelsIds) AND ps.deleted=:false)");
-        $qb->setParameter('channelsIds', $channelsIds, Mapper::getParameterType($channelsIds));
-        $qb->setParameter('false', false, ParameterType::BOOLEAN);
-    }
 }
