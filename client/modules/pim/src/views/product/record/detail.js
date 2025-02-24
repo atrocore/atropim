@@ -11,8 +11,6 @@
 Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
     Dep => Dep.extend({
 
-        template: 'pim:product/record/detail',
-
         notSavedFields: ['image'],
 
         isCatalogTreePanel: false,
