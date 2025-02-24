@@ -59,5 +59,8 @@
   },
   "tooltips": {
     "isVariantSpecificAttribute": "Variant-specific attribute values are required for all child products and will be added automatically, if not added before."
+  },
+  "boolFilters": {
+    "includeUniLingualValues": "Include Unilingual Values"
   }
 }

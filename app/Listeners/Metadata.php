@@ -57,12 +57,12 @@ class Metadata extends AbstractListener
             $data['clientDefs']['Category']['relationshipPanels']['catalogs']['unlinkConfirm'] = 'Category.messages.categoryCatalogUnlinkConfirm';
         }
 
+
         $data = $this->addTabPanels($data);
 
         $data = $this->addVirtualProductFields($data);
 
         $this->addLanguageBoolFiltersForPav($data);
-        $this->addScopeBoolFilters($data);
         $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
         $this->defineClassificationViewForProduct($data);
@@ -72,47 +72,8 @@ class Metadata extends AbstractListener
 
     protected function addLanguageBoolFiltersForPav(array &$metadata): void
     {
-        $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createLanguagePrismBoolFilterName('main');
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = ProductAttributeValue::createLanguagePrismBoolFilterName($language);
-            }
-        }
-    }
-
-    protected function addScopeBoolFilters(array &$metadata): void
-    {
-        if (!$this->getConfig()->get('isInstalled', false)) {
-            return;
-        }
-
-        $dataManager = $this->getContainer()->get('dataManager');
-
-        $channels = $dataManager->getCacheData('channels');
-        if (empty($channels)) {
-            $connection = $this->getEntityManager()->getConnection();
-            try {
-                $channels = $connection->createQueryBuilder()
-                    ->select('c.id,c.name')
-                    ->from($connection->quoteIdentifier('channel'), 'c')
-                    ->where('c.deleted = :false')
-                    ->setParameter('false', false, Mapper::getParameterType(false))
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                $channels = [];
-            }
-            if (!empty($channels)) {
-                $dataManager->setCacheData('channels', $channels);
-            }
-        }
-
-        foreach (['ProductAttributeValue', 'ProductFile'] as $entityType) {
-            $metadata['clientDefs'][$entityType]['channels'] = $channels;
-            $callback = '\\Pim\\SelectManagers\\' . $entityType . '::createScopePrismBoolFilterName';
-            $metadata['clientDefs'][$entityType]['boolFilterList'][] = call_user_func($callback, 'global');
-            foreach ($channels as $channel) {
-                $metadata['clientDefs'][$entityType]['boolFilterList'][] = call_user_func($callback, $channel['id']);
-            }
+        if ($this->getConfig()->get('isMultilangActive') && !empty($this->getConfig()->get('inputLanguageList', []))) {
+            $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = 'includeUniLingualValues';
         }
     }
 
@@ -204,8 +165,8 @@ class Metadata extends AbstractListener
             switch ($attribute['type']) {
                 case 'file':
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
-                        'attributeId'    => $attribute['id'],
-                        'attributeCode'  => $attribute['code'],
+                        'attributeId'   => $attribute['id'],
+                        'attributeCode' => $attribute['code'],
                         'fileFieldName' => $fieldName,
                     ]);
                     $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
@@ -235,7 +196,7 @@ class Metadata extends AbstractListener
                                 'type'            => 'varchar',
                                 'attributeId'     => $attribute['id'],
                                 'attributeCode'   => $attribute['code'],
-                                'fileFieldName'  => $languageFieldName,
+                                'fileFieldName'   => $languageFieldName,
                                 'multilangLocale' => $language,
                             ]);
                             $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Name"] = $additionalFieldDefs;
@@ -260,25 +221,25 @@ class Metadata extends AbstractListener
         $tabs = $this->getEntityManager()->getRepository('AttributeTab')->getSimplifyTabs();
         foreach ($tabs as $tab) {
             $data['clientDefs']['Product']['bottomPanels']['detail'][] = [
-                'name'                 => "tab_{$tab['id']}",
-                'link'                 => 'productAttributeValues',
-                'label'                => $tab['name'],
-                'createAction'         => 'createRelatedConfigured',
-                'selectAction'         => 'selectRelatedEntity',
-                'selectBoolFilterList' => ['fromAttributesTab'],
-                'tabId'                => $tab['id'],
-                'view'                 => 'pim:views/product/record/panels/product-attribute-values',
-                "rowActionsView"       => "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
-                "recordListView"       => "pim:views/record/list-in-groups",
-                "compareRecordsView"   => "pim:views/product/record/compare/product-attribute-values",
-                "compareInstanceRecordsView"   => "pim:views/product/record/compare/product-attribute-values-instance",
-                "aclScopesList"        => [
+                'name'                       => "tab_{$tab['id']}",
+                'link'                       => 'productAttributeValues',
+                'label'                      => $tab['name'],
+                'createAction'               => 'createRelatedConfigured',
+                'selectAction'               => 'selectRelatedEntity',
+                'selectBoolFilterList'       => ['fromAttributesTab'],
+                'tabId'                      => $tab['id'],
+                'view'                       => 'pim:views/product/record/panels/product-attribute-values',
+                "rowActionsView"             => "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
+                "recordListView"             => "pim:views/record/list-in-groups",
+                "compareRecordsView"         => "pim:views/product/record/compare/product-attribute-values",
+                "compareInstanceRecordsView" => "pim:views/product/record/compare/product-attribute-values-instance",
+                "aclScopesList"              => [
                     "Attribute",
                     "AttributeGroup",
                     "ProductAttributeValue"
                 ],
-                "sortBy"               => "attribute.sortOrderInAttributeGroup",
-                "asc"                  => true
+                "sortBy"                     => "attribute.sortOrderInAttributeGroup",
+                "asc"                        => true
             ];
         }
         return $data;
@@ -347,7 +308,8 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    protected  function addOnlyExtensibleEnumOptionForCABoolFilter(&$metadata){
+    protected function addOnlyExtensibleEnumOptionForCABoolFilter(&$metadata)
+    {
         $metadata['clientDefs']['ExtensibleEnumOption']['boolFilterList'][] = "onlyForClassificationAttributesUsingPavId";
         $metadata['clientDefs']['ExtensibleEnumOption']['hiddenBoolFilterList'][] = "onlyForClassificationAttributesUsingPavId";
 
@@ -356,9 +318,10 @@ class Metadata extends AbstractListener
 
     }
 
-    protected  function defineClassificationViewForProduct(&$metadata){
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)){
-            $metadata['entityDefs']['Product']['fields']['classifications']['view'] =  "pim:views/product/fields/classifications-single";
+    protected function defineClassificationViewForProduct(&$metadata)
+    {
+        if ($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
+            $metadata['entityDefs']['Product']['fields']['classifications']['view'] = "pim:views/product/fields/classifications-single";
         }
     }
 }

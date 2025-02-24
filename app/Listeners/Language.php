@@ -30,53 +30,7 @@ class Language extends AbstractListener
     {
         $data = $event->getArgument('data');
 
-        $languages = [];
-        if (!empty($this->getConfig()->get('isMultilangActive'))) {
-            $languages = $this->getConfig()->get('inputLanguageList', []);
-        }
-
         foreach ($data as $l => $rows) {
-            if (isset($rows['Locale']['fields']['language'])) {
-                $languageLabel = $rows['Locale']['fields']['language'];
-            } elseif (isset($data['en_US']['Locale']['fields']['language'])) {
-                $languageLabel = $data['en_US']['Locale']['fields']['language'];
-            } else {
-                $languageLabel = 'Language';
-            }
-
-            if (isset($rows['Global']['labels']['mainLanguage'])) {
-                $mainLanguageLabel = $rows['Global']['labels']['mainLanguage'];
-            } elseif (isset($data['en_US']['Global']['labels']['mainLanguage'])) {
-                $mainLanguageLabel = $data['en_US']['Global']['labels']['mainLanguage'];
-            } else {
-                $mainLanguageLabel = 'Main Language';
-            }
-
-            if (isset($rows['Global']['scopeNames']['Channel'])) {
-                $channelLabel = $rows['Global']['scopeNames']['Channel'];
-            } elseif (isset($data['en_US']['Global']['scopeNames']['Channel'])) {
-                $channelLabel = $data['en_US']['Global']['scopeNames']['Channel'];
-            } else {
-                $channelLabel = 'Channel';
-            }
-
-            $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createLanguagePrismBoolFilterName('main')] = $languageLabel . ': ' . $mainLanguageLabel;
-            foreach ($languages as $language) {
-                $data[$l]['ProductAttributeValue']['boolFilters'][ProductAttributeValue::createLanguagePrismBoolFilterName($language)] = $languageLabel . ': ' . $language;
-                $camelCaseLocale = ucfirst(Util::toCamelCase(strtolower($language)));
-                if (!empty($data[$l]['Attribute']['fields']["name"])) {
-                    $data[$l]['ClassificationAttribute']['fields']["attributeName$camelCaseLocale"] = $data[$l]['Attribute']['fields']["name"] . ' / ' . $language;
-                }
-            }
-
-            foreach (['ProductAttributeValue', 'ProductFile'] as $entityType) {
-                $callback = '\\Pim\\SelectManagers\\' . $entityType . '::createScopePrismBoolFilterName';
-                $data[$l][$entityType]['boolFilters'][call_user_func($callback, 'global')] = $channelLabel . ': Global';
-                foreach ($this->getMetadata()->get(['clientDefs', $entityType, 'channels'], []) as $channel) {
-                    $data[$l][$entityType]['boolFilters'][call_user_func($callback, $channel['id'])] = $channelLabel . ': ' . $channel['name'];
-                }
-            }
-
             foreach ($this->getMetadata()->get(['entityDefs', 'Product', 'fields'], []) as $fields => $fieldDefs) {
                 if (!empty($fieldDefs['attributeId'])) {
                     $attributeName = empty($fieldDefs['attributeName']) ? $fieldDefs['attributeId'] : $fieldDefs['attributeName'];
