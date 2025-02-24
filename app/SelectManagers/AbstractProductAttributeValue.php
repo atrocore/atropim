@@ -3,25 +3,27 @@
 namespace Pim\SelectManagers;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
 class AbstractProductAttributeValue extends AbstractSelectManager
 {
-    protected array $filterLanguages = [];
-    protected array $filterScopes = [];
-
-    public static function createLanguagePrismBoolFilterName(string $language): string
+    protected function hasIncludeUniLingualValuesBoolFilter(array $params): bool
     {
-        return 'prismVia' . ucfirst(Util::toCamelCase(strtolower($language)));
-    }
+        foreach ($params['where'] ?? [] as $row) {
+            if ($row['type'] == 'bool'
+                && !empty($row['value'])
+                && is_array($row['value'])
+                && in_array('includeUniLingualValues', $row['value'])) {
+                return true;
+            }
+        }
 
-    public static function createScopePrismBoolFilterName(string $id): string
-    {
-        return 'prismViaScope_' . $id;
+        return false;
     }
 
     /**
@@ -29,8 +31,20 @@ class AbstractProductAttributeValue extends AbstractSelectManager
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        // clear filter languages
-        $this->filterLanguages = [];
+        if ($this->hasIncludeUniLingualValuesBoolFilter($params)) {
+            $connection = $this->getEntityManager()->getConnection();
+            $uniLangItem = [
+                'type'      => 'in',
+                'attribute' => 'attributeId',
+                'value'     => [
+                    'innerSql' => [
+                        "sql"        => "SELECT attr1.id FROM {$connection->quoteIdentifier('attribute')} attr1 WHERE attr1.deleted=:false AND is_multilang=:false",
+                        "parameters" => $connection->createQueryBuilder()->setParameter('false', false, ParameterType::BOOLEAN)->getParameters()
+                    ]
+                ]
+            ];
+        }
+        $hasLanguageFilter = false;
 
         if (isset($params['where']) && is_array($params['where'])) {
             $pushBoolAttributeType = false;
@@ -46,6 +60,16 @@ class AbstractProductAttributeValue extends AbstractSelectManager
                 if (!empty($v['attribute']) && $v['attribute'] === 'boolValue') {
                     $pushBoolAttributeType = true;
                 }
+                if (!empty($v['attribute']) && $v['attribute'] === 'language' && !empty($uniLangItem)) {
+                    $params['where'][$k] = [
+                        'type'  => 'or',
+                        'value' => [
+                            $v,
+                            $uniLangItem
+                        ]
+                    ];
+                    $hasLanguageFilter = true;
+                }
             }
             $params['where'] = array_values($params['where']);
 
@@ -56,6 +80,12 @@ class AbstractProductAttributeValue extends AbstractSelectManager
                     "value"     => "bool"
                 ];
             }
+
+
+        }
+
+        if (empty($hasLanguageFilter) && !empty($uniLangItem)) {
+            $params['where'][] = $uniLangItem;
         }
 
         $selectParams = parent::getSelectParams($params, $withAcl, $checkWherePermission);
@@ -128,8 +158,6 @@ class AbstractProductAttributeValue extends AbstractSelectManager
         $result['callbacks'][] = [$this, 'selectAttributeGroup'];
         $result['callbacks'][] = [$this, 'filterByLanguage'];
         $result['callbacks'][] = [$this, 'filterByTab'];
-        $result['callbacks'][] = [$this, 'applyLanguageBoolFilters'];
-        $result['callbacks'][] = [$this, 'applyScopeBoolFilters'];
     }
 
     protected function boolFilterLinkedWithAttributeGroup(array &$result): void
@@ -156,67 +184,5 @@ class AbstractProductAttributeValue extends AbstractSelectManager
                 'id' => array_column($attributes, 'id')
             ];
         }
-    }
-
-    public function applyBoolFilter($filterName, &$result)
-    {
-        if (self::createLanguagePrismBoolFilterName('main') === $filterName) {
-            $this->filterLanguages[] = 'main';
-        }
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                if (self::createLanguagePrismBoolFilterName($language) === $filterName) {
-                    $this->filterLanguages[] = $language;
-                }
-            }
-        }
-
-        if (self::createScopePrismBoolFilterName('global') === $filterName) {
-            $this->filterScopes[] = 'global';
-        }
-
-        foreach ($this->getMetadata()->get(['clientDefs', 'ProductAttributeValue', 'channels'], []) as $channel) {
-            if (self::createScopePrismBoolFilterName($channel['id']) === $filterName) {
-                $this->filterScopes[] = $channel['id'];
-            }
-        }
-
-        parent::applyBoolFilter($filterName, $result);
-    }
-
-    public function applyLanguageBoolFilters(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        if (empty($this->filterLanguages)) {
-            return;
-        }
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        $qb->andWhere("$tableAlias.language IN (:languages) OR $tableAlias.attribute_id IN (SELECT attr1.id FROM {$connection->quoteIdentifier('attribute')} attr1 WHERE attr1.deleted=:false AND is_multilang=:false)");
-        $qb->setParameter('false', false, Mapper::getParameterType(false));
-        $qb->setParameter('languages', $this->filterLanguages, Mapper::getParameterType($this->filterLanguages));
-    }
-
-    public function applyScopeBoolFilters(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        if (empty($this->filterScopes)) {
-            return;
-        }
-
-        $channelsIds = [];
-        foreach ($this->filterScopes as $channelId) {
-            if ($channelId !== 'global') {
-                $channelsIds[] = $channelId;
-            }
-        }
-        $channelsIds[] = '';
-
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-
-        $qb->andWhere("$tableAlias.id IN (SELECT pav1.id FROM product_attribute_value pav1 WHERE pav1.channel_id IN (:channelsIds) AND deleted=:false)");
-        $qb->setParameter('false', false, Mapper::getParameterType(false));
-        $qb->setParameter('channelsIds', $channelsIds, Mapper::getParameterType($channelsIds));
     }
 }
