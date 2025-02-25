@@ -31,19 +31,21 @@ class AbstractProductAttributeValue extends AbstractSelectManager
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        if ($this->hasIncludeUniLingualValuesBoolFilter($params)) {
-            $connection = $this->getEntityManager()->getConnection();
-            $uniLangItem = [
-                'type'      => 'in',
-                'attribute' => 'attributeId',
-                'value'     => [
-                    'innerSql' => [
-                        "sql"        => "SELECT attr1.id FROM {$connection->quoteIdentifier('attribute')} attr1 WHERE attr1.deleted=:false AND is_multilang=:false",
-                        "parameters" => $connection->createQueryBuilder()->setParameter('false', false, ParameterType::BOOLEAN)->getParameters()
-                    ]
+        $includeUniLingualValues = $this->hasIncludeUniLingualValuesBoolFilter($params);
+        $connection = $this->getEntityManager()->getConnection();
+        $uniLangItem = [
+            'type'      => 'in',
+            'attribute' => 'attributeId',
+            'value'     => [
+                'innerSql' => [
+                    "sql"        => "SELECT attr1.id FROM {$connection->quoteIdentifier('attribute')} attr1 WHERE attr1.deleted=:false AND is_multilang=" .
+                        ($includeUniLingualValues ? ':false' : ':true'),
+                    "parameters" => $connection->createQueryBuilder()
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->setParameter('true', true, ParameterType::BOOLEAN)->getParameters()
                 ]
-            ];
-        }
+            ]
+        ];
         $hasLanguageFilter = false;
 
         if (isset($params['where']) && is_array($params['where'])) {
@@ -60,14 +62,15 @@ class AbstractProductAttributeValue extends AbstractSelectManager
                 if (!empty($v['attribute']) && $v['attribute'] === 'boolValue') {
                     $pushBoolAttributeType = true;
                 }
-                if (!empty($v['attribute']) && $v['attribute'] === 'language' && !empty($uniLangItem)) {
+                if (!empty($v['attribute']) && $v['attribute'] === 'language') {
                     $params['where'][$k] = [
-                        'type'  => 'or',
+                        'type'  => $includeUniLingualValues ? 'or' : 'and',
                         'value' => [
                             $v,
                             $uniLangItem
                         ]
                     ];
+
                     $hasLanguageFilter = true;
                 }
             }
@@ -84,7 +87,7 @@ class AbstractProductAttributeValue extends AbstractSelectManager
 
         }
 
-        if (empty($hasLanguageFilter) && !empty($uniLangItem)) {
+        if (empty($hasLanguageFilter) && $includeUniLingualValues) {
             $params['where'][] = $uniLangItem;
         }
 
