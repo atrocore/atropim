@@ -714,14 +714,18 @@ class ProductAttributeValue extends AbstractProductAttributeService
             throw new NotFound();
         }
 
-        if (!empty($userLanguage = $this->getInjection('preferences')->get('language'))) {
-            $nameField = Util::toCamelCase('name_' . strtolower($userLanguage));
-            if ($attribute->has($nameField) && !empty($attribute->get($nameField))) {
-                $entity->set('attributeName', $attribute->get($nameField));
-            }
-            $tooltipFieldName = Util::toCamelCase('tooltip_' . strtolower($userLanguage));
-            if ($attribute->has($tooltipFieldName) && !empty($attribute->get($tooltipFieldName))) {
-                $tooltip = $attribute->get($tooltipFieldName);
+
+        if (!empty($localeId = $this->getInjection('user')->get('localeId'))) {
+            if (!empty($locale = $this->getEntityManager()->getEntity('Locale', $localeId))) {
+                $userLanguage = $locale->get('languageCode');
+                $nameField = Util::toCamelCase('name_' . strtolower($userLanguage));
+                if ($attribute->has($nameField) && !empty($attribute->get($nameField))) {
+                    $entity->set('attributeName', $attribute->get($nameField));
+                }
+                $tooltipFieldName = Util::toCamelCase('tooltip_' . strtolower($userLanguage));
+                if ($attribute->has($tooltipFieldName) && !empty($attribute->get($tooltipFieldName))) {
+                    $tooltip = $attribute->get($tooltipFieldName);
+                }
             }
         }
 
