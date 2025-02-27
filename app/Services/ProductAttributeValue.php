@@ -61,7 +61,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         $this->getPseudoTransactionManager()->runForEntity('Product', $productId);
 
         if ($language === null) {
-            $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('preferences'));
+            $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('user'));
         }
 
         $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language, $languageFilter, $scopeFilter);
@@ -714,7 +714,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             throw new NotFound();
         }
 
-        if (!empty($userLanguage = $this->getInjection('preferences')->get('language'))) {
+        if (!empty($userLanguage = $this->getInjection('user')->getLanguage())) {
             $nameField = Util::toCamelCase('name_' . strtolower($userLanguage));
             if ($attribute->has($nameField) && !empty($attribute->get($nameField))) {
                 $entity->set('attributeName', $attribute->get($nameField));
