@@ -294,6 +294,9 @@ class ValueConverter extends Injectable
                         $value = $this->getEntityManager()->getRepository('Attribute')->convertDateWithModifier($value, $defaultDate);
                     }
                     $entity->set('value', $value);
+                    if (!empty($_GET['timezone'])) {
+                        $this->modifyDateByTimezone($entity, $_GET['timezone']);
+                    }
                 }
                 break;
             case 'datetime':
@@ -303,6 +306,9 @@ class ValueConverter extends Injectable
                         $value = $this->getEntityManager()->getRepository('Attribute')->convertDateWithModifier($value, $defaultDate, 'Y-m-d H:i:s');
                     }
                     $entity->set('value', $value);
+                    if (!empty($_GET['timezone'])) {
+                        $this->modifyDateByTimezone($entity, $_GET['timezone']);
+                    }
                 }
                 break;
             case 'link':
@@ -387,6 +393,19 @@ class ValueConverter extends Injectable
             $entity->clear('varcharValue');
             $entity->clear('referenceValue');
             $entity->clear('textValue');
+        }
+    }
+
+    public function modifyDateByTimezone(Entity $pav, string $timezone): void
+    {
+        if (!empty($pav->get('value'))) {
+            try {
+                $date = new \DateTime($pav->get('value'));
+                $date->setTimezone(new \DateTimeZone($timezone));
+                $pav->set('value', $date->format('Y-m-d H:i:s'));
+            } catch (\Throwable $e) {
+                throw new \Atro\Core\Exceptions\BadRequest($e->getMessage());
+            }
         }
     }
 
