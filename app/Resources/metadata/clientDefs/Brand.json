@@ -1,6 +1,6 @@
 {
     "controller": "controllers/record",
-    "iconClass": "fas fa-tags",
+    "iconClass": "shoppingmode",
     "boolFilterList": [
         "onlyMy"
     ],

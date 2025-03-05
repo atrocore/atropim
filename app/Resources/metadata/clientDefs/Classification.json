@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-sitemap",
+  "iconClass": "account_tree",
   "boolFilterList": [
     "onlyMy",
     "notEntity"

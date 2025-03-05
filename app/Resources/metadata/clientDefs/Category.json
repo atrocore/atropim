@@ -3,7 +3,7 @@
     "parents": "Category.messages.categoryParentChangeConfirm"
   },
   "controller": "pim:controllers/record-tree",
-  "iconClass": "fas fa-th",
+  "iconClass": "category",
   "boolFilterList": [
     "onlyMy",
     "notEntity",

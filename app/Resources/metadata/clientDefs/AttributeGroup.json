@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "far fa-object-group",
+  "iconClass": "done_all",
   "boolFilterList": [
     "onlyMy",
     "withNotLinkedAttributesToClassification",
