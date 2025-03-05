@@ -5,6 +5,7 @@
   "quickCreateOptions": {
     "fullFormDisabled": true
   },
+  "plateViewMode": true,
   "boolFilterList": [
     "onlyMy",
     "ownedByMe",
@@ -47,48 +48,6 @@
         "view": "pim:views/fields/main-image"
       }
     ]
-  },
-  "menu": {
-    "list": {
-      "buttons": [
-        {
-          "acl": "read",
-          "name": "list",
-          "label": "",
-          "link": "#Product/list",
-          "title": "List",
-          "iconHtml": "<span class=\"fa fa-th-list\"></span>"
-        },
-        {
-          "acl": "read",
-          "name": "plate",
-          "label": "",
-          "link": "#Product/plate",
-          "title": "Plate",
-          "iconHtml": "<span class=\"fa fa-th\"></span>"
-        }
-      ]
-    },
-    "plate": {
-      "buttons": [
-        {
-          "acl": "read",
-          "name": "list",
-          "label": "",
-          "link": "#Product/list",
-          "title": "List",
-          "iconHtml": "<span class=\"fa fa-th-list\"></span>"
-        },
-        {
-          "acl": "read",
-          "name": "plate",
-          "label": "",
-          "link": "#Product/plate",
-          "title": "Plate",
-          "iconHtml": "<span class=\"fa fa-th\"></span>"
-        }
-      ]
-    }
   },
   "disabledMassActions": [
   ],

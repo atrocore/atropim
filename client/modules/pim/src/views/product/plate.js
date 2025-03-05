@@ -14,6 +14,8 @@ Espo.define('pim:views/product/plate', 'pim:views/product/list',
         name: 'plate',
 
         setup() {
+            this.viewMode = 'plate';
+
             Dep.prototype.setup.call(this);
 
             this.collection.maxSize = 20;
@@ -22,7 +24,9 @@ Espo.define('pim:views/product/plate', 'pim:views/product/list',
         },
 
         getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.plate') || 'views/product/record/plate';
+            const viewName = Dep.prototype.getRecordViewName.call(this);
+
+            return viewName || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.plate') || 'views/product/record/plate';
         }
 
     })
