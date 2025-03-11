@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Services\AbstractService;
 use Espo\Core\ORM\Repositories\RDB;
-use Espo\Core\Services\Base;
-use Espo\Services\DashletInterface;
+use Atro\Services\DashletInterface;
 
-abstract class AbstractDashletService extends Base implements DashletInterface
+abstract class AbstractDashletService extends AbstractService implements DashletInterface
 {
     protected function init()
     {
