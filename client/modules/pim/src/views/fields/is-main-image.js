@@ -24,7 +24,11 @@ Espo.define('pim:views/fields/is-main-image', 'views/fields/bool',
         },
 
         isImage() {
-            return $.inArray(this.model.get('extension'), this.getMetadata().get('app.file.image.extensions') || []) !== -1;
+            let model = this.model
+            if(model.name==='ProductFile'){
+                model = this.getParentView().model
+            }
+            return $.inArray(model.get('extension'), this.getMetadata().get('app.file.image.extensions') || []) !== -1;
         },
 
     })

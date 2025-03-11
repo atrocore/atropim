@@ -27,32 +27,47 @@ Espo.define('pim:views/file/record/list', 'views/file/record/list',
             }
 
             this.rowList.push(key);
-            this.getInternalLayout(function (internalLayout) {
-                internalLayout = Espo.Utils.cloneDeep(internalLayout);
-                this.prepareInternalLayout(internalLayout, model);
 
-                const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
-                var acl = {
-                    edit: entityDisabled ? false : this.getAcl().checkModel(model, 'edit'),
-                    delete: entityDisabled ? false : this.getAcl().checkModel(model, 'delete'),
-                    unlink: this.options.canUnlink
-                };
+            let getRelationModel = (callback) => {
+                if (model.get('__relationEntity')) {
+                    this.getModelFactory().create(this.relationScope, relModel => {
+                        relModel.set(model.get('__relationEntity'));
+                        model.relationModel = relModel
+                        callback(relModel)
+                    })
+                } else {
+                    callback()
+                }
+            }
 
-                this.createView(key, 'views/base', {
-                    model: model,
-                    acl: acl,
-                    el: this.options.el + ' .list-row[data-id="' + key + '"]',
-                    optionsToPass: ['acl', 'scope'],
-                    scope: this.scope,
-                    noCache: true,
-                    _layout: {
-                        type: this._internalLayoutType,
-                        layout: internalLayout
-                    },
-                    name: this.type + '-' + model.name,
-                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
-                }, callback);
-            }.bind(this), model);
+            getRelationModel((relModel) => {
+                this.getInternalLayout(function (internalLayout) {
+                    internalLayout = Espo.Utils.cloneDeep(internalLayout);
+                    this.prepareInternalLayout(internalLayout, model);
+
+                    const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
+                    var acl = {
+                        edit: entityDisabled ? false : this.getAcl().checkModel(model, 'edit'),
+                        delete: entityDisabled ? false : this.getAcl().checkModel(model, 'delete'),
+                        unlink: this.options.canUnlink
+                    };
+
+                    this.createView(key, 'views/base', {
+                        model: model,
+                        acl: acl,
+                        el: this.options.el + ' .list-row[data-id="' + key + '"]',
+                        optionsToPass: ['acl', 'scope'],
+                        scope: this.scope,
+                        noCache: true,
+                        _layout: {
+                            type: this._internalLayoutType,
+                            layout: internalLayout
+                        },
+                        name: this.type + '-' + model.name,
+                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
+                    }, callback);
+                }.bind(this), model);
+            })
         },
 
         actionQuickView: function (data) {
