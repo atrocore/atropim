@@ -53,14 +53,16 @@
     "noGroup": "Keine Gruppe",
     "productImage": "Produktbild",
     "selectAttributeGroup": "Attributgruppe auswählen",
-    "draft": "Entwurf",
-    "prepared": "Vorbereitet",
-    "reviewed": "Überprüft",
-    "notReady": "Nicht bereit",
-    "ready": "Bereit",
     "channel": "Kanal"
   },
   "options": {
+    "productStatus": {
+      "draft": "Entwurf",
+      "prepared": "Vorbereitet",
+      "reviewed": "Überprüft",
+      "notReady": "Nicht bereit",
+      "ready": "Bereit"
+    },
     "tag": {
       "blue": "blau",
       "yellow": "gelb",

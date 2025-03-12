@@ -46,14 +46,16 @@
     "itemsInRow": "Éléments de la ligne",
     "productImage": "Image du produit",
     "selectAttributeGroup": "Sélectionnez le groupe d'attributs",
-    "draft": "Projet",
-    "prepared": "Préparé",
-    "reviewed": "Examiné",
-    "notReady": "Pas prêt",
-    "ready": "Prêt",
     "channel": "Canal"
   },
   "options": {
+    "productStatus": {
+      "draft": "Projet",
+      "prepared": "Préparé",
+      "reviewed": "Examiné",
+      "notReady": "Pas prêt",
+      "ready": "Prêt"
+    },
     "tag": {
       "blue": "bleu",
       "yellow": "jaune",
