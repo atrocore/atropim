@@ -92,7 +92,7 @@ Espo.define('pim:views/dashlets/products-by-status', 'views/dashlets/abstract/ba
 
             if (options.length) {
                 options.forEach(item => {
-                    labels[item] = this.translate(item, 'labels', 'Product');
+                    labels[item] = this.getLanguage().translateOption(item, 'productStatus', 'Product');
                 })
             }
 
