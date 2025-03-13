@@ -142,7 +142,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "dateValue": {
       "type": "date",
@@ -154,7 +155,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "datetimeValue": {
       "type": "datetime",
@@ -166,7 +168,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "intValue": {
       "type": "int",
@@ -178,7 +181,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "intValue1": {
       "type": "int",
@@ -190,7 +194,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "floatValue": {
       "type": "float",
@@ -202,7 +207,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "floatValue1": {
       "type": "float",
@@ -214,7 +220,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "varcharValue": {
       "type": "varchar",
@@ -226,7 +233,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "referenceValue": {
       "type": "varchar",
@@ -239,7 +247,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "textValue": {
       "type": "text",
@@ -251,7 +260,8 @@
       "massUpdateDisabled": true,
       "exportDisabled": false,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiDisabled": true
     },
     "min": {
       "type": "float",
@@ -348,7 +358,8 @@
       "lengthOfCut": 400,
       "view": "pim:views/product-attribute-value/fields/value-container",
       "massUpdateDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueFrom": {
       "type": "float",
@@ -361,7 +372,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueTo": {
       "type": "float",
@@ -374,7 +386,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueCurrency": {
       "type": "varchar",
@@ -400,7 +413,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueUnit": {
       "type": "varchar",
@@ -452,7 +466,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueName": {
       "type": "varchar",
@@ -465,7 +480,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueIds": {
       "type": "jsonArray",
@@ -478,7 +494,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueNames": {
       "type": "jsonObject",
@@ -491,7 +508,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "valueOptionData": {
       "type": "jsonArray",
