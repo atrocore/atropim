@@ -13,13 +13,14 @@ Espo.define('pim:views/product/record/row-actions/relationship-categories', 'vie
 
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
+            const model = this.model.relationModel
 
-            if (!this.model.get('ProductCategory__mainCategory') && this.getAcl().check('ProductCategory', 'edit')) {
+            if (model && !this.model.get('mainCategory') && this.getAcl().check('ProductCategory', 'edit')) {
                 list.unshift({
                     action: 'setAsMainCategory',
                     label: this.translate('setAsMainCategory'),
                     data: {
-                        id: this.model.get('ProductCategory__id')
+                        id: model.get('id')
                     }
                 });
             }
