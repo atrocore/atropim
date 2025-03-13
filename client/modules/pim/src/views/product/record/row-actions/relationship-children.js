@@ -13,13 +13,14 @@ Espo.define('pim:views/product/record/row-actions/relationship-children', 'views
 
         getActionList: function () {
             let list = Dep.prototype.getActionList.call(this);
+            let model = this.model.relationModel
 
-            if (!this.model.get('ProductHierarchy__mainChild') && this.options.acl.edit) {
+            if (model && !model.get('mainChild') && this.options.acl.edit) {
                 list.unshift({
                     action: 'setAsMainVariant',
                     label: this.translate('setAsMainVariant'),
                     data: {
-                        id: this.model.get('ProductHierarchy__id')
+                        id: model.get('id')
                     }
                 });
             }
