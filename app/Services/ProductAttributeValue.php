@@ -241,11 +241,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $attribute = $this->getRepository()->getPavAttribute($entity);
 
-            if (!empty($attribute->get('attributeGroupId'))) {
-                $row['sortOrder'] = empty($attribute->get('sortOrderInAttributeGroup')) ? 0 : (int)$attribute->get('sortOrderInAttributeGroup');
-            } else {
-                $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
-            }
+            $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
 
             $pavs[$k] = $row;
         }
@@ -745,11 +741,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
         }
 
-        if (!empty($attribute->get('attributeGroupId'))) {
-            $entity->set('sortOrder', $attribute->get('sortOrderInAttributeGroup'));
-        } else {
-            $entity->set('sortOrder', $attribute->get('sortOrder'));
-        }
+        $entity->set('sortOrder', $attribute->get('sortOrder'));
 
         $entity->set('channelCode', null);
         if (!empty($entity->get('channelId')) && !empty($channel = $entity->get('channel'))) {
