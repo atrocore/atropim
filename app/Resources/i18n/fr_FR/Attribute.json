@@ -10,7 +10,6 @@
     "products": "Produits",
     "productAttributeValues": "Valeurs des attributs",
     "isMultilang": "Multilingue",
-    "sortOrderInAttributeGroup": "Ordre de tri dans le groupe d'attributs",
     "fileType": "Type de fichier",
     "pattern": "Modèle d'expressions rationnelles",
     "unique": "Unique",

@@ -15,16 +15,16 @@ namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot13Dot90 extends Base
+class V1Dot13Dot91 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-03-19 12:00:00');
+        return new \DateTime('2025-03-19 15:00:00');
     }
 
     public function up(): void
     {
-        $this->execute("ALTER TABLE attribute DROP sort_order_in_attribute_group");
+        $this->execute("ALTER TABLE attribute DROP virtual_product_field");
     }
 
 

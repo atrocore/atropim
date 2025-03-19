@@ -38,14 +38,40 @@ class Attribute extends Base
 
     public function updateSortOrderInAttributeGroup(array $ids): void
     {
-        foreach ($ids as $k => $id) {
-            $this->getConnection()->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
-                ->set('sort_order_in_attribute_group', ':sortOrder')
-                ->where('a.id = :id')
-                ->setParameter('sortOrder', $k * 10)
-                ->setParameter('id', $id)
-                ->executeQuery();
+        $rows = $this->getConnection()->createQueryBuilder()
+            ->from($this->getConnection()->quoteIdentifier('attribute'))
+            ->select('sort_order', 'id')
+            ->where('id IN (:ids)')
+            ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+            ->orderBy('sort_order')
+            ->fetchAllAssociative();
+
+        $values = array_filter(array_unique(array_column($rows, 'sort_order')));
+        if (count($values) === count($rows)) {
+            // shuffle orders
+            foreach ($ids as $k => $id) {
+                $value = $rows[$k]['sort_order'];
+                $this->getConnection()->createQueryBuilder()
+                    ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
+                    ->set('sort_order', ':sortOrder')
+                    ->where('a.id = :id')
+                    ->setParameter('sortOrder', $value, ParameterType::INTEGER)
+                    ->setParameter('id', $id)
+                    ->executeQuery();
+            }
+        } else {
+            $min = min($values) ?? 0;
+
+            foreach ($ids as $k => $id) {
+                $this->getConnection()->createQueryBuilder()
+                    ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
+                    ->set('sort_order', ':sortOrder')
+                    ->where('a.id = :id')
+                    ->setParameter('sortOrder',
+                        $min + $k * 10)
+                    ->setParameter('id', $id)
+                    ->executeQuery();
+            }
         }
     }
 
@@ -77,11 +103,16 @@ class Attribute extends Base
         }
 
         if ($entity->get('sortOrder') === null) {
-            $entity->set('sortOrder', time());
-        }
+            $connection = $this->getEntityManager()->getConnection();
+            $max = $connection->createQueryBuilder()
+                ->select('MAX(sort_order)')
+                ->from($connection->quoteIdentifier('attribute'))
+                ->fetchOne();
 
-        if ($entity->get('sortOrderInAttributeGroup') === null) {
-            $entity->set('sortOrderInAttributeGroup', time());
+            if (empty($max)) {
+                $max = 0;
+            }
+            $entity->set('sortOrder', $max + 10);
         }
 
 
@@ -241,7 +272,7 @@ class Attribute extends Base
                 ->setParameter('attributeId', $attributeId, Mapper::getParameterType($attributeId))
                 ->setParameter('false', false, ParameterType::BOOLEAN);
 
-            if($entity->get('type') === 'varchar'){
+            if ($entity->get('type') === 'varchar') {
                 $query
                     ->set('varchar_value', ':empty')
                     ->andWhere("varchar_value is NULL")
@@ -249,7 +280,7 @@ class Attribute extends Base
                     ->executeQuery();
             }
 
-            if(in_array($entity->get('type'), ['text', 'markdown', 'wysiwyg', 'url'])){
+            if (in_array($entity->get('type'), ['text', 'markdown', 'wysiwyg', 'url'])) {
                 $query
                     ->set('text_value', ':empty')
                     ->andWhere("text_value is NULL")
@@ -257,7 +288,7 @@ class Attribute extends Base
                     ->executeQuery();
             }
 
-            if($entity->get('type') === 'int'){
+            if ($entity->get('type') === 'int') {
                 $query
                     ->set('int_value', ':zero')
                     ->andWhere("int_value is NULL")
@@ -265,7 +296,7 @@ class Attribute extends Base
                     ->executeQuery();
             }
 
-            if($entity->get('type') === 'float'){
+            if ($entity->get('type') === 'float') {
                 $query
                     ->set('float_value', ':zero')
                     ->andWhere("float_value is NULL")
@@ -273,7 +304,7 @@ class Attribute extends Base
                     ->executeQuery();
             }
 
-            if($entity->get('type') === 'bool'){
+            if ($entity->get('type') === 'bool') {
                 $query->set('bool_value', ':defaultBool')
                     ->where("bool_value is NULL")
                     ->setParameter('defaultBool', false, ParameterType::BOOLEAN)
@@ -295,12 +326,12 @@ class Attribute extends Base
         $this->getConnection()
             ->createQueryBuilder()
             ->update('product_attribute_value')
-            ->set('deleted',':false')
+            ->set('deleted', ':false')
             ->where('attribute_id = :attributeId')
             ->andWhere('deleted = :true')
-            ->setParameter('false',false, ParameterType::BOOLEAN)
-            ->setParameter('attributeId',$entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true',true, ParameterType::BOOLEAN);
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('attributeId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
+            ->setParameter('true', true, ParameterType::BOOLEAN);
     }
 
     /**

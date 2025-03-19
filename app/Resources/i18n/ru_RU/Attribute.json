@@ -10,7 +10,6 @@
     "products": "Продукты",
     "productAttributeValues": "Значения атрибутов",
     "isMultilang": "Многоязычность",
-    "sortOrderInAttributeGroup": "Порядок сортировки в группе атрибута",
     "fileType": "Тип файла",
     "pattern": "Regex Pattern",
     "unique": "Unique",

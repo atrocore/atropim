@@ -10,7 +10,6 @@
     "products": "Products",
     "productAttributeValues": "Attribute Values",
     "isMultilang": "Multilingual",
-    "sortOrderInAttributeGroup": "Sort Order in Attribute Group",
     "fileType": "File Type",
     "pattern": "Regex Pattern",
     "unique": "Unique",

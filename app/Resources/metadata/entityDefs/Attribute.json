@@ -191,12 +191,6 @@
       "tooltip": true,
       "view": "pim:views/attribute/fields/required"
     },
-    "sortOrderInAttributeGroup": {
-      "type": "int",
-      "default": null,
-      "massUpdateDisabled": true,
-      "filterDisabled": true
-    },
     "sortOrder": {
       "type": "int",
       "default": null,

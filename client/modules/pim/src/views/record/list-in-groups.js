@@ -70,7 +70,7 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             const htmlIcons = Dep.prototype.getStatusIcons.call(this, model) || [];
 
             if (model.get('isRequired')) {
-                htmlIcons.push(`<span class="fas fa-sm fa-asterisk required-sign" title="${this.translate('Required')}"></span>`)
+                htmlIcons.push(`<span class="fas fa-sm fa-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></span>`)
             }
 
             if (model.urlRoot === 'ProductAttributeValue') {
@@ -92,6 +92,14 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             }
 
             return htmlIcons;
+        },
+
+        afterRenderStatusIcons(icons, model) {
+            if (model.name === 'ProductAttributeValue') {
+                icons.find('span.required-sign').click(() => {
+                    this.getParentModel().trigger('toggle-required-fields-highlight');
+                });
+            }
         },
 
         afterRender() {
