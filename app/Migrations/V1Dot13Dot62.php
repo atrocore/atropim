@@ -31,7 +31,7 @@ class V1Dot13Dot62 extends Base
             $this->getConnection()->createQueryBuilder()
                 ->update('attribute')
                 ->set('sort_order', 'sort_order_in_product')
-                ->where('id is not null')
+                ->where('sort_order is null')
                 ->executeStatement();
         } catch (\Throwable $e) {
         }

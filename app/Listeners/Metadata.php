@@ -238,7 +238,7 @@ class Metadata extends AbstractListener
                     "AttributeGroup",
                     "ProductAttributeValue"
                 ],
-                "sortBy"                     => "attribute.sortOrderInAttributeGroup",
+                "sortBy"                     => "attribute.sortOrder",
                 "asc"                        => true
             ];
         }
