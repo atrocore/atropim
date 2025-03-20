@@ -78,7 +78,7 @@ class ProductLayout extends AbstractLayoutListener
         if ($relatedEntity === 'Category' && !str_contains(json_encode($result), 'ProductCategory__mainCategory')) {
             $result[0]['rows'][] = [['name' => 'ProductCategory__mainCategory'], false];
         }
-        if ($relatedEntity === 'Product' && !str_contains(json_encode($result), 'ProductHierarchy__mainChild')) {
+        if ($relatedEntity === 'Product' && in_array($event->getArgument('relationLink'), ['parents', 'children']) && !str_contains(json_encode($result), 'ProductHierarchy__mainChild')) {
             $result[0]['rows'][] = [['name' => 'ProductHierarchy__mainChild'], false];
         }
 
