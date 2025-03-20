@@ -105,7 +105,7 @@ Espo.define('pim:views/product/record/panels/associated-products',
         getModel(data, evt) {
             const idx = $(evt.target).closest('.group').index()
             const key = this.groups[idx].key
-            return this.getView('associatedProduct' + key).collection.get(data.cid)
+            return this.getView(key).collection.get(data.cid)
         },
 
         buildGroups() {
@@ -147,7 +147,7 @@ Espo.define('pim:views/product/record/panels/associated-products',
                                     el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
                                 };
 
-                                this.createView('associatedProduct' + group.key, viewName, options, view => {
+                                this.createView(group.key, viewName, options, view => {
                                     view.render();
                                     if (view.isRendered()) {
                                         areRendered.push(group.key);
