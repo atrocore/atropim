@@ -526,8 +526,13 @@ class ProductAttributeValue extends AbstractAttributeValue
             }
         }
 
+        $modifiedExtendedRelations = $this->getMetadata()->get(['scopes', 'Product', 'modifiedExtendedRelations'], []);
+        if (!in_array('productAttributeValues', $modifiedExtendedRelations)) {
+            return;
+        }
+
         $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $entity->get('productId'), [
-            'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
+            'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i') . ':00',
             'modifiedById' => $this->getEntityManager()->getUser()->get('id')
         ]);
     }
