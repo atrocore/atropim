@@ -142,18 +142,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "modifiedAtExpanded": {
-      "type": "datetime",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "ownerUser": {
       "type": "link",
       "required": false,
