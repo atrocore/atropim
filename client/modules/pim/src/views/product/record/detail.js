@@ -72,7 +72,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             let data = Dep.prototype.data.call(this);
             this.beforeSaveModel = this.model.getClonedAttributes();
 
-            return  data;
+            return data;
         },
 
         parseRoute(routeStr) {
@@ -86,16 +86,12 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             return route;
         },
 
-        treeLoad(view, treeData) {
-            view.clearStorage();
-
-            if (view.treeScope === 'Classification' ) {
-                $.ajax({url: `Product/${view.model.get('id')}/classifications`, type: 'GET'}).done(response => {
-                    let route = [];
-                    view.prepareTreeRoute(treeData, route);
-                    if(response.total && response.total > 0) {
-                        let $tree = view.getTreeEl();
-                        response.list.forEach((classification) =>  {
+        treeLoad(treeScope) {
+            if (treeScope === 'Classification') {
+                $.ajax({url: `Product/${this.model.get('id')}/classifications`, type: 'GET'}).done(response => {
+                    if (response.total && response.total > 0) {
+                        let $tree = window.treePanelComponent.getTreeEl();
+                        response.list.forEach((classification) => {
                             let node = $tree.tree('getNodeById', classification.id);
                             if (node && node.element) {
                                 $(node.element).addClass('jqtree-selected');
@@ -105,22 +101,27 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
             }
 
-            if (view.treeScope === 'Category') {
-                $.ajax({url: `Product/${view.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
+            if (treeScope === 'Brand' && this.model.get('brandId')) {
+                setTimeout(() => {
+                    let $tree = window.treePanelComponent.getTreeEl();
+                    let node = $tree.tree('getNodeById', this.model.get('brandId'));
+                    if (node && node.element) {
+                        $(node.element).addClass('jqtree-selected');
+                    }
+                }, 300)
+            }
+
+            if (treeScope === 'Category') {
+                $.ajax({url: `Product/${this.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
                     if (response.total && response.total > 0) {
                         let opened = {};
-                        this.selectCategoryNode(response.list, view, opened);
+                        this.selectCategoryNode(response.list, opened);
                     }
                 });
             }
-
-            if (['Product','Bookmark'].includes(view.treeScope) && view.model && view.model.get('id')) {
-                let route = [];
-                view.prepareTreeRoute(treeData, route);
-            }
         },
 
-        selectCategoryNode(categories, view, opened) {
+        selectCategoryNode(categories, opened) {
             if (categories.length > 0) {
                 let categoriesRoutes = {};
                 categories.forEach(category => {
@@ -134,7 +135,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                     categoriesRoutes[category.id] = route;
                 });
 
-                let $tree = view.getTreeEl();
+                let $tree = window.treePanelComponent.getTreeEl();
                 this.ajaxGetRequest('Category/action/TreeData', {ids: Object.keys(categoriesRoutes)}).then(response => {
                     if (response.total && response.total > 0) {
                         (response.tree || []).forEach(node => {
