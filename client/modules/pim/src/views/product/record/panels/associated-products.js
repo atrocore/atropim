@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product/record/panels/associated-main-products',
+Espo.define('pim:views/product/record/panels/associated-products',
     ['views/record/panels/relationship', 'views/record/panels/bottom', 'pim:views/record/panels/records-in-groups'],
     (Dep, BottomPanel, RecordInGroup) => Dep.extend({
         groupScope: 'Association',
@@ -37,12 +37,12 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
                 this.buttonList.push({
                     title: 'Create',
                     action: this.defs.createAction || 'createRelated',
-                    link: this.link,
+                    link: 'associatedMainProducts',
                     acl: 'create',
                     aclScope: this.scope,
                     html: '<span class="fas fa-plus"></span>',
                     data: {
-                        link: this.link,
+                        link: 'associatedMainProducts',
                         tabId: this.defs.tabId
                     }
                 });
@@ -65,7 +65,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             });
 
             this.listenTo(this.model, 'after:relate', (link) => {
-                if(link === 'associatedMainProducts') {
+                if (link === 'associatedMainProducts') {
                     this.actionRefresh();
                 }
             });
@@ -79,7 +79,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             });
 
             this.listenTo(this, 'after-groupPanels-rendered', () => {
-                setTimeout(() => this.regulateTableSizes(),500)
+                setTimeout(() => this.regulateTableSizes(), 500)
             });
         },
 
@@ -110,7 +110,7 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
             let areRendered = [];
 
             this.groups.forEach((group, key) => {
-                this.getHelper().layoutManager.get('Product', this.layoutName, null, function(data) {
+                this.getHelper().layoutManager.get('Product', this.layoutName, 'Product.associatedProducts', null, function (data) {
                     let list = [];
                     data.layout.forEach(item => {
                         if (item.name) {
@@ -132,9 +132,10 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
                                 let options = {
                                     scope: 'Product',
                                     collection: groupCollection,
+                                    layoutRelatedScope: 'Product.associatedProducts',
                                     layoutName: this.layoutName,
                                     listLayout: this.prepareListLayout(data.layout),
-                                    rowActionsView: 'views/record/row-actions/relationship-no-unlink',
+                                    rowActionsView: 'views/record/row-actions/relationship-no-remove',
                                     checkboxes: false,
                                     buttonsDisabled: true,
                                     showMore: false,
@@ -143,15 +144,15 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
 
                                 this.createView('associatedProduct' + group.key, viewName, options, view => {
                                     view.render();
-                                    if(view.isRendered()) {
+                                    if (view.isRendered()) {
                                         areRendered.push(group.key);
-                                        if(areRendered.length === this.groups.length) {
+                                        if (areRendered.length === this.groups.length) {
                                             this.trigger('after-groupPanels-rendered');
                                         }
                                     }
                                     view.once('after:render', () => {
                                         areRendered.push(group.key);
-                                        if(areRendered.length === this.groups.length) {
+                                        if (areRendered.length === this.groups.length) {
                                             this.trigger('after-groupPanels-rendered');
                                         }
                                     })
@@ -164,25 +165,14 @@ Espo.define('pim:views/product/record/panels/associated-main-products',
         },
 
         initGroupCollection(group, groupCollection, callback) {
-            groupCollection.url = 'Product';
+            groupCollection.url = this.model.name + '/' + this.model.id + '/' + this.link;
             groupCollection.collectionOnly = true;
             groupCollection.maxSize = 999
-            groupCollection.where = [
+            groupCollection.data.whereRelation = [
                 {
-                    type: 'linkedWith',
-                    attribute: 'associatedRelatedProduct',
-                    subQuery: [
-                        {
-                            type: 'equals',
-                            attribute: 'associationId',
-                            value: group.id
-                        },
-                        {
-                            type: 'equals',
-                            attribute: 'mainProductId',
-                            value: this.model.id
-                        }
-                    ]
+                    type: 'equals',
+                    attribute: 'associationId',
+                    value: group.id
                 }
             ]
             callback();
