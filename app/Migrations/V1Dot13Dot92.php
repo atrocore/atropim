@@ -31,22 +31,11 @@ class V1Dot13Dot92 extends Base
             $data = json_decode(file_get_contents($fileName), true);
         }
 
-        $write = false;
-
         if (
-            !empty($data['modifiedExtendedRelations'])
+            isset($data['modifiedExtendedRelations'])
             && !in_array('productAttributeValues', $data['modifiedExtendedRelations'])
         ) {
             $data['modifiedExtendedRelations'][] = 'productAttributeValues';
-            $write = true;
-        }
-
-        if (empty($data['modifiedExtendedRelations'])) {
-            $data['modifiedExtendedRelations'] = ['productAttributeValues'];
-            $write = true;
-        }
-
-        if ($write) {
             file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         }
     }
