@@ -23,23 +23,6 @@ Espo.define('pim:views/record/panels/files', 'views/record/panels/relationship',
             this.listenTo(this.model, 'after:relate after:unrelate', () => {
                 this.collection.reset();
             })
-
-            this.listenTo(this.collection, 'sync', function (c, r, options) {
-                if ('list' in r && Array.isArray(r['list'])) {
-                    r['list'].forEach(item => {
-                        if ('ProductFile__channelId' in item && 'ProductFile__id' in item) {
-                            let index = this.collection.models.findIndex(elem => elem.get('id') === item.id && elem.get('ProductFile__channelId') === item.ProductFile__channelId);
-
-                            if (index === -1) {
-                                item.originalId = item.id;
-                                item.id = item.ProductFile__id;
-
-                                this.collection.add(item);
-                            }
-                        }
-                    });
-                }
-            }, this);
         },
 
         actionSetAsMainImage(data) {

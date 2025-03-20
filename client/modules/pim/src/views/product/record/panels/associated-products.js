@@ -102,28 +102,33 @@ Espo.define('pim:views/product/record/panels/associated-products',
             })
         },
 
+        getModel(data, evt) {
+            const idx = $(evt.target).closest('.group').index()
+            const key = this.groups[idx].key
+            return this.getView('associatedProduct' + key).collection.get(data.cid)
+        },
+
         buildGroups() {
             if (!this.groups || this.groups.length < 1) {
                 return;
             }
 
             let areRendered = [];
-
-            this.groups.forEach((group, key) => {
-                this.getHelper().layoutManager.get('Product', this.layoutName, 'Product.associatedProducts', null, function (data) {
-                    let list = [];
-                    data.layout.forEach(item => {
-                        if (item.name) {
-                            let field = item.name;
-                            let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'type']);
-                            if (fieldType) {
-                                this.getFieldManager().getAttributeList(fieldType, field).forEach(attribute => {
-                                    list.push(attribute);
-                                });
-                            }
+            this.getHelper().layoutManager.get('Product', this.layoutName, 'Product.associatedProducts', null, function (data) {
+                let list = [];
+                data.layout.forEach(item => {
+                    if (item.name) {
+                        let field = item.name;
+                        let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'type']);
+                        if (fieldType) {
+                            this.getFieldManager().getAttributeList(fieldType, field).forEach(attribute => {
+                                list.push(attribute);
+                            });
                         }
-                    });
+                    }
+                });
 
+                this.groups.forEach((group, key) => {
                     this.getCollectionFactory().create('Product', groupCollection => {
                         this.initGroupCollection(group, groupCollection, () => {
                             groupCollection.data.select = list.join(',')
@@ -160,8 +165,9 @@ Espo.define('pim:views/product/record/panels/associated-products',
                             });
                         });
                     });
-                }.bind(this));
-            });
+                });
+            }.bind(this));
+
         },
 
         initGroupCollection(group, groupCollection, callback) {
