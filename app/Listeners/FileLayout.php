@@ -36,4 +36,22 @@ class FileLayout extends AbstractLayoutListener
 
         $event->setArgument('result', $result);
     }
+
+    public function list(Event $event)
+    {
+        $relatedEntity = $this->getRelatedEntity($event);
+        $result = $event->getArgument('result');
+
+        if (!$this->isCustomLayout($event)) {
+            if ($relatedEntity === 'Product' && !in_array('ProductFile__isMainImage', $result)) {
+                $result[] = ['name' => 'ProductFile__isMainImage'];
+            }
+
+            if ($relatedEntity === 'Category' && !in_array('CategoryFile__isMainImage', $result)) {
+                $result[] = ['name' => 'CategoryFile__isMainImage'];
+            }
+        }
+
+        $event->setArgument('result', $result);
+    }
 }
