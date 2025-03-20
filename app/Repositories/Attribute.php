@@ -241,10 +241,6 @@ class Attribute extends Base
      */
     protected function afterSave(Entity $entity, array $options = array())
     {
-        if ($entity->isAttributeChanged('virtualProductField') || (!empty($entity->get('virtualProductField') && $entity->isAttributeChanged('code')))) {
-            $this->clearCache();
-        }
-
         parent::afterSave($entity, $options);
 
         /**
@@ -319,10 +315,6 @@ class Attribute extends Base
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        if (!empty($entity->get('virtualProductField'))) {
-            $this->clearCache();
-        }
-
         $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByAttributeId($entity->get('id'));
         parent::afterRemove($entity, $options);
     }

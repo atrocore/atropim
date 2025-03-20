@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\Entities;
 
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Espo\Core\Templates\Entities\Hierarchy;
+use Atro\Core\Templates\Entities\Hierarchy;
 use Espo\ORM\EntityCollection;
 
 class Product extends Hierarchy

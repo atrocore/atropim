@@ -115,11 +115,6 @@
       "type": "bool",
       "default": false
     },
-    "virtualProductField": {
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    },
     "min": {
       "type": "float",
       "notStorable": true,
