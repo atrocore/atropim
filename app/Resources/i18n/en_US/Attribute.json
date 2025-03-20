@@ -18,7 +18,6 @@
     "defaultUnit": "Default Unit",
     "defaultDate": "Default Date",
     "defaultValue": "Default Value",
-    "virtualProductField": "Virtual product field",
     "defaultChannel": "Default channel",
     "isRequired": "Required",
     "tooltip": "Tooltip",
@@ -75,7 +74,6 @@
   "tooltips": {
     "isRequired": "This is a default value, which will be applied for adding this attribute to a product or to a classification.",
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
-    "virtualProductField": "Values for this attribute will be added as a virtual field via product list layout.",
     "sortOrder": "Sort order for attribute values for a product.",
     "defaultChannel": "Apply on newly added attribute values only",
     "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
