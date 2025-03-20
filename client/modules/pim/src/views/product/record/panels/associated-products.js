@@ -140,10 +140,12 @@ Espo.define('pim:views/product/record/panels/associated-products',
                                     layoutRelatedScope: 'Product.associatedProducts',
                                     layoutName: this.layoutName,
                                     listLayout: this.prepareListLayout(data.layout),
+                                    layoutData: data,
                                     rowActionsView: 'views/record/row-actions/relationship-no-remove',
                                     checkboxes: false,
                                     buttonsDisabled: true,
                                     showMore: false,
+                                    disableRefreshLayout: true,
                                     el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
                                 };
 
@@ -160,6 +162,9 @@ Espo.define('pim:views/product/record/panels/associated-products',
                                         if (areRendered.length === this.groups.length) {
                                             this.trigger('after-groupPanels-rendered');
                                         }
+                                    })
+                                    view.on('refresh-layout', () => {
+                                        this.actionRefresh()
                                     })
                                 });
                             });

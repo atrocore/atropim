@@ -394,7 +394,6 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                     th.css('width', el.maxWidth + 'px')
                 });
             });
-            debugger
 
             // this.groups.forEach(group => {
             //     const groupView = this.getView(group.key)
