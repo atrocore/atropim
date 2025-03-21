@@ -178,9 +178,12 @@
       ],
       "view": "pim:views/product/record/panels/categories"
     },
+    "associatedProducts": {
+      "label": "associatedProducts",
+      "view": "pim:views/product/record/panels/associated-products"
+    },
     "associatedMainProducts": {
       "label": "associatedProducts",
-      "view": "pim:views/product/record/panels/associated-main-products",
       "compareRecordsView": "pim:views/product/record/compare/associated-main-product",
       "compareInstanceRecordsView": "pim:views/product/record/compare/associated-main-product-instance"
     },

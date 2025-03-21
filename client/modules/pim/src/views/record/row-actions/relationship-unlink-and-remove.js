@@ -18,14 +18,16 @@ Espo.define('pim:views/record/row-actions/relationship-unlink-and-remove', 'view
                         action: 'unlinkRelated',
                         label: 'Unlink',
                         data: {
-                            id: this.model.id
+                            id: this.model.id,
+                            cid: this.model.cid
                         }
                     },
                     {
                         action: 'removeRelated',
                         label: 'Remove',
                         data: {
-                            id: this.model.id
+                            id: this.model.id,
+                            cid: this.model.cid
                         }
                     }
                 ];

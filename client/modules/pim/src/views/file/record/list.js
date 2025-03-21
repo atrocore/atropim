@@ -22,10 +22,6 @@ Espo.define('pim:views/file/record/list', 'views/file/record/list',
         buildRow: function (i, model, callback) {
             var key = model.id;
 
-            if (model.get('originalId')) {
-                model.set('id', model.get('originalId'));
-            }
-
             this.rowList.push(key);
 
             let getRelationModel = (callback) => {
@@ -68,33 +64,6 @@ Espo.define('pim:views/file/record/list', 'views/file/record/list',
                     }, callback);
                 }.bind(this), model);
             })
-        },
-
-        actionQuickView: function (data) {
-            if (data.id) {
-                data.id = this.getActualModelId(data);
-            }
-
-            Dep.prototype.actionQuickView.call(this, data);
-        },
-
-        actionQuickEdit: function (data) {
-            if (data.id) {
-                data.id = this.getActualModelId(data);
-            }
-
-            Dep.prototype.actionQuickEdit.call(this, data);
-        },
-
-        getActualModelId(data) {
-            let cid = data.id;
-            this.collection.forEach((model) => {
-                if (model.get('id') === data.id && model.get('ProductFile__id') === data.file && this.collection.get(model.cid)) {
-                    cid = model.cid;
-                }
-            });
-
-            return cid;
         }
     })
 );
