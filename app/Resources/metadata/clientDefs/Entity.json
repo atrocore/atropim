@@ -1,0 +1,20 @@
+{
+  "dynamicLogic": {
+    "fields": {
+      "hasAttribute": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "hasAttribute": {
+      "type": "bool"
+    }
+  }
+}
