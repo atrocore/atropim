@@ -80,6 +80,14 @@ class Metadata extends AbstractListener
                     "controller" => "controllers/record"
                 ];
 
+                $metadata["clientDefs"][$scope]["relationshipPanels"]["fooAttributeValues"] = [
+                    "selectAction"            => "selectAttribute",
+                    "disabledSelectAllResult" => true,
+                    "unlinkAll"               => false,
+                    "rowActionsView"          => "views/record/row-actions/relationship-no-unlink",
+                    "view"                    => "pim:views/record/panels/attribute-values"
+                ];
+
                 $metadata['scopes'][$entityName] = [
                     'type'              => "Base",
                     'module'            => "Pim",
