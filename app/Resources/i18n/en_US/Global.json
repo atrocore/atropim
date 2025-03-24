@@ -59,6 +59,13 @@
     }
   },
   "fields": {
+    "language": "Language",
+    "value": "Value",
+    "valueFrom": "Value From",
+    "valueTo": "Value To",
+    "valueUnitId": "Value Unit",
+    "valueId": "Value Link",
+    "valueIds": "Value Multiple Link",
     "categories": "Categories",
     "channels": "Channels",
     "products": "Products",

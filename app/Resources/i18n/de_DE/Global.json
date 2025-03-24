@@ -50,6 +50,11 @@
     "ContentItem": "Inhalte"
   },
   "fields": {
+    "language": "Sprache",
+    "value": "Wert",
+    "valueFrom": "Wert von",
+    "valueTo": "Wert auf",
+    "valueUnitId": "Werteinheit",
     "categories": "Kategorien",
     "channels": "Kanäle",
     "products": "Produkte",
