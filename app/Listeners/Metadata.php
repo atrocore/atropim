@@ -595,6 +595,15 @@ class Metadata extends AbstractListener
                     'attributeExtensibleEnumId' => [
                         'type' => 'varchar',
                     ],
+                    'attributeFileTypeId'       => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeGroupId'          => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeGroupName'        => [
+                        'type' => 'varchar',
+                    ],
                     'attributeIsDropdown'       => [
                         'type' => 'bool',
                     ],
@@ -603,6 +612,12 @@ class Metadata extends AbstractListener
                     ],
                     'attributeTrim'             => [
                         'type' => 'bool',
+                    ],
+                    'prohibitedEmptyValue'      => [
+                        'type' => 'bool',
+                    ],
+                    'sortOrder'                 => [
+                        'type' => 'int',
                     ],
                 ];
 

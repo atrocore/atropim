@@ -70,47 +70,40 @@ class AttributeValue extends Base
 
         $entity->set('attributeTooltip', $tooltip);
         $entity->set('attributeEntityType', $attribute->get('entityType'));
-//        $entity->set('attributeEntityField', $attribute->get('entityField'));
-//        $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
-//        $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
-//        $entity->set('attributeCode', $attribute->get('code'));
-//        $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
-//        $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
-//        $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-//        $entity->set('attributeNotNull', $attribute->get('notNull'));
-//        $entity->set('attributeTrim', $attribute->get('trim'));
+        $entity->set('attributeEntityField', $attribute->get('entityField'));
+        $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
+        $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
+        $entity->set('attributeCode', $attribute->get('code'));
+        $entity->set('prohibitedEmptyValue', $attribute->get('prohibitedEmptyValue'));
+        $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
+        $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
+        $entity->set('attributeNotNull', $attribute->get('notNull'));
+        $entity->set('attributeTrim', $attribute->get('trim'));
 
+        if (
+            !empty($attribute->get('useDisabledTextareaInViewMode'))
+            && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])
+        ) {
+            $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
+        }
 
-//        if (!empty($attribute->get('useDisabledTextareaInViewMode')) && in_array($entity->get('attributeType'), ['text', 'varchar', 'wysiwyg'])) {
-//            $entity->set('useDisabledTextareaInViewMode', $attribute->get('useDisabledTextareaInViewMode'));
-//        }
+        $entity->set('sortOrder', $attribute->get('sortOrder'));
 
-//        $entity->set('sortOrder', $attribute->get('sortOrder'));
+        $this->getValueConverter()->convertFrom($entity, $attribute, $clear);
 
-//        $entity->set('channelCode', null);
-//        if (!empty($entity->get('channelId')) && !empty($channel = $entity->get('channel'))) {
-//            $entity->set('channelCode', $channel->get('code'));
-//        }
+        if ($attribute->get('measureId')) {
+            $entity->set('attributeMeasureId', $attribute->get('measureId'));
+            $this->prepareUnitFieldValue($entity, 'value', [
+                'measureId' => $attribute->get('measureId'),
+                'type'      => $attribute->get('type'),
+                'mainField' => 'value'
+            ]);
+        }
 
-        $this->getInjection('container')->get(ValueConverter::class)->convertFrom($entity, $attribute, $clear);
-
-//        if ($attribute->get('measureId')) {
-//            $entity->set('attributeMeasureId', $attribute->get('measureId'));
-//            $this->prepareUnitFieldValue($entity, 'value', [
-//                'measureId' => $attribute->get('measureId'),
-//                'type'      => $attribute->get('type'),
-//                'mainField' => 'value'
-//            ]);
-//        }
-//
-//        $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
-//        if (in_array($entity->get('attributeType'), array_keys($dropdownTypes))) {
-//            $entity->set('attributeIsDropdown', $attribute->get('dropdown'));
-//        }
-//
-//        if ($entity->get('channelId') === '') {
-//            $entity->set('channelId', null);
-//        }
+        $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
+        if (in_array($entity->get('attributeType'), array_keys($dropdownTypes))) {
+            $entity->set('attributeIsDropdown', $attribute->get('dropdown'));
+        }
     }
 
     protected function init()
@@ -120,5 +113,10 @@ class AttributeValue extends Base
         $this->addDependency('language');
         $this->addDependency('container');
         $this->addDependency(ValueConverter::class);
+    }
+
+    protected function getValueConverter(): ValueConverter
+    {
+        return $this->getInjection('container')->get(ValueConverter::class);
     }
 }
