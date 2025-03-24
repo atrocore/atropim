@@ -45,6 +45,19 @@ class Language extends AbstractListener
             }
         }
 
+        foreach ($this->getMetadata()->get('scopes') ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['hasAttribute'])) {
+                foreach ([$scope, 'Attribute'] as $entityName) {
+                    if (!isset($data['en_US'][$entityName]['fields'][lcfirst($scope) . 'AttributeValues'])) {
+                        $data['en_US'][$entityName]['fields'][lcfirst($scope) . 'AttributeValues'] = 'Attribute Values';
+                    }
+                    if (!isset($data['de_DE'][$entityName]['fields'][lcfirst($scope) . 'AttributeValues'])) {
+                        $data['de_DE'][$entityName]['fields'][lcfirst($scope) . 'AttributeValues'] = 'Attributwerte';
+                    }
+                }
+            }
+        }
+
         $this->addTabTranslations($data);
 
         $event->setArgument('data', $data);
