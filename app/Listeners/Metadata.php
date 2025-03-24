@@ -81,20 +81,20 @@ class Metadata extends AbstractListener
                 ];
 
                 $metadata['scopes'][$entityName] = [
-                    'type'                 => "Base",
-                    'module'               => "Pim",
-                    'attributeValueFor'    => $scope,
-                    'entity'               => true,
-                    'layouts'              => true,
-                    'tab'                  => true,
-                    'acl'                  => true,
-                    'customizable'         => true,
-                    'importable'           => true,
-                    'notifications'        => true,
-                    'disabled'             => false,
-                    'object'               => true,
-                    'streamDisabled'       => true,
-                    'hideLastViewed'       => true
+                    'type'              => "Base",
+                    'module'            => "Pim",
+                    'attributeValueFor' => $scope,
+                    'entity'            => true,
+                    'layouts'           => true,
+                    'tab'               => true,
+                    'acl'               => true,
+                    'customizable'      => true,
+                    'importable'        => true,
+                    'notifications'     => true,
+                    'disabled'          => false,
+                    'object'            => true,
+                    'streamDisabled'    => true,
+                    'hideLastViewed'    => true
                 ];
 
                 $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
@@ -134,20 +134,184 @@ class Metadata extends AbstractListener
 
                 $metadata["entityDefs"][$entityName] = [
                     "fields"        => [
-                        lcfirst($scope)  => [
+                        lcfirst($scope)    => [
                             "type"     => "link",
                             "required" => true
                         ],
-                        "attribute"      => [
+                        "attribute"        => [
                             "type"     => "link",
                             "required" => true
                         ],
-                        "language"       => [
+                        "language"         => [
                             "type"                 => "language",
                             "default"              => "main",
                             "prohibitedEmptyValue" => true
                         ],
-                        "boolValue"      => [
+                        "value"            => [
+                            "type"               => "text",
+                            "notStorable"        => true,
+                            "filterDisabled"     => true,
+                            "rowsMax"            => 4,
+                            "lengthOfCut"        => 400,
+                            "view"               => "pim:views/product-attribute-value/fields/value-container",
+                            "massUpdateDisabled" => true,
+                            "emHidden"           => true,
+                            "openApiEnabled"     => true
+                        ],
+                        "valueFrom"        => [
+                            "type"                 => "float",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueTo"          => [
+                            "type"                 => "float",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueCurrency"    => [
+                            "type"                 => "varchar",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "valueUnitId"      => [
+                            "type"                 => "varchar",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueUnit"        => [
+                            "type"                 => "varchar",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "valueAllUnits"    => [
+                            "type"                 => "jsonObject",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "valueUnitData"    => [
+                            "type"                 => "jsonObject",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "valueId"          => [
+                            "type"                 => "varchar",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueName"        => [
+                            "type"                 => "varchar",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueIds"         => [
+                            "type"                 => "jsonArray",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueNames"       => [
+                            "type"                 => "jsonObject",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiEnabled"       => true
+                        ],
+                        "valueOptionData"  => [
+                            "type"                 => "jsonArray",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "valuePathsData"   => [
+                            "type"                 => "jsonObject",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "valueOptionsData" => [
+                            "type"                 => "jsonArray",
+                            "notStorable"          => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ],
+                        "boolValue"        => [
                             "type"                 => "bool",
                             "notNull"              => false,
                             "aclFieldDisabled"     => true,
@@ -159,7 +323,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "dateValue"      => [
+                        "dateValue"        => [
                             "type"                 => "date",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -170,7 +334,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "datetimeValue"  => [
+                        "datetimeValue"    => [
                             "type"                 => "datetime",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -181,7 +345,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "intValue"       => [
+                        "intValue"         => [
                             "type"                 => "int",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -192,7 +356,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "intValue1"      => [
+                        "intValue1"        => [
                             "type"                 => "int",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -203,7 +367,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "floatValue"     => [
+                        "floatValue"       => [
                             "type"                 => "float",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -214,7 +378,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "floatValue1"    => [
+                        "floatValue1"      => [
                             "type"                 => "float",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -225,7 +389,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "varcharValue"   => [
+                        "varcharValue"     => [
                             "type"                 => "varchar",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -236,7 +400,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "referenceValue" => [
+                        "referenceValue"   => [
                             "type"                 => "varchar",
                             "maxLength"            => 50,
                             "aclFieldDisabled"     => true,
@@ -248,7 +412,7 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "textValue"      => [
+                        "textValue"        => [
                             "type"                 => "text",
                             "aclFieldDisabled"     => true,
                             "layoutListDisabled"   => true,
@@ -259,20 +423,20 @@ class Metadata extends AbstractListener
                             "emHidden"             => true,
                             "openApiDisabled"      => true
                         ],
-                        "createdAt"      => [
+                        "createdAt"        => [
                             "type"     => "datetime",
                             "readOnly" => true
                         ],
-                        "modifiedAt"     => [
+                        "modifiedAt"       => [
                             "type"     => "datetime",
                             "readOnly" => true
                         ],
-                        "createdBy"      => [
+                        "createdBy"        => [
                             "type"     => "link",
                             "readOnly" => true,
                             "view"     => "views/fields/user"
                         ],
-                        "modifiedBy"     => [
+                        "modifiedBy"       => [
                             "type"     => "link",
                             "readOnly" => true,
                             "view"     => "views/fields/user"
