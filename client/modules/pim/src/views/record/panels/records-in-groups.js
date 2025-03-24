@@ -221,7 +221,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                             collection: groupCollection,
                             layoutName: this.layoutName,
                             listLayout: this.listLayout,
-                            layoutRelatedScope: this.model.name+ '.' + this.link,
+                            layoutRelatedScope: this.model.name + '.' + this.link,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                             buttonsDisabled: true,
@@ -391,9 +391,16 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
             });
             thAndMawWidths.forEach((el, key) => {
                 el.elements.forEach(th => {
-                    th.width(el.maxWidth)
+                    th.css('width', el.maxWidth + 'px')
                 });
             });
+
+            this.groups.forEach(group => {
+                const groupView = this.getView(group.key)
+                if (groupView && typeof groupView.fullTableScroll === 'function') {
+                    groupView.fullTableScroll()
+                }
+            })
         }
     })
 );
