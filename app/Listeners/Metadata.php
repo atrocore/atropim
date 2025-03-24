@@ -74,6 +74,8 @@ class Metadata extends AbstractListener
             if (!empty($scopeDefs['hasAttribute']) && in_array($scopeDefs['type'], ['Base', 'Hierarchy'])) {
                 $entityName = "{$scope}AttributeValue";
 
+                $metadata['app']['services'][$entityName] = '\\Pim\\Services\\AttributeValue';
+
                 $metadata["clientDefs"][$entityName] = [
                     "controller" => "controllers/record"
                 ];
@@ -139,6 +141,18 @@ class Metadata extends AbstractListener
                         "attribute"        => [
                             "type"     => "link",
                             "required" => true
+                        ],
+                        "attributeType"    => [
+                            "type"                 => "varchar",
+                            "readOnly"             => true,
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
                         ],
                         "language"         => [
                             "type"                 => "language",
@@ -558,6 +572,53 @@ class Metadata extends AbstractListener
                         ]
                     ]
                 ];
+
+                $additionalVirtualFields = [
+                    'attributeTooltip'          => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeIsMultilang'      => [
+                        'type' => 'bool'
+                    ],
+                    'attributeCode'             => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeEntityType'       => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeEntityField'      => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeMeasureId'        => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeExtensibleEnumId' => [
+                        'type' => 'varchar',
+                    ],
+                    'attributeIsDropdown'       => [
+                        'type' => 'bool',
+                    ],
+                    'attributeNotNull'          => [
+                        'type' => 'bool',
+                    ],
+                    'attributeTrim'             => [
+                        'type' => 'bool',
+                    ],
+                ];
+
+                foreach ($additionalVirtualFields as $fieldName => $defs) {
+                    $metadata["entityDefs"][$entityName]["fields"][$fieldName] = array_merge([
+                        "readOnly"             => true,
+                        "notStorable"          => true,
+                        "layoutListDisabled"   => true,
+                        "layoutDetailDisabled" => true,
+                        "massUpdateDisabled"   => true,
+                        "filterDisabled"       => true,
+                        "exportDisabled"       => true,
+                        "importDisabled"       => true,
+                        "emHidden"             => true
+                    ], $defs);
+                }
             }
         }
     }
