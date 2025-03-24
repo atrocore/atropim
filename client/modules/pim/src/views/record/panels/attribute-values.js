@@ -11,12 +11,6 @@
 Espo.define('pim:views/record/panels/attribute-values', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
-        // setup() {
-        //     Dep.prototype.setup.call(this);
-        //
-        //     this.defs.selectAction = 'selectAttribute';
-        // },
-
         actionSelectAttribute(data) {
             this.notify('Loading...');
             this.createView('dialog', 'views/modals/select-records', {
@@ -33,38 +27,22 @@ Espo.define('pim:views/record/panels/attribute-values', 'views/record/panels/rel
                 this.notify(false);
 
                 dialog.once('select', selectObj => {
-                    console.log(selectObj);
+                    selectObj.forEach(model => {
+                        let attrs = {attributeId: model.id, _silentMode: true}
+                        attrs[this.lcFirst(this.model.name) + 'Id'] = this.model.id;
+                        this.ajaxPostRequest(`FooAttributeValue`, attrs, {async: false});
+                    });
 
-                    // var data = {shouldDuplicateForeign: duplicate};
-                    // if (Object.prototype.toString.call(selectObj) === '[object Array]') {
-                    //     var ids = [];
-                    //     selectObj.forEach(function (model) {
-                    //         ids.push(model.id);
-                    //     });
-                    //     data.ids = ids;
-                    // } else {
-                    //     if (selectObj.massRelate) {
-                    //         data.massRelate = true;
-                    //         data.where = selectObj.where;
-                    //     } else {
-                    //         data.id = selectObj.id;
-                    //     }
-                    // }
-                    //
-                    // const selectConfirm = this.getMetadata().get(`clientDefs.${self.scope}.relationshipPanels.${link}.selectConfirm`) || false;
-                    // if (selectConfirm) {
-                    //     let parts = selectConfirm.split('.');
-                    //     Espo.Ui.confirm(this.translate(parts[2], parts[1], parts[0]), {
-                    //         confirmText: self.translate('Apply'),
-                    //         cancelText: self.translate('Cancel')
-                    //     }, () => {
-                    //         this.createLink(this.scope, this.model.id, link, data);
-                    //     });
-                    // } else {
-                    //     this.createLink(this.scope, this.model.id, link, data);
-                    // }
+                    this.notify('Linked', 'success');
+                    this.model.trigger('after:relate', this.link, this.defs);
+                    this.actionRefresh();
                 });
             });
+        },
+
+        lcFirst(str) {
+            if (!str) return str;
+            return str.charAt(0).toLowerCase() + str.slice(1);
         },
 
     })

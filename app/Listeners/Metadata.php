@@ -80,7 +80,7 @@ class Metadata extends AbstractListener
                     "controller" => "controllers/record"
                 ];
 
-                $metadata["clientDefs"][$scope]["relationshipPanels"]["fooAttributeValues"] = [
+                $metadata["clientDefs"][$scope]["relationshipPanels"][lcfirst($scope) . "AttributeValues"] = [
                     "selectAction"            => "selectAttribute",
                     "disabledSelectAllResult" => true,
                     "unlinkAll"               => false,
