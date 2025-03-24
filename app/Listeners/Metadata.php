@@ -157,6 +157,7 @@ class Metadata extends AbstractListener
                         "language"         => [
                             "type"                 => "language",
                             "default"              => "main",
+                            "view"                 => "pim:views/classification-attribute/fields/language",
                             "prohibitedEmptyValue" => true
                         ],
                         "value"            => [

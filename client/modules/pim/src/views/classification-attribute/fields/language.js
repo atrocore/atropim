@@ -53,7 +53,7 @@ Espo.define('pim:views/classification-attribute/fields/language', 'views/fields/
                     }
                     return
                 }
-                if ((!this.model.isNew() || this.model.urlRoot === 'ProductAttributeValue') && this.model.get('attributeId')) {
+                if ((!this.model.isNew() || this.model.name === 'ProductAttributeValue' || this.getMetadata().get(`scopes.${this.model.name}.attributeValueFor`)) && this.model.get('attributeId')) {
                     this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`).success(attr => {
                         if (attr.isMultilang) {
                             this.show();
