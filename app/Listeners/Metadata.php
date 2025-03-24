@@ -65,7 +65,334 @@ class Metadata extends AbstractListener
 
         $this->defineClassificationViewForProduct($data);
 
+        $this->addAttributeValuePanel($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function addAttributeValuePanel(array &$metadata): void
+    {
+        foreach ($metadata['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['hasAttribute']) && in_array($scopeDefs['type'], ['Base', 'Hierarchy'])) {
+                $entityName = "{$scope}AttributeValue";
+
+                $metadata['scopes'][$entityName] = [
+                    'type'           => "Base",
+                    'module'         => "Pim",
+                    'entity'         => true,
+                    'layouts'        => true,
+                    'tab'            => true,
+                    'acl'            => true,
+                    'customizable'   => true,
+                    'importable'     => true,
+                    'notifications'  => true,
+                    'disabled'       => true,
+                    'object'         => true,
+                    'streamDisabled' => true,
+                    'hideLastViewed' => true
+                ];
+
+                $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
+                    "type"                      => "linkMultiple",
+                    "layoutDetailDisabled"      => true,
+                    "layoutListDisabled"        => true,
+                    "layoutLeftSidebarDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => false,
+                    "noLoad"                    => true
+                ];
+
+                $metadata["entityDefs"][$scope]['links'][lcfirst($scope) . "AttributeValues"] = [
+                    "type"                => "hasMany",
+                    "foreign"             => lcfirst($scope),
+                    "entity"              => "{$scope}AttributeValue",
+                    "disableMassRelation" => true
+                ];
+
+                $metadata["entityDefs"]["Attribute"]['fields'][lcfirst($scope) . "AttributeValues"] = [
+                    "type"                      => "linkMultiple",
+                    "layoutDetailDisabled"      => true,
+                    "layoutListDisabled"        => true,
+                    "layoutLeftSidebarDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => false,
+                    "noLoad"                    => true
+                ];
+
+                $metadata["entityDefs"]["Attribute"]['links'][lcfirst($scope) . "AttributeValues"] = [
+                    "type"                => "hasMany",
+                    "foreign"             => "attribute",
+                    "entity"              => "{$scope}AttributeValue"
+                ];
+
+                $metadata["entityDefs"][$entityName] = [
+                    "fields"        => [
+                        lcfirst($scope)  => [
+                            "type"     => "link",
+                            "required" => true
+                        ],
+                        "attribute"      => [
+                            "type"     => "link",
+                            "required" => true
+                        ],
+                        "language"       => [
+                            "type"                 => "language",
+                            "default"              => "main",
+                            "prohibitedEmptyValue" => true
+                        ],
+                        "boolValue"      => [
+                            "type"                 => "bool",
+                            "notNull"              => false,
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "dateValue"      => [
+                            "type"                 => "date",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "datetimeValue"  => [
+                            "type"                 => "datetime",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "intValue"       => [
+                            "type"                 => "int",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "intValue1"      => [
+                            "type"                 => "int",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "floatValue"     => [
+                            "type"                 => "float",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "floatValue1"    => [
+                            "type"                 => "float",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "varcharValue"   => [
+                            "type"                 => "varchar",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "referenceValue" => [
+                            "type"                 => "varchar",
+                            "maxLength"            => 50,
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "textValue"      => [
+                            "type"                 => "text",
+                            "aclFieldDisabled"     => true,
+                            "layoutListDisabled"   => true,
+                            "layoutDetailDisabled" => true,
+                            "massUpdateDisabled"   => true,
+                            "exportDisabled"       => false,
+                            "importDisabled"       => true,
+                            "emHidden"             => true,
+                            "openApiDisabled"      => true
+                        ],
+                        "createdAt"      => [
+                            "type"     => "datetime",
+                            "readOnly" => true
+                        ],
+                        "modifiedAt"     => [
+                            "type"     => "datetime",
+                            "readOnly" => true
+                        ],
+                        "createdBy"      => [
+                            "type"     => "link",
+                            "readOnly" => true,
+                            "view"     => "views/fields/user"
+                        ],
+                        "modifiedBy"     => [
+                            "type"     => "link",
+                            "readOnly" => true,
+                            "view"     => "views/fields/user"
+                        ],
+                    ],
+                    "links"         => [
+                        lcfirst($scope) => [
+                            "type"     => "belongsTo",
+                            "entity"   => $scope,
+                            "foreign"  => lcfirst($scope) . "AttributeValues",
+                            "emHidden" => true
+                        ],
+                        "attribute"     => [
+                            "type"     => "belongsTo",
+                            "entity"   => "Attribute",
+                            "foreign"  => lcfirst($scope) . "AttributeValues",
+                            "emHidden" => true
+                        ],
+                        "createdBy"     => [
+                            "type"   => "belongsTo",
+                            "entity" => "User"
+                        ],
+                        "modifiedBy"    => [
+                            "type"   => "belongsTo",
+                            "entity" => "User"
+                        ]
+                    ],
+                    "uniqueIndexes" => [
+                        "unique_relationship" => [
+                            "deleted",
+                            lcfirst($scope) . "_id",
+                            "attribute_id",
+                            "language"
+                        ]
+                    ],
+                    "indexes"       => [
+                        "createdAt"      => [
+                            "columns" => [
+                                "createdAt",
+                                "deleted"
+                            ]
+                        ],
+                        "modifiedAt"     => [
+                            "columns" => [
+                                "modifiedAt",
+                                "deleted"
+                            ]
+                        ],
+                        "boolValue"      => [
+                            "columns" => [
+                                "boolValue",
+                                "deleted"
+                            ]
+                        ],
+                        "dateValue"      => [
+                            "columns" => [
+                                "dateValue",
+                                "deleted"
+                            ]
+                        ],
+                        "datetimeValue"  => [
+                            "columns" => [
+                                "datetimeValue",
+                                "deleted"
+                            ]
+                        ],
+                        "intValue"       => [
+                            "columns" => [
+                                "intValue",
+                                "deleted"
+                            ]
+                        ],
+                        "intValue1"      => [
+                            "columns" => [
+                                "intValue1",
+                                "deleted"
+                            ]
+                        ],
+                        "floatValue"     => [
+                            "columns" => [
+                                "floatValue",
+                                "deleted"
+                            ]
+                        ],
+                        "floatValue1"    => [
+                            "columns" => [
+                                "floatValue1",
+                                "deleted"
+                            ]
+                        ],
+                        "varcharValue"   => [
+                            "columns" => [
+                                "varcharValue",
+                                "deleted"
+                            ]
+                        ],
+                        "textValue"      => [
+                            "columns" => [
+                                "textValue",
+                                "deleted"
+                            ]
+                        ],
+                        "referenceValue" => [
+                            "columns" => [
+                                "referenceValue",
+                                "deleted"
+                            ]
+                        ]
+                    ],
+                    "collection"    => [
+                        "sortBy"           => "id",
+                        "asc"              => false,
+                        "textFilterFields" => [
+                            "varcharValue",
+                            "textValue",
+                            "intValue",
+                            "floatValue",
+                            "dateValue",
+                            "datetimeValue",
+                            "boolValue"
+                        ]
+                    ]
+                ];
+            }
+        }
     }
 
     protected function addLanguageBoolFiltersForPav(array &$metadata): void
