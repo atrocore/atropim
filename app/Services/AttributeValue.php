@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Pim\Core\ValueConverter;
@@ -43,6 +45,30 @@ class AttributeValue extends Base
         $this->prepareEntity($entity);
 
         parent::prepareEntityForOutput($entity);
+    }
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        parent::handleInput($data, $id);
+
+        if (property_exists($data, '_virtualValue') && is_object($data->_virtualValue)) {
+            $data->_virtualValue = Json::decode(Json::encode($data->_virtualValue), true);
+        }
+
+        if (property_exists($data, 'attributeId')) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($data->attributeId);
+        } elseif (!empty($id)) {
+            $entity = $this->getRepository()->get($id);
+            if (!empty($entity)) {
+                $attribute = $entity->get('attribute');
+            }
+        }
+
+        if (empty($attribute)) {
+            throw new BadRequest('Attribute is required.');
+        }
+
+        $this->getValueConverter()->convertTo($data, $attribute);
     }
 
     public function prepareEntity(Entity $entity, bool $clear = true): void
