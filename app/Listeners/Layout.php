@@ -25,12 +25,14 @@ class Layout extends AbstractListener
         $result = $event->getArgument('result') ?? [];
         $resultUpdated = false;
 
-        if ($this->getMetadata()->get("scopes.{$scope}.attributeValueEntity")) {
+        $entityName = $this->getMetadata()->get("scopes.{$scope}.attributeValueFor");
+
+        if (!empty($entityName)) {
             if ($viewType === 'list' && empty($result)) {
                 $resultUpdated = true;
                 $result = [
                     [
-                        "name"        => "foo",
+                        "name"        => lcfirst($entityName),
                         "notSortable" => true
                     ],
                     [
@@ -56,7 +58,7 @@ class Layout extends AbstractListener
                                     "name" => "attribute"
                                 ],
                                 [
-                                    "name" => "foo"
+                                    "name" => lcfirst($entityName)
                                 ]
                             ],
                             [

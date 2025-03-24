@@ -83,7 +83,7 @@ class Metadata extends AbstractListener
                 $metadata['scopes'][$entityName] = [
                     'type'                 => "Base",
                     'module'               => "Pim",
-                    'attributeValueEntity' => true,
+                    'attributeValueFor'    => $scope,
                     'entity'               => true,
                     'layouts'              => true,
                     'tab'                  => true,
