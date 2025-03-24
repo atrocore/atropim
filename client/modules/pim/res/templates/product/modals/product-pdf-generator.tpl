@@ -27,8 +27,12 @@
 {{#if isEnabledFiles}}
     <div class="row">
         <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="saveAsFile">{{translate 'saveAsFile' scope='PdfGenerator' category='labels'}}</label>
-            <div class="field" data-name="saveAsFile">{{{saveAsFile}}}</div>
+            <label class="control-label" data-name="linkAs">{{translate 'linkAs' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="linkAs">{{{saveAsFile}}}</div>
+        </div>
+        <div class="col-xs-6 cell form-group">
+            <label class="control-label" data-name="saveIn">{{translate 'saveIn' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="saveIn">{{{saveIn}}}</div>
         </div>
     </div>
     <div class="row">
@@ -37,18 +41,10 @@
             <div class="field" data-name="folder">{{{folder}}}</div>
         </div>
     </div>
-{{/if}}
-{{#if isEnabledAttachments}}
     <div class="row">
         <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="saveAsAttachment">{{translate 'saveAsAttachment' scope='PdfGenerator' category='labels'}}</label>
-            <div class="field" data-name="saveAsAttachment">{{{saveAsAttachment}}}</div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="saveInField">{{translate 'saveInField' scope='PdfGenerator' category='labels'}}</label>
-            <div class="field" data-name="saveInField">{{{saveInField}}}</div>
+            <label class="control-label" data-name="replacePdf">{{translate 'replacePdf' scope='PdfGenerator' category='labels'}}</label>
+            <div class="field" data-name="replacePdf">{{{replacePdf}}}</div>
         </div>
     </div>
 {{/if}}
