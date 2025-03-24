@@ -395,12 +395,12 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 });
             });
 
-            // this.groups.forEach(group => {
-            //     const groupView = this.getView(group.key)
-            //     if (groupView && typeof groupView.fullTableScroll === 'function') {
-            //         groupView.fullTableScroll()
-            //     }
-            // })
+            this.groups.forEach(group => {
+                const groupView = this.getView(group.key)
+                if (groupView && typeof groupView.fullTableScroll === 'function') {
+                    groupView.fullTableScroll()
+                }
+            })
         }
     })
 );
