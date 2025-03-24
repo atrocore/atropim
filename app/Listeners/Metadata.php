@@ -76,20 +76,25 @@ class Metadata extends AbstractListener
             if (!empty($scopeDefs['hasAttribute']) && in_array($scopeDefs['type'], ['Base', 'Hierarchy'])) {
                 $entityName = "{$scope}AttributeValue";
 
+                $metadata["clientDefs"][$entityName] = [
+                    "controller" => "controllers/record"
+                ];
+
                 $metadata['scopes'][$entityName] = [
-                    'type'           => "Base",
-                    'module'         => "Pim",
-                    'entity'         => true,
-                    'layouts'        => true,
-                    'tab'            => true,
-                    'acl'            => true,
-                    'customizable'   => true,
-                    'importable'     => true,
-                    'notifications'  => true,
-                    'disabled'       => true,
-                    'object'         => true,
-                    'streamDisabled' => true,
-                    'hideLastViewed' => true
+                    'type'                 => "Base",
+                    'module'               => "Pim",
+                    'attributeValueEntity' => true,
+                    'entity'               => true,
+                    'layouts'              => true,
+                    'tab'                  => true,
+                    'acl'                  => true,
+                    'customizable'         => true,
+                    'importable'           => true,
+                    'notifications'        => true,
+                    'disabled'             => false,
+                    'object'               => true,
+                    'streamDisabled'       => true,
+                    'hideLastViewed'       => true
                 ];
 
                 $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
@@ -122,9 +127,9 @@ class Metadata extends AbstractListener
                 ];
 
                 $metadata["entityDefs"]["Attribute"]['links'][lcfirst($scope) . "AttributeValues"] = [
-                    "type"                => "hasMany",
-                    "foreign"             => "attribute",
-                    "entity"              => "{$scope}AttributeValue"
+                    "type"    => "hasMany",
+                    "foreign" => "attribute",
+                    "entity"  => "{$scope}AttributeValue"
                 ];
 
                 $metadata["entityDefs"][$entityName] = [
