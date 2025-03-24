@@ -46,6 +46,42 @@ class Layout extends AbstractListener
                 ];
             }
 
+            if ($viewType === 'listIn' . $entityName && empty($result)) {
+                $resultUpdated = true;
+                $result = [
+                    [
+                        "name"        => "attribute",
+                        "notSortable" => true
+                    ],
+                    [
+                        "name"        => "language",
+                        "notSortable" => true
+                    ],
+                    [
+                        "name"        => "value",
+                        "notSortable" => true
+                    ]
+                ];
+            }
+
+            if ($viewType === 'listInAttribute' && empty($result)) {
+                $resultUpdated = true;
+                $result = [
+                    [
+                        "name"        => lcfirst($entityName),
+                        "notSortable" => true
+                    ],
+                    [
+                        "name"        => "language",
+                        "notSortable" => true
+                    ],
+                    [
+                        "name"        => "value",
+                        "notSortable" => true
+                    ]
+                ];
+            }
+
             if ($viewType === 'detail' and empty($result[0]['rows'][0][0])) {
                 $resultUpdated = true;
                 $result = [
