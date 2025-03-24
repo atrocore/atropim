@@ -1,0 +1,105 @@
+[
+  {
+    "label": "Relation",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "AssociatedProduct__association"
+        },
+        {
+          "name": "AssociatedProduct__backwardAssociation"
+        }
+      ],
+      [
+        {
+          "name": "AssociatedProduct__sorting"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "parent"
+        },
+        false
+      ],
+      [
+        {
+          "name": "catalog"
+        },
+        {
+          "name": "classifications"
+        }
+      ],
+      [
+        {
+          "name": "brand"
+        },
+        {
+          "name": "productSerie"
+        }
+      ],
+      [
+        {
+          "name": "sku"
+        },
+        {
+          "name": "mpn"
+        }
+      ],
+      [
+        {
+          "name": "ean"
+        },
+        false
+      ],
+      [
+        {
+          "name": "rrp"
+        },
+        {
+          "name": "tax"
+        }
+      ],
+      [
+        {
+          "name": "unitPrice"
+        },
+        false
+      ],
+      [
+        {
+          "name": "quantity"
+        },
+        false
+      ],
+      [
+        {
+          "name": "longDescription"
+        }
+      ],
+      [
+        {
+          "name": "productStatus"
+        },
+        {
+          "name": "taskStatus"
+        }
+      ]
+    ]
+  }
+]

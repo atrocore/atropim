@@ -22,64 +22,48 @@ Espo.define('pim:views/file/record/list', 'views/file/record/list',
         buildRow: function (i, model, callback) {
             var key = model.id;
 
-            if (model.get('originalId')) {
-                model.set('id', model.get('originalId'));
-            }
-
             this.rowList.push(key);
-            this.getInternalLayout(function (internalLayout) {
-                internalLayout = Espo.Utils.cloneDeep(internalLayout);
-                this.prepareInternalLayout(internalLayout, model);
 
-                const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
-                var acl = {
-                    edit: entityDisabled ? false : this.getAcl().checkModel(model, 'edit'),
-                    delete: entityDisabled ? false : this.getAcl().checkModel(model, 'delete'),
-                    unlink: this.options.canUnlink
-                };
-
-                this.createView(key, 'views/base', {
-                    model: model,
-                    acl: acl,
-                    el: this.options.el + ' .list-row[data-id="' + key + '"]',
-                    optionsToPass: ['acl', 'scope'],
-                    scope: this.scope,
-                    noCache: true,
-                    _layout: {
-                        type: this._internalLayoutType,
-                        layout: internalLayout
-                    },
-                    name: this.type + '-' + model.name,
-                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
-                }, callback);
-            }.bind(this), model);
-        },
-
-        actionQuickView: function (data) {
-            if (data.id) {
-                data.id = this.getActualModelId(data);
-            }
-
-            Dep.prototype.actionQuickView.call(this, data);
-        },
-
-        actionQuickEdit: function (data) {
-            if (data.id) {
-                data.id = this.getActualModelId(data);
-            }
-
-            Dep.prototype.actionQuickEdit.call(this, data);
-        },
-
-        getActualModelId(data) {
-            let cid = data.id;
-            this.collection.forEach((model) => {
-                if (model.get('id') === data.id && model.get('ProductFile__id') === data.file && this.collection.get(model.cid)) {
-                    cid = model.cid;
+            let getRelationModel = (callback) => {
+                if (model.get('__relationEntity')) {
+                    this.getModelFactory().create(this.relationScope, relModel => {
+                        relModel.set(model.get('__relationEntity'));
+                        model.relationModel = relModel
+                        callback(relModel)
+                    })
+                } else {
+                    callback()
                 }
-            });
+            }
 
-            return cid;
+            getRelationModel((relModel) => {
+                this.getInternalLayout(function (internalLayout) {
+                    internalLayout = Espo.Utils.cloneDeep(internalLayout);
+                    this.prepareInternalLayout(internalLayout, model);
+
+                    const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
+                    var acl = {
+                        edit: entityDisabled ? false : this.getAcl().checkModel(model, 'edit'),
+                        delete: entityDisabled ? false : this.getAcl().checkModel(model, 'delete'),
+                        unlink: this.options.canUnlink
+                    };
+
+                    this.createView(key, 'views/base', {
+                        model: model,
+                        acl: acl,
+                        el: this.options.el + ' .list-row[data-id="' + key + '"]',
+                        optionsToPass: ['acl', 'scope'],
+                        scope: this.scope,
+                        noCache: true,
+                        _layout: {
+                            type: this._internalLayoutType,
+                            layout: internalLayout
+                        },
+                        name: this.type + '-' + model.name,
+                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
+                    }, callback);
+                }.bind(this), model);
+            })
         }
     })
 );

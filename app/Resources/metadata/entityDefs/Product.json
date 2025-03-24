@@ -142,18 +142,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "modifiedAtExpanded": {
-      "type": "datetime",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "ownerUser": {
       "type": "link",
       "required": false,
@@ -267,25 +255,24 @@
         "mainProductId",
         "relatedProductId"
       ],
-      "layoutRelationshipsDisabled": true,
       "disableMassRelation": true
     },
     "relatedProducts": {
       "type": "hasMany",
       "relationName": "AssociatedProduct",
       "entity": "Product",
+      "layoutRelationshipsDisabled": false,
       "midKeys": [
         "relatedProductId",
         "mainProductId"
       ],
-      "layoutRelationshipsDisabled": true,
       "disableMassRelation": true
     },
     "associatedMainProducts": {
       "type": "hasMany",
       "foreign": "mainProduct",
-      "layoutRelationshipsDisabled": false,
       "entity": "AssociatedProduct",
+      "layoutRelationshipsDisabled": true,
       "addRelationCustomDefs": {
         "link": "products",
         "entity": "Product"

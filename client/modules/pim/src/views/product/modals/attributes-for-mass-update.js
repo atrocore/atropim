@@ -66,7 +66,7 @@ Espo.define('pim:views/product/modals/attributes-for-mass-update', 'views/modal'
                 }
 
                 view.listenTo(view, 'after:render', (view) => {
-                    view.getField('language').hide();
+                    view.getField('language')?.hide();
                 });
 
                 view.listenTo(view.model, 'change:attributeId', function (model) {

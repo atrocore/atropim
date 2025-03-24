@@ -25,7 +25,7 @@ class AttributeGroup extends Base
                 'attributeGroupId' => $attributeGroupId,
                 'type'             => $types
             ])
-            ->order('sortOrderInAttributeGroup', 'ASC')
+            ->order('sortOrder', 'ASC')
             ->find();
 
         return [

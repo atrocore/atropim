@@ -20,15 +20,6 @@ use Atro\Listeners\AbstractLayoutListener;
 
 class FileLayout extends AbstractLayoutListener
 {
-    public function list(Event $event)
-    {
-        if (!$this->isCustomLayout($event) && $this->isRelatedLayout($event)) {
-            $result = $event->getArgument('result');
-            $result[] = ['name' => 'ProductFile__channel'];
-
-            $event->setArgument('result', $result);
-        }
-    }
 
     public function detail(Event $event)
     {
@@ -37,11 +28,28 @@ class FileLayout extends AbstractLayoutListener
 
         if ($relatedEntity === 'Product' && !str_contains(json_encode($result), '"ProductFile__isMainImage"')) {
             $result[0]['rows'][] = [['name' => 'ProductFile__isMainImage'], ['name' => 'ProductFile__sorting']];
-            $result[0]['rows'][] = [['name' => 'ProductFile__channel'], false];
         }
 
         if ($relatedEntity === 'Category' && !str_contains(json_encode($result), '"CategoryFile__isMainImage"')) {
             $result[0]['rows'][] = [['name' => 'CategoryFile__isMainImage'], ['name' => 'CategoryFile__sorting']];
+        }
+
+        $event->setArgument('result', $result);
+    }
+
+    public function list(Event $event)
+    {
+        $relatedEntity = $this->getRelatedEntity($event);
+        $result = $event->getArgument('result');
+
+        if (!$this->isCustomLayout($event)) {
+            if ($relatedEntity === 'Product' && !in_array('ProductFile__isMainImage', $result)) {
+                $result[] = ['name' => 'ProductFile__isMainImage'];
+            }
+
+            if ($relatedEntity === 'Category' && !in_array('CategoryFile__isMainImage', $result)) {
+                $result[] = ['name' => 'CategoryFile__isMainImage'];
+            }
         }
 
         $event->setArgument('result', $result);

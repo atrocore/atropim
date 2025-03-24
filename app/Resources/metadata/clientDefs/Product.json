@@ -120,6 +120,7 @@
       "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
       "view": "pim:views/product/record/panels/product-attribute-values",
       "compareRecordsView": "pim:views/product/record/compare/product-attribute-values",
+      "recordListView": "pim:views/record/list-in-groups",
       "compareInstanceRecordsView": "pim:views/product/record/compare/product-attribute-values-instance",
       "aclScopesList": [
         "Attribute",
@@ -136,9 +137,12 @@
       ],
       "view": "pim:views/product/record/panels/categories"
     },
+    "associatedProducts": {
+      "label": "associatedProducts",
+      "view": "pim:views/product/record/panels/associated-products"
+    },
     "associatedMainProducts": {
       "label": "associatedProducts",
-      "view": "pim:views/product/record/panels/associated-main-products",
       "compareRecordsView": "pim:views/product/record/compare/associated-main-product",
       "compareInstanceRecordsView": "pim:views/product/record/compare/associated-main-product-instance"
     },

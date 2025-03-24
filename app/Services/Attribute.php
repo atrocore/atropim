@@ -23,7 +23,7 @@ use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
 
     /**
      * @inheritDoc
@@ -97,7 +97,7 @@ class Attribute extends Base
      */
     public function updateEntity($id, $data)
     {
-        if (property_exists($data, 'sortOrderInAttributeGroup') && property_exists($data, '_sortedIds')) {
+        if (property_exists($data, 'sortOrder') && property_exists($data, '_sortedIds')) {
             $this->getRepository()->updateSortOrderInAttributeGroup($data->_sortedIds);
             return $this->getEntity($id);
         }
