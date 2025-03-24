@@ -30,7 +30,8 @@
     "contents": "Contents",
     "taskStatus": "Task status",
     "components": "Product Components",
-    "calls": "Calls"
+    "calls": "Calls",
+    "contentItems": "Content Items"
   },
   "labels": {
     "Product Attributes": "Attributes",
