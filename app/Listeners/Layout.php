@@ -40,38 +40,6 @@ class Layout extends AbstractListener
                         "notSortable" => true
                     ],
                     [
-                        "name"        => "value",
-                        "notSortable" => true
-                    ]
-                ];
-            }
-
-            if ($viewType === 'listIn' . $entityName && empty($result)) {
-                $resultUpdated = true;
-                $result = [
-                    [
-                        "name"        => "attribute",
-                        "notSortable" => true
-                    ],
-                    [
-                        "name"        => "language",
-                        "notSortable" => true
-                    ],
-                    [
-                        "name"        => "value",
-                        "notSortable" => true
-                    ]
-                ];
-            }
-
-            if ($viewType === 'listInAttribute' && empty($result)) {
-                $resultUpdated = true;
-                $result = [
-                    [
-                        "name"        => lcfirst($entityName),
-                        "notSortable" => true
-                    ],
-                    [
                         "name"        => "language",
                         "notSortable" => true
                     ],
