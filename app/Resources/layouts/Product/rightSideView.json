@@ -30,15 +30,11 @@
       ],
       [
         {
-          "name": "modified"
+          "name": "modified",
+          "fullWidth": true
         },
         false
-      ]
-    ]
-  },
-  {
-    "label": "Some",
-    "rows": [
+      ],
       [
         {
           "name": "followers",
