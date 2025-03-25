@@ -4,6 +4,8 @@
     "CategoryFile": "Category File",
     "ProductChannel": "Product Channel",
     "ProductCategory": "Product Category",
+    "CategoryChannel": "Category Channel",
+    "CategoryHierarchy": "Category Hierarchy",
     "Product": "Product",
     "Attribute": "Attribute",
     "Catalog": "Catalog",
