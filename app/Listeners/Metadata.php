@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
 
 class Metadata extends AbstractListener
