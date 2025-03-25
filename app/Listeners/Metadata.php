@@ -80,14 +80,6 @@ class Metadata extends AbstractListener
                     "controller" => "controllers/record"
                 ];
 
-                $metadata["clientDefs"][$scope]["relationshipPanels"][lcfirst($scope) . "AttributeValues"] = [
-                    "selectAction"            => "selectAttribute",
-                    "disabledSelectAllResult" => true,
-                    "unlinkAll"               => false,
-                    "rowActionsView"          => "views/record/row-actions/relationship-no-unlink",
-                    "view"                    => "pim:views/record/panels/attribute-values"
-                ];
-
                 $metadata['scopes'][$entityName] = [
                     'type'              => "Base",
                     'module'            => "Pim",
@@ -106,21 +98,23 @@ class Metadata extends AbstractListener
                 ];
 
                 $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
-                    "type"                      => "linkMultiple",
-                    "layoutDetailDisabled"      => true,
-                    "layoutListDisabled"        => true,
-                    "layoutLeftSidebarDisabled" => true,
-                    "massUpdateDisabled"        => true,
-                    "importDisabled"            => true,
-                    "exportDisabled"            => false,
-                    "noLoad"                    => true
+                    "type"                        => "linkMultiple",
+                    "layoutDetailDisabled"        => true,
+                    "layoutListDisabled"          => true,
+                    "layoutRelationshipsDisabled" => true,
+                    "layoutLeftSidebarDisabled"   => true,
+                    "massUpdateDisabled"          => true,
+                    "importDisabled"              => true,
+                    "exportDisabled"              => false,
+                    "noLoad"                      => true
                 ];
 
                 $metadata["entityDefs"][$scope]['links'][lcfirst($scope) . "AttributeValues"] = [
-                    "type"                => "hasMany",
-                    "foreign"             => lcfirst($scope),
-                    "entity"              => "{$scope}AttributeValue",
-                    "disableMassRelation" => true
+                    "type"                        => "hasMany",
+                    "foreign"                     => lcfirst($scope),
+                    "layoutRelationshipsDisabled" => true,
+                    "entity"                      => "{$scope}AttributeValue",
+                    "disableMassRelation"         => true
                 ];
 
                 $metadata["entityDefs"]["Attribute"]['fields'][lcfirst($scope) . "AttributeValues"] = [
@@ -135,9 +129,10 @@ class Metadata extends AbstractListener
                 ];
 
                 $metadata["entityDefs"]["Attribute"]['links'][lcfirst($scope) . "AttributeValues"] = [
-                    "type"    => "hasMany",
-                    "foreign" => "attribute",
-                    "entity"  => "{$scope}AttributeValue"
+                    "type"                        => "hasMany",
+                    "foreign"                     => "attribute",
+                    "layoutRelationshipsDisabled" => true,
+                    "entity"                      => "{$scope}AttributeValue"
                 ];
 
                 $metadata["entityDefs"][$entityName] = [

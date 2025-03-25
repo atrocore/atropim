@@ -19,7 +19,6 @@ use Atro\Core\Templates\Controllers\Base;
 
 class Attribute extends Base
 {
-
     public function actionDefaultValue($params, $data, $request)
     {
         if (!$request->isGet()) {
@@ -31,5 +30,28 @@ class Attribute extends Base
         }
 
         return $this->getRecordService()->getDefaultValue((string)$request->get('id'));
+    }
+
+    public function actionLoadAttributes($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!empty($request->get('path'))) {
+            return [
+                'attr_1' => [
+                    'type' => 'varchar'
+                ],
+                'attr_2' => [
+                    'type' => 'int'
+                ],
+                'attr_3' => [
+                    'type' => 'float'
+                ]
+            ];
+        }
+
+        return null;
     }
 }
