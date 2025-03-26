@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/record/detail', 'views/record/detail',
+Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
     Dep => Dep.extend({
 
         setup() {
@@ -25,6 +25,44 @@ Espo.define('pim:views/record/detail', 'views/record/detail',
                 this.actionEdit();
             }
         },
+
+        prepareLayoutData(data) {
+            if (!this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+                return;
+            }
+
+            let layoutRows = [];
+            this.ajaxGetRequest('Attribute/action/recordAttributes', {
+                entityName: this.model.name,
+                entityId: this.model.get('id')
+            }, {async: false}).success(items => {
+                items.forEach(item => {
+                    this.model.defs['fields'][item.id] = item;
+                    layoutRows.push([
+                        {
+                            name: item.id,
+                            customLabel: item.name
+                        },
+                        false
+                    ])
+                })
+            })
+
+            data.layout.forEach((row, k) => {
+                if (row.id === 'attributeValues') {
+                    delete data.layout[k];
+                }
+            })
+
+            if (layoutRows.length > 0) {
+                data.layout.push({
+                    id: 'attributeValues',
+                    label: this.translate('Attribute Values'),
+                    rows: layoutRows
+                });
+            }
+        },
+
     })
 );
 

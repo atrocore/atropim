@@ -18,12 +18,63 @@ use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+
+    public function getRecordAttributes(string $entityName, string $entityId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $res = $conn->createQueryBuilder()
+            ->select('a.*, v.language as v_language')
+            ->from(Util::toUnderScore(lcfirst($entityName)) . '_attribute_value', 'v')
+            ->leftJoin('v', $conn->quoteIdentifier('attribute'), 'a', 'a.id=v.attribute_id')
+            ->where('v.deleted=:false')
+            ->andWhere('a.deleted=:false')
+            ->andWhere('v.' . Util::toUnderScore(lcfirst($entityName)) . '_id=:entityId')
+            ->orderBy('a.sort_order', 'ASC')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('entityId', $entityId)
+            ->fetchAllAssociative();
+
+        $result = [];
+
+        foreach ($res as $item) {
+            $data = @json_decode($item['data'], true);
+
+            $row = [
+                'id'          => 'attr_' . $item['id'] . '_' . $item['v_language'],
+                'attributeId' => $item['id'],
+                'name'        => $item['name'],
+                'type'        => $item['type'],
+                'required'    => !empty($item['is_required'])
+            ];
+
+            switch ($item['type']) {
+                case 'int':
+                case 'float':
+                    if (isset($data['min'])) {
+                        $row['min'] = $data['min'];
+                    }
+                    if (isset($data['max'])) {
+                        $row['max'] = $data['max'];
+                    }
+                    if (isset($item['measure_id'])) {
+                        $row['measureId'] = $item['measure_id'];
+                        $row['view'] = "views/fields/unit-{$item['type']}";
+                    }
+                    break;
+            }
+
+            $result[] = $row;
+        }
+
+        return $result;
+    }
 
     /**
      * @inheritDoc
@@ -80,7 +131,8 @@ class Attribute extends Base
             $entity->set('dropdown', false);
         }
 
-        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
+        if (in_array($entity->get('type'),
+                ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
             $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
 
@@ -265,7 +317,8 @@ class Attribute extends Base
     {
         $attributeList = array_keys($this->getInjection('metadata')->get(['attributes']));
         if (!in_array($entity->get('type'), $attributeList)) {
-            throw new Forbidden(str_replace('{type}', $entity->get('type'), $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
+            throw new Forbidden(str_replace('{type}', $entity->get('type'),
+                $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
         }
 
         parent::checkFieldsWithPattern($entity);
@@ -278,7 +331,8 @@ class Attribute extends Base
             $language = $this->getInjection('user')->getLanguage();
         }
         if (!empty($language) && $language !== 'main') {
-            if ($this->getConfig()->get('isMultilangActive') && in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+            if ($this->getConfig()->get('isMultilangActive') && in_array($language,
+                    $this->getConfig()->get('inputLanguageList', []))) {
                 return Util::toCamelCase('name_' . strtolower($language));
             }
         }
