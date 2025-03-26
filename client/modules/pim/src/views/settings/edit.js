@@ -16,11 +16,14 @@ Espo.define('pim:views/settings/edit', 'views/settings/edit', function (Dep) {
 
         recordView: 'pim:views/admin/settings',
 
-        getHeader() {
-            return this.buildHeaderHtml([
-                this.getLanguage().translate('pim', 'labels', 'Admin')
-            ], true);
-        }
+        getBreadcrumbsItems() {
+            return [
+                this.getAdminBreadcrumbsItem(),
+                {
+                    label: this.getLanguage().translate('pim', 'labels', 'Admin')
+                }
+            ]
+        },
     });
 
 });
