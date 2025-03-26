@@ -3,8 +3,11 @@
     "__APPEND__",
     "pim"
   ],
-
   "views/admin/layouts/list-small": [
+    "__APPEND__",
+    "pim"
+  ],
+  "views/record/detail": [
     "__APPEND__",
     "pim"
   ]
