@@ -14,8 +14,8 @@ namespace Pim\SelectManagers;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Pim\Entities\Attribute;
@@ -29,6 +29,12 @@ class Product extends AbstractSelectManager
     private string $textFilter = '';
 
     private array $textFilterParams = [];
+
+    public function mutateWhereQuery(array &$where): void
+    {
+        parent::mutateWhereQuery($where);
+        $this->mutateWhereAttributeQuery($where);
+    }
 
     public function mutateWhereAttributeQuery(array &$where): void
     {

@@ -1,0 +1,46 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "mainImage",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "ownerUser",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "assignedUser",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "created",
+          "fullWidth": true
+        },
+        false
+      ],
+      [
+        {
+          "name": "modified",
+          "fullWidth": true
+        },
+        false
+      ],
+      [
+        {
+          "name": "followers",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]
