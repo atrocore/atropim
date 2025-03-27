@@ -47,27 +47,43 @@ class Attribute extends Base
             $data = @json_decode($item['data'], true);
 
             $row = [
-                'id'          => "attr_{$item['v_id']}",
-                'attributeId' => $item['id'],
-                'name'        => $item['name'],
-                'type'        => $item['type'],
-                'required'    => !empty($item['is_required'])
+                'id'                            => "attr_{$item['v_id']}",
+                'attributeId'                   => $item['id'],
+                'name'                          => $item['name'],
+                'type'                          => $item['type'],
+                'trim'                          => !empty($item['trim']),
+                'required'                      => !empty($item['is_required']),
+                'notNull'                       => !empty($item['not_null']),
+                'useDisabledTextareaInViewMode' => !empty($item['use_disabled_textarea_in_view_mode']),
+                'amountOfDigitsAfterComma'      => $item['amount_of_digits_after_comma'] ?? null,
+                'prohibitedEmptyValue'          => !empty($item['prohibited_empty_value']),
+                'extensibleEnumId'              => $item['extensible_enum_id'] ?? null
             ];
 
-            switch ($item['type']) {
-                case 'int':
-                case 'float':
-                    if (isset($data['min'])) {
-                        $row['min'] = $data['min'];
-                    }
-                    if (isset($data['max'])) {
-                        $row['max'] = $data['max'];
-                    }
-                    if (isset($item['measure_id'])) {
-                        $row['measureId'] = $item['measure_id'];
-                        $row['view'] = "views/fields/unit-{$item['type']}";
-                    }
-                    break;
+            if (!empty($data['maxLength'])) {
+                $row['maxLength'] = $data['maxLength'];
+            }
+
+            if (!empty($data['countBytesInsteadOfCharacters'])) {
+                $row['countBytesInsteadOfCharacters'] = $data['countBytesInsteadOfCharacters'];
+            }
+
+            if (isset($data['min'])) {
+                $row['min'] = $data['min'];
+            }
+
+            if (isset($data['max'])) {
+                $row['max'] = $data['max'];
+            }
+
+            if (isset($item['measure_id'])) {
+                $row['measureId'] = $item['measure_id'];
+                $row['view'] = "views/fields/unit-{$item['type']}";
+            }
+
+            $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
+            if (!empty($item['dropdown']) && isset($dropdownTypes[$item['type']])) {
+                $row['view'] = $dropdownTypes[$item['type']];
             }
 
             $result[] = $row;
