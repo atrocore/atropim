@@ -438,25 +438,7 @@ class Metadata extends AbstractListener
                             "importDisabled"       => true,
                             "emHidden"             => true,
                             "openApiDisabled"      => true
-                        ],
-                        "createdAt"        => [
-                            "type"     => "datetime",
-                            "readOnly" => true
-                        ],
-                        "modifiedAt"       => [
-                            "type"     => "datetime",
-                            "readOnly" => true
-                        ],
-                        "createdBy"        => [
-                            "type"     => "link",
-                            "readOnly" => true,
-                            "view"     => "views/fields/user"
-                        ],
-                        "modifiedBy"       => [
-                            "type"     => "link",
-                            "readOnly" => true,
-                            "view"     => "views/fields/user"
-                        ],
+                        ]
                     ],
                     "links"         => [
                         lcfirst($scope) => [
@@ -470,14 +452,6 @@ class Metadata extends AbstractListener
                             "entity"   => "Attribute",
                             "foreign"  => lcfirst($scope) . "AttributeValues",
                             "emHidden" => true
-                        ],
-                        "createdBy"     => [
-                            "type"   => "belongsTo",
-                            "entity" => "User"
-                        ],
-                        "modifiedBy"    => [
-                            "type"   => "belongsTo",
-                            "entity" => "User"
                         ]
                     ],
                     "uniqueIndexes" => [
@@ -489,18 +463,6 @@ class Metadata extends AbstractListener
                         ]
                     ],
                     "indexes"       => [
-                        "createdAt"      => [
-                            "columns" => [
-                                "createdAt",
-                                "deleted"
-                            ]
-                        ],
-                        "modifiedAt"     => [
-                            "columns" => [
-                                "modifiedAt",
-                                "deleted"
-                            ]
-                        ],
                         "boolValue"      => [
                             "columns" => [
                                 "boolValue",
