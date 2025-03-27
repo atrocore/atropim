@@ -82,17 +82,18 @@ class Metadata extends AbstractListener
                     'type'              => "Base",
                     'module'            => "Pim",
                     'attributeValueFor' => $scope,
-                    'entity'            => true,
-                    'layouts'           => true,
-                    'tab'               => true,
-                    'acl'               => true,
-                    'customizable'      => true,
-                    'importable'        => true,
-                    'notifications'     => true,
+                    'entity'            => false,
+                    'layouts'           => false,
+                    'tab'               => false,
+                    'acl'               => false,
+                    'customizable'      => false,
+                    'importable'        => false,
+                    'notifications'     => false,
                     'disabled'          => false,
-                    'object'            => true,
+                    'object'            => false,
                     'streamDisabled'    => true,
-                    'hideLastViewed'    => true
+                    'hideLastViewed'    => true,
+                    'emHidden'          => true,
                 ];
 
                 $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
@@ -117,52 +118,52 @@ class Metadata extends AbstractListener
 
                 $metadata["entityDefs"][$entityName] = [
                     "fields"        => [
-                        lcfirst($scope)    => [
+                        lcfirst($scope)  => [
                             "type"     => "link",
                             "required" => true
                         ],
-                        "attribute"        => [
+                        "attribute"      => [
                             "type"     => "link",
                             "required" => true
                         ],
-                        "attributeType"    => [
-                            "type"                 => "varchar"
+                        "attributeType"  => [
+                            "type" => "varchar"
                         ],
-                        "language"         => [
-                            "type"                 => "varchar",
-                            "default"              => "main"
+                        "language"       => [
+                            "type"    => "varchar",
+                            "default" => "main"
                         ],
-                        "boolValue"        => [
-                            "type"                 => "bool",
-                            "notNull"              => false
+                        "boolValue"      => [
+                            "type"    => "bool",
+                            "notNull" => false
                         ],
-                        "dateValue"        => [
-                            "type"                 => "date"
+                        "dateValue"      => [
+                            "type" => "date"
                         ],
-                        "datetimeValue"    => [
-                            "type"                 => "datetime"
+                        "datetimeValue"  => [
+                            "type" => "datetime"
                         ],
-                        "intValue"         => [
-                            "type"                 => "int"
+                        "intValue"       => [
+                            "type" => "int"
                         ],
-                        "intValue1"        => [
-                            "type"                 => "int"
+                        "intValue1"      => [
+                            "type" => "int"
                         ],
-                        "floatValue"       => [
-                            "type"                 => "float"
+                        "floatValue"     => [
+                            "type" => "float"
                         ],
-                        "floatValue1"      => [
-                            "type"                 => "float"
+                        "floatValue1"    => [
+                            "type" => "float"
                         ],
-                        "varcharValue"     => [
-                            "type"                 => "varchar"
+                        "varcharValue"   => [
+                            "type" => "varchar"
                         ],
-                        "referenceValue"   => [
-                            "type"                 => "varchar",
-                            "maxLength"            => 50
+                        "referenceValue" => [
+                            "type"      => "varchar",
+                            "maxLength" => 50
                         ],
-                        "textValue"        => [
-                            "type"                 => "text"
+                        "textValue"      => [
+                            "type" => "text"
                         ]
                     ],
                     "links"         => [
