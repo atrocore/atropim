@@ -30,7 +30,7 @@ class Attribute extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
         $res = $conn->createQueryBuilder()
-            ->select('a.*, v.id as v_id, v.language as v_language')
+            ->select('a.*, v.id as v_id')
             ->from(Util::toUnderScore(lcfirst($entityName)) . '_attribute_value', 'v')
             ->leftJoin('v', $conn->quoteIdentifier('attribute'), 'a', 'a.id=v.attribute_id')
             ->where('v.deleted=:false')

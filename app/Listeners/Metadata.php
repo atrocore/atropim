@@ -129,10 +129,6 @@ class Metadata extends AbstractListener
                         "attributeType"  => [
                             "type" => "varchar"
                         ],
-                        "language"       => [
-                            "type"    => "varchar",
-                            "default" => "main"
-                        ],
                         "boolValue"      => [
                             "type"    => "bool",
                             "notNull" => false
@@ -164,6 +160,9 @@ class Metadata extends AbstractListener
                         ],
                         "textValue"      => [
                             "type" => "text"
+                        ],
+                        "jsonValue"      => [
+                            "type" => "jsonObject"
                         ]
                     ],
                     "links"         => [
@@ -183,8 +182,7 @@ class Metadata extends AbstractListener
                         "unique_relationship" => [
                             "deleted",
                             lcfirst($scope) . "_id",
-                            "attribute_id",
-                            "language"
+                            "attribute_id"
                         ]
                     ],
                     "indexes"       => [
@@ -245,6 +243,12 @@ class Metadata extends AbstractListener
                         "referenceValue" => [
                             "columns" => [
                                 "referenceValue",
+                                "deleted"
+                            ]
+                        ],
+                        "jsonValue" => [
+                            "columns" => [
+                                "jsonValue",
                                 "deleted"
                             ]
                         ]
