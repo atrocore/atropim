@@ -25,15 +25,13 @@
         {
           "name": "created",
           "fullWidth": true
-        },
-        false
+        }
       ],
       [
         {
           "name": "modified",
           "fullWidth": true
-        },
-        false
+        }
       ],
       [
         {
