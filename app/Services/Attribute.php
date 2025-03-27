@@ -43,6 +43,19 @@ class Attribute extends Base
 
         $result = [];
 
+        $languages = [];
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $languages[$code] = $code;
+                foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
+                    if ($code === $v['code']) {
+                        $languages[$code] = $v['name'];
+                        break;
+                    }
+                }
+            }
+        }
+
         foreach ($res as $item) {
             $data = @json_decode($item['data'], true);
 
@@ -87,6 +100,15 @@ class Attribute extends Base
             }
 
             $result[] = $row;
+
+            if (!empty($item['is_multilang'])) {
+                foreach ($languages as $language => $languageName) {
+                    $result[] = array_merge($row, [
+                        'id'   => $row['id'] . ucfirst(Util::toCamelCase(strtolower($language))),
+                        'name' => $item['name'] . ' / ' . $languageName
+                    ]);
+                }
+            }
         }
 
         return $result;
