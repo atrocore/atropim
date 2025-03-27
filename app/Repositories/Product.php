@@ -290,6 +290,8 @@ class Product extends Hierarchy
         $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('ProductFile')->removeByProductId($entity->get('id'));
 
+        $this->getEntityManager()->getRepository('ProductChannel')->where(['productId' => $entity->get('id')])->removeCollection();
+
         parent::afterRemove($entity, $options);
     }
 
