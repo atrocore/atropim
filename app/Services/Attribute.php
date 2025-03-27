@@ -30,7 +30,7 @@ class Attribute extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
         $res = $conn->createQueryBuilder()
-            ->select('a.*, v.language as v_language')
+            ->select('a.*, v.id as v_id, v.language as v_language')
             ->from(Util::toUnderScore(lcfirst($entityName)) . '_attribute_value', 'v')
             ->leftJoin('v', $conn->quoteIdentifier('attribute'), 'a', 'a.id=v.attribute_id')
             ->where('v.deleted=:false')
@@ -47,7 +47,7 @@ class Attribute extends Base
             $data = @json_decode($item['data'], true);
 
             $row = [
-                'id'          => 'attr_' . $item['id'] . '_' . $item['v_language'],
+                'id'          => "attr_{$item['v_id']}",
                 'attributeId' => $item['id'],
                 'name'        => $item['name'],
                 'type'        => $item['type'],
