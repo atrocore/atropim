@@ -109,6 +109,7 @@
     "mainImage": {
       "type": "file",
       "previewSize": "medium",
+      "view": "pim:views/fields/main-image",
       "notStorable": true,
       "readOnly": true,
       "massUpdateDisabled": true,
