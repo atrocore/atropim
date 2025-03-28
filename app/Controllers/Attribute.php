@@ -45,7 +45,7 @@ class Attribute extends Base
         return $this->getRecordService()->getRecordAttributes($request->get('entityName'), $request->get('entityId'));
     }
 
-    public function actionAddAttributeToRecord($params, $data, $request)
+    public function actionAddAttributeValue($params, $data, $request)
     {
         if (!$request->isPost() || empty($data->entityName) || empty($data->entityId)) {
             throw new BadRequest();
@@ -59,11 +59,24 @@ class Attribute extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->addAttributeToRecord(
+        return $this->getRecordService()->addAttributeValue(
             $data->entityName,
             $data->entityId,
             $data->where,
             $data->ids
         );
+    }
+
+    public function actionRemoveAttributeValue($params, $data, $request)
+    {
+        if (!$request->isPost() || empty($data->entityName) || empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($data->entityName, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->removeAttributeValue($data->entityName, $data->id);
     }
 }

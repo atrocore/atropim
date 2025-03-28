@@ -50,12 +50,11 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
                         data.where = selectObj.where
                     }
                     $.ajax({
-                        url: `Attribute/action/addAttributeToRecord`,
+                        url: `Attribute/action/addAttributeValue`,
                         type: 'POST',
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: () => {
-                            this.model.fetch();
                             this.refreshLayout();
                             this.notify('Saved', 'success');
                         }
@@ -92,10 +91,10 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
             this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
                 let layoutRow = [];
                 items.forEach(item => {
-                    this.model.defs['fields'][item.id] = item;
+                    this.model.defs['fields'][item.name] = item;
                     layoutRow.push({
-                        name: item.id,
-                        customLabel: item.name,
+                        name: item.name,
+                        customLabel: item.label,
                         fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
                     });
                     if (layoutRow[0]['fullWidth'] || layoutRow[1]) {

@@ -27,7 +27,7 @@ class Attribute extends Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
 
-    public function addAttributeToRecord(string $entityName, string $entityId, ?array $where, ?array $ids): bool
+    public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
     {
         if ($where !== null) {
             $selectParams = $this
@@ -61,6 +61,19 @@ class Attribute extends Base
             } catch (UniqueConstraintViolationException $e) {
             }
         }
+
+        return true;
+    }
+
+    public function removeAttributeValue(string $entityName, string $id): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete("{$name}_attribute_value")
+            ->where('id=:id')
+            ->setParameter('id', $id)
+            ->executeQuery();
 
         return true;
     }
@@ -101,9 +114,10 @@ class Attribute extends Base
             $data = @json_decode($item['data'], true);
 
             $row = [
-                'id'                            => "attr_{$item['v_id']}",
+                'id'                            => $item['v_id'],
                 'attributeId'                   => $item['id'],
-                'name'                          => $item['name'],
+                'name'                          => "attr_{$item['v_id']}",
+                'label'                         => $item['name'],
                 'type'                          => $item['type'],
                 'trim'                          => !empty($item['trim']),
                 'required'                      => !empty($item['is_required']),
@@ -145,8 +159,8 @@ class Attribute extends Base
             if (!empty($item['is_multilang'])) {
                 foreach ($languages as $language => $languageName) {
                     $result[] = array_merge($row, [
-                        'id'   => $row['id'] . ucfirst(Util::toCamelCase(strtolower($language))),
-                        'name' => $item['name'] . ' / ' . $languageName
+                        'name'  => $row['id'] . ucfirst(Util::toCamelCase(strtolower($language))),
+                        'label' => $item['name'] . ' / ' . $languageName
                     ]);
                 }
             }
