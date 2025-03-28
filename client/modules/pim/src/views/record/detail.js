@@ -31,20 +31,30 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
                 return;
             }
 
-            let layoutRows = [];
-            this.ajaxGetRequest('Attribute/action/recordAttributes', {
+            if (!this.getAcl().check(this.model.name, 'read')) {
+                return;
+            }
+
+            let params = {
                 entityName: this.model.name,
                 entityId: this.model.get('id')
-            }, {async: false}).success(items => {
+            };
+
+            let layoutRows = [];
+
+            this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
+                let layoutRow = [];
                 items.forEach(item => {
                     this.model.defs['fields'][item.id] = item;
-                    layoutRows.push([
-                        {
-                            name: item.id,
-                            customLabel: item.name
-                        },
-                        false
-                    ])
+                    layoutRow.push({
+                        name: item.id,
+                        customLabel: item.name,
+                        fullWidth: ['text', 'markdown', 'wysiwyg'].includes(item.type)
+                    });
+                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                        layoutRows.push(layoutRow);
+                        layoutRow = [];
+                    }
                 })
             })
 
@@ -57,7 +67,7 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
             if (layoutRows.length > 0) {
                 data.layout.push({
                     id: 'attributeValues',
-                    label: this.translate('Attribute Values'),
+                    label: this.translate('attributeValues'),
                     rows: layoutRows
                 });
             }

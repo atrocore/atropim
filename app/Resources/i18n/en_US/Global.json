@@ -87,6 +87,7 @@
     "role": "Role"
   },
   "labels": {
+    "attributeValues": "Attribute Values",
     "removeHierarchically": "Delete Hierarchically",
     "setAsMainImage": "Set as Main Image",
     "setAsMainCategory": "Set as Main Category",

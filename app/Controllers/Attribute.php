@@ -38,8 +38,10 @@ class Attribute extends Base
             throw new BadRequest();
         }
 
-        return $this
-            ->getRecordService()
-            ->getRecordAttributes($request->get('entityName'), $request->get('entityId'));
+        if (!$this->getAcl()->check($request->get('entityName'), 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getRecordAttributes($request->get('entityName'), $request->get('entityId'));
     }
 }
