@@ -1,14 +1,19 @@
 [
   {
-    "style": "default",
-    "label": "Details",
+    "label":  "",
     "rows": [
       [
         {
           "name": "mainImage",
           "fullWidth": true
         }
-      ],
+      ]
+    ]
+  },
+  {
+    "style": "default",
+    "label": "accessManagement",
+    "rows": [
       [
         {
           "name": "ownerUser",

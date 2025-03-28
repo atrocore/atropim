@@ -22,24 +22,6 @@
     "notChildren",
     "onlyLeafCategories"
   ],
-  "sidePanels": {
-    "edit": [
-      {
-        "name": "mainImage",
-        "unshift": true,
-        "label": "mainImage",
-        "view": "pim:views/fields/main-image"
-      }
-    ],
-    "detail": [
-      {
-        "name": "mainImage",
-        "unshift": true,
-        "label": "mainImage",
-        "view": "pim:views/fields/main-image"
-      }
-    ]
-  },
   "disabledMassActions": [
     "merge"
   ],

@@ -1,0 +1,15 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [{"name": "mainImage", "fullWidth":  true}]
+    ]
+  },
+  {
+    "label": "accessManagement",
+    "rows": [
+      [{"name":  "created", "fullWidth":  true}],
+      [{"name":  "modified", "fullWidth":  true}]
+    ]
+  }
+]
