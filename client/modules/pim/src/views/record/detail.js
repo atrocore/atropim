@@ -28,7 +28,7 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
             }
         },
 
-        actionAddAttribute(data) {
+        actionAddAttribute() {
             this.notify('Loading...');
             this.createView('dialog', 'views/modals/select-records', {
                 scope: 'Attribute',
@@ -70,6 +70,19 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
             if (parentView.options.params && parentView.options.params.setEditMode) {
                 this.actionEdit();
             }
+
+            this.$el.find('.panel-heading').each((k, el) => {
+                let $el = $(el);
+                let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
+
+                if (isAttributeValuePanel) {
+                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><span class="fas fa-plus cursor-pointer" style="font-size: 1em;"></span></a></div>';
+                    $el.append(html);
+                    $el.find('.add-attribute-value-container').click(()=>{
+                        this.actionAddAttribute();
+                    });
+                }
+            });
         },
 
         prepareLayoutData(data) {
