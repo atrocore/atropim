@@ -28,14 +28,16 @@ class Attribute extends Base
 
     public function getRecordAttributes(string $entityName, string $entityId): array
     {
+        $tableName = Util::toUnderScore(lcfirst($entityName));
+
         $conn = $this->getEntityManager()->getConnection();
         $res = $conn->createQueryBuilder()
             ->select('a.*, v.id as v_id')
-            ->from(Util::toUnderScore(lcfirst($entityName)) . '_attribute_value', 'v')
+            ->from("{$tableName}_attribute_value", 'v')
             ->leftJoin('v', $conn->quoteIdentifier('attribute'), 'a', 'a.id=v.attribute_id')
             ->where('v.deleted=:false')
             ->andWhere('a.deleted=:false')
-            ->andWhere('v.' . Util::toUnderScore(lcfirst($entityName)) . '_id=:entityId')
+            ->andWhere('v.' . "{$tableName}_id=:entityId")
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('entityId', $entityId)
