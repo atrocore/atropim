@@ -19,12 +19,51 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+
+    public function addAttributeToRecord(string $entityName, string $entityId, ?array $where, ?array $ids): bool
+    {
+        if ($where !== null) {
+            $selectParams = $this
+                ->getSelectManager()
+                ->getSelectParams(['where' => json_decode(json_encode($where), true)], true);
+            $attributes = $this->getRepository()->find($selectParams);
+        } elseif ($ids !== null) {
+            $attributes = $this->getRepository()->where(['id' => $ids])->find();
+        }
+
+        if (empty($attributes)) {
+            return false;
+        }
+
+        $conn = $this->getEntityManager()->getConnection();
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        foreach ($attributes as $attribute) {
+            try {
+                $conn->createQueryBuilder()
+                    ->insert("{$name}_attribute_value")
+                    ->setValue('id', ':id')
+                    ->setValue('attribute_id', ':attributeId')
+                    ->setValue("{$name}_id", ':entityId')
+                    ->setValue("attribute_type", ':attributeType')
+                    ->setParameter('id', Util::generateId())
+                    ->setParameter('attributeId', $attribute->get('id'))
+                    ->setParameter('attributeType', $attribute->get('type'))
+                    ->setParameter('entityId', $entityId)
+                    ->executeQuery();
+            } catch (UniqueConstraintViolationException $e) {
+            }
+        }
+
+        return true;
+    }
 
     public function getRecordAttributes(string $entityName, string $entityId): array
     {
