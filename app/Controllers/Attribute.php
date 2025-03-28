@@ -44,4 +44,26 @@ class Attribute extends Base
 
         return $this->getRecordService()->getRecordAttributes($request->get('entityName'), $request->get('entityId'));
     }
+
+    public function actionAddAttributeToRecord($params, $data, $request)
+    {
+        if (!$request->isPost() || empty($data->entityName) || empty($data->entityId)) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'ids') && !property_exists($data, 'where')){
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($data->entityName, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->addAttributeToRecord(
+            $data->entityName,
+            $data->entityId,
+            $data->where,
+            $data->ids
+        );
+    }
 }

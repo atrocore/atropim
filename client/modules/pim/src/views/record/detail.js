@@ -17,6 +17,53 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
             Dep.prototype.setup.call(this);
         },
 
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
+
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+                this.dropdownItemList.push({
+                    label: 'addAttribute',
+                    name: 'addAttribute'
+                });
+            }
+        },
+
+        actionAddAttribute(data) {
+            this.notify('Loading...');
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'Attribute',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', selectObj => {
+                    this.notify('Loading...');
+                    const data = {
+                        entityName: this.model.name,
+                        entityId: this.model.get('id'),
+                    }
+                    if (Array.isArray(selectObj)) {
+                        data.ids = selectObj.map(o => o.id)
+                    } else {
+                        data.where = selectObj.where
+                    }
+                    $.ajax({
+                        url: `Attribute/action/addAttributeToRecord`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: () => {
+                            this.model.fetch();
+                            this.refreshLayout();
+                            this.notify('Saved', 'success');
+                        }
+                    });
+                });
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
@@ -49,13 +96,18 @@ Espo.define('pim:views/record/detail', 'class-replace!pim:views/record/detail',
                     layoutRow.push({
                         name: item.id,
                         customLabel: item.name,
-                        fullWidth: ['text', 'markdown', 'wysiwyg'].includes(item.type)
+                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
                     });
                     if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
                         layoutRows.push(layoutRow);
                         layoutRow = [];
                     }
                 })
+
+                if (layoutRow.length > 0) {
+                    layoutRow.push(false);
+                    layoutRows.push(layoutRow);
+                }
             })
 
             data.layout.forEach((row, k) => {
