@@ -32,19 +32,6 @@ class Attribute extends Base
         return $this->getRecordService()->getDefaultValue((string)$request->get('id'));
     }
 
-    public function actionRecordAttributes($params, $data, $request)
-    {
-        if (!$request->isGet() || empty($request->get('entityName')) || empty($request->get('entityId'))) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($request->get('entityName'), 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getRecordAttributes($request->get('entityName'), $request->get('entityId'));
-    }
-
     public function actionAddAttributeValue($params, $data, $request)
     {
         if (!$request->isPost() || empty($data->entityName) || empty($data->entityId)) {
