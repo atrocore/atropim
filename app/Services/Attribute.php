@@ -18,12 +18,156 @@ use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+
+    public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
+    {
+        if ($where !== null) {
+            $selectParams = $this
+                ->getSelectManager()
+                ->getSelectParams(['where' => json_decode(json_encode($where), true)], true);
+            $attributes = $this->getRepository()->find($selectParams);
+        } elseif ($ids !== null) {
+            $attributes = $this->getRepository()->where(['id' => $ids])->find();
+        }
+
+        if (empty($attributes)) {
+            return false;
+        }
+
+        $conn = $this->getEntityManager()->getConnection();
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        foreach ($attributes as $attribute) {
+            try {
+                $conn->createQueryBuilder()
+                    ->insert("{$name}_attribute_value")
+                    ->setValue('id', ':id')
+                    ->setValue('attribute_id', ':attributeId')
+                    ->setValue("{$name}_id", ':entityId')
+                    ->setValue("attribute_type", ':attributeType')
+                    ->setParameter('id', Util::generateId())
+                    ->setParameter('attributeId', $attribute->get('id'))
+                    ->setParameter('attributeType', $attribute->get('type'))
+                    ->setParameter('entityId', $entityId)
+                    ->executeQuery();
+            } catch (UniqueConstraintViolationException $e) {
+            }
+        }
+
+        return true;
+    }
+
+    public function removeAttributeValue(string $entityName, string $id): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete("{$name}_attribute_value")
+            ->where('id=:id')
+            ->setParameter('id', $id)
+            ->executeQuery();
+
+        return true;
+    }
+
+    public function getRecordAttributes(string $entityName, string $entityId): array
+    {
+        $tableName = Util::toUnderScore(lcfirst($entityName));
+
+        $conn = $this->getEntityManager()->getConnection();
+        $res = $conn->createQueryBuilder()
+            ->select('a.*, v.id as v_id')
+            ->from("{$tableName}_attribute_value", 'v')
+            ->leftJoin('v', $conn->quoteIdentifier('attribute'), 'a', 'a.id=v.attribute_id')
+            ->where('v.deleted=:false')
+            ->andWhere('a.deleted=:false')
+            ->andWhere('v.' . "{$tableName}_id=:entityId")
+            ->orderBy('a.sort_order', 'ASC')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('entityId', $entityId)
+            ->fetchAllAssociative();
+
+        $result = [];
+
+        $languages = [];
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $languages[$code] = $code;
+                foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
+                    if ($code === $v['code']) {
+                        $languages[$code] = $v['name'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        foreach ($res as $item) {
+            $data = @json_decode($item['data'], true);
+
+            $row = [
+                'id'                            => $item['v_id'],
+                'attributeId'                   => $item['id'],
+                'name'                          => "attr_{$item['v_id']}",
+                'label'                         => $item['name'],
+                'type'                          => $item['type'],
+                'trim'                          => !empty($item['trim']),
+                'required'                      => !empty($item['is_required']),
+                'notNull'                       => !empty($item['not_null']),
+                'useDisabledTextareaInViewMode' => !empty($item['use_disabled_textarea_in_view_mode']),
+                'amountOfDigitsAfterComma'      => $item['amount_of_digits_after_comma'] ?? null,
+                'prohibitedEmptyValue'          => !empty($item['prohibited_empty_value']),
+                'extensibleEnumId'              => $item['extensible_enum_id'] ?? null
+            ];
+
+            if (!empty($data['maxLength'])) {
+                $row['maxLength'] = $data['maxLength'];
+            }
+
+            if (!empty($data['countBytesInsteadOfCharacters'])) {
+                $row['countBytesInsteadOfCharacters'] = $data['countBytesInsteadOfCharacters'];
+            }
+
+            if (isset($data['min'])) {
+                $row['min'] = $data['min'];
+            }
+
+            if (isset($data['max'])) {
+                $row['max'] = $data['max'];
+            }
+
+            if (isset($item['measure_id'])) {
+                $row['measureId'] = $item['measure_id'];
+                $row['view'] = "views/fields/unit-{$item['type']}";
+            }
+
+            $dropdownTypes = $this->getMetadata()->get(['app', 'attributeDropdownTypes'], []);
+            if (!empty($item['dropdown']) && isset($dropdownTypes[$item['type']])) {
+                $row['view'] = $dropdownTypes[$item['type']];
+            }
+
+            $result[] = $row;
+
+            if (!empty($item['is_multilang'])) {
+                foreach ($languages as $language => $languageName) {
+                    $result[] = array_merge($row, [
+                        'name'  => $row['id'] . ucfirst(Util::toCamelCase(strtolower($language))),
+                        'label' => $item['name'] . ' / ' . $languageName
+                    ]);
+                }
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * @inheritDoc
@@ -80,7 +224,8 @@ class Attribute extends Base
             $entity->set('dropdown', false);
         }
 
-        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
+        if (in_array($entity->get('type'),
+                ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
             $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
 
@@ -265,7 +410,8 @@ class Attribute extends Base
     {
         $attributeList = array_keys($this->getInjection('metadata')->get(['attributes']));
         if (!in_array($entity->get('type'), $attributeList)) {
-            throw new Forbidden(str_replace('{type}', $entity->get('type'), $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
+            throw new Forbidden(str_replace('{type}', $entity->get('type'),
+                $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
         }
 
         parent::checkFieldsWithPattern($entity);
@@ -278,7 +424,8 @@ class Attribute extends Base
             $language = $this->getInjection('user')->getLanguage();
         }
         if (!empty($language) && $language !== 'main') {
-            if ($this->getConfig()->get('isMultilangActive') && in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+            if ($this->getConfig()->get('isMultilangActive') && in_array($language,
+                    $this->getConfig()->get('inputLanguageList', []))) {
                 return Util::toCamelCase('name_' . strtolower($language));
             }
         }

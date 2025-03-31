@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\ORM\DB\RDB\Mapper;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
-use Pim\SelectManagers\ProductAttributeValue;
 
 class Metadata extends AbstractListener
 {
