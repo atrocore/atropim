@@ -1,6 +1,5 @@
 {
   "fields": {
-    "modifiedAtExpanded": "Змінено в (розгорнуто)",
     "mainImage": "Основне зображення",
     "data": "Дані",
     "categories": "Категорії продукту",
@@ -46,14 +45,16 @@
     "itemsInRow": "Елементів у ряд",
     "productImage": "Зображення продукту",
     "selectAttributeGroup": "Вибрати групу атрибута",
-    "draft": "Чернетка",
-    "prepared": "Підготовлено",
-    "reviewed": "Відредаговано",
-    "notReady": "Не готово",
-    "ready": "Готово",
     "channel": "Канал"
   },
   "options": {
+    "productStatus": {
+      "draft": "Чернетка",
+      "prepared": "Підготовлено",
+      "reviewed": "Відредаговано",
+      "notReady": "Не готово",
+      "ready": "Готово"
+    },
     "tag": {
       "blue": "блакитний",
       "yellow": "жовтий",

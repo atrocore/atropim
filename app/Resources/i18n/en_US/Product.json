@@ -1,6 +1,5 @@
 {
   "fields": {
-    "modifiedAtExpanded": "Modified at (expanded)",
     "mainImage": "Main Image",
     "files": "Files",
     "data": "Data",
@@ -31,7 +30,8 @@
     "contents": "Contents",
     "taskStatus": "Task status",
     "components": "Product Components",
-    "calls": "Calls"
+    "calls": "Calls",
+    "contentItems": "Content Items"
   },
   "labels": {
     "Product Attributes": "Attributes",
@@ -46,14 +46,16 @@
     "itemsInRow": "Items in row",
     "productImage": "Product Image",
     "selectAttributeGroup": "Select Attribute Group",
-    "draft": "Draft",
-    "prepared": "Prepared",
-    "reviewed": "Reviewed",
-    "notReady": "Not Ready",
-    "ready": "Ready",
     "channel": "Channel"
   },
   "options": {
+    "productStatus": {
+      "draft": "Draft",
+      "prepared": "Prepared",
+      "reviewed": "Reviewed",
+      "notReady": "Not Ready",
+      "ready": "Ready"
+    },
     "tag": {
       "blue": "blue",
       "yellow": "yellow",

@@ -156,7 +156,7 @@ Espo.define('pim:views/attribute-group/record/panels/attributes', ['views/record
                         this.createView('list', viewName, {
                             collection: collection,
                             layoutName: layoutName,
-                            layoutRelatedScope: this.model.name,
+                            layoutRelatedScope: this.model.name + '.' + this.link,
                             listLayout: listLayout,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -316,11 +316,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
             $attribute = $attributes[$entity->get('attributeId')];
 
-            if (!empty($attribute->get('attributeGroupId'))) {
-                $row['sortOrder'] = empty($attribute->get('sortOrderInAttributeGroup')) ? 0 : (int)$attribute->get('sortOrderInAttributeGroup');
-            } else {
                 $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
-            }
 
             $records[$k] = $row;
         }

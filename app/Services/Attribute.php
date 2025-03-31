@@ -18,12 +18,65 @@ use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'sortOrderInAttributeGroup', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+
+    public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
+    {
+        if ($where !== null) {
+            $selectParams = $this
+                ->getSelectManager()
+                ->getSelectParams(['where' => json_decode(json_encode($where), true)], true);
+            $attributes = $this->getRepository()->find($selectParams);
+        } elseif ($ids !== null) {
+            $attributes = $this->getRepository()->where(['id' => $ids])->find();
+        }
+
+        if (empty($attributes)) {
+            return false;
+        }
+
+        $conn = $this->getEntityManager()->getConnection();
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        foreach ($attributes as $attribute) {
+            try {
+                $conn->createQueryBuilder()
+                    ->insert("{$name}_attribute_value")
+                    ->setValue('id', ':id')
+                    ->setValue('attribute_id', ':attributeId')
+                    ->setValue("{$name}_id", ':entityId')
+                    ->setValue("attribute_type", ':attributeType')
+                    ->setParameter('id', Util::generateId())
+                    ->setParameter('attributeId', $attribute->get('id'))
+                    ->setParameter('attributeType', $attribute->get('type'))
+                    ->setParameter('entityId', $entityId)
+                    ->executeQuery();
+            } catch (UniqueConstraintViolationException $e) {
+            }
+        }
+
+        return true;
+    }
+
+    public function removeAttributeValue(string $entityName, string $id): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete("{$name}_attribute_value")
+            ->where('id=:id')
+            ->setParameter('id', $id)
+            ->executeQuery();
+
+        return true;
+    }
 
     /**
      * @inheritDoc
@@ -80,7 +133,8 @@ class Attribute extends Base
             $entity->set('dropdown', false);
         }
 
-        if (in_array($entity->get('type'), ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
+        if (in_array($entity->get('type'),
+                ['extensibleEnum', 'extensibleMultiEnum']) && $entity->get('extensibleEnum') !== null) {
             $entity->set('listMultilingual', $entity->get('extensibleEnum')->get('multilingual'));
         }
 
@@ -97,7 +151,7 @@ class Attribute extends Base
      */
     public function updateEntity($id, $data)
     {
-        if (property_exists($data, 'sortOrderInAttributeGroup') && property_exists($data, '_sortedIds')) {
+        if (property_exists($data, 'sortOrder') && property_exists($data, '_sortedIds')) {
             $this->getRepository()->updateSortOrderInAttributeGroup($data->_sortedIds);
             return $this->getEntity($id);
         }
@@ -265,7 +319,8 @@ class Attribute extends Base
     {
         $attributeList = array_keys($this->getInjection('metadata')->get(['attributes']));
         if (!in_array($entity->get('type'), $attributeList)) {
-            throw new Forbidden(str_replace('{type}', $entity->get('type'), $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
+            throw new Forbidden(str_replace('{type}', $entity->get('type'),
+                $this->getInjection('language')->translate('invalidType', 'exceptions', 'Attribute')));
         }
 
         parent::checkFieldsWithPattern($entity);
@@ -278,7 +333,8 @@ class Attribute extends Base
             $language = $this->getInjection('user')->getLanguage();
         }
         if (!empty($language) && $language !== 'main') {
-            if ($this->getConfig()->get('isMultilangActive') && in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+            if ($this->getConfig()->get('isMultilangActive') && in_array($language,
+                    $this->getConfig()->get('inputLanguageList', []))) {
                 return Util::toCamelCase('name_' . strtolower($language));
             }
         }

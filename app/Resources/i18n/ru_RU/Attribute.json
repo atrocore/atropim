@@ -10,13 +10,11 @@
     "products": "Продукты",
     "productAttributeValues": "Значения атрибутов",
     "isMultilang": "Многоязычность",
-    "sortOrderInAttributeGroup": "Порядок сортировки в группе атрибута",
     "fileType": "Тип файла",
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "measure": "Мера",
-    "virtualProductField": "Виртуальное поле продукта",
     "defaultChannel": "Канал",
     "isRequired": "Обязательно",
     "tooltip": "Текст подсказки",
@@ -36,7 +34,6 @@
   },
   "tooltips": {
     "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"\/^[A-Z]{1,10}$\/\"",
-    "virtualProductField": "Значения этого атрибута будут добавлены в виде виртуального поля через лейаут списка товаров.",
     "sortOrder": "Порядок сортировки значений атрибутов продукта.W"
   },
   "exceptions": {

@@ -4,11 +4,11 @@
   "homepage": "https://atropim.com",
   "license": "GPL-3.0-only",
   "require": {
-    "atrocore/core": "~1.13.32"
+    "atrocore/core": "~1.13.48"
   },
   "conflict": {
     "atrocore/product-variants": "*",
-    "atrocore/pdf-generator": "<1.7.22",
+    "atrocore/pdf-generator": "<1.7.30",
     "atrocore/etim-classification": "<1.0.6"
   },
   "autoload": {

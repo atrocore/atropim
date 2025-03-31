@@ -26,9 +26,9 @@
       "view": "pim:views/attribute-group/record/panels/attributes",
       "dragDrop": {
         "isActive": true,
-        "sortField": "sortOrderInAttributeGroup"
+        "sortField": "sortOrder"
       },
-      "sortBy": "sortOrderInAttributeGroup",
+      "sortBy": "sortOrder",
       "asc": true
     }
   }

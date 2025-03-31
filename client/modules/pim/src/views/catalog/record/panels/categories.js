@@ -155,7 +155,7 @@ Espo.define('pim:views/catalog/record/panels/categories', ['views/record/panels/
                         this.createView('list', viewName, {
                             collection: collection,
                             layoutName: layoutName,
-                            layoutRelatedScope: this.model.name,
+                            layoutRelatedScope: this.model.name+ '.' + this.link,
                             listLayout: listLayout,
                             checkboxes: false,
                             rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),

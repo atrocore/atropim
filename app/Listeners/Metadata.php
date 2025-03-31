@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\ORM\DB\RDB\Mapper;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
-use Pim\SelectManagers\ProductAttributeValue;
 
 class Metadata extends AbstractListener
 {
@@ -60,8 +58,6 @@ class Metadata extends AbstractListener
 
         $data = $this->addTabPanels($data);
 
-        $data = $this->addVirtualProductFields($data);
-
         $this->addLanguageBoolFiltersForPav($data);
         $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
@@ -75,141 +71,6 @@ class Metadata extends AbstractListener
         if ($this->getConfig()->get('isMultilangActive') && !empty($this->getConfig()->get('inputLanguageList', []))) {
             $metadata['clientDefs']['ProductAttributeValue']['boolFilterList'][] = 'includeUniLingualValues';
         }
-    }
-
-    protected function addVirtualProductFields(array $metadata): array
-    {
-        if (!$this->getConfig()->get('isInstalled', false)) {
-            return $metadata;
-        }
-
-        $dataManager = $this->getContainer()->get('dataManager');
-
-        $attributes = $dataManager->getCacheData('attribute_product_fields');
-        if ($attributes === null) {
-            $connection = $this->getEntityManager()->getConnection();
-            try {
-                $attributes = $connection->createQueryBuilder()
-                    ->select('t.*')
-                    ->from($connection->quoteIdentifier('attribute'), 't')
-                    ->where('t.deleted = :false')
-                    ->andWhere('t.virtual_product_field = :true')
-                    ->setParameter('true', true, Mapper::getParameterType(true))
-                    ->setParameter('false', false, Mapper::getParameterType(false))
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                $attributes = [];
-            }
-
-            $dataManager->setCacheData('attribute_product_fields', $attributes);
-        }
-
-        $languages = [];
-        if ($this->getConfig()->get('isMultilangActive')) {
-            $languages = $this->getConfig()->get('inputLanguageList', []);
-        }
-
-        foreach ($attributes as $attribute) {
-            $fieldName = "{$attribute['code']}Attribute";
-
-            $additionalFieldDefs = [
-                'type'                      => 'varchar',
-                'notStorable'               => true,
-                'readOnly'                  => true,
-                'layoutListDisabled'        => true,
-                'layoutListSmallDisabled'   => true,
-                'layoutDetailDisabled'      => true,
-                'layoutDetailSmallDisabled' => true,
-                'massUpdateDisabled'        => true,
-                'filterDisabled'            => true,
-                'importDisabled'            => true,
-                'exportDisabled'            => true,
-                'emHidden'                  => true,
-            ];
-
-            $defs = array_merge($additionalFieldDefs, [
-                'type'                    => $attribute['type'],
-                'layoutListDisabled'      => false,
-                'layoutListSmallDisabled' => false,
-                'isMultilang'             => !empty($attribute['is_multilang']),
-                'attributeId'             => $attribute['id'],
-                'attributeCode'           => $attribute['code'],
-                'attributeName'           => $attribute['name'],
-            ]);
-
-            foreach ($languages as $language) {
-                $languageName = $attribute['name'];
-                if (isset($attribute['name_' . strtolower($language)])) {
-                    $languageName = $attribute['name_' . strtolower($language)];;
-                }
-                $defs[Util::toCamelCase('attribute_name_' . strtolower($language))] = $languageName;
-            }
-
-            if (!empty($attribute['extensible_enum_id'])) {
-                $defs['extensibleEnumId'] = $attribute['extensible_enum_id'];
-            }
-
-            if (!empty($attribute['measure_id'])) {
-                $defs['measureId'] = $attribute['measure_id'];
-                $defs['unitIdField'] = true;
-                $metadata['entityDefs']['Product']['fields']["{$fieldName}UnitId"] = $additionalFieldDefs;
-            }
-
-            switch ($attribute['type']) {
-                case 'file':
-                    $defs['fileTypeId'] = $attribute['file_type_id'];
-                    break;
-            }
-
-            $metadata['entityDefs']['Product']['fields'][$fieldName] = $defs;
-            switch ($attribute['type']) {
-                case 'file':
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Id"] = array_merge($additionalFieldDefs, [
-                        'attributeId'   => $attribute['id'],
-                        'attributeCode' => $attribute['code'],
-                        'fileFieldName' => $fieldName,
-                    ]);
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
-                    break;
-                case 'extensibleEnum':
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Name"] = $additionalFieldDefs;
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}OptionData"] = array_merge($additionalFieldDefs, ['type' => 'jsonArray']);
-                    break;
-                case 'extensibleMultiEnum':
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}Names"] = array_merge($additionalFieldDefs, ['type' => 'jsonArray']);
-                    $metadata['entityDefs']['Product']['fields']["{$fieldName}OptionsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonArray']);
-                    break;
-            }
-
-            if (!empty($attribute['is_multilang'])) {
-                $languageDefs = $defs;
-                $languageDefs['isMultilang'] = false;
-                $languageDefs['multilangField'] = $fieldName;
-
-                foreach ($languages as $language) {
-                    $languageFieldName = Util::toCamelCase($attribute['code'] . '_' . strtolower($language)) . 'Attribute';
-                    $languageDefs['multilangLocale'] = $language;
-                    switch ($defs['type']) {
-                        case 'file':
-                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Id"] = array_merge($defs, [
-                                'type'            => 'varchar',
-                                'attributeId'     => $attribute['id'],
-                                'attributeCode'   => $attribute['code'],
-                                'fileFieldName'   => $languageFieldName,
-                                'multilangLocale' => $language,
-                            ]);
-                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}Name"] = $additionalFieldDefs;
-                            $metadata['entityDefs']['Product']['fields']["{$languageFieldName}PathsData"] = array_merge($additionalFieldDefs, ['type' => 'jsonObject']);
-                            break;
-                    }
-
-                    $metadata['entityDefs']['Product']['fields'][$languageFieldName] = $languageDefs;
-                }
-            }
-        }
-
-        return $metadata;
     }
 
     protected function addTabPanels(array $data): array
@@ -238,7 +99,7 @@ class Metadata extends AbstractListener
                     "AttributeGroup",
                     "ProductAttributeValue"
                 ],
-                "sortBy"                     => "attribute.sortOrderInAttributeGroup",
+                "sortBy"                     => "attribute.sortOrder",
                 "asc"                        => true
             ];
         }

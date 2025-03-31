@@ -17,16 +17,6 @@ Espo.define('pim:views/fields/main-image', 'views/fields/file',
             this.listenTo(this.model, 'file:saved after:unrelate', () => {
                 this.model.fetch().then(() => this.reRender());
             });
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'detail') {
-                this.$el.find('.attachment-preview').css({'display': 'block'});
-                this.$el.find('img').css({'display': 'block', 'margin': '0 auto'});
-            }
-        },
-
+        }
     })
 );
