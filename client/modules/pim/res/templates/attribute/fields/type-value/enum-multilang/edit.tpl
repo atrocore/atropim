@@ -15,7 +15,7 @@
 	</div>
     {{/each}}
 </div>
-<a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><span class="fas fa-plus"></span></a>
+<a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg></a>
 <style>
 	.has-error .attribute-type-value .option-group .form-control {
 		border-color: #eaeaea;
