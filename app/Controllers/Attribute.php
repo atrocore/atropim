@@ -49,8 +49,8 @@ class Attribute extends Base
         return $this->getRecordService()->addAttributeValue(
             $data->entityName,
             $data->entityId,
-            $data->where,
-            $data->ids
+            $data->where ?? null,
+            $data->ids ?? null
         );
     }
 
