@@ -11,8 +11,6 @@
 Espo.define('pim:views/attribute/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
-        sideView: "pim:views/attribute/record/detail-side",
-
         bottomView: 'pim:views/attribute/record/detail-bottom',
 
         delete: function () {
