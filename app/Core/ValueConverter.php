@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pim\Core;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Utils\Config;
 use Atro\Entities\File;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
@@ -16,7 +17,9 @@ class ValueConverter extends Injectable
 {
     public function __construct()
     {
+        $this->addDependency('config');
         $this->addDependency('entityManager');
+        $this->addDependency('language');
         $this->addDependency('memoryStorage');
         $this->addDependency('twig');
     }
@@ -87,6 +90,18 @@ class ValueConverter extends Injectable
                 if (property_exists($data, 'value')) {
                     $data->textValue = $data->value;
                     unset($data->value);
+                }
+
+                if ($attribute->get('isMultilang')) {
+                    foreach (array_keys($this->getLanguages()) as $code) {
+                        $dataName = Util::toCamelCase('textValue' . ucfirst(strtolower($code)));
+                        $valueName = Util::toCamelCase('value' . ucfirst(strtolower($code)));
+
+                        if (property_exists($data, $valueName)) {
+                            $data->$dataName = $data->$valueName;
+                            unset($data->$valueName);
+                        }
+                    }
                 }
                 break;
             case 'bool':
@@ -191,6 +206,19 @@ class ValueConverter extends Injectable
                     }
                 }
 
+                if ($attribute->get('isMultilang')) {
+                    foreach (array_keys($this->getLanguages()) as $code) {
+                        $dataName = Util::toCamelCase('varcharValue' . ucfirst(strtolower($code)));
+                        $valueName = Util::toCamelCase('value' . ucfirst(strtolower($code)));
+
+                        if (property_exists($data, $valueName)) {
+                            $value = $data->$valueName;
+                            $data->$dataName = !empty($attribute->get('notNull')) ? $value ?? '' : $value;
+                            unset($data->$valueName);
+                        }
+                    }
+                }
+
                 if (property_exists($data, 'valueUnitId')) {
                     $data->referenceValue = $data->valueUnitId;
                     unset($data->valueUnitId);
@@ -208,6 +236,10 @@ class ValueConverter extends Injectable
             if (property_exists($data, $name)) {
                 unset($data->$name);
             }
+        }
+
+        if (property_exists($data, 'valueFields')) {
+            unset($data->valueFields);
         }
     }
 
@@ -268,6 +300,26 @@ class ValueConverter extends Injectable
             case 'wysiwyg':
                 if ($entity->has('textValue')) {
                     $entity->set('value', $entity->get('textValue'));
+                }
+
+                if ($attribute->get('isMultilang')) {
+                    $valueFields = $entity->get('valueFields') ?? [];
+
+                    foreach ($this->getLanguages() as $code => $name) {
+                        $dataName = Util::toCamelCase('textValue' . ucfirst(strtolower($code)));
+                        $valueName = Util::toCamelCase('value' . ucfirst(strtolower($code)));
+
+                        if ($entity->has($dataName)) {
+                            $valueFields[$valueName] = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType()) . ' / ' . $name;
+                            $entity->fields[$valueName] = $entity->fields['value'];
+                            $entity->fields['value']['isMultilang'] = true;
+                            $entity->set($valueName, $entity->get($dataName));
+                        }
+                    }
+
+                    if (!empty($valueFields)) {
+                        $entity->set('valuesFields', $valueFields);
+                    }
                 }
                 break;
             case 'bool':
@@ -362,6 +414,26 @@ class ValueConverter extends Injectable
                     $entity->set('value', $entity->get('varcharValue'));
                     $entity->set('valueUnitId', $entity->get('referenceValue'));
                 }
+
+                if ($attribute->get('isMultilang')) {
+                    $valueFields = $entity->get('valueFields') ?? [];
+
+                    foreach ($this->getLanguages() as $code => $name) {
+                        $dataName = Util::toCamelCase('varcharValue' . ucfirst(strtolower($code)));
+                        $valueName = Util::toCamelCase('value' . ucfirst(strtolower($code)));
+
+                        if ($entity->has($dataName)) {
+                            $valueFields[$valueName] = $this->getInjection('language')->translate('value', 'fields', $entity->getEntityType()) . ' / ' . $name;
+                            $entity->fields[$valueName] = $entity->fields['value'];
+                            $entity->set($valueName, $entity->get($dataName));
+                        }
+                    }
+
+                    if (!empty($valueFields)) {
+                        $entity->set('valuesFields', $valueFields);
+                    }
+                }
+
                 break;
             default:
                 if ($entity->has('varcharValue')) {
@@ -393,6 +465,21 @@ class ValueConverter extends Injectable
             $entity->clear('varcharValue');
             $entity->clear('referenceValue');
             $entity->clear('textValue');
+
+            foreach (array_keys($this->getLanguages()) as $code) {
+                $textValueName = Util::toCamelCase('textValue' . ucfirst(strtolower($code)));
+                $varcharValueName = Util::toCamelCase('varcharValue' . ucfirst(strtolower($code)));
+
+                $entity->_technicalFieldValues[$textValueName] = $entity->get($textValueName);
+                $entity->_technicalFieldValues[$varcharValueName] = $entity->get($varcharValueName);
+
+                $entity->clear($textValueName);
+                $entity->clear($varcharValueName);
+            }
+
+            if (!$attribute->get('isMultilang')) {
+                $entity->clear('valueFields');
+            }
         }
     }
 
@@ -417,6 +504,29 @@ class ValueConverter extends Injectable
     public function getMemoryStorage(): StorageInterface
     {
         return $this->getInjection('memoryStorage');
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->getInjection('config');
+    }
+
+    public function getLanguages(): array
+    {
+        $languages = [];
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $languages[$code] = $code;
+                foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
+                    if ($code === $v['code']) {
+                        $languages[$code] = $v['name'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $languages;
     }
 
     protected function isExport(): bool
