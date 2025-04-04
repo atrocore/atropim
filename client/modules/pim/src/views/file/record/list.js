@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/file/record/list', 'views/file/record/list',
+Espo.define('pim:views/file/record/list', 'views/record/list',
     Dep => Dep.extend({
         setup() {
             Dep.prototype.setup.call(this);
