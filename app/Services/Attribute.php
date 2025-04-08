@@ -52,10 +52,8 @@ class Attribute extends Base
                     ->setValue('id', ':id')
                     ->setValue('attribute_id', ':attributeId')
                     ->setValue("{$name}_id", ':entityId')
-                    ->setValue("attribute_type", ':attributeType')
                     ->setParameter('id', Util::generateId())
                     ->setParameter('attributeId', $attribute->get('id'))
-                    ->setParameter('attributeType', $attribute->get('type'))
                     ->setParameter('entityId', $entityId)
                     ->executeQuery();
             } catch (UniqueConstraintViolationException $e) {
@@ -69,10 +67,20 @@ class Attribute extends Base
     {
         $name = Util::toUnderScore(lcfirst($entityName));
 
+        $parts = explode('_', $id);
+        if (count($parts) !== 2) {
+            return false;
+        }
+
+        $attributeId = $parts[0];
+        $entityId = $parts[1];
+
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->delete("{$name}_attribute_value")
-            ->where('id=:id')
-            ->setParameter('id', $id)
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
             ->executeQuery();
 
         return true;
