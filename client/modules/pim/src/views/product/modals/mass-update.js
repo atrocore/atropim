@@ -11,16 +11,14 @@
 Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
     Dep => Dep.extend({
 
-        template: 'pim:product/modals/mass-update',
-
-        events: _.extend({
-            'click [data-action="select-attribute"]': function (e) {
-                this.openAttributeListModal();
-            },
-        }, Dep.prototype.events),
-
         setup() {
             Dep.prototype.setup.call(this);
+
+            this.buttonList.push({
+                name: 'selectAttribute',
+                label: 'Select Attribute',
+                className: 'btn-select-attribute'
+            });
 
             this.attributeList = [];
         },
@@ -42,7 +40,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             this.attributeList = [];
         },
 
-        openAttributeListModal() {
+        selectAttribute() {
             this.notify('Loading...');
 
             this.createView('modal', 'pim:views/product/modals/attributes-for-mass-update', {
@@ -101,7 +99,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
             this.clearView(name);
 
-            let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + model.get('attributeName') + '</label><div class="field" data-name="' + name + '" /></div>';
+            let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><div class="pull-right inline-actions"></div><label class="control-label">' + model.get('attributeName') + '</label><div class="field" data-name="' + name + '" /></div>';
             this.$el.find('.fields-container').append(html);
 
             this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
@@ -147,7 +145,10 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         view.$el.append('<div class="text-muted small">' + name + '</div>');
                     });
 
-                    view.render();
+                    view.render(() => {
+                        this.initRemoveField(view);
+                        this.enableButton('update');
+                    });
 
                     this.notify(false);
                 });
