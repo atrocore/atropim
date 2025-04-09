@@ -121,11 +121,10 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             if (!isset($result[$record['attribute_data']['attribute_group_id']])) {
                 $key = 'no_group';
-                $row['sortOrder'] = empty($record['attribute_data']['sort_order']) ? 0 : (int)$record['attribute_data']['sort_order'];
             } else {
                 $key = $record['attribute_data']['attribute_group_id'];
-                $row['sortOrder'] = empty($record['attribute_data']['sort_order_in_attribute_group']) ? 0 : (int)$record['attribute_data']['sort_order_in_attribute_group'];
             }
+            $row['sortOrder'] = empty($record['attribute_data']['sort_order']) ? 0 : (int)$record['attribute_data']['sort_order'];
 
             $result[$key]['pavs'][] = $row;
         }

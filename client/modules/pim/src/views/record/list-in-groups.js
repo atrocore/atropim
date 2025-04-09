@@ -36,10 +36,6 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
 
             this.listenTo(this, 'after:save', model => {
                 let panelView = this.getParentView();
-                let completeView = panelView.getParentView().getParentView().getView('side').getView('complete');
-                if (completeView) {
-                    completeView.actionRefresh();
-                }
 
                 if (panelView && panelView.model) {
                     panelView.model.trigger('after:attributesSave');

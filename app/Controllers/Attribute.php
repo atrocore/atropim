@@ -32,6 +32,18 @@ class Attribute extends Base
         return $this->getRecordService()->getDefaultValue((string)$request->get('id'));
     }
 
+    public function actionAttributesDefs($params, $data, $request)
+    {
+        if (!$request->isGet() || empty($request->get('entityName')) || empty($request->get('attributesIds'))) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->getAttributesDefs(
+            $request->get('entityName'),
+            $request->get('attributesIds')
+        );
+    }
+
     public function actionAddAttributeValue($params, $data, $request)
     {
         if (!$request->isPost() || empty($data->entityName) || empty($data->entityId)) {
@@ -49,14 +61,14 @@ class Attribute extends Base
         return $this->getRecordService()->addAttributeValue(
             $data->entityName,
             $data->entityId,
-            $data->where,
-            $data->ids
+            $data->where ?? null,
+            $data->ids ?? null
         );
     }
 
     public function actionRemoveAttributeValue($params, $data, $request)
     {
-        if (!$request->isPost() || empty($data->entityName) || empty($data->id)) {
+        if (!$request->isPost() || empty($data->entityName) || empty($data->attributeId) || empty($data->entityId)) {
             throw new BadRequest();
         }
 
@@ -64,6 +76,6 @@ class Attribute extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->removeAttributeValue($data->entityName, $data->id);
+        return $this->getRecordService()->removeAttributeValue($data->entityName, $data->entityId, $data->attributeId);
     }
 }

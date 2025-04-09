@@ -13,19 +13,43 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
     protected $mandatorySelectAttributeList = ['sortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit'];
+
+    public function getAttributesDefs(string $entityName, array $attributesIds): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $attributes = $conn->createQueryBuilder()
+            ->select('*')
+            ->from($conn->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->fetchAllAssociative();
+
+        $entity = $this->getEntityManager()->getRepository($entityName)->get();
+
+        /** @var AttributeFieldConverter $converter */
+        $converter = $this->getInjection(AttributeFieldConverter::class);
+
+        $attributesDefs = [];
+        foreach ($attributes as $row) {
+            $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
+        }
+
+        return $attributesDefs;
+    }
 
     public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
     {
@@ -52,10 +76,8 @@ class Attribute extends Base
                     ->setValue('id', ':id')
                     ->setValue('attribute_id', ':attributeId')
                     ->setValue("{$name}_id", ':entityId')
-                    ->setValue("attribute_type", ':attributeType')
                     ->setParameter('id', Util::generateId())
                     ->setParameter('attributeId', $attribute->get('id'))
-                    ->setParameter('attributeType', $attribute->get('type'))
                     ->setParameter('entityId', $entityId)
                     ->executeQuery();
             } catch (UniqueConstraintViolationException $e) {
@@ -65,14 +87,16 @@ class Attribute extends Base
         return true;
     }
 
-    public function removeAttributeValue(string $entityName, string $id): bool
+    public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
         $name = Util::toUnderScore(lcfirst($entityName));
 
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->delete("{$name}_attribute_value")
-            ->where('id=:id')
-            ->setParameter('id', $id)
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
             ->executeQuery();
 
         return true;
@@ -192,6 +216,7 @@ class Attribute extends Base
 
         // add dependencies
         $this->addDependency('language');
+        $this->addDependency(AttributeFieldConverter::class);
     }
 
     /**
