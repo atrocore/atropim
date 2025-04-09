@@ -213,6 +213,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
 
         buildGroups() {
+            this.collection.reset()
             if (!this.groups || this.groups.length < 1) {
                 this.afterGroupRender()
                 return;
