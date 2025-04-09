@@ -8,29 +8,159 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
+Espo.define('pim:views/product/modals/mass-update', 'views/modal',
     Dep => Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
+        cssName: 'mass-update',
 
-            this.buttonList.push({
-                name: 'selectAttribute',
-                label: 'Select Attribute',
-                className: 'btn-select-attribute'
-            });
+        header: false,
 
+        template: 'pim:product/modals/mass-update',
+
+        fullHeight: true,
+
+        data: function () {
+            return {
+                scope: this.scope,
+                fields: this.fields,
+                isAllowedMassUpdateAttributeValue: this.getAcl().check('ProductAttributeValue', 'edit')
+            };
+        },
+
+        events: {
+            'click button[data-action="update"]': function () {
+                this.update();
+            },
+            'click a[data-action="add-field"]': function (e) {
+                var field = $(e.currentTarget).data('name');
+                this.addField(field);
+            },
+            'click button[data-action="reset"]': function (e) {
+                this.reset();
+            },
+            'click [data-action="select-attribute"]': function (e) {
+                this.openAttributeListModal();
+            },
+        },
+
+        setup: function () {
+            this.buttonList = [
+                {
+                    name: 'update',
+                    label: 'Update',
+                    style: 'danger',
+                    disabled: true
+                },
+                {
+                    name: 'cancel',
+                    label: 'Cancel'
+                }
+            ];
+
+            this.scope = this.options.scope;
+            this.ids = this.options.ids;
+            this.where = this.getWhere();
+            this.selectData = this.options.selectData;
+            this.byWhere = this.options.byWhere;
+
+            this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
+
+            this.getModelFactory().create(this.scope, function (model) {
+                this.model = model;
+                this.model.set({ids: this.ids});
+                let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
+
+                this.fields = [];
+                $.each((this.getMetadata().get(`entityDefs.${this.scope}.fields`) || {}), (field, row) => {
+                    if (~forbiddenFieldList.indexOf(field)) return;
+                    if (row.layoutMassUpdateDisabled) return;
+                    if (row.massUpdateDisabled) return;
+                    this.fields.push(field);
+                });
+                this.fields.sort()
+            }.bind(this));
+
+            this.fieldList = [];
             this.attributeList = [];
         },
 
-        data() {
-            return _.extend({
-                isAllowedMassUpdateAttributeValue: this.getAcl().check('ProductAttributeValue', 'edit')
-            }, Dep.prototype.data.call(this));
+        addField: function (name) {
+            this.enableButton('update');
+
+            this.$el.find('[data-action="reset"]').removeClass('hidden');
+
+            this.$el.find('ul.filter-list li[data-name="' + name + '"]').addClass('hidden');
+
+            if (this.$el.find('ul.filter-list li:not(.hidden)').size() == 0) {
+                this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
+            }
+
+            this.notify('Loading...');
+            var label = this.translate(name, 'fields', this.scope);
+            var html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + label + '</label><div class="field" data-name="' + name + '" /></div>';
+            this.$el.find('.fields-container').append(html);
+
+            var type = this.model.getFieldType(name);
+
+            var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
+            this.createView(name, viewName, {
+                model: this.model,
+                el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                defs: {
+                    name: name,
+                    isMassUpdate: true
+                },
+                mode: 'edit'
+            }, function (view) {
+                this.fieldList.push(name);
+                view.render();
+                view.notify(false);
+            }.bind(this));
         },
 
-        reset() {
-            Dep.prototype.reset.call(this);
+        actionUpdate: function () {
+            this.disableButton('update');
+
+            var self = this;
+
+            var attributes = this.prepareData();
+
+            this.model.set(attributes);
+
+            if (!this.isValid()) {
+                self.notify('Saving...');
+                $.ajax({
+                    url: this.scope + '/action/massUpdate',
+                    type: 'PUT',
+                    data: JSON.stringify({
+                        attributes: attributes,
+                        ids: self.ids || null,
+                        where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
+                        selectData: (!self.ids || self.ids.length == 0) ? self.options.selectData : null,
+                        byWhere: this.byWhere
+                    }),
+                    success: function (result) {
+                        self.trigger('after:update', result);
+                    },
+                    error: function () {
+                        self.notify('Error occurred', 'error');
+                        self.enableButton('update');
+                    }
+                });
+            } else {
+                this.notify('Not valid', 'error');
+                this.enableButton('update');
+            }
+        },
+
+        reset: function () {
+            this.fieldList.forEach(function (field) {
+                this.clearView(field);
+                this.$el.find('.cell[data-name="' + field + '"]').remove();
+            }, this);
+
+            this.fieldList = [];
 
             this.attributeList.forEach(function (field) {
                 this.clearView(field);
@@ -38,9 +168,52 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             }, this);
 
             this.attributeList = [];
+
+            this.model.clear();
+
+            this.$el.find('[data-action="reset"]').addClass('hidden');
+
+            this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');
+            this.$el.find('ul.filter-list').find('li').removeClass('hidden');
+
+            this.disableButton('update');
         },
 
-        selectAttribute() {
+        isValid() {
+            var notValid = false;
+            this.fieldList.forEach(function (field) {
+                var view = this.getView(field);
+                notValid = view.validate() || notValid;
+            }.bind(this));
+
+            this.attributeList.forEach(function (field) {
+                var view = this.getView(field.name);
+                notValid = view.validate() || notValid;
+            }.bind(this));
+
+            return notValid;
+        },
+
+        getWhere() {
+            let where = this.options.where;
+            let cleanWhere = (where) => {
+                where.forEach(wherePart => {
+                    if (['in', 'notIn'].includes(wherePart['type'])) {
+                        if ('value' in wherePart && !(wherePart['value'] ?? []).length) {
+                            delete wherePart['value']
+                        }
+                    }
+
+                    if (['and', 'or'].includes(wherePart['type']) && Array.isArray(wherePart['value'] ?? [])) {
+                        cleanWhere(wherePart['value'] ?? [])
+                    }
+                })
+            };
+            cleanWhere(where);
+            return where;
+        },
+
+        openAttributeListModal() {
             this.notify('Loading...');
 
             this.createView('modal', 'pim:views/product/modals/attributes-for-mass-update', {
@@ -99,7 +272,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
             this.clearView(name);
 
-            let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><div class="pull-right inline-actions"></div><label class="control-label">' + model.get('attributeName') + '</label><div class="field" data-name="' + name + '" /></div>';
+            let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + model.get('attributeName') + '</label><div class="field" data-name="' + name + '" /></div>';
             this.$el.find('.fields-container').append(html);
 
             this.ajaxGetRequest(`Attribute/${model.get('attributeId')}`, null, {async: false}).success(attr => {
@@ -128,7 +301,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                     options.params.extensibleEnumId = attr.extensibleEnumId;
                 }
 
-                if(attr.isMultilang){
+                if (attr.isMultilang) {
                     options.params.multilangLocale = language
                 }
 
@@ -145,10 +318,7 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
                         view.$el.append('<div class="text-muted small">' + name + '</div>');
                     });
 
-                    view.render(() => {
-                        this.initRemoveField(view);
-                        this.enableButton('update');
-                    });
+                    view.render();
 
                     this.notify(false);
                 });
@@ -160,7 +330,11 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
         },
 
         prepareData() {
-            let result = Dep.prototype.prepareData.call(this);
+            var result = {};
+            this.fieldList.forEach(function (field) {
+                var view = this.getView(field);
+                _.extend(result, view.fetch());
+            }.bind(this));
 
             if (this.attributeList.length) {
                 result.panelsData = {
@@ -180,8 +354,8 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
 
                     if (item.attributeType === 'file' || item.attributeType === 'link') {
                         attribute.valueId = data[name + 'Id'];
-                    } else if(item.attributeType === 'linkMultiple'){
-                        attribute.valueIds = data[name+ 'Ids']
+                    } else if (item.attributeType === 'linkMultiple') {
+                        attribute.valueIds = data[name + 'Ids']
                     } else {
                         attribute.value = data[name];
                     }
@@ -205,15 +379,5 @@ Espo.define('pim:views/product/modals/mass-update', 'views/modals/mass-update',
             return result;
         },
 
-        isValid() {
-            let result = Dep.prototype.isValid.call(this);
-
-            this.attributeList.forEach(function (field) {
-                var view = this.getView(field.name);
-                result = view.validate() || result;
-            }.bind(this));
-
-            return result;
-        }
     })
 );
