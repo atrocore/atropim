@@ -500,6 +500,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
         },
 
         buildGroups() {
+            this.collection.reset()
             let areRendered = [];
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
