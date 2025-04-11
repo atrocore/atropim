@@ -3,10 +3,6 @@
     "available-currency": "Währungsliste"
   },
   "labels": {
-    "pim": "PIM",
-    "pimSettings": "Allgemeine Einstellungen"
-  },
-  "descriptions": {
-    "pimSettings": "PIM Systemeinstellungen."
+    "pim": "PIM"
   }
 }

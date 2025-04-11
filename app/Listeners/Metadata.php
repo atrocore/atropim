@@ -23,6 +23,12 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
+        $data['app']['adminPanel']['system']['itemList'][] = [
+            'url'         => '#Admin/moduleSettings/id=pim:views_settings_edit',
+            'label'       => 'pimSettings',
+            'description' => 'pimSettings'
+        ];
+
         // find multilingual attributes
         $multilingualAttributes = [];
         foreach ($data['attributes'] as $attribute => $attributeDefs) {
