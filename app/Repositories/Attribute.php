@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -34,6 +35,90 @@ class Attribute extends Base
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
+    }
+
+    public function addAttributeValue(string $entityName, string $entityId, string $attributeId): void
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $this->getConnection()->createQueryBuilder()
+            ->insert("{$name}_attribute_value")
+            ->setValue('id', ':id')
+            ->setValue('attribute_id', ':attributeId')
+            ->setValue("{$name}_id", ':entityId')
+            ->setParameter('id', Util::generateId())
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
+            ->executeQuery();
+
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => 'Relate',
+            'parentType' => $entityName,
+            'parentId'   => $entityId,
+            'data'       => [
+                'relatedType' => 'Attribute',
+                'relatedId'   => $attributeId,
+                'link'        => lcfirst($entityName) . "AttributeValues"
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($note);
+    }
+
+    public function updateAttributeValue(Entity $entity, string $fieldName, $value): void
+    {
+        $name = Util::toUnderScore(lcfirst($entity->getEntityName()));
+
+        $this->getConnection()->createQueryBuilder()
+            ->update("{$name}_attribute_value")
+            ->set($entity->fields[$fieldName]['column'], ':value')
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->setParameter('attributeId', $entity->fields[$fieldName]['attributeId'])
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('value', $value, Mapper::getParameterType($value))
+            ->executeQuery();
+    }
+
+    public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from("{$name}_attribute_value")
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->andWhere('deleted=:false')
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAssociative();
+
+        if (!empty($res)) {
+            $this->getConnection()->createQueryBuilder()
+                ->delete("{$name}_attribute_value")
+                ->where('attribute_id=:attributeId')
+                ->andWhere("{$name}_id=:entityId")
+                ->setParameter('attributeId', $attributeId)
+                ->setParameter('entityId', $entityId)
+                ->executeQuery();
+
+            $note = $this->getEntityManager()->getEntity('Note');
+            $note->set([
+                'type'       => 'Unrelate',
+                'parentType' => $entityName,
+                'parentId'   => $entityId,
+                'data'       => [
+                    'relatedType' => 'Attribute',
+                    'relatedId'   => $attributeId,
+                    'link'        => lcfirst($entityName) . "AttributeValues"
+                ],
+            ]);
+            $this->getEntityManager()->saveEntity($note);
+        }
+
+        return true;
     }
 
     public function updateSortOrderInAttributeGroup(array $ids): void
@@ -157,7 +242,8 @@ class Attribute extends Base
 
         if (!$entity->isNew() && $entity->isAttributeChanged('pattern') && !empty($pattern = $entity->get('pattern'))) {
             if (!preg_match("/^\/(.*)\/$/", $pattern)) {
-                throw new BadRequest($this->getInjection('language')->translate('regexNotValid', 'exceptions', 'FieldManager'));
+                throw new BadRequest($this->getInjection('language')->translate('regexNotValid', 'exceptions',
+                    'FieldManager'));
             }
 
             $res = $this->getConnection()->createQueryBuilder()
@@ -191,7 +277,8 @@ class Attribute extends Base
             && $entity->get('max') !== null
             && $entity->get('max') < $entity->get('min')
         ) {
-            throw new BadRequest($this->getInjection('language')->translate('maxLessThanMin', 'exceptions', 'Attribute'));
+            throw new BadRequest($this->getInjection('language')->translate('maxLessThanMin', 'exceptions',
+                'Attribute'));
         }
     }
 
@@ -204,9 +291,15 @@ class Attribute extends Base
 
         try {
             if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-                $converterName = $this->getMetadata()->get(['attributes', $entity->getFetched('type'), 'convert', $entity->get('type')]);
+                $converterName = $this->getMetadata()->get([
+                    'attributes',
+                    $entity->getFetched('type'),
+                    'convert',
+                    $entity->get('type')
+                ]);
                 if (empty($converterName)) {
-                    $message = $this->getInjection('language')->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
+                    $message = $this->getInjection('language')->translate('noAttributeConverterFound', 'exceptions',
+                        'Attribute');
                     throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
                 }
                 $this->getInjection('container')->get($converterName)->convert($entity);
