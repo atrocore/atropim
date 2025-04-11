@@ -66,21 +66,11 @@ class Attribute extends Base
             return false;
         }
 
-        $conn = $this->getEntityManager()->getConnection();
-        $name = Util::toUnderScore(lcfirst($entityName));
-
         foreach ($attributes as $attribute) {
             try {
-                $conn->createQueryBuilder()
-                    ->insert("{$name}_attribute_value")
-                    ->setValue('id', ':id')
-                    ->setValue('attribute_id', ':attributeId')
-                    ->setValue("{$name}_id", ':entityId')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('attributeId', $attribute->get('id'))
-                    ->setParameter('entityId', $entityId)
-                    ->executeQuery();
+                $this->getRepository()->addAttributeValue($entityName, $entityId, $attribute->get('id'));
             } catch (UniqueConstraintViolationException $e) {
+                // ignore
             }
         }
 
@@ -89,17 +79,7 @@ class Attribute extends Base
 
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
-        $name = Util::toUnderScore(lcfirst($entityName));
-
-        $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->delete("{$name}_attribute_value")
-            ->where('attribute_id=:attributeId')
-            ->andWhere("{$name}_id=:entityId")
-            ->setParameter('attributeId', $attributeId)
-            ->setParameter('entityId', $entityId)
-            ->executeQuery();
-
-        return true;
+        return $this->getRepository()->removeAttributeValue($entityName, $entityId, $attributeId);
     }
 
     /**

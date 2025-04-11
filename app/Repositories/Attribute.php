@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -34,6 +35,51 @@ class Attribute extends Base
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
+    }
+
+    public function addAttributeValue(string $entityName, string $entityId, string $attributeId): void
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $this->getConnection()->createQueryBuilder()
+            ->insert("{$name}_attribute_value")
+            ->setValue('id', ':id')
+            ->setValue('attribute_id', ':attributeId')
+            ->setValue("{$name}_id", ':entityId')
+            ->setParameter('id', Util::generateId())
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
+            ->executeQuery();
+    }
+
+    public function updateAttributeValue(Entity $entity, string $fieldName, $value): void
+    {
+        $name = Util::toUnderScore(lcfirst($entity->getEntityName()));
+
+        $this->getConnection()->createQueryBuilder()
+            ->update("{$name}_attribute_value")
+            ->set($entity->fields[$fieldName]['column'], ':value')
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->setParameter('attributeId', $entity->fields[$fieldName]['attributeId'])
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('value', $value, Mapper::getParameterType($value))
+            ->executeQuery();
+    }
+
+    public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete("{$name}_attribute_value")
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
+            ->executeQuery();
+
+        return true;
     }
 
     public function updateSortOrderInAttributeGroup(array $ids): void
