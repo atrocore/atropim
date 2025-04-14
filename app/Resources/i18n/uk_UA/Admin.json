@@ -3,10 +3,6 @@
     "available-currency": "Список валют"
   },
   "labels": {
-    "pim": "PIM",
-    "pimSettings": "Загальні налаштування"
-  },
-  "descriptions": {
-    "pimSettings": "PIM налаштування системи"
+    "pim": "PIM"
   }
 }

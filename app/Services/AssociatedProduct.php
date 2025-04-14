@@ -227,7 +227,7 @@ class AssociatedProduct extends Relation
 
     public function removeAssociations($mainProductId, $associationId)
     {
-        if (empty($productId)) {
+        if (empty($mainProductId)) {
             throw new NotFound();
         }
 

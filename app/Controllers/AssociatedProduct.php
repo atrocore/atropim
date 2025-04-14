@@ -20,7 +20,7 @@ class AssociatedProduct extends Relation
 {
     public function actionRemoveFromProduct($params, $data, $request)
     {
-        if (!$request->isPost()) {
+        if (!$request->isPost() && !property_exists($data, 'mainProductId')) {
             throw new BadRequest();
         }
 
@@ -28,6 +28,7 @@ class AssociatedProduct extends Relation
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->removeAssociations((string)$data->productId, (string)$data->associationId);
+        $associationId = property_exists($data, 'associationId') ? (string)$data->associationId : '';
+        return $this->getRecordService()->removeAssociations((string)$data->mainProductId, $associationId);
     }
 }

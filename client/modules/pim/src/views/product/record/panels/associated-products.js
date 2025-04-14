@@ -9,10 +9,11 @@
  */
 
 Espo.define('pim:views/product/record/panels/associated-products',
-    ['views/record/panels/relationship', 'views/record/panels/bottom', 'pim:views/record/panels/records-in-groups'],
-    (Dep, BottomPanel, RecordInGroup) => Dep.extend({
-        groupScope: 'Association',
+    ['pim:views/record/panels/records-in-groups', 'views/record/panels/bottom', 'views/record/panels/relationship'],
+    (Dep, BottomPanel, Relationship) => Dep.extend({
 
+        scope: 'Product',
+        groupScope: 'Association',
         disableSelect: true,
 
         template: 'pim:product/record/panels/associated-main-products',
@@ -21,85 +22,20 @@ Espo.define('pim:views/product/record/panels/associated-products',
 
         groups: [],
 
+        disableCollectionFetch: true,
+
+        getCreateLink() {
+            return 'associatedMainProducts';
+        },
+
         setup() {
-            let bottomPanel = new BottomPanel();
-            bottomPanel.setup.call(this);
+            Dep.prototype.setup.call(this);
 
-            this.link = this.link || this.defs.link || this.panelName;
+            this.defs.recordListView = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list')
 
-            if (!this.scope && !(this.link in this.model.defs.links)) {
-                throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
-            }
-            this.title = this.title || this.translate(this.link, 'links', this.model.name);
-            this.scope = this.scope || this.model.defs.links[this.link].entity;
-            this.layoutName = 'list';
-            if (this.checkAclAction('create')) {
-                this.buttonList.push({
-                    title: 'Create',
-                    action: this.defs.createAction || 'createRelated',
-                    link: 'associatedMainProducts',
-                    acl: 'create',
-                    aclScope: this.scope,
-                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
-                    data: {
-                        link: 'associatedMainProducts',
-                        tabId: this.defs.tabId
-                    }
-                });
-            }
-
-            if (!this.disableDeleteAll && this.checkAclAction('delete')) {
-                this.actionList.push({
-                    label: 'deleteAll',
-                    action: 'deleteAllRelationshipEntities',
-                    data: {
-                        "relationshipScope": this.scope
-                    },
-                    acl: 'delete',
-                    aclScope: this.scope
-                });
-            }
-
-            this.listenTo(this.model, 'after:unrelate', () => {
-                this.actionRefresh();
-            });
-
-            this.listenTo(this.model, 'after:relate', (link) => {
-                if (link === 'associatedMainProducts') {
-                    this.actionRefresh();
-                }
-            });
-
-            this.setupListLayout();
-            this.wait(true);
-
-            this.getCollectionFactory().create(this.scope, collection => {
-                this.collection = collection;
-                this.fetchCollectionGroups(() => this.wait(false));
-            });
-
-            this.listenTo(this, 'after-groupPanels-rendered', () => {
+            this.listenTo(this, 'groups-rendered', () => {
                 setTimeout(() => this.regulateTableSizes(), 500)
             });
-        },
-
-        data() {
-            return _.extend({
-                groups: this.groups,
-                groupScope: this.groupScope
-            }, Dep.prototype.data.call(this));
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            this.buildGroups();
-        },
-
-        actionRefresh() {
-            this.fetchCollectionGroups(() => {
-                this.reRender();
-            })
         },
 
         getModel(data, evt) {
@@ -108,13 +44,35 @@ Espo.define('pim:views/product/record/panels/associated-products',
             return this.getView(key).collection.get(data.cid)
         },
 
-        buildGroups() {
-            if (!this.groups || this.groups.length < 1) {
-                return;
-            }
+        afterGroupRender() {
+            this.groups.forEach(group => {
+                const groupCollection = this.getView(group.key).collection;
+                groupCollection.forEach(item => {
+                    item = item.relationModel
+                    if (this.collection.get(item.get('id'))) {
+                        this.collection.remove(item.get('id'));
+                    }
+                    this.collection.add(item);
+                });
+            })
 
-            let areRendered = [];
-            this.getHelper().layoutManager.get('Product', this.layoutName, 'Product.associatedProducts', null, function (data) {
+            this.collection.total = this.collection.length
+            this.collection.trigger('update-total', this.collection)
+            this.trigger('after-groupPanels-rendered')
+        },
+
+        initGroupCollection(group, groupCollection, callback) {
+            this.getHelper().layoutManager.get('Product', this.layoutName, 'Product.associatedProducts', null, data => {
+                groupCollection.url = this.model.name + '/' + this.model.id + '/' + this.link;
+                groupCollection.collectionOnly = true;
+                groupCollection.maxSize = 999
+                groupCollection.data.whereRelation = [
+                    {
+                        type: 'equals',
+                        attribute: 'associationId',
+                        value: group.id
+                    }
+                ]
                 let list = [];
                 data.layout.forEach(item => {
                     if (item.name) {
@@ -127,66 +85,12 @@ Espo.define('pim:views/product/record/panels/associated-products',
                         }
                     }
                 });
+                groupCollection.data.select = list.join(',')
 
-                this.groups.forEach((group, key) => {
-                    this.getCollectionFactory().create('Product', groupCollection => {
-                        this.initGroupCollection(group, groupCollection, () => {
-                            groupCollection.data.select = list.join(',')
-                            groupCollection.fetch().then(() => {
-                                let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
-                                let options = {
-                                    scope: 'Product',
-                                    collection: groupCollection,
-                                    layoutRelatedScope: 'Product.associatedProducts',
-                                    layoutName: this.layoutName,
-                                    listLayout: this.prepareListLayout(data.layout),
-                                    layoutData: data,
-                                    rowActionsView: 'views/record/row-actions/relationship-no-remove',
-                                    checkboxes: false,
-                                    buttonsDisabled: true,
-                                    showMore: false,
-                                    disableRefreshLayout: true,
-                                    el: `${this.options.el} .group[data-name="${group.key}"] .list-container`,
-                                };
-
-                                this.createView(group.key, viewName, options, view => {
-                                    view.render();
-                                    if (view.isRendered()) {
-                                        areRendered.push(group.key);
-                                        if (areRendered.length === this.groups.length) {
-                                            this.trigger('after-groupPanels-rendered');
-                                        }
-                                    }
-                                    view.once('after:render', () => {
-                                        areRendered.push(group.key);
-                                        if (areRendered.length === this.groups.length) {
-                                            this.trigger('after-groupPanels-rendered');
-                                        }
-                                    })
-                                    view.on('refresh-layout', () => {
-                                        this.actionRefresh()
-                                    })
-                                });
-                            });
-                        });
-                    });
+                groupCollection.fetch().success(() => {
+                    callback();
                 });
-            }.bind(this));
-
-        },
-
-        initGroupCollection(group, groupCollection, callback) {
-            groupCollection.url = this.model.name + '/' + this.model.id + '/' + this.link;
-            groupCollection.collectionOnly = true;
-            groupCollection.maxSize = 999
-            groupCollection.data.whereRelation = [
-                {
-                    type: 'equals',
-                    attribute: 'associationId',
-                    value: group.id
-                }
-            ]
-            callback();
+            })
         },
 
         fetchCollectionGroups(callback) {
@@ -209,43 +113,17 @@ Espo.define('pim:views/product/record/panels/associated-products',
             });
         },
 
-        prepareListLayout(layout) {
-            layout.forEach((v, k) => {
-                layout[k]['notSortable'] = true;
-            });
-
-            return layout;
-        },
-
         deleteEntities(groupId) {
-            const data = {
-                where: [
-                    {
-                        type: "equals",
-                        attribute: "id",
-                        value: this.model.id
-                    }
-                ],
-                foreignWhere: [],
-            }
-            if (groupId) {
-                data.associationId = groupId
-            }
-            $.ajax({
-                url: `${this.model.name}/${this.link}/relation`,
-                data: JSON.stringify(data),
-                type: 'DELETE',
-                contentType: 'application/json',
-                success: function () {
+            const data = {mainProductId: this.model.id}
+            if (groupId) data.associationId = groupId
+            this.ajaxPostRequest(`AssociatedProduct/action/RemoveFromProduct`, data)
+                .done(response => {
                     this.notify(false);
                     this.notify('Removed', 'success');
                     this.model.trigger('after:unrelate');
-                }.bind(this),
-                error: function () {
-                    this.notify('Error occurred', 'error');
-                }.bind(this),
-            })
+                });
         },
+
         actionDeleteAllRelationshipEntities(data) {
             this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {
                 this.notify('Please wait...');
@@ -271,14 +149,6 @@ Espo.define('pim:views/product/record/panels/associated-products',
                 this.notify('removing');
                 this.deleteEntities(group.id)
             }, this);
-        },
-
-        checkAclAction(action) {
-            return this.getAcl().check(this.scope, action);
-        },
-
-        regulateTableSizes() {
-            RecordInGroup.prototype.regulateTableSizes.call(this);
         }
     })
 );

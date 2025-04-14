@@ -23,6 +23,10 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
             }, Dep.prototype.data.call(this));
         },
 
+        getCreateLink() {
+            return this.link;
+        },
+
         setup() {
             let bottomPanel = new BottomPanel();
             bottomPanel.setup.call(this);
@@ -56,12 +60,12 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.buttonList.push({
                     title: 'Create',
                     action: this.defs.createAction || 'createRelated',
-                    link: this.link,
+                    link: this.getCreateLink(),
                     acl: 'create',
                     aclScope: this.scope,
                     html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
                     data: {
-                        link: this.link,
+                        link: this.getCreateLink(),
                         tabId: this.defs.tabId
                     }
                 });
@@ -151,7 +155,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.setFilter(this.filter);
 
                 this.listenTo(this.model, 'change:classificationId update-all after:relate after:unrelate', link => {
-                    if (!link || link === this.link) {
+                    if (!link || link === this.link || link === this.getCreateLink()) {
                         this.getCollectionFactory().create(this.scope, collection => {
                             this.collection = collection;
                             this.actionRefresh();
@@ -209,7 +213,9 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
         },
 
         buildGroups() {
+            this.collection.reset()
             if (!this.groups || this.groups.length < 1) {
+                this.afterGroupRender()
                 return;
             }
             let count = 0;
@@ -231,6 +237,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                             groupName: group.label,
                             groupScope: this.groupScope,
                             hierarchyEnabled: this.hierarchyEnabled,
+                            disableSorting: true,
+                            disableRefreshLayout: true,
                         };
 
                         this.createView(group.key, viewName, options, view => {
@@ -246,6 +254,10 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                                     this.afterGroupRender()
                                     this.trigger('groups-rendered');
                                 }
+
+                                view.on('refresh-layout', () => {
+                                    this.actionRefresh()
+                                })
                             });
                         });
                     });
