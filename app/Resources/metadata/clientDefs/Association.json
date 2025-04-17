@@ -1,6 +1,6 @@
 {
     "controller": "controllers/record",
-    "iconClass": "fas fa-exchange-alt",
+    "iconClass": "pallet",
     "boolFilterList": [
         "onlyMy",
         "notUsedAssociations",

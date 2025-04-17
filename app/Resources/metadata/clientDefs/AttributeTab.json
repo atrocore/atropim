@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "far fa-window-restore",
+  "iconClass": "tab",
   "relationshipPanels": {
     "attributes": {
       "view": "pim:views/attribute-tab/record/panels/attributes"

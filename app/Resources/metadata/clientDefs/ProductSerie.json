@@ -1,6 +1,6 @@
 {
     "controller": "controllers/record",
-    "iconClass": "far fa-newspaper",
+    "iconClass": "shelves",
     "boolFilterList": [
         "onlyMy"
     ],

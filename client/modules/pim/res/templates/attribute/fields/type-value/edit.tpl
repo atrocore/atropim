@@ -2,7 +2,7 @@
     {{#each optionGroups}}
 	<div class="list-group-item" data-index="{{@index}}">
 		<a href="javascript:" class="pull-right remove-icon" data-index="{{@index}}" data-action="removeGroup">
-			<i class="fas fa-times"></i>
+			<svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
 		</a>
 		<div class="option-group">
 			{{#each options}}

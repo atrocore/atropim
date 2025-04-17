@@ -66,24 +66,24 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             const htmlIcons = Dep.prototype.getStatusIcons.call(this, model) || [];
 
             if (model.get('isRequired')) {
-                htmlIcons.push(`<span class="fas fa-sm fa-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></span>`)
+                htmlIcons.push(`<svg class="icon icon-small required-sign pressable-icon" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
             }
 
             if (model.urlRoot === 'ProductAttributeValue') {
                 const isPavValueInherited = model.get('isPavValueInherited');
 
                 if (model.get('isVariantSpecificAttribute')) {
-                    htmlIcons.push(`<span class="fas fa-star fa-sm" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></span>`);
+                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"><use href="client/img/icons/icons.svg#star"></use></svg>`);
                 }
 
                 if (isPavValueInherited === true) {
-                    htmlIcons.push(`<span title="${this.translate('inherited')}" class="fas fa-link fa-sm"></span>`);
+                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
                 } else if (isPavValueInherited === false) {
-                    htmlIcons.push(`<span title="${this.translate('notInherited')}" class="fas fa-unlink fa-sm"></span>`);
+                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('notInherited')}"><use href="client/img/icons/icons.svg#unlink"></use></svg>`);
                 }
 
                 if (model.get('isPavRelationInherited')) {
-                    htmlIcons.push(`<span class="fa fa-sitemap fa-sm" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"></span>`);
+                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"><use href="client/img/icons/icons.svg#sitemap"></use></svg>`);
                 }
             }
 

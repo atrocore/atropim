@@ -1,6 +1,6 @@
 {
     "controller": "controllers/record",
-    "iconClass": "fas fa-percent",
+    "iconClass": "request_quote",
     "boolFilterList": [
         "onlyMy"
     ],

@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "far fa-window-restore",
+  "iconClass": "inbox_text",
   "boolFilterList": [
     "onlyMy",
     "notEntity"

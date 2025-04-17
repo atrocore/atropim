@@ -3,7 +3,7 @@
     "categoryId": "Channel.messages.categoryChangeConfirm"
   },
   "controller": "controllers/record",
-  "iconClass": "fas fa-share-square",
+  "iconClass": "hub",
   "boolFilterList": [
     "onlyMy",
     "notLinkedWithProduct",

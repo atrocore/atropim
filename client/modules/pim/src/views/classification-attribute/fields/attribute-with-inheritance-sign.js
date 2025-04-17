@@ -24,19 +24,20 @@ Espo.define('pim:views/classification-attribute/fields/attribute-with-inheritanc
             iconsContainer.html('');
 
             if (this.model.get('isRequired')) {
-                iconsContainer.append(`<span class="fas fa-sm fa-asterisk required-sign" title="${this.translate('Required')}"></span>`);
+                iconsContainer.append(`<svg class="icon icon-small required-sign" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
             }
 
             let isCaValueInherited = this.model.get('isCaValueInherited');
             if (isCaValueInherited === true) {
-                iconsContainer.append(`<span title="${this.translate('inherited')}" class="fas fa-link fa-sm"></span>`);
+                iconsContainer.append(`<svg class="icon icon-small" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
             } else if (isCaValueInherited === false) {
-                iconsContainer.append(`<span title="${this.translate('notInherited')}" class="fas fa-unlink fa-sm"></span>`);
+                iconsContainer.append(`<svg class="icon icon-small" title="${this.translate('notInherited')}"><use href="client/img/icons/icons.svg#unlink"></use></svg>`);
             }
 
             if (this.model.get('isInherited')) {
-                iconsContainer.append(`<span class="fa fa-sitemap fa-sm" title="${this.translate('inherited')}"></span>`);
+                iconsContainer.append(`<svg class="icon icon-small" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#sitemap"></use></svg>`);
             }
+
         },
 
     })

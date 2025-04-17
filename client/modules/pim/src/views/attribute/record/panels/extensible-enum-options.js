@@ -19,7 +19,7 @@ Espo.define('pim:views/attribute/record/panels/extensible-enum-options', 'views/
             this.buttonList.push({
                 title: 'Create',
                 action: 'createExtensibleEnumOption',
-                html: '<span class="fas fa-plus"></span>'
+                html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>'
             });
 
             this.listenTo(this.model.attributeModel, 'after:save', () => {
