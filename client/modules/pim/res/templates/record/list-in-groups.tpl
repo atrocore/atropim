@@ -29,7 +29,7 @@
                     <th width="{{rowActionsColumnWidth}}" class="context-menu">
                         <div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
+                                <i class="ph ph-caret-down"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="javascript:" class="action" data-action="unlinkGroup" data-id="{{groupId}}">{{translate 'Remove'}}</a></li>

@@ -66,24 +66,24 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             const htmlIcons = Dep.prototype.getStatusIcons.call(this, model) || [];
 
             if (model.get('isRequired')) {
-                htmlIcons.push(`<svg class="icon icon-small required-sign pressable-icon" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
+                htmlIcons.push(`<i class="ph ph-warning required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
             }
 
             if (model.urlRoot === 'ProductAttributeValue') {
                 const isPavValueInherited = model.get('isPavValueInherited');
 
                 if (model.get('isVariantSpecificAttribute')) {
-                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"><use href="client/img/icons/icons.svg#star"></use></svg>`);
+                    htmlIcons.push(`<i class="ph ph-star" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></i>`);
                 }
 
                 if (isPavValueInherited === true) {
-                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
+                    htmlIcons.push(`<i class="ph ph-link-simple-horizontal" title="${this.translate('inherited')}"></i>`);
                 } else if (isPavValueInherited === false) {
-                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('notInherited')}"><use href="client/img/icons/icons.svg#unlink"></use></svg>`);
+                    htmlIcons.push(`<i class="ph ph-link-simple-horizontal-break" title="${this.translate('notInherited')}"></i>`);
                 }
 
                 if (model.get('isPavRelationInherited')) {
-                    htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"><use href="client/img/icons/icons.svg#sitemap"></use></svg>`);
+                    htmlIcons.push(`<i class="ph ph-tree-structure" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"></i>`);
                 }
             }
 
@@ -92,7 +92,7 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
 
         afterRenderStatusIcons(icons, model) {
             if (model.name === 'ProductAttributeValue') {
-                icons.find('span.required-sign').click(() => {
+                icons.find('i.required-sign').click(() => {
                     this.getParentModel().trigger('toggle-required-fields-highlight');
                 });
             }
