@@ -63,7 +63,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                     link: this.getCreateLink(),
                     acl: 'create',
                     aclScope: this.scope,
-                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
+                    html: '<i class="ph ph-plus"></i>',
                     data: {
                         link: this.getCreateLink(),
                         tabId: this.defs.tabId

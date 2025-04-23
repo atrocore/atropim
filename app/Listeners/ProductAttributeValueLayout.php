@@ -20,24 +20,6 @@ use Atro\Listeners\AbstractLayoutListener;
 
 class ProductAttributeValueLayout extends AbstractLayoutListener
 {
-    public function list(Event $event)
-    {
-        if($this->isRelatedLayout($event)){
-            $result = $event->getArgument('result');
-            foreach ($result as &$item) {
-                if (!empty($item['name'])) {
-                    if ($item['name'] === 'attribute') {
-                        $item['view'] = 'pim:views/product-attribute-value/fields/attribute-with-required-sign';
-                    }
-                    if ($item['name'] === 'icons') {
-                        $item['customLabel'] = '';
-                    }
-                }
-            }
-            $event->setArgument('result',  $result);
-        }
-    }
-
     /**
      * @param Event $event
      */

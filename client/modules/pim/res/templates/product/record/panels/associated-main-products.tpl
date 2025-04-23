@@ -7,7 +7,7 @@
             <a href="#{{../groupScope}}/view/{{id}}"><strong>{{label}}</strong></a>
              <div class="pull-right btn-group">
 	            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-	                <span class="caret"></span>
+                    <i class="ph ph-caret-down"></i>
 	            </button>
 	            <ul class="dropdown-menu">
 	                <li><a href="javascript:" class="action" data-action="unlinkGroup" data-id="{{id}}">{{translate 'Remove' }}</a></li>

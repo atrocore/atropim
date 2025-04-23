@@ -2,7 +2,7 @@
     {{#each optionGroups}}
 	<div class="list-group-item" data-index="{{@index}}">
 		<a href="javascript:" class="pull-right remove-icon" data-index="{{@index}}" data-action="removeGroup">
-			<svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+            <i class="ph ph-x"></i>
 		</a>
 		<div class="option-group">
 			{{#each options}}
@@ -15,7 +15,7 @@
 	</div>
     {{/each}}
 </div>
-<a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg></a>
+<a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><i class="ph ph-plus"></i></a>
 <style>
 	.has-error .attribute-type-value .option-group .form-control {
 		border-color: #eaeaea;

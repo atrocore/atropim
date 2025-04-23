@@ -59,7 +59,7 @@ Espo.define('pim:views/record/panels/refresh-after-update-related',  ['views/rec
                         link: this.link,
                         acl: 'create',
                         aclScope: this.scope,
-                        html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
+                        html: '<i class="ph ph-plus"></i>',
                         data: {
                             link: this.link,
                         }
