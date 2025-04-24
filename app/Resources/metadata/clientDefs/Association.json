@@ -1,6 +1,6 @@
 {
     "controller": "controllers/record",
-    "iconClass": "pallet",
+    "iconClass": "shuffle",
     "boolFilterList": [
         "onlyMy",
         "notUsedAssociations",

@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "inbox_text",
+  "iconClass": "book",
   "boolFilterList": [
     "onlyMy",
     "notEntity"
