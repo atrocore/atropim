@@ -354,7 +354,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
 
             this.groups.forEach(group => {
                 let groupView = this.getView(group.key);
-                if (groupView) {
+                if (groupView && typeof groupView.setListMode === 'function') {
                     groupView.setListMode();
                 }
             });
