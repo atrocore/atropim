@@ -343,6 +343,16 @@ class Product extends AbstractSelectManager
                 ],
             ]
         ];
+
+        if(!empty($row['language'])) {
+            $where['value'][] = [
+                'type' => 'equals',
+                'attribute' => 'language',
+                'value' => $row['language']
+            ];
+            unset($row['language']);
+        }
+
         switch ($attribute->get('type')) {
             case 'array':
             case 'extensibleMultiEnum':
