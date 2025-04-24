@@ -15,6 +15,7 @@ namespace Pim\Services;
 
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\LayoutManager;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
@@ -52,7 +53,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'referenceValue'
         ];
 
-    public function getGroupsPavs(string $productId, string $tabId, ?string $language, array $fieldFilter, array $languageFilter, array $scopeFilter): array
+    public function getGroupsPavs(string $productId, string $tabId, ?string $language, array $fieldFilter, ?array $languageFilter, array $scopeFilter): array
     {
         if (empty($productId)) {
             throw new NotFound();
@@ -60,8 +61,26 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
         $this->getPseudoTransactionManager()->runForEntity('Product', $productId);
 
+        $user = $this->getUser();
         if ($language === null) {
-            $language = Language::detectLanguage($this->getConfig(), $this->getInjection('container')->get('user'));
+            $language = Language::detectLanguage($this->getConfig(), $user);
+        }
+
+        if ($languageFilter === null) {
+            $languageFilter = [];
+
+            $mainLocale = $this->getEntityManager()->getEntity('Locale', 'main');
+            $mainLocaleCode = $mainLocale->get('code');
+
+            foreach (LayoutManager::getUserLanguages($this->getUser(), $this->getEntityManager(), $this->getConfig()) as $locale) {
+                if ($locale === $mainLocaleCode) {
+                    $languageFilter[] = 'main';
+                } else {
+                    $languageFilter[] = $locale;
+                }
+            }
+
+            array_unshift($languageFilter, 'unilingual');
         }
 
         $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language, $languageFilter, $scopeFilter);
