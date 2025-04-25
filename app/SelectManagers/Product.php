@@ -16,6 +16,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 use Pim\Entities\Attribute;
@@ -343,6 +344,16 @@ class Product extends AbstractSelectManager
                 ],
             ]
         ];
+
+        if(!empty($row['language'])) {
+            $where['value'][] = [
+                'type' => 'equals',
+                'attribute' => 'language',
+                'value' => $row['language']
+            ];
+            unset($row['language']);
+        }
+
         switch ($attribute->get('type')) {
             case 'array':
             case 'extensibleMultiEnum':
@@ -481,6 +492,20 @@ class Product extends AbstractSelectManager
                 break;
             case 'extensibleEnum':
                 $row['attribute'] = 'referenceValue';
+                if(!empty($row['subQuery'])) {
+                    $foreignEntity = 'ExtensibleEnumOption';
+                    $foreignRepository = $this->getEntityManager()->getRepository($foreignEntity);
+                    $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $row['subQuery']], true, true);
+                    $sp['select'] = ['id'];
+                    $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
+                    $row['value'] = [
+                        "innerSql" => [
+                            "sql"        => str_replace($this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias(), 'sbq_' . Util::generateId(), $qb1->getSql()),
+                            "parameters" => $qb1->getParameters()
+                        ]
+                    ];
+                    unset($row['subQuery']);
+                }
                 $where['value'][] = $row;
                 $where['value'][] = [
                     'type'      => 'equals',
