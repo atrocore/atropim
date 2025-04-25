@@ -31,7 +31,7 @@ class AbstractProductAttributeValue extends AbstractSelectManager
      */
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
-        $includeUniLingualValues = $this->hasIncludeUniLingualValuesBoolFilter($params);
+-        $includeUniLingualValues = $this->hasIncludeUniLingualValuesBoolFilter($params);
         $connection = $this->getEntityManager()->getConnection();
         $uniLangItem = [
             'type'      => 'in',
