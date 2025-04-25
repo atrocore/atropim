@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Atro\Core\Exceptions\Error;
+use Espo\ORM\IEntity;
 
 class Attribute extends Base
 {
@@ -65,19 +67,24 @@ class Attribute extends Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function updateAttributeValue(Entity $entity, string $fieldName, $value): void
+    public function upsertAttributeValue(IEntity $entity, string $fieldName, $value): void
     {
         $name = Util::toUnderScore(lcfirst($entity->getEntityName()));
+        $valColumn = $entity->fields[$fieldName]['column'];
 
-        $this->getConnection()->createQueryBuilder()
-            ->update("{$name}_attribute_value")
-            ->set($entity->fields[$fieldName]['column'], ':value')
-            ->where('attribute_id=:attributeId')
-            ->andWhere("{$name}_id=:entityId")
-            ->setParameter('attributeId', $entity->fields[$fieldName]['attributeId'])
-            ->setParameter('entityId', $entity->id)
-            ->setParameter('value', $value, Mapper::getParameterType($value))
-            ->executeQuery();
+        if (Converter::isPgSQL($this->getConnection())) {
+            $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value) ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";
+        } else {
+            $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value) ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
+        }
+
+        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+        $stmt->execute([
+            ':id'          => Util::generateId(),
+            ':entityId'    => $entity->id,
+            ':attributeId' => $entity->fields[$fieldName]['attributeId'],
+            ':value'       => $value
+        ]);
     }
 
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
