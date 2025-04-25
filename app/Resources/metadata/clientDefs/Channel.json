@@ -3,7 +3,7 @@
     "categoryId": "Channel.messages.categoryChangeConfirm"
   },
   "controller": "controllers/record",
-  "iconClass": "hub",
+  "iconClass": "storefront",
   "boolFilterList": [
     "onlyMy",
     "notLinkedWithProduct",
