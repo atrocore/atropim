@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "tab",
+  "iconClass": "rows",
   "relationshipPanels": {
     "attributes": {
       "view": "pim:views/attribute-tab/record/panels/attributes"

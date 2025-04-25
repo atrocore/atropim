@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "done_all",
+  "iconClass": "list-checks",
   "boolFilterList": [
     "onlyMy",
     "withNotLinkedAttributesToClassification",

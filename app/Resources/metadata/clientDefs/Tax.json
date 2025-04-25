@@ -1,6 +1,6 @@
 {
     "controller": "controllers/record",
-    "iconClass": "request_quote",
+    "iconClass": "percent",
     "boolFilterList": [
         "onlyMy"
     ],

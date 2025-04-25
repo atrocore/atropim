@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "edit_attributes",
+  "iconClass": "check-fat",
   "boolFilterList": [
     "onlyMy",
     "notLinkedWithProduct",
