@@ -51,7 +51,7 @@ Want to know more about AtroPIM functions and its advantages for you? Please, vi
 
 ## Technology
 
-![image](https://github.com/atrocore/atropim/assets/33658481/d6fa31af-54fe-48a8-80bb-f8d05572b765)
+![Architecture and Technologies](_assets/architecture-and-technologies.svg)
 
 Want to know more about AtroPIM technology? Please, visit [our website](http://atropim.com/technology)!
 
