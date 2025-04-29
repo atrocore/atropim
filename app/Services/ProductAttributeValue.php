@@ -69,8 +69,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
         if ($languageFilter === null) {
             $languageFilter = [];
 
-            $mainLocale = $this->getEntityManager()->getEntity('Locale', 'main');
-            $mainLocaleCode = $mainLocale->get('code');
+            $mainLocaleCode = LayoutManager::getSystemMainLocaleCode($this->getConfig());
 
             foreach (LayoutManager::getUserLanguages($this->getUser(), $this->getEntityManager(), $this->getConfig()) as $locale) {
                 if ($locale === $mainLocaleCode) {
