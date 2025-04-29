@@ -9,6 +9,9 @@
     "name": "children"
   },
   {
+    "name": "compositeAttributes"
+  },
+  {
     "name": "productAttributeValues"
   }
 ]

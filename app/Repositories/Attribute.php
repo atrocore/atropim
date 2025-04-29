@@ -207,6 +207,12 @@ class Attribute extends Base
             $entity->set('sortOrder', $max + 10);
         }
 
+        if (!empty($entity->get('compositeId'))) {
+            $composite = $this->get($entity->get('compositeId'));
+            if (empty($composite) || $composite->get('type') !== 'composite') {
+                throw new BadRequest($this->exception('compositeAttributeNotFound'));
+            }
+        }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
             $qb = $this->getConnection()->createQueryBuilder();
