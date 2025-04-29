@@ -207,21 +207,21 @@ class Attribute extends Base
             $entity->set('sortOrder', $max + 10);
         }
 
-        if (!empty($entity->get('compositeId'))) {
-            if ($entity->get('compositeId') === $entity->get('id')) {
+        if (!empty($entity->get('compositeAttributeId'))) {
+            if ($entity->get('compositeAttributeId') === $entity->get('id')) {
                 throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
             }
 
-            $composite = $this->get($entity->get('compositeId'));
+            $composite = $this->get($entity->get('compositeAttributeId'));
             if (empty($composite) || $composite->get('type') !== 'composite') {
                 throw new BadRequest($this->exception('compositeAttributeNotFound'));
             }
 
-            while (!empty($composite->get('compositeId'))) {
+            while (!empty($composite->get('compositeAttributeId'))) {
                 if ($composite->get('id') === $entity->get('id')) {
                     throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
                 }
-                $composite = $this->get($composite->get('compositeId'));
+                $composite = $this->get($composite->get('compositeAttributeId'));
             }
         }
 
