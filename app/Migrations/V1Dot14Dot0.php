@@ -24,8 +24,8 @@ class V1Dot14Dot0 extends Base
 
     public function up(): void
     {
-        $this->exec("ALTER TABLE attribute ADD composite_id VARCHAR(36) DEFAULT NULL");
-        $this->exec("CREATE INDEX IDX_ATTRIBUTE_COMPOSITE_ID ON attribute (composite_id, deleted)");
+        $this->exec("ALTER TABLE attribute ADD composite_attribute_id VARCHAR(36) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_ATTRIBUTE_COMPOSITE_ATTRIBUTE_ID ON attribute (composite_attribute_id, deleted)");
     }
 
     protected function exec(string $query): void

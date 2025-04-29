@@ -1,9 +1,7 @@
 {
   "fields": {
-    "composite": "Composite",
-    "compositeAttributes": "Composite Attributes",
-    "parents": "Associating Attributes",
-    "children": "Associated Attributes",
+    "compositeAttribute": "Composite Attribute",
+    "nestedAttributes": "Nested Attributes",
     "attributeGroup": "Attribute Group",
     "attributeTab": "Attribute Tab",
     "type": "Attribute Type",
@@ -84,6 +82,7 @@
   },
   "exceptions": {
     "compositeAttributeNotFound": "Composite attribute not found.",
+    "compositeAttributeCannotBeChild": "Composite attribute cannot be child.",
     "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",
     "maxLessThanMin": "Min should be less than Max.",
     "noAttributeConverterFound": "Attribute converting from type '%s' to '%s' is impossible.",

@@ -208,9 +208,20 @@ class Attribute extends Base
         }
 
         if (!empty($entity->get('compositeId'))) {
+            if ($entity->get('compositeId') === $entity->get('id')) {
+                throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
+            }
+
             $composite = $this->get($entity->get('compositeId'));
             if (empty($composite) || $composite->get('type') !== 'composite') {
                 throw new BadRequest($this->exception('compositeAttributeNotFound'));
+            }
+
+            while (!empty($composite->get('compositeId'))) {
+                if ($composite->get('id') === $entity->get('id')) {
+                    throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
+                }
+                $composite = $this->get($composite->get('compositeId'));
             }
         }
 

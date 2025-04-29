@@ -69,10 +69,10 @@
       "tooltip": false,
       "view": "pim:views/attribute/fields/type"
     },
-    "composite": {
+    "compositeAttribute": {
       "type": "link"
     },
-    "compositeAttributes": {
+    "nestedAttributes": {
       "type": "linkMultiple"
     },
     "fileType": {
@@ -286,14 +286,14 @@
       "relationName": "EntityTeam",
       "layoutRelationshipsDisabled": true
     },
-    "composite": {
+    "compositeAttribute": {
       "type": "belongsTo",
-      "foreign": "compositeAttributes",
+      "foreign": "nestedAttributes",
       "entity": "Attribute"
     },
-    "compositeAttributes": {
+    "nestedAttributes": {
       "type": "hasMany",
-      "foreign": "composite",
+      "foreign": "compositeAttribute",
       "entity": "Attribute"
     },
     "attributeGroup": {
