@@ -70,7 +70,8 @@
       "view": "pim:views/attribute/fields/type"
     },
     "compositeAttribute": {
-      "type": "link"
+      "type": "link",
+      "view": "pim:views/attribute/fields/composite-attribute"
     },
     "nestedAttributes": {
       "type": "linkMultiple"

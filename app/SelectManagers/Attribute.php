@@ -11,6 +11,7 @@
 
 namespace Pim\SelectManagers;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
@@ -32,6 +33,60 @@ class Attribute extends AbstractSelectManager
         parent::applyAdditional($result, $params);
 
         $result['callbacks'][] = [$this, 'filterByType'];
+    }
+
+    protected function boolFilterNotParentCompositeAttribute(array &$result): void
+    {
+        $attributeId = (string)$this->getSelectCondition('notParentCompositeAttribute');
+        if (empty($attributeId)) {
+            return;
+        }
+
+        $ids = [$attributeId];
+        $this->prepareAllParentsCompositeAttributesIds($attributeId, $ids);
+
+        $result['whereClause'][] = [
+            'id!=' => $ids
+        ];
+    }
+
+    protected function prepareAllParentsCompositeAttributesIds(string $attributeId, array &$ids = []): void
+    {
+        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
+        if (!empty(!empty($attribute->get('compositeAttributeId')))) {
+            $ids[] = $attribute->get('compositeAttributeId');
+            $this->prepareAllParentsCompositeAttributesIds($attribute->get('compositeAttributeId'), $ids);
+        }
+    }
+
+    protected function boolFilterNotChildCompositeAttribute(array &$result): void
+    {
+        $attributeId = (string)$this->getSelectCondition('notChildCompositeAttribute');
+        if (empty($attributeId)) {
+            return;
+        }
+
+        $ids = [$attributeId];
+        $this->prepareAllChildrenCompositeAttributesIds($attributeId, $ids);
+
+        $result['whereClause'][] = [
+            'id!=' => $ids
+        ];
+    }
+
+    protected function prepareAllChildrenCompositeAttributesIds(string $attributeId, array &$ids = []): void
+    {
+        $children = $this->getEntityManager()->getRepository('Attribute')
+            ->where([
+                'compositeAttributeId' => $attributeId,
+                'type'                 => 'composite'
+            ])
+            ->find();
+
+        foreach ($children as $child) {
+            $ids[] = $child->get('id');
+            $this->prepareAllChildrenCompositeAttributesIds($child->get('id'), $ids);
+        }
     }
 
     /**

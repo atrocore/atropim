@@ -8,23 +8,16 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/attribute/record/panels/nested-attributes', 'views/record/panels/relationship',
+Espo.define('pim:views/attribute/fields/composite-attribute', 'views/fields/link',
     Dep => Dep.extend({
 
+        selectBoolFilterList:  ['notChildCompositeAttribute'],
+
         boolFilterData: {
-            notParentCompositeAttribute: function () {
+            notChildCompositeAttribute: function () {
                 return this.model.id;
             }
         },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            this.$el.parent().hide();
-            if (this.model.get('type') === 'composite') {
-                this.$el.parent().show();
-            }
-        }
 
     })
 );
