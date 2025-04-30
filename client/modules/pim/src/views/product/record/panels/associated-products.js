@@ -80,6 +80,18 @@ Espo.define('pim:views/product/record/panels/associated-products',
                         let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'type']);
                         if (fieldType) {
                             this.getFieldManager().getAttributeList(fieldType, field).forEach(attribute => {
+                                if (fieldType === 'link' || fieldType === 'linkMultiple') {
+                                    const foreignEntity = this.getMetadata().get(['entityDefs', 'Product', 'links', field, 'entity']);
+                                    let foreignName = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'foreignName']);
+                                    if (foreignEntity && this.getMetadata().get(['entityDefs', foreignEntity, 'fields', 'name'])) {
+                                        foreignName = 'name';
+                                    }
+
+                                    if (!foreignName && (attribute.endsWith('Name') || attribute.endsWith('Names'))) {
+                                        return;
+                                    }
+                                }
+
                                 list.push(attribute);
                             });
                         }
