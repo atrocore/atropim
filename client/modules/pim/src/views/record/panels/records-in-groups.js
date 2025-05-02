@@ -178,6 +178,10 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.wait(false);
             });
 
+            this.listenTo(window.Backbone, 'change:disabled-languages', () => {
+                this.actionRefresh()
+            })
+
             this.editableFields = ['value'];
         },
         afterRender() {
@@ -239,6 +243,7 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                             hierarchyEnabled: this.hierarchyEnabled,
                             disableSorting: true,
                             disableRefreshLayout: true,
+                            disableRefreshOnLanguageChange: true,
                         };
 
                         this.createView(group.key, viewName, options, view => {
