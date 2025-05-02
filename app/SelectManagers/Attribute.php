@@ -43,20 +43,11 @@ class Attribute extends AbstractSelectManager
         }
 
         $ids = [$attributeId];
-        $this->prepareAllParentsCompositeAttributesIds($attributeId, $ids);
+        $this->getEntityManager()->getRepository('Attribute')->prepareAllParentsCompositeAttributesIds($attributeId, $ids);
 
         $result['whereClause'][] = [
             'id!=' => $ids
         ];
-    }
-
-    protected function prepareAllParentsCompositeAttributesIds(string $attributeId, array &$ids = []): void
-    {
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
-        if (!empty(!empty($attribute->get('compositeAttributeId')))) {
-            $ids[] = $attribute->get('compositeAttributeId');
-            $this->prepareAllParentsCompositeAttributesIds($attribute->get('compositeAttributeId'), $ids);
-        }
     }
 
     protected function boolFilterNotChildCompositeAttribute(array &$result): void
@@ -67,26 +58,11 @@ class Attribute extends AbstractSelectManager
         }
 
         $ids = [$attributeId];
-        $this->prepareAllChildrenCompositeAttributesIds($attributeId, $ids);
+        $this->getEntityManager()->getRepository('Attribute')->prepareAllChildrenCompositeAttributesIds($attributeId, $ids);
 
         $result['whereClause'][] = [
             'id!=' => $ids
         ];
-    }
-
-    protected function prepareAllChildrenCompositeAttributesIds(string $attributeId, array &$ids = []): void
-    {
-        $children = $this->getEntityManager()->getRepository('Attribute')
-            ->where([
-                'compositeAttributeId' => $attributeId,
-                'type'                 => 'composite'
-            ])
-            ->find();
-
-        foreach ($children as $child) {
-            $ids[] = $child->get('id');
-            $this->prepareAllChildrenCompositeAttributesIds($child->get('id'), $ids);
-        }
     }
 
     /**

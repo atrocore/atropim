@@ -72,6 +72,20 @@ class Attribute extends Base
             } catch (UniqueConstraintViolationException $e) {
                 // ignore
             }
+
+            if ($attribute->get('type') === 'composite') {
+                $childrenIds = [];
+                $this
+                    ->getRepository()
+                    ->prepareAllChildrenAttributesIdsForComposite($attribute->get('id'), $childrenIds);
+                foreach ($childrenIds as $childId) {
+                    try {
+                        $this->getRepository()->addAttributeValue($entityName, $entityId, $childId);
+                    } catch (UniqueConstraintViolationException $e) {
+                        // ignore
+                    }
+                }
+            }
         }
 
         return true;
@@ -79,6 +93,19 @@ class Attribute extends Base
 
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
+        $attribute = $this->getRepository()->get($attributeId);
+        if (!empty($attribute)) {
+            if ($attribute->get('type') === 'composite') {
+                $childrenIds = [];
+                $this
+                    ->getRepository()
+                    ->prepareAllChildrenAttributesIdsForComposite($attribute->get('id'), $childrenIds);
+                foreach ($childrenIds as $childId) {
+                    $this->getRepository()->removeAttributeValue($entityName, $entityId, $childId);
+                }
+            }
+        }
+
         return $this->getRepository()->removeAttributeValue($entityName, $entityId, $attributeId);
     }
 
