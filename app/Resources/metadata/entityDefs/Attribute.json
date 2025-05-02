@@ -69,6 +69,13 @@
       "tooltip": false,
       "view": "pim:views/attribute/fields/type"
     },
+    "compositeAttribute": {
+      "type": "link",
+      "view": "pim:views/attribute/fields/composite-attribute"
+    },
+    "nestedAttributes": {
+      "type": "linkMultiple"
+    },
     "fileType": {
       "type": "link",
       "required": false,
@@ -83,7 +90,6 @@
     "productAttributeValues": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": false,
@@ -95,7 +101,6 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
@@ -147,9 +152,7 @@
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
@@ -203,9 +206,7 @@
       "isMultilang": true,
       "trim": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
@@ -244,9 +245,7 @@
       "type": "bool",
       "notStorable": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
@@ -287,6 +286,16 @@
       "entity": "Team",
       "relationName": "EntityTeam",
       "layoutRelationshipsDisabled": true
+    },
+    "compositeAttribute": {
+      "type": "belongsTo",
+      "foreign": "nestedAttributes",
+      "entity": "Attribute"
+    },
+    "nestedAttributes": {
+      "type": "hasMany",
+      "foreign": "compositeAttribute",
+      "entity": "Attribute"
     },
     "attributeGroup": {
       "type": "belongsTo",

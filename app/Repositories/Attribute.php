@@ -34,6 +34,44 @@ class Attribute extends Base
         $this->addDependency('container');
     }
 
+    public function prepareAllParentsCompositeAttributesIds(string $attributeId, array &$ids = []): void
+    {
+        $attribute = $this->get($attributeId);
+        if (!empty(!empty($attribute->get('compositeAttributeId')))) {
+            $ids[] = $attribute->get('compositeAttributeId');
+            $this->prepareAllParentsCompositeAttributesIds($attribute->get('compositeAttributeId'), $ids);
+        }
+    }
+
+    public function prepareAllChildrenCompositeAttributesIds(string $attributeId, array &$ids = []): void
+    {
+        $children = $this
+            ->where([
+                'compositeAttributeId' => $attributeId,
+                'type'                 => 'composite'
+            ])
+            ->find();
+
+        foreach ($children as $child) {
+            $ids[] = $child->get('id');
+            $this->prepareAllChildrenCompositeAttributesIds($child->get('id'), $ids);
+        }
+    }
+
+    public function prepareAllChildrenAttributesIdsForComposite(string $attributeId, array &$ids = []): void
+    {
+        $children = $this
+            ->where(['compositeAttributeId' => $attributeId])
+            ->find();
+
+        foreach ($children as $child) {
+            $ids[] = $child->get('id');
+            if ($child->get('type') === 'composite') {
+                $this->prepareAllChildrenAttributesIdsForComposite($child->get('id'), $ids);
+            }
+        }
+    }
+
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
@@ -207,6 +245,23 @@ class Attribute extends Base
             $entity->set('sortOrder', $max + 10);
         }
 
+        if (!empty($entity->get('compositeAttributeId'))) {
+            if ($entity->get('compositeAttributeId') === $entity->get('id')) {
+                throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
+            }
+
+            $composite = $this->get($entity->get('compositeAttributeId'));
+            if (empty($composite) || $composite->get('type') !== 'composite') {
+                throw new BadRequest($this->exception('compositeAttributeNotFound'));
+            }
+
+            while (!empty($composite->get('compositeAttributeId'))) {
+                if ($composite->get('id') === $entity->get('id')) {
+                    throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
+                }
+                $composite = $this->get($composite->get('compositeAttributeId'));
+            }
+        }
 
         if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
             $qb = $this->getConnection()->createQueryBuilder();

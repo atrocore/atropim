@@ -144,6 +144,12 @@
           "name": "htmlSanitizer"
         },
         false
+      ],
+      [
+        {
+          "name": "compositeAttribute"
+        },
+        false
       ]
     ]
   }

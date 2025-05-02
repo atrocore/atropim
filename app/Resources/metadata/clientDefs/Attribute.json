@@ -5,14 +5,14 @@
     "onlyMy",
     "notLinkedWithProduct",
     "fromAttributesTab",
-    "notParents",
-    "notChildren"
+    "notParentCompositeAttribute",
+    "notChildCompositeAttribute"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "fromAttributesTab",
-    "notParents",
-    "notChildren"
+    "notParentCompositeAttribute",
+    "notChildCompositeAttribute"
   ],
   "disabledMassActions": [
     "merge"
@@ -47,6 +47,12 @@
       "select": false,
       "rowActionsView": "views/record/row-actions/relationship-no-unlink",
       "layout": "listInAttribute"
+    },
+    "nestedAttributes": {
+      "selectBoolFilterList": [
+        "notParentCompositeAttribute"
+      ],
+      "view": "pim:views/attribute/record/panels/nested-attributes"
     }
   },
   "dynamicLogic": {
@@ -326,7 +332,8 @@
               ]
             }
           ]
-        }}
+        }
+      }
     }
   }
 }

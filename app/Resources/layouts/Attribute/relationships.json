@@ -9,6 +9,9 @@
     "name": "children"
   },
   {
+    "name": "nestedAttributes"
+  },
+  {
     "name": "productAttributeValues"
   }
 ]
