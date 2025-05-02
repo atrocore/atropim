@@ -15,11 +15,11 @@ namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot14Dot0 extends Base
+class V1Dot14Dot1 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-04-30 12:00:00');
+        return new \DateTime('2025-05-02 12:00:00');
     }
 
     public function up(): void
