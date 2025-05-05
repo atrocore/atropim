@@ -6,45 +6,44 @@ GitHub mirror: https://github.com/atrocore/atropim
 
 > This repository is hosted by GitLab, we use GitHub to host its mirror. 
 
+This repository contains source code for a PIM module for the AtroCore Data Platform.
 
 ## What Is AtroPIM?
 
-![anne](_assets/atropim-banner.png)
+![Banner](_assets/atropim-banner.png)
 
-AtroPIM is an [open-source product information management system (PIM)](https://atropim.com), which is based on [AtroCore](https://github.com/atrocore/atrocore) software platform. 
-
-AtroPIM is a single page application (SPA) with an API-centric architecture. It has a flexible data model based on entities, entity attributes and relations of all kinds among them. AtroPIM allows you to gather and store all your product content in one place, enrich it and spread it to several channels like own online shop, amazon, eBay, online shops of your distributors, on a tablet or mobile application. AtroPIM will help you to structure and organize all your flexible data and get rid of excel mess. 
+AtroPIM is an [open-source product information management system (PIM)](https://atropim.com).
+AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
 ## What Are the Advantages of AtroPIM?
 
-- Many out-of-the-box features;
-- Free – 100% open source, licensed under GPLv3;
-- REST API;
-- Responsive and user friendly UI;
-- Configurable (entities, relations, layouts, labels, navigation, dashboards);
-- Extensible with modules;
-- Includes the advantages of [AtroCore](https://github.com/atrocore/atrocore).
+- Scalable
+- Highly configurable out of the box
+- REST API for everything incl. your custom data model
+- User-friendly and mobile-friendly
+- Configurable "everything" (entities, relations, fields, layouts, notifications, labels, navigation, dashboards, etc.)
+- Extensible with modules
+- ... and other advantages of [AtroCore](https://github.com/atrocore/atrocore).
 
 ## How Does It Work?
 
 AtroPIM is an effective solution for storing, processing and managing your product information. All product data are extracted from different sources, classified, translated and enriched. AtroPIM helps you publish the relevant data on different sales channels with minimum efforts. 
 
-![unctions_banne](_assets/how_it_works_scheme__en.png)
+![Functions_banner](_assets/how_it_works_scheme__en.png)
 
 ## Features
 
 AtroPIM comes with a lot of features directly out of the box, including:
 
-- associations;
-- measuring units;
-- channels;
-- catalogs;
-- category trees and categories;
-- classifications;
-- product series;
-- products;
-- attribute groups and attributes;
-- product and category images;  
+- All AtroCore's features plus management of:
+- Products
+- Associated Products
+- Channels
+- Category Trees
+- Classifications
+- Product Series
+- Products
+- Product and Category Images
 - and much more.
 
 Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](http://atropim.com).
