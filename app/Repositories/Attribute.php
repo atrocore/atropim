@@ -117,12 +117,18 @@ class Attribute extends Base
         }
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
-        $stmt->execute([
-            ':id'          => Util::generateId(),
-            ':entityId'    => $entity->id,
-            ':attributeId' => $entity->fields[$fieldName]['attributeId'],
-            ':value'       => $value
-        ]);
+
+        $stmt->bindValue(':id', Util::generateId());
+        $stmt->bindValue(':entityId', $entity->id);
+        $stmt->bindValue(':attributeId', $entity->fields[$fieldName]['attributeId']);
+
+        if ($entity->fields[$fieldName]['type'] === 'bool') {
+            $stmt->bindValue(':value', $value, \PDO::PARAM_BOOL);
+        } else {
+            $stmt->bindValue(':value', $value);
+        }
+
+        $stmt->execute();
     }
 
     public function hasAttributeValue(string $entityName, string $entityId, string $attributeId): bool
