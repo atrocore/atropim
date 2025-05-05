@@ -58,7 +58,7 @@ AtroPIM has a REST API and can be integrated with any third-party system, channe
 
 We offer the following native paid integrations:
 
-- Any channel manager: Channable, ChannelPilot, ChannelAdvisor and others
+- Multichannel tools: Channable, ChannelPilot, ChannelAdvisor and others
 - ERPs: Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
 - Marketplaces: Amazon, Otto
 - E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
