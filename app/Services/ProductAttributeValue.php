@@ -770,12 +770,9 @@ class ProductAttributeValue extends AbstractProductAttributeService
 
             $this->getRepository()->prepareAttributeData($attribute, $entity, $classificationAttribute);
 
-            $entity->set('isPavRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
-            if (!$entity->get('isPavRelationInherited')) {
-                $entity->set('isPavRelationInherited', !empty($classificationAttribute));
-            }
+            $entity->set('isPavRelationInherited', !empty($classificationAttribute));
 
-            if ($entity->get('isPavRelationInherited')) {
+            if ($this->getRepository()->isPavRelationInherited($entity)) {
                 $entity->set('isPavValueInherited', $this->getRepository()->isPavValueInherited($entity));
             }
         }
