@@ -1,4 +1,4 @@
-![Logo](_assets/atropim-logo.svg)
+<img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48"><br><br>
 
 This repository is hosted on: https://gitlab.atrocore.com/atrocore/atropim
 
