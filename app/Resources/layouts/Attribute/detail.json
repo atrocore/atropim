@@ -8,8 +8,14 @@
           "name": "type"
         },
         {
-          "name": "fileType"
+          "name": "entity"
         }
+      ],
+      [
+        {
+          "name": "fileType"
+        },
+        false
       ],
       [
         {

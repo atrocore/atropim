@@ -55,6 +55,11 @@
     "extensibleEnum": {
       "type": "link"
     },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true
+    },
     "code": {
       "type": "varchar",
       "unique": true

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "entity": "Entity",
     "compositeAttribute": "Composite Attribute",
     "nestedAttributes": "Nested Attributes",
     "attributeGroup": "Attribute Group",

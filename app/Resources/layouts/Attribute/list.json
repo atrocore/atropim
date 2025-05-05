@@ -4,16 +4,13 @@
     "link": true
   },
   {
-    "name": "code"
-  },
-  {
-    "name": "attributeGroup"
-  },
-  {
-    "name": "attributeTab"
+    "name": "entity"
   },
   {
     "name": "type"
+  },
+  {
+    "name": "code"
   },
   {
     "name": "isMultilang"
