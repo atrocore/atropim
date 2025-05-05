@@ -61,7 +61,7 @@ We offer the following native paid integrations:
 - Any channel manager: Channable, ChannelPilot, ChannelAdvisor and others
 - ERPs: Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
 - Marketplaces: Amazon, Otto
-- E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others
+- E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
 
 Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
 
