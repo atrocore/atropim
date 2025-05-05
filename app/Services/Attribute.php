@@ -94,6 +94,15 @@ class Attribute extends Base
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
         $attribute = $this->getRepository()->get($attributeId);
+
+        if (
+            !empty($compositeAttribute = $attribute->get('compositeAttribute'))
+            && $attribute->get('type') !== 'composite'
+            && $this->getRepository()->hasAttributeValue($entityName, $entityId, $compositeAttribute->get('id'))
+        ) {
+            throw new BadRequest('Nested attribute cannot be deleted.');
+        }
+
         if (!empty($attribute)) {
             if ($attribute->get('type') === 'composite') {
                 $childrenIds = [];

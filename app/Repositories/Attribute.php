@@ -125,6 +125,24 @@ class Attribute extends Base
         ]);
     }
 
+    public function hasAttributeValue(string $entityName, string $entityId, string $attributeId): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from("{$name}_attribute_value")
+            ->where('attribute_id=:attributeId')
+            ->andWhere("{$name}_id=:entityId")
+            ->andWhere('deleted=:false')
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAssociative();
+
+        return !empty($res);
+    }
+
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
         $name = Util::toUnderScore(lcfirst($entityName));
