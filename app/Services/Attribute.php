@@ -97,7 +97,6 @@ class Attribute extends Base
 
         if (
             !empty($compositeAttribute = $attribute->get('compositeAttribute'))
-            && $attribute->get('type') !== 'composite'
             && $this->getRepository()->hasAttributeValue($entityName, $entityId, $compositeAttribute->get('id'))
         ) {
             throw new BadRequest('Nested attribute cannot be deleted.');
