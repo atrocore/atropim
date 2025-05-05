@@ -11,7 +11,7 @@ GitHub mirror: https://github.com/atrocore/atropim
 
 ![anne](_assets/atropim-banner.png)
 
-AtroPIM is an [open-source product information management system (PIM)](https://atropim.com), which is based on [AtroCore](https://github.com/atrocore/atrocore) software platform. AtroPIM (as well as AtroCore) is distributed under GPLv3 License and is free. It has a lot of features right out-of-the-box and thus is an excellent tool for cost-effective and timely application development.
+AtroPIM is an [open-source product information management system (PIM)](https://atropim.com), which is based on [AtroCore](https://github.com/atrocore/atrocore) software platform. 
 
 AtroPIM is a single page application (SPA) with an API-centric architecture. It has a flexible data model based on entities, entity attributes and relations of all kinds among them. AtroPIM allows you to gather and store all your product content in one place, enrich it and spread it to several channels like own online shop, amazon, eBay, online shops of your distributors, on a tablet or mobile application. AtroPIM will help you to structure and organize all your flexible data and get rid of excel mess. 
 
@@ -53,25 +53,20 @@ Want to know more about AtroPIM functions and its advantages for you? Please, vi
 
 ![Architecture and Technologies](_assets/architecture-and-technologies.svg)
 
-Want to know more about AtroPIM technology? Please, visit [our website](http://atropim.com/technology)!
-
 ## Integrations
 
 AtroPIM has a REST API and can be integrated with any third-party system, channel or marketplace. 
 
-We offer the following paid integrations:
+We offer the following native paid integrations:
 
-- Data synchronisation with over 2000 Channels via channable.com
-- ODOO
-- SAP Business One,
-- Microsoft Business Central
-- Magento 2
-- Magento 1
-- Shopware 6
-- Shopify
-- and others.
+- Any channel manager: Channable, ChannelPilot, ChannelAdvisor and others
+- ERPs: Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
+- Marketplaces: Amazon, Otto
+- E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others
 
-Please [contact us](https://atropim.com/contact), if you want to know more.
+Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
+
+Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 
 ### Requirements
@@ -88,6 +83,7 @@ Please [contact us](https://atropim.com/contact), if you want to know more.
 Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ### Demo
+
 - URL: https://demo.atropim.com/
 - Login: admin
 - Password: admin
