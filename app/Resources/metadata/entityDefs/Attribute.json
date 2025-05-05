@@ -58,7 +58,8 @@
     "entity": {
       "type": "link",
       "entity": "Entity",
-      "required": true
+      "required": true,
+      "view": "pim:views/attribute/fields/entity"
     },
     "code": {
       "type": "varchar",
