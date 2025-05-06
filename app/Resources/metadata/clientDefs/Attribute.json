@@ -6,13 +6,15 @@
     "notLinkedWithProduct",
     "fromAttributesTab",
     "notParentCompositeAttribute",
-    "notChildCompositeAttribute"
+    "notChildCompositeAttribute",
+    "onlyForEntity"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "fromAttributesTab",
     "notParentCompositeAttribute",
-    "notChildCompositeAttribute"
+    "notChildCompositeAttribute",
+    "onlyForEntity"
   ],
   "disabledMassActions": [
     "merge"
