@@ -183,6 +183,10 @@ class Attribute extends Base
                 $entity->set('htmlSanitizerName', $htmlSanitizer->get('name'));
             }
         }
+
+        if ($entity->get('fullWidth') === null) {
+            $entity->set('fullWidth', in_array($entity->get('type'), ['wysiwyg', 'markdown', 'text', 'composite']));
+        }
     }
 
     /**

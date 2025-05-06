@@ -258,6 +258,17 @@
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true
+    },
+    "fullWidth": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "layoutListDisabled": true,
+      "default": false,
+      "emHidden": true,
+      "view": "pim:views/attribute/fields/full-width"
     }
   },
   "links": {
