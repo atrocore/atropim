@@ -21,6 +21,6 @@
   "inheritedRelations": [
     "classificationAttributes"
   ],
-  "disabledAttributes": true,
-  "hideDisabledAttributes": true
+  "attributesDisabled": true,
+  "hideAttributesDisabled": true
 }
