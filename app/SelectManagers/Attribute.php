@@ -51,6 +51,21 @@ class Attribute extends AbstractSelectManager
         ];
     }
 
+    protected function boolFilterOnlyCompositeAttributes(array &$result): void
+    {
+        $attributeId = (string)$this->getSelectCondition('onlyCompositeAttributes');
+
+        $result['whereClause'][] = [
+            'type=' => 'composite'
+        ];
+
+        if(!empty($attributeId)) {
+            $result['whereClause'][] = [
+                'id!=' => $attributeId,
+            ];
+        }
+    }
+
     protected function boolFilterNotParentCompositeAttribute(array &$result): void
     {
         $attributeId = (string)$this->getSelectCondition('notParentCompositeAttribute');
