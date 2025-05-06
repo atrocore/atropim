@@ -1,7 +1,9 @@
 {
   "fields": {
-    "hasAttribute": {
-      "type": "bool"
+    "attributesDisabled": {
+      "type": "bool",
+      "tooltip": true,
+      "view": "pim:views/entity/fields/attributes-disabled"
     }
   }
 }
