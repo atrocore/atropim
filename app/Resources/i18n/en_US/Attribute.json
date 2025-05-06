@@ -82,6 +82,8 @@
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },
   "exceptions": {
+    "attributeNotBelongToEntity": "Attribute does not belong to this Entity.",
+    "entityCannotBeChanged": "Entity cannot be changed.",
     "compositeAttributeNotFound": "Composite attribute not found.",
     "compositeAttributeCannotBeChild": "Composite attribute cannot be child.",
     "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",

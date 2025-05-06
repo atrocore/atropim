@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
@@ -79,6 +80,15 @@ class Attribute extends Base
 
     public function addAttributeValue(string $entityName, string $entityId, string $attributeId): void
     {
+        $attribute = $this->get($attributeId);
+        if (empty($attribute)) {
+            throw new NotFound();
+        }
+
+        if ($attribute->get('entityId') !== $entityName) {
+            throw new BadRequest($this->exception('attributeNotBelongToEntity'));
+        }
+
         $name = Util::toUnderScore(lcfirst($entityName));
 
         $this->getConnection()->createQueryBuilder()
@@ -250,6 +260,10 @@ class Attribute extends Base
     {
         if ($entity->get('code') === '') {
             $entity->set('code', null);
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
+            throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {

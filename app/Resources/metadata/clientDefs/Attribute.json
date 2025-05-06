@@ -57,6 +57,16 @@
   },
   "dynamicLogic": {
     "fields": {
+      "entity": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
       "dropdown": {
         "visible": {
           "conditionGroup": [
