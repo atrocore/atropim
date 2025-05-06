@@ -26,7 +26,6 @@ class Attribute extends AbstractSelectManager
 
         $qb->andWhere("{$tableAlias}.type IN (:attributeTypes)");
         $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
-
     }
 
     public function applyAdditional(array &$result, array $params)
