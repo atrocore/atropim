@@ -17,12 +17,7 @@ Espo.define('pim:views/entity/fields/attributes-disabled', 'views/fields/bool',
             const scope = this.model.id;
 
             this.$el.parent().hide();
-            if (
-                !this.model.isNew()
-                && !this.getMetadata().get(`scopes.${scope}.hideAttributesDisabled`)
-                && !this.getMetadata().get(`scopes.${scope}.emHidden`)
-                && ['Base', 'Hierarchy'].includes(this.getMetadata().get(`scopes.${scope}.type`))
-            ) {
+            if (!this.model.isNew() && !this.getMetadata().get(`scopes.${scope}.hideAttributesDisabled`)) {
                 this.$el.parent().show();
             }
         },
