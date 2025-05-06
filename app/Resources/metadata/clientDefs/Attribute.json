@@ -6,13 +6,17 @@
     "notLinkedWithProduct",
     "fromAttributesTab",
     "notParentCompositeAttribute",
-    "notChildCompositeAttribute"
+    "notChildCompositeAttribute",
+    "onlyCompositeAttributes",
+    "notLinkedWithCurrent"
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
     "fromAttributesTab",
     "notParentCompositeAttribute",
-    "notChildCompositeAttribute"
+    "notChildCompositeAttribute",
+    "onlyCompositeAttributes",
+    "notLinkedWithCurrent"
   ],
   "disabledMassActions": [
     "merge"
@@ -50,7 +54,8 @@
     },
     "nestedAttributes": {
       "selectBoolFilterList": [
-        "notParentCompositeAttribute"
+        "notParentCompositeAttribute",
+        "notLinkedWithCurrent"
       ],
       "view": "pim:views/attribute/record/panels/nested-attributes"
     }

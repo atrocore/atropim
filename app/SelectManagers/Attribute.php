@@ -26,6 +26,7 @@ class Attribute extends AbstractSelectManager
 
         $qb->andWhere("{$tableAlias}.type IN (:attributeTypes)");
         $qb->setParameter('attributeTypes', $attributeTypes, Mapper::getParameterType($attributeTypes));
+
     }
 
     public function applyAdditional(array &$result, array $params)
@@ -33,6 +34,22 @@ class Attribute extends AbstractSelectManager
         parent::applyAdditional($result, $params);
 
         $result['callbacks'][] = [$this, 'filterByType'];
+    }
+
+    protected function boolFilterNotLinkedWithCurrent(array &$result): void
+    {
+        $attributeId = (string)$this->getSelectCondition('notLinkedWithCurrent');
+
+        if(empty($attributeId)) {
+            return;
+        }
+
+        $result['whereClause'][] = [
+            'OR' => [
+                'compositeAttributeId!=' => $attributeId,
+                'compositeAttributeId=' => null
+            ]
+        ];
     }
 
     protected function boolFilterNotParentCompositeAttribute(array &$result): void
