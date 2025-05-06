@@ -14,17 +14,22 @@
     </div>
 
     {{#if massActionList}}
-    <div class="btn-group actions">
-        <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
-        {{translate 'Actions'}}
-        <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            {{#each massActionList}}
-            <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
-            {{/each}}
-        </ul>
-    </div>
+        <div class="btn-group actions">
+            <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
+                {{translate 'Actions'}} <i class="ph ph-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu">
+                {{#each massActionList}}
+                {{#if action}}
+                <li><a href="javascript:" data-action="{{action}}" data-id="{{id}}" class='mass-action'>{{label}}</a></li>
+                {{else if divider}}
+                    <li class="divider"></li>
+                {{else}}
+                <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
+                {{/if}}
+                {{/each}}
+            </ul>
+        </div>
     {{/if}}
     {{/if}}
 
