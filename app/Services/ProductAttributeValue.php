@@ -53,7 +53,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             'referenceValue'
         ];
 
-    public function getGroupsPavs(string $productId, string $tabId, ?string $language, array $fieldFilter, ?array $languageFilter, array $scopeFilter): array
+    public function getGroupsPavs(string $productId, string $tabId, ?string $language, array $fieldFilter, ?array $languageFilter): array
     {
         if (empty($productId)) {
             throw new NotFound();
@@ -82,7 +82,7 @@ class ProductAttributeValue extends AbstractProductAttributeService
             array_unshift($languageFilter, 'unilingual');
         }
 
-        $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language, $languageFilter, $scopeFilter);
+        $data = $this->getRepository()->getPavsWithAttributeGroupsData($productId, $tabId, $language, $languageFilter);
 
         /**
          * Prepare attributes groups

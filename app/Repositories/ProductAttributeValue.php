@@ -37,7 +37,7 @@ class ProductAttributeValue extends AbstractAttributeValue
         return null;
     }
 
-    public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language, array $languageFilter, array $scopeFilter): array
+    public function getPavsWithAttributeGroupsData(string $productId, string $tabId, string $language, array $languageFilter): array
     {
         // prepare tabId
         if ($tabId === 'null') {
@@ -70,25 +70,6 @@ class ProductAttributeValue extends AbstractAttributeValue
             $qb->andWhere($query)
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('languagesFilter', $languageFilter, Connection::PARAM_STR_ARRAY);
-        }
-
-        if (!empty($scopeFilter) && !in_array('allChannels', $scopeFilter)) {
-            $sql = "";
-            if (in_array('linkedChannels', $scopeFilter)) {
-                $sql .= "pav.channel_id IN (SELECT channel_id FROM product_channel where product_id =:productId and deleted=:false) OR ";
-            }
-            $scopeFilter = array_map(function ($v) {
-                if ($v === 'Global' || $v === "linkedChannels") {
-                    return '';
-                }
-                return $v;
-            }, $scopeFilter);
-
-            $sql .= 'pav.channel_id IN (:channelsIds)';
-
-            $qb->andWhere($sql)
-                ->setParameter('channelsIds', $scopeFilter, Connection::PARAM_STR_ARRAY);
-
         }
 
         $pavs = $qb->fetchAllAssociative();

@@ -19,6 +19,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 
 class AssociatedProduct extends Relation
 {
@@ -195,7 +196,7 @@ class AssociatedProduct extends Relation
         return $result;
     }
 
-    protected function getMainImage(\Pim\Entities\Product $product): ?File
+    protected function getMainImage(IEntity $product): ?File
     {
         $mainImage = $this->getEntityManager()->getRepository('ProductFile')->where(['productId' => $product->get('id'), 'isMainImage' => true])->findOne();
 

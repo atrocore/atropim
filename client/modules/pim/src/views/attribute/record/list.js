@@ -11,7 +11,7 @@
 Espo.define('pim:views/attribute/record/list', 'pim:views/record/list',
     Dep => Dep.extend({
 
-        massActionRemove: function (data, permanently = false) {
+        massActionRemove: function () {
             if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -30,7 +30,7 @@ Espo.define('pim:views/attribute/record/list', 'pim:views/record/list',
                 this.notify('Removing...');
 
                 var ids = [];
-                var data = { permanently: permanently };
+                var data = {};
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
                     data.selectData = this.collection.data || {};
