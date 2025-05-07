@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/entity/fields/attributes-disabled', 'views/fields/bool',
+Espo.define('pim:views/entity/fields/has-attribute', 'views/fields/bool',
     Dep => Dep.extend({
 
         afterRender() {
@@ -17,7 +17,7 @@ Espo.define('pim:views/entity/fields/attributes-disabled', 'views/fields/bool',
             const scope = this.model.id;
 
             this.$el.parent().hide();
-            if (!this.model.isNew() && !this.getMetadata().get(`scopes.${scope}.hideAttributesDisabled`)) {
+            if (!this.model.isNew() && !this.getMetadata().get(`scopes.${scope}.attributesDisabled`)) {
                 this.$el.parent().show();
             }
         },

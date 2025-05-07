@@ -472,13 +472,6 @@ class Attribute extends Base
     {
         parent::afterSave($entity, $options);
 
-        // enable hasAttribute for Entity if needs
-        if ($entity->isNew() && !$this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")) {
-            $this->getMetadata()->set('scopes', $entity->get('entityId'), ['hasAttribute' => true]);
-            $this->getMetadata()->save();
-            $this->getInjection('dataManager')->clearCache();
-        }
-
         if ($entity->isNew() && !empty($entity->get('compositeAttributeId'))) {
             $this->addAttributeValueForComposite($entity);
         }
@@ -558,21 +551,6 @@ class Attribute extends Base
         $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByAttributeId($entity->get('id'));
 
         parent::afterRemove($entity, $options);
-
-        // disable hasAttribute for Entity if needs
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")) {
-            $exist = $this
-                ->where([
-                    'id!='     => $entity->get('id'),
-                    'entityId' => $entity->get('entityId')
-                ])
-                ->findOne();
-            if (empty($exist)) {
-                $this->getMetadata()->delete('scopes', $entity->get('entityId'), ['hasAttribute']);
-                $this->getMetadata()->save();
-                $this->getInjection('dataManager')->clearCache();
-            }
-        }
     }
 
     protected function afterRestore($entity)

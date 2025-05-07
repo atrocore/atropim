@@ -1,6 +1,6 @@
 {
   "fields": {
-    "attributesDisabled": "Attributes Disabled"
+    "hasAttribute": "Has Attribute"
   },
   "labels": {
     "attributes": "Attributes"
