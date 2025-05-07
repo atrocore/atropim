@@ -1,5 +1,8 @@
 {
   "fields": {
     "attributesDisabled": "Attributes Disabled"
+  },
+  "labels": {
+    "attributes": "Attributes"
   }
 }
