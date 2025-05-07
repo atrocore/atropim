@@ -4,5 +4,8 @@
   },
   "labels": {
     "attributes": "Attributes"
+  },
+  "exceptions": {
+    "entityAlreadyHasAttributesInUse": "Has Attribute param cannot be deactivated. Please, remove all related attributes first."
   }
 }
