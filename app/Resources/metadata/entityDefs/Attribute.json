@@ -55,6 +55,12 @@
     "extensibleEnum": {
       "type": "link"
     },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "pim:views/attribute/fields/entity"
+    },
     "code": {
       "type": "varchar",
       "unique": true

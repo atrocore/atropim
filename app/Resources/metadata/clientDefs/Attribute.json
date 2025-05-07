@@ -8,7 +8,9 @@
     "notParentCompositeAttribute",
     "notChildCompositeAttribute",
     "onlyCompositeAttributes",
-    "notLinkedWithCurrent"
+    "notLinkedWithCurrent",
+    "onlyForEntity"
+
   ],
   "hiddenBoolFilterList": [
     "notLinkedWithProduct",
@@ -16,7 +18,8 @@
     "notParentCompositeAttribute",
     "notChildCompositeAttribute",
     "onlyCompositeAttributes",
-    "notLinkedWithCurrent"
+    "notLinkedWithCurrent",
+    "onlyForEntity"
   ],
   "disabledMassActions": [
     "merge"
@@ -55,13 +58,24 @@
     "nestedAttributes": {
       "selectBoolFilterList": [
         "notParentCompositeAttribute",
-        "notLinkedWithCurrent"
+        "notLinkedWithCurrent",
+        "onlyForEntity"
       ],
       "view": "pim:views/attribute/record/panels/nested-attributes"
     }
   },
   "dynamicLogic": {
     "fields": {
+      "entity": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
       "fullWidth": {
         "readOnly": {
           "conditionGroup": [

@@ -20,5 +20,6 @@
   ],
   "inheritedRelations": [
     "classificationAttributes"
-  ]
+  ],
+  "attributesDisabled": true
 }

@@ -19,5 +19,6 @@
   "nonComparableFields": [
     "productAttributeValues",
     "classificationAttributes"
-  ]
+  ],
+  "attributesDisabled": true
 }

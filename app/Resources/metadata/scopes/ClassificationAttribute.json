@@ -14,5 +14,6 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "attributesDisabled": true
 }

@@ -18,7 +18,24 @@ Espo.define('pim:views/attribute/record/panels/nested-attributes', 'views/record
 
             notLinkedWithCurrent: function () {
                 return this.model.id;
+            },
+
+            onlyForEntity: function () {
+                return this.model.get('entityId');
             }
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (params, link, prepareAttributeCallback) => {
+                if (link === 'nestedAttributes') {
+                    prepareAttributeCallback({
+                        entityId: this.model.get('entityId'),
+                        entityName: this.model.get('entityName')
+                    })
+                }
+            });
         },
 
         afterRender() {

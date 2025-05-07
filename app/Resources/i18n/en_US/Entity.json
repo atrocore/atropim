@@ -1,5 +1,8 @@
 {
   "fields": {
     "hasAttribute": "Has Attribute"
+  },
+  "labels": {
+    "attributes": "Attributes"
   }
 }

@@ -1,7 +1,8 @@
 {
   "fields": {
     "hasAttribute": {
-      "type": "bool"
+      "type": "bool",
+      "view": "pim:views/entity/fields/has-attribute"
     }
   }
 }
