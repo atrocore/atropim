@@ -35,6 +35,37 @@ class Attribute extends AbstractSelectManager
         $result['callbacks'][] = [$this, 'filterByType'];
     }
 
+    protected function boolFilterNotLinkedWithCurrent(array &$result): void
+    {
+        $attributeId = (string)$this->getSelectCondition('notLinkedWithCurrent');
+
+        if(empty($attributeId)) {
+            return;
+        }
+
+        $result['whereClause'][] = [
+            'OR' => [
+                'compositeAttributeId!=' => $attributeId,
+                'compositeAttributeId=' => null
+            ]
+        ];
+    }
+
+    protected function boolFilterOnlyCompositeAttributes(array &$result): void
+    {
+        $attributeId = (string)$this->getSelectCondition('onlyCompositeAttributes');
+
+        $result['whereClause'][] = [
+            'type=' => 'composite'
+        ];
+
+        if(!empty($attributeId)) {
+            $result['whereClause'][] = [
+                'id!=' => $attributeId,
+            ];
+        }
+    }
+
     protected function boolFilterNotParentCompositeAttribute(array &$result): void
     {
         $attributeId = (string)$this->getSelectCondition('notParentCompositeAttribute');
