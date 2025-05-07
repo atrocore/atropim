@@ -13,6 +13,7 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
+  "hasAttribute": true,
   "overviewFilters": true,
   "addRelationEnabled": true,
   "multiParents": false,
@@ -32,9 +33,6 @@
   "inheritedRelations": ["productFiles"],
   "mandatoryUnInheritedRelations": [],
   "unInheritedRelations": [],
-  "importTypeSimple": {
-    "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
-  },
   "completeness": {
     "service": "Completeness\\Services\\ProductCompleteness"
   },
