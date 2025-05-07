@@ -14,6 +14,10 @@ Espo.define('pim:views/attribute/record/panels/nested-attributes', 'views/record
         boolFilterData: {
             notParentCompositeAttribute: function () {
                 return this.model.id;
+            },
+
+            notLinkedWithCurrent: function () {
+                return this.model.id;
             }
         },
 

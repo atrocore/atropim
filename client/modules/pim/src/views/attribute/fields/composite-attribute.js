@@ -11,10 +11,14 @@
 Espo.define('pim:views/attribute/fields/composite-attribute', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList:  ['notChildCompositeAttribute'],
+        selectBoolFilterList:  ['notChildCompositeAttribute', 'onlyCompositeAttributes'],
 
         boolFilterData: {
             notChildCompositeAttribute: function () {
+                return this.model.id;
+            },
+
+            onlyCompositeAttributes: function() {
                 return this.model.id;
             }
         },

@@ -35,7 +35,8 @@
     "trim": "Remove leading and trailing whitespaces",
     "classificationAttributes": "Classification Attributes",
     "preparedName": "Name",
-    "htmlSanitizer": "HTML Sanitizer"
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "Full Width"
   },
   "labels": {
     "Create Attribute": "Create Attribute",

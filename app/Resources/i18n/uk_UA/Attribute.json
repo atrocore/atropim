@@ -33,7 +33,8 @@
     "trim": "Видалення початкових і кінцевих пробілів",
     "classificationAttributes": "Класифікаційні атрибути",
     "preparedName": "Ім'я",
-    "htmlSanitizer": "HTML Sanitizer"
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "На всю ширину"
   },
   "labels": {
     "Create Attribute": "Створити атрибут",
