@@ -78,6 +78,34 @@ class Attribute extends Base
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
     }
 
+    public function addAttributeValueForComposite(Entity $entity): void
+    {
+        if (empty($entity->get('compositeAttributeId'))) {
+            return;
+        }
+
+        $attributesIds = [$entity->get('compositeAttributeId')];
+        $this->prepareAllParentsCompositeAttributesIds($entity->get('compositeAttributeId'), $attributesIds);
+
+        $name = Util::toUnderScore(lcfirst($entity->get('entityId')));
+
+        $avIds = $this->getConnection()->createQueryBuilder()
+            ->select("{$name}_id")
+            ->distinct()
+            ->from("{$name}_attribute_value")
+            ->where('attribute_id IN (:attributesIds)')
+            ->setParameter('attributesIds', $attributesIds, $this->getConnection()::PARAM_STR_ARRAY)
+            ->fetchFirstColumn();
+
+        foreach ($avIds as $avId) {
+            try {
+                $this->addAttributeValue($entity->get('entityId'), $avId, $entity->get('id'));
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+    }
+
     public function addAttributeValue(string $entityName, string $entityId, string $attributeId): void
     {
         $attribute = $this->get($attributeId);
@@ -449,6 +477,10 @@ class Attribute extends Base
             $this->getMetadata()->set('scopes', $entity->get('entityId'), ['hasAttribute' => true]);
             $this->getMetadata()->save();
             $this->getInjection('dataManager')->clearCache();
+        }
+
+        if ($entity->isNew() && !empty($entity->get('compositeAttributeId'))) {
+            $this->addAttributeValueForComposite($entity);
         }
 
         /**
