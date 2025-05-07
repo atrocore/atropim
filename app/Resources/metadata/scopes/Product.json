@@ -19,7 +19,6 @@
   "dragAndDrop": true,
   "fieldValueInheritance": true,
   "mandatoryUnInheritedFields": [
-    "productAttributeValues",
     "isInheritAssignedUser",
     "isInheritOwnerUser",
     "isInheritTeams",
@@ -30,7 +29,7 @@
     "mpn"
   ],
   "relationInheritance": true,
-  "inheritedRelations": ["productAttributeValues", "productFiles"],
+  "inheritedRelations": ["productFiles"],
   "mandatoryUnInheritedRelations": [],
   "unInheritedRelations": [],
   "importTypeSimple": {
@@ -46,12 +45,9 @@
     "filterUpdateImportJob"
   ],
   "duplicatableRelations": [
-    "productAttributeValues",
     "files",
     "categories",
     "teams"
   ],
-  "modifiedExtendedRelations": [
-    "productAttributeValues"
-  ]
+  "modifiedExtendedRelations": []
 }

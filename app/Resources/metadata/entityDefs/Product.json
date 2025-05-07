@@ -1,17 +1,5 @@
 {
   "fields": {
-    "productAttributeValues": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutLeftSidebarDisabled": true,
-      "massUpdateDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": false,
-      "noLoad": true
-    },
     "classifications": {
       "type": "linkMultiple",
       "view": "pim:views/product/fields/classifications",
@@ -326,12 +314,6 @@
       "relationName": "productCategory",
       "foreign": "products",
       "entity": "Category"
-    },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductAttributeValue",
-      "disableMassRelation": true
     },
     "contentItems": {
       "type": "hasMany",

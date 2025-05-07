@@ -2,8 +2,6 @@
   "fields": {
     "parents": "Assoziierende Attribute",
     "children": "Assoziierte Attribute",
-    "channelProductAttributeValues": "Produktattributwerte für Kanal",
-    "productAttributeValues": "Attributwerte",
     "products": "Produkte",
     "type": "Typ",
     "attributeGroup": "Attributgruppe",

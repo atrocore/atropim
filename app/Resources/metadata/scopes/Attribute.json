@@ -17,7 +17,6 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "nonComparableFields": [
-    "productAttributeValues",
     "classificationAttributes"
   ],
   "attributesDisabled": true

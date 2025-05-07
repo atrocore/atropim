@@ -46,16 +46,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "productAttributeValues": {
-      "type": "linkMultiple",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "importDisabled": true,
-      "noLoad": true
-    },
     "attributes": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
@@ -94,11 +84,6 @@
       "relationName": "productChannel",
       "foreign": "channels",
       "entity": "Product"
-    },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "channel",
-      "entity": "ProductAttributeValue"
     },
     "classificationAttributes": {
       "type": "hasMany",

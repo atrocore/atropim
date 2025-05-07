@@ -8,7 +8,6 @@
     "code": "Код",
     "name": "Назва атрибута",
     "products": "Продукти",
-    "productAttributeValues": "Значення атрибутів",
     "isMultilang": "Багатомовність",
     "fileType": "Тип файлу",
     "pattern": "Regex Pattern",

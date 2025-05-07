@@ -110,24 +110,6 @@
       },
       "view": "pim:views/product/record/panels/children"
     },
-    "productAttributeValues": {
-      "createAction": "createRelatedConfigured",
-      "selectAction": "selectRelatedEntity",
-      "selectBoolFilterList": [
-        "fromAttributesTab"
-      ],
-      "tabId": null,
-      "rowActionsView": "pim:views/product-attribute-value/record/row-actions/relationship-no-unlink-in-product",
-      "view": "pim:views/product/record/panels/product-attribute-values",
-      "compareRecordsView": "pim:views/product/record/compare/product-attribute-values",
-      "recordListView": "pim:views/record/list-in-groups",
-      "compareInstanceRecordsView": "pim:views/product/record/compare/product-attribute-values-instance",
-      "aclScopesList": [
-        "Attribute",
-        "AttributeGroup",
-        "ProductAttributeValue"
-      ]
-    },
     "categories": {
       "create": false,
       "selectAction": "selectRelatedEntity",

@@ -93,15 +93,6 @@
       "hideMultilang": true,
       "layoutDetailDisabled": true
     },
-    "productAttributeValues": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": false,
-      "importDisabled": true,
-      "noLoad": true
-    },
     "classificationAttributes": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
@@ -333,11 +324,6 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "Measure"
-    },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "attribute",
-      "entity": "ProductAttributeValue"
     },
     "classificationAttributes": {
       "type": "hasMany",
