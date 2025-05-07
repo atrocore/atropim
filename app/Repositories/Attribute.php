@@ -293,6 +293,10 @@ class Attribute extends Base
                 throw new BadRequest($this->exception('compositeAttributeNotFound'));
             }
 
+            if ($composite->get('entityId') !== $entity->get('entityId')) {
+                throw new BadRequest($this->exception('attributeEntityMustBeSameAsInCompositeAttribute'));
+            }
+
             while (!empty($composite->get('compositeAttributeId'))) {
                 if ($composite->get('id') === $entity->get('id')) {
                     throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));

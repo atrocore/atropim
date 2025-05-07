@@ -18,6 +18,10 @@ Espo.define('pim:views/attribute/record/panels/nested-attributes', 'views/record
 
             notLinkedWithCurrent: function () {
                 return this.model.id;
+            },
+
+            onlyForEntity: function () {
+                return this.model.get('entityId');
             }
         },
 

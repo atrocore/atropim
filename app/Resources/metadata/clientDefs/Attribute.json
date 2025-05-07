@@ -58,7 +58,8 @@
     "nestedAttributes": {
       "selectBoolFilterList": [
         "notParentCompositeAttribute",
-        "notLinkedWithCurrent"
+        "notLinkedWithCurrent",
+        "onlyForEntity"
       ],
       "view": "pim:views/attribute/record/panels/nested-attributes"
     }
