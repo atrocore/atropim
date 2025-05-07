@@ -35,7 +35,8 @@
     "classificationAttributes": "Klassifizierungattribute",
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
-    "classifications": "Klassifizierungen"
+    "classifications": "Klassifizierungen",
+    "fullWidth": "Volle Breite"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",

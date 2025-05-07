@@ -62,6 +62,17 @@
   },
   "dynamicLogic": {
     "fields": {
+      "fullWidth": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["wysiwyg", "markdown", "text", "composite"]
+            }
+          ]
+        }
+      },
       "dropdown": {
         "visible": {
           "conditionGroup": [

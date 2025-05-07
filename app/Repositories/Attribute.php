@@ -350,6 +350,10 @@ class Attribute extends Base
             }
         }
 
+        if (in_array($entity->get('type'), ['wysiwyg', 'markdown', 'text', 'composite'])) {
+            $entity->set('fullWidth', true);
+        }
+
         parent::beforeSave($entity, $options);
 
         $this->validateMinMax($entity);

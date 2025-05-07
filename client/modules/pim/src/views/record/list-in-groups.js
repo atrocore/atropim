@@ -66,7 +66,7 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             const htmlIcons = Dep.prototype.getStatusIcons.call(this, model) || [];
 
             if (model.get('isRequired')) {
-                htmlIcons.push(`<i class="ph ph-warning required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
+                htmlIcons.push(`<i class="ph ph-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
             }
 
             if (model.urlRoot === 'ProductAttributeValue') {
