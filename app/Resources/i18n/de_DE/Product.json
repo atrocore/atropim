@@ -83,7 +83,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "ohne Produktattribute",
     "notAssociatedProducts": "Ohne assoziierte Produkte",
     "notLinkedWithBrand": "Ohne Marke",
     "notLinkedWithProductSerie": "Ohne Produktserie",

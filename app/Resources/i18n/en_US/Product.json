@@ -80,7 +80,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "Without Product Attributes",
     "notAssociatedProducts": "Without Associated Products",
     "notLinkedWithBrand": "Without Brand",
     "notLinkedWithProductSerie": "Without Product Serie",

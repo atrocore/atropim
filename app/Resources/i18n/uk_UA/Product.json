@@ -78,7 +78,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "Без атрибутів продукту",
     "notAssociatedProducts": "Не асоційовані продукти",
     "notLinkedWithBrand": "Не пов'язаний із брендом",
     "notLinkedWithProductSerie": "Не пов'язаний із серією продукту",

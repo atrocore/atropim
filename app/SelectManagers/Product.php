@@ -31,50 +31,6 @@ class Product extends AbstractSelectManager
 
     private array $textFilterParams = [];
 
-    public function mutateWhereQuery(array &$where): void
-    {
-        parent::mutateWhereQuery($where);
-        $this->mutateWhereAttributeQuery($where);
-    }
-
-    public function mutateWhereAttributeQuery(array &$where): void
-    {
-        foreach ($where as &$item) {
-            if (isset($item['value']) && is_array($item['value']) && empty($item['isAttribute'])) {
-                $this->mutateWhereAttributeQuery($item['value']);
-            } else {
-                if (!empty($item['isAttribute'])) {
-                    /** @var \Pim\Repositories\ProductAttributeValue $pavRepo */
-                    $pavRepo = $this->getEntityManager()->getRepository('ProductAttributeValue');
-
-                    $attributeId = $item['attribute'];
-
-                    $sp = $this->createSelectManager('ProductAttributeValue')->getSelectParams(['where' => [$this->convertAttributeWhere($item)]], true, true);
-                    $sp['select'] = ['productId'];
-
-                    $qb1 = $pavRepo->getMapper()->createSelectQueryBuilder($pavRepo->get(), $sp);
-
-                    $operator = 'IN';
-                    if (isset($item['type']) && $item['type'] === 'arrayNoneOf') {
-                        $operator = 'NOT IN';
-                    }
-
-                    $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
-
-                    $innerSql = str_replace($mainTableAlias, "t_{$attributeId}", $qb1->getSql());
-
-                    $item = [
-                        'type'  => 'innerSql',
-                        'value' => [
-                            "sql"        => "$mainTableAlias.id $operator ({$innerSql})",
-                            "parameters" => $qb1->getParameters()
-                        ]
-                    ];
-                }
-            }
-        }
-    }
-
     protected function textFilter($textFilter, &$result)
     {
         parent::textFilter($textFilter, $result);
@@ -94,18 +50,6 @@ class Product extends AbstractSelectManager
         }
 
         $result['whereClause'][] = $last;
-    }
-
-    protected function boolFilterWithoutProductAttributes(&$result)
-    {
-        $result['callbacks'][] = [$this, 'applyBoolFilterWithoutProductAttributes'];
-    }
-
-    public function applyBoolFilterWithoutProductAttributes(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-        $qb->andWhere("$tableAlias.id NOT IN (SELECT DISTINCT product_id FROM product_attribute_value WHERE deleted=:false)");
-        $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
 
     /**

@@ -80,7 +80,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "Без атрибутов продукта",
     "notAssociatedProducts": "Не ассоциированные продукты",
     "notLinkedWithBrand": "Не связан с брендом",
     "notLinkedWithProductSerie": "Не связан с серией продукта",
