@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 
@@ -36,6 +37,15 @@ class V1Dot14Dot3 extends Base
 
             $this->exec("ALTER TABLE product_attribute_value ADD json_value TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN product_attribute_value.json_value IS '(DC2Type:jsonObject)'");
+
+            $this->exec("CREATE TABLE variant_specific_product_attribute (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, product_id VARCHAR(36) DEFAULT NULL, attribute_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE UNIQUE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_UNIQUE_RELATION ON variant_specific_product_attribute (deleted, product_id, attribute_id)");
+            $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_BY_ID ON variant_specific_product_attribute (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_BY_ID ON variant_specific_product_attribute (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_PRODUCT_ID ON variant_specific_product_attribute (product_id, deleted)");
+            $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_ATTRIBUTE_ID ON variant_specific_product_attribute (attribute_id, deleted)");
+            $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_AT ON variant_specific_product_attribute (created_at, deleted)");
+            $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_AT ON variant_specific_product_attribute (modified_at, deleted)");
         } else {
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_MODIFIED_BY_ID ON product_attribute_value");
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_MODIFIED_AT ON product_attribute_value");
@@ -45,6 +55,8 @@ class V1Dot14Dot3 extends Base
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value");
 
             $this->exec("ALTER TABLE product_attribute_value ADD json_value LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
+
+            $this->exec("CREATE TABLE variant_specific_product_attribute (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, product_id VARCHAR(36) DEFAULT NULL, attribute_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_UNIQUE_RELATION (deleted, product_id, attribute_id), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_PRODUCT_ID (product_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_ATTRIBUTE_ID (attribute_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_AT (created_at, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
 
         foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
@@ -65,15 +77,66 @@ class V1Dot14Dot3 extends Base
         $this->migrateArrayType();
         $this->migrateMultilang();
         $this->migrateChannelSpecific();
-
-        echo '<pre>';
-        print_r('22222');
-        die();
-
-        // migrate data
-        // migrate variant_specific_attribute
+        $this->migrateVariantSpecific();
 
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
+    }
+
+    protected function migrateVariantSpecific(): void
+    {
+        while (true) {
+            try {
+                $res = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from('product_attribute_value')
+                    ->where('deleted=:false')
+                    ->andWhere('is_variant_specific_attribute=:true')
+                    ->setFirstResult(0)
+                    ->setMaxResults(5000)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                return;
+            }
+
+            if (empty($res)) {
+                break;
+            }
+
+            foreach ($res as $item) {
+                try {
+                    $this->getConnection()->createQueryBuilder()
+                        ->insert('variant_specific_product_attribute')
+                        ->setValue('id', ':id')
+                        ->setValue('created_at', ':created_at')
+                        ->setValue('modified_at', ':modified_at')
+                        ->setValue('created_by_id', ':created_by_id')
+                        ->setValue('modified_by_id', ':modified_by_id')
+                        ->setValue('product_id', ':product_id')
+                        ->setValue('attribute_id', ':attribute_id')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('created_at', date('Y-m-d H:i:s'))
+                        ->setParameter('modified_at', date('Y-m-d H:i:s'))
+                        ->setParameter('created_by_id', 'system')
+                        ->setParameter('modified_by_id', 'system')
+                        ->setParameter('product_id', $item['product_id'])
+                        ->setParameter('attribute_id', $item['attribute_id'])
+                        ->executeQuery();
+                } catch (\Throwable $e) {
+                }
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('product_attribute_value')
+                    ->set('is_variant_specific_attribute', ':false')
+                    ->where('id=:id')
+                    ->setParameter('id', $item['id'])
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->executeQuery();
+            }
+        }
+
+        $this->exec("ALTER TABLE product_attribute_value DROP is_variant_specific_attribute;");
     }
 
     protected function migrateChannelSpecific(): void

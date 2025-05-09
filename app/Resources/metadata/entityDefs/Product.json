@@ -131,6 +131,9 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
+    "variantSpecificAttributes": {
+      "type": "linkMultiple"
+    },
     "ownerUser": {
       "type": "link",
       "required": false,
@@ -225,6 +228,12 @@
       "foreign": "products",
       "relationName": "ProductClassification",
       "entity": "Classification"
+    },
+    "variantSpecificAttributes": {
+      "type": "hasMany",
+      "foreign": "variantSpecificProducts",
+      "relationName": "VariantSpecificProductAttribute",
+      "entity": "Attribute"
     },
     "catalog": {
       "type": "belongsTo",

@@ -269,6 +269,9 @@
     },
     "channel": {
       "type": "link"
+    },
+    "variantSpecificProducts": {
+      "type": "linkMultiple"
     }
   },
   "links": {
@@ -342,6 +345,12 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "Channel"
+    },
+    "variantSpecificProducts": {
+      "type": "hasMany",
+      "foreign": "variantSpecificAttributes",
+      "relationName": "VariantSpecificProductAttribute",
+      "entity": "Product"
     }
   },
   "collection": {
