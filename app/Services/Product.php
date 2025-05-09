@@ -110,61 +110,14 @@ class Product extends Hierarchy
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateEntity($id, $data)
     {
-        $conflicts = [];
-
         if (property_exists($data, '_sortedIds') && property_exists($data, '_scope') && $data->_scope == 'Category' && property_exists($data, '_id')) {
             $this->getRepository()->updateSortOrderInCategory($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
         }
 
-        if ($this->isPanelsUpdating($data)) {
-            if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-                $this->getEntityManager()->getPDO()->beginTransaction();
-                $inTransaction = true;
-            }
-            $panelsData = json_decode(json_encode($data->panelsData), true);
-            foreach ($panelsData as $link => $linkData) {
-                if (empty($linkData)) {
-                    continue;
-                }
-                $entityType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']);
-
-                if (empty($entityType)) {
-                    continue;
-                }
-
-                $service = $this->getInjection('serviceFactory')->create($entityType);
-                $method = 'updatePanelFrom' . $this->entityType;
-                if (method_exists($service, $method)) {
-                    $conflicts = $service->$method($id, $data);
-                }
-            }
-            $data->_skipIsEntityUpdated = true;
-        }
-
-        try {
-            $result = parent::updateEntity($id, $data);
-        } catch (Conflict $e) {
-            $conflicts = array_merge($conflicts, $e->getFields());
-        }
-
-        if (!empty($conflicts)) {
-            if (!empty($inTransaction)) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts)));
-        }
-
-        if (!empty($inTransaction)) {
-            $this->getEntityManager()->getPDO()->commit();
-        }
-
-        return $result;
+        return parent::updateEntity($id, $data);
     }
 
     /**
@@ -295,19 +248,6 @@ class Product extends Hierarchy
         return ['message' => $this->getMassActionsService()->createRelationMessage($success, $error, 'Product', 'Product', false)];
     }
 
-    public function getPrismChannelId(): ?string
-    {
-        $channel = null;
-        if (!empty($account = $this->getUser()->get('account')) && !empty($account->get('channelId'))) {
-            $channel = $account->get('channel');
-        }
-        if (empty($channel) && !empty($channelCode = self::getHeader('Channel-Code'))) {
-            $channel = $this->getEntityManager()->getRepository('Channel')->where(['code' => $channelCode])->findOne();
-        }
-
-        return empty($channel) ? null : $channel->get('id');
-    }
-
     /**
      * @param Entity $product
      * @param Entity $duplicatingProduct
@@ -395,234 +335,6 @@ class Product extends Hierarchy
         }
     }
 
-    public function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
-    {
-        if (!property_exists($data, 'productId')) {
-            return;
-        }
-
-        $children = $this->getRepository()->getChildrenArray($data->productId);
-        foreach ($children as $child) {
-            $inputData = clone $data;
-            $inputData->productId = $child['id'];
-            $inputData->productName = $child['name'];
-            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData, $parentTransactionId);
-            if ($child['childrenCount'] > 0) {
-                $this->createPseudoTransactionCreateJobs(clone $inputData, $transactionId);
-            }
-        }
-    }
-
-    public function createPseudoTransactionUpdateJobs(\stdClass $data, string $parentTransactionId = null): void
-    {
-        $children = $this->getRepository()->getChildrenArray($data->productId);
-        foreach ($children as $child) {
-            $product = $this->getEntity($child['id']);
-
-            if (!empty($product)) {
-                $data->productId = $child['id'];
-
-                $transactionId = null;
-
-                foreach ($product->get('productAttributeValues') as $pav) {
-                    if ($pav->get('attributeId') == $data->attributeId
-                        && $pav->get('channelId') == $data->channelId
-                        && $pav->get('language') == $data->language) {
-                        $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->id, $data, $parentTransactionId);
-                    }
-                }
-
-                if ($child['childrenCount'] > 0) {
-                    $this->createPseudoTransactionUpdateJobs(clone $data, $transactionId);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param string $id
-     * @param array  $params
-     *
-     * @return array
-     * @throws Forbidden
-     * @throws NotFound
-     */
-    protected function findLinkedEntitiesProductAttributeValues(string $id, array $params): array
-    {
-        $entity = $this->getEntityManager()->getRepository('Product')->get($id);
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->check($entity, 'read')) {
-            throw new Forbidden();
-        }
-
-        $foreignEntityName = 'ProductAttributeValue';
-        $link = 'productAttributeValues';
-
-        if (!empty($params['maxSize'])) {
-            $params['maxSize'] = $params['maxSize'] + 1;
-        }
-
-        // get select params
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
-        if (empty($selectParams['orderBy'])) {
-            $selectParams['orderBy'] = 'id';
-        }
-
-        // get record service
-        $recordService = $this->getRecordService($foreignEntityName);
-
-        /**
-         * Prepare select list
-         */
-        $selectAttributeList = $recordService->getSelectAttributeList($params);
-        if ($selectAttributeList) {
-            $selectParams['select'] = array_unique($selectAttributeList);
-        }
-
-        $pavs = $this->getEntityManager()->getRepository('Product')->findRelated($entity, $link, $selectParams);
-        $collection = new EntityCollection();
-
-        $recordService->prepareCollectionForOutput($pavs);
-        foreach ($pavs as $e) {
-            if (!$this->getAcl()->check($e, 'read')) {
-                continue;
-            }
-
-            $recordService->loadAdditionalFieldsForList($e);
-            if (!empty($params['loadAdditionalFields'])) {
-                $recordService->loadAdditionalFields($e);
-            }
-            if (!empty($selectAttributeList)) {
-                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
-            }
-            $recordService->prepareEntityForOutput($e);
-
-            $collection->append($e);
-        }
-
-        $collection = $this->preparePavsForOutput($collection);
-
-        $result = [
-            'collection' => $collection,
-            'total'      => count($collection),
-        ];
-
-        return $this
-            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => $result]))
-            ->getArgument('result');
-    }
-
-    public function preparePavsForOutput(EntityCollection $collection): EntityCollection
-    {
-        if (count($collection) === 0) {
-            return $collection;
-        }
-
-        $scopeData = [];
-        if (!empty($collection[0]) && empty($collection[0]->has('channelId'))) {
-            $pavsData = $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->select(['id', 'channelId', 'channelName'])
-                ->where(['id' => array_column($collection->toArray(), 'id')])
-                ->find();
-            foreach ($pavsData as $v) {
-                $scopeData[$v->get('id')] = $v;
-            }
-        } else {
-            foreach ($collection as $pav) {
-                $scopeData[$pav->get('id')] = $pav;
-            }
-        }
-
-        $collection = $this->filterPavsViaChannel($collection, $scopeData);
-
-        if (count($collection) === 0) {
-            return $collection;
-        }
-
-        $records = [];
-
-        foreach ($collection as $pav) {
-            if (!isset($scopeData[$pav->get('id')])) {
-                continue 1;
-            }
-            $records[$pav->get('id')] = $pav;
-        }
-
-        // clear hided records
-        foreach ($collection as $pav) {
-            if (!isset($records[$pav->get('id')])) {
-                $this->getEntityManager()->getRepository('ProductAttributeValue')->clearRecord($pav->get('id'));
-            }
-        }
-
-        $headerLanguage = $this->getHeaderLanguage();
-
-        // filtering via header language
-        if (!empty($headerLanguage)) {
-            foreach ($records as $id => $pav) {
-                if ($pav->get('language') !== $headerLanguage) {
-                    if ($headerLanguage === 'main') {
-                        unset($records[$id]);
-                    } else {
-                        if ($pav->get('language') !== 'main') {
-                            unset($records[$id]);
-                        } else {
-                            foreach ($records as $pav1) {
-                                if (
-                                    $pav1->get('language') === $headerLanguage
-                                    && $pav1->get('attributeId') == $pav->get('attributeId')
-                                    && $pav1->get('channelId') == $pav->get('channelId')
-                                ) {
-                                    unset($records[$id]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        foreach ($records as $pav) {
-            if (empty($pav->get('channelId'))) {
-                $pav->set('channelId', null);
-                $pav->set('channelName', 'Global');
-            }
-        }
-
-        return new EntityCollection(array_values($records));
-    }
-
-    protected function filterPavsViaChannel(EntityCollection $collection, array $scopeData): EntityCollection
-    {
-        if (count($collection) > 0 && !empty($channelId = $this->getPrismChannelId())) {
-            $newCollection = new EntityCollection();
-
-            $channelSpecificAttributeIds = [];
-            foreach ($collection as $pav) {
-                if ($scopeData[$pav->get('id')]->get('channelId') === $channelId) {
-                    $channelSpecificAttributeIds[] = $pav->get('attributeId');
-                    $newCollection->append($pav);
-                }
-            }
-
-            foreach ($collection as $pav) {
-                if ($scopeData[$pav->get('id')]->get('channelId') === '' && !in_array($pav->get('attributeId'), $channelSpecificAttributeIds)) {
-                    $newCollection->append($pav);
-                }
-            }
-
-            $collection = $newCollection;
-        }
-
-        return $collection;
-    }
-
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
@@ -675,32 +387,6 @@ class Product extends Hierarchy
     }
 
     /**
-     * @param array $attributeList
-     */
-    protected function prepareAttributeListForExport(&$attributeList)
-    {
-        foreach ($attributeList as $k => $v) {
-            if ($v == 'productAttributeValuesIds') {
-                $attributeList[$k] = 'productAttributeValues';
-            }
-
-            if ($v == 'productAttributeValuesNames') {
-                unset($attributeList[$k]);
-            }
-
-            if ($v == 'channelsIds') {
-                $attributeList[$k] = 'channels';
-            }
-
-            if ($v == 'channelsNames') {
-                unset($attributeList[$k]);
-            }
-        }
-
-        $attributeList = array_values($attributeList);
-    }
-
-    /**
      * @return MassActions
      */
     protected function getMassActionsService(): MassActions
@@ -718,37 +404,12 @@ class Product extends Hierarchy
         return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
     }
 
-    protected function isPanelsUpdating(\stdClass $data): bool
-    {
-        if (!property_exists($data, 'panelsData')) {
-            return false;
-        }
-
-        if (!is_object($data->panelsData)) {
-            return false;
-        }
-
-        $panelsData = json_decode(json_encode($data->panelsData), true);
-        foreach ($panelsData as $link => $linkData) {
-            $linkDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link]);
-            if (!empty($linkDefs) && !empty($linkData)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * @inheritDoc
      */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         $post = clone $data;
-
-        if ($this->isPanelsUpdating($post)) {
-            return true;
-        }
 
         $this->setProductMainImage($entity);
 
