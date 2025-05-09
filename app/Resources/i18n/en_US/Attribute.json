@@ -35,7 +35,9 @@
     "classificationAttributes": "Classification Attributes",
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
-    "fullWidth": "Full Width"
+    "fullWidth": "Full Width",
+    "channel": "Channel",
+    "variantSpecificProducts": "Variant Specific Products"
   },
   "labels": {
     "Create Attribute": "Create Attribute",

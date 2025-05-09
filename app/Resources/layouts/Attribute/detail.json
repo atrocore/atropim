@@ -25,6 +25,12 @@
       ],
       [
         {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
           "name": "code"
         },
         {
