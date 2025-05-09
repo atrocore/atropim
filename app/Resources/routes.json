@@ -39,13 +39,5 @@
       "controller": "ClassificationAttribute",
       "action": "unlinkAttributeGroupHierarchy"
     }
-  },
-  {
-    "route": "/ProductAttributeValue/action/unlinkAttributeGroup",
-    "method": "delete",
-    "params": {
-      "controller": "ProductAttributeValue",
-      "action": "unlinkAttributeGroup"
-    }
   }
 ]

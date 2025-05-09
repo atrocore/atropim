@@ -38,29 +38,6 @@ class Entity extends AbstractEntityListener
         $event->setArgument("params", $params);
     }
 
-    protected  function boolFilterOnlyForClassificationAttributesUsingPavId(&$params,  $data)
-    {
-        if(empty($data['pavId']) || !isset($data['channelId'])){
-            return $params;
-        }
-
-        $classificationAttributeId = $this->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->getClassificationAttributesFromPavId($data['pavId'], $data['channelId']);
-
-        if(!empty($classificationAttributeId)) {
-
-            $params['where'][] = [
-                "type" => "linkedWith",
-                "attribute" => "classificationAttributes",
-                "value" =>  [$classificationAttributeId]
-            ];
-
-        }
-
-        return $params;
-    }
-
     protected  function boolFilterOnlyExtensibleEnumOptionIds(&$params, $ids){
 
         if(!is_array($ids) || empty($ids)){

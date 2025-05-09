@@ -131,18 +131,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                                 }
                             }
                         }
-                    } else {
-                        customOptions = {
-                            customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
-                            customBoolFilterData: {
-                                onlyForClassificationAttributesUsingPavId() {
-                                    return {
-                                        'pavId' : this.model.get('id'),
-                                        'channelId': this.model.get('channelId')
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
 

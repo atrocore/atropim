@@ -18,31 +18,6 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
  */
 class AttributeGroup extends AbstractSelectManager
 {
-
-    /**
-     * @param array $result
-     */
-    protected function boolFilterWithNotLinkedAttributesToProduct(array &$result)
-    {
-        // get product attributes
-        $productAttributes = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select(['attributeId'])
-            ->where([
-                'productId' => (string)$this->getSelectCondition('withNotLinkedAttributesToProduct'),
-                'channelId' => ''
-            ])
-            ->find()
-            ->toArray();
-
-        if (count($productAttributes) > 0) {
-            $result['whereClause'][] = [
-                'id' => $this->getNotLinkedAttributeGroups($productAttributes)
-            ];
-        }
-    }
-
     /**
      * @param array $result
      */

@@ -77,7 +77,6 @@ class SettingsController extends AbstractListener
 
         }
 
-        $this->deleteMultiLangAttributeOnInputLanguageChange($data, 'ProductAttributeValue');
         $this->deleteMultiLangAttributeOnInputLanguageChange($data, 'ClassificationAttribute');
     }
 

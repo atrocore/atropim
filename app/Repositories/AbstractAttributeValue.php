@@ -30,13 +30,8 @@ abstract  class AbstractAttributeValue extends Base
     ];
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
-        if($this->entityType === 'ProductAttributeValue'){
-            $foreignEntity = "Product";
-            $foreignFieldId = "productId";
-        } else {
-            $foreignEntity = "Classification";
-            $foreignFieldId = "classificationId";
-        }
+        $foreignEntity = "Classification";
+        $foreignFieldId = "classificationId";
         $pav = $this->get($parentId);
         if (empty($pav) || empty($pav->get($foreignFieldId))) {
             return [];
@@ -185,14 +180,8 @@ abstract  class AbstractAttributeValue extends Base
 
     public function getParentsPavs(Entity $entity): ?EntityCollection
     {
-        if($this->entityType === 'ProductAttributeValue'){
-            $foreignEntity = "Product";
-            $foreignFieldId = "productId";
-
-        } else {
-            $foreignEntity = "Classification";
-            $foreignFieldId = "classificationId";
-        }
+        $foreignEntity = "Classification";
+        $foreignFieldId = "classificationId";
 
         if (isset($this->recordPavs[$foreignEntity][$entity->get($foreignFieldId)])) {
             return $this->recordPavs[$foreignEntity][$entity->get($foreignFieldId)];

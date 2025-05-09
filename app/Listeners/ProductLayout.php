@@ -48,21 +48,6 @@ class ProductLayout extends AbstractLayoutListener
             }
         } else {
             foreach ($result as $row) {
-                if ($row['name'] == 'productAttributeValues') {
-                    $panels = $this->getMetadata()->get(['clientDefs', 'Product', 'bottomPanels', 'detail'], []);
-                    foreach ($panels as $panel) {
-                        if (!empty($panel['tabId'])) {
-                            if (!$isAdmin) {
-                                $entity = $this->getEntityManager()->getEntity('AttributeTab', $panel['tabId']);
-                                // check if user can read on AttributeTab
-                                if (!$this->getContainer()->get('acl')->checkEntity($entity, 'read')) {
-                                    continue 1;
-                                }
-                            }
-                            $newResult[] = ['name' => $panel['name']];
-                        }
-                    }
-                }
                 $newResult[] = $row;
             }
         }

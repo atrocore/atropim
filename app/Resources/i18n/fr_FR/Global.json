@@ -20,7 +20,6 @@
     "ClassificationAttribute": "Attribut de classification",
     "AssociatedProduct": "Produit associé",
     "ProductSerie": "Série de produits",
-    "ProductAttributeValue": "Valeur de l'attribut",
     "ChannelPricing": "Tarification par canal",
     "ContentItem": "Élément de contenu"
   },
@@ -71,7 +70,6 @@
     "ProductSerie": "Série de produits",
     "Content": "Contenu",
     "ContentGroup": "Groupes de contenu",
-    "ProductAttributeValue": "Valeurs des attributs",
     "Catalog": "Catalogues",
     "Classification": "Classification",
     "Product": "Produits",

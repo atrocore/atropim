@@ -91,13 +91,6 @@ class Product extends Hierarchy
             ->dispatch('ProductRepository', 'findRelated', new Event(['entity' => $entity, 'relationName' => $relationName, 'params' => $params]))
             ->getArgument('params');
 
-        if ($relationName === 'productAttributeValues') {
-            $params['leftJoins'] = ['attribute'];
-            $params['sortBy'] = 'attribute_mm.sortOrder';
-            $params['asc'] = true;
-            $params['limit'] = 9999;
-        }
-
         if ($relationName == 'categories' && !empty($params)) {
             if (isset($params['additionalColumns']['sorting'])) {
                 unset($params['additionalColumns']['sorting']);
@@ -105,23 +98,6 @@ class Product extends Hierarchy
         }
 
         return parent::findRelated($entity, $relationName, $params);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function countRelated(Entity $entity, $relationName, array $params = [])
-    {
-        // prepare params
-        $params = $this
-            ->dispatch('ProductRepository', 'countRelated', new Event(['entity' => $entity, 'relationName' => $relationName, 'params' => $params]))
-            ->getArgument('params');
-
-        if ($relationName === 'productAttributeValues') {
-            $params['limit'] = 9999;
-        }
-
-        return parent::countRelated($entity, $relationName, $params);
     }
 
     /**
@@ -286,7 +262,6 @@ class Product extends Hierarchy
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('ProductFile')->removeByProductId($entity->get('id'));
 
@@ -298,17 +273,6 @@ class Product extends Hierarchy
     protected function afterRestore($entity)
     {
         parent::afterRestore($entity);
-
-        $this->getConnection()
-            ->createQueryBuilder()
-            ->update('product_attribute_value')
-            ->set('deleted',':false')
-            ->where('product_id = :productId')
-            ->andWhere('deleted = :true')
-            ->setParameter('false',false, ParameterType::BOOLEAN)
-            ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true',true, ParameterType::BOOLEAN)
-            ->executeStatement();
 
         $this->getConnection()
             ->createQueryBuilder()

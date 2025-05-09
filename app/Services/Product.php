@@ -308,32 +308,6 @@ class Product extends Hierarchy
         return empty($channel) ? null : $channel->get('id');
     }
 
-    protected function duplicateProductAttributeValues(Entity $product, Entity $duplicatingProduct): void
-    {
-        $pavs = $duplicatingProduct->get('productAttributeValues');
-        if (empty($pavs) || count($pavs) === 0) {
-            return;
-        }
-
-        /** @var \Pim\Repositories\ProductAttributeValue $repository */
-        $repository = $this->getEntityManager()->getRepository('ProductAttributeValue');
-
-        foreach ($pavs as $pav) {
-            $entity = $repository->get();
-            $entity->set($pav->toArray());
-            $entity->id = Util::generateId();
-            $entity->set('productId', $product->get('id'));
-
-            try {
-                if (!empty($duplicate = $repository->getDuplicateEntity($entity))) {
-                    $repository->remove($duplicate);
-                }
-                $repository->save($entity);
-            } catch (ProductAttributeAlreadyExists $e) {
-            }
-        }
-    }
-
     /**
      * @param Entity $product
      * @param Entity $duplicatingProduct
@@ -658,18 +632,6 @@ class Product extends Hierarchy
         }
     }
 
-    public function createEntity($attachment)
-    {
-        $entity = parent::createEntity($attachment);
-
-        if (!empty(($parentsIds = $entity->getLinkMultipleIdList('parents'))[0])) {
-            foreach ($parentsIds as $parentsId) {
-                $this->inheritedAllFromParent($parentsId, $entity);
-            }
-        }
-        return $entity;
-    }
-
     protected function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
@@ -739,35 +701,6 @@ class Product extends Hierarchy
     }
 
     /**
-     * @param Entity $entity
-     *
-     * @return string|null
-     */
-    protected function getAttributeProductAttributeValuesFromEntityForExport(Entity $entity): ?string
-    {
-        if (empty($entity->get('productAttributeValuesIds'))) {
-            return null;
-        }
-
-        // prepare select
-        $select = ['id', 'attributeId', 'attributeName', 'isRequired', 'channelId', 'channelName', 'data', 'value'];
-        if ($this->getConfig()->get('isMultilangActive')) {
-            foreach ($this->getConfig()->get('inputLanguageList') as $locale) {
-                $select[] = Util::toCamelCase('value_' . strtolower($locale));
-            }
-        }
-
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select($select)
-            ->where(['id' => $entity->get('productAttributeValuesIds')])
-            ->find();
-
-        return Json::encode($pavs->toArray());
-    }
-
-    /**
      * @return MassActions
      */
     protected function getMassActionsService(): MassActions
@@ -830,56 +763,6 @@ class Product extends Hierarchy
         parent::init();
 
         $this->addDependency('serviceFactory');
-    }
-
-    public function inheritedAllFromParent($parent, $child)
-    {
-        if (is_string($parent)) {
-            $parent = $this->getRepository()->get($parent);
-        }
-
-        if (is_string($child)) {
-            $child = $this->getRepository()->get($child);
-        }
-
-        $pavs = $parent->get('productAttributeValues');
-        if (!empty($pavs[0])) {
-            $pavRepository = $this->getEntityManager()->getRepository('ProductAttributeValue');
-            $pavService = $this->getServiceFactory()->create('ProductAttributeValue');
-            foreach ($pavs as $parentPav) {
-                $childPav = $pavRepository->getChildPavForProduct($parentPav, $child);
-
-                // create child PAV if not exist
-                if (empty($childPav)) {
-                    $childPav = $pavRepository->get();
-                    $childPav->set($parentPav->toArray());
-                    $childPav->id = null;
-                    $childPav->set('productId', $child->get('id'));
-                    try {
-                        $pavRepository->save($childPav);;
-                    } catch (\Throwable $e) {
-                        $GLOBALS['log']->error('Create child PAV failed: ' . $e->getMessage());
-                    }
-                    continue;
-                }
-
-                $pavService->prepareEntityForOutput($childPav);
-                if ($childPav->get('isPavValueInherited') === false) {
-                    $value = $childPav->get('value');
-                    if ($childPav->get('attributeType') === 'file') {
-                        $value = $childPav->get('valueId');
-                    }
-
-                    if ($value === null) {
-                        try {
-                            $pavService->inheritPav($childPav);
-                        } catch (\Throwable $e) {
-                            $GLOBALS['log']->error('Inherit PAV failed: ' . $e->getMessage());
-                        }
-                    }
-                }
-            }
-        }
     }
 
     protected function getMandatoryLinksToMerge(): array

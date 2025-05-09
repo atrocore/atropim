@@ -476,25 +476,6 @@ class Attribute extends Base
             $this->addAttributeValueForComposite($entity);
         }
 
-        /**
-         * Delete all lingual product attribute values
-         */
-        if (!$entity->isNew() && $entity->isAttributeChanged('isMultilang') && empty($entity->get('isMultilang'))) {
-            while (true) {
-                $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')
-                    ->where(['attributeId' => $entity->get('id'), 'language!=' => 'main'])
-                    ->limit(0, 2000)
-                    ->order('createdAt', 'ASC')
-                    ->find();
-                if (empty($pavs[0])) {
-                    break;
-                }
-                foreach ($pavs as $pav) {
-                    $this->getEntityManager()->removeEntity($pav);
-                }
-            }
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('notNull') && !empty($entity->get('notNull'))) {
             $attributeId = $entity->get('id');
             $query = $this->getEntityManager()
@@ -544,28 +525,6 @@ class Attribute extends Base
                     ->executeQuery();
             }
         }
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByAttributeId($entity->get('id'));
-
-        parent::afterRemove($entity, $options);
-    }
-
-    protected function afterRestore($entity)
-    {
-        parent::afterRestore($entity);
-
-        $this->getConnection()
-            ->createQueryBuilder()
-            ->update('product_attribute_value')
-            ->set('deleted', ':false')
-            ->where('attribute_id = :attributeId')
-            ->andWhere('deleted = :true')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('attributeId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true', true, ParameterType::BOOLEAN);
     }
 
     /**

@@ -202,33 +202,6 @@ class Attribute extends Base
         return parent::updateEntity($id, $data);
     }
 
-    protected function duplicateProductAttributeValues(Entity $entity, Entity $duplicatingEntity)
-    {
-        foreach ($duplicatingEntity->get('productAttributeValues') as $item) {
-            $record = $this->getEntityManager()->getEntity('ProductAttributeValue');
-            $record->set($item->toArray());
-            $record->id = null;
-
-            $record->clear('createdAt');
-            $record->clear('modifiedAt');
-            $record->clear('createdById');
-            $record->clear('modifiedById');
-
-            $record->clear('boolValue');
-            $record->clear('dateValue');
-            $record->clear('datetimeValue');
-            $record->clear('intValue');
-            $record->clear('floatValue');
-            $record->clear('varcharValue');
-            $record->clear('textValue');
-            $record->clear('referenceValue');
-
-            $record->set('attributeId', $entity->get('id'));
-            $record->set('attributeName', $entity->get('name'));
-            $this->getEntityManager()->saveEntity($record);
-        }
-    }
-
     protected function init()
     {
         parent::init();
@@ -249,56 +222,6 @@ class Attribute extends Base
         $config = $this->getConfig()->get('modules');
 
         return (!empty($config['multilangFields'])) ? array_keys($config['multilangFields']) : [];
-    }
-
-    /**
-     * @param Entity $entity
-     */
-    protected function afterDeleteEntity(Entity $entity)
-    {
-        // call parent action
-        parent::afterDeleteEntity($entity);
-
-        // unlink
-        $this->unlinkAttribute([$entity->get('id')]);
-    }
-
-    /**
-     * Unlink attribute from Classification and Product
-     *
-     * @param array $ids
-     *
-     * @return bool
-     */
-    protected function unlinkAttribute(array $ids): bool
-    {
-        // prepare data
-        $result = false;
-
-        if (!empty($ids)) {
-            // remove from product families
-            $this
-                ->getEntityManager()
-                ->getRepository('ClassificationAttribute')
-                ->where([
-                    'attributeId' => $ids
-                ])
-                ->removeCollection();
-
-            // remove from products
-            $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->where([
-                    'attributeId' => $ids
-                ])
-                ->removeCollection();
-
-            // prepare result
-            $result = true;
-        }
-
-        return $result;
     }
 
     public function getDefaultValue(string $id): array

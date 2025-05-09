@@ -164,37 +164,6 @@ class AbstractProductAttributeService extends Base
         }
     }
 
-    public function inheritPav($pav): bool
-    {
-        if (is_string($pav)) {
-            $pav = $this->getEntity($pav);
-        }
-
-        if (!($pav instanceof \Pim\Entities\AbstractAttributeValue)) {
-            return false;
-        }
-
-        $parentPav = $this->getRepository()->getParentPav($pav);
-        if (empty($parentPav)) {
-            return false;
-        }
-
-        $this->getInjection(ValueConverter::class)->convertFrom($parentPav, $parentPav->get('attribute'));
-
-        $input = new \stdClass();
-        $input->isVariantSpecificAttribute = $parentPav->get('isVariantSpecificAttribute');
-        $input->isRequired = $parentPav->get('isRequired');
-        foreach ($parentPav->toArray() as $name => $v) {
-            if (substr($name, 0, 5) === 'value') {
-                $input->$name = $v;
-            }
-        }
-
-        $this->updateEntity($pav->get('id'), $input);
-
-        return true;
-    }
-
     protected function checkFieldsWithPattern(Entity $entity): void
     {
         $attribute = !empty($entity->get('attribute')) ? $entity->get('attribute') : $this->getEntityManager()->getEntity('Attribute', $entity->get('attributeId'));
@@ -204,7 +173,7 @@ class AbstractProductAttributeService extends Base
             in_array($attribute->get('type'), $typesWithPattern)
             && !empty($pattern = $attribute->get('pattern'))
             && !preg_match($pattern, $entity->get('varcharValue'))) {
-            $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', 'ProductAttributeValue');
+            $message = $this->getInjection('language')->translate('attributeDontMatchToPattern', 'exceptions', 'Attribute');
             $message = str_replace('{attribute}', $attribute->get('name'), $message);
             $message = str_replace('{pattern}', $pattern, $message);
 
