@@ -266,9 +266,17 @@
       "default": false,
       "emHidden": true,
       "view": "pim:views/attribute/fields/full-width"
+    },
+    "channel": {
+      "type": "link"
     }
   },
   "links": {
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "attributes"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
