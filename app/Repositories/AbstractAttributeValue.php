@@ -28,6 +28,7 @@ abstract  class AbstractAttributeValue extends Base
         "Product" => [],
         "Classification" =>  []
     ];
+
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
         $foreignEntity = "Classification";
