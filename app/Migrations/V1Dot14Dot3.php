@@ -80,6 +80,15 @@ class V1Dot14Dot3 extends Base
         $this->migrateVariantSpecific();
 
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
+
+        $this->exec("ALTER TABLE classification ADD entity_id VARCHAR(36) DEFAULT NULL");
+        $this->getConnection()->createQueryBuilder()
+            ->update('classification')
+            ->set('entity_id', ':entityId')
+            ->where('deleted=:false')
+            ->setParameter('entityId', 'Product')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
     }
 
     protected function migrateVariantSpecific(): void

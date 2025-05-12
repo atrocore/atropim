@@ -36,6 +36,12 @@
       "type": "varchar",
       "trim": true
     },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "pim:views/classification/fields/entity"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
