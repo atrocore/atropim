@@ -65,7 +65,6 @@
     "compareInstance": "pim:views/product/record/compare-instance"
   },
   "massRelationView": "pim:views/product/modals/select-entity-and-records",
-  "massUpdateView": "pim:views/product/modals/mass-update",
   "additionalPdfGeneratorDropdownItem": {
     "actionViewPath": "pim:views/product/actions/show-pdf-generator",
     "action": "showPdfGenerator"

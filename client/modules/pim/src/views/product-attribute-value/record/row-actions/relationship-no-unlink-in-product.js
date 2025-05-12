@@ -55,19 +55,6 @@ Espo.define('pim:views/product-attribute-value/record/row-actions/relationship-n
                         id: this.model.id
                     }
                 });
-
-                if (
-                    this.getMetadata().get('scopes.Product.relationInheritance') === true
-                    && !(this.getMetadata().get('scopes.Product.unInheritedRelations') || []).includes('productAttributeValues')
-                ) {
-                    list.push({
-                        action: 'removeRelatedHierarchically',
-                        label: 'removeHierarchically',
-                        data: {
-                            id: this.model.id
-                        }
-                    });
-                }
             }
             this.runPipeline('actionListPipe', list);
             return list;

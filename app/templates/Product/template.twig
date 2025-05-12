@@ -357,31 +357,31 @@
         {% set attributeGroups = {} %}
         {% set pavLanguage = language == mainLanguage ? 'main' : language %}
 
-        {% for pav in product.productAttributeValues ?? [] %}
-            {% set attribute = pav.attribute %}
+{#        {% for pav in product.productAttributeValues ?? [] %}#}
+{#            {% set attribute = pav.attribute %}#}
 
-            {% if not attribute.isMultilang or (attribute.isMultilang and pav.language == pavLanguage) %}
-                {% set data = {
-                    'attribute': attribute,
-                    'pav': pav,
-                    'displayValue': formatPAV(pav)
-                } %}
+{#            {% if not attribute.isMultilang or (attribute.isMultilang and pav.language == pavLanguage) %}#}
+{#                {% set data = {#}
+{#                    'attribute': attribute,#}
+{#                    'pav': pav,#}
+{#                    'displayValue': formatPAV(pav)#}
+{#                } %}#}
 
-                {% if pav.attributeType == 'file' and pav.valuePathsData['thumbnails'] is not empty %}
-                    {% set data = data|merge({ 'media': true }) %}
-                {% endif %}
+{#                {% if pav.attributeType == 'file' and pav.valuePathsData['thumbnails'] is not empty %}#}
+{#                    {% set data = data|merge({ 'media': true }) %}#}
+{#                {% endif %}#}
 
-                {% set tab = attributeGroups[attribute.attributeTabName] ?? {} %}
-                {% if tab[attribute.attributeGroupName] %}
-                    {% set tmp = tab[attribute.attributeGroupName]|merge({(attribute.name): data}) %}
-                {% else %}
-                    {% set tmp = {(attribute.name): data} %}
-                {% endif %}
+{#                {% set tab = attributeGroups[attribute.attributeTabName] ?? {} %}#}
+{#                {% if tab[attribute.attributeGroupName] %}#}
+{#                    {% set tmp = tab[attribute.attributeGroupName]|merge({(attribute.name): data}) %}#}
+{#                {% else %}#}
+{#                    {% set tmp = {(attribute.name): data} %}#}
+{#                {% endif %}#}
 
-                {% set tab = tab|merge({(attribute.attributeGroupName): tmp}) %}
-                {% set attributeGroups = attributeGroups|merge({(attribute.attributeTabName): tab}) %}
-            {% endif %}
-        {% endfor %}
+{#                {% set tab = tab|merge({(attribute.attributeGroupName): tmp}) %}#}
+{#                {% set attributeGroups = attributeGroups|merge({(attribute.attributeTabName): tab}) %}#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
 
         {% for tabName, tab in attributeGroups %}
             <h2>{{ tabName ?: translate('productAttributeValues', language, 'fields', 'Product') }}</h2>
