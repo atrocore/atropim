@@ -55,8 +55,6 @@ class Metadata extends AbstractListener
 
         $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
-        $this->defineClassificationViewForProduct($data);
-
         $event->setArgument('data', $data);
     }
 
@@ -96,12 +94,5 @@ class Metadata extends AbstractListener
     {
         $metadata['clientDefs']['ExtensibleEnumOption']['boolFilterList'][] = "onlyExtensibleEnumOptionIds";
         $metadata['clientDefs']['ExtensibleEnumOption']['hiddenBoolFilterList'][] = "onlyExtensibleEnumOptionIds";
-    }
-
-    protected function defineClassificationViewForProduct(&$metadata)
-    {
-        if ($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
-            $metadata['entityDefs']['Product']['fields']['classifications']['view'] = "pim:views/product/fields/classifications-single";
-        }
     }
 }

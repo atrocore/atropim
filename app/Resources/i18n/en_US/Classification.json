@@ -1,7 +1,6 @@
 {
   "fields": {
     "entity": "Entity",
-    "products": "Products",
     "description": "Description",
     "release": "Release",
     "synonyms": "Synonyms",

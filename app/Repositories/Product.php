@@ -245,21 +245,6 @@ class Product extends Hierarchy
         $this->addDependency(ValueConverter::class);
     }
 
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
-        }
-
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-            && $entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1){
-            $data = $entity->get('classificationsIds');
-            $entity->set('classificationsIds', [end($data)]);
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));

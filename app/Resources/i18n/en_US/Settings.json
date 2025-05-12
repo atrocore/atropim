@@ -3,8 +3,7 @@
     "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
     "behaviorOnCategoryDelete": "Behavior on category delete",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog",
-    "behaviorOnClassificationChange": "Behavior on Classification change/removal",
-    "allowSingleClassificationForProduct": "Allow only single classification for a product"
+    "behaviorOnClassificationChange": "Behavior on Classification change/removal"
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields and attribute values for this locale are automatically removed.",

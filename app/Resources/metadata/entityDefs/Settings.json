@@ -47,9 +47,6 @@
         "removeOnlyInheritedAttributesWithNoValue"
       ],
       "default": "retainAllInheritedAttributes"
-    },
-    "allowSingleClassificationForProduct": {
-      "type": "bool"
     }
   }
 }

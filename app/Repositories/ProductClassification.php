@@ -23,15 +23,6 @@ class ProductClassification extends Relation
     {
         parent::afterSave($entity, $data);
 
-        if ($this->getConfig()->get('allowSingleClassificationForProduct', false)) {
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->delete('product_classification')
-                ->where('product_id=:productId AND classification_id <> :classificationId')
-                ->setParameter('productId', $entity->get('productId'))
-                ->setParameter('classificationId', $entity->get('classificationId'))
-                ->executeQuery();
-        }
-
         if ($entity->isNew()) {
             $this->getEntityManager()->getRepository('Product')->relateClassification($entity->get('productId'), $entity->get('classificationId'));
         }

@@ -112,8 +112,7 @@
     "you": "sie",
     "removeHint": "Beim Entfernen des Katalogs werden die dazugehörigen Produkte gelöscht.",
     "categoryPreview": "Kategorievorschau",
-    "productPreview": "Produktvorschau",
-    "classificationSettings": "Einstellungen für die Klassifizierung"
+    "productPreview": "Produktvorschau"
   },
   "streamMessages": {
     "createProductAssociationThis": "{user} hat {relatedProduct} als {association} assoziiert",

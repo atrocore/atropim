@@ -3,8 +3,7 @@
     "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
     "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog",
-    "behaviorOnClassificationChange": "Verhalten bei Änderung/Entfernung der Klassifizierung",
-    "allowSingleClassificationForProduct": "Nur eine einzige Klassifizierung für ein Produkt zulassen"
+    "behaviorOnClassificationChange": "Verhalten bei Änderung/Entfernung der Klassifizierung"
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder und Attributwerte für dieses Gebietsschema eingegeben haben, automatisch entfernt.",

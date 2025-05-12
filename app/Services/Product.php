@@ -434,15 +434,6 @@ class Product extends Hierarchy
         return $links;
     }
 
-    protected  function getForbiddenLinksToMerge(): array {
-        $links = parent::getForbiddenLinksToMerge();
-        if($this->getConfig()->get('allowSingleClassificationForProduct')){
-            $links[] = 'classifications';
-        }
-
-        return  $links;
-    }
-
     protected  function applyMergeForAssociatedRelatedProduct(Entity $target, array $sourceList): void
     {
         $sourceIds = [];

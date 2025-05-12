@@ -1,10 +1,5 @@
 {
   "fields": {
-    "classifications": {
-      "type": "linkMultiple",
-      "view": "pim:views/product/fields/classifications",
-      "noLoad": false
-    },
     "brand": {
       "type": "link",
       "view": "pim:views/product/fields/brand"
@@ -222,12 +217,6 @@
       "relationName": "productFile",
       "foreign": "products",
       "entity": "File"
-    },
-    "classifications": {
-      "type": "hasMany",
-      "foreign": "products",
-      "relationName": "ProductClassification",
-      "entity": "Classification"
     },
     "variantSpecificAttributes": {
       "type": "hasMany",

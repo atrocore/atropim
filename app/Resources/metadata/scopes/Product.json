@@ -14,6 +14,7 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "hasAttribute": true,
+  "hasClassification": true,
   "overviewFilters": true,
   "addRelationEnabled": true,
   "multiParents": false,

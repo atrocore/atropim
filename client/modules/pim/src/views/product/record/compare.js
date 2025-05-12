@@ -13,22 +13,8 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
 
     return Dep.extend({
 
-        isValidType(type, field) {
-            if(field === 'classifications' && this.getConfig().get('allowSingleClassificationForProduct')) {
-                return true;
-            }
-            return  Dep.prototype.isValidType.call(this, type, field);
-        },
-
-        isLinkEnabled(model, name) {
-            if(name === 'classifications' && this.getConfig().get('allowSingleClassificationForProduct')) {
-                return false;
-            }
-            return Dep.prototype.isLinkEnabled.call(this, model, name);
-        },
-
         isComparableLink(link) {
-            if(['productAttributeValues', 'associatedMainProducts'].includes(link)) {
+            if(['associatedMainProducts'].includes(link)) {
                 return true;
             }
 

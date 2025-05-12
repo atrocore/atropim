@@ -60,10 +60,6 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "products": {
-      "type": "linkMultiple",
-      "noLoad": true
-    },
     "classificationAttributes": {
       "type": "linkMultiple",
       "layoutListDisabled": true,
@@ -99,12 +95,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "products": {
-      "type": "hasMany",
-      "foreign": "classifications",
-      "relationName": "ProductClassification",
-      "entity": "Product"
     },
     "classificationAttributes": {
       "type": "hasMany",

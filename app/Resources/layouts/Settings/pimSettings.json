@@ -32,16 +32,5 @@
         false
       ]
     ]
-  },
-  {
-    "label": "classificationSettings",
-    "rows": [
-      [
-        {
-          "name": "allowSingleClassificationForProduct"
-        },
-        false
-      ]
-    ]
   }
 ]

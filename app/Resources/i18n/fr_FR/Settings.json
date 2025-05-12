@@ -3,8 +3,7 @@
     "productCanLinkedWithNonLeafCategories": "Permet de lier des produits à des catégories non feuilletantes.",
     "behaviorOnCategoryDelete": "Comportement lors de la suppression d'une catégorie",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Comportement de l'arbre des catégories à la sortie du catalogue",
-    "behaviorOnClassificationChange": "Comportement en cas de changement/suppression de la classification",
-    "allowSingleClassificationForProduct": "N'autoriser qu'une seule classification pour un produit"
+    "behaviorOnClassificationChange": "Comportement en cas de changement/suppression de la classification"
   },
   "labels": {
     "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues et les valeurs d'attributs pour cette langue sont automatiquement supprimées.",

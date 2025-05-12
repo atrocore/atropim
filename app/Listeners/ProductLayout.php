@@ -32,11 +32,6 @@ class ProductLayout extends AbstractLayoutListener
             }
 
             foreach ($result as $row) {
-                if ($this->getConfig()->get('allowSingleClassificationForProduct', false)
-                    && $row['name'] === 'classifications') {
-                    continue;
-                }
-
                 if (str_starts_with($row['name'], "tab_")) {
                     if (!empty(substr($row['name'], 4)) && !empty($entity = $this->getEntityManager()->getEntity('AttributeTab', substr($row['name'], 4)))) {
                         if (!$this->getContainer()->get('acl')->checkEntity($entity, 'read')) {

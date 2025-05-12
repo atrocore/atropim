@@ -104,8 +104,7 @@
     "removeExplain": "Select this to unlink attribute from other Entities before removing",
     "removeHint": "When removing the Catalog, the Products belonging to it are deleted.",
     "categoryPreview": "Category Preview",
-    "productPreview": "Product Preview",
-    "classificationSettings": "Classification Settings"
+    "productPreview": "Product Preview"
   },
   "streamMessages": {
     "createProductAssociationThis": "{user} associated {relatedProduct} as {association}",

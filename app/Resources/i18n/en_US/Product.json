@@ -6,7 +6,6 @@
     "categories": "Categories",
     "product": "Main Product",
     "products": "Products",
-    "classifications": "Classifications",
     "brand": "Brand",
     "associatedMainProducts": "Associated Products: Related",
     "associatedRelatedProduct": "Associated Products: Main",
@@ -94,10 +93,8 @@
     "itselfAssociation": "Product cannot be associated with itself.",
     "productAssociationAlreadyExists": "Such product association exists already.",
     "youCantChangeClassificationInProduct": "You can't change Classification in Product",
-    "youCantChangeFieldOfTypeInProduct": "You can't change field of Type in Product",
     "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
-    "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first.",
-    "someProductsHaveMoreThanOneClassification": "Some Products have more than one classifications."
+    "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
   },
   "messages": {
     "componentsNotInstalled": "Install Product Components module to use components preview."
