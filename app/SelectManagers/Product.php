@@ -31,9 +31,9 @@ class Product extends AbstractSelectManager
 
     private array $textFilterParams = [];
 
-    public function mutateWhereQuery(array &$where): void
+    public function mutateWhereQuery(array &$where, &$result = null): void
     {
-        parent::mutateWhereQuery($where);
+        parent::mutateWhereQuery($where, $result);
         $this->mutateWhereAttributeQuery($where);
     }
 
