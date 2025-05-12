@@ -60,6 +60,7 @@
     }
   },
   "fields": {
+    "classifications": "Classifications",
     "categories": "Categories",
     "channels": "Channels",
     "products": "Products",

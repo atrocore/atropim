@@ -53,6 +53,7 @@
     }
   },
   "fields": {
+    "classifications": "Класифікації",
     "classification": "Класифікація",
     "productStatus": "Статус продукту",
     "oneGeoType": "OneGeo Type",

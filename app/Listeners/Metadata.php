@@ -44,6 +44,8 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareClassificationAttributeMetadata($data);
 
+        $this->addClassificationToEntity($data);
+
         if ($this->getConfig()->get('behaviorOnCategoryDelete', 'cascade') == 'cascade') {
             $data['clientDefs']['Category']['deleteConfirmation'] = 'Category.messages.categoryRemoveConfirm';
         }
@@ -56,6 +58,34 @@ class Metadata extends AbstractListener
         $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
         $event->setArgument('data', $data);
+    }
+
+    protected function addClassificationToEntity(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['hasAttribute']) && $scopeDefs['hasClassification']) {
+                $data['entityDefs'][$scope]['fields']['classifications'] = [
+                    "type" => "linkMultiple"
+                ];
+                $data['entityDefs'][$scope]['links']['classifications'] = [
+                    "type"         => "hasMany",
+                    "foreign"      => Util::pluralize(lcfirst($scope)),
+                    "relationName" => "{$scope}Classification",
+                    "entity"       => "Classification"
+                ];
+
+                $data['entityDefs']['Classification']['fields'][Util::pluralize(lcfirst($scope))] = [
+                    "type" => "linkMultiple"
+                ];
+
+                $data['entityDefs']['Classification']['links'][Util::pluralize(lcfirst($scope))] = [
+                    "type"         => "hasMany",
+                    "foreign"      => 'classifications',
+                    "relationName" => "{$scope}Classification",
+                    "entity"       => "$scope"
+                ];
+            }
+        }
     }
 
     protected function prepareClassificationAttributeMetadata(array $data): array

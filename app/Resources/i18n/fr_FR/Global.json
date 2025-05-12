@@ -24,6 +24,7 @@
     "ContentItem": "Élément de contenu"
   },
   "fields": {
+    "classifications": "Classification",
     "amount": "Montant",
     "products": "Produits",
     "scope": "Champ d'application",
