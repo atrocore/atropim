@@ -224,33 +224,6 @@ class Attribute extends Base
         return (!empty($config['multilangFields'])) ? array_keys($config['multilangFields']) : [];
     }
 
-    public function getDefaultValue(string $id): array
-    {
-        $attribute = $this->getRepository()->get($id);
-
-        if (empty($attribute)) {
-            throw new NotFound();
-        }
-
-        if ($attribute->get('type') !== 'varchar') {
-            throw new BadRequest('Invalid Type for default value');
-        }
-
-        $value = "";
-
-        if (!empty($default = $attribute->get('defaultValue'))) {
-            if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
-                // use twig
-                $default = $this->getInjection('twig')->renderTemplate($default, []);
-            }
-            $value = $default;
-        }
-
-        return [
-            "value" => $value
-        ];
-    }
-
     public function findEntities($params)
     {
         if (!empty(\Atro\Services\AbstractService::getLanguagePrism())) {

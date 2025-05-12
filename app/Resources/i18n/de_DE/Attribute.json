@@ -16,7 +16,6 @@
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
     "defaultDate": "Standard Datum",
-    "defaultValue": "Standardwert",
     "defaultChannel": "Standardkanal",
     "isRequired": "erforderlich",
     "tooltip": "Kurzinfo",

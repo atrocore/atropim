@@ -17,7 +17,6 @@
     "measure": "Measure",
     "defaultUnit": "Default Unit",
     "defaultDate": "Default Date",
-    "defaultValue": "Default Value",
     "defaultChannel": "Default channel",
     "isRequired": "Required",
     "tooltip": "Tooltip",

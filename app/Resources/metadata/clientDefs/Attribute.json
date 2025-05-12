@@ -296,19 +296,6 @@
           ]
         }
       },
-      "defaultValue": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "varchar"
-              ]
-            }
-          ]
-        }
-      },
       "notNull": {
         "visible": {
           "conditionGroup": [

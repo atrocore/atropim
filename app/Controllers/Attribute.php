@@ -19,19 +19,6 @@ use Atro\Core\Templates\Controllers\Base;
 
 class Attribute extends Base
 {
-    public function actionDefaultValue($params, $data, $request)
-    {
-        if (!$request->isGet()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getDefaultValue((string)$request->get('id'));
-    }
-
     public function actionAttributesDefs($params, $data, $request)
     {
         if (!$request->isGet() || empty($request->get('entityName')) || empty($request->get('attributesIds'))) {

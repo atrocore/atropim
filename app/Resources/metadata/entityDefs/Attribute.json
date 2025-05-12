@@ -170,13 +170,6 @@
       "exportDisabled": true,
       "tooltip": true
     },
-    "defaultValue": {
-      "type": "text",
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "defaultChannel": {
       "type": "link",
       "tooltip": true
