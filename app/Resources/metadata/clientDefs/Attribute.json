@@ -57,6 +57,19 @@
   },
   "dynamicLogic": {
     "fields": {
+      "attributeGroup": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "composite"
+              ]
+            }
+          ]
+        }
+      },
       "entity": {
         "readOnly": {
           "conditionGroup": [

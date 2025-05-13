@@ -279,19 +279,18 @@ class Attribute extends Base
         return $attributes;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @throws BadRequest
-     */
     public function beforeSave(Entity $entity, array $options = [])
     {
+        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
+            throw new BadRequest($this->exception('entityCannotBeChanged'));
+        }
+
         if ($entity->get('code') === '') {
             $entity->set('code', null);
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
-            throw new BadRequest($this->exception('entityCannotBeChanged'));
+        if ($entity->get('type') === 'composite' && !empty($entity->get('attributeGroupId'))) {
+            $entity->set('attributeGroupId', null);
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {

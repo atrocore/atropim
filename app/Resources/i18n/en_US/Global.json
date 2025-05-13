@@ -82,6 +82,7 @@
     "role": "Role"
   },
   "labels": {
+    "selectAttributes": "Select attribute(s)",
     "attributeValues": "Attribute Values",
     "addAttribute": "Add Attribute",
     "removeHierarchically": "Delete Hierarchically",
