@@ -95,7 +95,6 @@
     "ProductsByTaskStatus": "Продукты по статусу задачи"
   },
   "exceptions": {
-    "attributeRecordAlreadyExists": "Атрибут '%s' для канала %s уже связан.",
     "massRelateBlocked": "Массовое создание таких связей заблокировано.",
     "massUnRelateBlocked": "Массовое удаление таких связей заблокировано.",
     "onlyForceDeletingAvailable": "Доступно только принудительное удаление",

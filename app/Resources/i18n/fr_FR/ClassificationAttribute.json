@@ -25,8 +25,8 @@
   },
   "labels": {
     "Create ClassificationAttribute": "Créer un attribut de classification",
-    "unlinkRelatedAttribute": "Supprimer ici et conserver pour les produits",
-    "cascadeUnlinkRelatedAttribute": "Supprimer ici et à partir des produits"
+    "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
+    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers"
   },
   "options": {
     "scope": {

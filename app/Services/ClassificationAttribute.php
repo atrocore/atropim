@@ -25,15 +25,9 @@ class ClassificationAttribute extends AbstractProductAttributeService
     protected $mandatorySelectAttributeList
         = [
             'classificationId',
-            'scope',
-            'isRequired',
-            'productName',
             'attributeId',
             'attributeName',
-            'attributeType',
-            'attributeEntityType',
-            'attributeEntityField',
-            'attributeTooltip',
+            'isRequired',
             'intValue',
             'intValue1',
             'boolValue',
@@ -47,9 +41,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
             'data'
         ];
 
-    /**
-     * @inheritDoc
-     */
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -83,7 +74,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 }
             }
 
-            $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
+//            $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
 
             if ($attribute->get('measureId')) {
                 $entity->set('attributeMeasureId', $attribute->get('measureId'));
@@ -94,17 +85,13 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 ]);
             }
         }
-
-        if ($entity->get('channelId') === '') {
-            $entity->set('channelId', null);
-        }
     }
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         parent::handleInput($data, $id);
 
-        $this->getInjection(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
+//        $this->getInjection(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
     }
 
     public function createEntity($attachment)
@@ -130,7 +117,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
         try {
             $this->prepareDefaultValues($attachment);
             $result = parent::createEntity($attachment);
-            $this->createAssociatedFamilyAttribute($attachment, $attachment->attributeId);
             $this->createPseudoTransactionCreateJobs($attachment);
 
             if ($inTransaction) {
@@ -144,35 +130,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
         }
 
         return $result;
-    }
-
-    protected function createAssociatedFamilyAttribute(\stdClass $attachment, string $attributeId): void
-    {
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
-        if (empty($attribute)) {
-            return;
-        }
-
-        $children = $attribute->get('children');
-        if (empty($children) || count($children) === 0) {
-            return;
-        }
-
-        foreach ($children as $child) {
-            $aData = new \stdClass();
-            $aData->attributeId = $child->get('id');
-            $aData->classificationId = $attachment->classificationId;
-            if (property_exists($attachment, 'ownerUserId')) {
-                $aData->ownerUserId = $attachment->ownerUserId;
-            }
-            if (property_exists($attachment, 'assignedUserId')) {
-                $aData->assignedUserId = $attachment->assignedUserId;
-            }
-            if (property_exists($attachment, 'teamsIds')) {
-                $aData->teamsIds = $attachment->teamsIds;
-            }
-            $this->createEntity($aData);
-        }
     }
 
     protected function prepareDefaultValues(\stdClass $data): void
@@ -191,12 +148,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
         }
 
-        if (!property_exists($data, 'Id')) {
-            if (!empty($attribute->get('defaultChannelId'))) {
-                $data->channelId = $attribute->get('defaultChannelId');
-            }
-        }
-
         if (!property_exists($data, 'maxLength')) {
             $data->maxLength = $attribute->get('maxLength');
             $data->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
@@ -205,6 +156,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
+        return;
+
         if (!property_exists($data, 'classificationId')) {
             return;
         }
@@ -249,6 +202,8 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, $parentTransactionId = null): void
     {
+        return;
+
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $inputData = new \stdClass();
             foreach (['channelId', 'language'] as $key) {
@@ -283,7 +238,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
             $inTransaction = true;
         }
         try {
-            $this->withPavs = true;
             $this->createPseudoTransactionDeleteJobs($id);
             $result = parent::deleteEntity($id);
             if ($inTransaction) {
@@ -368,6 +322,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
 
     protected function createPseudoTransactionDeleteJobs(string $id, $parentTransactionId = null): void
     {
+        return;
         foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
             $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
             $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);

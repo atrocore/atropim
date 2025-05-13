@@ -120,8 +120,7 @@
     "massRelateBlocked": "Les relations de masse de ce type sont bloquées.",
     "massUnRelateBlocked": "Les déliaisons de masse de ce type sont bloquées.",
     "onlyForceDeletingAvailable": "Seule la suppression forcée est disponible",
-    "notValid": "Les données ne sont pas valides",
-    "attributeRecordAlreadyExists": "L'attribut \"%s\" du canal %s est déjà lié."
+    "notValid": "Les données ne sont pas valides"
   },
   "messages": {
     "fieldHasPattern": "{field} ne doit contenir que des traits de soulignement, des chiffres et des lettres en minuscules."

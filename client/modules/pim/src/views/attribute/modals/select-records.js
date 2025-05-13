@@ -11,7 +11,7 @@
 Espo.define('pim:views/attribute/modals/select-records', 'views/modals/select-records',
     Dep => Dep.extend({
 
-        mandatorySelectAttributeList: ['defaultChannelId', 'defaultChannelName', 'isRequired', 'notNull'],
+        mandatorySelectAttributeList: ['isRequired', 'notNull'],
 
     })
 );

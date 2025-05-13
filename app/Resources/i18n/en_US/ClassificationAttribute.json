@@ -25,8 +25,8 @@
   },
   "labels": {
     "Create ClassificationAttribute": "Create Classification Attribute",
-    "unlinkRelatedAttribute": "Delete here and retain for products",
-    "cascadeUnlinkRelatedAttribute": "Delete here and from products"
+    "unlinkRelatedAttribute": "Delete here and retain for records",
+    "cascadeUnlinkRelatedAttribute": "Delete here and from records"
   },
   "options": {
     "scope": {

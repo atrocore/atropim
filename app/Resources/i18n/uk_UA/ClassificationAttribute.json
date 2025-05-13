@@ -17,8 +17,8 @@
   },
   "labels": {
     "Create ClassificationAttribute": "Створити атрибут класифікації",
-    "unlinkRelatedAttribute": "Видалити тут і зберегти для продуктів",
-    "cascadeUnlinkRelatedAttribute": "Видалити тут і з продуктів"
+    "unlinkRelatedAttribute": "Видалити тут і зберегти для записів",
+    "cascadeUnlinkRelatedAttribute": "Видалити тут і з записів"
   },
   "options": {
     "scope": {

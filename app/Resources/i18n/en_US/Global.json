@@ -123,7 +123,6 @@
     "ProductsByTaskStatus": "Products by Task Status"
   },
   "exceptions": {
-    "attributeRecordAlreadyExists": "Attribute '%s' for the channel %s is already linked.",
     "massRelateBlocked": "Mass relating of this kind is blocked.",
     "massUnRelateBlocked": "Mass unrelating of this kind is blocked.",
     "onlyForceDeletingAvailable": "Only force deleting available",
