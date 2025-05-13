@@ -6,7 +6,6 @@
     "attribute": "Attribute",
     "channel": "Kanal",
     "language": "Sprache",
-    "languages": "Sprachen",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "value": "Standardwert",

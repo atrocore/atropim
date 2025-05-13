@@ -5,7 +5,6 @@
     "isRequired": "Обов'язково",
     "channel": "Канал",
     "language": "Мова",
-    "languages": "Мови",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
     "value": "Значення за замовчуванням",

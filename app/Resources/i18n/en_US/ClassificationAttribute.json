@@ -5,7 +5,6 @@
     "isRequired": "Required",
     "channel": "Channel",
     "language": "Language",
-    "languages": "Languages",
     "maxLength": "Max Length",
     "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
     "value": "Default Value",

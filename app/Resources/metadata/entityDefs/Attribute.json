@@ -85,7 +85,6 @@
     },
     "isMultilang": {
       "type": "bool",
-      "view": "pim:views/attribute/fields/is-multilang",
       "hideMultilang": true,
       "layoutDetailDisabled": true
     },

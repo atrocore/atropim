@@ -15,11 +15,6 @@
       "view": "pim:views/classification-attribute/fields/language",
       "prohibitedEmptyValue": true
     },
-    "languages": {
-      "type": "multiLanguage",
-      "notStorable": true,
-      "view": "pim:views/classification-attribute/fields/languages"
-    },
     "isRequired": {
       "type": "bool",
       "default": false
