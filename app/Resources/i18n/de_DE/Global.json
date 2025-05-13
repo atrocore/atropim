@@ -85,6 +85,7 @@
     }
   },
   "labels": {
+    "selectAttributes": "Attribut(e) auswählen",
     "removeHierarchically": "Hierarchisch löschen",
     "setAsMainImage": "Als Hauptbild setzen",
     "setAsMainCategory": "Als Hauptkategorie festlegen",

@@ -5,21 +5,15 @@
         {
           "name": "classification"
         },
-        false
+        {
+          "name": "attribute"
+        }
       ],
       [
         {
           "name": "isRequired"
         },
         false
-      ],
-      [
-        {
-          "name": "attribute"
-        },
-        {
-          "name": "channel"
-        }
       ],
       [
         {

@@ -79,6 +79,7 @@
     "ContentItem": "Éléments de contenu"
   },
   "labels": {
+    "selectAttributes": "Sélectionnez le(s) attribut(s)",
     "removeHierarchically": "Supprimer de façon hiérarchique",
     "setAsMainImage": "Image principale",
     "setAsMainCategory": "Définir comme catégorie principale",

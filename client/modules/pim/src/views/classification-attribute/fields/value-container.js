@@ -22,12 +22,14 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
         setup() {
             this.name = this.options.name || this.defs.name;
 
-            this.listenTo(this.model, 'change:attributeId change:min change:max', () => {
+            this.listenTo(this.model, 'change:attributeId', () => {
                 if (this.mode === 'detail' || this.mode === 'edit') {
                     this.clearValue();
 
                     if (this.model.get('attributeId')) {
                         this.fetchAttributeData();
+                    } else {
+                        this.reRender();
                     }
                 }
             });
@@ -48,7 +50,9 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            this.$el.parent().hide();
             if (this.model.get('attributeType')) {
+                this.$el.parent().show();
                 let attributeType = this.model.get('attributeType');
 
                 let fieldView = this.getFieldManager().getViewName(attributeType);
