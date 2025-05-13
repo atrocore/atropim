@@ -19,7 +19,6 @@ use Atro\Core\Exceptions\Forbidden;
 
 class ClassificationAttribute extends AbstractAttributeValueController
 {
-
     public function actionDelete($params, $data, $request)
     {
         if (!$request->isDelete()) {
@@ -29,7 +28,7 @@ class ClassificationAttribute extends AbstractAttributeValueController
         $id = $params['id'];
 
         if (property_exists($data, 'deletePav') && !empty($data->deletePav)) {
-            $this->getRecordService()->deleteEntityWithThemPavs($id);
+            $this->getRecordService()->deleteEntityWithThemAttributeValues($id);
         } else {
             $this->getRecordService()->deleteEntity($id);
         }

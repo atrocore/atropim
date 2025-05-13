@@ -138,12 +138,14 @@ class ClassificationAttribute extends Base
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
-        return;
+        if (!property_exists($data, 'classificationId')) {
+            return;
+        }
 
-//        if (!property_exists($data, 'classificationId')) {
-//            return;
-//        }
-//
+        echo '<pre>';
+        print_r('123');
+        die();
+
 //        foreach ($this->getRepository()->getProductChannelsViaClassificationId($data->classificationId) as $id) {
 //            $inputData = clone $data;
 //            $inputData->productId = $id;
@@ -227,7 +229,7 @@ class ClassificationAttribute extends Base
 //        }
     }
 
-    public function deleteEntityWithThemPavs($id)
+    public function deleteEntityWithThemAttributeValues($id)
     {
         /**
          * ID can be an array with one item. It is needs to execute this method from custom pseudo transaction in advanced classification module
@@ -273,9 +275,7 @@ class ClassificationAttribute extends Base
     public function sortCollection(EntityCollection $collection): void
     {
         $attributes = [];
-        foreach ($this->getEntityManager()->getRepository('Attribute')->where([
-            'id' => array_column($collection->toArray(), 'attributeId')
-        ])->find() as $attribute) {
+        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => array_column($collection->toArray(), 'attributeId')])->find() as $attribute) {
             $attributes[$attribute->get('id')] = $attribute;
         }
 
@@ -345,6 +345,5 @@ class ClassificationAttribute extends Base
         parent::init();
 
         $this->addDependency('language');
-        $this->addDependency('container');
     }
 }

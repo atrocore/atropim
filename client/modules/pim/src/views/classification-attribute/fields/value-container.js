@@ -51,7 +51,18 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
             Dep.prototype.afterRender.call(this);
 
             this.$el.parent().hide();
-            if (this.model.get('attributeType')) {
+
+            let hasDefault = false;
+
+            if (this.model.get('attributeType')){
+                (this.getMetadata().get(`fields.${this.model.get('attributeType')}.params`) || []).forEach(item => {
+                    if (item.name === 'default' || item.name === 'defaultDate'){
+                        hasDefault = true;
+                    }
+                })
+            }
+
+            if (hasDefault) {
                 this.$el.parent().show();
                 let attributeType = this.model.get('attributeType');
 
