@@ -13,17 +13,27 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Pim\Core\ValueConverter;
 
-class ClassificationAttribute extends AbstractAttributeValue
+class ClassificationAttribute extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
         $this->validateClassificationAttribute($entity);
+
+        // prepare default value
+        $data = $entity->get('data') ?? [];
+        $data = json_decode(json_encode($data), true);
+        foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
+            if ($entity->has($key)) {
+                $data['default'][$key] = $entity->get($key);
+            }
+        }
+        $entity->set('data', $data);
     }
 
     public function validateClassificationAttribute(Entity $entity): void
@@ -63,7 +73,6 @@ class ClassificationAttribute extends AbstractAttributeValue
     protected function init()
     {
         $this->addDependency('language');
-        $this->addDependency(ValueConverter::class);
     }
 
     protected function translate(string $key, string $label, string $scope = 'ClassificationAttribute'): string

@@ -104,128 +104,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "boolValue": {
-      "type": "bool",
-      "notNull": false,
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "dateValue": {
-      "type": "date",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "datetimeValue": {
-      "type": "datetime",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "intValue": {
-      "type": "int",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "intValue1": {
-      "type": "int",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "floatValue": {
-      "type": "float",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "floatValue1": {
-      "type": "float",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "varcharValue": {
-      "type": "varchar",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "textValue": {
-      "type": "text",
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "referenceValue": {
-      "type": "varchar",
-      "maxLength": 50,
-      "aclFieldDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "value": {
       "type": "text",
       "notStorable": true,
@@ -589,16 +467,7 @@
   },
   "collection": {
     "sortBy": "createdAt",
-    "asc": false,
-    "textFilterFields": [
-      "varcharValue",
-      "textValue",
-      "intValue",
-      "floatValue",
-      "dateValue",
-      "datetimeValue",
-      "boolValue"
-    ]
+    "asc": false
   },
   "uniqueIndexes": {
     "unique_relationship": [
@@ -617,66 +486,6 @@
     "modifiedAt": {
       "columns": [
         "modifiedAt",
-        "deleted"
-      ]
-    },
-    "boolValue": {
-      "columns": [
-        "boolValue",
-        "deleted"
-      ]
-    },
-    "dateValue": {
-      "columns": [
-        "dateValue",
-        "deleted"
-      ]
-    },
-    "datetimeValue": {
-      "columns": [
-        "datetimeValue",
-        "deleted"
-      ]
-    },
-    "intValue": {
-      "columns": [
-        "intValue",
-        "deleted"
-      ]
-    },
-    "intValue1": {
-      "columns": [
-        "intValue1",
-        "deleted"
-      ]
-    },
-    "floatValue": {
-      "columns": [
-        "floatValue",
-        "deleted"
-      ]
-    },
-    "floatValue1": {
-      "columns": [
-        "floatValue1",
-        "deleted"
-      ]
-    },
-    "varcharValue": {
-      "columns": [
-        "varcharValue",
-        "deleted"
-      ]
-    },
-    "textValue": {
-      "columns": [
-        "textValue",
-        "deleted"
-      ]
-    },
-    "referenceValue": {
-      "columns": [
-        "referenceValue",
         "deleted"
       ]
     }

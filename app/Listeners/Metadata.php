@@ -63,7 +63,7 @@ class Metadata extends AbstractListener
     protected function addClassificationToEntity(array &$data): void
     {
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['hasAttribute']) && $scopeDefs['hasClassification']) {
+            if (!empty($scopeDefs['hasAttribute']) && !empty($scopeDefs['hasClassification'])) {
                 $data['entityDefs'][$scope]['fields']['classifications'] = [
                     "type" => "linkMultiple"
                 ];

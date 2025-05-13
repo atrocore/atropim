@@ -547,7 +547,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     }
                 }
             ];
-            collection.data.select = 'attributeId,attributeName,value,language,channelId,channelName';
+            collection.data.select = 'attributeId,attributeName,value';
 
             this.listenTo(collection, 'sync', () => {
                 collection.models.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));

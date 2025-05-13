@@ -31,12 +31,6 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
                     }
                 }
             });
-
-            this.listenTo(this.model, 'change:language', () => {
-                if (this.mode === 'detail' || this.mode === 'edit') {
-                    this.reRender();
-                }
-            });
         },
 
         clearValue() {
@@ -53,6 +47,7 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
             if (this.model.get('attributeType')) {
                 let attributeType = this.model.get('attributeType');
 
@@ -122,13 +117,11 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
 
-                    if (this.model.urlRoot === 'ClassificationAttribute') {
-                        customOptions = {
-                            customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
-                            customBoolFilterData: {
-                                onlyExtensibleEnumOptionIds() {
-                                    return this.model.get('extensibleEnumOptionsIds')
-                                }
+                    customOptions = {
+                        customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
+                        customBoolFilterData: {
+                            onlyExtensibleEnumOptionIds() {
+                                return this.model.get('extensibleEnumOptionsIds')
                             }
                         }
                     }
@@ -145,65 +138,36 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
                     collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
-                    labelText: this.translate('value', 'fields', 'ProductAttributeValue'),
                     inlineEditDisabled: true,
                     ...customOptions
                 };
 
-                if (attributeType === 'link' || attributeType === 'linkMultiple') {
+                if (attributeType === 'link') {
                     options.foreignScope = this.model.get('attributeEntityType');
                     options.params.foreignName = this.model.get('attributeEntityField');
                 }
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
 
-                    if (this.model.name !== 'ClassificationAttribute') {
-                        this.listenTo(this.model, 'change:isRequired', () => {
-                            if (this.model.get('isRequired')) {
-                                view.setRequired();
-                            } else {
-                                view.setNotRequired();
+                    this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
+                        if (attributeType === 'extensibleEnum' && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))) {
+                            try {
+                                view.clearLink()
+                            } catch (e) {
                             }
-                        });
-                    }
+                        }
 
-                    if (this.model.urlRoot === 'ClassificationAttribute') {
-                        this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
-
-                            if (attributeType === 'extensibleEnum'
-                                && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))) {
-                                try {
-                                    view.clearLink()
-                                } catch (e) {
-
-                                }
-                            }
-
-                            if (attributeType === 'extensibleMultiEnum') {
-                                (this.model.get('value') ?? []).forEach(v => {
-                                    if (!this.model.get('extensibleEnumOptionsIds').includes(v)) {
-                                        try {
-                                            view.deleteLink(v)
-                                        } catch (e) {
-                                        }
+                        if (attributeType === 'extensibleMultiEnum') {
+                            (this.model.get('value') ?? []).forEach(v => {
+                                if (!this.model.get('extensibleEnumOptionsIds').includes(v)) {
+                                    try {
+                                        view.deleteLink(v)
+                                    } catch (e) {
                                     }
-                                })
-                            }
-                        });
-                    }
-
-
-                    if(this.model.urlRoot === 'ProductAttributeValue'
-                        && ['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('attributeType'))
-                        && this.model.get('attributeIsDropdown')
-                    ) {
-                        view.listenTo(this.model, 'change:channelId', () => {
-                            // we rebuild the list of options according to the new channelId
-                            view.setup();
-                            view.reRender()
-                        })
-                    }
-
+                                }
+                            })
+                        }
+                    });
                 });
 
                 if (this.mode === 'edit' && 'extensibleMultiEnum' === attributeType) {

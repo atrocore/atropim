@@ -84,6 +84,8 @@ class V1Dot14Dot3 extends Base
         $this->exec("ALTER TABLE classification_attribute DROP " . $this->getConnection()->quoteIdentifier('language'));
         $this->migrateChannelSpecificForCa();
 
+        //@ todo migrate default value for classification attribute
+
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
         $this->exec("CREATE UNIQUE INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP ON classification_attribute (deleted, classification_id, attribute_id)");
 

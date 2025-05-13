@@ -18,7 +18,6 @@ use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Pim\Core\ValueConverter;
 
 class ClassificationAttribute extends Base
 {
@@ -48,6 +47,7 @@ class ClassificationAttribute extends Base
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($attribute)) {
+            $entity->set('attributeType', $attribute->get('type'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
             $entity->set('attributeEntityType', $attribute->get('entityType'));
@@ -63,19 +63,6 @@ class ClassificationAttribute extends Base
                 }
             }
 
-//            if (empty($this->getMemoryStorage()->get('exportJobId'))
-//                && empty($this->getMemoryStorage()->get('importJobId'))
-//                && $this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'
-//            ) {
-//                $entity->set('isCaRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
-//
-//                if ($entity->get('isCaRelationInherited')) {
-//                    $entity->set('isCaValueInherited', $this->getRepository()->isPavValueInherited($entity));
-//                }
-//            }
-
-//            $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
-
             if ($attribute->get('measureId')) {
                 $entity->set('attributeMeasureId', $attribute->get('measureId'));
                 $this->prepareUnitFieldValue($entity, 'value', [
@@ -85,27 +72,16 @@ class ClassificationAttribute extends Base
                 ]);
             }
         }
-    }
 
-    protected function handleInput(\stdClass $data, ?string $id = null): void
-    {
-        parent::handleInput($data, $id);
-
-//        $this->getInjection(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
+        if (!empty($entity->get('data')->default)) {
+            $entity->set($entity->get('data')->default);
+        }
     }
 
     public function createEntity($attachment)
     {
         if (!property_exists($attachment, 'attributeId')) {
             throw new BadRequest("'attributeId' is required.");
-        }
-
-        /**
-         * For multiple creation via languages
-         */
-        $this->prepareDefaultLanguages($attachment);
-        if (property_exists($attachment, 'languages') && !empty($attachment->languages)) {
-            return $this->multipleCreateViaLanguages($attachment);
         }
 
         $inTransaction = false;
@@ -277,8 +253,6 @@ class ClassificationAttribute extends Base
         foreach ($collection as $k => $entity) {
             $row = [
                 'entity'      => $entity,
-                'channelName' => empty($entity->get('channelId')) ? '-9999' : $entity->get('channelName'),
-                'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
             ];
 
             $attribute = $attributes[$entity->get('attributeId')];
@@ -290,8 +264,6 @@ class ClassificationAttribute extends Base
 
         array_multisort(
             array_column($records, 'sortOrder'), SORT_ASC,
-            array_column($records, 'channelName'), SORT_ASC,
-            array_column($records, 'language'), SORT_ASC,
             $records
         );
 
@@ -339,6 +311,5 @@ class ClassificationAttribute extends Base
 
         $this->addDependency('language');
         $this->addDependency('container');
-        $this->addDependency(ValueConverter::class);
     }
 }
