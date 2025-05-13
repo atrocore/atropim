@@ -25,24 +25,17 @@ class ClassificationAttribute extends Base
         = [
             'classificationId',
             'attributeId',
-            'attributeName',
             'isRequired',
-            'intValue',
-            'intValue1',
-            'boolValue',
-            'dateValue',
-            'datetimeValue',
-            'floatValue',
-            'floatValue1',
-            'varcharValue',
-            'referenceValue',
-            'textValue',
             'data'
         ];
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
+
+        if (!empty($entity->get('data')->default)) {
+            $entity->set($entity->get('data')->default);
+        }
 
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
@@ -69,22 +62,47 @@ class ClassificationAttribute extends Base
                     'mainField' => 'value'
                 ]);
             }
+
             if (!empty($attribute->get('extensibleEnumId'))) {
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
+                if ($attribute->get('type') === 'extensibleEnum') {
+                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->getPreparedOption($attribute->get('extensibleEnumId'), $entity->get('value'));
+                    if (!empty($option)) {
+                        $entity->set('valueName', $option['preparedName']);
+                        $entity->set('valueOptionData', $option);
+                    }
+                } elseif ($attribute->get('type') === 'extensibleMultiEnum') {
+                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->getPreparedOptions($attribute->get('extensibleEnumId'), $entity->get('value'));
+                    if (isset($options[0])) {
+                        $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
+                        $entity->set('valueOptionsData', $options);
+                    }
+                }
             }
-            if (!empty($attribute->get('entityType'))) {
-                $entity->set('attributeEntityType', $attribute->get('entityType'));
-            }
-            if (!empty($attribute->get('entityField'))) {
-                $entity->set('attributeEntityField', $attribute->get('entityField'));
-            }
-            if (!empty($attribute->get('fileTypeId'))) {
-                $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
-            }
-        }
 
-        if (!empty($entity->get('data')->default)) {
-            $entity->set($entity->get('data')->default);
+            if ($attribute->get('type') === 'link' && !empty($attribute->get('entityType'))) {
+                $entity->set('attributeEntityType', $attribute->get('entityType'));
+                $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
+                if (!empty($foreign)) {
+                    $entity->set('valueName', $foreign->get($attribute->get('entityField') ?? 'name'));
+                }
+                if (!empty($attribute->get('entityField'))) {
+                    $entity->set('attributeEntityField', $attribute->get('entityField'));
+                }
+            }
+
+            if ($attribute->get('type') === 'file') {
+                $file = $this->getEntityManager()->getEntity('File', $entity->get('valueId'));
+                if (!empty($file)) {
+                    $entity->set("valueName", $file->get('name'));
+                    $entity->set("valuePathsData", $file->getPathsData());
+                }
+                if (!empty($attribute->get('fileTypeId'))) {
+                    $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
+                }
+            }
         }
     }
 
@@ -314,6 +332,11 @@ class ClassificationAttribute extends Base
             }
         }
 
+        return true;
+    }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
         return true;
     }
 
