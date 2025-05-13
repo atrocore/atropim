@@ -233,7 +233,7 @@
       "filterDisabled": true,
       "rowsMax": 4,
       "lengthOfCut": 400,
-      "view": "pim:views/product-attribute-value/fields/value-container",
+      "view": "pim:views/classification-attribute/fields/value-container",
       "massUpdateDisabled": true
     },
     "valueFrom": {

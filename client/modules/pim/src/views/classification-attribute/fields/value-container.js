@@ -8,14 +8,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/fields/base',
+Espo.define('pim:views/classification-attribute/fields/value-container', 'views/fields/base',
     (Dep) => Dep.extend({
 
-        listTemplate: 'pim:product-attribute-value/fields/base',
+        listTemplate: 'pim:classification-attribute/fields/base',
 
-        detailTemplate: 'pim:product-attribute-value/fields/base',
+        detailTemplate: 'pim:classification-attribute/fields/base',
 
-        editTemplate: 'pim:product-attribute-value/fields/base',
+        editTemplate: 'pim:classification-attribute/fields/base',
 
         fieldActions: false,
 
