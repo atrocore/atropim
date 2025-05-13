@@ -50,12 +50,10 @@ class ClassificationAttribute extends Base
             $entity->set('attributeType', $attribute->get('type'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-            $entity->set('attributeEntityType', $attribute->get('entityType'));
-            $entity->set('attributeEntityField', $attribute->get('entityField'));
-            $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
             $entity->set('attributeNotNull', $attribute->get('notNull'));
             $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));
+
             if (!empty($this->getConfig()->get('isMultilangActive'))) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                     $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
@@ -63,13 +61,25 @@ class ClassificationAttribute extends Base
                 }
             }
 
-            if ($attribute->get('measureId')) {
+            if (!empty($attribute->get('measureId'))) {
                 $entity->set('attributeMeasureId', $attribute->get('measureId'));
                 $this->prepareUnitFieldValue($entity, 'value', [
                     'measureId' => $attribute->get('measureId'),
                     'type'      => $attribute->get('type'),
                     'mainField' => 'value'
                 ]);
+            }
+            if (!empty($attribute->get('extensibleEnumId'))) {
+                $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
+            }
+            if (!empty($attribute->get('entityType'))) {
+                $entity->set('attributeEntityType', $attribute->get('entityType'));
+            }
+            if (!empty($attribute->get('entityField'))) {
+                $entity->set('attributeEntityField', $attribute->get('entityField'));
+            }
+            if (!empty($attribute->get('fileTypeId'))) {
+                $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
             }
         }
 
@@ -245,19 +255,21 @@ class ClassificationAttribute extends Base
     public function sortCollection(EntityCollection $collection): void
     {
         $attributes = [];
-        foreach ($this->getEntityManager()->getRepository('Attribute')->where(['id' => array_column($collection->toArray(), 'attributeId')])->find() as $attribute) {
+        foreach ($this->getEntityManager()->getRepository('Attribute')->where([
+            'id' => array_column($collection->toArray(), 'attributeId')
+        ])->find() as $attribute) {
             $attributes[$attribute->get('id')] = $attribute;
         }
 
         $records = [];
         foreach ($collection as $k => $entity) {
             $row = [
-                'entity'      => $entity,
+                'entity' => $entity,
             ];
 
             $attribute = $attributes[$entity->get('attributeId')];
 
-                $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
+            $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
 
             $records[$k] = $row;
         }
