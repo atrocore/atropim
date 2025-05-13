@@ -104,22 +104,9 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             }
 
             if (this.defs.select && this.getAcl().check('ClassificationAttribute', 'create')) {
-                var data = {link: this.link};
-                if (this.defs.selectPrimaryFilterName) {
-                    data.primaryFilterName = this.defs.selectPrimaryFilterName;
-                }
-                if (this.defs.selectBoolFilterList) {
-                    data.boolFilterList = this.defs.selectBoolFilterList;
-                }
-                data.boolFilterListCallback = 'getSelectBoolFilterList';
-                data.boolFilterDataCallback = 'getSelectBoolFilterData';
-                data.afterSelectCallback = 'relateAttributes';
-                data.scope = 'Attribute';
-
                 this.actionList.unshift({
-                    label: 'Select',
-                    action: this.defs.selectAction || 'selectRelated',
-                    data: data,
+                    label: 'selectAttributes',
+                    action: 'selectAttributes',
                     acl: 'edit',
                     aclScope: this.model.name
                 });
@@ -226,6 +213,49 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     this.actionRefresh();
                 });
             })
+        },
+
+        actionSelectAttributes() {
+            const scope = 'Attribute';
+            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
+
+            this.notify('Loading...');
+            this.createView('dialog', viewName, {
+                scope: scope,
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: true,
+                boolFilterList: ['onlyForEntity'],
+                boolFilterData: {
+                    onlyForEntity: this.model.get('entityId')
+                },
+                allowSelectAllResult: false,
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', models => {
+                    this.notify('Saving...');
+
+                    if (models.massRelate) {
+                        models = dialog.collection.models;
+                    }
+
+                    let attributesIds = [];
+                    models.forEach(model => {
+                        attributesIds.push(model.get('id'))
+                    });
+
+                    this.ajaxPostRequest('ClassificationAttribute', {
+                        classificationId: this.model.get('id'),
+                        attributesIds: attributesIds,
+                        assignedUserId: this.getUser().id,
+                        assignedUserName: this.getUser().get('name')
+                    }).then(() => {
+                        this.notify('Linked', 'success');
+                        this.actionRefresh();
+                    });
+                });
+            });
         },
 
         actionSetCaAsInherited(data) {
