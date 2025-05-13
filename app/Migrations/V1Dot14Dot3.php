@@ -28,11 +28,6 @@ class V1Dot14Dot3 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("DROP INDEX idx_product_attribute_value_channel_id");
-            $this->exec("DROP INDEX idx_product_attribute_value_modified_at");
-            $this->exec("DROP INDEX idx_product_attribute_value_created_by_id");
-            $this->exec("DROP INDEX idx_product_attribute_value_modified_by_id");
-            $this->exec("DROP INDEX idx_product_attribute_value_created_at");
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP");
             $this->exec("DROP INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP");
 
@@ -48,11 +43,6 @@ class V1Dot14Dot3 extends Base
             $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_AT ON variant_specific_product_attribute (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_AT ON variant_specific_product_attribute (modified_at, deleted)");
         } else {
-            $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_MODIFIED_BY_ID ON product_attribute_value");
-            $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_MODIFIED_AT ON product_attribute_value");
-            $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_CHANNEL_ID ON product_attribute_value");
-            $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_CREATED_AT ON product_attribute_value");
-            $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_CREATED_BY_ID ON product_attribute_value");
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value");
             $this->exec("DROP INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP ON classification_attribute");
 
@@ -83,8 +73,7 @@ class V1Dot14Dot3 extends Base
 
         $this->exec("ALTER TABLE classification_attribute DROP " . $this->getConnection()->quoteIdentifier('language'));
         $this->migrateChannelSpecificForCa();
-
-        //@ todo migrate default value for classification attribute
+        $this->migrateDefaultValueForClassificationAttributes();
 
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
         $this->exec("CREATE UNIQUE INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP ON classification_attribute (deleted, classification_id, attribute_id)");
@@ -97,6 +86,87 @@ class V1Dot14Dot3 extends Base
             ->setParameter('entityId', 'Product')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+    }
+
+    protected function migrateDefaultValueForClassificationAttributes(): void
+    {
+        $columns = [
+            'bool_value',
+            'date_value',
+            'datetime_value',
+            'int_value',
+            'int_value1',
+            'float_value',
+            'float_value1',
+            'varchar_value',
+            'text_value',
+            'reference_value'
+        ];
+
+        foreach ($columns as $column) {
+            while (true) {
+                try {
+                    $res = $this->getConnection()->createQueryBuilder()
+                        ->select('ca.*, a.type as attribute_type')
+                        ->from('classification_attribute', 'ca')
+                        ->leftJoin('ca', 'attribute', 'a', 'a.id=ca.attribute_id AND a.deleted=:false')
+                        ->where('ca.deleted=:false')
+                        ->andWhere("ca.$column IS NOT NULL")
+                        ->setFirstResult(0)
+                        ->setMaxResults(5000)
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->fetchAllAssociative();
+                } catch (\Throwable $e) {
+                    break;
+                }
+
+                if (empty($res)) {
+                    break;
+                }
+
+                foreach ($res as $item) {
+                    $data = @json_decode($item['data'] ?? '', true);
+                    if (!is_array($data)) {
+                        $data = [];
+                    }
+
+                    if ($column === 'reference_value') {
+                        if ($item['attribute_type'] === 'link') {
+                            $data['default']['valueId'] = $item[$column];
+                        } else {
+                            $data['default']['valueUnitId'] = $item[$column];
+                        }
+                    } elseif ($item['attribute_type'] === 'extensibleMultiEnum') {
+                        $data['default']['valueIds'] = $item[$column];
+                    } elseif ($item['attribute_type'] === 'rangeInt') {
+                        if ($column === 'int_value') {
+                            $data['default']['valueFrom'] = $item[$column];
+                        } else {
+                            $data['default']['valueTo'] = $item[$column];
+                        }
+                    } elseif ($item['attribute_type'] === 'rangeFloat') {
+                        if ($column === 'float_value') {
+                            $data['default']['valueFrom'] = $item[$column];
+                        } else {
+                            $data['default']['valueTo'] = $item[$column];
+                        }
+                    } else {
+                        $data['default']['value'] = $item[$column];
+                    }
+
+                    $this->getConnection()->createQueryBuilder()
+                        ->update('classification_attribute')
+                        ->set('data', ':data')
+                        ->set($column, ':null')
+                        ->where('id=:id')
+                        ->setParameter('id', $item['id'])
+                        ->setParameter('null', null, ParameterType::NULL)
+                        ->setParameter('data', json_encode($data))
+                        ->executeQuery();
+                }
+            }
+            $this->exec("ALTER TABLE classification_attribute DROP $column");
+        }
     }
 
     protected function migrateVariantSpecific(): void
