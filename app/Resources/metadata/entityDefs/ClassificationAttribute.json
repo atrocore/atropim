@@ -9,12 +9,6 @@
       "required": true,
       "view": "pim:views/classification-attribute/fields/attribute"
     },
-    "language": {
-      "type": "language",
-      "default": "main",
-      "view": "pim:views/classification-attribute/fields/language",
-      "prohibitedEmptyValue": true
-    },
     "isRequired": {
       "type": "bool",
       "default": false
@@ -109,12 +103,6 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
-    },
-    "channel": {
-      "type": "link",
-      "required": false,
-      "notNull": true,
-      "default": ""
     },
     "boolValue": {
       "type": "bool",
@@ -584,11 +572,6 @@
       "foreign": "classificationAttributes",
       "entity": "Attribute"
     },
-    "channel": {
-      "type": "belongsTo",
-      "foreign": "classificationAttributes",
-      "entity": "Channel"
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -621,9 +604,7 @@
     "unique_relationship": [
       "deleted",
       "classification_id",
-      "attribute_id",
-      "language",
-      "channel_id"
+      "attribute_id"
     ]
   },
   "indexes": {

@@ -34,6 +34,7 @@ class V1Dot14Dot3 extends Base
             $this->exec("DROP INDEX idx_product_attribute_value_modified_by_id");
             $this->exec("DROP INDEX idx_product_attribute_value_created_at");
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP");
+            $this->exec("DROP INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP");
 
             $this->exec("ALTER TABLE product_attribute_value ADD json_value TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN product_attribute_value.json_value IS '(DC2Type:jsonObject)'");
@@ -53,6 +54,7 @@ class V1Dot14Dot3 extends Base
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_CREATED_AT ON product_attribute_value");
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_CREATED_BY_ID ON product_attribute_value");
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value");
+            $this->exec("DROP INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP ON classification_attribute");
 
             $this->exec("ALTER TABLE product_attribute_value ADD json_value LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
 
@@ -79,7 +81,11 @@ class V1Dot14Dot3 extends Base
         $this->migrateChannelSpecific();
         $this->migrateVariantSpecific();
 
+        $this->exec("ALTER TABLE classification_attribute DROP " . $this->getConnection()->quoteIdentifier('language'));
+        $this->migrateChannelSpecificForCa();
+
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
+        $this->exec("CREATE UNIQUE INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP ON classification_attribute (deleted, classification_id, attribute_id)");
 
         $this->exec("ALTER TABLE classification ADD entity_id VARCHAR(36) DEFAULT NULL");
         $this->getConnection()->createQueryBuilder()
@@ -146,6 +152,78 @@ class V1Dot14Dot3 extends Base
         }
 
         $this->exec("ALTER TABLE product_attribute_value DROP is_variant_specific_attribute;");
+    }
+
+    protected function migrateChannelSpecificForCa(): void
+    {
+        while (true) {
+            try {
+                $res = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from('classification_attribute')
+                    ->where('deleted=:false')
+                    ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
+                    ->setFirstResult(0)
+                    ->setMaxResults(5000)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('empty', '')
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                return;
+            }
+
+            if (empty($res)) {
+                break;
+            }
+
+            foreach ($res as $item) {
+                $attribute = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from($this->getConnection()->quoteIdentifier('attribute'))
+                    ->where('id=:id')
+                    ->setParameter('id', $item['attribute_id'])
+                    ->fetchAssociative();
+
+                if (empty($attribute)) {
+                    continue;
+                }
+
+                $attributeId = md5($attribute['id'] . '_' . $item['channel_id']);
+
+                $qb = $this->getConnection()->createQueryBuilder()
+                    ->insert($this->getConnection()->quoteIdentifier('attribute'));
+
+                foreach ($attribute as $column => $val) {
+                    if ($column === 'id') {
+                        $qb->setValue('id', ':id')
+                            ->setParameter('id', $attributeId);
+                    } elseif ($column === 'channel_id') {
+                        $qb->setValue('channel_id', ':channelId')
+                            ->setParameter('channelId', $item['channel_id']);
+                    } else {
+                        $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
+                            ->setParameter($column, $val, Mapper::getParameterType($val));
+                    }
+                }
+
+                try {
+                    $qb->executeQuery();
+                } catch (\Throwable $e) {
+                }
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('classification_attribute')
+                    ->set('channel_id', ':empty')
+                    ->set('attribute_id', ':attributeId')
+                    ->where('id=:id')
+                    ->setParameter('empty', '')
+                    ->setParameter('attributeId', $attributeId)
+                    ->setParameter('id', $item['id'])
+                    ->executeQuery();
+            }
+        }
+
+        $this->exec("ALTER TABLE classification_attribute DROP channel_id");
     }
 
     protected function migrateChannelSpecific(): void

@@ -4,8 +4,6 @@
     "isRequired": "erforderlich",
     "classification": "Klassifizierung",
     "attribute": "Attribute",
-    "channel": "Kanal",
-    "language": "Sprache",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "value": "Standardwert",

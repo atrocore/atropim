@@ -4,14 +4,7 @@
     "notSortable": true
   },
   {
-    "name": "language"
-  },
-  {
     "name": "isRequired"
-  },
-  {
-    "name": "channel",
-    "notSortable": true
   },
   {
     "name": "value"
