@@ -52,4 +52,15 @@ class Entity extends AbstractEntityListener
         return $params;
     }
 
+    public function beforeSave(Event $event): void
+    {
+        /** @var \Espo\ORM\Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.relationForClassification")) {
+            echo '<pre>';
+            print_r('11');
+            die();
+        }
+    }
 }

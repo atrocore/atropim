@@ -2,14 +2,10 @@
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
     "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog",
-    "behaviorOnClassificationChange": "Verhalten bei Änderung/Entfernung der Klassifizierung"
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog"
   },
   "labels": {
-    "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder und Attributwerte für dieses Gebietsschema eingegeben haben, automatisch entfernt.",
-    "retainAllInheritedAttributes": "Alle vererbte Attribute beibehalten",
-    "removeAllInheritedAttributes": "Alle vererbte Attribute entfernen",
-    "removeOnlyInheritedAttributesWithNoValue": "Nur vererbte Attribute ohne Wert entfernen"
+    "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder und Attributwerte für dieses Gebietsschema eingegeben haben, automatisch entfernt."
   },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Möchten Sie die Verknüpfung von Produkten mit den Kategorien, die keine Blatt-Kategorien sind, wirklich verbieten? Alle mit diesen Kategorien verknüpften Produkte werden automatisch entkoppelt."

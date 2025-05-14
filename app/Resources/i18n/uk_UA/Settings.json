@@ -2,14 +2,10 @@
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Дозволити прив'язувати продукти до субкатегорій.",
     "behaviorOnCategoryDelete": "Поведінка при видаленні категорії",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведінка під час розриву зв'язку дерева категорій із каталогом",
-    "behaviorOnClassificationChange": "Дії при зміні/видаленні класифікації"
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведінка під час розриву зв'язку дерева категорій із каталогом"
   },
   "labels": {
-    "confirmLocaleChanges": "Якщо мову видалено, всі ваші дані, раніше введені в багатомовні поля, а також значення атрибутів для цієї локалі, автоматично видаляються.",
-    "retainAllInheritedAttributes": "Зберегти всі успадковані атрибути",
-    "removeAllInheritedAttributes": "Видалити всі успадковані атрибути",
-    "removeOnlyInheritedAttributesWithNoValue": "Видалити лише успадковані атрибути без значення"
+    "confirmLocaleChanges": "Якщо мову видалено, всі ваші дані, раніше введені в багатомовні поля, а також значення атрибутів для цієї локалі, автоматично видаляються."
   },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Ви впевнені, що бажаєте заборонити прив'язувати продукти до субкатегорій? Усі продукти прив'язані до них будуть автоматично відв'язані."
