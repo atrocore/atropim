@@ -2,7 +2,7 @@
   "fields": {
     "isMultiChannel": "ist Multichannel",
     "isRequired": "erforderlich",
-    "classification": "Klassifizierung",
+    "classification": "Klassifikation",
     "attribute": "Attribute",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
@@ -22,7 +22,8 @@
     "extensibleEnumOptions": "Optionen zulassen"
   },
   "labels": {
-    "Create ClassificationAttribute": "Attribut der Klassifizierung erstellen",
+    "classificationAttribute": "Attribut aus Klassifikation",
+    "Create ClassificationAttribute": "Attribut der Klassifikation erstellen",
     "unlinkRelatedAttribute": "Hier löschen und für die Akten aufbewahren",
     "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen"
   },

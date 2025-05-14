@@ -95,7 +95,7 @@
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
     "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
-    "youCantChangeClassificationInProduct": "Sie können die Klassifizierung in Product nicht ändern.",
+    "youCantChangeClassificationInProduct": "Sie können die Klassifikation in Product nicht ändern.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
   },

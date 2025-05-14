@@ -29,14 +29,14 @@
     "max": "Max",
     "notNull": "Deaktivieren Nullwert",
     "trim": "Führende und nachfolgende Whitespaces entfernen",
-    "classificationAttributes": "Klassifizierungattribute",
+    "classificationAttributes": "Klassifikationsattribute",
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
     "fullWidth": "Volle Breite"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",
-    "classification": "Klassifizierung",
+    "classification": "Klassifikation",
     "addNewValue": "Neuen Wert hinzufügen",
     "extensibleEnumOptions": "Auswahloptionen"
   },
@@ -80,7 +80,7 @@
     "maxLessThanMin": "Min sollte kleiner als Max sein.",
     "noAttributeConverterFound": "Attributkonvertierung vom Typ '%s' in '%s' ist nicht möglich.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
-    "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",
+    "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifikationen verwendet. Bitte aktualisieren Sie zuerst die Klassifikationen.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
