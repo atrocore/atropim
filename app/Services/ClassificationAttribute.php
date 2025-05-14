@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -138,27 +140,49 @@ class ClassificationAttribute extends Base
 
     protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
-        if (!property_exists($data, 'classificationId')) {
+        if (!property_exists($data, 'classificationId') || !property_exists($data, 'attributeId')) {
             return;
         }
 
-        echo '<pre>';
-        print_r('123');
-        die();
+        $classification = $this->getEntityManager()->getEntity('Classification', $data->classificationId);
+        if (empty($classification)) {
+            return;
+        }
 
-//        foreach ($this->getRepository()->getProductChannelsViaClassificationId($data->classificationId) as $id) {
-//            $inputData = clone $data;
-//            $inputData->productId = $id;
-//            $inputData->_isCreateFromClassificationAttribute = true;
-//            unset($inputData->classificationId);
-//
-//            $parentId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
-//            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $parentId);
-//        }
-//
-//        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
-//            parent::createPseudoTransactionCreateJobs($data,$parentTransactionId);
-//        }
+        $fieldName = lcfirst($classification->get('entityId')) . 'Id';
+        $columnName = Util::toUnderScore($fieldName);
+
+        $tableName = Util::toUnderScore(lcfirst($classification->get('entityId')));
+
+        $conn = $this->getEntityManager()->getConnection();
+        $ids = $conn->createQueryBuilder()
+            ->select("t.id")
+            ->from("{$tableName}_classification", 'r')
+            ->innerJoin('r', $conn->quoteIdentifier($tableName), 't', "t.id=r.$columnName AND t.deleted=:false")
+            ->where('r.deleted=:false')
+            ->andWhere('r.classification_id=:classificationId')
+            ->setParameter('classificationId', $classification->get('id'))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+
+        $attributeFieldName = AttributeFieldConverter::prepareFieldName($data->attributeId);
+
+        foreach ($ids as $id) {
+            $inputData = new \stdClass();
+            $inputData->$attributeFieldName = null;
+            $inputData->__attributes = [$data->attributeId];
+
+            foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
+                if (property_exists($data, $key)) {
+                    $preparedKey = str_replace('value', $attributeFieldName, $key);
+                    $inputData->$preparedKey = $data->$key;
+                }
+            }
+
+            $this
+                ->getPseudoTransactionManager()
+                ->pushUpdateEntityJob($classification->get('entityId'), $id, $inputData);
+        }
     }
 
     protected function prepareDefaultValues(\stdClass $data): void
