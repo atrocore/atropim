@@ -207,53 +207,7 @@ class ClassificationAttribute extends Base
         }
     }
 
-    public function updateEntity($id, $data)
-    {
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $this->createPseudoTransactionUpdateJobs($id, clone $data);
-            $result = parent::updateEntity($id, $data);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
-    }
-
-    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, $parentTransactionId = null): void
-    {
-        return;
-
-//        foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
-//            $inputData = new \stdClass();
-//            foreach (['channelId', 'language'] as $key) {
-//                if (property_exists($data, $key)) {
-//                    $inputData->$key = $data->$key;
-//                }
-//            }
-//
-//            if (!empty((array)$inputData)) {
-//                $parentId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->get('id'), $inputData);
-//                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
-//            }
-//        }
-//
-//        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
-//            parent::createPseudoTransactionUpdateJobs($id, $data, $parentTransactionId);
-//        }
-    }
-
-    public function deleteEntityWithThemAttributeValues($id)
+    public function deleteEntityWithThemAttributeValues($id): bool
     {
         /**
          * ID can be an array with one item. It is needs to execute this method from custom pseudo transaction in advanced classification module
@@ -262,38 +216,31 @@ class ClassificationAttribute extends Base
             $id = array_shift($id);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $this->createPseudoTransactionDeleteJobs($id);
-            $result = parent::deleteEntity($id);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
+        $classificationData = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('c.id as classification_id, c.entity_id, ca.attribute_id')
+            ->from('classification', 'c')
+            ->innerJoin('c', 'classification_attribute', 'ca', 'c.id = ca.classification_id AND ca.deleted=:false')
+            ->where('c.deleted=:false')
+            ->andWhere('ca.id=:id')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->fetchAssociative();
+
+        $result = parent::deleteEntity($id);
+
+        if ($result && !empty($classificationData)) {
+            $tableName = Util::toUnderScore(lcfirst($classificationData['entity_id']));
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->delete("{$tableName}_attribute_value")
+                ->where("attribute_id=:attributeId")
+                ->andWhere("{$tableName}_id IN (SELECT {$tableName}_id FROM {$tableName}_classification WHERE classification_id=:classificationId AND deleted=:false)")
+                ->setParameter('attributeId', $classificationData['attribute_id'])
+                ->setParameter('classificationId', $classificationData['classification_id'])
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeQuery();
         }
 
         return $result;
-    }
-
-    protected function createPseudoTransactionDeleteJobs(string $id, $parentTransactionId = null): void
-    {
-        return;
-//        foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
-//            $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
-//            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
-//        }
-//
-//        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
-//            parent::createPseudoTransactionDeleteJobs($id, $parentTransactionId);
-//        }
     }
 
     public function sortCollection(EntityCollection $collection): void
