@@ -85,7 +85,7 @@ class Metadata extends AbstractListener
                     "entity"       => "$scope"
                 ];
 
-                $data['scopes']["{$scope}Classification"]['relationForClassification'] = true;
+                $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
             }
         }
     }

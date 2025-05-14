@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
+use Atro\Services\Record;
 
 class Entity extends AbstractEntityListener
 {
@@ -52,15 +54,54 @@ class Entity extends AbstractEntityListener
         return $params;
     }
 
-    public function beforeSave(Event $event): void
+    public function afterSave(Event $event): void
     {
         /** @var \Espo\ORM\Entity $entity */
         $entity = $event->getArgument('entity');
 
-        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.relationForClassification")) {
-            echo '<pre>';
-            print_r('11');
-            die();
+        // create classification attributes if it needs
+        $this->createClassificationAttributesForRecord($entity);
+    }
+
+    protected function createClassificationAttributesForRecord(\Espo\ORM\Entity $entity): void
+    {
+        $entityName = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.classificationForEntity");
+        if (empty($entityName)) {
+            return;
         }
+
+        $cas = $this->getEntityManager()->getRepository('ClassificationAttribute')
+            ->where([
+                'classificationId' => $entity->get('classificationId')
+            ])
+            ->find();
+
+        if (empty($cas[0])) {
+            return;
+        }
+
+        /** @var Record $service */
+        $recordService = $this->getServiceFactory()->create($entityName);
+
+        $inputData = new \stdClass();
+        $inputData->__attributes = [];
+
+        foreach ($cas as $ca) {
+            $attributeFieldName = AttributeFieldConverter::prepareFieldName($ca->get('attributeId'));
+            $default = $ca->get('data')?->default ?? new \stdClass();
+
+            $inputData->__attributes[] = $ca->get('attributeId');
+            $inputData->$attributeFieldName = null;
+            foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
+                if (property_exists($default, $key)) {
+                    $preparedKey = str_replace('value', $attributeFieldName, $key);
+                    $inputData->$preparedKey = $default->$key;
+                }
+            }
+        }
+
+        $recordId = $entity->get(lcfirst($entityName) . 'Id');
+
+        $recordService->updateEntity($recordId, $inputData);
     }
 }

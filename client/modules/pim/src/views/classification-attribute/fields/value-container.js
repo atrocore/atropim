@@ -52,7 +52,7 @@ Espo.define('pim:views/classification-attribute/fields/value-container', 'views/
 
             this.$el.parent().hide();
 
-            let hasDefault = false;
+            let hasDefault = this.mode === 'list';
 
             if (this.model.get('attributeType')){
                 (this.getMetadata().get(`fields.${this.model.get('attributeType')}.params`) || []).forEach(item => {
