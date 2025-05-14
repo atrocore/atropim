@@ -65,7 +65,6 @@ class Channel extends Base
     {
         parent::init();
 
-        $this->addDependency('queueManager');
         $this->addDependency('language');
     }
 }
