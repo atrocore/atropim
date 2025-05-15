@@ -69,33 +69,10 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
                 htmlIcons.push(`<i class="ph ph-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
             }
 
-            if (model.urlRoot === 'ProductAttributeValue') {
-                const isPavValueInherited = model.get('isPavValueInherited');
-
-                if (model.get('isVariantSpecificAttribute')) {
-                    htmlIcons.push(`<i class="ph ph-star" title="${this.translate('isVariantSpecificAttribute', 'fields', 'ProductAttributeValue')}"></i>`);
-                }
-
-                if (isPavValueInherited === true) {
-                    htmlIcons.push(`<i class="ph ph-link-simple-horizontal" title="${this.translate('inherited')}"></i>`);
-                } else if (isPavValueInherited === false) {
-                    htmlIcons.push(`<i class="ph ph-link-simple-horizontal-break" title="${this.translate('notInherited')}"></i>`);
-                }
-
-                if (model.get('isPavRelationInherited')) {
-                    htmlIcons.push(`<i class="ph ph-tree-structure" title="${this.translate('isPavRelationInherited', 'fields', 'ProductAttributeValue')}"></i>`);
-                }
-            }
-
             return htmlIcons;
         },
 
         afterRenderStatusIcons(icons, model) {
-            if (model.name === 'ProductAttributeValue') {
-                icons.find('i.required-sign').click(() => {
-                    this.getParentModel().trigger('toggle-required-fields-highlight');
-                });
-            }
         },
 
         afterRender() {
@@ -104,19 +81,6 @@ Espo.define('pim:views/record/list-in-groups', 'views/record/list',
             if (this.mode === 'edit') {
                 this.setEditMode();
             }
-        },
-
-        actionSetPavAsInherited(data) {
-            let model = null;
-            if (this.collection) {
-                model = this.collection.get(data.id);
-            }
-
-            this.ajaxPostRequest(`ProductAttributeValue/action/inheritPav`, {id: data.id}).then(response => {
-                this.notify('Saved', 'success');
-                model?.trigger('after:attributesSave');
-                this.$el.parents('.panel').find('.action[data-action=refresh]').click();
-            });
         },
 
         updateHeaderDefs(defs) {

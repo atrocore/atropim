@@ -3,6 +3,10 @@
     "hasAttribute": {
       "type": "bool",
       "view": "pim:views/entity/fields/has-attribute"
+    },
+    "hasClassification": {
+      "type": "bool",
+      "view": "pim:views/entity/fields/has-classification"
     }
   }
 }

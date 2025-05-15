@@ -11,8 +11,8 @@
   },
   "dynamicLogic": {
     "fields": {
-      "channel": {
-        "visible": {
+      "classification": {
+        "readOnly": {
           "conditionGroup": [
             {
               "type": "isNotEmpty",

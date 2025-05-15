@@ -3,7 +3,6 @@
     "description": "Description",
     "isActive": "Active",
     "categories": "Categories",
-    "locales": "Languages",
     "code": "Code",
     "products": "Products"
   },

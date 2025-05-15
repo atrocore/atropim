@@ -9,17 +9,13 @@
     "code": "Code",
     "name": "Attribute Name",
     "products": "Products",
-    "productAttributeValues": "Attribute Values",
     "isMultilang": "Multilingual",
     "fileType": "File Type",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
     "prohibitedEmptyValue": "Disable empty value",
     "measure": "Measure",
     "defaultUnit": "Default Unit",
     "defaultDate": "Default Date",
-    "defaultValue": "Default Value",
-    "defaultChannel": "Default channel",
     "isRequired": "Required",
     "tooltip": "Tooltip",
     "maxLength": "Max Length",
@@ -36,7 +32,9 @@
     "classificationAttributes": "Classification Attributes",
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
-    "fullWidth": "Full Width"
+    "fullWidth": "Full Width",
+    "channel": "Channel",
+    "variantSpecificProducts": "Variant Specific Products"
   },
   "labels": {
     "Classification": "Classification",
@@ -65,7 +63,6 @@
     }
   },
   "messages": {
-    "allLingualAttrsWillDeleted": "If the multilingual attribute is set as a not lingual all the attribute values for additional languages will be deleted. Do you want to proceed?",
     "sameNumberOptions": "You must set the same number of options",
     "productsCountWithAttribute": "Count of products where this attribute is set: <strong>{count}</strong>",
     "removeAttribute(s)": "All values for this(these) attribute(s) are also deleted. Do you really want to delete this(these) attribute(s)?"
@@ -77,7 +74,6 @@
     "isRequired": "This is a default value, which will be applied for adding this attribute to a product or to a classification.",
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "sortOrder": "Sort order for attribute values for a product.",
-    "defaultChannel": "Apply on newly added attribute values only",
     "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },
@@ -95,8 +91,6 @@
     "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
     "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
     "attributeIsUsedInClassifications": "Attribute is used in classifications. Please, update classifications first.",
-    "attributeNotHaveUniqueValue": "Attribute have no unique value.",
-    "someAttributeDontMathToPattern": "Some attribute don't match to pattern.",
     "invalidType": "The attribute type '{type}' is invalid"
   }
 }

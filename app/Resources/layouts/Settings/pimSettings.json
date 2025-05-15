@@ -21,27 +21,5 @@
         false
       ]
     ]
-  },
-  {
-    "label": "productSettings",
-    "rows": [
-      [
-        {
-          "name": "behaviorOnClassificationChange"
-        },
-        false
-      ]
-    ]
-  },
-  {
-    "label": "classificationSettings",
-    "rows": [
-      [
-        {
-          "name": "allowSingleClassificationForProduct"
-        },
-        false
-      ]
-    ]
   }
 ]

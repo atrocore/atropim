@@ -1,4 +1,3 @@
-<?php
 /**
  * AtroCore Software
  *
@@ -9,18 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+Espo.define('pim:views/classification/fields/entity', 'pim:views/attribute/fields/entity',
+    Dep => Dep.extend({
 
-namespace Pim\SelectManagers;
+    })
+);
 
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\ORM\IEntity;
-use Pim\Core\SelectManagers\AbstractSelectManager;
-use Espo\Core\Utils\Util;
-
-class ProductAttributeValue extends AbstractProductAttributeValue
-{
-
-}

@@ -31,25 +31,6 @@
         "restrict"
       ],
       "default": "cascade"
-    },
-    "behaviorOnClassificationChange": {
-      "type": "enum",
-      "tooltip": false,
-      "required": true,
-      "optionsIds": [
-        "retainAllInheritedAttributes",
-        "removeAllInheritedAttributes",
-        "removeOnlyInheritedAttributesWithNoValue"
-      ],
-      "options": [
-        "retainAllInheritedAttributes",
-        "removeAllInheritedAttributes",
-        "removeOnlyInheritedAttributesWithNoValue"
-      ],
-      "default": "retainAllInheritedAttributes"
-    },
-    "allowSingleClassificationForProduct": {
-      "type": "bool"
     }
   }
 }

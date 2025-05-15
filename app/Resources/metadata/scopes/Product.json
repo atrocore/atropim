@@ -13,13 +13,14 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
+  "hasAttribute": true,
+  "hasClassification": true,
   "overviewFilters": true,
   "addRelationEnabled": true,
   "multiParents": false,
   "dragAndDrop": true,
   "fieldValueInheritance": true,
   "mandatoryUnInheritedFields": [
-    "productAttributeValues",
     "isInheritAssignedUser",
     "isInheritOwnerUser",
     "isInheritTeams",
@@ -30,12 +31,9 @@
     "mpn"
   ],
   "relationInheritance": true,
-  "inheritedRelations": ["productAttributeValues", "productFiles"],
+  "inheritedRelations": ["productFiles"],
   "mandatoryUnInheritedRelations": [],
   "unInheritedRelations": [],
-  "importTypeSimple": {
-    "handler": "\\Import\\Types\\Simple\\Handlers\\ProductHandler"
-  },
   "completeness": {
     "service": "Completeness\\Services\\ProductCompleteness"
   },
@@ -46,12 +44,9 @@
     "filterUpdateImportJob"
   ],
   "duplicatableRelations": [
-    "productAttributeValues",
     "files",
     "categories",
     "teams"
   ],
-  "modifiedExtendedRelations": [
-    "productAttributeValues"
-  ]
+  "modifiedExtendedRelations": []
 }

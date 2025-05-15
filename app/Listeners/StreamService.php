@@ -114,17 +114,7 @@ class StreamService extends AbstractEntityListener
             return null;
         }
 
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
-
-        // for backward compatibility
-        if (empty($attribute)) {
-            $pav = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($attributeId);
-            if (!empty($pav)) {
-                $attribute = $pav->get('attribute');
-            }
-        }
-
-        return $attribute;
+        return $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
     }
 
     public function prepareNoteFieldDefs(Event $event): void

@@ -2,15 +2,10 @@
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Permet de lier des produits à des catégories non feuilletantes.",
     "behaviorOnCategoryDelete": "Comportement lors de la suppression d'une catégorie",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Comportement de l'arbre des catégories à la sortie du catalogue",
-    "behaviorOnClassificationChange": "Comportement en cas de changement/suppression de la classification",
-    "allowSingleClassificationForProduct": "N'autoriser qu'une seule classification pour un produit"
+    "behaviorOnCategoryTreeUnlinkFromCatalog": "Comportement de l'arbre des catégories à la sortie du catalogue"
   },
   "labels": {
-    "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues et les valeurs d'attributs pour cette langue sont automatiquement supprimées.",
-    "retainAllInheritedAttributes": "Conserver tous les attributs hérités",
-    "removeAllInheritedAttributes": "Supprimer tous les attributs hérités",
-    "removeOnlyInheritedAttributesWithNoValue": "Supprimer uniquement les attributs hérités sans valeur"
+    "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues et les valeurs d'attributs pour cette langue sont automatiquement supprimées."
   },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Êtes-vous sûr de vouloir désactiver le lien entre les produits et les catégories non feuilletantes ? Tous les produits liés à ces catégories seront automatiquement dissociés."

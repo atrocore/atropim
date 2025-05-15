@@ -18,7 +18,6 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -202,33 +201,6 @@ class Attribute extends Base
         return parent::updateEntity($id, $data);
     }
 
-    protected function duplicateProductAttributeValues(Entity $entity, Entity $duplicatingEntity)
-    {
-        foreach ($duplicatingEntity->get('productAttributeValues') as $item) {
-            $record = $this->getEntityManager()->getEntity('ProductAttributeValue');
-            $record->set($item->toArray());
-            $record->id = null;
-
-            $record->clear('createdAt');
-            $record->clear('modifiedAt');
-            $record->clear('createdById');
-            $record->clear('modifiedById');
-
-            $record->clear('boolValue');
-            $record->clear('dateValue');
-            $record->clear('datetimeValue');
-            $record->clear('intValue');
-            $record->clear('floatValue');
-            $record->clear('varcharValue');
-            $record->clear('textValue');
-            $record->clear('referenceValue');
-
-            $record->set('attributeId', $entity->get('id'));
-            $record->set('attributeName', $entity->get('name'));
-            $this->getEntityManager()->saveEntity($record);
-        }
-    }
-
     protected function init()
     {
         parent::init();
@@ -249,83 +221,6 @@ class Attribute extends Base
         $config = $this->getConfig()->get('modules');
 
         return (!empty($config['multilangFields'])) ? array_keys($config['multilangFields']) : [];
-    }
-
-    /**
-     * @param Entity $entity
-     */
-    protected function afterDeleteEntity(Entity $entity)
-    {
-        // call parent action
-        parent::afterDeleteEntity($entity);
-
-        // unlink
-        $this->unlinkAttribute([$entity->get('id')]);
-    }
-
-    /**
-     * Unlink attribute from Classification and Product
-     *
-     * @param array $ids
-     *
-     * @return bool
-     */
-    protected function unlinkAttribute(array $ids): bool
-    {
-        // prepare data
-        $result = false;
-
-        if (!empty($ids)) {
-            // remove from product families
-            $this
-                ->getEntityManager()
-                ->getRepository('ClassificationAttribute')
-                ->where([
-                    'attributeId' => $ids
-                ])
-                ->removeCollection();
-
-            // remove from products
-            $this
-                ->getEntityManager()
-                ->getRepository('ProductAttributeValue')
-                ->where([
-                    'attributeId' => $ids
-                ])
-                ->removeCollection();
-
-            // prepare result
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    public function getDefaultValue(string $id): array
-    {
-        $attribute = $this->getRepository()->get($id);
-
-        if (empty($attribute)) {
-            throw new NotFound();
-        }
-
-        if ($attribute->get('type') !== 'varchar') {
-            throw new BadRequest('Invalid Type for default value');
-        }
-
-        $value = "";
-
-        if (!empty($default = $attribute->get('defaultValue'))) {
-            if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
-                // use twig
-                $default = $this->getInjection('twig')->renderTemplate($default, []);
-            }
-            $value = $default;
-        }
-
-        return [
-            "value" => $value
-        ];
     }
 
     public function findEntities($params)

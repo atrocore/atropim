@@ -27,16 +27,12 @@
     "ownerUser": {
       "type": "link",
       "required": false,
-      "view": "views/fields/owner-user",
-      "isMultilang": true,
-      "requiredForMultilang": false
+      "view": "views/fields/owner-user"
     },
     "assignedUser": {
       "type": "link",
       "required": false,
-      "view": "views/fields/assigned-user",
-      "isMultilang": true,
-      "requiredForMultilang": false
+      "view": "views/fields/assigned-user"
     },
     "teams": {
       "type": "linkMultiple",
@@ -89,18 +85,8 @@
     },
     "isMultilang": {
       "type": "bool",
-      "view": "pim:views/attribute/fields/is-multilang",
       "hideMultilang": true,
       "layoutDetailDisabled": true
-    },
-    "productAttributeValues": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": false,
-      "importDisabled": true,
-      "noLoad": true
     },
     "classificationAttributes": {
       "type": "linkMultiple",
@@ -117,10 +103,6 @@
       "layoutListSmallDisabled": true,
       "filterDisabled": true,
       "tooltip": true
-    },
-    "unique": {
-      "type": "bool",
-      "default": false
     },
     "prohibitedEmptyValue": {
       "type": "bool",
@@ -181,17 +163,6 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
-      "tooltip": true
-    },
-    "defaultValue": {
-      "type": "text",
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "defaultChannel": {
-      "type": "link",
       "tooltip": true
     },
     "isRequired": {
@@ -275,9 +246,20 @@
       "default": false,
       "emHidden": true,
       "view": "pim:views/attribute/fields/full-width"
+    },
+    "channel": {
+      "type": "link"
+    },
+    "variantSpecificProducts": {
+      "type": "linkMultiple"
     }
   },
   "links": {
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "attributes"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -334,20 +316,16 @@
       "foreign": "attributes",
       "entity": "Measure"
     },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "attribute",
-      "entity": "ProductAttributeValue"
-    },
     "classificationAttributes": {
       "type": "hasMany",
       "foreign": "attribute",
       "entity": "ClassificationAttribute"
     },
-    "defaultChannel": {
-      "type": "belongsTo",
-      "foreign": "attributes",
-      "entity": "Channel"
+    "variantSpecificProducts": {
+      "type": "hasMany",
+      "foreign": "variantSpecificAttributes",
+      "relationName": "VariantSpecificProductAttribute",
+      "entity": "Product"
     }
   },
   "collection": {

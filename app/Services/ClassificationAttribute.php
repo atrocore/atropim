@@ -13,58 +13,41 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
+use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Pim\Core\ValueConverter;
 
-class ClassificationAttribute extends AbstractProductAttributeService
+class ClassificationAttribute extends Base
 {
-    protected $foreignEntity = 'Classification';
     protected $mandatorySelectAttributeList
         = [
             'classificationId',
-            'scope',
-            'isRequired',
-            'productName',
             'attributeId',
-            'attributeName',
-            'attributeType',
-            'attributeEntityType',
-            'attributeEntityField',
-            'attributeTooltip',
-            'intValue',
-            'intValue1',
-            'boolValue',
-            'dateValue',
-            'datetimeValue',
-            'floatValue',
-            'floatValue1',
-            'varcharValue',
-            'referenceValue',
-            'textValue',
+            'isRequired',
             'data'
         ];
 
-    /**
-     * @inheritDoc
-     */
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
+        if (!empty($entity->get('data')->default)) {
+            $entity->set($entity->get('data')->default);
+        }
+
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($attribute)) {
+            $entity->set('attributeType', $attribute->get('type'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));
-            $entity->set('attributeEntityType', $attribute->get('entityType'));
-            $entity->set('attributeEntityField', $attribute->get('entityField'));
-            $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
             $entity->set('attributeNotNull', $attribute->get('notNull'));
             $entity->set('attributeIsMultilang', $attribute->get('isMultilang'));
             $entity->set('sortOrder', $attribute->get('sortOrder'));
+
             if (!empty($this->getConfig()->get('isMultilangActive'))) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                     $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
@@ -72,20 +55,7 @@ class ClassificationAttribute extends AbstractProductAttributeService
                 }
             }
 
-            if (empty($this->getMemoryStorage()->get('exportJobId'))
-                && empty($this->getMemoryStorage()->get('importJobId'))
-                && $this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'
-            ) {
-                $entity->set('isCaRelationInherited', $this->getRepository()->isPavRelationInherited($entity));
-
-                if ($entity->get('isCaRelationInherited')) {
-                    $entity->set('isCaValueInherited', $this->getRepository()->isPavValueInherited($entity));
-                }
-            }
-
-            $this->getInjection(ValueConverter::class)->convertFrom($entity, $attribute);
-
-            if ($attribute->get('measureId')) {
+            if (!empty($attribute->get('measureId'))) {
                 $entity->set('attributeMeasureId', $attribute->get('measureId'));
                 $this->prepareUnitFieldValue($entity, 'value', [
                     'measureId' => $attribute->get('measureId'),
@@ -93,32 +63,54 @@ class ClassificationAttribute extends AbstractProductAttributeService
                     'mainField' => 'value'
                 ]);
             }
+
+            if (!empty($attribute->get('extensibleEnumId'))) {
+                $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
+                if ($attribute->get('type') === 'extensibleEnum') {
+                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->getPreparedOption($attribute->get('extensibleEnumId'), $entity->get('value'));
+                    if (!empty($option)) {
+                        $entity->set('valueName', $option['preparedName']);
+                        $entity->set('valueOptionData', $option);
+                    }
+                } elseif ($attribute->get('type') === 'extensibleMultiEnum') {
+                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                        ->getPreparedOptions($attribute->get('extensibleEnumId'), $entity->get('value'));
+                    if (isset($options[0])) {
+                        $entity->set('valueNames', array_column($options, 'preparedName', 'id'));
+                        $entity->set('valueOptionsData', $options);
+                    }
+                }
+            }
+
+            if ($attribute->get('type') === 'link' && !empty($attribute->get('entityType'))) {
+                $entity->set('attributeEntityType', $attribute->get('entityType'));
+                $foreign = $this->getEntityManager()->getEntity($attribute->get('entityType'), $entity->get('valueId'));
+                if (!empty($foreign)) {
+                    $entity->set('valueName', $foreign->get($attribute->get('entityField') ?? 'name'));
+                }
+                if (!empty($attribute->get('entityField'))) {
+                    $entity->set('attributeEntityField', $attribute->get('entityField'));
+                }
+            }
+
+            if ($attribute->get('type') === 'file') {
+                $file = $this->getEntityManager()->getEntity('File', $entity->get('valueId'));
+                if (!empty($file)) {
+                    $entity->set("valueName", $file->get('name'));
+                    $entity->set("valuePathsData", $file->getPathsData());
+                }
+                if (!empty($attribute->get('fileTypeId'))) {
+                    $entity->set('attributeFileTypeId', $attribute->get('fileTypeId'));
+                }
+            }
         }
-
-        if ($entity->get('channelId') === '') {
-            $entity->set('channelId', null);
-        }
-    }
-
-    protected function handleInput(\stdClass $data, ?string $id = null): void
-    {
-        parent::handleInput($data, $id);
-
-        $this->getInjection(ValueConverter::class)->convertTo($data, $this->getAttributeViaInputData($data, $id));
     }
 
     public function createEntity($attachment)
     {
         if (!property_exists($attachment, 'attributeId')) {
             throw new BadRequest("'attributeId' is required.");
-        }
-
-        /**
-         * For multiple creation via languages
-         */
-        $this->prepareDefaultLanguages($attachment);
-        if (property_exists($attachment, 'languages') && !empty($attachment->languages)) {
-            return $this->multipleCreateViaLanguages($attachment);
         }
 
         $inTransaction = false;
@@ -130,7 +122,6 @@ class ClassificationAttribute extends AbstractProductAttributeService
         try {
             $this->prepareDefaultValues($attachment);
             $result = parent::createEntity($attachment);
-            $this->createAssociatedFamilyAttribute($attachment, $attachment->attributeId);
             $this->createPseudoTransactionCreateJobs($attachment);
 
             if ($inTransaction) {
@@ -146,32 +137,38 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return $result;
     }
 
-    protected function createAssociatedFamilyAttribute(\stdClass $attachment, string $attributeId): void
+    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
     {
-        $attribute = $this->getEntityManager()->getRepository('Attribute')->get($attributeId);
-        if (empty($attribute)) {
+        if (!property_exists($data, 'classificationId') || !property_exists($data, 'attributeId')) {
             return;
         }
 
-        $children = $attribute->get('children');
-        if (empty($children) || count($children) === 0) {
+        $classification = $this->getEntityManager()->getEntity('Classification', $data->classificationId);
+        if (empty($classification)) {
             return;
         }
 
-        foreach ($children as $child) {
-            $aData = new \stdClass();
-            $aData->attributeId = $child->get('id');
-            $aData->classificationId = $attachment->classificationId;
-            if (property_exists($attachment, 'ownerUserId')) {
-                $aData->ownerUserId = $attachment->ownerUserId;
+        $entityName = $classification->get('entityId');
+        $attributesDefs = $this->getAttributeService()->getAttributesDefs($entityName, [$data->attributeId]);
+        $attributeFieldName = AttributeFieldConverter::prepareFieldName($data->attributeId);
+
+        foreach ($this->getRepository()->getClassificationRelatedRecords($classification) as $id) {
+            $inputData = new \stdClass();
+            foreach ($attributesDefs as $field => $defs) {
+                $inputData->$field = null;
             }
-            if (property_exists($attachment, 'assignedUserId')) {
-                $aData->assignedUserId = $attachment->assignedUserId;
+            $inputData->__attributes = [$data->attributeId];
+
+            foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
+                if (property_exists($data, $key)) {
+                    $preparedKey = str_replace('value', $attributeFieldName, $key);
+                    $inputData->$preparedKey = $data->$key;
+                }
             }
-            if (property_exists($attachment, 'teamsIds')) {
-                $aData->teamsIds = $attachment->teamsIds;
-            }
-            $this->createEntity($aData);
+
+            $this
+                ->getPseudoTransactionManager()
+                ->pushUpdateEntityJob($entityName, $id, $inputData);
         }
     }
 
@@ -191,84 +188,13 @@ class ClassificationAttribute extends AbstractProductAttributeService
             }
         }
 
-        if (!property_exists($data, 'Id')) {
-            if (!empty($attribute->get('defaultChannelId'))) {
-                $data->channelId = $attribute->get('defaultChannelId');
-            }
-        }
-
         if (!property_exists($data, 'maxLength')) {
             $data->maxLength = $attribute->get('maxLength');
             $data->countBytesInsteadOfCharacters = $attribute->get('countBytesInsteadOfCharacters');
         }
     }
 
-    protected function createPseudoTransactionCreateJobs(\stdClass $data, string $parentTransactionId = null): void
-    {
-        if (!property_exists($data, 'classificationId')) {
-            return;
-        }
-
-        foreach ($this->getRepository()->getProductChannelsViaClassificationId($data->classificationId) as $id) {
-            $inputData = clone $data;
-            $inputData->productId = $id;
-            $inputData->_isCreateFromClassificationAttribute = true;
-            unset($inputData->classificationId);
-
-            $parentId = $this->getPseudoTransactionManager()->pushCreateEntityJob('ProductAttributeValue', $inputData);
-            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $inputData->productId, null, $parentId);
-        }
-
-        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
-            parent::createPseudoTransactionCreateJobs($data,$parentTransactionId);
-        }
-    }
-
-    public function updateEntity($id, $data)
-    {
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $this->createPseudoTransactionUpdateJobs($id, clone $data);
-            $result = parent::updateEntity($id, $data);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
-    }
-
-    protected function createPseudoTransactionUpdateJobs(string $id, \stdClass $data, $parentTransactionId = null): void
-    {
-        foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
-            $inputData = new \stdClass();
-            foreach (['channelId', 'language'] as $key) {
-                if (property_exists($data, $key)) {
-                    $inputData->$key = $data->$key;
-                }
-            }
-
-            if (!empty((array)$inputData)) {
-                $parentId = $this->getPseudoTransactionManager()->pushUpdateEntityJob('ProductAttributeValue', $pav->get('id'), $inputData);
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
-            }
-        }
-
-        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
-            parent::createPseudoTransactionUpdateJobs($id, $data, $parentTransactionId);
-        }
-    }
-
-    public function deleteEntityWithThemPavs($id)
+    public function deleteEntityWithThemAttributeValues($id): bool
     {
         /**
          * ID can be an array with one item. It is needs to execute this method from custom pseudo transaction in advanced classification module
@@ -277,23 +203,18 @@ class ClassificationAttribute extends AbstractProductAttributeService
             $id = array_shift($id);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $this->withPavs = true;
-            $this->createPseudoTransactionDeleteJobs($id);
-            $result = parent::deleteEntity($id);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
+        $classificationData = $this->getRepository()->getClassificationDataForClassificationAttributeId($id);
+
+        $result = parent::deleteEntity($id);
+
+        if ($result && !empty($classificationData)) {
+            $this
+                ->getRepository()
+                ->deleteAttributeValuesByClassificationAttribute(
+                    $classificationData['entity_id'],
+                    $classificationData['attribute_id'],
+                    $classificationData['classification_id']
+                );
         }
 
         return $result;
@@ -309,22 +230,18 @@ class ClassificationAttribute extends AbstractProductAttributeService
         $records = [];
         foreach ($collection as $k => $entity) {
             $row = [
-                'entity'      => $entity,
-                'channelName' => empty($entity->get('channelId')) ? '-9999' : $entity->get('channelName'),
-                'language'    => $entity->get('language') === 'main' ? null : $entity->get('language')
+                'entity' => $entity,
             ];
 
             $attribute = $attributes[$entity->get('attributeId')];
 
-                $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
+            $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
 
             $records[$k] = $row;
         }
 
         array_multisort(
             array_column($records, 'sortOrder'), SORT_ASC,
-            array_column($records, 'channelName'), SORT_ASC,
-            array_column($records, 'language'), SORT_ASC,
             $records
         );
 
@@ -366,15 +283,20 @@ class ClassificationAttribute extends AbstractProductAttributeService
         return true;
     }
 
-    protected function createPseudoTransactionDeleteJobs(string $id, $parentTransactionId = null): void
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        foreach ($this->getRepository()->getInheritedPavs($id) as $pav) {
-            $parentId = $this->getPseudoTransactionManager()->pushDeleteEntityJob('ProductAttributeValue', $pav->get('id'));
-            $this->getPseudoTransactionManager()->pushUpdateEntityJob('Product', $pav->get('productId'), null, $parentId);
-        }
+        return true;
+    }
 
-        if($this->getMetadata()->get(['scopes','Classification','type']) === 'Hierarchy'){
-            parent::createPseudoTransactionDeleteJobs($id, $parentTransactionId);
-        }
+    protected function getAttributeService(): Attribute
+    {
+        return $this->getServiceFactory()->create('Attribute');
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

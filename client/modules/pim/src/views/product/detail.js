@@ -8,14 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product/detail', ['pim:views/detail', 'pim:views/product/fields/classifications-single'],
-    (Dep, ClassificationSingle) => Dep.extend({
-
-        selectRelatedFilters: {
-            classifications: function () {
-                return ClassificationSingle.prototype.getSelectFilters.call(this)
-            }
-        },
+Espo.define('pim:views/product/detail', 'pim:views/detail',
+    Dep => Dep.extend({
 
         selectBoolFilterLists: {
             attributes: ['notLinkedWithProduct'],

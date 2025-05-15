@@ -4,11 +4,6 @@
     "behaviorOnCategoryDelete": "Поведение при удалении категории",
     "behaviorOnCategoryTreeUnlinkFromCatalog": "Поведение при разрыве связи дерева категорий с каталогом"
   },
-  "labels": {
-    "retainAllInheritedAttributes": "Сохранить все унаследованные атрибуты",
-    "removeAllInheritedAttributes": "Удалить все унаследованные атрибуты",
-    "removeOnlyInheritedAttributesWithNoValue": "Удалить только унаследованные атрибуты без значения"
-  },
   "messages": {
     "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Вы уверены, что хотите запретить привязывать продукты к субкатегориям? Все продукты привязанные к ним будут автоматически отвязаны."
   },

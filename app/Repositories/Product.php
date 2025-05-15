@@ -19,7 +19,6 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Pim\Core\ValueConverter;
 
 class Product extends Hierarchy
 {
@@ -91,13 +90,6 @@ class Product extends Hierarchy
             ->dispatch('ProductRepository', 'findRelated', new Event(['entity' => $entity, 'relationName' => $relationName, 'params' => $params]))
             ->getArgument('params');
 
-        if ($relationName === 'productAttributeValues') {
-            $params['leftJoins'] = ['attribute'];
-            $params['sortBy'] = 'attribute_mm.sortOrder';
-            $params['asc'] = true;
-            $params['limit'] = 9999;
-        }
-
         if ($relationName == 'categories' && !empty($params)) {
             if (isset($params['additionalColumns']['sorting'])) {
                 unset($params['additionalColumns']['sorting']);
@@ -105,23 +97,6 @@ class Product extends Hierarchy
         }
 
         return parent::findRelated($entity, $relationName, $params);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function countRelated(Entity $entity, $relationName, array $params = [])
-    {
-        // prepare params
-        $params = $this
-            ->dispatch('ProductRepository', 'countRelated', new Event(['entity' => $entity, 'relationName' => $relationName, 'params' => $params]))
-            ->getArgument('params');
-
-        if ($relationName === 'productAttributeValues') {
-            $params['limit'] = 9999;
-        }
-
-        return parent::countRelated($entity, $relationName, $params);
     }
 
     /**
@@ -265,28 +240,10 @@ class Product extends Hierarchy
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
-        $this->addDependency('queueManager');
-        $this->addDependency(ValueConverter::class);
-    }
-
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            throw new BadRequest($this->translate("youCantChangeFieldOfTypeInProduct", 'exceptions', 'Product'));
-        }
-
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-            && $entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1){
-            $data = $entity->get('classificationsIds');
-            $entity->set('classificationsIds', [end($data)]);
-        }
-
-        parent::beforeSave($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('ProductFile')->removeByProductId($entity->get('id'));
 
@@ -301,17 +258,6 @@ class Product extends Hierarchy
 
         $this->getConnection()
             ->createQueryBuilder()
-            ->update('product_attribute_value')
-            ->set('deleted',':false')
-            ->where('product_id = :productId')
-            ->andWhere('deleted = :true')
-            ->setParameter('false',false, ParameterType::BOOLEAN)
-            ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true',true, ParameterType::BOOLEAN)
-            ->executeStatement();
-
-        $this->getConnection()
-            ->createQueryBuilder()
             ->update('associated_product')
             ->set('deleted',':false')
             ->where('main_product_id = :productId')
@@ -322,7 +268,6 @@ class Product extends Hierarchy
             ->setParameter('true',true, ParameterType::BOOLEAN)
             ->executeStatement();
     }
-
 
     public function getProductsHierarchyMap(array $productIds): array
     {
@@ -346,145 +291,6 @@ class Product extends Hierarchy
         return $result;
     }
 
-    public function relateClassification($product, $classification): void
-    {
-        if (is_string($product)) {
-            $product = $this->get($product);
-        }
-
-        if (is_string($classification)) {
-            $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
-        }
-
-        if (!$product instanceof Entity) {
-            $GLOBALS['log']->error('RelateClassification Failed: $product is not object');
-            return;
-        }
-
-        if (!$classification instanceof Entity) {
-            $GLOBALS['log']->error('RelateClassification Failed: $classification is not object');
-            return;
-        }
-
-        $cas = $classification->get('classificationAttributes');
-        if (empty($cas[0])) {
-            return;
-        }
-
-        foreach ($cas as $ca) {
-            $productAttributeValue = $this->getEntityManager()->getRepository('ProductAttributeValue')->get();
-            $productAttributeValue->set(
-                [
-                    'productId'      => $product->get('id'),
-                    'attributeId'    => $ca->get('attributeId'),
-                    'language'       => $ca->get('language'),
-                    'scope'          => $ca->get('scope'),
-                    'channelId'      => $ca->get('channelId'),
-                    'boolValue'      => $ca->get('boolValue'),
-                    'dateValue'      => $ca->get('dateValue'),
-                    'datetimeValue'  => $ca->get('datetimeValue'),
-                    'intValue'       => $ca->get('intValue'),
-                    'intValue1'      => $ca->get('intValue1'),
-                    'floatValue'     => $ca->get('floatValue'),
-                    'floatValue1'    => $ca->get('floatValue1'),
-                    'varcharValue'   => $ca->get('varcharValue'),
-                    'referenceValue' => $ca->get('referenceValue'),
-                    'textValue'      => $ca->get('textValue'),
-                ]
-            );
-
-            $productAttributeValue->clearCompletenessFields = true;
-
-            $attribute = $ca->get('attribute');
-            if (!empty($attribute) && $attribute->get('type') === 'linkMultiple') {
-                $linkName = $attribute->getLinkMultipleLinkName();
-                $productAttributeValue->set('valueIds', $ca->getLinkMultipleIdList($linkName));
-            }
-
-            try {
-                $this->getEntityManager()->saveEntity($productAttributeValue, ['ignoreDuplicate' => true]);
-            } catch (BadRequest $e) {
-            }
-        }
-    }
-
-    public function unRelateClassification($product, $classification): void
-    {
-        $mode = $this->getConfig()->get('behaviorOnClassificationChange', 'retainAllInheritedAttributes');
-        if ($mode == 'retainAllInheritedAttributes') {
-            return;
-        }
-
-        if (is_string($product)) {
-            $product = $this->get($product);
-        }
-
-        if (is_string($classification)) {
-            $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
-        }
-
-        if (!$product instanceof Entity) {
-            $GLOBALS['log']->error('UnRelateClassification Failed: $product is not object');
-            return;
-        }
-
-        if (!$classification instanceof Entity) {
-            $GLOBALS['log']->error('UnRelateClassification Failed: $classification is not object');
-            return;
-        }
-
-        $where = [
-            'classificationId' => $classification->get('id')
-        ];
-
-        foreach ($product->get('classifications') as $productClassification) {
-            if ($productClassification->get('id') === $classification->get('id')) {
-                continue;
-            }
-            foreach ($productClassification->get('classificationAttributes') as $pca) {
-                if (!isset($where['attributeId!='])) {
-                    $where['attributeId!='] = [];
-                }
-                $where['attributeId!='] = array_merge($where['attributeId!='], array_column($pca->toArray(), 'attributeId'));
-            }
-        }
-
-        $cas = $this
-            ->getEntityManager()
-            ->getRepository('ClassificationAttribute')
-            ->where($where)
-            ->find();
-
-        if (empty($cas[0])) {
-            return;
-        }
-
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->where(['productId' => $product->get('id'), 'attributeId' => array_column($cas->toArray(), 'attributeId')])
-            ->find();
-
-        if (empty($pavs[0])) {
-            return;
-        }
-
-        foreach ($cas as $ca) {
-            foreach ($pavs as $pav) {
-                if ($pav->get('attributeId') === $ca->get('attributeId') && $pav->get('channelId') === $ca->get('channelId')) {
-                    $this->getValueConverter()->convertFrom($pav, $pav->get('attribute'));
-                    if ($mode === 'removeOnlyInheritedAttributesWithNoValue') {
-                        if ($pav->get('value') !== null && $pav->get('value') !== '') {
-                            continue 1;
-                        }
-                    }
-                    $pav->clearCompletenessFields = true;
-                    $this->getEntityManager()->removeEntity($pav);
-                }
-            }
-        }
-    }
-
     protected function translate(string $key, string $label, $scope = ''): string
     {
         return $this->getInjection('language')->translate($key, $label, $scope);
@@ -493,10 +299,5 @@ class Product extends Hierarchy
     protected function dispatch(string $target, string $action, Event $event): Event
     {
         return $this->getInjection('eventManager')->dispatch($target, $action, $event);
-    }
-
-    public function getValueConverter(): ValueConverter
-    {
-        return $this->getInjection(ValueConverter::class);
     }
 }

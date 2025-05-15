@@ -13,12 +13,48 @@ declare(strict_types=1);
 
 namespace Pim\Controllers;
 
+use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Exceptions\Error;
 use Slim\Http\Request;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 
-class ClassificationAttribute extends AbstractAttributeValueController
+class ClassificationAttribute extends Base
 {
+    public function actionCreate($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'create')) {
+            throw new Forbidden();
+        }
+
+        $service = $this->getRecordService();
+
+        if (property_exists($data, 'attributesIds')) {
+
+            foreach ($data->attributesIds as $attributeId) {
+                $input = clone $data;
+                $input->attributeId = $attributeId;
+                unset($input->attributesIds);
+                try {
+                    $entity = $service->createEntity($input);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error($e->getMessage());
+                }
+            }
+        } else {
+            $entity = $service->createEntity($data);
+        }
+
+        if (!empty($entity)) {
+            return $entity->getValueMap();
+        }
+
+        throw new Error();
+    }
 
     public function actionDelete($params, $data, $request)
     {
@@ -29,7 +65,7 @@ class ClassificationAttribute extends AbstractAttributeValueController
         $id = $params['id'];
 
         if (property_exists($data, 'deletePav') && !empty($data->deletePav)) {
-            $this->getRecordService()->deleteEntityWithThemPavs($id);
+            $this->getRecordService()->deleteEntityWithThemAttributeValues($id);
         } else {
             $this->getRecordService()->deleteEntity($id);
         }
@@ -52,18 +88,5 @@ class ClassificationAttribute extends AbstractAttributeValueController
         }
 
         return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->classificationId);
-    }
-
-    public function actionInheritCa($params, $data, $request)
-    {
-        if (!$request->isPost() || !property_exists($data, 'id')) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->inheritPav((string)$data->id);
     }
 }

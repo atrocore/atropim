@@ -27,30 +27,6 @@ class ExtensibleEnumOptionEntity extends AbstractEntityListener
 
         $conn = $this->getEntityManager()->getConnection();
 
-        $pav = $conn->createQueryBuilder()
-            ->select('t.*')
-            ->from($conn->quoteIdentifier('product_attribute_value'), 't')
-            ->where("(t.reference_value = :referenceValue and t.attribute_type = :extensibleEnum) OR (t.text_value LIKE :textValue and t.attribute_type = :extensibleMultiEnum)")
-            ->andWhere('t.deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('referenceValue', $entity->get('id'))
-            ->setParameter('textValue', "%\"{$entity->get('id')}\"%")
-            ->setParameter('extensibleEnum', 'extensibleEnum')
-            ->setParameter('extensibleMultiEnum', 'extensibleMultiEnum')
-            ->fetchAssociative();
-
-        if (!empty($pav)) {
-            $pavEntity = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($pav['id']);
-            throw new BadRequest(
-                sprintf(
-                    $this->getLanguage()->translate('extensibleEnumOptionIsUsedOnProductAttribute', 'exceptions', 'ExtensibleEnumOption'),
-                    $entity->get('name'),
-                    $pavEntity->get('attributeName') ?? $pavEntity->get('attributeId'),
-                    $pavEntity->get('productName') ?? $pavEntity->get('productId')
-                )
-            );
-        }
-
         $ca = $conn->createQueryBuilder()
             ->select('t.*')
             ->from($conn->quoteIdentifier('classification_attribute'), 't')

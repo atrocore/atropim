@@ -11,7 +11,6 @@
     "Association": "Ассоциация",
     "AttributeGroup": "Группа атрибута",
     "Brand": "Бренд",
-    "ProductAttributeValue": "Значение атрибута",
     "ProductPrice": "Цена продукта",
     "Tax": "Налоги",
     "ProductSerie": "Серия продукта",
@@ -32,7 +31,6 @@
     "Brand": "Бренды",
     "Tax": "Налоги",
     "Product": "Продукты",
-    "ProductAttributeValue": "Значения атрибутов",
     "ProductPrice": "Цены продукта",
     "ProductSerie": "Серии продукта",
     "Content": "Контент",
@@ -76,7 +74,6 @@
     "lowestLevelProducts": "Продукты наинизшего уровня",
     "bundleProducts": "Товарные комбинации",
     "bundledProducts": "Комбинируемые товары",
-    "productSettings": "Настройки продукта",
     "Reset selection": "Сбросить выбор",
     "typeToSearch": "Введ. и нажм. Enter...",
     "categorySettings": "Настройки категорий",
@@ -97,7 +94,6 @@
     "ProductsByTaskStatus": "Продукты по статусу задачи"
   },
   "exceptions": {
-    "attributeRecordAlreadyExists": "Атрибут '%s' для канала %s уже связан.",
     "massRelateBlocked": "Массовое создание таких связей заблокировано.",
     "massUnRelateBlocked": "Массовое удаление таких связей заблокировано.",
     "onlyForceDeletingAvailable": "Доступно только принудительное удаление",

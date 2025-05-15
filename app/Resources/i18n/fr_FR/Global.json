@@ -20,11 +20,11 @@
     "ClassificationAttribute": "Attribut de classification",
     "AssociatedProduct": "Produit associé",
     "ProductSerie": "Série de produits",
-    "ProductAttributeValue": "Valeur de l'attribut",
     "ChannelPricing": "Tarification par canal",
     "ContentItem": "Élément de contenu"
   },
   "fields": {
+    "classifications": "Classification",
     "amount": "Montant",
     "products": "Produits",
     "scope": "Champ d'application",
@@ -71,7 +71,6 @@
     "ProductSerie": "Série de produits",
     "Content": "Contenu",
     "ContentGroup": "Groupes de contenu",
-    "ProductAttributeValue": "Valeurs des attributs",
     "Catalog": "Catalogues",
     "Classification": "Classification",
     "Product": "Produits",
@@ -80,6 +79,7 @@
     "ContentItem": "Éléments de contenu"
   },
   "labels": {
+    "selectAttributes": "Sélectionnez le(s) attribut(s)",
     "removeHierarchically": "Supprimer de façon hiérarchique",
     "setAsMainImage": "Image principale",
     "setAsMainCategory": "Définir comme catégorie principale",
@@ -89,7 +89,6 @@
     "productHierarchies": "Hiérarchies de produits",
     "lowestLevelProducts": "Produits du niveau le plus bas",
     "bundleProducts": "Produits de l'offre groupée",
-    "productSettings": "Paramètres du produit",
     "typeToSearch": "Tapez et appuyez sur Entrée...",
     "categorySettings": "Paramètres de catégorie",
     "cascade": "Cascade",
@@ -100,7 +99,6 @@
     "productPreview": "Aperçu du produit",
     "Reset selection": "Remise à zéro de la sélection",
     "bundledProducts": "Produits groupés",
-    "classificationSettings": "Paramètres de classification",
     "nonHierarchicalProducts": "Produits non hiérarchisés",
     "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer."
   },
@@ -122,8 +120,7 @@
     "massRelateBlocked": "Les relations de masse de ce type sont bloquées.",
     "massUnRelateBlocked": "Les déliaisons de masse de ce type sont bloquées.",
     "onlyForceDeletingAvailable": "Seule la suppression forcée est disponible",
-    "notValid": "Les données ne sont pas valides",
-    "attributeRecordAlreadyExists": "L'attribut \"%s\" du canal %s est déjà lié."
+    "notValid": "Les données ne sont pas valides"
   },
   "messages": {
     "fieldHasPattern": "{field} ne doit contenir que des traits de soulignement, des chiffres et des lettres en minuscules."

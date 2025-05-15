@@ -28,33 +28,6 @@ class ExtensibleEnumExtensibleEnumOptionEntity extends AbstractEntityListener
 
         $conn = $this->getEntityManager()->getConnection();
 
-        $pav = $conn->createQueryBuilder()
-            ->select('t.*')
-            ->from($conn->quoteIdentifier('product_attribute_value'), 't')
-            ->join('t','attribute','a','t.attribute_id=a.id')
-            ->where("(t.reference_value = :referenceValue and t.attribute_type = :extensibleEnum) OR (t.text_value LIKE :textValue and t.attribute_type = :extensibleMultiEnum)")
-            ->andWhere('a.extensible_enum_id=:extensibleEnumId')
-            ->andWhere('t.deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('referenceValue', $param = $entity->get('extensibleEnumOptionId'), Mapper::getParameterType($param))
-            ->setParameter('textValue', "%\"{$entity->get('extensibleEnumOptionId')}\"%", ParameterType::STRING)
-            ->setParameter('extensibleEnum', 'extensibleEnum', ParameterType::STRING)
-            ->setParameter('extensibleMultiEnum', 'extensibleMultiEnum', ParameterType::STRING)
-            ->setParameter('extensibleEnumId', $param = $entity->get('extensibleEnumId'), Mapper::getParameterType($param))
-            ->fetchAssociative();
-
-        if (!empty($pav)) {
-            $pavEntity = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($pav['id']);
-            throw new BadRequest(
-                sprintf(
-                    $this->getLanguage()->translate('extensibleEnumOptionIsUsedOnProductAttribute', 'exceptions', 'ExtensibleEnumOption'),
-                    $entity->get('name'),
-                    $pavEntity->get('attributeName') ?? $pavEntity->get('attributeId'),
-                    $pavEntity->get('productName') ?? $pavEntity->get('productId')
-                )
-            );
-        }
-
         $ca = $conn->createQueryBuilder()
             ->select('t.*')
             ->from($conn->quoteIdentifier('classification_attribute'), 't')

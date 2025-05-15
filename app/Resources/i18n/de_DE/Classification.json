@@ -2,8 +2,8 @@
   "fields": {
     "description": "Beschreibung",
     "isActive": "Aktiv",
-    "classifications": "Klassifizierungen",
-    "classificationAttributes": "Klassifizierungattribute",
+    "classifications": "Klassifikationen",
+    "classificationAttributes": "Klassifikationsattribute",
     "products": "Produkte",
     "synonyms": "Synonyme",
     "release": "Freigeben",

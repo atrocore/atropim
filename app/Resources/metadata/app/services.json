@@ -3,6 +3,5 @@
   "ProductsByStatusDashlet": "\\Pim\\Services\\ProductsByStatusDashlet",
   "ProductsByTagDashlet": "\\Pim\\Services\\ProductsByTagDashlet",
   "ProductsByTaskStatusDashlet": "\\Pim\\Services\\ProductsByTaskStatusDashlet",
-  "ProductTypesDashlet": "\\Pim\\Services\\ProductTypesDashlet",
-  "RevisionField": "\\Pim\\Services\\RevisionField"
+  "ProductTypesDashlet": "\\Pim\\Services\\ProductTypesDashlet"
 }

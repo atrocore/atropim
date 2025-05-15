@@ -1,15 +1,18 @@
 [
-    {
-        "name": "name",
-        "link": true
-    },
-    {
-        "name": "code"
-    },
-    {
-        "name": "parents"
-    },
-    {
-        "name": "isActive"
-    }
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "entity"
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "parents"
+  },
+  {
+    "name": "isActive"
+  }
 ]

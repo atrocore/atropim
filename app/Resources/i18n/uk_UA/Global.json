@@ -12,7 +12,6 @@
     "AttributeGroup": "Група атрибута",
     "Brand": "Бренд",
     "Classification": "Класифікація",
-    "ProductAttributeValue": "Значення атрибута",
     "ProductPrice": "Ціна продукту",
     "Tax": "Податки",
     "ProductSerie": "Серія продукту",
@@ -36,7 +35,6 @@
     "Classification": "Класифікації",
     "Tax": "Податки",
     "Product": "Продукти",
-    "ProductAttributeValue": "Значення атрибутів",
     "ProductPrice": "Ціни продукту",
     "ProductSerie": "Серії продукту",
     "ClassificationAttribute": "Атрибути класифікації",
@@ -55,6 +53,7 @@
     }
   },
   "fields": {
+    "classifications": "Класифікації",
     "classification": "Класифікація",
     "productStatus": "Статус продукту",
     "oneGeoType": "OneGeo Type",
@@ -86,7 +85,6 @@
     "lowestLevelProducts": "Продукти найнижчого рівня",
     "bundleProducts": "Товарні комбінації",
     "bundledProducts": "Комбіновані товари",
-    "productSettings": "Налаштування продукту",
     "Reset selection": "Скинути вибір",
     "typeToSearch": "Введ. і натисн. Enter...",
     "categorySettings": "Налаштування категорій",
@@ -96,8 +94,7 @@
     "removeExplain": "Виберіть цю опцію, щоб скасувати зв'язок атрибута з іншими об'єктами перед видаленням",
     "removeHint": "При видаленні каталогу, належні йому продакти видаляються.",
     "categoryPreview": "Попередній перегляд категорії",
-    "productPreview": "Попередній перегляд продукту",
-    "classificationSettings": "Налаштування класифікації"
+    "productPreview": "Попередній перегляд продукту"
   },
   "dashlets": {
     "Channels": "Канали",
@@ -108,7 +105,6 @@
     "ProductsByTaskStatus": "Продукти за статусом завдання"
   },
   "exceptions": {
-    "attributeRecordAlreadyExists": "Атрибут '%s' для каналу %s уже пов'язаний.",
     "massRelateBlocked": "Масове створення таких зв'язків заблоковано.",
     "massUnRelateBlocked": "Масове видалення таких зв'язків заблоковано.",
     "onlyForceDeletingAvailable": "Доступне тільки примусове видалення",

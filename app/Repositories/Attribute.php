@@ -279,19 +279,18 @@ class Attribute extends Base
         return $attributes;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @throws BadRequest
-     */
     public function beforeSave(Entity $entity, array $options = [])
     {
+        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
+            throw new BadRequest($this->exception('entityCannotBeChanged'));
+        }
+
         if ($entity->get('code') === '') {
             $entity->set('code', null);
         }
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
-            throw new BadRequest($this->exception('entityCannotBeChanged'));
+        if ($entity->get('type') === 'composite' && !empty($entity->get('attributeGroupId'))) {
+            $entity->set('attributeGroupId', null);
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
@@ -330,69 +329,6 @@ class Attribute extends Base
                     throw new BadRequest($this->exception('compositeAttributeCannotBeChild'));
                 }
                 $composite = $this->get($composite->get('compositeAttributeId'));
-            }
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('unique') && $entity->get('unique')) {
-            $qb = $this->getConnection()->createQueryBuilder();
-
-            $qb
-                ->select('COUNT(*)')
-                ->from('product_attribute_value')
-                ->where('attribute_id = :attributeId')
-                ->andWhere('deleted = :false')
-                ->setParameter('attributeId', $entity->id)
-                ->setParameter('false', false, Mapper::getParameterType(false));
-
-            switch ($entity->get('type')) {
-                case 'float':
-                    $qb->andWhere('float_value IS NOT NULL');
-                    $qb->groupBy("float_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
-                    break;
-                case 'int':
-                    $qb->andWhere('int_value IS NOT NULL');
-                    $qb->groupBy("int_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
-                case 'date':
-                    $qb->andWhere('date_value IS NOT NULL');
-                    $qb->groupBy("date_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
-                case 'datetime':
-                    $qb->andWhere('datetime_value IS NOT NULL');
-                    $qb->groupBy("datetime_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
-                    break;
-                default:
-                    $qb->andWhere('varchar_value IS NOT NULL');
-                    $qb->groupBy("varchar_value, {$this->getConnection()->quoteIdentifier('language')}, scope, channel_id");
-                    break;
-            }
-
-            $qb->having('COUNT(*) > 1');
-
-            if (!empty($qb->fetchAssociative())) {
-                throw new Error($this->exception('attributeNotHaveUniqueValue'));
-            }
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('pattern') && !empty($pattern = $entity->get('pattern'))) {
-            if (!preg_match("/^\/(.*)\/$/", $pattern)) {
-                throw new BadRequest($this->getInjection('language')->translate('regexNotValid', 'exceptions',
-                    'FieldManager'));
-            }
-
-            $res = $this->getConnection()->createQueryBuilder()
-                ->select('varchar_value')
-                ->from('product_attribute_value')
-                ->where('attribute_id = :attributeId')
-                ->andWhere('deleted = :false')
-                ->andWhere('varchar_value IS NOT NULL')
-                ->andWhere("varchar_value != ''")
-                ->setParameter('attributeId', $entity->get('id'))
-                ->setParameter('false', false, Mapper::getParameterType(false))
-                ->fetchAllAssociative();
-
-            foreach ($res as $row) {
-                if (!preg_match($pattern, $row['varchar_value'])) {
-                    throw new BadRequest($this->exception('someAttributeDontMathToPattern'));
-                }
             }
         }
 
@@ -441,16 +377,6 @@ class Attribute extends Base
                 $this->getInjection('container')->get($converterName)->convert($entity);
             }
 
-            if (!$entity->isNew() && $entity->isAttributeChanged('measureId')) {
-                $this->getConnection()->createQueryBuilder()
-                    ->update('product_attribute_value')
-                    ->set('reference_value', ':null')
-                    ->where('attribute_id = :id')
-                    ->setParameter('null', null)
-                    ->setParameter('id', $entity->get('id'))
-                    ->executeQuery();
-            }
-
             $result = parent::save($entity, $options);
             if (!empty($inTransaction)) {
                 $this->getPDO()->commit();
@@ -475,97 +401,6 @@ class Attribute extends Base
         if ($entity->isNew() && !empty($entity->get('compositeAttributeId'))) {
             $this->addAttributeValueForComposite($entity);
         }
-
-        /**
-         * Delete all lingual product attribute values
-         */
-        if (!$entity->isNew() && $entity->isAttributeChanged('isMultilang') && empty($entity->get('isMultilang'))) {
-            while (true) {
-                $pavs = $this->getEntityManager()->getRepository('ProductAttributeValue')
-                    ->where(['attributeId' => $entity->get('id'), 'language!=' => 'main'])
-                    ->limit(0, 2000)
-                    ->order('createdAt', 'ASC')
-                    ->find();
-                if (empty($pavs[0])) {
-                    break;
-                }
-                foreach ($pavs as $pav) {
-                    $this->getEntityManager()->removeEntity($pav);
-                }
-            }
-        }
-
-        if (!$entity->isNew() && $entity->isAttributeChanged('notNull') && !empty($entity->get('notNull'))) {
-            $attributeId = $entity->get('id');
-            $query = $this->getEntityManager()
-                ->getConnection()->createQueryBuilder()
-                ->update('product_attribute_value')
-                ->where("attribute_id=:attributeId")
-                ->andWhere('deleted=:false')
-                ->setParameter('attributeId', $attributeId, Mapper::getParameterType($attributeId))
-                ->setParameter('false', false, ParameterType::BOOLEAN);
-
-            if ($entity->get('type') === 'varchar') {
-                $query
-                    ->set('varchar_value', ':empty')
-                    ->andWhere("varchar_value is NULL")
-                    ->setParameter('empty', '', ParameterType::STRING)
-                    ->executeQuery();
-            }
-
-            if (in_array($entity->get('type'), ['text', 'markdown', 'wysiwyg', 'url'])) {
-                $query
-                    ->set('text_value', ':empty')
-                    ->andWhere("text_value is NULL")
-                    ->setParameter('empty', '', ParameterType::STRING)
-                    ->executeQuery();
-            }
-
-            if ($entity->get('type') === 'int') {
-                $query
-                    ->set('int_value', ':zero')
-                    ->andWhere("int_value is NULL")
-                    ->setParameter('zero', 0, ParameterType::INTEGER)
-                    ->executeQuery();
-            }
-
-            if ($entity->get('type') === 'float') {
-                $query
-                    ->set('float_value', ':zero')
-                    ->andWhere("float_value is NULL")
-                    ->setParameter('zero', 0, ParameterType::INTEGER)
-                    ->executeQuery();
-            }
-
-            if ($entity->get('type') === 'bool') {
-                $query->set('bool_value', ':defaultBool')
-                    ->where("bool_value is NULL")
-                    ->setParameter('defaultBool', false, ParameterType::BOOLEAN)
-                    ->executeQuery();
-            }
-        }
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository('ProductAttributeValue')->removeByAttributeId($entity->get('id'));
-
-        parent::afterRemove($entity, $options);
-    }
-
-    protected function afterRestore($entity)
-    {
-        parent::afterRestore($entity);
-
-        $this->getConnection()
-            ->createQueryBuilder()
-            ->update('product_attribute_value')
-            ->set('deleted', ':false')
-            ->where('attribute_id = :attributeId')
-            ->andWhere('deleted = :true')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('attributeId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true', true, ParameterType::BOOLEAN);
     }
 
     /**

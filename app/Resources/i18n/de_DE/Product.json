@@ -4,9 +4,7 @@
     "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",
     "channelProducts": "Kanalprodukte",
-    "productAttributeValues": "Attributwerte",
     "productBundles": "Produktbündel",
-    "classifications": "Klassifizierungen",
     "productPackages": "Verpackungsdetails",
     "products": "Produkte",
     "productStatus": "Produktstatus",
@@ -84,7 +82,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "ohne Produktattribute",
     "notAssociatedProducts": "Ohne assoziierte Produkte",
     "notLinkedWithBrand": "Ohne Marke",
     "notLinkedWithProductSerie": "Ohne Produktserie",
@@ -98,11 +95,9 @@
     "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
     "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
-    "youCantChangeClassificationInProduct": "Sie können die Klassifizierung in Product nicht ändern.",
-    "youCantChangeFieldOfTypeInProduct": "Sie können das Feld Typ in Produkt nicht ändern",
+    "youCantChangeClassificationInProduct": "Sie können die Klassifikation in Product nicht ändern.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
-    "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf.",
-    "someProductsHaveMoreThanOneClassification": "Einige Produkte haben mehr als eine Klassifizierung."
+    "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
   },
   "messages": {
     "componentsNotInstalled": "Installieren Sie das Modul Product Components, um die Komponentenvorschau zu verwenden."

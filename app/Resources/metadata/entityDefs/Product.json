@@ -1,22 +1,5 @@
 {
   "fields": {
-    "productAttributeValues": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutLeftSidebarDisabled": true,
-      "massUpdateDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": false,
-      "noLoad": true
-    },
-    "classifications": {
-      "type": "linkMultiple",
-      "view": "pim:views/product/fields/classifications",
-      "noLoad": false
-    },
     "brand": {
       "type": "link",
       "view": "pim:views/product/fields/brand"
@@ -143,6 +126,9 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
+    "variantSpecificAttributes": {
+      "type": "linkMultiple"
+    },
     "ownerUser": {
       "type": "link",
       "required": false,
@@ -232,11 +218,11 @@
       "foreign": "products",
       "entity": "File"
     },
-    "classifications": {
+    "variantSpecificAttributes": {
       "type": "hasMany",
-      "foreign": "products",
-      "relationName": "ProductClassification",
-      "entity": "Classification"
+      "foreign": "variantSpecificProducts",
+      "relationName": "VariantSpecificProductAttribute",
+      "entity": "Attribute"
     },
     "catalog": {
       "type": "belongsTo",
@@ -326,12 +312,6 @@
       "relationName": "productCategory",
       "foreign": "products",
       "entity": "Category"
-    },
-    "productAttributeValues": {
-      "type": "hasMany",
-      "foreign": "product",
-      "entity": "ProductAttributeValue",
-      "disableMassRelation": true
     },
     "contentItems": {
       "type": "hasMany",

@@ -1,6 +1,6 @@
 {
   "fields": {
-    "products": "Products",
+    "entity": "Entity",
     "description": "Description",
     "release": "Release",
     "synonyms": "Synonyms",
@@ -17,5 +17,8 @@
   },
   "labels": {
     "selectAttributeGroup": "Select Attribute Group"
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "Entity cannot be changed."
   }
 }

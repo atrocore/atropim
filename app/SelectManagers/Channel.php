@@ -68,35 +68,6 @@ class Channel extends AbstractSelectManager
     /**
      * @param array $result
      */
-    protected function boolFilterNotLinkedWithAttributesInProduct(array &$result)
-    {
-        $data = (array)$this->getSelectCondition('notLinkedWithAttributesInProduct');
-
-        if (isset($data['productId']) && isset($data['attributeId'])) {
-            $channels = $this
-                ->getEntityManager()
-                ->getRepository('Channel')
-                ->select(['id'])
-                ->distinct()
-                ->join(['productAttributeValues'])
-                ->where(
-                    [
-                        'productAttributeValues.attributeId' => $data['attributeId'],
-                        'productAttributeValues.productId'   => $data['productId']
-                    ]
-                )
-                ->find()
-                ->toArray();
-
-            $result['whereClause'][] = [
-                'id!=' => !empty($channels) ? array_column($channels, 'id') : []
-            ];
-        }
-    }
-
-    /**
-     * @param array $result
-     */
     protected function boolFilterNotLinkedWithAttributesInClassification(array &$result)
     {
         $data = (array)$this->getSelectCondition('notLinkedWithAttributesInClassification');

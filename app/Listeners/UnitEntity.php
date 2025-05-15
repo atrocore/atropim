@@ -27,27 +27,6 @@ class UnitEntity extends AbstractEntityListener
 
         $conn = $this->getEntityManager()->getConnection();
 
-        $pav = $conn->createQueryBuilder()
-            ->select('t.*')
-            ->from($conn->quoteIdentifier('product_attribute_value'), 't')
-            ->where('t.reference_value = :unitId')
-            ->andWhere('t.deleted = :false')
-            ->setParameter('unitId', $entity->get('id'))
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAssociative();
-
-        if (!empty($pav)) {
-            $pavEntity = $this->getEntityManager()->getRepository('ProductAttributeValue')->get($pav['id']);
-            throw new BadRequest(
-                sprintf(
-                    $this->getLanguage()->translate('unitIsUsedOnProductAttribute', 'exceptions', 'Unit'),
-                    $entity->get('name'),
-                    $pavEntity->get('attributeName') ?? $pavEntity->get('attributeId'),
-                    $pavEntity->get('productName') ?? $pavEntity->get('productId')
-                )
-            );
-        }
-
         $ca = $conn->createQueryBuilder()
             ->select('t.*')
             ->from($conn->quoteIdentifier('classification_attribute'), 't')

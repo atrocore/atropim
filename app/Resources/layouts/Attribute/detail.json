@@ -25,11 +25,15 @@
       ],
       [
         {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
           "name": "code"
         },
-        {
-          "name": "unique"
-        }
+        false
       ],
       [
         {
@@ -62,14 +66,6 @@
       [
         {
           "name": "defaultDate"
-        },
-        {
-          "name": "defaultValue"
-        }
-      ],
-      [
-        {
-          "name": "defaultChannel"
         },
         false
       ],

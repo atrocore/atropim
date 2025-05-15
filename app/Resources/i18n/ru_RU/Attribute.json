@@ -8,14 +8,11 @@
     "code": "Код",
     "name": "Название атрибута",
     "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов",
     "isMultilang": "Многоязычность",
     "fileType": "Тип файла",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "measure": "Мера",
-    "defaultChannel": "Канал",
     "isRequired": "Обязательно",
     "tooltip": "Текст подсказки",
     "maxLength": "Максимальная длина"
@@ -40,8 +37,6 @@
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
-    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "attributeNotHaveUniqueValue": "Атрибут не имеет уникального значения.",
-    "someAttributeDontMathToPattern": "Некоторые атрибуты не соответствуют шаблону."
+    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты."
   }
 }
