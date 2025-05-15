@@ -25,8 +25,22 @@ class V1Dot14Dot3 extends Base
         return new \DateTime('2025-05-09 12:00:00');
     }
 
+    protected array $languages = [];
+
     public function up(): void
     {
+        $languageFile = 'data/reference-data/Language.json';
+        if (file_exists($languageFile)) {
+            $res = @json_decode(file_get_contents($languageFile), true);
+            if (!empty($res)) {
+                foreach ($res as $k => $row) {
+                    if (!empty($row['role']) && $row['role'] === 'additional') {
+                        $this->languages[] = $k;
+                    }
+                }
+            }
+        }
+
         if ($this->isPgSQL()) {
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP");
             $this->exec("DROP INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP");
@@ -51,7 +65,7 @@ class V1Dot14Dot3 extends Base
             $this->exec("CREATE TABLE variant_specific_product_attribute (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, product_id VARCHAR(36) DEFAULT NULL, attribute_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_UNIQUE_RELATION (deleted, product_id, attribute_id), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_PRODUCT_ID (product_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_ATTRIBUTE_ID (attribute_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_AT (created_at, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
 
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+        foreach ($this->languages as $language) {
             $this->exec("ALTER TABLE product_attribute_value ADD varchar_value_" . strtolower($language) . " VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE product_attribute_value ADD text_value_" . strtolower($language) . " TEXT DEFAULT NULL");
         }
