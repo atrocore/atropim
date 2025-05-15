@@ -114,6 +114,14 @@ class V1Dot14Dot3 extends Base
             ->setParameter('entityId', 'Product')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+
+        echo 'Migrate layouts' . PHP_EOL;
+        $this->getConnection()->createQueryBuilder()
+            ->delete('layout_relationship_item')
+            ->where('name=:pav OR name LIKE :like')
+            ->setParameter('pav', 'productAttributeValues')
+            ->setParameter('like', 'tab_%')
+            ->executeQuery();
     }
 
     protected function migrateDefaultValueForClassificationAttributes(): void
