@@ -139,6 +139,14 @@ class V1Dot14Dot3 extends Base
                 }
 
                 foreach ($res as $item) {
+                    $this->getConnection()->createQueryBuilder()
+                        ->update('classification_attribute')
+                        ->set($column, ':null')
+                        ->where('id=:id')
+                        ->setParameter('id', $item['id'])
+                        ->setParameter('null', null, ParameterType::NULL)
+                        ->executeQuery();
+
                     $data = @json_decode($item['data'] ?? '', true);
                     if (!is_array($data)) {
                         $data = [];
@@ -171,10 +179,8 @@ class V1Dot14Dot3 extends Base
                     $this->getConnection()->createQueryBuilder()
                         ->update('classification_attribute')
                         ->set('data', ':data')
-                        ->set($column, ':null')
                         ->where('id=:id')
                         ->setParameter('id', $item['id'])
-                        ->setParameter('null', null, ParameterType::NULL)
                         ->setParameter('data', json_encode($data))
                         ->executeQuery();
                 }
@@ -263,6 +269,14 @@ class V1Dot14Dot3 extends Base
             }
 
             foreach ($res as $item) {
+                $this->getConnection()->createQueryBuilder()
+                    ->update('classification_attribute')
+                    ->set('channel_id', ':empty')
+                    ->where('id=:id')
+                    ->setParameter('empty', '')
+                    ->setParameter('id', $item['id'])
+                    ->executeQuery();
+
                 $attribute = $this->getConnection()->createQueryBuilder()
                     ->select('*')
                     ->from($this->getConnection()->quoteIdentifier('attribute'))
@@ -299,10 +313,8 @@ class V1Dot14Dot3 extends Base
 
                 $this->getConnection()->createQueryBuilder()
                     ->update('classification_attribute')
-                    ->set('channel_id', ':empty')
                     ->set('attribute_id', ':attributeId')
                     ->where('id=:id')
-                    ->setParameter('empty', '')
                     ->setParameter('attributeId', $attributeId)
                     ->setParameter('id', $item['id'])
                     ->executeQuery();
@@ -335,6 +347,14 @@ class V1Dot14Dot3 extends Base
             }
 
             foreach ($res as $item) {
+                $this->getConnection()->createQueryBuilder()
+                    ->update('product_attribute_value')
+                    ->set('channel_id', ':empty')
+                    ->where('id=:id')
+                    ->setParameter('empty', '')
+                    ->setParameter('id', $item['id'])
+                    ->executeQuery();
+
                 $attribute = $this->getConnection()->createQueryBuilder()
                     ->select('*')
                     ->from($this->getConnection()->quoteIdentifier('attribute'))
@@ -371,10 +391,8 @@ class V1Dot14Dot3 extends Base
 
                 $this->getConnection()->createQueryBuilder()
                     ->update('product_attribute_value')
-                    ->set('channel_id', ':empty')
                     ->set('attribute_id', ':attributeId')
                     ->where('id=:id')
-                    ->setParameter('empty', '')
                     ->setParameter('attributeId', $attributeId)
                     ->setParameter('id', $item['id'])
                     ->executeQuery();
