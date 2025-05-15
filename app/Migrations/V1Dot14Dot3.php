@@ -41,6 +41,8 @@ class V1Dot14Dot3 extends Base
             }
         }
 
+        echo 'Prepare DB schema' . PHP_EOL;
+
         if ($this->isPgSQL()) {
             $this->exec("DROP INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP");
             $this->exec("DROP INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP");
@@ -65,6 +67,7 @@ class V1Dot14Dot3 extends Base
             $this->exec("CREATE TABLE variant_specific_product_attribute (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, product_id VARCHAR(36) DEFAULT NULL, attribute_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_UNIQUE_RELATION (deleted, product_id, attribute_id), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_PRODUCT_ID (product_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_ATTRIBUTE_ID (attribute_id, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_CREATED_AT (created_at, deleted), INDEX IDX_VARIANT_SPECIFIC_PRODUCT_ATTRIBUTE_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
 
+        echo 'Create lingual columns for product_attribute_value' . PHP_EOL;
         foreach ($this->languages as $language) {
             $this->exec("ALTER TABLE product_attribute_value ADD varchar_value_" . strtolower($language) . " VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE product_attribute_value ADD text_value_" . strtolower($language) . " TEXT DEFAULT NULL");
@@ -80,13 +83,24 @@ class V1Dot14Dot3 extends Base
         $this->exec("ALTER TABLE product_attribute_value DROP modified_by_id");
         $this->exec("ALTER TABLE product_attribute_value DROP count_bytes_instead_of_characters");
 
+        echo 'Migrate array type' . PHP_EOL;
         $this->migrateArrayType();
+
+        echo 'Migrate multilingual records' . PHP_EOL;
         $this->migrateMultilang();
+
+        echo 'Migrate channel specific records' . PHP_EOL;
         $this->migrateChannelSpecific();
+
+        echo 'Migrate variant specific parameter for records' . PHP_EOL;
         $this->migrateVariantSpecific();
 
         $this->exec("ALTER TABLE classification_attribute DROP " . $this->getConnection()->quoteIdentifier('language'));
+
+        echo 'Migrate channel specific for classification attribute' . PHP_EOL;
         $this->migrateChannelSpecificForCa();
+
+        echo 'Migrate default value for classification attribute' . PHP_EOL;
         $this->migrateDefaultValueForClassificationAttributes();
 
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
