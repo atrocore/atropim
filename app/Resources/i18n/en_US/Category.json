@@ -16,8 +16,7 @@
     "sortOrder": "Sort Order"
   },
   "labels": {
-    "withoutCatalog": "Without Catalog",
-    "Create Category": "Create Category"
+    "withoutCatalog": "Without Catalog"
   },
   "options": {
     "template": {

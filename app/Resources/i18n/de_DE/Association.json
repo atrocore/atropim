@@ -10,9 +10,6 @@
     "backwardAssociation": "Umgekehrte Assoziation",
     "code": "Code"
   },
-  "labels": {
-    "Create Association": "Assoziation erstellen"
-  },
   "exceptions": {
     "associationIsLinkedWithProducts": "Die Assoziation ist mit einem Produkt verlinkt. Bitte entfernen Sie zuerst das Produkt.",
     "youCanNotDeactivateAssociationWithActiveProducts": "Sie können die Assoziation mit einem aktiven Produkt nicht deaktivieren"

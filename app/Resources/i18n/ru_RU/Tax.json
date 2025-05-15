@@ -3,8 +3,5 @@
         "value": "Значение",
         "isActive": "Активный",
         "products": "Продукты"
-    },
-    "labels": {
-        "Create Tax": "Создать налог"
     }
 }

@@ -2,8 +2,5 @@
   "fields": {
     "name": "Название",
     "contents": "Контент"
-  },
-  "labels": {
-    "Create ContentGroup": "Создать группу контента"
   }
 }

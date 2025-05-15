@@ -3,7 +3,6 @@
     "attributes": "Атрибуты"
   },
   "labels": {
-    "selectAttributeGroup": "Выбрать группу атрибута",
-    "Create AttributeTab": "Создать таб атрибутов"
+    "selectAttributeGroup": "Выбрать группу атрибута"
   }
 }

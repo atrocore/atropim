@@ -2,8 +2,5 @@
   "fields": {
     "name": "Name",
     "contents": "Contents"
-  },
-  "labels": {
-    "Create ContentGroup": "Create Content Group"
   }
 }

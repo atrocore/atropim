@@ -16,9 +16,6 @@
     "catalogs": "Каталоги",
     "sortOrder": "Порядок сортировки"
   },
-  "labels": {
-    "Create Category": "Создать категории"
-  },
   "options": {
     "template": {
       "default": "По умолчанию"

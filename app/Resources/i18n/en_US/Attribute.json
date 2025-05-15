@@ -37,7 +37,6 @@
     "variantSpecificProducts": "Variant Specific Products"
   },
   "labels": {
-    "Create Attribute": "Create Attribute",
     "Classification": "Classification",
     "addNewValue": "Add new value",
     "extensibleEnumOptions": "List Options"

@@ -33,7 +33,6 @@
     "fullWidth": "На всю ширину"
   },
   "labels": {
-    "Create Attribute": "Створити атрибут",
     "classification": "Класифікація",
     "addNewValue": "Додати нове значення",
     "extensibleEnumOptions": "Опції списку"

@@ -33,7 +33,6 @@
     "htmlSanitizer": "HTML Sanitizer"
   },
   "labels": {
-    "Create Attribute": "Créer un attribut",
     "Classification": "Classification",
     "addNewValue": "Ajouter une nouvelle valeur",
     "extensibleEnumOptions": "Liste des options"

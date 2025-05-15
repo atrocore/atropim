@@ -11,7 +11,6 @@
     "unLinkCategoryFromChannel": "Розірвати зв'язок категорії '%s' з каналом '%s'",
     "linkCategoryWithChannel": "Зв'язати категорію '%s' з каналом '%s'",
     "changeCategoryForChannel": "Змінити категорію на '%s' для каналу '%s'",
-    "Create Channel": "Створити канал",
     "main": "Основна мова"
   },
   "options": {

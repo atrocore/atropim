@@ -23,7 +23,6 @@
   },
   "labels": {
     "classificationAttribute": "Attribut aus Klassifikation",
-    "Create ClassificationAttribute": "Attribut der Klassifikation erstellen",
     "unlinkRelatedAttribute": "Hier löschen und für die Akten aufbewahren",
     "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen"
   },

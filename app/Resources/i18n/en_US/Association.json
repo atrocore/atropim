@@ -6,9 +6,6 @@
     "backwardAssociation": "Backward Association",
     "code": "Code"
   },
-  "labels": {
-    "Create Association": "Create Association"
-  },
   "exceptions": {
     "associationIsLinkedWithProducts": "Association is linked with product(s). Please, unlink product(s) first",
     "youCanNotDeactivateAssociationWithActiveProducts": "You can not deactivate association with active product(s)"

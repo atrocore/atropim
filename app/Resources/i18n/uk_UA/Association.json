@@ -6,9 +6,6 @@
     "backwardAssociation": "Зворотній зв'язок",
     "code": "Код"
   },
-  "labels": {
-    "Create Association": "Створити зв'язок"
-  },
   "exceptions": {
     "associationIsLinkedWithProducts": "Асоціація пов'язана з продуктом (-ами). Будь ласка, спочатку відключіть продукт(-и)",
     "youCanNotDeactivateAssociationWithActiveProducts": "Ви не можете відключити зв'язок з активним продуктом (-ами)"

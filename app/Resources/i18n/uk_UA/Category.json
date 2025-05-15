@@ -15,9 +15,6 @@
     "productCategories": "Категорії продукту",
     "sortOrder": "Порядок сортування"
   },
-  "labels": {
-    "Create Category": "Створити категорії"
-  },
   "options": {
     "шаблон": {
       "default": "За замовчуванням"

@@ -17,7 +17,6 @@
     }
   },
   "labels": {
-    "selectAttributeGroup": "Attributgruppe auswählen",
-    "Create Classification": "Klassifikation erstellen"
+    "selectAttributeGroup": "Attributgruppe auswählen"
   }
 }

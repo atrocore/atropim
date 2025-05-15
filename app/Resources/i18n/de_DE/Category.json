@@ -20,8 +20,7 @@
     "image": "Bild"
   },
   "labels": {
-    "withoutCatalog": "Ohne Katalogg",
-    "Create Category": "Kategorie erstellen"
+    "withoutCatalog": "Ohne Katalogg"
   },
   "options": {
     "template": {

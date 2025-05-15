@@ -3,7 +3,6 @@
     "attributes": "Attributs"
   },
   "labels": {
-    "selectAttributeGroup": "Sélectionnez le groupe d'attributs",
-    "Create AttributeTab": "Onglet Créer un attribut"
+    "selectAttributeGroup": "Sélectionnez le groupe d'attributs"
   }
 }

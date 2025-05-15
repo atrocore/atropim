@@ -22,7 +22,6 @@
   },
   "labels": {
     "classificationAttribute": "Attribute from Classification",
-    "Create ClassificationAttribute": "Create Classification Attribute",
     "unlinkRelatedAttribute": "Delete here and retain for records",
     "cascadeUnlinkRelatedAttribute": "Delete here and from records"
   },

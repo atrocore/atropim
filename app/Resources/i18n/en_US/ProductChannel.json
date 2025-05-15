@@ -3,8 +3,5 @@
     "isActive": "Active For Channel",
     "product": "Product",
     "channel": "Channel"
-  },
-  "labels": {
-    "Create ProductChannel": "Create Product Channel"
   }
 }
