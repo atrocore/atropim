@@ -178,7 +178,8 @@ Espo.define('pim:views/record/panels/records-in-groups', ['views/record/panels/r
                 this.wait(false);
             });
 
-            this.listenTo(window.Backbone, 'change:disabled-languages', () => {
+            this.addToLanguageObservables();
+            this.listenTo(this, 'change:disabled-languages', () => {
                 this.actionRefresh()
             })
 

@@ -187,26 +187,6 @@ class Product extends AbstractSelectManager
         $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
     }
 
-    protected function boolFilterLinkedWithClassification(array &$result)
-    {
-        if (empty($id = $this->getSelectCondition('linkedWithClassification'))) {
-            return;
-        }
-
-        /** @var \Pim\Repositories\Classification $repository */
-        $repository = $this->getEntityManager()->getRepository('Classification');
-        if (empty($classification = $repository->get($id))) {
-            throw new BadRequest('No such Classification');
-        }
-
-        $ids = $repository->getChildrenRecursivelyArray($classification->get('id'));
-        $ids[] = $classification->get('id');
-
-        $result['whereClause'][] = [
-            'id' => $this->getProductsIdsByClassificationIds($ids)
-        ];
-    }
-
     protected function boolFilterWithoutMainImage(&$result)
     {
         $connection = $this->getEntityManager()->getConnection();
