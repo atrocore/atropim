@@ -31,7 +31,6 @@ Espo.define('pim:views/product/record/panels/categories', 'views/record/panels/r
             this.listenTo(this.model, 'after:relate after:unrelate', link => {
                 if (link === 'categories') {
                     $('.action[data-action=refresh][data-panel=productChannels]').click();
-                    $('.action[data-action=refresh][data-panel=productAttributeValues]').click();
                 }
             });
         },

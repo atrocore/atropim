@@ -6,8 +6,6 @@
     "categories": "Catégories de produits",
     "product": "Produit principal",
     "products": "Produits",
-    "productAttributeValues": "Valeurs des attributs",
-    "classifications": "Classification",
     "brand": "Marque",
     "associatedMainProducts": "Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés : Produits associés",
     "associatedRelatedProduct": "Produits associés : Principaux",
@@ -79,7 +77,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "Sans attributs de produit",
     "notAssociatedProducts": "Sans produits associés",
     "notLinkedWithBrand": "Sans marque",
     "notLinkedWithProductSerie": "Sans série de produits",
@@ -94,9 +91,7 @@
     "itselfAssociation": "Le produit ne peut pas être associé à lui-même.",
     "productAssociationAlreadyExists": "Une telle association de produits existe déjà.",
     "youCantChangeClassificationInProduct": "Vous ne pouvez pas modifier la classification dans le produit",
-    "youCantChangeFieldOfTypeInProduct": "Vous ne pouvez pas modifier le champ Type dans Produit",
     "productCanNotLinkToNonLeafCategory": "Les produits ne peuvent pas être liés à une catégorie non feuilletée.",
-    "productCatalogChangeException": "Le catalogue ne peut pas être supprimé/modifié, le produit utilise des catégories autorisées pour ce catalogue. Veuillez d'abord les dissocier.",
-    "someProductsHaveMoreThanOneClassification": "Certains produits ont plus d'une classification."
+    "productCatalogChangeException": "Le catalogue ne peut pas être supprimé/modifié, le produit utilise des catégories autorisées pour ce catalogue. Veuillez d'abord les dissocier."
   }
 }

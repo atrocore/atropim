@@ -17,7 +17,6 @@
     "AttributeTab": "Attribute Tab",
     "Brand": "Brand",
     "Classification": "Classification",
-    "ProductAttributeValue": "Attribute Value",
     "ProductPrice": "Product Price",
     "Tax": "Tax",
     "ProductSerie": "Product Serie",
@@ -43,7 +42,6 @@
     "Classification": "Classifications",
     "Tax": "Taxes",
     "Product": "Products",
-    "ProductAttributeValue": "Attribute Values",
     "ProductPrice": "Product Prices",
     "ProductSerie": "Product Series",
     "ClassificationAttribute": "Classification Attributes",
@@ -62,6 +60,7 @@
     }
   },
   "fields": {
+    "classifications": "Classifications",
     "categories": "Categories",
     "channels": "Channels",
     "products": "Products",
@@ -83,6 +82,7 @@
     "role": "Role"
   },
   "labels": {
+    "selectAttributes": "Select attribute(s)",
     "attributeValues": "Attribute Values",
     "addAttribute": "Add Attribute",
     "removeHierarchically": "Delete Hierarchically",
@@ -96,7 +96,6 @@
     "lowestLevelProducts": "Lowest level products",
     "bundleProducts": "Bundle products",
     "bundledProducts": "Bundled products",
-    "productSettings": "Product settings",
     "Reset selection": "Reset selection",
     "typeToSearch": "Type and press Enter...",
     "categorySettings": "Category settings",
@@ -106,8 +105,7 @@
     "removeExplain": "Select this to unlink attribute from other Entities before removing",
     "removeHint": "When removing the Catalog, the Products belonging to it are deleted.",
     "categoryPreview": "Category Preview",
-    "productPreview": "Product Preview",
-    "classificationSettings": "Classification Settings"
+    "productPreview": "Product Preview"
   },
   "streamMessages": {
     "createProductAssociationThis": "{user} associated {relatedProduct} as {association}",
@@ -124,7 +122,6 @@
     "ProductsByTaskStatus": "Products by Task Status"
   },
   "exceptions": {
-    "attributeRecordAlreadyExists": "Attribute '%s' for the channel %s is already linked.",
     "massRelateBlocked": "Mass relating of this kind is blocked.",
     "massUnRelateBlocked": "Mass unrelating of this kind is blocked.",
     "onlyForceDeletingAvailable": "Only force deleting available",

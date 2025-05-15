@@ -16,14 +16,6 @@ Espo.define('pim:views/classification/record/row-actions/classification-attribut
 
             list = list.filter(item => item.action !== 'inheritRelated');
 
-            list.push({
-                action: 'setCaAsInherited',
-                label: this.translate('inherit'),
-                data: {
-                    id: this.model.id
-                }
-            });
-
             if (this.options.acl.delete) {
                 list.push({
                     action: 'unlinkRelatedAttribute',

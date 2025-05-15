@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Pim\Entities;
 
 use Espo\ORM\IEntity;
+use Atro\Core\Templates\Entities\Base;
 
-class ClassificationAttribute extends AbstractAttributeValue
+class ClassificationAttribute extends Base
 {
     protected $entityType = "ClassificationAttribute";
 

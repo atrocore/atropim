@@ -6,13 +6,7 @@
     "name": "attribute"
   },
   {
-    "name": "language"
-  },
-  {
     "name": "isRequired"
-  },
-  {
-    "name": "channel"
   },
   {
     "name": "value"

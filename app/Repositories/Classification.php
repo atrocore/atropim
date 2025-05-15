@@ -46,10 +46,8 @@ class Classification extends Hierarchy
             $entity->set('code', null);
         }
 
-        if($this->getConfig()->get('allowSingleClassificationForProduct', false)
-            && $entity->isAttributeChanged('productsIds') && (count($entity->get('productsIds')) > 1)){
-            $data = $entity->get('productsIds');
-            $entity->set('productsIds', [end($data)]);
+        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
+            throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
 
         parent::beforeSave($entity, $options);
@@ -60,7 +58,7 @@ class Classification extends Hierarchy
         try {
             $result = parent::save($entity, $options);
         } catch (UniqueConstraintViolationException $e) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('notUniqueValue', 'exceptions', 'Global'), 'code'));
+            throw new BadRequest(sprintf($this->exception('notUniqueValue', 'Global'), 'code'));
         }
 
         return $result;
@@ -78,7 +76,12 @@ class Classification extends Hierarchy
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
     {
         return $this
-            ->where(['id!=' => $entity->get('id'), 'release' => $entity->get('release'), 'code' => $entity->get('code'), 'deleted' => $deleted])
+            ->where([
+                'id!='    => $entity->get('id'),
+                'release' => $entity->get('release'),
+                'code'    => $entity->get('code'),
+                'deleted' => $deleted
+            ])
             ->findOne(['withDeleted' => $deleted]);
     }
 
@@ -91,11 +94,15 @@ class Classification extends Hierarchy
             ->removeCollection();
     }
 
+    protected function exception(string $key, string $scope = 'Attribute'): string
+    {
+        return $this->getInjection('language')->translate($key, 'exceptions', $scope);
+    }
+
     protected function init()
     {
         parent::init();
 
         $this->addDependency('language');
     }
-
 }

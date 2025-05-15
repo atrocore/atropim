@@ -1,6 +1,6 @@
 {
   "exceptions": {
     "unitIsUsedOnProductAttribute": "Die Einheit '%s' wird im Attribut '%s' aus dem Produkt '%s' verwendet.",
-    "unitIsUsedOnClassificationAttribute": "Die Einheit '%s' wird im Attribut '%s' aus der Klassifizierung '%s' verwendet."
+    "unitIsUsedOnClassificationAttribute": "Die Einheit '%s' wird im Attribut '%s' aus der Klassifikation '%s' verwendet."
   }
 }

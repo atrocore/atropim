@@ -36,6 +36,12 @@
       "type": "varchar",
       "trim": true
     },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "pim:views/classification/fields/entity"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -53,10 +59,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "products": {
-      "type": "linkMultiple",
-      "noLoad": true
     },
     "classificationAttributes": {
       "type": "linkMultiple",
@@ -93,12 +95,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "products": {
-      "type": "hasMany",
-      "foreign": "classifications",
-      "relationName": "ProductClassification",
-      "entity": "Product"
     },
     "classificationAttributes": {
       "type": "hasMany",

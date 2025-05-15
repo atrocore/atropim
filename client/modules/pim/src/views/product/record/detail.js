@@ -41,14 +41,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             this.listenTo(this.model, 'after:save', () => {
-                // refresh attributes panels after any saving
-                $(".panel-productAttributeValues button[data-action='refresh']").click();
-                (this.getMetadata().get('clientDefs.Product.bottomPanels.detail') || []).forEach(tabPanelDefs => {
-                    if (tabPanelDefs.tabId) {
-                        $(".panel-" + tabPanelDefs.name + " button[data-action='refresh']").click();
-                    }
-                });
-
                 // refresh categories panel after any saving
                 $(".panel-categories button[data-action='refresh']").click();
             });
@@ -277,18 +269,6 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                     }
                 }
             }
-
-            (this.getMetadata().get('clientDefs.Product.bottomPanels.detail') || []).forEach(tabPanelDefs => {
-                if (tabPanelDefs.tabId && panelsData[tabPanelDefs.name]) {
-                    if (!panelsData['productAttributeValues']) {
-                        panelsData['productAttributeValues'] = {};
-                    }
-                    $.each(panelsData[tabPanelDefs.name], (k, v) => {
-                        panelsData['productAttributeValues'][k] = v;
-                    });
-                    delete panelsData[tabPanelDefs.name];
-                }
-            });
 
             return panelsData;
         },

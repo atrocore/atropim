@@ -5,7 +5,6 @@
     "categories": "Категории продукта",
     "product": "Основной продукт",
     "products": "Продукты",
-    "productAttributeValues": "Значения атрибутов",
     "brand": "Бренд",
     "associatedMainProducts": "Ассоциированные продукты: Связанные",
     "associatedRelatedProduct": "Ассоциированные продукты: Основные",
@@ -81,7 +80,6 @@
     }
   },
   "boolFilters": {
-    "withoutProductAttributes": "Без атрибутов продукта",
     "notAssociatedProducts": "Не ассоциированные продукты",
     "notLinkedWithBrand": "Не связан с брендом",
     "notLinkedWithProductSerie": "Не связан с серией продукта",
@@ -94,7 +92,6 @@
     "noSuchAssociation": "Проверка не удалась. Такой ассоциации не существует.",
     "itselfAssociation": "Продукт не может быть ассоциирован с самим собой.",
     "productAssociationAlreadyExists": "Такая продуктовая ассоциация уже существует.",
-    "youCantChangeFieldOfTypeInProduct": "Вы не можете изменить поле тип продукта",
     "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
     "productCatalogChangeException": "Вы не можете удалить/изменить каталог продукта, продукт использует категории которые разрешены для оригинального(предыдущего) каталога. Пожалуйста, сначала удалите связь с этими категориями."
   }

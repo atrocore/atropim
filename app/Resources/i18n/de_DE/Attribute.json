@@ -2,8 +2,6 @@
   "fields": {
     "parents": "Assoziierende Attribute",
     "children": "Assoziierte Attribute",
-    "channelProductAttributeValues": "Produktattributwerte für Kanal",
-    "productAttributeValues": "Attributwerte",
     "products": "Produkte",
     "type": "Typ",
     "attributeGroup": "Attributgruppe",
@@ -13,13 +11,10 @@
     "fileType": "Datei-Typ",
     "name": "Attributname",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
     "defaultDate": "Standard Datum",
-    "defaultValue": "Standardwert",
-    "defaultChannel": "Standardkanal",
     "isRequired": "erforderlich",
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
@@ -32,15 +27,14 @@
     "max": "Max",
     "notNull": "Deaktivieren Nullwert",
     "trim": "Führende und nachfolgende Whitespaces entfernen",
-    "classificationAttributes": "Klassifizierungattribute",
+    "classificationAttributes": "Klassifikationsattribute",
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
-    "classifications": "Klassifizierungen",
     "fullWidth": "Volle Breite"
   },
   "labels": {
     "Create Attribute": "Attribut erstellen",
-    "classification": "Klassifizierung",
+    "classification": "Klassifikation",
     "addNewValue": "Neuen Wert hinzufügen",
     "extensibleEnumOptions": "Auswahloptionen"
   },
@@ -75,7 +69,6 @@
     "isRequired": "Dies ist ein Standardwert, der beim Hinzufügen dieses Attributs zum Produkt oder zur Klassifikation verwendet wird.",
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "sortOrder": "Sortierreihenfolge für Attributwerte für ein Produkt.",
-    "defaultChannel": "Nur auf neu hinzugefügte Attributwerte anwenden",
     "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
   },
@@ -84,12 +77,10 @@
     "maxLessThanMin": "Min sollte kleiner als Max sein.",
     "noAttributeConverterFound": "Attributkonvertierung vom Typ '%s' in '%s' ist nicht möglich.",
     "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
-    "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifizierungen verwendet. Bitte aktualisieren Sie zuerst die Klassifizierungen.",
+    "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifikationen verwendet. Bitte aktualisieren Sie zuerst die Klassifikationen.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
-    "attributeNotHaveUniqueValue": "Attribut hat keinen eindeutigen Wert.",
-    "someAttributeDontMathToPattern": "Einige Attribute stimmen nicht mit dem Muster überein.",
     "invalidType": "Der Attributtyp „{type}“ ist ungültig"
   }
 }

@@ -21,7 +21,7 @@ class EntityLayout extends AbstractLayoutListener
     public function detail(Event $event): void
     {
         $result = $event->getArgument('result');
-        $result[0]['rows'][] = [['name' => 'hasAttribute'], false];
+        $result[0]['rows'][] = [['name' => 'hasAttribute'], ['name' => 'hasClassification']];
         $event->setArgument('result', $result);
     }
 }

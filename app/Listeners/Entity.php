@@ -13,21 +13,26 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
+use Atro\Services\Record;
+use Pim\Services\Attribute;
 
 class Entity extends AbstractEntityListener
 {
-    public function beforeGetSelectParams(Event  $event) {
+    public function beforeGetSelectParams(Event $event)
+    {
         $params = $event->getArgument('params');
         $entityType = $event->getArgument('entityType');
-        if($entityType === 'ExtensibleEnumOption') {
-            if (!empty($params['where']) ) {
+        if ($entityType === 'ExtensibleEnumOption') {
+            if (!empty($params['where'])) {
                 foreach ($params['where'] as $key => $filter) {
-                    if(!empty($filter['type']) && $filter['type'] === 'bool' && !empty($filter['value'])){
-                        foreach ($filter['value'] as $boolFilter){
-                            $method = "boolFilter".ucfirst($boolFilter);
-                            if(method_exists($this, $method)){
-                               $this->$method($params, isset($filter['data'][$boolFilter]) ? $filter['data'][$boolFilter] : null);
+                    if (!empty($filter['type']) && $filter['type'] === 'bool' && !empty($filter['value'])) {
+                        foreach ($filter['value'] as $boolFilter) {
+                            $method = "boolFilter" . ucfirst($boolFilter);
+                            if (method_exists($this, $method)) {
+                                $this->$method($params,
+                                    isset($filter['data'][$boolFilter]) ? $filter['data'][$boolFilter] : null);
                             }
                         }
                     }
@@ -38,41 +43,79 @@ class Entity extends AbstractEntityListener
         $event->setArgument("params", $params);
     }
 
-    protected  function boolFilterOnlyForClassificationAttributesUsingPavId(&$params,  $data)
+    protected function boolFilterOnlyExtensibleEnumOptionIds(&$params, $ids)
     {
-        if(empty($data['pavId']) || !isset($data['channelId'])){
-            return $params;
-        }
 
-        $classificationAttributeId = $this->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->getClassificationAttributesFromPavId($data['pavId'], $data['channelId']);
-
-        if(!empty($classificationAttributeId)) {
-
-            $params['where'][] = [
-                "type" => "linkedWith",
-                "attribute" => "classificationAttributes",
-                "value" =>  [$classificationAttributeId]
-            ];
-
-        }
-
-        return $params;
-    }
-
-    protected  function boolFilterOnlyExtensibleEnumOptionIds(&$params, $ids){
-
-        if(!is_array($ids) || empty($ids)){
+        if (!is_array($ids) || empty($ids)) {
             return $params;
         }
 
         $params['where'][] = [
-            "type" => "in",
+            "type"      => "in",
             "attribute" => "id",
-            "value" =>  $ids
+            "value"     => $ids
         ];
         return $params;
     }
 
+    public function afterSave(Event $event): void
+    {
+        /** @var \Espo\ORM\Entity $entity */
+        $entity = $event->getArgument('entity');
+
+        // create classification attributes if it needs
+        $this->createClassificationAttributesForRecord($entity);
+    }
+
+    protected function createClassificationAttributesForRecord(\Espo\ORM\Entity $entity): void
+    {
+        $entityName = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.classificationForEntity");
+        if (empty($entityName)) {
+            return;
+        }
+
+        $cas = $this->getEntityManager()->getRepository('ClassificationAttribute')
+            ->where([
+                'classificationId' => $entity->get('classificationId')
+            ])
+            ->find();
+
+        if (empty($cas[0])) {
+            return;
+        }
+
+        $attributesIds = array_column($cas->toArray(), 'attributeId');
+
+        /** @var Record $service */
+        $recordService = $this->getServiceFactory()->create($entityName);
+
+        $inputData = new \stdClass();
+        $inputData->__attributes = [];
+        foreach ($this->getAttributeService()->getAttributesDefs($entityName, $attributesIds) as $field => $defs) {
+            $inputData->$field = null;
+        }
+
+        foreach ($cas as $ca) {
+            $attributeFieldName = AttributeFieldConverter::prepareFieldName($ca->get('attributeId'));
+            $default = $ca->get('data')?->default ?? new \stdClass();
+
+            $inputData->__attributes[] = $ca->get('attributeId');
+            foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
+                if (property_exists($default, $key)) {
+                    $preparedKey = str_replace('value', $attributeFieldName, $key);
+                    $inputData->$preparedKey = $default->$key;
+                }
+            }
+        }
+
+        $recordId = $entity->get(lcfirst($entityName) . 'Id');
+
+        $recordService->updateEntity($recordId, $inputData);
+    }
+
+
+    protected function getAttributeService(): Attribute
+    {
+        return $this->getServiceFactory()->create('Attribute');
+    }
 }

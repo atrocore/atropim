@@ -8,33 +8,29 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/fields/base',
+Espo.define('pim:views/classification-attribute/fields/value-container', 'views/fields/base',
     (Dep) => Dep.extend({
 
-        listTemplate: 'pim:product-attribute-value/fields/base',
+        listTemplate: 'pim:classification-attribute/fields/base',
 
-        detailTemplate: 'pim:product-attribute-value/fields/base',
+        detailTemplate: 'pim:classification-attribute/fields/base',
 
-        editTemplate: 'pim:product-attribute-value/fields/base',
+        editTemplate: 'pim:classification-attribute/fields/base',
 
         fieldActions: false,
 
         setup() {
             this.name = this.options.name || this.defs.name;
 
-            this.listenTo(this.model, 'change:attributeId change:min change:max', () => {
+            this.listenTo(this.model, 'change:attributeId', () => {
                 if (this.mode === 'detail' || this.mode === 'edit') {
                     this.clearValue();
 
                     if (this.model.get('attributeId')) {
                         this.fetchAttributeData();
+                    } else {
+                        this.reRender();
                     }
-                }
-            });
-
-            this.listenTo(this.model, 'change:language', () => {
-                if (this.mode === 'detail' || this.mode === 'edit') {
-                    this.reRender();
                 }
             });
         },
@@ -53,7 +49,21 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-            if (this.model.get('attributeType')) {
+
+            this.$el.parent().hide();
+
+            let hasDefault = this.mode === 'list';
+
+            if (this.model.get('attributeType')){
+                (this.getMetadata().get(`fields.${this.model.get('attributeType')}.params`) || []).forEach(item => {
+                    if (item.name === 'default' || item.name === 'defaultDate'){
+                        hasDefault = true;
+                    }
+                })
+            }
+
+            if (hasDefault) {
+                this.$el.parent().show();
                 let attributeType = this.model.get('attributeType');
 
                 let fieldView = this.getFieldManager().getViewName(attributeType);
@@ -122,25 +132,11 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
 
-                    if (this.model.urlRoot === 'ClassificationAttribute') {
-                        customOptions = {
-                            customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
-                            customBoolFilterData: {
-                                onlyExtensibleEnumOptionIds() {
-                                    return this.model.get('extensibleEnumOptionsIds')
-                                }
-                            }
-                        }
-                    } else {
-                        customOptions = {
-                            customSelectBoolFilters: ['onlyForClassificationAttributesUsingPavId'],
-                            customBoolFilterData: {
-                                onlyForClassificationAttributesUsingPavId() {
-                                    return {
-                                        'pavId' : this.model.get('id'),
-                                        'channelId': this.model.get('channelId')
-                                    }
-                                }
+                    customOptions = {
+                        customSelectBoolFilters: ['onlyExtensibleEnumOptionIds'],
+                        customBoolFilterData: {
+                            onlyExtensibleEnumOptionIds() {
+                                return this.model.get('extensibleEnumOptionsIds')
                             }
                         }
                     }
@@ -157,65 +153,36 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                     collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
-                    labelText: this.translate('value', 'fields', 'ProductAttributeValue'),
                     inlineEditDisabled: true,
                     ...customOptions
                 };
 
-                if (attributeType === 'link' || attributeType === 'linkMultiple') {
+                if (attributeType === 'link') {
                     options.foreignScope = this.model.get('attributeEntityType');
                     options.params.foreignName = this.model.get('attributeEntityField');
                 }
                 this.createView('valueField', fieldView, options, view => {
                     view.render();
 
-                    if (this.model.name !== 'ClassificationAttribute') {
-                        this.listenTo(this.model, 'change:isRequired', () => {
-                            if (this.model.get('isRequired')) {
-                                view.setRequired();
-                            } else {
-                                view.setNotRequired();
+                    this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
+                        if (attributeType === 'extensibleEnum' && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))) {
+                            try {
+                                view.clearLink()
+                            } catch (e) {
                             }
-                        });
-                    }
+                        }
 
-                    if (this.model.urlRoot === 'ClassificationAttribute') {
-                        this.listenTo(this.model, 'change:extensibleEnumOptionsIds', () => {
-
-                            if (attributeType === 'extensibleEnum'
-                                && !this.model.get('extensibleEnumOptionsIds').includes(this.model.get('value'))) {
-                                try {
-                                    view.clearLink()
-                                } catch (e) {
-
-                                }
-                            }
-
-                            if (attributeType === 'extensibleMultiEnum') {
-                                (this.model.get('value') ?? []).forEach(v => {
-                                    if (!this.model.get('extensibleEnumOptionsIds').includes(v)) {
-                                        try {
-                                            view.deleteLink(v)
-                                        } catch (e) {
-                                        }
+                        if (attributeType === 'extensibleMultiEnum') {
+                            (this.model.get('value') ?? []).forEach(v => {
+                                if (!this.model.get('extensibleEnumOptionsIds').includes(v)) {
+                                    try {
+                                        view.deleteLink(v)
+                                    } catch (e) {
                                     }
-                                })
-                            }
-                        });
-                    }
-
-
-                    if(this.model.urlRoot === 'ProductAttributeValue'
-                        && ['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('attributeType'))
-                        && this.model.get('attributeIsDropdown')
-                    ) {
-                        view.listenTo(this.model, 'change:channelId', () => {
-                            // we rebuild the list of options according to the new channelId
-                            view.setup();
-                            view.reRender()
-                        })
-                    }
-
+                                }
+                            })
+                        }
+                    });
                 });
 
                 if (this.mode === 'edit' && 'extensibleMultiEnum' === attributeType) {
@@ -292,16 +259,6 @@ Espo.define('pim:views/product-attribute-value/fields/value-container', 'views/f
                 this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                 this.model.set('attributeNotNull', !!attr.notNull);
                 this.reRender();
-                if (attr.defaultValue && !this.model.get('id')) {
-                    if (attr.defaultValue.includes('{{') && attr.defaultValue.includes('}}')) {
-                        this.ajaxGetRequest(`Attribute/action/DefaultValue?id=${this.model.get('attributeId')}`)
-                            .success(seed => {
-                                this.model.set('value', seed.value)
-                            })
-                    } else {
-                        this.model.set('value', attr.defaultValue)
-                    }
-                }
             });
         }
     })

@@ -11,6 +11,19 @@
 Espo.define('pim:views/classification-attribute/fields/attribute', 'views/fields/link',
     Dep => Dep.extend({
 
+        selectBoolFilterList: ['onlyForEntity'],
+
+        boolFilterData: {
+            onlyForEntity() {
+                let entity = 'NotExistedEntity';
+                this.ajaxGetRequest(`Classification/${this.model.get('classificationId')}`, null, {async: false}).success(classification => {
+                    entity = classification.entityId;
+                });
+
+                return entity;
+            }
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 

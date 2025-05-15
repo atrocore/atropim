@@ -3,9 +3,6 @@
     "classification": "Classification",
     "attribute": "Attribut",
     "isRequired": "Exigée",
-    "channel": "Canal",
-    "language": "Langue",
-    "languages": "Langues",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
     "value": "Valeur par défaut",
@@ -25,8 +22,8 @@
   },
   "labels": {
     "Create ClassificationAttribute": "Créer un attribut de classification",
-    "unlinkRelatedAttribute": "Supprimer ici et conserver pour les produits",
-    "cascadeUnlinkRelatedAttribute": "Supprimer ici et à partir des produits"
+    "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
+    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers"
   },
   "options": {
     "scope": {
@@ -35,10 +32,6 @@
     }
   },
   "messages": {
-    "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis.",
-    "unlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée ? Toutes les classifications enfant et les produits associés conserveront cet attribut.",
-    "cascadeUnlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée, de ses classifications filles et des produits qui leur sont associés ? Toutes les valeurs d'attributs associées seront également supprimées.",
-    "removeRelatedAttributeGroup": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné dans la classification sélectionnée ? Toutes les classifications enfants et les produits associés conserveront ces attributs.",
-    "removeRelatedAttributeGroupCascade": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné de la classification sélectionnée, de ses classifications filles et des produits qui leur sont associés ? Toutes les valeurs d'attributs associées seront également supprimées."
+    "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis."
   }
 }

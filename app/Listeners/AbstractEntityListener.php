@@ -15,74 +15,18 @@ namespace Pim\Listeners;
 
 use Espo\Core\ServiceFactory;
 use Atro\Listeners\AbstractListener;
-use Espo\ORM\Entity;
 
-/**
- * Class AbstractListener
- */
 abstract class AbstractEntityListener extends AbstractListener
 {
-    /**
-     * Create service
-     *
-     * @param string $serviceName
-     *
-     * @return mixed
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    protected function createService(string $serviceName)
-    {
-        return $this->getServiceFactory()->create($serviceName);
-    }
-
-    /**
-     * Entity field is unique?
-     *
-     * @param Entity $entity
-     * @param string $field
-     *
-     * @return bool
-     */
-    protected function isUnique(Entity $entity, string $field): bool
-    {
-        // prepare result
-        $result = true;
-
-        // find
-        $fundedEntity = $this->getEntityManager()
-            ->getRepository($entity->getEntityName())
-            ->where([$field => $entity->get($field)])
-            ->findOne();
-
-        if (!empty($fundedEntity) && $fundedEntity->get('id') != $entity->get('id')) {
-            $result = false;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get service factory
-     *
-     * @return ServiceFactory
-     */
     protected function getServiceFactory(): ServiceFactory
     {
         return $this->getContainer()->get('serviceFactory');
     }
 
-    /**
-     * Translate
-     *
-     * @param string $key
-     *
-     * @param string $label
-     * @param string $scope
-     *
-     * @return string
-     */
     protected function translate(string $key, string $label, $scope = ''): string
     {
-        return $this->getContainer()->get('language')->translate($key, $label, $scope);
+        /** @var \Atro\Core\Utils\Language $language */
+        $language = $this->getContainer()->get('language');
+        return $language->translate($key, $label, $scope);
     }
 }

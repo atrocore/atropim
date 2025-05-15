@@ -3,7 +3,6 @@
   "iconClass": "check-fat",
   "boolFilterList": [
     "onlyMy",
-    "notLinkedWithProduct",
     "fromAttributesTab",
     "notParentCompositeAttribute",
     "notChildCompositeAttribute",
@@ -13,7 +12,6 @@
 
   ],
   "hiddenBoolFilterList": [
-    "notLinkedWithProduct",
     "fromAttributesTab",
     "notParentCompositeAttribute",
     "notChildCompositeAttribute",
@@ -42,13 +40,6 @@
     ]
   },
   "relationshipPanels": {
-    "productAttributeValues": {
-      "create": false,
-      "select": false,
-      "view": "pim:views/attribute/record/panels/product-attribute-values",
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "layout": "listInAttribute"
-    },
     "classificationAttributes": {
       "create": false,
       "select": false,
@@ -66,6 +57,19 @@
   },
   "dynamicLogic": {
     "fields": {
+      "attributeGroup": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "composite"
+              ]
+            }
+          ]
+        }
+      },
       "entity": {
         "readOnly": {
           "conditionGroup": [
@@ -230,25 +234,6 @@
           ]
         }
       },
-      "unique": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "file",
-                "date",
-                "datetime",
-                "float",
-                "int",
-                "url",
-                "varchar"
-              ]
-            }
-          ]
-        }
-      },
       "prohibitedEmptyValue": {
         "visible": {
           "conditionGroup": [
@@ -300,19 +285,6 @@
               "value": [
                 "date",
                 "datetime"
-              ]
-            }
-          ]
-        }
-      },
-      "defaultValue": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "varchar"
               ]
             }
           ]

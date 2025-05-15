@@ -106,28 +106,6 @@ class Attribute extends AbstractSelectManager
         }
     }
 
-    /**
-     * NotLinkedWithProduct filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotLinkedWithProduct(&$result)
-    {
-        // prepare data
-        $productId = (string)$this->getSelectCondition('notLinkedWithProduct');
-
-        $pavs = $this
-            ->getEntityManager()
-            ->getRepository('ProductAttributeValue')
-            ->select(['attributeId'])
-            ->where(['productId' => $productId])
-            ->find();
-
-        $result['whereClause'][] = [
-            'id!=' => array_column($pavs->toArray(), 'attributeId')
-        ];
-    }
-
     protected function boolFilterFromAttributesTab(array &$result): void
     {
         $data = (array)$this->getSelectCondition('fromAttributesTab');

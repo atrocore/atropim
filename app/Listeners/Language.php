@@ -16,7 +16,6 @@ namespace Pim\Listeners;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
-use Pim\SelectManagers\ProductAttributeValue;
 
 /**
  * Class Language
