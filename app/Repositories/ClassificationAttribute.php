@@ -15,10 +15,60 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ClassificationAttribute extends Base
 {
+    public function getClassificationRelatedRecords(Entity $classification): array
+    {
+        $fieldName = lcfirst($classification->get('entityId')) . 'Id';
+        $columnName = Util::toUnderScore($fieldName);
+
+        $tableName = Util::toUnderScore(lcfirst($classification->get('entityId')));
+
+        return $this->getConnection()->createQueryBuilder()
+            ->select("t.id")
+            ->from("{$tableName}_classification", 'r')
+            ->innerJoin('r', $this->getConnection()->quoteIdentifier($tableName), 't',
+                "t.id=r.$columnName AND t.deleted=:false")
+            ->where('r.deleted=:false')
+            ->andWhere('r.classification_id=:classificationId')
+            ->setParameter('classificationId', $classification->get('id'))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
+
+    public function getClassificationDataForClassificationAttributeId(string $classificationAttributeId): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('c.id as classification_id, c.entity_id, ca.attribute_id')
+            ->from('classification', 'c')
+            ->innerJoin('c', 'classification_attribute', 'ca', 'c.id = ca.classification_id AND ca.deleted=:false')
+            ->where('c.deleted=:false')
+            ->andWhere('ca.id=:id')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $classificationAttributeId)
+            ->fetchAssociative();
+    }
+
+    public function deleteAttributeValuesByClassificationAttribute(
+        string $entityName,
+        string $attributeId,
+        string $classificationId
+    ): void {
+        $tableName = Util::toUnderScore(lcfirst($entityName));
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete("{$tableName}_attribute_value")
+            ->where("attribute_id=:attributeId")
+            ->andWhere("{$tableName}_id IN (SELECT {$tableName}_id FROM {$tableName}_classification WHERE classification_id=:classificationId AND deleted=:false)")
+            ->setParameter('attributeId', $attributeId)
+            ->setParameter('classificationId', $classificationId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+    }
+
     public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);

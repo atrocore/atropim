@@ -17,7 +17,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -149,25 +149,9 @@ class ClassificationAttribute extends Base
             return;
         }
 
-        $fieldName = lcfirst($classification->get('entityId')) . 'Id';
-        $columnName = Util::toUnderScore($fieldName);
-
-        $tableName = Util::toUnderScore(lcfirst($classification->get('entityId')));
-
-        $conn = $this->getEntityManager()->getConnection();
-        $ids = $conn->createQueryBuilder()
-            ->select("t.id")
-            ->from("{$tableName}_classification", 'r')
-            ->innerJoin('r', $conn->quoteIdentifier($tableName), 't', "t.id=r.$columnName AND t.deleted=:false")
-            ->where('r.deleted=:false')
-            ->andWhere('r.classification_id=:classificationId')
-            ->setParameter('classificationId', $classification->get('id'))
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
-
         $attributeFieldName = AttributeFieldConverter::prepareFieldName($data->attributeId);
 
-        foreach ($ids as $id) {
+        foreach ($this->getRepository()->getClassificationRelatedRecords($classification) as $id) {
             $inputData = new \stdClass();
             $inputData->$attributeFieldName = null;
             $inputData->__attributes = [$data->attributeId];
@@ -216,28 +200,18 @@ class ClassificationAttribute extends Base
             $id = array_shift($id);
         }
 
-        $classificationData = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('c.id as classification_id, c.entity_id, ca.attribute_id')
-            ->from('classification', 'c')
-            ->innerJoin('c', 'classification_attribute', 'ca', 'c.id = ca.classification_id AND ca.deleted=:false')
-            ->where('c.deleted=:false')
-            ->andWhere('ca.id=:id')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('id', $id)
-            ->fetchAssociative();
+        $classificationData = $this->getRepository()->getClassificationDataForClassificationAttributeId($id);
 
         $result = parent::deleteEntity($id);
 
         if ($result && !empty($classificationData)) {
-            $tableName = Util::toUnderScore(lcfirst($classificationData['entity_id']));
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->delete("{$tableName}_attribute_value")
-                ->where("attribute_id=:attributeId")
-                ->andWhere("{$tableName}_id IN (SELECT {$tableName}_id FROM {$tableName}_classification WHERE classification_id=:classificationId AND deleted=:false)")
-                ->setParameter('attributeId', $classificationData['attribute_id'])
-                ->setParameter('classificationId', $classificationData['classification_id'])
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->executeQuery();
+            $this
+                ->getRepository()
+                ->deleteAttributeValuesByClassificationAttribute(
+                    $classificationData['entity_id'],
+                    $classificationData['attribute_id'],
+                    $classificationData['classification_id']
+                );
         }
 
         return $result;
