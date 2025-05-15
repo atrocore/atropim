@@ -62,7 +62,6 @@
     "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
     "attributeIsUsedInClassifications": "Атрибут уже використовується в класифікаціях. Будь ласка, спочатку оновіть класифікації.",
-    "someAttributeDontMathToPattern": "Деякі атрибути не відповідають шаблону.",
     "invalidType": "Тип атрибута '{type}' недійсний"
   }
 }

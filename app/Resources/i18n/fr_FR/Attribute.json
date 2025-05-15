@@ -81,7 +81,6 @@
     "attributeWithSuchCodeAlreadyExist": "L'attribut avec ce code existe déjà.",
     "attributeIsUsedInProducts": "L'attribut est utilisé dans les produits. Veuillez d'abord mettre à jour les produits.",
     "attributeIsUsedInClassifications": "L'attribut est utilisé dans les classifications. Veuillez d'abord mettre à jour les classifications.",
-    "someAttributeDontMathToPattern": "Certains attributs ne correspondent pas au modèle.",
     "invalidType": "Le type d'attribut '{type}' n'est pas valide"
   }
 }

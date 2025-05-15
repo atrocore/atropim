@@ -81,7 +81,6 @@
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
-    "someAttributeDontMathToPattern": "Einige Attribute stimmen nicht mit dem Muster überein.",
     "invalidType": "Der Attributtyp „{type}“ ist ungültig"
   }
 }

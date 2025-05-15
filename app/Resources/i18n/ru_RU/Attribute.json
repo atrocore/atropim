@@ -38,7 +38,6 @@
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
-    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "someAttributeDontMathToPattern": "Некоторые атрибуты не соответствуют шаблону."
+    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты."
   }
 }
