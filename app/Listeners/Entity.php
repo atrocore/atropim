@@ -16,20 +16,23 @@ namespace Pim\Listeners;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Services\Record;
+use Pim\Services\Attribute;
 
 class Entity extends AbstractEntityListener
 {
-    public function beforeGetSelectParams(Event  $event) {
+    public function beforeGetSelectParams(Event $event)
+    {
         $params = $event->getArgument('params');
         $entityType = $event->getArgument('entityType');
-        if($entityType === 'ExtensibleEnumOption') {
-            if (!empty($params['where']) ) {
+        if ($entityType === 'ExtensibleEnumOption') {
+            if (!empty($params['where'])) {
                 foreach ($params['where'] as $key => $filter) {
-                    if(!empty($filter['type']) && $filter['type'] === 'bool' && !empty($filter['value'])){
-                        foreach ($filter['value'] as $boolFilter){
-                            $method = "boolFilter".ucfirst($boolFilter);
-                            if(method_exists($this, $method)){
-                               $this->$method($params, isset($filter['data'][$boolFilter]) ? $filter['data'][$boolFilter] : null);
+                    if (!empty($filter['type']) && $filter['type'] === 'bool' && !empty($filter['value'])) {
+                        foreach ($filter['value'] as $boolFilter) {
+                            $method = "boolFilter" . ucfirst($boolFilter);
+                            if (method_exists($this, $method)) {
+                                $this->$method($params,
+                                    isset($filter['data'][$boolFilter]) ? $filter['data'][$boolFilter] : null);
                             }
                         }
                     }
@@ -40,16 +43,17 @@ class Entity extends AbstractEntityListener
         $event->setArgument("params", $params);
     }
 
-    protected  function boolFilterOnlyExtensibleEnumOptionIds(&$params, $ids){
+    protected function boolFilterOnlyExtensibleEnumOptionIds(&$params, $ids)
+    {
 
-        if(!is_array($ids) || empty($ids)){
+        if (!is_array($ids) || empty($ids)) {
             return $params;
         }
 
         $params['where'][] = [
-            "type" => "in",
+            "type"      => "in",
             "attribute" => "id",
-            "value" =>  $ids
+            "value"     => $ids
         ];
         return $params;
     }
@@ -80,18 +84,22 @@ class Entity extends AbstractEntityListener
             return;
         }
 
+        $attributesIds = array_column($cas->toArray(), 'attributeId');
+
         /** @var Record $service */
         $recordService = $this->getServiceFactory()->create($entityName);
 
         $inputData = new \stdClass();
         $inputData->__attributes = [];
+        foreach ($this->getAttributeService()->getAttributesDefs($entityName, $attributesIds) as $field => $defs) {
+            $inputData->$field = null;
+        }
 
         foreach ($cas as $ca) {
             $attributeFieldName = AttributeFieldConverter::prepareFieldName($ca->get('attributeId'));
             $default = $ca->get('data')?->default ?? new \stdClass();
 
             $inputData->__attributes[] = $ca->get('attributeId');
-            $inputData->$attributeFieldName = null;
             foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
                 if (property_exists($default, $key)) {
                     $preparedKey = str_replace('value', $attributeFieldName, $key);
@@ -103,5 +111,11 @@ class Entity extends AbstractEntityListener
         $recordId = $entity->get(lcfirst($entityName) . 'Id');
 
         $recordService->updateEntity($recordId, $inputData);
+    }
+
+
+    protected function getAttributeService(): Attribute
+    {
+        return $this->getServiceFactory()->create('Attribute');
     }
 }

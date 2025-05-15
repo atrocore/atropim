@@ -16,7 +16,6 @@ namespace Pim\Services;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
-use Doctrine\DBAL\ParameterType;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -149,11 +148,15 @@ class ClassificationAttribute extends Base
             return;
         }
 
+        $entityName = $classification->get('entityId');
+        $attributesDefs = $this->getAttributeService()->getAttributesDefs($entityName, [$data->attributeId]);
         $attributeFieldName = AttributeFieldConverter::prepareFieldName($data->attributeId);
 
         foreach ($this->getRepository()->getClassificationRelatedRecords($classification) as $id) {
             $inputData = new \stdClass();
-            $inputData->$attributeFieldName = null;
+            foreach ($attributesDefs as $field => $defs) {
+                $inputData->$field = null;
+            }
             $inputData->__attributes = [$data->attributeId];
 
             foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
@@ -165,7 +168,7 @@ class ClassificationAttribute extends Base
 
             $this
                 ->getPseudoTransactionManager()
-                ->pushUpdateEntityJob($classification->get('entityId'), $id, $inputData);
+                ->pushUpdateEntityJob($entityName, $id, $inputData);
         }
     }
 
@@ -283,6 +286,11 @@ class ClassificationAttribute extends Base
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         return true;
+    }
+
+    protected function getAttributeService(): Attribute
+    {
+        return $this->getServiceFactory()->create('Attribute');
     }
 
     protected function init()
