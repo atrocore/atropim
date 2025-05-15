@@ -104,10 +104,6 @@
       "filterDisabled": true,
       "tooltip": true
     },
-    "unique": {
-      "type": "bool",
-      "default": false
-    },
     "prohibitedEmptyValue": {
       "type": "bool",
       "default": false
@@ -167,10 +163,6 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,
-      "tooltip": true
-    },
-    "defaultChannel": {
-      "type": "link",
       "tooltip": true
     },
     "isRequired": {
@@ -328,11 +320,6 @@
       "type": "hasMany",
       "foreign": "attribute",
       "entity": "ClassificationAttribute"
-    },
-    "defaultChannel": {
-      "type": "belongsTo",
-      "foreign": "attributes",
-      "entity": "Channel"
     },
     "variantSpecificProducts": {
       "type": "hasMany",

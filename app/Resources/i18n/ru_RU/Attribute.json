@@ -11,10 +11,8 @@
     "isMultilang": "Многоязычность",
     "fileType": "Тип файла",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "measure": "Мера",
-    "defaultChannel": "Канал",
     "isRequired": "Обязательно",
     "tooltip": "Текст подсказки",
     "maxLength": "Максимальная длина"
@@ -41,7 +39,6 @@
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
     "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "attributeNotHaveUniqueValue": "Атрибут не имеет уникального значения.",
     "someAttributeDontMathToPattern": "Некоторые атрибуты не соответствуют шаблону."
   }
 }

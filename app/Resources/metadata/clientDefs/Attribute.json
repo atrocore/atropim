@@ -234,25 +234,6 @@
           ]
         }
       },
-      "unique": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "file",
-                "date",
-                "datetime",
-                "float",
-                "int",
-                "url",
-                "varchar"
-              ]
-            }
-          ]
-        }
-      },
       "prohibitedEmptyValue": {
         "visible": {
           "conditionGroup": [

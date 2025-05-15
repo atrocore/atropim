@@ -11,12 +11,10 @@
     "fileType": "Datei-Typ",
     "name": "Attributname",
     "pattern": "Regex Pattern",
-    "unique": "Unique",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
     "defaultDate": "Standard Datum",
-    "defaultChannel": "Standardkanal",
     "isRequired": "erforderlich",
     "tooltip": "Kurzinfo",
     "maxLength": "Maximallänge",
@@ -71,7 +69,6 @@
     "isRequired": "Dies ist ein Standardwert, der beim Hinzufügen dieses Attributs zum Produkt oder zur Klassifikation verwendet wird.",
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "sortOrder": "Sortierreihenfolge für Attributwerte für ein Produkt.",
-    "defaultChannel": "Nur auf neu hinzugefügte Attributwerte anwenden",
     "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
   },
@@ -84,7 +81,6 @@
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
-    "attributeNotHaveUniqueValue": "Attribut hat keinen eindeutigen Wert.",
     "someAttributeDontMathToPattern": "Einige Attribute stimmen nicht mit dem Muster überein.",
     "invalidType": "Der Attributtyp „{type}“ ist ungültig"
   }

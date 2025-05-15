@@ -18,7 +18,6 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

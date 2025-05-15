@@ -11,12 +11,10 @@
     "isMultilang": "Multilingue",
     "fileType": "Type de fichier",
     "pattern": "Modèle d'expressions rationnelles",
-    "unique": "Unique",
     "prohibitedEmptyValue": "Désactiver la valeur vide",
     "measure": "Mesure",
     "defaultUnit": "Unité par défaut",
     "defaultDate": "Date par défaut",
-    "defaultChannel": "Canal par défaut",
     "isRequired": "Exigée",
     "tooltip": "Bulle d'aide",
     "maxLength": "Longueur maximale",
@@ -72,7 +70,6 @@
     "isRequired": "Il s'agit d'une valeur par défaut, qui sera appliquée lors de l'ajout de cet attribut à un produit ou à une classification.",
     "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
     "sortOrder": "Ordre de tri des valeurs des attributs d'un produit.",
-    "defaultChannel": "Appliquer uniquement aux valeurs d'attributs nouvellement ajoutées",
     "defaultDate": "Modificateur de la valeur de l'attribut (par exemple +5 jours, -3 mois)"
   },
   "exceptions": {
@@ -84,7 +81,6 @@
     "attributeWithSuchCodeAlreadyExist": "L'attribut avec ce code existe déjà.",
     "attributeIsUsedInProducts": "L'attribut est utilisé dans les produits. Veuillez d'abord mettre à jour les produits.",
     "attributeIsUsedInClassifications": "L'attribut est utilisé dans les classifications. Veuillez d'abord mettre à jour les classifications.",
-    "attributeNotHaveUniqueValue": "L'attribut n'a pas de valeur unique.",
     "someAttributeDontMathToPattern": "Certains attributs ne correspondent pas au modèle.",
     "invalidType": "Le type d'attribut '{type}' n'est pas valide"
   }
