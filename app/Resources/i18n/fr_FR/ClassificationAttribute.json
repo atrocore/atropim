@@ -24,7 +24,6 @@
     "extensibleEnumOptions": "Liste des options"
   },
   "labels": {
-    "Create ClassificationAttribute": "Créer un attribut de classification",
     "unlinkRelatedAttribute": "Supprimer ici et conserver pour les produits",
     "cascadeUnlinkRelatedAttribute": "Supprimer ici et à partir des produits"
   },

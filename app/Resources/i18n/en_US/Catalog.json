@@ -5,9 +5,6 @@
     "channels": "Channels",
     "code": "Code"
   },
-  "labels": {
-    "Create Catalog": "Create Catalog"
-  },
   "options": {
     "template": {
       "default": "Default"

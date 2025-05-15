@@ -11,7 +11,6 @@
     "unLinkCategoryFromChannel": "Unlink category '%s' from channel '%s'",
     "linkCategoryWithChannel": "Link category '%s' with channel '%s'",
     "changeCategoryForChannel": "Change category to '%s' for channel '%s'",
-    "Create Channel": "Create Channel",
     "main": "Main Language"
   },
   "options": {

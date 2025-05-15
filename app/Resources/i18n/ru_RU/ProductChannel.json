@@ -3,8 +3,5 @@
     "isActive": "Активный для канала",
     "product": "Продукт",
     "channel": "Канал"
-  },
-  "labels": {
-    "Create ProductChannel": "Создать канал продукта"
   }
 }

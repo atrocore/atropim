@@ -1,8 +1,5 @@
 {
   "fields": {
     "products": "Produits"
-  },
-  "labels": {
-    "Create ProductSerie": "Créer une série de produits"
   }
 }

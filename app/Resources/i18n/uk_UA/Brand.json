@@ -5,9 +5,6 @@
     "isActive": "Активний",
     "code": "Код"
   },
-  "labels": {
-    "Create Brand": "Створити бренд"
-  },
   "exceptions": {
     "brandWithSuchCodeAlreadyExist": "Бренд із таким кодом вже існує",
     "brandIsUsedInProducts": "Такий бренд вже використовується в продуктах. Будь ласка, спочатку оновіть продукти"

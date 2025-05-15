@@ -6,8 +6,7 @@
     "channels": "Канали"
   },
   "labels": {
-    "withoutCatalog": "Без каталогу",
-    "Create Catalog": "Створити каталог"
+    "withoutCatalog": "Без каталогу"
   },
   "options": {
     "template": {

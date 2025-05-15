@@ -6,9 +6,6 @@
     "code": "Code",
     "productsCount": "Anzahl Produkte"
   },
-  "labels": {
-    "Create Catalog": "Katalog erstellen"
-  },
   "options": {
     "template": {
       "default": "Standard"

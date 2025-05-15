@@ -25,7 +25,6 @@
     "extensibleEnumOptions": "Optionen zulassen"
   },
   "labels": {
-    "Create ClassificationAttribute": "Attribut der Klassifizierung erstellen",
     "unlinkRelatedAttribute": "Hier löschen und für Produkte behalten",
     "cascadeUnlinkRelatedAttribute": "Hier und von Produkten löschen"
   },

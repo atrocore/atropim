@@ -11,7 +11,6 @@
     "unLinkCategoryFromChannel": "Détachez la catégorie \"%s\" du canal \"%s\".",
     "linkCategoryWithChannel": "Lien entre la catégorie '%s' et le canal '%s'",
     "changeCategoryForChannel": "Changer la catégorie en '%s' pour le canal '%s'",
-    "Create Channel": "Créer un canal",
     "main": "Langue principale"
   },
   "options": {

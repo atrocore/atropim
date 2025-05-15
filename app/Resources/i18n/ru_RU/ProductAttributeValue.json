@@ -20,7 +20,6 @@
     }
   },
   "labels": {
-    "Create ProductAttributeValue": "Создать значение атрибута",
     "cannotLinkDefaultChannel": "Канал по умолчанию '{channel}' для выбранного атрибута не связан с этим продуктом."
   },
   "exceptions": {

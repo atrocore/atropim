@@ -7,9 +7,6 @@
     "attributes": "Attributs",
     "sortOrder": "Ordre de tri"
   },
-  "labels": {
-    "Create AttributeGroup": "Créer un groupe d'attributs"
-  },
   "messages": {
     "unlinkAttributeGroupConfirmation": "Êtes-vous sûr de vouloir dissocier tous les attributs du groupe d'attributs ?"
   },

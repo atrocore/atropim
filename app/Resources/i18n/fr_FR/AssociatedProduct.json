@@ -8,9 +8,6 @@
     "relatedProductImage": "Image du produit apparenté",
     "sorting": "Ordre de tri"
   },
-  "labels": {
-    "Create AssociatedProduct": "Créer un produit associé"
-  },
   "messages": {
     "removeRelatedProducts": "Êtes-vous sûr de vouloir retirer tous les produits de l'association sélectionnée du produit actuel ? Tous les produits associés seront conservés."
   }

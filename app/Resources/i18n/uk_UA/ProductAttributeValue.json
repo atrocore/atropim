@@ -27,7 +27,6 @@
     }
   },
   "labels": {
-    "Create ProductAttributeValue": "Створити значення атрибута",
     "cannotLinkDefaultChannel": "Канал за замовчуванням '{channel}' для обраного атрибута не пов'язаний із цим продуктом.",
     "countOfLinkedAttributes": "Кількість пов’язаних атрибутів: {count}"
   },

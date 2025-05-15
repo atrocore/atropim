@@ -7,9 +7,6 @@
         "attributes": "Атрибуты",
         "sortOrder": "Порядок сортировки"
     },
-    "labels": {
-        "Create AttributeGroup": "Создать группу атрибутов"
-    },
     "messages": {
         "unlinkAttributeGroupConfirmation": "Вы действительно хотите отключить все атрибуты группы атрибутов?"
     },

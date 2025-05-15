@@ -3,8 +3,5 @@
         "value": "Value",
         "isActive": "Active",
         "products": "Products"
-    },
-    "labels": {
-        "Create Tax": "Create Tax"
     }
 }

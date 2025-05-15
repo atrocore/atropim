@@ -34,7 +34,6 @@
     }
   },
   "labels": {
-    "Create ProductAttributeValue": "Créer une valeur d'attribut",
     "cannotLinkDefaultChannel": "Le canal par défaut '{canal}' pour l'attribut sélectionné n'est pas lié à ce produit.",
     "countOfLinkedAttributes": "Nombre d'attributs liés : {count}"
   },

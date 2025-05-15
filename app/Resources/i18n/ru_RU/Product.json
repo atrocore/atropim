@@ -36,7 +36,6 @@
     "calls": "Звонки"
   },
   "labels": {
-    "Create Product": "Создать продукт",
     "Product Attributes": "Атрибуты",
     "thereIsNoValidAttributesForChannel": "Для канала нет допустимых атрибутов",
     "addAttributeFilter": "Добавить фильтр атрибутов",

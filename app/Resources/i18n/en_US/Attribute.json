@@ -39,7 +39,6 @@
     "fullWidth": "Full Width"
   },
   "labels": {
-    "Create Attribute": "Create Attribute",
     "Classification": "Classification",
     "addNewValue": "Add new value",
     "extensibleEnumOptions": "List Options"

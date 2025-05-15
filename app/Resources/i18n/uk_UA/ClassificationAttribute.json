@@ -16,7 +16,6 @@
     "extensibleEnumOptions": "Дозволити параметри"
   },
   "labels": {
-    "Create ClassificationAttribute": "Створити атрибут класифікації",
     "unlinkRelatedAttribute": "Видалити тут і зберегти для продуктів",
     "cascadeUnlinkRelatedAttribute": "Видалити тут і з продуктів"
   },

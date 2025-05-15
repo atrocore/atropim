@@ -6,9 +6,6 @@
     "code": "Code",
     "attributes": "Attribute"
   },
-  "labels": {
-    "Create AttributeGroup": "Attributgruppe erstellen"
-  },
   "messages": {
     "unlinkAttributeGroupConfirmation": "Möchten Sie die Verknüpfung aller Attribute der Attributgruppe wirklich aufheben?"
   },

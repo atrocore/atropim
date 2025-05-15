@@ -6,9 +6,6 @@
     "backwardAssociation": "Обратная связь",
     "code": "Код"
   },
-  "labels": {
-    "Create Association": "Создать связь"
-  },
   "exceptions": {
     "associationIsLinkedWithProducts": "Ассоциация связана с продуктом (-ами). Пожалуйста, сначала отключите продукт(-ы)",
     "youCanNotDeactivateAssociationWithActiveProducts": "Вы не можете отключить связь с активным продуктом (-ами)"

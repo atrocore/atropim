@@ -6,8 +6,5 @@
     "mainProductImage": "Изображение главного продукта",
     "relatedProduct": "Связанный продукт",
     "relatedProductImage": "Изображение связанного продукта"
-  },
-  "labels": {
-    "Create AssociatedProduct": "Создать связанный продукт"
   }
 }

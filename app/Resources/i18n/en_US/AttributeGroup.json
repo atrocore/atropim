@@ -7,9 +7,6 @@
         "attributes": "Attributes",
         "sortOrder": "Sort Order"
     },
-    "labels": {
-        "Create AttributeGroup": "Create Attribute Group"
-    },
     "messages": {
         "unlinkAttributeGroupConfirmation": "Are you sure you want to unlink all Attribute Group's Attributes?"
     },
