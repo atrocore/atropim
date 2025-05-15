@@ -442,24 +442,26 @@ class V1Dot14Dot3 extends Base
             }
 
             foreach ($res as $record) {
-                // move value to lingual column
-                $this->getConnection()->createQueryBuilder()
-                    ->update('product_attribute_value')
-                    ->set('varchar_value_' . strtolower($record['language']), ':varcharValue')
-                    ->set('text_value_' . strtolower($record['language']), ':textValue')
-                    ->where('language=:main')
-                    ->andWhere('product_id=:productId')
-                    ->andWhere('attribute_id=:attributeId')
-                    ->andWhere('channel_id=:channelId')
-                    ->andWhere('deleted=:false')
-                    ->setParameter('varcharValue', $record['varchar_value'])
-                    ->setParameter('textValue', $record['text_value'])
-                    ->setParameter('main', 'main')
-                    ->setParameter('productId', $record['product_id'])
-                    ->setParameter('channelId', $record['channel_id'])
-                    ->setParameter('attributeId', $record['attribute_id'])
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->executeQuery();
+                if (in_array($record['language'], $this->languages)) {
+                    // move value to lingual column
+                    $this->getConnection()->createQueryBuilder()
+                        ->update('product_attribute_value')
+                        ->set('varchar_value_' . strtolower($record['language']), ':varcharValue')
+                        ->set('text_value_' . strtolower($record['language']), ':textValue')
+                        ->where('language=:main')
+                        ->andWhere('product_id=:productId')
+                        ->andWhere('attribute_id=:attributeId')
+                        ->andWhere('channel_id=:channelId')
+                        ->andWhere('deleted=:false')
+                        ->setParameter('varcharValue', $record['varchar_value'])
+                        ->setParameter('textValue', $record['text_value'])
+                        ->setParameter('main', 'main')
+                        ->setParameter('productId', $record['product_id'])
+                        ->setParameter('channelId', $record['channel_id'])
+                        ->setParameter('attributeId', $record['attribute_id'])
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->executeQuery();
+                }
 
                 // delete lingual record
                 $this->getConnection()->createQueryBuilder()
