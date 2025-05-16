@@ -65,7 +65,8 @@ class Metadata extends AbstractListener
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['hasAttribute']) && !empty($scopeDefs['hasClassification'])) {
                 $data['entityDefs'][$scope]['fields']['classifications'] = [
-                    "type" => "linkMultiple"
+                    "type" => "linkMultiple",
+                    "view" => "pim:views/fields/classifications"
                 ];
                 $data['entityDefs'][$scope]['links']['classifications'] = [
                     "type"         => "hasMany",
