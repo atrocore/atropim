@@ -106,6 +106,16 @@ class Attribute extends AbstractSelectManager
         }
     }
 
+    protected function boolFilterOnlyForAttributePanel(array &$result): void
+    {
+        $attributePanelId = (string)$this->getSelectCondition('onlyForAttributePanel');
+        if (!empty($attributePanelId)) {
+            $result['whereClause'][] = [
+                'attributePanelId' => $attributePanelId === 'attributeValues' ? null : $attributePanelId
+            ];
+        }
+    }
+
     protected function boolFilterFromAttributesTab(array &$result): void
     {
         $data = (array)$this->getSelectCondition('fromAttributesTab');
