@@ -31,7 +31,6 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
                 let options = [ "allChannels", "Global"];
                 let translatedOptions = {
                     "allChannels": this.translate("allChannels"),
-                    "linkedChannels": this.translate('linkedChannels'),
                     "Global": this.translate("Global")
                 };
 
