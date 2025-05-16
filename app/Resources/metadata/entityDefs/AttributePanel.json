@@ -49,7 +49,7 @@
     },
     "attributes": {
       "type": "hasMany",
-      "foreign": "attributeTab",
+      "foreign": "attributePanel",
       "entity": "Attribute"
     }
   },

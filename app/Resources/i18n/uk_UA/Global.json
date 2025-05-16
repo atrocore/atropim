@@ -1,7 +1,6 @@
 {
   "scopeNames": {
     "ProductChannel": "Канал продукту",
-    "AttributeTab": "Вкладка атрибута",
     "Product": "Продукт",
     "Attribute": "Атрибут",
     "Catalog": "Каталог",
@@ -23,7 +22,6 @@
   },
   "scopeNamesPlural": {
     "ProductChannel": "Канали продукту",
-    "AttributeTab": "Вкладки атрибутів",
     "Attribute": "Атрибути",
     "Catalog": "Каталоги",
     "Category": "Категорії",
