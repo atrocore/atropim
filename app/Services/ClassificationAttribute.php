@@ -68,7 +68,7 @@ class ClassificationAttribute extends Base
                 $entity->set('attributeExtensibleEnumId', $attribute->get('extensibleEnumId'));
                 if ($attribute->get('type') === 'extensibleEnum') {
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
-                        ->getPreparedOption($attribute->get('extensibleEnumId'), $entity->get('value'));
+                        ->getPreparedOption($attribute->get('extensibleEnumId'), (string)$entity->get('value'));
                     if (!empty($option)) {
                         $entity->set('valueName', $option['preparedName']);
                         $entity->set('valueOptionData', $option);
