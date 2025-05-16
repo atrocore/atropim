@@ -1,0 +1,45 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+namespace Pim\Repositories;
+
+use Atro\Core\Templates\Repositories\ReferenceData;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
+
+class AttributePanel extends ReferenceData
+{
+    public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
+    {
+        if ($link === 'attributes') {
+            return $this->getEntityManager()->getRepository('Attribute')
+                ->where([
+                    'attributePanelId' => $entity->get('id')
+                ])
+                ->find();
+        }
+
+        return parent::findRelated($entity, $link, $selectParams);
+    }
+
+    public function countRelated(Entity $entity, string $relationName, array $params = []): int
+    {
+        if ($relationName === 'attributes') {
+            return $this->getEntityManager()->getRepository('Attribute')
+                ->where([
+                    'attributePanelId' => $entity->get('id')
+                ])
+                ->count();
+        }
+
+        return parent::countRelated($entity, $relationName, $params);
+    }
+}

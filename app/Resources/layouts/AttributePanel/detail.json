@@ -11,6 +11,14 @@
       ],
       [
         {
+          "name": "code"
+        },
+        {
+          "name": "sortOrder"
+        }
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }

@@ -45,8 +45,9 @@
       "readOnly": false,
       "tooltip": false
     },
-    "attributeTab": {
-      "type": "link"
+    "attributePanel": {
+      "type": "link",
+      "entity": "AttributePanel"
     },
     "extensibleEnum": {
       "type": "link"
@@ -300,11 +301,6 @@
       "type": "belongsTo",
       "foreign": "attributes",
       "entity": "AttributeGroup"
-    },
-    "attributeTab": {
-      "type": "belongsTo",
-      "foreign": "attributes",
-      "entity": "AttributeTab"
     },
     "extensibleEnum": {
       "type": "belongsTo",

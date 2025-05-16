@@ -3,7 +3,7 @@
   "iconClass": "rows",
   "relationshipPanels": {
     "attributes": {
-      "view": "pim:views/attribute-tab/record/panels/attributes"
+      "create": false
     }
   }
 }

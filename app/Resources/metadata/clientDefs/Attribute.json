@@ -8,8 +8,8 @@
     "notChildCompositeAttribute",
     "onlyCompositeAttributes",
     "notLinkedWithCurrent",
-    "onlyForEntity"
-
+    "onlyForEntity",
+    "onlyForAttributePanel"
   ],
   "hiddenBoolFilterList": [
     "fromAttributesTab",
@@ -17,7 +17,8 @@
     "notChildCompositeAttribute",
     "onlyCompositeAttributes",
     "notLinkedWithCurrent",
-    "onlyForEntity"
+    "onlyForEntity",
+    "onlyForAttributePanel"
   ],
   "disabledMassActions": [
     "merge"
