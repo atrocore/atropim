@@ -42,5 +42,20 @@ class V1Dot14Dot4 extends Base
 
         @mkdir('data/reference-data');
         file_put_contents('data/reference-data/AttributePanel.json', json_encode($result));
+
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE attribute rename COLUMN attribute_tab_id TO attribute_panel_id");
+        } else {
+            $this->exec("ALTER TABLE attribute CHANGE attribute_tab_id attribute_panel_id varchar(36) null");
+        }
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+            // ignore
+        }
     }
 }
