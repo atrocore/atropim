@@ -15,8 +15,11 @@ namespace Pim\Listeners;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Services\Record;
 use Pim\Services\Attribute;
+use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends AbstractEntityListener
 {
@@ -58,16 +61,41 @@ class Entity extends AbstractEntityListener
         return $params;
     }
 
+    public function beforeSave(Event $event): void
+    {
+        /** @var OrmEntity $entity */
+        $entity = $event->getArgument('entity');
+
+        $this->validateClassificationAttributesForRecord($entity);
+    }
+
     public function afterSave(Event $event): void
     {
-        /** @var \Espo\ORM\Entity $entity */
+        /** @var OrmEntity $entity */
         $entity = $event->getArgument('entity');
 
         // create classification attributes if it needs
         $this->createClassificationAttributesForRecord($entity);
     }
 
-    protected function createClassificationAttributesForRecord(\Espo\ORM\Entity $entity): void
+    protected function validateClassificationAttributesForRecord(OrmEntity $entity): void
+    {
+        $entityName = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.classificationForEntity");
+        if (empty($entityName)) {
+            return;
+        }
+
+        $classification = $this->getEntityManager()->getRepository('Classification')->get($entity->get('classificationId'));
+        if (empty($classification)) {
+            throw new NotFound();
+        }
+
+        if ($classification->get('entityId') !== $entityName) {
+            throw new BadRequest($this->translate('classificationForToAnotherEntity', 'exceptions', 'Classification'));
+        }
+    }
+
+    protected function createClassificationAttributesForRecord(OrmEntity $entity): void
     {
         $entityName = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.classificationForEntity");
         if (empty($entityName)) {

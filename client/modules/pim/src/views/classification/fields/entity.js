@@ -11,6 +11,8 @@
 Espo.define('pim:views/classification/fields/entity', 'pim:views/attribute/fields/entity',
     Dep => Dep.extend({
 
+        selectBoolFilterList: ['canHasAttributes', 'canHasClassifications'],
+
     })
 );
 
