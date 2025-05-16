@@ -35,7 +35,12 @@ class V1Dot14Dot4 extends Base
 
         $res = Util::arrayKeysToCamelCase($res);
 
+        $result = [];
+        foreach ($res as $item) {
+            $result[$item['id']] = array_merge($item, ['code' => $item['id']]);
+        }
+
         @mkdir('data/reference-data');
-        file_put_contents('data/reference-data/AttributePanel.json', json_encode($res));
+        file_put_contents('data/reference-data/AttributePanel.json', json_encode($result));
     }
 }

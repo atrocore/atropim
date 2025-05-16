@@ -6,11 +6,19 @@
       "trim": true,
       "isMultilang": true
     },
+    "code": {
+      "type": "varchar",
+      "required": true
+    },
     "description": {
       "type": "text",
       "required": false,
       "rowsMax": 4,
       "lengthOfCut": 400
+    },
+    "sortOrder": {
+      "type": "float",
+      "view": "pim:views/attribute-panel/fields/sort-order"
     },
     "createdAt": {
       "type": "datetime",
@@ -48,5 +56,9 @@
       "foreign": "attributePanel",
       "entity": "Attribute"
     }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": true
   }
 }
