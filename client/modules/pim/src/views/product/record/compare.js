@@ -45,7 +45,7 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
                     label: this.translate('scopeFilter'),
                     options: options,
                     translatedOptions: translatedOptions,
-                    defaultValue: 'Global'
+                    defaultValue: 'allChannels'
                 });
             }
 
