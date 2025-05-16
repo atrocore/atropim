@@ -129,6 +129,8 @@ class V1Dot14Dot3 extends Base
 
     protected function deletePavDuplicates(): void
     {
+        $this->exec("DELETE FROM product_attribute_value WHERE product_id IS NULL OR attribute_id IS NULL");
+
         while (true) {
             $res = $this->getPDO()
                 ->query("SELECT deleted, product_id, attribute_id, COUNT(*) as count FROM product_attribute_value GROUP BY deleted, product_id, attribute_id HAVING COUNT(*) > 1")
@@ -161,6 +163,8 @@ class V1Dot14Dot3 extends Base
 
     protected function deleteCaDuplicates(): void
     {
+        $this->exec("DELETE FROM classification_attribute WHERE classification_id IS NULL OR attribute_id IS NULL");
+
         while (true) {
             $res = $this->getPDO()
                 ->query("SELECT deleted, classification_id, attribute_id, COUNT(*) as count FROM classification_attribute GROUP BY deleted, classification_id, attribute_id HAVING COUNT(*) > 1")
