@@ -103,7 +103,10 @@ class V1Dot14Dot3 extends Base
         echo 'Migrate default value for classification attribute' . PHP_EOL;
         $this->migrateDefaultValueForClassificationAttributes();
 
+        $this->deletePavDuplicates();
         $this->exec("CREATE UNIQUE INDEX IDX_PRODUCT_ATTRIBUTE_VALUE_UNIQUE_RELATIONSHIP ON product_attribute_value (deleted, product_id, attribute_id)");
+
+        $this->deleteCaDuplicates();
         $this->exec("CREATE UNIQUE INDEX IDX_CLASSIFICATION_ATTRIBUTE_UNIQUE_RELATIONSHIP ON classification_attribute (deleted, classification_id, attribute_id)");
 
         $this->exec("ALTER TABLE classification ADD entity_id VARCHAR(36) DEFAULT NULL");
@@ -122,6 +125,70 @@ class V1Dot14Dot3 extends Base
             ->setParameter('pav', 'productAttributeValues')
             ->setParameter('like', 'tab_%')
             ->executeQuery();
+    }
+
+    protected function deletePavDuplicates(): void
+    {
+        while (true) {
+            $res = $this->getPDO()
+                ->query("SELECT deleted, product_id, attribute_id, COUNT(*) as count FROM product_attribute_value GROUP BY deleted, product_id, attribute_id HAVING COUNT(*) > 1")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+            if (empty($res[0])) {
+                break;
+            }
+
+            $item = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('product_attribute_value')
+                ->where('product_id=:product_id')
+                ->andWhere('deleted=:deleted')
+                ->andWhere('attribute_id=:attribute_id')
+                ->setParameter('product_id', $res[0]['product_id'])
+                ->setParameter('attribute_id', $res[0]['attribute_id'])
+                ->setParameter('deleted', $res[0]['deleted'], \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->fetchAssociative();
+
+            if (!empty($item)) {
+                echo "Deleted product attribute value duplicate {$item['id']}" . PHP_EOL;
+                $this->getConnection()->createQueryBuilder()
+                    ->delete('product_attribute_value')
+                    ->where('id=:id')
+                    ->setParameter('id', $item['id'])
+                    ->executeQuery();
+            }
+        }
+    }
+
+    protected function deleteCaDuplicates(): void
+    {
+        while (true) {
+            $res = $this->getPDO()
+                ->query("SELECT deleted, classification_id, attribute_id, COUNT(*) as count FROM classification_attribute GROUP BY deleted, classification_id, attribute_id HAVING COUNT(*) > 1")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+            if (empty($res[0])) {
+                break;
+            }
+
+            $item = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('classification_attribute')
+                ->where('classification_id=:classification_id')
+                ->andWhere('deleted=:deleted')
+                ->andWhere('attribute_id=:attribute_id')
+                ->setParameter('classification_id', $res[0]['classification_id'])
+                ->setParameter('attribute_id', $res[0]['attribute_id'])
+                ->setParameter('deleted', $res[0]['deleted'], \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->fetchAssociative();
+
+            if (!empty($item)) {
+                echo "Deleted classification attribute duplicate {$item['id']}" . PHP_EOL;
+                $this->getConnection()->createQueryBuilder()
+                    ->delete('classification_attribute')
+                    ->where('id=:id')
+                    ->setParameter('id', $item['id'])
+                    ->executeQuery();
+            }
+        }
     }
 
     protected function migrateDefaultValueForClassificationAttributes(): void
