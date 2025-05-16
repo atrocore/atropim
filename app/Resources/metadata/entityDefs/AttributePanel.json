@@ -29,6 +29,9 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "attributes": {
+      "type": "linkMultiple"
     }
   },
   "links": {
@@ -39,14 +42,11 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "attributePanel",
+      "entity": "Attribute"
     }
-  },
-  "collection": {
-    "sortBy": "createdAt",
-    "asc": false,
-    "textFilterFields": [
-      "name",
-      "code"
-    ]
   }
 }

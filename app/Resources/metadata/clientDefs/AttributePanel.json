@@ -1,4 +1,9 @@
 {
   "controller": "controllers/record",
-  "iconClass": "rows"
+  "iconClass": "rows",
+  "relationshipPanels": {
+    "attributes": {
+      "create": false
+    }
+  }
 }
