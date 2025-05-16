@@ -27,35 +27,65 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
                 return this.overviewFilterList;
             }
             if (this.getAcl().check('Channel', 'read')) {
-                this.ajaxGetRequest('Channel', {maxSize: 500}, {async: false}).then(data => {
-                    let options = [ "allChannels", "linkedChannels", "Global"];
-                    let translatedOptions = {
-                        "allChannels": this.translate("allChannels"),
-                        "linkedChannels": this.translate('linkedChannels'),
-                        "Global": this.translate("Global")
-                    };
-                    if (data.total > 0) {
-                        data.list.forEach(item => {
-                            options.push(item.id);
-                            translatedOptions[item.id] = item.name;
-                        });
-                    }
-                    result.push({
-                        name: "scopeFilter",
-                        label: this.translate('scopeFilter'),
-                        options: options,
-                        translatedOptions: translatedOptions,
-                        defaultValue: 'linkedChannels'
-                    });
+                let channels = this.getChannels();
+                let options = [ "allChannels", "Global"];
+                let translatedOptions = {
+                    "allChannels": this.translate("allChannels"),
+                    "linkedChannels": this.translate('linkedChannels'),
+                    "Global": this.translate("Global")
+                };
 
-                    if(!this.getStorage().get('scopeFilter', this.scope)){
-                        this.getStorage().set('scopeFilter', this.scope, ['linkedChannels']);
-                    }
+               channels.forEach(item => {
+                    options.push(item.id);
+                    translatedOptions[item.id] = item.name;
+                });
+
+                result.push({
+                    name: "scopeFilter",
+                    label: this.translate('scopeFilter'),
+                    options: options,
+                    translatedOptions: translatedOptions,
+                    defaultValue: 'Global'
                 });
             }
 
             return this.overviewFilterList = result;
         },
+
+        isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
+           let isAllow = Dep.prototype.isAllowFieldUsingFilter.call(this, field, fieldDef, equalValueForModels);
+           if(!isAllow) {
+               return false;
+           }
+
+           if(!fieldDef['attributeId']) {
+               return isAllow;
+           }
+
+           let hide = !isAllow;
+           const fieldFilter = this.selectedFilters['scopeFilter'] || ['linkedChannels'];
+           if(fieldFilter.includes('Global') && fieldDef['channelId']){
+               hide = true;
+           }else if(!fieldFilter.includes('allChannels') && !fieldFilter.includes('Global') ) {
+               hide =  !fieldDef['channelId'] || !fieldFilter.includes(fieldDef['channelId']);
+           }
+
+            return !hide;
+        },
+
+        getChannels() {
+            if(this.channels) {
+                return this.channels;
+            }
+            this.ajaxGetRequest('Channel', {
+                select: 'id,name',
+                maxSize: 500,
+                collectionOnly: true,
+            }, {async: false}).then(data => {
+                return this.channels = data.list;
+            });
+            return this.channels;
+        }
 
     });
 });
