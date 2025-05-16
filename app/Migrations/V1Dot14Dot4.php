@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 
 class V1Dot14Dot4 extends Base
 {
@@ -24,26 +26,16 @@ class V1Dot14Dot4 extends Base
 
     public function up(): void
     {
-        $this->exec("ALTER TABLE attribute_tab RENAME TO attribute_panel");
-        $this->exec("ALTER TABLE attribute RENAME COLUMN attribute_tab_id TO attribute_panel_id");
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from('attribute_tab')
+            ->where('deleted=:false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
 
-        if ($this->isPgSQL()) {
-            $this->exec("ALTER INDEX idx_attribute_attribute_tab_id RENAME TO IDX_ATTRIBUTE_ATTRIBUTE_PANEL_ID");
-            $this->exec("ALTER INDEX idx_attribute_tab_created_by_id RENAME TO IDX_ATTRIBUTE_PANEL_CREATED_BY_ID");
-            $this->exec("ALTER INDEX idx_attribute_tab_modified_by_id RENAME TO IDX_ATTRIBUTE_PANEL_MODIFIED_BY_ID");
-        } else {
-            $this->exec("ALTER TABLE attribute RENAME INDEX idx_attribute_attribute_tab_id TO IDX_ATTRIBUTE_ATTRIBUTE_PANEL_ID");
-            $this->exec("ALTER TABLE attribute_panel RENAME INDEX idx_attribute_tab_created_by_id TO IDX_ATTRIBUTE_PANEL_CREATED_BY_ID");
-            $this->exec("ALTER TABLE attribute_panel RENAME INDEX idx_attribute_tab_modified_by_id TO IDX_ATTRIBUTE_PANEL_MODIFIED_BY_ID");
-        }
-    }
+        $res = Util::arrayKeysToCamelCase($res);
 
-    protected function exec(string $query): void
-    {
-        try {
-            $this->getPDO()->exec($query);
-        } catch (\Throwable $e) {
-            // ignore
-        }
+        @mkdir('data/reference-data');
+        file_put_contents('data/reference-data/AttributePanel.json', json_encode($res));
     }
 }

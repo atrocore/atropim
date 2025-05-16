@@ -29,13 +29,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "attributes": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
     }
   },
   "links": {
@@ -46,11 +39,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "attributes": {
-      "type": "hasMany",
-      "foreign": "attributePanel",
-      "entity": "Attribute"
     }
   },
   "collection": {
