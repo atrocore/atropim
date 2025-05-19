@@ -29,13 +29,7 @@ class Attribute extends Base
 
     public function getAttributesDefs(string $entityName, array $attributesIds): array
     {
-        $conn = $this->getEntityManager()->getConnection();
-        $attributes = $conn->createQueryBuilder()
-            ->select('*')
-            ->from($conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
-            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
-            ->fetchAllAssociative();
+        $attributes = $this->getRepository()->getAttributesByIds($attributesIds);
 
         $entity = $this->getEntityManager()->getRepository($entityName)->get();
 
@@ -48,6 +42,30 @@ class Attribute extends Base
         }
 
         return $attributesDefs;
+    }
+
+    public function getAttributesFields(string $entityName, array $attributesIds): array
+    {
+        $attributes = $this->getRepository()->getAttributesByIds($attributesIds);
+
+        $entity = $this->getEntityManager()->getRepository($entityName)->get();
+
+        /** @var AttributeFieldConverter $converter */
+        $converter = $this->getInjection(AttributeFieldConverter::class);
+
+        $attributesDefs = [];
+        foreach ($attributes as $row) {
+            $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
+        }
+
+        $res = [];
+        foreach ($entity->fields ?? [] as $field => $fieldDefs) {
+            if (!empty($fieldDefs['attributeId'])) {
+                $res[] = $field;
+            }
+        }
+
+        return $res;
     }
 
     public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool

@@ -18,6 +18,7 @@ use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
@@ -33,6 +34,16 @@ class Attribute extends Base
         $this->addDependency('language');
         $this->addDependency('dataManager');
         $this->addDependency('container');
+    }
+
+    public function getAttributesByIds(array $attributesIds): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from($this->getConnection()->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->fetchAllAssociative();
     }
 
     public function prepareAllParentsCompositeAttributesIds(string $attributeId, array &$ids = []): void

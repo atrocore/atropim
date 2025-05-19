@@ -149,12 +149,13 @@ class ClassificationAttribute extends Base
         }
 
         $entityName = $classification->get('entityId');
-        $attributesDefs = $this->getAttributeService()->getAttributesDefs($entityName, [$data->attributeId]);
+        $attributesFields = $this->getAttributeService()->getAttributesFields($entityName, [$data->attributeId]);
+
         $attributeFieldName = AttributeFieldConverter::prepareFieldName($data->attributeId);
 
         foreach ($this->getRepository()->getClassificationRelatedRecords($classification) as $id) {
             $inputData = new \stdClass();
-            foreach ($attributesDefs as $field => $defs) {
+            foreach ($attributesFields as $field) {
                 $inputData->$field = null;
             }
             $inputData->__attributes = [$data->attributeId];
