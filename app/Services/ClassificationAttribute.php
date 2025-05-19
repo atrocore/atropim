@@ -115,8 +115,8 @@ class ClassificationAttribute extends Base
 
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
+//            $this->getEntityManager()->getPDO()->beginTransaction();
+//            $inTransaction = true;
         }
 
         try {
@@ -149,27 +149,19 @@ class ClassificationAttribute extends Base
         }
 
         $entityName = $classification->get('entityId');
-        $attributesFields = $this->getAttributeService()->getAttributesFields($entityName, [$data->attributeId]);
-
-        $attributeFieldName = AttributeFieldConverter::prepareFieldName($data->attributeId);
 
         foreach ($this->getRepository()->getClassificationRelatedRecords($classification) as $id) {
-            $inputData = new \stdClass();
-            foreach ($attributesFields as $field) {
-                $inputData->$field = null;
-            }
-            $inputData->__attributes = [$data->attributeId];
-
-            foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
-                if (property_exists($data, $key)) {
-                    $preparedKey = str_replace('value', $attributeFieldName, $key);
-                    $inputData->$preparedKey = $data->$key;
-                }
-            }
+            $parentId = $this
+                ->getPseudoTransactionManager()
+                ->pushCustomJob('Attribute', 'createAttributeValue', [
+                    'entityName' => $entityName,
+                    'entityId'   => $id,
+                    'data'       => $data
+                ]);
 
             $this
                 ->getPseudoTransactionManager()
-                ->pushUpdateEntityJob($entityName, $id, $inputData);
+                ->pushUpdateEntityJob($entityName, $id, ['modifiedAt' => date('Y-m-d')], $parentId);
         }
     }
 

@@ -157,7 +157,15 @@ class Attribute extends Base
     public function upsertAttributeValue(IEntity $entity, string $fieldName, $value): void
     {
         $name = Util::toUnderScore(lcfirst($entity->getEntityName()));
-        $valColumn = $entity->fields[$fieldName]['column'];
+        $valColumn = $entity->fields[$fieldName]['column'] ?? null;
+
+        if (empty($valColumn)) {
+            return;
+        }
+
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
 
         if (Converter::isPgSQL($this->getConnection())) {
             $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value) ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";

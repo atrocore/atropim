@@ -112,35 +112,18 @@ class Entity extends AbstractEntityListener
             return;
         }
 
-        $attributesIds = array_column($cas->toArray(), 'attributeId');
-
-        /** @var Record $service */
-        $recordService = $this->getServiceFactory()->create($entityName);
-
-        $inputData = new \stdClass();
-        $inputData->__attributes = [];
-        foreach ($this->getAttributeService()->getAttributesFields($entityName, $attributesIds) as $field) {
-            $inputData->$field = null;
-        }
-
         foreach ($cas as $ca) {
-            $attributeFieldName = AttributeFieldConverter::prepareFieldName($ca->get('attributeId'));
-            $default = $ca->get('data')?->default ?? new \stdClass();
+            $data = $ca->get('data')?->default ?? new \stdClass();
+            $data = json_decode(json_encode($data), true);
+            $data['attributeId'] = $ca->get('attributeId');
 
-            $inputData->__attributes[] = $ca->get('attributeId');
-            foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
-                if (property_exists($default, $key)) {
-                    $preparedKey = str_replace('value', $attributeFieldName, $key);
-                    $inputData->$preparedKey = $default->$key;
-                }
-            }
+            $this->getAttributeService()->createAttributeValue([
+                'entityName' => $entityName,
+                'entityId'   => $entity->get(lcfirst($entityName) . 'Id'),
+                'data'       => $data
+            ]);
         }
-
-        $recordId = $entity->get(lcfirst($entityName) . 'Id');
-
-        $recordService->updateEntity($recordId, $inputData);
     }
-
 
     protected function getAttributeService(): Attribute
     {

@@ -19,7 +19,6 @@ use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Util;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
 
@@ -44,28 +43,49 @@ class Attribute extends Base
         return $attributesDefs;
     }
 
-    public function getAttributesFields(string $entityName, array $attributesIds): array
+    public function createAttributeValue(array $pseudoTransactionData): void
     {
-        $attributes = $this->getRepository()->getAttributesByIds($attributesIds);
+        $entityName = $pseudoTransactionData['entityName'] ?? null;
+        $entityId = $pseudoTransactionData['entityId'] ?? null;
+        $data = $pseudoTransactionData['data'] ?? [];
 
-        $entity = $this->getEntityManager()->getRepository($entityName)->get();
+        if (empty($entityName) || empty($entityId) || empty($data)) {
+            return;
+        }
+
+        $entity = $this->getEntityManager()->getRepository($entityName)->get($entityId);
+        if (empty($entity)) {
+            return;
+        }
+
+        /** @var \Pim\Repositories\Attribute $attributeRepo */
+        $attributeRepo = $this->getEntityManager()->getRepository('Attribute');
 
         /** @var AttributeFieldConverter $converter */
         $converter = $this->getInjection(AttributeFieldConverter::class);
 
         $attributesDefs = [];
-        foreach ($attributes as $row) {
+        foreach ($this->getRepository()->getAttributesByIds([$data['attributeId']]) as $row) {
             $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
         }
 
-        $res = [];
+        $attributeFieldName = AttributeFieldConverter::prepareFieldName($data['attributeId']);
+
+        // set null value
         foreach ($entity->fields ?? [] as $field => $fieldDefs) {
-            if (!empty($fieldDefs['attributeId'])) {
-                $res[] = $field;
+            $valueName = str_replace($attributeFieldName, 'value', $field);
+            if (!empty($fieldDefs['attributeId']) && !empty($fieldDefs['column']) && !array_key_exists($valueName, $data)) {
+                $data[$valueName] = null;
             }
         }
 
-        return $res;
+        // set default value if it needs
+        foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
+            if (array_key_exists($key, $data)) {
+                $fieldName = str_replace('value', $attributeFieldName, $key);
+                $attributeRepo->upsertAttributeValue($entity, $fieldName, $data[$key]);
+            }
+        }
     }
 
     public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
