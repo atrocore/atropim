@@ -3,7 +3,8 @@
   "iconClass": "rows",
   "relationshipPanels": {
     "attributes": {
-      "create": false
+      "create": false,
+      "disabledSelectAllResult": true
     }
   }
 }
