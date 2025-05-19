@@ -42,4 +42,31 @@ class AttributePanel extends ReferenceData
 
         return parent::countRelated($entity, $relationName, $params);
     }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->clearCache();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->clearCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('dataManager');
+    }
+
+    protected function clearCache(): void
+    {
+        $this->getConfig()->clearReferenceDataCache();
+        $this->getInjection('dataManager')->clearCache();
+    }
 }
