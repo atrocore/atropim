@@ -17,6 +17,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Services\Record;
 use Pim\Services\Attribute;
 use Espo\ORM\Entity as OrmEntity;
@@ -138,12 +139,19 @@ class Entity extends AbstractEntityListener
 
         $recordId = $entity->get(lcfirst($entityName) . 'Id');
 
+        $this->getMemoryStorage()->set('disableCA', true);
         $recordService->updateEntity($recordId, $inputData);
+        $this->getMemoryStorage()->set('disableCA', false);
     }
 
 
     protected function getAttributeService(): Attribute
     {
         return $this->getServiceFactory()->create('Attribute');
+    }
+
+    protected function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 }
