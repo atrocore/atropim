@@ -31,7 +31,6 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
                 let options = [ "allChannels", "Global"];
                 let translatedOptions = {
                     "allChannels": this.translate("allChannels"),
-                    "linkedChannels": this.translate('linkedChannels'),
                     "Global": this.translate("Global")
                 };
 
@@ -45,7 +44,7 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
                     label: this.translate('scopeFilter'),
                     options: options,
                     translatedOptions: translatedOptions,
-                    defaultValue: 'Global'
+                    defaultValue: 'allChannels'
                 });
             }
 
