@@ -18,8 +18,7 @@
     "datetimeValue": "Standardwert: Datum-Uhrzeit",
     "boolValue": "Standardwert: Boolesch",
     "min": "Min",
-    "max": "Max",
-    "extensibleEnumOptions": "Optionen zulassen"
+    "max": "Max"
   },
   "labels": {
     "classificationAttribute": "Attribut aus Klassifikation",

@@ -17,8 +17,7 @@
     "datetimeValue": "Valeur par défaut : Date-heure",
     "boolValue": "Valeur par défaut : Booléen",
     "min": "Min",
-    "max": "Max",
-    "extensibleEnumOptions": "Liste des options"
+    "max": "Max"
   },
   "labels": {
     "Create ClassificationAttribute": "Créer un attribut de classification",

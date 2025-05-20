@@ -17,8 +17,7 @@
     "datetimeValue": "Default Value: Date-time",
     "boolValue": "Default Value: Boolean",
     "min": "Min",
-    "max": "Max",
-    "extensibleEnumOptions": "Allow options"
+    "max": "Max"
   },
   "labels": {
     "classificationAttribute": "Attribute from Classification",
