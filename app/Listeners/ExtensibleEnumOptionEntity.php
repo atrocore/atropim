@@ -30,11 +30,10 @@ class ExtensibleEnumOptionEntity extends AbstractEntityListener
         $ca = $conn->createQueryBuilder()
             ->select('t.*')
             ->from($conn->quoteIdentifier('classification_attribute'), 't')
-            ->where("t.reference_value = :referenceValue OR t.text_value LIKE :textValue")
+            ->where("t.data LIKE  :like")
             ->andWhere('t.deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('referenceValue', $entity->get('id'))
-            ->setParameter('textValue', "%\"{$entity->get('id')}\"%")
+            ->setParameter('like', "%\"{$entity->get('id')}\"%")
             ->fetchAssociative();
 
         if (!empty($ca)) {
