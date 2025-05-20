@@ -240,6 +240,10 @@ class V1Dot14Dot3 extends Base
                         ->setParameter('null', null, ParameterType::NULL)
                         ->executeQuery();
 
+                    if (empty($item[$column])) {
+                        continue;
+                    }
+
                     $data = @json_decode($item['data'] ?? '', true);
                     if (!is_array($data)) {
                         $data = [];
