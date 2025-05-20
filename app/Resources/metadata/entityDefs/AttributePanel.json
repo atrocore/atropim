@@ -18,6 +18,7 @@
     },
     "sortOrder": {
       "type": "float",
+      "required": true,
       "view": "pim:views/attribute-panel/fields/sort-order"
     },
     "createdAt": {

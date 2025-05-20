@@ -37,7 +37,7 @@ class V1Dot14Dot4 extends Base
 
         $result = [];
         foreach ($res as $item) {
-            $result[$item['id']] = array_merge($item, ['code' => $item['id']]);
+            $result[$item['id']] = array_merge($item, ['code' => $item['id'], 'sortOrder' => 0]);
         }
 
         @mkdir('data/reference-data');
