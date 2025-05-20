@@ -22,6 +22,7 @@ class EntityLayout extends AbstractLayoutListener
     {
         $result = $event->getArgument('result');
         $result[0]['rows'][] = [['name' => 'hasAttribute'], ['name' => 'hasClassification']];
+        $result[0]['rows'][] = [false, ['name' => 'hasSingleClassificationOnly']];
         $event->setArgument('result', $result);
     }
 }

@@ -102,11 +102,16 @@
     "ProductStatusOverview": "Огляд статусу продукту",
     "ProductsByTaskStatus": "Продукти за статусом завдання"
   },
+  "boolFilters": {
+    "multipleClassifications": "Декілька класифікацій"
+  },
   "exceptions": {
     "massRelateBlocked": "Масове створення таких зв'язків заблоковано.",
     "massUnRelateBlocked": "Масове видалення таких зв'язків заблоковано.",
     "onlyForceDeletingAvailable": "Доступне тільки примусове видалення",
-    "notValid": "Дані не дійсні"
+    "notValid": "Дані не дійсні",
+    "singleClassificationOnlyAllowed": "Дозволено встановлювати лише одну класифікацію",
+    "moreThanOneClassification": "Деякі записи мають більше ніж одну класифікацію."
   },
   "messages": {
     "fieldHasPattern": "{field} повинне містити тільки підкреслення, цифри і букви в нижньому регістрі"

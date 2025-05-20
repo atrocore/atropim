@@ -129,11 +129,16 @@
     "ProductsByStatus": "Produkte nach Status",
     "ProductsByTaskStatus": "Products by Task Status"
   },
+  "boolFilters": {
+    "multipleClassifications": "Mehrere Klassifizierungen"
+  },
   "exceptions": {
     "massRelateBlocked": "Massenverknüpfungen dieser Art ist gesperrt.",
     "massUnRelateBlocked": "Massenaufhebung der Verknüpfungen dieser Art ist gesperrt.",
     "onlyForceDeletingAvailable": "Nur erzwingtes Löschen verfügbar",
-    "notValid": "Daten sind nicht gültig"
+    "notValid": "Daten sind nicht gültig",
+    "singleClassificationOnlyAllowed": "Nur eine Klassifizierung ist zulässig",
+    "moreThanOneClassification": "Einige Datensätze haben mehr als eine Klassifizierung."
   },
   "messages": {
     "fieldHasPattern": "{field} sollte nur Unterstriche, Zahlen und Alphabete in Kleinbuchstaben enthalten",

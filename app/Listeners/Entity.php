@@ -17,6 +17,7 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Services\Record;
 use Pim\Services\Attribute;
 use Espo\ORM\Entity as OrmEntity;
@@ -66,6 +67,27 @@ class Entity extends AbstractEntityListener
         /** @var OrmEntity $entity */
         $entity = $event->getArgument('entity');
 
+        if ($entity->getEntityName() === 'Entity' && $entity->get('hasSingleClassificationOnly') && $entity->get('hasClassification')) {
+            $mapper = $this->getEntityManager()->getMapper();
+            $entityColumn = $mapper->toDb(lcfirst($entity->get('code')) . 'Id');
+            $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+            $classifications = $qb->select($entityColumn)
+                ->from($mapper->toDb($entity->get('code') . 'Classification'), 'ec')
+                ->where('ec.deleted = :false')
+                ->groupBy($entityColumn)
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->having('COUNT(*) > 1')
+                ->setMaxResults(1)
+                ->executeQuery()
+                ->fetchAllAssociative();
+
+            if (!empty($classifications)) {
+                throw new BadRequest($this->getLanguage()->translate('moreThanOneClassification', 'exceptions'));
+            }
+
+            return;
+        }
+
         $this->validateClassificationAttributesForRecord($entity);
     }
 
@@ -92,6 +114,37 @@ class Entity extends AbstractEntityListener
 
         if ($classification->get('entityId') !== $entityName) {
             throw new BadRequest($this->translate('classificationForToAnotherEntity', 'exceptions', 'Classification'));
+        }
+
+        if (
+            !$this->getMetadata()->get(['scopes', $entityName, 'hasClassification'], false)
+            || !$this->getMetadata()->get(['scopes', $entityName, 'hasSingleClassificationOnly'], false)
+        ) {
+            return;
+        }
+
+        if ($entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1) {
+            throw new BadRequest($this->getLanguage()->translate('singleClassificationOnlyAllowed', 'exceptions'));
+        }
+
+        $entityField = lcfirst($entityName) . 'Id';
+        if ($entityId = $entity->get($entityField)) {
+            $key = 'single_classification_' . $entityName;
+            $memoryData = $this->getMemoryStorage()->get($key) ?? [];
+
+            if (empty($memoryData[$entityId])) {
+                $this->getService($entityName)->unlinkAll($entityId, 'classifications');
+                $memoryData[$entityId] = true;
+                $this->getMemoryStorage()->set($key, $memoryData);
+            }
+
+            $records = $this->getEntityManager()->getRepository($entity->getEntityName())
+                ->where([$entityField => $entityId])
+                ->find();
+
+            if (!empty($records[0])) {
+                throw new BadRequest($this->getLanguage()->translate('singleClassificationOnlyAllowed', 'exceptions'));
+            }
         }
     }
 
@@ -128,5 +181,10 @@ class Entity extends AbstractEntityListener
     protected function getAttributeService(): Attribute
     {
         return $this->getServiceFactory()->create('Attribute');
+    }
+
+    protected function getMemoryStorage(): MemoryStorage
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 }
