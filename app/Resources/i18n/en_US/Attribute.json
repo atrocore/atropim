@@ -4,7 +4,7 @@
     "compositeAttribute": "Composite Attribute",
     "nestedAttributes": "Nested Attributes",
     "attributeGroup": "Attribute Group",
-    "attributeTab": "Attribute Tab",
+    "attributePanel": "Attribute Panel",
     "type": "Attribute Type",
     "code": "Code",
     "name": "Attribute Name",

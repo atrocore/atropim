@@ -3,7 +3,6 @@
     "parents": "Associer des attributs",
     "children": "Attributs associés",
     "attributeGroup": "Groupe d'attributs",
-    "attributeTab": "Onglet Attributs",
     "type": "Type d'attribut",
     "code": "Code",
     "name": "Nom de l'attribut",
