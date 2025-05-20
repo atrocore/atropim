@@ -100,20 +100,6 @@
             }
           ]
         }
-      },
-      "extensibleEnumOptions": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "attributeType",
-              "value": [
-                "extensibleEnum",
-                "extensibleMultiEnum"
-              ]
-            }
-          ]
-        }
       }
     }
   }

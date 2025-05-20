@@ -348,6 +348,14 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "allowedOptions": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/allowed-options",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
     "min": {
       "type": "float",
       "notStorable": true,
@@ -407,11 +415,6 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "extensibleEnumOptions": {
-      "type": "linkMultiple",
-      "noLoad": false,
-      "view": "pim:views/classification-attribute/fields/extensible-enum-options"
-    },
     "isCaRelationInherited": {
       "type": "bool",
       "notStorable": true,
@@ -457,12 +460,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "extensibleEnumOptions": {
-      "type": "hasMany",
-      "foreign": "classificationAttributes",
-      "relationName": "ClassificationAttributeExtensibleEnumOption",
-      "entity": "ExtensibleEnumOption"
     }
   },
   "collection": {

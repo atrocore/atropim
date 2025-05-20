@@ -33,13 +33,13 @@
       ],
       [
         {
-          "name": "value"
+          "name": "allowedOptions"
         },
         false
       ],
       [
         {
-          "name": "extensibleEnumOptions"
+          "name": "value"
         },
         false
       ]
