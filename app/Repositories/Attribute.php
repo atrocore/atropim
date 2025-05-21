@@ -19,10 +19,10 @@ use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Atro\Core\Exceptions\Error;
 use Espo\ORM\IEntity;
 
 class Attribute extends Base
@@ -87,6 +87,55 @@ class Attribute extends Base
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);
+    }
+
+    public function inheritAllAttributeValuesFromParents(Entity $entity): void
+    {
+        $parentsIds = $entity->get('parentsIds') ?? [];
+        if (empty($parentsIds)) {
+            return;
+        }
+
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
+
+        foreach ($parentsIds as $parentId) {
+            $attrs = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from("{$tableName}_attribute_value")
+                ->where("deleted=:false")
+                ->andWhere("{$tableName}_id=:id")
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('id', $parentId)
+                ->fetchAllAssociative();
+
+            if (empty($attrs)) {
+                continue;
+            }
+
+            foreach ($attrs as $attr) {
+                $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->delete("{$tableName}_attribute_value")
+                    ->where('deleted=:false')
+                    ->andWhere("{$tableName}_id = :recordId")
+                    ->andWhere("attribute_id = :attributeId")
+                    ->setParameter('recordId', $entity->get('id'))
+                    ->setParameter('attributeId', $attr['attribute_id'])
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->executeQuery();
+
+
+                $attr['id'] = Util::generateId();
+                $attr["{$tableName}_id"] = $entity->get('id');
+
+                $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+                $qb->insert("{$tableName}_attribute_value");
+                foreach ($attr as $column => $value) {
+                    $qb->setValue($column, ":{$column}");
+                    $qb->setParameter($column, $value, Mapper::getParameterType($value));
+                }
+                $qb->executeQuery();
+            }
+        }
     }
 
     public function addAttributeValueForComposite(Entity $entity): void
