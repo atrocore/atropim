@@ -62,7 +62,7 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
            }
 
            let hide = !isAllow;
-           const fieldFilter = this.selectedFilters['scopeFilter'] || ['linkedChannels'];
+           const fieldFilter = this.selectedFilters['scopeFilter'] || ['allChannels'];
            if(fieldFilter.includes('Global') && fieldDef['channelId']){
                hide = true;
            }else if(!fieldFilter.includes('allChannels') && !fieldFilter.includes('Global') ) {
