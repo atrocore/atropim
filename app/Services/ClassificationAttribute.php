@@ -115,8 +115,8 @@ class ClassificationAttribute extends Base
 
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-//            $this->getEntityManager()->getPDO()->beginTransaction();
-//            $inTransaction = true;
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {

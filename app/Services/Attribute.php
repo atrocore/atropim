@@ -83,7 +83,7 @@ class Attribute extends Base
         foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
             if (array_key_exists($key, $data)) {
                 $fieldName = str_replace('value', $attributeFieldName, $key);
-                $attributeRepo->upsertAttributeValue($entity, $fieldName, $data[$key]);
+                $attributeRepo->upsertAttributeValue($entity, $fieldName, $data[$key], true);
             }
         }
     }

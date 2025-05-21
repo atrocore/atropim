@@ -353,6 +353,7 @@
       "view": "views/admin/field-manager/fields/allowed-options",
       "notStorable": true,
       "virtualField": true,
+      "fieldProperty": true,
       "filterDisabled": true,
       "emHidden": true
     },
@@ -360,6 +361,7 @@
       "type": "float",
       "notStorable": true,
       "virtualField": true,
+      "fieldProperty": true,
       "filterDisabled": true,
       "emHidden": true
     },
@@ -367,6 +369,7 @@
       "type": "float",
       "notStorable": true,
       "virtualField": true,
+      "fieldProperty": true,
       "filterDisabled": true,
       "emHidden": true
     },
@@ -374,6 +377,7 @@
       "type": "int",
       "notStorable": true,
       "virtualField": true,
+      "fieldProperty": true,
       "filterDisabled": true,
       "emHidden": true
     },
@@ -382,6 +386,7 @@
       "default": false,
       "notStorable": true,
       "virtualField": true,
+      "fieldProperty": true,
       "filterDisabled": true,
       "emHidden": true
     },

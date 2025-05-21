@@ -203,7 +203,7 @@ class Attribute extends Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function upsertAttributeValue(IEntity $entity, string $fieldName, $value): void
+    public function upsertAttributeValue(IEntity $entity, string $fieldName, $value, bool $insertOnly = false): void
     {
         $name = Util::toUnderScore(lcfirst($entity->getEntityName()));
         $valColumn = $entity->fields[$fieldName]['column'] ?? null;
@@ -216,10 +216,13 @@ class Attribute extends Base
             $value = json_encode($value);
         }
 
-        if (Converter::isPgSQL($this->getConnection())) {
-            $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value) ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";
-        } else {
-            $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value) ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
+        $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value)";
+        if (!$insertOnly) {
+            if (Converter::isPgSQL($this->getConnection())) {
+                $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";
+            } else {
+                $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
+            }
         }
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
@@ -234,7 +237,10 @@ class Attribute extends Base
             $stmt->bindValue(':value', $value);
         }
 
-        $stmt->execute();
+        try {
+            $stmt->execute();
+        } catch (UniqueConstraintViolationException $e) {
+        }
     }
 
     public function hasAttributeValue(string $entityName, string $entityId, string $attributeId): bool
