@@ -36,7 +36,7 @@ class EntityEntity extends AbstractEntityListener
 
         if (
             $entity->get('hasClassification') && $entity->get('singleClassification')
-            && $this->getEntityManager()->getRepository('Classification')->entityHaveMultipleClassifications($entity->get('code'))
+            && $this->getEntityManager()->getRepository('Classification')->entityHasMultipleClassifications($entity->get('code'))
         ) {
             throw new BadRequest($this->getLanguage()->translate('moreThanOneClassification', 'exceptions'));
         }

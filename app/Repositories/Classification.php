@@ -40,7 +40,7 @@ class Classification extends Hierarchy
         return array_column($data, 'id');
     }
 
-    public function entityHaveMultipleClassifications(string $entityName): bool
+    public function entityHasMultipleClassifications(string $entityName): bool
     {
         $record = $this->getMultipleClassificationsQb($entityName)
             ->setMaxResults(1)
