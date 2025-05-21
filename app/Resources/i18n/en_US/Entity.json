@@ -1,7 +1,8 @@
 {
   "fields": {
     "hasAttribute": "Has Attributes",
-    "hasClassification": "Has Classifications"
+    "hasClassification": "Has Classifications",
+    "singleClassification": "Single Classification only"
   },
   "labels": {
     "attributes": "Attributes"

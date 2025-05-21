@@ -93,6 +93,29 @@ class Entity extends AbstractEntityListener
         if ($classification->get('entityId') !== $entityName) {
             throw new BadRequest($this->translate('classificationForToAnotherEntity', 'exceptions', 'Classification'));
         }
+
+        $this->validateSingleClassification($entityName, $entity);
+    }
+
+    protected function validateSingleClassification(string $entityName, OrmEntity $entity): void
+    {
+        if (
+            !$this->getMetadata()->get(['scopes', $entityName, 'hasClassification'], false)
+            || !$this->getMetadata()->get(['scopes', $entityName, 'singleClassification'], false)
+        ) {
+            return;
+        }
+
+        $entityField = lcfirst($entityName) . 'Id';
+        $entityId = $entity->get($entityField);
+
+        $record = $this->getEntityManager()->getRepository($entity->getEntityName())
+            ->where([$entityField => $entityId])
+            ->findOne();
+
+        if (!empty($record)) {
+            throw new BadRequest($this->getLanguage()->translate('singleClassificationAllowed', 'exceptions'));
+        }
     }
 
     protected function createClassificationAttributesForRecord(OrmEntity $entity): void

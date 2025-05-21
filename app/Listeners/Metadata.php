@@ -68,12 +68,20 @@ class Metadata extends AbstractListener
                     "type" => "linkMultiple",
                     "view" => "pim:views/fields/classifications"
                 ];
+
                 $data['entityDefs'][$scope]['links']['classifications'] = [
                     "type"         => "hasMany",
                     "foreign"      => Util::pluralize(lcfirst($scope)),
                     "relationName" => "{$scope}Classification",
                     "entity"       => "Classification"
                 ];
+
+                if (!empty($scopeDefs['singleClassification'])) {
+                    $data['entityDefs'][$scope]['fields']['classifications']['view'] = 'pim:views/fields/classifications-single';
+                    $data['entityDefs'][$scope]['links']['classifications']['layoutRelationshipsDisabled'] = true;
+                } else {
+                    $data['clientDefs'][$scope]['boolFilterList'][] = 'multipleClassifications';
+                }
 
                 $data['entityDefs']['Classification']['fields'][Util::pluralize(lcfirst($scope))] = [
                     "type" => "linkMultiple"

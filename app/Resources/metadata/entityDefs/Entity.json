@@ -7,6 +7,9 @@
     "hasClassification": {
       "type": "bool",
       "view": "pim:views/entity/fields/has-classification"
+    },
+    "singleClassification": {
+      "type": "bool"
     }
   }
 }

@@ -33,5 +33,12 @@ class EntityEntity extends AbstractEntityListener
                 throw new BadRequest($this->getLanguage()->translate('entityAlreadyHasAttributesInUse', 'exceptions', 'Entity'));
             }
         }
+
+        if (
+            $entity->get('hasClassification') && $entity->get('singleClassification')
+            && $this->getEntityManager()->getRepository('Classification')->entityHasMultipleClassifications($entity->get('code'))
+        ) {
+            throw new BadRequest($this->getLanguage()->translate('moreThanOneClassification', 'exceptions'));
+        }
     }
 }
