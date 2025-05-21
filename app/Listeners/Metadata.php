@@ -69,28 +69,19 @@ class Metadata extends AbstractListener
                     "view" => "pim:views/fields/classifications"
                 ];
 
-                if (!empty($scopeDefs['hasSingleClassificationOnly'])) {
-                    $data['entityDefs'][$scope]['fields']['classifications']['view'] = 'pim:views/fields/classifications-single';
-
-                    $data['clientDefs'][$scope]['relationshipPanels']['classifications'] = array_merge(
-                        $data['clientDefs'][$scope]['relationshipPanels']['classifications'] ?? [],
-                        [
-                            'hideShowFullList' => true,
-                            'disableSelectMultiple' => true,
-                            'selectBoolFilterList' => ['fieldsFilter'],
-                            'view' => 'pim:views/record/panels/classifications'
-                        ]
-                    );
-                } else {
-                    $data['clientDefs'][$scope]['boolFilterList'][] = 'multipleClassifications';
-                }
-
                 $data['entityDefs'][$scope]['links']['classifications'] = [
                     "type"         => "hasMany",
                     "foreign"      => Util::pluralize(lcfirst($scope)),
                     "relationName" => "{$scope}Classification",
                     "entity"       => "Classification"
                 ];
+
+                if (!empty($scopeDefs['singleClassification'])) {
+                    $data['entityDefs'][$scope]['fields']['classifications']['view'] = 'pim:views/fields/classifications-single';
+                    $data['entityDefs'][$scope]['links']['classifications']['layoutRelationshipsDisabled'] = true;
+                } else {
+                    $data['clientDefs'][$scope]['boolFilterList'][] = 'multipleClassifications';
+                }
 
                 $data['entityDefs']['Classification']['fields'][Util::pluralize(lcfirst($scope))] = [
                     "type" => "linkMultiple"

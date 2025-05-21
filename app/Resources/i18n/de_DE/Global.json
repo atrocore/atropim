@@ -137,7 +137,7 @@
     "massUnRelateBlocked": "Massenaufhebung der Verknüpfungen dieser Art ist gesperrt.",
     "onlyForceDeletingAvailable": "Nur erzwingtes Löschen verfügbar",
     "notValid": "Daten sind nicht gültig",
-    "singleClassificationOnlyAllowed": "Nur eine Klassifizierung ist zulässig",
+    "singleClassificationAllowed": "Nur eine Klassifizierung ist zulässig",
     "moreThanOneClassification": "Einige Datensätze haben mehr als eine Klassifizierung."
   },
   "messages": {

@@ -1,7 +1,7 @@
 {
   "dynamicLogic": {
     "fields": {
-      "hasSingleClassificationOnly": {
+      "singleClassification": {
         "visible": {
           "conditionGroup": [
             {

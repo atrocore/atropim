@@ -129,7 +129,7 @@
     "massUnRelateBlocked": "Mass unrelating of this kind is blocked.",
     "onlyForceDeletingAvailable": "Only force deleting available",
     "notValid": "Data is not valid",
-    "singleClassificationOnlyAllowed": "Only one classification is allowed",
+    "singleClassificationAllowed": "Only one classification is allowed",
     "moreThanOneClassification": "Some records have more than one classification."
   },
   "messages": {

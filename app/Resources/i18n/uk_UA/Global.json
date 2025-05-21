@@ -110,7 +110,7 @@
     "massUnRelateBlocked": "Масове видалення таких зв'язків заблоковано.",
     "onlyForceDeletingAvailable": "Доступне тільки примусове видалення",
     "notValid": "Дані не дійсні",
-    "singleClassificationOnlyAllowed": "Дозволено встановлювати лише одну класифікацію",
+    "singleClassificationAllowed": "Дозволено встановлювати лише одну класифікацію",
     "moreThanOneClassification": "Деякі записи мають більше ніж одну класифікацію."
   },
   "messages": {

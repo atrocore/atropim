@@ -34,23 +34,11 @@ class EntityEntity extends AbstractEntityListener
             }
         }
 
-        if ($entity->get('hasSingleClassificationOnly') && $entity->get('hasClassification')) {
-            $mapper = $this->getEntityManager()->getMapper();
-            $entityColumn = $mapper->toDb(lcfirst($entity->get('code')) . 'Id');
-            $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-            $classifications = $qb->select($entityColumn)
-                ->from($mapper->toDb($entity->get('code') . 'Classification'), 'ec')
-                ->where('ec.deleted = :false')
-                ->groupBy($entityColumn)
-                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
-                ->having('COUNT(*) > 1')
-                ->setMaxResults(1)
-                ->executeQuery()
-                ->fetchAllAssociative();
-
-            if (!empty($classifications)) {
-                throw new BadRequest($this->getLanguage()->translate('moreThanOneClassification', 'exceptions'));
-            }
+        if (
+            $entity->get('hasClassification') && $entity->get('singleClassification')
+            && $this->getEntityManager()->getRepository('Classification')->entityHaveMultipleClassifications($entity->get('code'))
+        ) {
+            throw new BadRequest($this->getLanguage()->translate('moreThanOneClassification', 'exceptions'));
         }
     }
 }

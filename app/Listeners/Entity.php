@@ -17,7 +17,6 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Services\Record;
 use Pim\Services\Attribute;
 use Espo\ORM\Entity as OrmEntity;
@@ -95,35 +94,27 @@ class Entity extends AbstractEntityListener
             throw new BadRequest($this->translate('classificationForToAnotherEntity', 'exceptions', 'Classification'));
         }
 
+        $this->validateSingleClassification($entityName, $entity);
+    }
+
+    protected function validateSingleClassification(string $entityName, OrmEntity $entity): void
+    {
         if (
             !$this->getMetadata()->get(['scopes', $entityName, 'hasClassification'], false)
-            || !$this->getMetadata()->get(['scopes', $entityName, 'hasSingleClassificationOnly'], false)
+            || !$this->getMetadata()->get(['scopes', $entityName, 'singleClassification'], false)
         ) {
             return;
         }
 
-        if ($entity->isAttributeChanged('classificationsIds') && count($entity->get('classificationsIds')) > 1) {
-            throw new BadRequest($this->getLanguage()->translate('singleClassificationOnlyAllowed', 'exceptions'));
-        }
-
         $entityField = lcfirst($entityName) . 'Id';
-        if ($entityId = $entity->get($entityField)) {
-            $key = 'single_classification_' . $entityName;
-            $memoryData = $this->getMemoryStorage()->get($key) ?? [];
+        $entityId = $entity->get($entityField);
 
-            if (empty($memoryData[$entityId])) {
-                $this->getService($entityName)->unlinkAll($entityId, 'classifications');
-                $memoryData[$entityId] = true;
-                $this->getMemoryStorage()->set($key, $memoryData);
-            }
+        $record = $this->getEntityManager()->getRepository($entity->getEntityName())
+            ->where([$entityField => $entityId])
+            ->findOne();
 
-            $records = $this->getEntityManager()->getRepository($entity->getEntityName())
-                ->where([$entityField => $entityId])
-                ->find();
-
-            if (!empty($records[0])) {
-                throw new BadRequest($this->getLanguage()->translate('singleClassificationOnlyAllowed', 'exceptions'));
-            }
+        if (!empty($record)) {
+            throw new BadRequest($this->getLanguage()->translate('singleClassificationAllowed', 'exceptions'));
         }
     }
 
@@ -160,10 +151,5 @@ class Entity extends AbstractEntityListener
     protected function getAttributeService(): Attribute
     {
         return $this->getServiceFactory()->create('Attribute');
-    }
-
-    protected function getMemoryStorage(): MemoryStorage
-    {
-        return $this->getContainer()->get('memoryStorage');
     }
 }

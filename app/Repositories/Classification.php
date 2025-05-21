@@ -40,6 +40,30 @@ class Classification extends Hierarchy
         return array_column($data, 'id');
     }
 
+    public function entityHaveMultipleClassifications(string $entityName): bool
+    {
+        $record = $this->getMultipleClassificationsQb($entityName)
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return !empty($record);
+    }
+
+    public function getMultipleClassificationsQb(string $entityName): \Doctrine\DBAL\Query\QueryBuilder
+    {
+        $mapper = $this->getEntityManager()->getMapper();
+        $entityColumn = $mapper->toDb(lcfirst("{$entityName}Id"));
+
+        return $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select($entityColumn)
+            ->from($mapper->toDb("{$entityName}Classification"), 'ec')
+            ->where('ec.deleted = :false')
+            ->groupBy($entityColumn)
+            ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->having('COUNT(*) > 1');
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
