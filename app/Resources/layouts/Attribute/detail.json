@@ -91,7 +91,9 @@
         {
           "name": "sortOrder"
         },
-        false
+        {
+          "name": "attributeGroupSortOrder"
+        }
       ],
       [
         {

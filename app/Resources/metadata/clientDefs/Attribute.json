@@ -71,6 +71,16 @@
           ]
         }
       },
+      "attributeGroupSortOrder": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeGroupId"
+            }
+          ]
+        }
+      },
       "entity": {
         "readOnly": {
           "conditionGroup": [

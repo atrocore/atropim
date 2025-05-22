@@ -226,14 +226,13 @@ class Attribute extends Base
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateEntity($id, $data)
     {
-        if (property_exists($data, 'sortOrder') && property_exists($data, '_sortedIds')) {
-            $this->getRepository()->updateSortOrderInAttributeGroup($data->_sortedIds);
-            return $this->getEntity($id);
+        foreach (['attributeGroupSortOrder', 'sortOrder'] as $field) {
+            if (property_exists($data, $field) && property_exists($data, '_sortedIds')) {
+                $this->getRepository()->updateSortOrder($data->_sortedIds, $field);
+                return $this->getEntity($id);
+            }
         }
 
         return parent::updateEntity($id, $data);

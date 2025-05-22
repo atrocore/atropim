@@ -302,42 +302,17 @@ class Attribute extends Base
         return true;
     }
 
-    public function updateSortOrderInAttributeGroup(array $ids): void
+    public function updateSortOrder(array $ids, string $field): void
     {
-        $rows = $this->getConnection()->createQueryBuilder()
-            ->from($this->getConnection()->quoteIdentifier('attribute'))
-            ->select('sort_order', 'id')
-            ->where('id IN (:ids)')
-            ->setParameter('ids', $ids, Mapper::getParameterType($ids))
-            ->orderBy('sort_order')
-            ->fetchAllAssociative();
-
-        $values = array_filter(array_unique(array_column($rows, 'sort_order')));
-        if (count($values) === count($rows)) {
-            // shuffle orders
-            foreach ($ids as $k => $id) {
-                $value = $rows[$k]['sort_order'];
-                $this->getConnection()->createQueryBuilder()
-                    ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
-                    ->set('sort_order', ':sortOrder')
-                    ->where('a.id = :id')
-                    ->setParameter('sortOrder', $value, ParameterType::INTEGER)
-                    ->setParameter('id', $id)
-                    ->executeQuery();
-            }
-        } else {
-            $min = min($values) ?? 0;
-
-            foreach ($ids as $k => $id) {
-                $this->getConnection()->createQueryBuilder()
-                    ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
-                    ->set('sort_order', ':sortOrder')
-                    ->where('a.id = :id')
-                    ->setParameter('sortOrder',
-                        $min + $k * 10)
-                    ->setParameter('id', $id)
-                    ->executeQuery();
-            }
+        $column = Util::toUnderScore($field);
+        foreach ($ids as $k => $id) {
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
+                ->set($column, ':sortOrder')
+                ->where('a.id = :id')
+                ->setParameter('sortOrder', $k * 10)
+                ->setParameter('id', $id)
+                ->executeQuery();
         }
     }
 

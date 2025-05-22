@@ -43,6 +43,8 @@ class V1Dot14Dot6 extends Base
             ->setParameter('productEntityName', 'Product')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+
+        $this->exec("ALTER TABLE attribute ADD attribute_group_sort_order INT DEFAULT NULL");
     }
 
     public static function createDefaultAttributePanel(): void

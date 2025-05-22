@@ -184,10 +184,11 @@
     },
     "sortOrder": {
       "type": "int",
-      "default": null,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "tooltip": true
+      "default": null
+    },
+    "attributeGroupSortOrder": {
+      "type": "int",
+      "default": null
     },
     "tooltip": {
       "type": "text",

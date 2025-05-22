@@ -30,9 +30,9 @@
       ],
       "dragDrop": {
         "isActive": true,
-        "sortField": "sortOrder"
+        "sortField": "attributeGroupSortOrder"
       },
-      "sortBy": "sortOrder",
+      "sortBy": "attributeGroupSortOrder",
       "asc": true
     }
   }
