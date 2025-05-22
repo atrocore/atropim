@@ -16,7 +16,16 @@ Espo.define('pim:views/attribute/fields/attribute-group-layout-item', 'views/fie
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.parent().find('label').css('font-weight', 'bold');
+            const parts = this.name.split('_');
+            const attributeGroupId = parts[1] || null;
+            if (attributeGroupId) {
+                $.each((this.model.get('attributesDefs') || {}), (name, defs) => {
+                    if (defs.attributeGroup && defs.attributeGroup.id === attributeGroupId) {
+                        this.$el.parent().find('label').html(`<a href="/#AttributeGroup/view/${attributeGroupId}"><span class="label-text" style="font-weight: bold">${defs.attributeGroup.name}</span></a>`);
+                    }
+                });
+            }
+
         },
 
     })
