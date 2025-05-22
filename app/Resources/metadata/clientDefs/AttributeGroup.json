@@ -23,6 +23,7 @@
   },
   "relationshipPanels": {
     "attributes": {
+      "create": false,
       "view": "pim:views/attribute-group/record/panels/attributes",
       "selectBoolFilterList": [
         "onlyForEntity"

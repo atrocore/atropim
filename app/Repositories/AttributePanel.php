@@ -51,12 +51,14 @@ class AttributePanel extends ReferenceData
             foreach ($this->find() as $foreign) {
                 if ($foreign->get('id') !== $entity->get('id')) {
                     $foreign->set('default', false);
-                    $this->save($foreign);
+                    $this->save($foreign, ['skipClearCache' => true]);
                 }
             }
         }
 
-        $this->clearCache();
+        if (empty($options['skipClearCache'])) {
+            $this->clearCache();
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
