@@ -364,19 +364,14 @@ class Attribute extends Base
             if ($entity->get('entityId') !== $attributeGroup->get('entityId')) {
                 throw new BadRequest($this->exception('wrongAttributeEntity'));
             }
+
+            if ($entity->get('attributeGroupSortOrder') === null) {
+                $entity->set('attributeGroupSortOrder', 0);
+            }
         }
 
         if ($entity->get('sortOrder') === null) {
-            $connection = $this->getEntityManager()->getConnection();
-            $max = $connection->createQueryBuilder()
-                ->select('MAX(sort_order)')
-                ->from($connection->quoteIdentifier('attribute'))
-                ->fetchOne();
-
-            if (empty($max)) {
-                $max = 0;
-            }
-            $entity->set('sortOrder', $max + 10);
+            $entity->set('sortOrder', 0);
         }
 
         if (!empty($entity->get('compositeAttributeId'))) {
