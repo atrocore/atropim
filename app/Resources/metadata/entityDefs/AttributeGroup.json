@@ -16,6 +16,11 @@
       "tooltip": false,
       "isMultilang": true
     },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "view": "pim:views/attribute-group/fields/entity"
+    },
     "code": {
       "type": "varchar",
       "trim": true,

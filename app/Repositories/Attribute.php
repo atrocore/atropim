@@ -355,6 +355,18 @@ class Attribute extends Base
 
     public function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        if ($entity->get('type') === 'composite' && !empty($entity->get('attributeGroupId'))) {
+            $entity->set('attributeGroupId', null);
+        }
+
+        if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
+            $entity->set('isMultilang', false);
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
             throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
@@ -368,16 +380,15 @@ class Attribute extends Base
             throw new BadRequest($this->exception('wrongAttributeEntity'));
         }
 
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
+        if (!empty($entity->get('attributeGroupId'))) {
+            $attributeGroup = $this->getEntityManager()->getEntity('AttributeGroup', $entity->get('attributeGroupId'));
+            if (empty($attributeGroup)) {
+                throw new BadRequest("Attribute Group '{$entity->get('attributeGroupId')}' does not exist.");
+            }
 
-        if ($entity->get('type') === 'composite' && !empty($entity->get('attributeGroupId'))) {
-            $entity->set('attributeGroupId', null);
-        }
-
-        if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
-            $entity->set('isMultilang', false);
+            if ($entity->get('entityId') !== $attributeGroup->get('entityId')) {
+                throw new BadRequest($this->exception('wrongAttributeEntity'));
+            }
         }
 
         if ($entity->get('sortOrder') === null) {

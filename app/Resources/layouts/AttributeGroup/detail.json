@@ -8,14 +8,16 @@
           "name": "name"
         },
         {
-          "name": "code"
+          "name": "entity"
         }
       ],
       [
         {
-          "name": "sortOrder"
+          "name": "code"
         },
-        false
+        {
+          "name": "sortOrder"
+        }
       ],
       [
         {

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V1Dot14Dot6 extends Base
 {
@@ -31,6 +32,16 @@ class V1Dot14Dot6 extends Base
             ->set('attribute_panel_id', ':id')
             ->where('attribute_panel_id IS NULL')
             ->setParameter('id', 'attributeValues')
+            ->executeQuery();
+
+        $this->exec("ALTER TABLE attribute_group ADD entity_id VARCHAR(36) DEFAULT NULL");
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('attribute_group')
+            ->set('entity_id', ':productEntityName')
+            ->where('deleted=:false')
+            ->setParameter('productEntityName', 'Product')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
     }
 
