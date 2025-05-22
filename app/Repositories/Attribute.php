@@ -359,6 +359,15 @@ class Attribute extends Base
             throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
 
+        $attributePanel = $this->getEntityManager()->getEntity('AttributePanel', $entity->get('attributePanelId'));
+        if (empty($attributePanel)) {
+            throw new BadRequest("Attribute panel '{$entity->get('attributePanelId')}' does not exist.");
+        }
+
+        if ($entity->get('entityId') !== $attributePanel->get('entityId')) {
+            throw new BadRequest($this->exception('wrongAttributeEntity'));
+        }
+
         if ($entity->get('code') === '') {
             $entity->set('code', null);
         }

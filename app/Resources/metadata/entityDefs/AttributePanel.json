@@ -16,6 +16,12 @@
       "rowsMax": 4,
       "lengthOfCut": 400
     },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "pim:views/attribute-panel/fields/entity"
+    },
     "sortOrder": {
       "type": "float",
       "required": true,

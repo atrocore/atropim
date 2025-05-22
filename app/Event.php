@@ -19,6 +19,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
 use Pim\Migrations\V1Dot13Dot66;
+use Pim\Migrations\V1Dot14Dot6;
 
 /**
  * Class Event
@@ -68,6 +69,7 @@ class Event extends AfterInstallAfterDelete
         $this->addNavigationItems($this->menuItems);
 
         V1Dot13Dot66::createExamplePreviews($this->getContainer()->get('connection'));
+        V1Dot14Dot6::createDefaultAttributePanel();
     }
 
     /**

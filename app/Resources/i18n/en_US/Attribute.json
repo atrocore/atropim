@@ -78,6 +78,7 @@
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },
   "exceptions": {
+    "wrongAttributeEntity": "Not allowed Entity has been chosen. Entity needs to be the same with Attribute Panel and Attribute Group.",
     "attributeEntityMustBeSameAsInCompositeAttribute": "Attribute Entity must be same as in Composite Attribute",
     "attributeNotBelongToEntity": "Attribute does not belong to this Entity.",
     "entityCannotBeChanged": "Entity cannot be changed.",

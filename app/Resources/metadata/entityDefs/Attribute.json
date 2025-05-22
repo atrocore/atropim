@@ -47,7 +47,8 @@
     },
     "attributePanel": {
       "type": "link",
-      "entity": "AttributePanel"
+      "entity": "AttributePanel",
+      "required": true
     },
     "extensibleEnum": {
       "type": "link"
