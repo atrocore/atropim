@@ -47,7 +47,18 @@ class AttributePanel extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        $this->clearCache();
+        if ($entity->isAttributeChanged('default') && !empty($entity->get('default'))) {
+            foreach ($this->find() as $foreign) {
+                if ($foreign->get('id') !== $entity->get('id')) {
+                    $foreign->set('default', false);
+                    $this->save($foreign, ['skipClearCache' => true]);
+                }
+            }
+        }
+
+        if (empty($options['skipClearCache'])) {
+            $this->clearCache();
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

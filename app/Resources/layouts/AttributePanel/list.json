@@ -4,9 +4,15 @@
     "link": true
   },
   {
+    "name": "entity"
+  },
+  {
     "name": "code"
   },
   {
     "name": "sortOrder"
+  },
+  {
+    "name": "default"
   }
 ]

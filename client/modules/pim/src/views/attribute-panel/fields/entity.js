@@ -8,14 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/attribute-group/record/panels/attributes', 'views/record/panels/relationship',
+Espo.define('pim:views/attribute-panel/fields/entity', 'pim:views/attribute/fields/entity',
     Dep => Dep.extend({
-
-        boolFilterData: {
-            onlyForEntity() {
-                return this.model.get('entityId');
-            }
-        },
 
     })
 );
+

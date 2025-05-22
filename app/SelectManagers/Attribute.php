@@ -111,7 +111,7 @@ class Attribute extends AbstractSelectManager
         $attributePanelId = (string)$this->getSelectCondition('onlyForAttributePanel');
         if (!empty($attributePanelId)) {
             $result['whereClause'][] = [
-                'attributePanelId' => $attributePanelId === 'attributeValues' ? null : $attributePanelId
+                'attributePanelId' => $attributePanelId
             ];
         }
     }

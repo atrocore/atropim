@@ -16,6 +16,7 @@ namespace Pim\Controllers;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Controllers\Hierarchy;
 use Atro\Services\Record;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class Classification extends Hierarchy
 {
@@ -51,7 +52,10 @@ class Classification extends Hierarchy
 
             foreach ($data->classificationsIds as $classificationId) {
                 if (!in_array($classificationId, $recordClassificationsIds)) {
-                    $service->linkEntity($data->entityId, 'classifications', $classificationId);
+                    try {
+                        $service->linkEntity($data->entityId, 'classifications', $classificationId);
+                    } catch (UniqueConstraintViolationException $e) {
+                    }
                 }
             }
         }

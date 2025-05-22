@@ -15,22 +15,4 @@ use Atro\Core\Templates\Services\Base;
 
 class AttributeGroup extends Base
 {
-    public function findLinkedEntitiesAttributes(string $attributeGroupId): array
-    {
-        $types = array_keys($this->getMetadata()->get(['attributes'], []));
-
-        $collection = $this->getEntityManager()
-            ->getRepository('Attribute')
-            ->where([
-                'attributeGroupId' => $attributeGroupId,
-                'type'             => $types
-            ])
-            ->order('sortOrder', 'ASC')
-            ->find();
-
-        return [
-            'total'      => count($collection),
-            'collection' => $collection
-        ];
-    }
 }

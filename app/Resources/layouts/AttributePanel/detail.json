@@ -7,7 +7,9 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "entity"
+        }
       ],
       [
         {
@@ -16,6 +18,12 @@
         {
           "name": "sortOrder"
         }
+      ],
+      [
+        {
+          "name": "default"
+        },
+        false
       ],
       [
         {

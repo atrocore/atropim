@@ -47,7 +47,9 @@
     },
     "attributePanel": {
       "type": "link",
-      "entity": "AttributePanel"
+      "entity": "AttributePanel",
+      "view": "pim:views/attribute/fields/attribute-panel",
+      "required": true
     },
     "extensibleEnum": {
       "type": "link"
@@ -182,10 +184,11 @@
     },
     "sortOrder": {
       "type": "int",
-      "default": null,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "tooltip": true
+      "default": null
+    },
+    "attributeGroupSortOrder": {
+      "type": "int",
+      "default": null
     },
     "tooltip": {
       "type": "text",

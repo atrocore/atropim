@@ -302,42 +302,17 @@ class Attribute extends Base
         return true;
     }
 
-    public function updateSortOrderInAttributeGroup(array $ids): void
+    public function updateSortOrder(array $ids, string $field): void
     {
-        $rows = $this->getConnection()->createQueryBuilder()
-            ->from($this->getConnection()->quoteIdentifier('attribute'))
-            ->select('sort_order', 'id')
-            ->where('id IN (:ids)')
-            ->setParameter('ids', $ids, Mapper::getParameterType($ids))
-            ->orderBy('sort_order')
-            ->fetchAllAssociative();
-
-        $values = array_filter(array_unique(array_column($rows, 'sort_order')));
-        if (count($values) === count($rows)) {
-            // shuffle orders
-            foreach ($ids as $k => $id) {
-                $value = $rows[$k]['sort_order'];
-                $this->getConnection()->createQueryBuilder()
-                    ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
-                    ->set('sort_order', ':sortOrder')
-                    ->where('a.id = :id')
-                    ->setParameter('sortOrder', $value, ParameterType::INTEGER)
-                    ->setParameter('id', $id)
-                    ->executeQuery();
-            }
-        } else {
-            $min = min($values) ?? 0;
-
-            foreach ($ids as $k => $id) {
-                $this->getConnection()->createQueryBuilder()
-                    ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
-                    ->set('sort_order', ':sortOrder')
-                    ->where('a.id = :id')
-                    ->setParameter('sortOrder',
-                        $min + $k * 10)
-                    ->setParameter('id', $id)
-                    ->executeQuery();
-            }
+        $column = Util::toUnderScore($field);
+        foreach ($ids as $k => $id) {
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier('attribute'), 'a')
+                ->set($column, ':sortOrder')
+                ->where('a.id = :id')
+                ->setParameter('sortOrder', $k * 10)
+                ->setParameter('id', $id)
+                ->executeQuery();
         }
     }
 
@@ -355,33 +330,44 @@ class Attribute extends Base
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
-            throw new BadRequest($this->exception('entityCannotBeChanged'));
-        }
-
         if ($entity->get('code') === '') {
             $entity->set('code', null);
-        }
-
-        if ($entity->get('type') === 'composite' && !empty($entity->get('attributeGroupId'))) {
-            $entity->set('attributeGroupId', null);
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
             $entity->set('isMultilang', false);
         }
 
-        if ($entity->get('sortOrder') === null) {
-            $connection = $this->getEntityManager()->getConnection();
-            $max = $connection->createQueryBuilder()
-                ->select('MAX(sort_order)')
-                ->from($connection->quoteIdentifier('attribute'))
-                ->fetchOne();
+        if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
+            throw new BadRequest($this->exception('entityCannotBeChanged'));
+        }
 
-            if (empty($max)) {
-                $max = 0;
+        $attributePanel = $this->getEntityManager()->getEntity('AttributePanel', $entity->get('attributePanelId'));
+        if (empty($attributePanel)) {
+            throw new BadRequest("Attribute panel '{$entity->get('attributePanelId')}' does not exist.");
+        }
+
+        if ($entity->get('entityId') !== $attributePanel->get('entityId')) {
+            throw new BadRequest($this->exception('wrongAttributeEntity'));
+        }
+
+        if (!empty($entity->get('attributeGroupId'))) {
+            $attributeGroup = $this->getEntityManager()->getEntity('AttributeGroup', $entity->get('attributeGroupId'));
+            if (empty($attributeGroup)) {
+                throw new BadRequest("Attribute Group '{$entity->get('attributeGroupId')}' does not exist.");
             }
-            $entity->set('sortOrder', $max + 10);
+
+            if ($entity->get('entityId') !== $attributeGroup->get('entityId')) {
+                throw new BadRequest($this->exception('wrongAttributeEntity'));
+            }
+
+            if ($entity->get('attributeGroupSortOrder') === null) {
+                $entity->set('attributeGroupSortOrder', 0);
+            }
+        }
+
+        if ($entity->get('sortOrder') === null) {
+            $entity->set('sortOrder', 0);
         }
 
         if (!empty($entity->get('compositeAttributeId'))) {
