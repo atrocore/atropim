@@ -47,6 +47,15 @@ class AttributePanel extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
+        if ($entity->isAttributeChanged('default') && !empty($entity->get('default'))) {
+            foreach ($this->find() as $foreign) {
+                if ($foreign->get('id') !== $entity->get('id')) {
+                    $foreign->set('default', false);
+                    $this->save($foreign);
+                }
+            }
+        }
+
         $this->clearCache();
     }
 

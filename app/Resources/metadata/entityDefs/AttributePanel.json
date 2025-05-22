@@ -22,10 +22,16 @@
       "required": true,
       "view": "pim:views/attribute-panel/fields/entity"
     },
+    "default": {
+      "type": "bool"
+    },
     "sortOrder": {
       "type": "float",
       "required": true,
       "view": "pim:views/attribute-panel/fields/sort-order"
+    },
+    "attributes": {
+      "type": "linkMultiple"
     },
     "createdAt": {
       "type": "datetime",
@@ -44,9 +50,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "attributes": {
-      "type": "linkMultiple"
     }
   },
   "links": {

@@ -62,7 +62,8 @@ class V1Dot14Dot6 extends Base
             'code'      => 'attributeValues',
             'name'      => 'Attributes',
             'sortOrder' => 0,
-            'entityId'  => 'Product'
+            'entityId'  => 'Product',
+            'default'   => true
         ];
 
         file_put_contents('data/reference-data/AttributePanel.json', json_encode($result));
