@@ -24,6 +24,9 @@
   "relationshipPanels": {
     "attributes": {
       "view": "pim:views/attribute-group/record/panels/attributes",
+      "selectBoolFilterList": [
+        "onlyForEntity"
+      ],
       "dragDrop": {
         "isActive": true,
         "sortField": "sortOrder"

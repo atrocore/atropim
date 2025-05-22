@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/attribute-group/record/panels/attributes', 'views/record/panels/relationship',
+Espo.define('pim:views/attribute-panel/record/panels/attributes', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
         boolFilterData: {

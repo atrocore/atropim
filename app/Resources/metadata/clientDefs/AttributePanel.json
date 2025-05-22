@@ -4,7 +4,11 @@
   "relationshipPanels": {
     "attributes": {
       "create": false,
-      "disabledSelectAllResult": true
+      "disabledSelectAllResult": true,
+      "view": "pim:views/attribute-panel/record/panels/attributes",
+      "selectBoolFilterList": [
+        "onlyForEntity"
+      ]
     }
   }
 }
