@@ -21,11 +21,12 @@ Espo.define('pim:views/attribute/fields/attribute-group-layout-item', 'views/fie
             if (attributeGroupId) {
                 $.each((this.model.get('attributesDefs') || {}), (name, defs) => {
                     if (defs.attributeGroup && defs.attributeGroup.id === attributeGroupId) {
-                        this.$el.parent().find('label').html(`<a href="/#AttributeGroup/view/${attributeGroupId}"><span class="label-text" style="font-weight: bold">${defs.attributeGroup.name}</span></a>`);
+                        this.$el.parent().find('label').html(`<a href="/#AttributeGroup/view/${attributeGroupId}" target="_blank"><span class="label-text" style="font-weight: bold">${defs.attributeGroup.name}</span></a>`);
                     }
                 });
             }
 
+            this.$el.css('border-bottom', '1px solid #e7e7e7');
         },
 
     })

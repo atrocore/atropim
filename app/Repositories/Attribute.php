@@ -334,10 +334,6 @@ class Attribute extends Base
             $entity->set('code', null);
         }
 
-        if ($entity->get('type') === 'composite' && !empty($entity->get('attributeGroupId'))) {
-            $entity->set('attributeGroupId', null);
-        }
-
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
             $entity->set('isMultilang', false);
         }
