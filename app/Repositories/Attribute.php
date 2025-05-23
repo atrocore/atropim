@@ -239,7 +239,7 @@ class Attribute extends Base
 
         try {
             $stmt->execute();
-        } catch (UniqueConstraintViolationException $e) {
+        } catch (\PDOException $e) {
         }
     }
 

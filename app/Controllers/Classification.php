@@ -52,10 +52,7 @@ class Classification extends Hierarchy
 
             foreach ($data->classificationsIds as $classificationId) {
                 if (!in_array($classificationId, $recordClassificationsIds)) {
-                    try {
-                        $service->linkEntity($data->entityId, 'classifications', $classificationId);
-                    } catch (UniqueConstraintViolationException $e) {
-                    }
+                    $service->linkEntity($data->entityId, 'classifications', $classificationId);
                 }
             }
         }
