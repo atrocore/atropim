@@ -11,6 +11,7 @@
 
 namespace Pim\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -61,6 +62,23 @@ class AttributePanel extends ReferenceData
         }
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        $attribute = $this->getEntityManager()->getRepository('Attribute')
+            ->where([
+                'attributePanelId' => $entity->get('id')
+            ])
+            ->findOne();
+
+        if (!empty($attribute)) {
+            throw new BadRequest(
+                $this->getInjection('language')->translate('entityIsUsed', 'exceptions', 'AttributePanel')
+            );
+        }
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -73,6 +91,7 @@ class AttributePanel extends ReferenceData
         parent::init();
 
         $this->addDependency('dataManager');
+        $this->addDependency('language');
     }
 
     protected function clearCache(): void

@@ -11,9 +11,11 @@
 
 namespace Pim\Repositories;
 
+use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class AttributeGroup extends \Espo\Core\Templates\Repositories\Base
+class AttributeGroup extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -22,5 +24,29 @@ class AttributeGroup extends \Espo\Core\Templates\Repositories\Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        $attribute = $this->getEntityManager()->getRepository('Attribute')
+            ->where([
+                'attributeGroupId' => $entity->get('id')
+            ])
+            ->findOne();
+
+        if (!empty($attribute)) {
+            throw new BadRequest(
+                $this->getInjection('language')->translate('entityIsUsed', 'exceptions', 'AttributeGroup')
+            );
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }
