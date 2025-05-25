@@ -12,7 +12,7 @@ This repository contains source code for a PIM module for the AtroCore Data Plat
 
 ![Banner](_assets/atropim-banner.png)
 
-AtroPIM is an [open-source product information management system (PIM)](https://atropim.com).
+AtroPIM is an [open-source product information management system (PIM)](https://www.atropim.com).
 AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
 ## What Are the Advantages of AtroPIM?
@@ -46,7 +46,7 @@ AtroPIM comes with a lot of features directly out of the box, including:
 - Product and Category Images
 - and much more.
 
-Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](http://atropim.com).
+Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](https://www.atropim.com).
 
 ## Technology
 
@@ -97,9 +97,8 @@ AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Resources
 
-- Explanatory Videos - https://www.youtube.com/channel/UCUwliSmn5XC0CMKcI_W46Hg/videos
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
-- Please visit our Help Center - https://help.atrocore.com/
+- Please visit our Help Center (Documentation) - https://help.atrocore.com/
 - Read our Release Notes - https://help.atrocore.com/release-notes/pim
 - Please visit our Community - https://community.atrocore.com
-- Сontact us - https://atrocore.com/contact
+- Сontact us - https://www.atrocore.com/contact
