@@ -302,6 +302,7 @@ class Attribute extends Base
         return true;
     }
 
+
     public function updateSortOrder(array $ids, string $field): void
     {
         $column = Util::toUnderScore($field);
