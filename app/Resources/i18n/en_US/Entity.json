@@ -2,7 +2,8 @@
   "fields": {
     "hasAttribute": "Has Attributes",
     "hasClassification": "Has Classifications",
-    "singleClassification": "Single Classification only"
+    "singleClassification": "Single Classification only",
+    "disableAttributeLinking": "Disable direct attribute linking"
   },
   "labels": {
     "attributes": "Attributes"

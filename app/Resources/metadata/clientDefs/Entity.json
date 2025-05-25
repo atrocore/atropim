@@ -20,6 +20,21 @@
             }
           ]
         }
+      },
+      "disableAttributeLinking": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "equals",
+              "attribute": "hasAttribute",
+              "value": true
+            }
+          ]
+        }
       }
     }
   }

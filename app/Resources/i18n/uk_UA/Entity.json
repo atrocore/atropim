@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "hasAttribute": "Має атрибути",
+    "hasClassification": "Має класифікації",
+    "singleClassification": "Дозволено лише одну класифікацію",
+    "disableAttributeLinking": "Заборонено пряме зв'язування атрибутів"
+  },
+  "labels": {
+    "attributes": "Атрибути"
+  },
+  "exceptions": {
+    "entityAlreadyHasAttributesInUse": "Параметр \"Має атрибути\" не можна деактивувати. Будь ласка, видаліть спочатку усі пов'язані із сутністю атрибути."
+  }
+}
