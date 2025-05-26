@@ -74,7 +74,7 @@
             {
               "type": "in",
               "attribute": "type",
-              "value": ["wysiwyg", "markdown", "text", "composite"]
+              "value": ["composite"]
             }
           ]
         }
