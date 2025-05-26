@@ -89,6 +89,8 @@ class Attribute extends Base
                 $attributeRepo->upsertAttributeValue($entity, $fieldName, $data[$key], true);
             }
         }
+
+        $this->afterCreateDeleteAttributeValue($entityName, $entityId);
     }
 
     public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
@@ -128,6 +130,8 @@ class Attribute extends Base
             }
         }
 
+        $this->afterCreateDeleteAttributeValue($entityName, $entityId);
+
         return true;
     }
 
@@ -154,9 +158,12 @@ class Attribute extends Base
             }
         }
 
-        return $this->getRepository()->removeAttributeValue($entityName, $entityId, $attributeId);
-    }
+        $res = $this->getRepository()->removeAttributeValue($entityName, $entityId, $attributeId);
 
+        $this->afterCreateDeleteAttributeValue($entityName, $entityId);
+
+        return $res;
+    }
 
     public function removeAttributeValues(string $entityName, string $entityId, ?array $attributeIds, ?array $where = null): array
     {
@@ -213,6 +220,8 @@ class Attribute extends Base
             }
 
         }
+
+        $this->afterCreateDeleteAttributeValue($entityName, $entityId);
 
         return [
             'count'  => $count,
@@ -368,19 +377,9 @@ class Attribute extends Base
         parent::checkFieldsWithPattern($entity);
     }
 
-    protected function getTranslatedNameField(): string
+    protected function afterCreateDeleteAttributeValue(string $entityName, string $entityId): void
     {
-        $language = \Espo\Core\Services\Base::getLanguagePrism();
-        if (empty($language)) {
-            $language = $this->getInjection('user')->getLanguage();
-        }
-        if (!empty($language) && $language !== 'main') {
-            if ($this->getConfig()->get('isMultilangActive') && in_array($language,
-                    $this->getConfig()->get('inputLanguageList', []))) {
-                return Util::toCamelCase('name_' . strtolower($language));
-            }
-        }
-
-        return 'name';
+        $event = new Event(['entityName' => $entityName, 'entityId' => $entityId]);
+        $this->dispatchEvent('afterCreateDeleteAttributeValue', $event);
     }
 }
