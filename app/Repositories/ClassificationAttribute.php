@@ -21,6 +21,70 @@ use Espo\ORM\Entity;
 
 class ClassificationAttribute extends Base
 {
+    public function entityHasDirectlyLinkedAttributes(string $entityName): bool
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+
+        $attributesQb = $this->getConnection()->createQueryBuilder()
+            ->select('a.id')
+            ->from('attribute', 'a')
+            ->where('a.deleted = :false')
+            ->andWhere("a.composite_attribute_id is not null");
+
+        $classificationsQb = $this->getConnection()->createQueryBuilder()
+            ->select('rc.classification_id')
+            ->from("{$name}_classification", 'rc')
+            ->where('rc.deleted = :false');
+
+        $caQb = $this->getConnection()->createQueryBuilder()
+            ->select('ca.attribute_id')
+            ->from('classification_attribute', 'ca')
+            ->where('ca.deleted = :false')
+            ->andWhere($classificationsQb->expr()->in('ca.classification_id', $classificationsQb->getSQL()));
+
+        $record = $this->getConnection()->createQueryBuilder()
+            ->select('rav.id')
+            ->from("{$name}_attribute_value", 'rav')
+            ->where('rav.deleted = :false')
+            ->andWhere($attributesQb->expr()->notIn('rav.attribute_id', $attributesQb->getSQL()))
+            ->andWhere($caQb->expr()->notIn('rav.attribute_id', $caQb->getSQL()))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return !empty($record);
+    }
+
+    public function getAttributesToRemoveWithClassification(string $entityName, string $entityId, string $classificationId): array
+    {
+        $name = Util::toUnderScore(lcfirst($entityName));
+        $columnName = Util::toUnderScore(lcfirst($entityName) . 'Id');
+
+        $classificationsQb = $this->getConnection()->createQueryBuilder()
+            ->select('rc.classification_id')
+            ->from("{$name}_classification", 'rc')
+            ->where('rc.deleted = :false')
+            ->andWhere("rc.$columnName = :entity_id");
+
+        $caQb = $this->getConnection()->createQueryBuilder()
+            ->select('ca1.attribute_id')
+            ->from('classification_attribute', 'ca1')
+            ->where('ca1.deleted = :false')
+            ->andWhere($classificationsQb->expr()->in('ca1.classification_id', $classificationsQb->getSQL()));
+
+        return $this->getConnection()->createQueryBuilder()
+            ->select('ca.attribute_id')
+            ->from('classification_attribute', 'ca')
+            ->where('ca.deleted = :false')
+            ->andWhere('ca.classification_id = :classification_id')
+            ->andWhere($caQb->expr()->notIn('ca.attribute_id', $caQb->getSQL()))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('entity_id', $entityId)
+            ->setParameter('classification_id', $classificationId)
+            ->executeQuery()
+            ->fetchFirstColumn();
+    }
+
     public function getClassificationRelatedRecords(Entity $classification): array
     {
         $fieldName = lcfirst($classification->get('entityId')) . 'Id';

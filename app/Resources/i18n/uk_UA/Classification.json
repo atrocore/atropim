@@ -11,5 +11,8 @@
   },
   "labels": {
     "selectAttributeGroup": "Вибрати групу атрибутів"
+  },
+  "exceptions": {
+    "classificationHasRecords": "Класифікацію з пов'язаними записами не можна видалити."
   }
 }
