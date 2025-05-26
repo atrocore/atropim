@@ -10,6 +10,9 @@
     },
     "singleClassification": {
       "type": "bool"
+    },
+    "disableAttributeLinking": {
+      "type": "bool"
     }
   }
 }

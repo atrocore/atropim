@@ -18,5 +18,8 @@
   },
   "labels": {
     "selectAttributeGroup": "Attributgruppe auswählen"
+  },
+  "exceptions": {
+    "classificationHasRecords": "Klassifizierungen mit Bezugsdatensätzen können nicht gelöscht werden."
   }
 }

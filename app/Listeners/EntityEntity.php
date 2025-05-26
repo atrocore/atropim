@@ -16,6 +16,7 @@ namespace Pim\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
+use Pim\Repositories\ClassificationAttribute;
 
 class EntityEntity extends AbstractEntityListener
 {
@@ -31,6 +32,15 @@ class EntityEntity extends AbstractEntityListener
 
             if (!empty($attribute)) {
                 throw new BadRequest($this->getLanguage()->translate('entityAlreadyHasAttributesInUse', 'exceptions', 'Entity'));
+            }
+        }
+
+        if ($entity->isAttributeChanged('disableAttributeLinking') && $entity->get('disableAttributeLinking')) {
+            /** @var ClassificationAttribute $caRepository */
+            $caRepository = $this->getEntityManager()->getRepository('ClassificationAttribute');
+
+            if ($caRepository->entityHasDirectlyLinkedAttributes($entity->get('code'))) {
+                throw new BadRequest($this->getLanguage()->translate('entityHasDirectlyLinkedAttributes', 'exceptions', 'Entity'));
             }
         }
 

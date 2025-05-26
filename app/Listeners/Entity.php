@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Services\Record;
+use Pim\Repositories\ClassificationAttribute;
 use Pim\Services\Attribute;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -76,6 +75,20 @@ class Entity extends AbstractEntityListener
 
         // create classification attributes if it needs
         $this->createClassificationAttributesForRecord($entity);
+    }
+
+    public function afterUnrelate(Event $event): void
+    {
+        /** @var OrmEntity $entity */
+        $entity = $event->getArgument('entity');
+
+        /** @var OrmEntity $classification */
+        $classification = $event->getArgument('foreign');
+        $relationName = $event->getArgument('relationName');
+
+        if ($relationName === 'classifications') {
+            $this->deleteAttributeValuesFromRecord($entity, $classification);
+        }
     }
 
     protected function validateClassificationAttributesForRecord(OrmEntity $entity): void
@@ -152,5 +165,33 @@ class Entity extends AbstractEntityListener
     protected function getAttributeService(): Attribute
     {
         return $this->getServiceFactory()->create('Attribute');
+    }
+
+    protected function deleteAttributeValuesFromRecord(OrmEntity $entity, OrmEntity $classification): void
+    {
+        $entityName = $entity->getEntityName();
+        $entityId = $entity->get('id');
+        $classificationId = $classification->get('id');
+
+        if (
+            !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'hasAttribute'])
+            || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'hasClassification'])
+            || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'disableAttributeLinking'])
+        ) {
+            return;
+        }
+
+        /** @var ClassificationAttribute $repository */
+        $repository = $this->getEntityManager()->getRepository('ClassificationAttribute');
+        $attributeIds = $repository->getAttributesToRemoveWithClassification($entityName, $entityId, $classificationId);
+        if (empty($attributeIds)) {
+            return;
+        }
+
+        /** @var \Pim\Repositories\Attribute $attributeRepository */
+        $attributeRepository = $this->getEntityManager()->getRepository('Attribute');
+        foreach ($attributeIds as $attributeId) {
+            $attributeRepository->removeAttributeValue($entityName, $entityId, $attributeId);
+        }
     }
 }

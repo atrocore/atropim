@@ -45,6 +45,13 @@ class Attribute extends Base
             throw new Forbidden();
         }
 
+        if (
+            $this->getMetadata()->get(['scopes', $data->entityName, 'hasAttribute'])
+            && $this->getMetadata()->get(['scopes', $data->entityName, 'disableAttributeLinking'])
+        ) {
+            throw new BadRequest();
+        }
+
         return $this->getRecordService()->addAttributeValue(
             $data->entityName,
             $data->entityId,
@@ -61,6 +68,13 @@ class Attribute extends Base
 
         if (!$this->getAcl()->check($data->entityName, 'edit')) {
             throw new Forbidden();
+        }
+
+        if (
+            $this->getMetadata()->get(['scopes', $data->entityName, 'hasAttribute'])
+            && $this->getMetadata()->get(['scopes', $data->entityName, 'disableAttributeLinking'])
+        ) {
+            throw new BadRequest();
         }
 
         return $this->getRecordService()->removeAttributeValue($data->entityName, $data->entityId, $data->attributeId);

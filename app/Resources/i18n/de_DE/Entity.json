@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "hasAttribute": "Hat Attribute",
+    "hasClassification": "Hat Klassifikationen",
+    "singleClassification": "Nur eine Klassifizierung",
+    "disableAttributeLinking": "Direkte Attributverknüpfung deaktivieren"
+  },
+  "labels": {
+    "attributes": "Attribute"
+  },
+  "exceptions": {
+    "entityAlreadyHasAttributesInUse": "Has Attribut param kann nicht deaktiviert werden. Bitte entfernen Sie zuerst alle zugehörigen Attribute.",
+    "entityHasDirectlyLinkedAttributes": "Es gibt bereits direkt verknüpfte Attribute. Bitte entfernen Sie diese aus den Datensätzen."
+  }
+}
