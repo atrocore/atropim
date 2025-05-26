@@ -15,11 +15,14 @@ namespace Pim\Services;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Attribute extends Base
@@ -152,6 +155,69 @@ class Attribute extends Base
         }
 
         return $this->getRepository()->removeAttributeValue($entityName, $entityId, $attributeId);
+    }
+
+
+    public function removeAttributeValues(string $entityName, string $entityId, ?array $attributeIds, ?array $where = null): array
+    {
+        if (empty($attributeIds) && empty($where)) {
+            return [];
+        }
+
+        // Fetch only existing attributes
+        $name = Util::toUnderScore(lcfirst($entityName));
+        /* @var $repository RDB */
+        $repository = $this->getRepository();
+
+        $qb = $repository->getConnection()->createQueryBuilder()
+            ->select('attribute_id')
+            ->from("{$name}_attribute_value", 'eav');
+
+        if (!empty($attributeIds)) {
+            $qb->where('attribute_id in (:attributeIds)')
+                ->setParameter('attributeIds', $attributeIds, Mapper::getParameterType($attributeIds));
+        } else {
+            $sp = $this->getSelectParams(['where' => $where]);
+            $sp['select'] = ['id'];
+
+            $qb1 = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
+
+            $qb->where("attribute_id in ({$qb1->getSQL()})");
+            $qb->setParameters($qb1->getParameters());
+        }
+
+        // remove composite attributes first
+        $qb->leftJoin("eav", $repository->getConnection()->quoteIdentifier('attribute'), 'attr', "attribute_id=attr.id")
+            ->orderBy("CASE WHEN attr.type = 'composite' THEN 0 ELSE 1 END");
+
+        $res = $qb->andWhere("{$name}_id=:entityId")
+            ->andWhere('eav.deleted=:false')
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $errors = [];
+        $count = 0;
+        foreach ($res as $item) {
+            try {
+                $this->removeAttributeValue($entityName, $entityId, $item['attribute_id']);
+                $count++;
+            } catch (\Throwable $e) {
+                $attribute = $this->getRepository()->get($item['attribute_id']);
+                $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
+
+                $attributeName = $attribute->get('name');
+                $name = ($entity ? $entity->get('name') : null) ?? $entityId;
+
+                $errors[] = "Failed to remove attribute '$attributeName' on " . lcfirst($entityName) . "'{$name}': " . $e->getMessage();
+            }
+
+        }
+
+        return [
+            'count'  => $count,
+            'errors' => $errors
+        ];
     }
 
     /**
