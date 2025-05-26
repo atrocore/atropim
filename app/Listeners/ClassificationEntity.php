@@ -17,16 +17,8 @@ use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Repositories\RDB;
 
-/**
- * Class ChannelEntity
- */
 class ClassificationEntity extends AbstractEntityListener
 {
-    /**
-     * @param Event $event
-     *
-     * @throws BadRequest
-     */
     public function beforeRemove(Event $event)
     {
         /** @var \Espo\ORM\Entity $entity */
