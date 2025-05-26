@@ -1,6 +1,12 @@
 {
   "controller": "controllers/record",
   "iconClass": "rows",
+  "boolFilterList": [
+    "onlyForEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyForEntity"
+  ],
   "relationshipPanels": {
     "attributes": {
       "create": false,

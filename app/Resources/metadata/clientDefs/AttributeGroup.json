@@ -5,12 +5,12 @@
     "onlyMy",
     "withNotLinkedAttributesToClassification",
     "withNotLinkedAttributesToProduct",
-    "fromAttributesTab"
+    "onlyForEntity"
   ],
   "hiddenBoolFilterList": [
     "withNotLinkedAttributesToClassification",
     "withNotLinkedAttributesToProduct",
-    "fromAttributesTab"
+    "onlyForEntity"
   ],
   "disabledMassActions": [
     "merge"

@@ -11,6 +11,14 @@
 Espo.define('pim:views/attribute/fields/attribute-panel', 'views/fields/link',
     Dep => Dep.extend({
 
+        selectBoolFilterList: ['onlyForEntity'],
+
+        boolFilterData: {
+            onlyForEntity() {
+                return this.model.get('entityId') || 'NotExistedEntity';
+            }
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 

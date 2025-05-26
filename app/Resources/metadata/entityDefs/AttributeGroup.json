@@ -19,6 +19,7 @@
     "entity": {
       "type": "link",
       "entity": "Entity",
+      "required": true,
       "view": "pim:views/attribute-group/fields/entity"
     },
     "code": {

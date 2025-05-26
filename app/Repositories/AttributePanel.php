@@ -22,9 +22,8 @@ class AttributePanel extends ReferenceData
     {
         if ($link === 'attributes') {
             return $this->getEntityManager()->getRepository('Attribute')
-                ->where([
-                    'attributePanelId' => $entity->get('id')
-                ])
+                ->where(['attributePanelId' => $entity->get('id')])
+                ->order('sortOrder', 'ASC')
                 ->find();
         }
 
@@ -35,9 +34,7 @@ class AttributePanel extends ReferenceData
     {
         if ($relationName === 'attributes') {
             return $this->getEntityManager()->getRepository('Attribute')
-                ->where([
-                    'attributePanelId' => $entity->get('id')
-                ])
+                ->where(['attributePanelId' => $entity->get('id')])
                 ->count();
         }
 
@@ -84,6 +81,30 @@ class AttributePanel extends ReferenceData
         parent::afterRemove($entity, $options);
 
         $this->clearCache();
+    }
+
+    protected function getAllItems(array $params = []): array
+    {
+        $res = parent::getAllItems($params);
+
+        $entityName = null;
+        foreach ($params['whereClause'] ?? [] as $item) {
+            if (!empty($item['entityId='])) {
+                $entityName = $item['entityId='];
+            } elseif (!empty($item['entityId'])) {
+                $entityName = $item['entityId'];
+            }
+        }
+
+        if (!empty($entityName)) {
+            foreach ($res as $code => $item) {
+                if ($item['entityId'] !== $entityName) {
+                    unset($res[$code]);
+                }
+            }
+        }
+
+        return $res;
     }
 
     protected function init()
