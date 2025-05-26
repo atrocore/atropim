@@ -33,6 +33,7 @@ class Event extends AfterInstallAfterDelete
         = [
             'Association',
             'Attribute',
+            'AttributePanel',
             'AttributeGroup',
             'Brand',
             'Category',
@@ -49,6 +50,7 @@ class Event extends AfterInstallAfterDelete
         = [
             'Association',
             'Attribute',
+            'AttributePanel',
             'AttributeGroup',
             'Brand',
             'Category',
