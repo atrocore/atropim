@@ -69,8 +69,7 @@
       "view": "pim:views/attribute/fields/entity"
     },
     "code": {
-      "type": "varchar",
-      "unique": true
+      "type": "varchar"
     },
     "type": {
       "type": "varchar",
@@ -356,5 +355,12 @@
         "deleted"
       ]
     }
+  },
+  "uniqueIndexes": {
+    "unique_code": [
+      "deleted",
+      "entity_id",
+      "code"
+    ]
   }
 }

@@ -62,17 +62,21 @@ class Attribute extends Base
         }
 
         /** @var \Pim\Repositories\Attribute $attributeRepo */
-        $attributeRepo = $this->getEntityManager()->getRepository('Attribute');
+        $attributeRepo = $this->getRepository();
+
+        $attributes = $attributeRepo->getAttributesByIds([$data['attributeId']]);
+        if (empty($attributes[0])) {
+            return;
+        }
+
+        $row = $attributes[0];
 
         /** @var AttributeFieldConverter $converter */
         $converter = $this->getInjection(AttributeFieldConverter::class);
 
         $attributesDefs = [];
-        foreach ($this->getRepository()->getAttributesByIds([$data['attributeId']]) as $row) {
-            $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
-        }
-
-        $attributeFieldName = AttributeFieldConverter::prepareFieldName($data['attributeId']);
+        $converter->getFieldType($row['type'])->convert($entity, $row, $attributesDefs);
+        $attributeFieldName = AttributeFieldConverter::prepareFieldName($row);
 
         // set null value
         foreach ($entity->fields ?? [] as $field => $fieldDefs) {

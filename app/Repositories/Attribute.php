@@ -19,7 +19,6 @@ use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
@@ -339,8 +338,13 @@ class Attribute extends Base
             $entity->set('code', null);
         }
 
-        if ($entity->get('code') !== null && !$this->isValidCode($entity->get('code'))){
-            throw new BadRequest("The code must start with a letter and can contain only letters, numbers, and underscores. No spaces or other special characters are allowed.");
+        if ($entity->get('code') !== null) {
+            if (!$this->isValidCode($entity->get('code'))) {
+                throw new BadRequest("The code must start with a letter and can contain only letters, numbers, and underscores. No spaces or other special characters are allowed.");
+            }
+            if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
+                throw new BadRequest("Field with such code exists for the {$entity->get('entityId')}.");
+            }
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
