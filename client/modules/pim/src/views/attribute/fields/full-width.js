@@ -14,7 +14,10 @@ Espo.define('pim:views/attribute/fields/full-width', 'views/fields/bool', functi
         setup(){
             Dep.prototype.setup.call(this);
 
-            this.prepareFullWidth();
+            if (this.model.isNew()) {
+                this.prepareFullWidth();
+            }
+
             this.listenTo(this.model, 'change:type', () => {
                 this.prepareFullWidth();
             });
