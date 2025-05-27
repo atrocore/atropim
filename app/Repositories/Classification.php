@@ -97,7 +97,7 @@ class Classification extends Hierarchy
         parent::beforeRemove($entity, $options);
     }
 
-    protected function hasRelatedRecords(Entity $entity): bool
+    public function hasRelatedRecords(Entity $entity): bool
     {
         if (empty($entity->get('entityId'))) {
             return false;
