@@ -88,6 +88,40 @@ class Classification extends Hierarchy
         return $result;
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($this->hasRelatedRecords($entity)) {
+            throw new BadRequest($this->getLanguage()->translate('classificationHasRecords', 'exceptions', 'Classification'));
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    protected function hasRelatedRecords(Entity $entity): bool
+    {
+        if (empty($entity->get('entityId'))) {
+            return false;
+        }
+
+        $relTable = $this->getMapper()->toDb(lcfirst($entity->get('entityId') . 'Classification'));
+        $entityColumn = $this->getMapper()->toDb(lcfirst($entity->get('entityId') . 'Id'));
+        $entityTable = $this->getMapper()->toDb(lcfirst($entity->get('entityId')));
+
+        $record = $this->getConnection()->createQueryBuilder()
+            ->select('ec.id')
+            ->from($relTable, 'ec')
+            ->innerJoin('ec', $entityTable, 'e', "e.id = ec.$entityColumn AND e.deleted = :false")
+            ->where('ec.classification_id = :classification_id')
+            ->andWhere('ec.deleted = :false')
+            ->setParameter('classification_id', $entity->get('id'))
+            ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return !empty($record);
+    }
+
     public function remove(Entity $entity, array $options = [])
     {
         if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
