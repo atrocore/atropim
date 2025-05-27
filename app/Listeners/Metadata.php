@@ -23,6 +23,9 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
+        // code for Attribute must always be unique
+        $data['entityDefs']['Attribute']['fields']['code']['unique'] = true;
+
         // find multilingual attributes
         $multilingualAttributes = [];
         foreach ($data['attributes'] as $attribute => $attributeDefs) {

@@ -328,10 +328,19 @@ class Attribute extends Base
         return $attributes;
     }
 
+    public function isValidCode(string $code): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) === 1;
+    }
+
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
             $entity->set('code', null);
+        }
+
+        if ($entity->get('code') !== null && !$this->isValidCode($entity->get('code'))){
+            throw new BadRequest("The code must start with a letter and can contain only letters, numbers, and underscores. No spaces or other special characters are allowed.");
         }
 
         if (!in_array($entity->get('type'), $this->getMultilingualAttributeTypes())) {
