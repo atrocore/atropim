@@ -14,11 +14,16 @@ Espo.define('pim:views/attribute/fields/full-width', 'views/fields/bool', functi
         setup(){
             Dep.prototype.setup.call(this);
 
+            this.prepareFullWidth();
             this.listenTo(this.model, 'change:type', () => {
-                if (['wysiwyg', 'markdown', 'text', 'composite'].includes(this.model.get('type'))) {
-                    this.model.set('fullWidth', true);
-                }
+                this.prepareFullWidth();
             });
         },
+
+        prepareFullWidth() {
+            if (['wysiwyg', 'markdown', 'text', 'composite'].includes(this.model.get('type'))) {
+                this.model.set('fullWidth', true);
+            }
+        }
     })
 })
