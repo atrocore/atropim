@@ -3,10 +3,12 @@
   "iconClass": "shapes",
   "boolFilterList": [
     "onlyMy",
-    "notEntity"
+    "notEntity",
+    "onlyForEntity"
   ],
   "hiddenBoolFilterList": [
-    "notEntity"
+    "notEntity",
+    "onlyForEntity"
   ],
   "disabledMassActions": [
     "merge"

@@ -19,4 +19,13 @@ use Pim\Core\SelectManagers\AbstractSelectManager;
 
 class Classification extends AbstractSelectManager
 {
+    protected function boolFilterOnlyForEntity(array &$result): void
+    {
+        $entityName = (string)$this->getSelectCondition('onlyForEntity');
+        if (!empty($entityName)) {
+            $result['whereClause'][] = [
+                'entityId' => $entityName
+            ];
+        }
+    }
 }
