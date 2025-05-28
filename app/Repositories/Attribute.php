@@ -405,7 +405,7 @@ class Attribute extends Base
             }
         }
 
-        if (in_array($entity->get('type'), ['wysiwyg', 'markdown', 'text', 'composite'])) {
+        if ($entity->get('type') === 'composite') {
             $entity->set('fullWidth', true);
         }
 
