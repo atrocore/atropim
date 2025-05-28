@@ -194,7 +194,10 @@ class Attribute extends Base
             $qb1 = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
 
             $qb->where("attribute_id in ({$qb1->getSQL()})");
-            $qb->setParameters($qb1->getParameters());
+
+            foreach ($qb1->getParameters() as $parameterName => $value) {
+                $qb->setParameter($parameterName, $value, Mapper::getParameterType($value));
+            }
         }
 
         // remove composite attributes first
