@@ -424,20 +424,16 @@ class V1Dot14Dot3 extends Base
     protected function migrateChannelSpecific(): void
     {
         while (true) {
-            try {
-                $res = $this->getConnection()->createQueryBuilder()
-                    ->select('*')
-                    ->from('product_attribute_value')
-                    ->where('deleted=:false')
-                    ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
-                    ->setFirstResult(0)
-                    ->setMaxResults(5000)
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->setParameter('empty', '')
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                return;
-            }
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('product_attribute_value')
+                ->where('deleted=:false')
+                ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
+                ->setFirstResult(0)
+                ->setMaxResults(5000)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('empty', '')
+                ->fetchAllAssociative();
 
             if (empty($res)) {
                 break;
@@ -446,9 +442,9 @@ class V1Dot14Dot3 extends Base
             foreach ($res as $item) {
                 $this->getConnection()->createQueryBuilder()
                     ->update('product_attribute_value')
-                    ->set('channel_id', ':empty')
+                    ->set('channel_id', ':null')
                     ->where('id=:id')
-                    ->setParameter('empty', '')
+                    ->setParameter('null', null, ParameterType::NULL)
                     ->setParameter('id', $item['id'])
                     ->executeQuery();
 
