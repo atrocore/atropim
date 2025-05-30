@@ -222,6 +222,12 @@ class Attribute extends Base
             } else {
                 $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
             }
+        } else {
+            if (Converter::isPgSQL($this->getConnection())) {
+                $sql .= ' ON CONFLICT DO NOTHING';
+            } else {
+                $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
+            }
         }
 
         $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
@@ -239,6 +245,7 @@ class Attribute extends Base
         try {
             $stmt->execute();
         } catch (\PDOException $e) {
+            $GLOBALS['log']->error('Upsert attribute error: ' . $e->getMessage());
         }
     }
 
