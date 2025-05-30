@@ -441,10 +441,8 @@ class V1Dot14Dot3 extends Base
 
             foreach ($res as $item) {
                 $this->getConnection()->createQueryBuilder()
-                    ->update('product_attribute_value')
-                    ->set('channel_id', ':null')
+                    ->delete('product_attribute_value')
                     ->where('id=:id')
-                    ->setParameter('null', null, ParameterType::NULL)
                     ->setParameter('id', $item['id'])
                     ->executeQuery();
 
