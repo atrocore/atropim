@@ -423,29 +423,28 @@ class V1Dot14Dot3 extends Base
 
     protected function migrateChannelSpecific(): void
     {
+        $offset = 0;
+        $limit = 5000;
+
         while (true) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('*')
                 ->from('product_attribute_value')
                 ->where('deleted=:false')
                 ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
-                ->setFirstResult(0)
-                ->setMaxResults(5000)
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('empty', '')
                 ->fetchAllAssociative();
+
+            $offset = $offset + $limit;
 
             if (empty($res)) {
                 break;
             }
 
             foreach ($res as $item) {
-                $this->getConnection()->createQueryBuilder()
-                    ->delete('product_attribute_value')
-                    ->where('id=:id')
-                    ->setParameter('id', $item['id'])
-                    ->executeQuery();
-
                 $attribute = $this->getConnection()->createQueryBuilder()
                     ->select('*')
                     ->from($this->getConnection()->quoteIdentifier('attribute'))
