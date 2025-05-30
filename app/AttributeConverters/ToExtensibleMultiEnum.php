@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Pim\AttributeConverters;
 
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ToExtensibleMultiEnum implements AttributeConverterInterface
@@ -31,14 +33,15 @@ class ToExtensibleMultiEnum implements AttributeConverterInterface
     {
         $attribute->set('prohibitedEmptyValue', false);
 
+        $tableName = Util::toUnderScore(lcfirst($attribute->get('entityId')));
+
         while (true) {
             $res = $this->connection->createQueryBuilder()
-                ->select('pav.id, pav.varchar_value')
-                ->from($this->connection->quoteIdentifier('product_attribute_value'), 'pav')
-                ->where('pav.attribute_id = :attributeId')
+                ->select('id, varchar_value')
+                ->from("{$tableName}_attribute_value")
+                ->where('attribute_id = :attributeId')
+                ->andWhere('varchar_value IS NOT NULL')
                 ->setParameter('attributeId', $attribute->get('id'))
-                ->andWhere('pav.attribute_type = :attributeType')
-                ->setParameter('attributeType', 'extensibleEnum')
                 ->setFirstResult(0)
                 ->setMaxResults(self::LIMIT)
                 ->fetchAllAssociative();
@@ -49,49 +52,58 @@ class ToExtensibleMultiEnum implements AttributeConverterInterface
 
             foreach ($res as $v) {
                 $this->connection->createQueryBuilder()
-                    ->update($this->connection->quoteIdentifier('product_attribute_value'))
-                    ->set('text_value', ':textValue')
-                    ->setParameter('textValue', $this->prepareTextValue($v['varchar_value']))
+                    ->update("{$tableName}_attribute_value")
+                    ->set('json_value', ':jsonValue')
                     ->set('varchar_value', ':nullValue')
-                    ->setParameter('nullValue', null)
-                    ->set('attribute_type', ':attributeType')
-                    ->setParameter('attributeType', 'extensibleMultiEnum')
+                    ->setParameter('jsonValue', $this->prepareJsonValue($v['varchar_value']))
+                    ->setParameter('nullValue', null, ParameterType::NULL)
                     ->where('id = :id')
                     ->setParameter('id', $v['id'])
                     ->executeQuery();
             }
         }
 
+        $offset = 0;
         while (true) {
             $res = $this->connection->createQueryBuilder()
-                ->select('ca.id, ca.varchar_value')
-                ->from($this->connection->quoteIdentifier('classification_attribute'), 'ca')
-                ->where('ca.attribute_id = :attributeId')
+                ->select('id, data')
+                ->from('classification_attribute')
+                ->where('attribute_id=:attributeId')
                 ->setParameter('attributeId', $attribute->get('id'))
-                ->andWhere('ca.varchar_value IS NOT NULL')
-                ->setFirstResult(0)
+                ->setFirstResult($offset)
                 ->setMaxResults(self::LIMIT)
                 ->fetchAllAssociative();
+
+            $offset = $offset + self::LIMIT;
 
             if (empty($res)) {
                 break;
             }
 
             foreach ($res as $v) {
+                $data = @json_decode((string)$v['data'], true);
+                if (!is_array($data)) {
+                    $data = [];
+                }
+
+                if (!isset($data['default'])) {
+                    continue;
+                }
+
+                unset($data['default']);
+
                 $this->connection->createQueryBuilder()
-                    ->update($this->connection->quoteIdentifier('classification_attribute'))
-                    ->set('text_value', ':textValue')
-                    ->setParameter('textValue', $this->prepareTextValue($v['varchar_value']))
-                    ->set('varchar_value', ':nullValue')
-                    ->setParameter('nullValue', null)
-                    ->where('id = :id')
+                    ->update('classification_attribute')
+                    ->set('data', ':data')
+                    ->where('id=:id')
                     ->setParameter('id', $v['id'])
+                    ->setParameter('data', json_encode($data))
                     ->executeQuery();
             }
         }
     }
 
-    protected function prepareTextValue($varcharValue): ?string
+    protected function prepareJsonValue($varcharValue): ?string
     {
         if ($varcharValue === null) {
             return null;
