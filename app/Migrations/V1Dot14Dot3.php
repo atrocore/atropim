@@ -470,6 +470,9 @@ class V1Dot14Dot3 extends Base
                         ->insert($this->getConnection()->quoteIdentifier('attribute'));
 
                     foreach ($attribute as $column => $val) {
+                        if ($column === 'code') {
+                            continue;
+                        }
                         if ($column === 'id') {
                             $qb->setValue('id', ':id')
                                 ->setParameter('id', $attributeId);
