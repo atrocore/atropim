@@ -30,7 +30,7 @@ class EntityFieldEntity extends AbstractEntityListener
                     'entityId' => $entity->get('entityId'),
                     'code'     => $entity->get('code')
                 ])
-                ->find();
+                ->findOne();
 
             if (!empty($attribute)) {
                 throw new BadRequest("Attribute with such code exists for the {$entity->get('entityId')}.");
