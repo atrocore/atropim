@@ -458,25 +458,31 @@ class V1Dot14Dot3 extends Base
 
                 $attributeId = md5($attribute['id'] . '_' . $item['channel_id']);
 
-                $qb = $this->getConnection()->createQueryBuilder()
-                    ->insert($this->getConnection()->quoteIdentifier('attribute'));
+                $newAttribute = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from($this->getConnection()->quoteIdentifier('attribute'))
+                    ->where('id=:id')
+                    ->setParameter('id', $attributeId)
+                    ->fetchAssociative();
 
-                foreach ($attribute as $column => $val) {
-                    if ($column === 'id') {
-                        $qb->setValue('id', ':id')
-                            ->setParameter('id', $attributeId);
-                    } elseif ($column === 'channel_id') {
-                        $qb->setValue('channel_id', ':channelId')
-                            ->setParameter('channelId', $item['channel_id']);
-                    } else {
-                        $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
-                            ->setParameter($column, $val, Mapper::getParameterType($val));
+                if (empty($newAttribute)) {
+                    $qb = $this->getConnection()->createQueryBuilder()
+                        ->insert($this->getConnection()->quoteIdentifier('attribute'));
+
+                    foreach ($attribute as $column => $val) {
+                        if ($column === 'id') {
+                            $qb->setValue('id', ':id')
+                                ->setParameter('id', $attributeId);
+                        } elseif ($column === 'channel_id') {
+                            $qb->setValue('channel_id', ':channelId')
+                                ->setParameter('channelId', $item['channel_id']);
+                        } else {
+                            $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
+                                ->setParameter($column, $val, Mapper::getParameterType($val));
+                        }
                     }
-                }
 
-                try {
                     $qb->executeQuery();
-                } catch (\Throwable $e) {
                 }
 
                 $this->getConnection()->createQueryBuilder()
