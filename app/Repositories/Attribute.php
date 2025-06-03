@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
@@ -334,11 +335,6 @@ class Attribute extends Base
         return $attributes;
     }
 
-    public function isValidCode(string $code): bool
-    {
-        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) === 1;
-    }
-
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
@@ -346,7 +342,7 @@ class Attribute extends Base
         }
 
         if ($entity->get('code') !== null) {
-            if (!$this->isValidCode($entity->get('code'))) {
+            if (!AttributeFieldConverter::isValidCode($entity->get('code'))) {
                 throw new BadRequest("The code must start with a letter and can contain only letters, numbers, and underscores. No spaces or other special characters are allowed.");
             }
             if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
