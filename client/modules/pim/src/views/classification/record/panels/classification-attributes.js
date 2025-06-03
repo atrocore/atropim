@@ -34,12 +34,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                 let data = $(e.currentTarget).data();
                 this.unlinkAttributeGroup(data);
             },
-            'click [data-action="unlinkAttributeGroupHierarchy"]': function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                let data = $(e.currentTarget).data();
-                this.unlinkAttributeGroupHierarchy(data);
-            }
         }, Dep.prototype.events),
 
         data() {
@@ -285,7 +279,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     type: 'DELETE',
                     data: JSON.stringify({
                         id: id,
-                        deletePav: false,
+                        withAttributeValues: false,
                     }),
                     contentType: 'application/json',
                     success: function () {
@@ -313,7 +307,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     type: 'DELETE',
                     data: JSON.stringify({
                         id: id,
-                        deletePav: true,
+                        withAttributeValues: true,
                     }),
                     contentType: 'application/json',
                     success: function () {
@@ -646,42 +640,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                     data: JSON.stringify({
                         ids: [this.model.id],
                         foreignIds: ids
-                    }),
-                    type: 'DELETE',
-                    contentType: 'application/json',
-                    success: function () {
-                        this.notify('Removed', 'success');
-                        this.model.trigger('after:unrelate');
-                        this.actionRefresh();
-                    }.bind(this),
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                });
-            }, this);
-        },
-
-        unlinkAttributeGroupHierarchy(data) {
-            let id = data.id;
-            if (!id) {
-                return;
-            }
-
-            let group = this.groups.find(group => group.id === id);
-            if (!group || !group.rowList) {
-                return;
-            }
-
-            this.confirm({
-                message: this.translate('removeRelatedAttributeGroupCascade', 'messages', 'ClassificationAttribute'),
-                confirmText: this.translate('Remove')
-            }, function () {
-                this.notify('removing');
-                $.ajax({
-                    url: `${this.scope}/action/unlinkAttributeGroupHierarchy`,
-                    data: JSON.stringify({
-                        attributeGroupId: id,
-                        classificationId: this.model.id
                     }),
                     type: 'DELETE',
                     contentType: 'application/json',

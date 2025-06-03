@@ -250,40 +250,9 @@ class ClassificationAttribute extends Base
         parent::prepareCollectionForOutput($collection);
     }
 
-    public function unlinkAttributeGroupHierarchy(string $attributeGroupId, string $classificationId): bool
-    {
-        $attributes = $this
-            ->getRepository()
-            ->select(['id'])
-            ->join('attribute')
-            ->where([
-                'attribute.attributeGroupId' => $attributeGroupId,
-                'classificationId'           => $classificationId
-            ])
-            ->find()
-            ->toArray();
-
-        if (!empty($attributes)) {
-            foreach ($attributes as $attribute) {
-                try {
-                    $this->deleteEntity($attribute['id']);
-                } catch (\Throwable $e) {
-                    $GLOBALS['log']->error('AttributeGroup hierarchical removing from Classification failed: ' . $e->getMessage());
-                }
-            }
-        }
-
-        return true;
-    }
-
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         return true;
-    }
-
-    protected function getAttributeService(): Attribute
-    {
-        return $this->getServiceFactory()->create('Attribute');
     }
 
     protected function init()

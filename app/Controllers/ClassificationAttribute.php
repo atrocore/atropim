@@ -64,29 +64,12 @@ class ClassificationAttribute extends Base
 
         $id = $params['id'];
 
-        if (property_exists($data, 'deletePav') && !empty($data->deletePav)) {
+        if (!empty($data->withAttributeValues)) {
             $this->getRecordService()->deleteEntityWithThemAttributeValues($id);
         } else {
             $this->getRecordService()->deleteEntity($id);
         }
 
         return true;
-    }
-
-    public function actionUnlinkAttributeGroupHierarchy(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isDelete()) {
-            throw new BadRequest();
-        }
-
-        if (!property_exists($data, 'attributeGroupId') || !property_exists($data, 'classificationId')) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check('ClassificationAttribute', 'edit')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->unlinkAttributeGroupHierarchy($data->attributeGroupId, $data->classificationId);
     }
 }
