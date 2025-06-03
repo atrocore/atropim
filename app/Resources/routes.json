@@ -31,13 +31,5 @@
       "controller": "Attribute",
       "action": "getAttributesIdsFilter"
     }
-  },
-  {
-    "route": "/ClassificationAttribute/action/unlinkAttributeGroupHierarchy",
-    "method": "delete",
-    "params": {
-      "controller": "ClassificationAttribute",
-      "action": "unlinkAttributeGroupHierarchy"
-    }
   }
 ]
