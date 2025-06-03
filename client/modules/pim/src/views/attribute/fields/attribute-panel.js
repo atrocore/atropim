@@ -15,7 +15,7 @@ Espo.define('pim:views/attribute/fields/attribute-panel', 'views/fields/link',
 
         boolFilterData: {
             onlyForEntity() {
-                return this.model.get('entityId') || 'NotExistedEntity';
+                return this.model.get('entityId') || null;
             }
         },
 
