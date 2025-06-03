@@ -22,7 +22,7 @@
   },
   "labels": {
     "classificationAttribute": "Attribut aus Klassifikation",
-    "unlinkRelatedAttribute": "Hier löschen und für die Akten aufbewahren",
+    "unlinkRelatedAttribute": "Löschen und für Datensätze aufbewahren",
     "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen"
   },
   "options": {

@@ -21,8 +21,8 @@
   },
   "labels": {
     "classificationAttribute": "Attribute from Classification",
-    "unlinkRelatedAttribute": "Delete here and retain for records",
-    "cascadeUnlinkRelatedAttribute": "Delete here and from records"
+    "unlinkRelatedAttribute": "Delete and retain for records",
+    "cascadeUnlinkRelatedAttribute": "Delete and from records"
   },
   "options": {
     "scope": {

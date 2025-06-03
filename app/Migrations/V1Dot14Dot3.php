@@ -423,35 +423,28 @@ class V1Dot14Dot3 extends Base
 
     protected function migrateChannelSpecific(): void
     {
+        $offset = 0;
+        $limit = 5000;
+
         while (true) {
-            try {
-                $res = $this->getConnection()->createQueryBuilder()
-                    ->select('*')
-                    ->from('product_attribute_value')
-                    ->where('deleted=:false')
-                    ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
-                    ->setFirstResult(0)
-                    ->setMaxResults(5000)
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->setParameter('empty', '')
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                return;
-            }
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('product_attribute_value')
+                ->where('deleted=:false')
+                ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('empty', '')
+                ->fetchAllAssociative();
+
+            $offset = $offset + $limit;
 
             if (empty($res)) {
                 break;
             }
 
             foreach ($res as $item) {
-                $this->getConnection()->createQueryBuilder()
-                    ->update('product_attribute_value')
-                    ->set('channel_id', ':empty')
-                    ->where('id=:id')
-                    ->setParameter('empty', '')
-                    ->setParameter('id', $item['id'])
-                    ->executeQuery();
-
                 $attribute = $this->getConnection()->createQueryBuilder()
                     ->select('*')
                     ->from($this->getConnection()->quoteIdentifier('attribute'))
@@ -465,25 +458,34 @@ class V1Dot14Dot3 extends Base
 
                 $attributeId = md5($attribute['id'] . '_' . $item['channel_id']);
 
-                $qb = $this->getConnection()->createQueryBuilder()
-                    ->insert($this->getConnection()->quoteIdentifier('attribute'));
+                $newAttribute = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from($this->getConnection()->quoteIdentifier('attribute'))
+                    ->where('id=:id')
+                    ->setParameter('id', $attributeId)
+                    ->fetchAssociative();
 
-                foreach ($attribute as $column => $val) {
-                    if ($column === 'id') {
-                        $qb->setValue('id', ':id')
-                            ->setParameter('id', $attributeId);
-                    } elseif ($column === 'channel_id') {
-                        $qb->setValue('channel_id', ':channelId')
-                            ->setParameter('channelId', $item['channel_id']);
-                    } else {
-                        $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
-                            ->setParameter($column, $val, Mapper::getParameterType($val));
+                if (empty($newAttribute)) {
+                    $qb = $this->getConnection()->createQueryBuilder()
+                        ->insert($this->getConnection()->quoteIdentifier('attribute'));
+
+                    foreach ($attribute as $column => $val) {
+                        if ($column === 'code') {
+                            continue;
+                        }
+                        if ($column === 'id') {
+                            $qb->setValue('id', ':id')
+                                ->setParameter('id', $attributeId);
+                        } elseif ($column === 'channel_id') {
+                            $qb->setValue('channel_id', ':channelId')
+                                ->setParameter('channelId', $item['channel_id']);
+                        } else {
+                            $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
+                                ->setParameter($column, $val, Mapper::getParameterType($val));
+                        }
                     }
-                }
 
-                try {
                     $qb->executeQuery();
-                } catch (\Throwable $e) {
                 }
 
                 $this->getConnection()->createQueryBuilder()
