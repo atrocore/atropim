@@ -10,11 +10,13 @@
 {# If set to false, badges with empty values will be skipped #}
 {% set displayEmptyBadgeFields = false %}
 
+{% set imageMimetypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}
+
 {% set product = entities[0]|prepareEntity %}
 
 {% set mainImage = null %}
 {% set mainImageWrapper = findRecord('ProductFile', { 'productId': product.id, 'isMainImage': true }) %}
-{% set files = product.files|filter(file => file.mimeType in ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] ) %}
+{% set files = product.files|filter(file => file.mimeType in imageMimetypes) %}
 {% set images = [] %}
 {% for file in files %}
     {% if file.id == mainImageWrapper.fileId %}
@@ -281,7 +283,7 @@
 <header>
     <h1 class="value-container" {{ editable(product, getAllLanguageFields('Product', 'name')) }}>{{ product.name }}</h1>
     <div class="row status-info">
-        <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translate(product.productStatus, language, scope: 'Product') }}</div>
+        <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translateOption(product.productStatus, language, 'productStatus', scope: 'Product') }}</div>
         {% if product.tag is not empty %}
             <div class="row tags" {{ editable(product, ['tag']) }}>
                 {% for tag in product.tag %}
@@ -354,59 +356,52 @@
     {% endif %}
 
     <section class="attributes">
-        {% set attributeGroups = {} %}
-        {% set pavLanguage = language == mainLanguage ? 'main' : language %}
+        {% set attributesPanels = product.attributesDefs|column('attributePanelId')|unique %}
+        {% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null, 'id') %}
+        {% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => v.mainField == k or not v.mainField) %}
 
-{#        {% for pav in product.productAttributeValues ?? [] %}#}
-{#            {% set attribute = pav.attribute %}#}
-
-{#            {% if not attribute.isMultilang or (attribute.isMultilang and pav.language == pavLanguage) %}#}
-{#                {% set data = {#}
-{#                    'attribute': attribute,#}
-{#                    'pav': pav,#}
-{#                    'displayValue': formatPAV(pav)#}
-{#                } %}#}
-
-{#                {% if pav.attributeType == 'file' and pav.valuePathsData['thumbnails'] is not empty %}#}
-{#                    {% set data = data|merge({ 'media': true }) %}#}
-{#                {% endif %}#}
-
-{#                {% set tab = attributeGroups[attribute.attributeTabName] ?? {} %}#}
-{#                {% if tab[attribute.attributeGroupName] %}#}
-{#                    {% set tmp = tab[attribute.attributeGroupName]|merge({(attribute.name): data}) %}#}
-{#                {% else %}#}
-{#                    {% set tmp = {(attribute.name): data} %}#}
-{#                {% endif %}#}
-
-{#                {% set tab = tab|merge({(attribute.attributeGroupName): tmp}) %}#}
-{#                {% set attributeGroups = attributeGroups|merge({(attribute.attributeTabName): tab}) %}#}
-{#            {% endif %}#}
-{#        {% endfor %}#}
-
-        {% for tabName, tab in attributeGroups %}
-            <h2>{{ tabName ?: translate('productAttributeValues', language, 'fields', 'Product') }}</h2>
-
+        {% for panel in attributesPanels %}
+            <h2>{{ config.referenceData.AttributePanel[panel].name ?? panel }}</h2>
+            {% set groups = attributesGroups|map(group => group|merge({ 'attributes': attributesList|filter(i => i.attributeGroupId == group.id and i.attributePanelId == panel) }))|filter(g => g.attributes is not empty) %}
             <table>
                 <tbody>
-                {% for key, attribute in tab %}
+                {% for group in groups|sort((a, b) => a.id is null ? -2 : a.sortOrder <=> b.sortOrder) %}
                     <tr>
-                        <td colspan="2">{{ key ?: translate('noGroup', language, scope: 'Product') }}</td>
+                        <td colspan="2">{{ group.name ?? group.id ?? translate('noGroup', language, scope: 'Product')  }}</td>
                     </tr>
-                    {% for name, data in attribute %}
+
+                    {% for key, attribute in group.attributes|sort((a, b) => a.sortOrderInAttributeGroup <=> b.sortOrderInAttributeGroup) %}
                         <tr>
-                            <td width="50%"><span {{ editable(data.attribute) }}>{{ data.attribute.name }}</span></td>
+                            <td width="50%">{{ attribute.detailViewLabel ?? attribute.label }}</td>
                             <td width="50%">
-                                {% if data.media %}
-                                    <picture {{ editable(data.pav) }} style="max-width: 300px">
-                                        <img src="{{ data.displayValue }}" alt="">
-                                    </picture>
-                                {% elseif data.pav.attributeType in ['wysiwyg', 'markdown'] %}
-                                    <div class="value-container" {{ editable(data.pav) }}>{{ data.displayValue|raw }}</div>
-                                {% elseif data.displayValue is same as('') %}
-                                     <span class="value-container" {{ editable(data.pav) }}>&nbsp;</span>
-                                {% else %}
-                                    <span class="value-container" {{ editable(data.pav) }}>{{ data.displayValue }}</span>
+                                {% set mediaUrl = null %}
+                                {% set displayValue = formatField(product, key) %}
+
+                                {% if attribute.type == 'file' %}
+                                    {% set fileId = get(product, key ~ 'Id') %}
+
+                                    {% if fileId is not empty %}
+                                        {% set attrFile = findRecord('File', { 'id': get(product, key ~ 'Id') })|prepareEntity %}
+
+                                        {% if attrFile is not null and attrFile.mimeType in imageMimetypes %}
+                                            {% set mediaUrl = attrFile.mediumThumbnailUrl %}
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
+
+                                <div class="value-container">
+                                    {% if mediaUrl is not null %}
+                                        <picture {{ editable(product, [key]) }} style="max-width: 300px">
+                                            <img src="{{ mediaUrl }}" alt="">
+                                        </picture>
+                                    {% elseif attribute.type in ['wysiwyg', 'markdown'] %}
+                                        <div class="value-container" {{ editable(product, [key]) }}>{{ displayValue|raw }}</div>
+                                    {% elseif displayValue is same as('') %}
+                                        <span class="value-container" {{ editable(product, [key]) }}>&nbsp;</span>
+                                    {% else %}
+                                        <span class="value-container" {{ editable(product, [key]) }}>{{ displayValue }}</span>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
