@@ -409,11 +409,9 @@ class Product extends Hierarchy
      */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $post = clone $data;
-
         $this->setProductMainImage($entity);
 
-        return parent::isEntityUpdated($entity, $post);
+        return parent::isEntityUpdated($entity, $data);
     }
 
     /**
