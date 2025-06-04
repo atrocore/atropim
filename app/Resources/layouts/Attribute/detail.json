@@ -79,7 +79,9 @@
         {
           "name": "isRequired"
         },
-        false
+        {
+          "name": "isReadOnly"
+        }
       ],
       [
         {

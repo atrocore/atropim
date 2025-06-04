@@ -178,8 +178,11 @@
     "isRequired": {
       "type": "bool",
       "default": false,
-      "tooltip": true,
       "view": "pim:views/attribute/fields/required"
+    },
+    "isReadOnly": {
+      "type": "bool",
+      "default": false
     },
     "sortOrder": {
       "type": "int",
