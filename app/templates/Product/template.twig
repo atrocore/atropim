@@ -12,7 +12,7 @@
 
 {% set imageMimetypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}
 
-{% set product = entities[0]|prepareEntity %}
+{% set product = entities[0]|prepareEntity|putAttributesToEntity %}
 
 {% set mainImage = null %}
 {% set mainImageWrapper = findRecord('ProductFile', { 'productId': product.id, 'isMainImage': true }) %}
