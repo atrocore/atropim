@@ -65,7 +65,6 @@
     "All": "Tous"
   },
   "tooltips": {
-    "isRequired": "Il s'agit d'une valeur par défaut, qui sera appliquée lors de l'ajout de cet attribut à un produit ou à une classification.",
     "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
     "defaultDate": "Modificateur de la valeur de l'attribut (par exemple +5 jours, -3 mois)"
   },
