@@ -38,11 +38,15 @@ class Attribute extends Base
 
     public function getAttributesByIds(array $attributesIds): array
     {
-        return $this->getConnection()->createQueryBuilder()
-            ->select('*')
-            ->from($this->getConnection()->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
+        $conn = $this->getConnection();
+
+        return $conn->createQueryBuilder()
+            ->select('a.*, c.id as channel_id, c.name as channel_name')
+            ->from($conn->quoteIdentifier('attribute'), 'a')
+            ->where('a.id IN (:ids)')
+            ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'a.channel_id=c.id AND c.deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
     }
 
