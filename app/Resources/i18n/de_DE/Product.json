@@ -100,6 +100,7 @@
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
   },
   "messages": {
-    "componentsNotInstalled": "Installieren Sie das Modul Product Components, um die Komponentenvorschau zu verwenden."
+    "componentsNotInstalled": "Installieren Sie das Modul Components, um die Komponentenvorschau zu verwenden.",
+    "emptyComponents": "Produkt hat keine Komponenten"
   }
 }
