@@ -27,7 +27,6 @@
     "packedAmount": "Packed Amount",
     "contents": "Contents",
     "taskStatus": "Task status",
-    "components": "Product Components",
     "calls": "Calls",
     "contentItems": "Content Items",
     "variantSpecificAttributes": "Variant Specific Attributes"
@@ -97,6 +96,7 @@
     "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
   },
   "messages": {
-    "componentsNotInstalled": "Install Product Components module to use components preview."
+    "componentsNotInstalled": "Install Components module to use components preview.",
+    "emptyComponents": "Product does not have Components"
   }
 }

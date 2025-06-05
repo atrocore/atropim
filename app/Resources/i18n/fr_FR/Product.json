@@ -93,5 +93,9 @@
     "youCantChangeClassificationInProduct": "Vous ne pouvez pas modifier la classification dans le produit",
     "productCanNotLinkToNonLeafCategory": "Les produits ne peuvent pas être liés à une catégorie non feuilletée.",
     "productCatalogChangeException": "Le catalogue ne peut pas être supprimé/modifié, le produit utilise des catégories autorisées pour ce catalogue. Veuillez d'abord les dissocier."
+  },
+  "messages": {
+    "componentsNotInstalled": "Installez le module Composants pour utiliser l'aperçu des composants.",
+    "emptyComponents": "Le produit n'a pas de composants"
   }
 }
