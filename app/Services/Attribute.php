@@ -71,6 +71,10 @@ class Attribute extends Base
 
         $row = $attributes[0];
 
+        if ($attributeRepo->hasAttributeValue($entityName, $entityId, $row['id'])) {
+            return;
+        }
+
         /** @var AttributeFieldConverter $converter */
         $converter = $this->getInjection(AttributeFieldConverter::class);
 
@@ -81,7 +85,7 @@ class Attribute extends Base
         // set null value
         foreach ($entity->fields ?? [] as $field => $fieldDefs) {
             $valueName = str_replace($attributeFieldName, 'value', $field);
-            if (!empty($fieldDefs['attributeId']) && !empty($fieldDefs['column']) && !array_key_exists($valueName, $data)) {
+            if (!empty($fieldDefs['attributeId']) && $fieldDefs['attributeId'] === $row['id'] && !empty($fieldDefs['column']) && !array_key_exists($valueName, $data)) {
                 $data[$valueName] = null;
             }
         }
@@ -90,7 +94,7 @@ class Attribute extends Base
         foreach (['value', 'valueFrom', 'valueTo', 'valueUnitId', 'valueId', 'valueIds'] as $key) {
             if (array_key_exists($key, $data)) {
                 $fieldName = str_replace('value', $attributeFieldName, $key);
-                $attributeRepo->upsertAttributeValue($entity, $fieldName, $data[$key], true);
+                $attributeRepo->upsertAttributeValue($entity, $fieldName, $data[$key], false);
             }
         }
 

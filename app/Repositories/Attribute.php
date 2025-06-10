@@ -183,15 +183,22 @@ class Attribute extends Base
 
         $name = Util::toUnderScore(lcfirst($entityName));
 
-        $this->getConnection()->createQueryBuilder()
+        $qb = $this->getConnection()->createQueryBuilder()
             ->insert("{$name}_attribute_value")
             ->setValue('id', ':id')
             ->setValue('attribute_id', ':attributeId')
             ->setValue("{$name}_id", ':entityId')
             ->setParameter('id', Util::generateId())
             ->setParameter('attributeId', $attributeId)
-            ->setParameter('entityId', $entityId)
-            ->executeQuery();
+            ->setParameter('entityId', $entityId);
+
+        if (!empty($attribute->get('defaultUnit'))) {
+            $qb->setValue('reference_value', ':unitId')
+                ->setparameter('unitId', $attribute->get('defaultUnit'));
+        }
+
+        $qb->executeQuery();
+
 
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
