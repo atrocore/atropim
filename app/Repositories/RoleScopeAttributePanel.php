@@ -37,7 +37,7 @@ class RoleScopeAttributePanel extends Base
                 throw new NotUnique(sprintf($message, $fieldName));
             }
 
-            $attributePanel = $this->getEntityManager()->getRepository('AttributePanel')->get($entity->get('attributattributePanelId'));
+            $attributePanel = $this->getEntityManager()->getRepository('AttributePanel')->get($entity->get('attributePanelId'));
             $roleScope = $this->getEntityManager()->getRepository('RoleScope')->get($entity->get('roleScopeId'));
 
             if ($roleScope->get('name') !== $attributePanel->get('entityId')) {
