@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "attributes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "attributePanels": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "roleScope",
+      "entity": "RoleScopeAttribute"
+    },
+    "attributePanels": {
+      "type": "hasMany",
+      "foreign": "roleScope",
+      "entity": "RoleScopeAttributePanel"
+    }
+  }
+}
