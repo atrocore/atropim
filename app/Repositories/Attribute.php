@@ -227,37 +227,55 @@ class Attribute extends Base
             $value = json_encode($value);
         }
 
-        $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value)";
-        if (!$insertOnly) {
-            if (Converter::isPgSQL($this->getConnection())) {
-                $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";
-            } else {
-                $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
+        if (!$this->getAcl()->check($entity->getEntityName(), 'createAttributeValue')) {
+            if ($insertOnly) {
+                return;
             }
+
+            $this->getConnection()->createQueryBuilder()
+                ->update("{$name}_attribute_value")
+                ->set($valColumn, ":value")
+                ->where("{$name}_id=:entityId")
+                ->andWhere("attribute_id=:attributeId")
+                ->andWhere("deleted=:false")
+                ->setParameter('value', $value, Mapper::getParameterType($value))
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('attributeId', $entity->fields[$fieldName]['attributeId'])
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeQuery();
         } else {
-            if (Converter::isPgSQL($this->getConnection())) {
-                $sql .= ' ON CONFLICT DO NOTHING';
+            $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value)";
+            if (!$insertOnly) {
+                if (Converter::isPgSQL($this->getConnection())) {
+                    $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";
+                } else {
+                    $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
+                }
             } else {
-                $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
+                if (Converter::isPgSQL($this->getConnection())) {
+                    $sql .= ' ON CONFLICT DO NOTHING';
+                } else {
+                    $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
+                }
             }
-        }
 
-        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+            $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
 
-        $stmt->bindValue(':id', Util::generateId());
-        $stmt->bindValue(':entityId', $entity->id);
-        $stmt->bindValue(':attributeId', $entity->fields[$fieldName]['attributeId']);
+            $stmt->bindValue(':id', Util::generateId());
+            $stmt->bindValue(':entityId', $entity->id);
+            $stmt->bindValue(':attributeId', $entity->fields[$fieldName]['attributeId']);
 
-        if ($entity->fields[$fieldName]['type'] === 'bool') {
-            $stmt->bindValue(':value', $value, \PDO::PARAM_BOOL);
-        } else {
-            $stmt->bindValue(':value', $value);
-        }
+            if ($entity->fields[$fieldName]['type'] === 'bool') {
+                $stmt->bindValue(':value', $value, \PDO::PARAM_BOOL);
+            } else {
+                $stmt->bindValue(':value', $value);
+            }
 
-        try {
-            $stmt->execute();
-        } catch (\PDOException $e) {
-            $GLOBALS['log']->error('Upsert attribute error: ' . $e->getMessage());
+            try {
+                $stmt->execute();
+            } catch (\PDOException $e) {
+                $GLOBALS['log']->error('Upsert attribute error: ' . $e->getMessage());
+            }
         }
     }
 
@@ -488,6 +506,11 @@ class Attribute extends Base
         if ($entity->isNew() && !empty($entity->get('compositeAttributeId'))) {
             $this->addAttributeValueForComposite($entity);
         }
+    }
+
+    protected function getAcl()
+    {
+        return $this->getInjection('container')->get('acl');
     }
 
     /**
