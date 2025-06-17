@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "createAttributeValueAction": "Create Attribute Value",
+    "deleteAttributeValueAction": "Delete Attribute Value",
+    "attributes": "Attributes",
+    "attributePanels": "Attribute Panels"
+  }
+}

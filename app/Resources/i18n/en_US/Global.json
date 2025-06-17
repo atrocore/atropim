@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "RoleScopeAttribute": "Attribute",
+    "RoleScopeAttributePanel": "Attribute Panel",
     "ProductFile": "Product File",
     "CategoryFile": "Category File",
     "ProductChannel": "Product Channel",
@@ -27,6 +29,8 @@
     "ContentItem": "Content Item"
   },
   "scopeNamesPlural": {
+    "RoleScopeAttribute": "Attributes",
+    "RoleScopeAttributePanel": "Attribute Panels",
     "ProductFile": "Product Files",
     "CategoryFile": "Category Files",
     "ProductChannel": "Product Channels",

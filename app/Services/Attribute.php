@@ -56,6 +56,10 @@ class Attribute extends Base
             return;
         }
 
+        if (!$this->getAcl()->check($entityName, 'createAttributeValue')) {
+            return;
+        }
+
         $entity = $this->getEntityManager()->getRepository($entityName)->get($entityId);
         if (empty($entity)) {
             return;
@@ -103,6 +107,10 @@ class Attribute extends Base
 
     public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
     {
+        if (!$this->getAcl()->check($entityName, 'createAttributeValue')) {
+            throw new Forbidden();
+        }
+
         if ($where !== null) {
             $selectParams = $this
                 ->getSelectManager()
@@ -145,6 +153,10 @@ class Attribute extends Base
 
     public function removeAttributeValue(string $entityName, string $entityId, string $attributeId): bool
     {
+        if (!$this->getAcl()->check($entityName, 'deleteAttributeValue')) {
+            throw new Forbidden();
+        }
+
         $attribute = $this->getRepository()->get($attributeId);
 
         if (
@@ -175,6 +187,10 @@ class Attribute extends Base
 
     public function removeAttributeValues(string $entityName, string $entityId, ?array $attributeIds, ?array $where = null): array
     {
+        if (!$this->getAcl()->check($entityName, 'deleteAttributeValue')) {
+            throw new Forbidden();
+        }
+
         if (empty($attributeIds) && empty($where)) {
             return [];
         }

@@ -1,0 +1,15 @@
+{
+  "type": "Base",
+  "module": "Pim",
+  "entity": true,
+  "object": true,
+  "layouts": false,
+  "tab": false,
+  "acl": false,
+  "disabled": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "hideFieldTypeFilters": true,
+  "bookmarkDisabled": true,
+  "actionDisabled": true
+}
