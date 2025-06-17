@@ -20,6 +20,22 @@ Espo.define('pim:views/role-scope-attribute/fields/attribute', 'views/fields/lin
             }
         },
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:readAction', () => {
+                if (!this.model.get('readAction')) {
+                    this.model.set('editAction', false);
+                }
+            });
+
+            this.listenTo(this.model, 'change:editAction', () => {
+                if (this.model.get('editAction')) {
+                    this.model.set('readAction', true);
+                }
+            });
+        },
+
     });
 });
 

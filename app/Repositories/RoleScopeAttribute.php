@@ -45,6 +45,10 @@ class RoleScopeAttribute extends Base
             }
         }
 
+        if (empty($entity->get('readAction'))) {
+            $entity->set('editAction', false);
+        }
+
         parent::beforeSave($entity, $options);
     }
 
