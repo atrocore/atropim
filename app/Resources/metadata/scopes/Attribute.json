@@ -3,7 +3,7 @@
   "layouts": false,
   "tab": true,
   "acl": true,
-  "customizable": true,
+  "customizable": false,
   "importable": true,
   "notifications": true,
   "disabled": false,
