@@ -24,6 +24,9 @@ class V1Dot14Dot12 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE role_scope ADD create_attribute_value_action VARCHAR(255) DEFAULT NULL");
+        $this->exec("ALTER TABLE role_scope ADD delete_attribute_value_action VARCHAR(255) DEFAULT NULL");
+
         if ($this->isPgSQL()) {
             $this->exec("CREATE TABLE role_scope_attribute (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', read_action BOOLEAN DEFAULT 'false' NOT NULL, edit_action BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, attribute_id VARCHAR(36) DEFAULT NULL, role_scope_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
             $this->exec("CREATE UNIQUE INDEX IDX_ROLE_SCOPE_ATTRIBUTE_UNIQUE ON role_scope_attribute (deleted, attribute_id, role_scope_id)");
