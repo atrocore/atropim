@@ -461,39 +461,22 @@ class Attribute extends Base
 
     public function save(Entity $entity, array $options = [])
     {
-        if (!$this->getPDO()->inTransaction()) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
+        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
+            $converterName = $this
+                ->getMetadata()
+                ->get(['attributes', $entity->getFetched('type'), 'convert', $entity->get('type')]);
+
+            if (empty($converterName)) {
+                $message = $this
+                    ->getInjection('language')
+                    ->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
+                throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
+            }
+
+            $this->getInjection('container')->get($converterName)->convert($entity);
         }
 
-        try {
-            if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-                $converterName = $this->getMetadata()->get([
-                    'attributes',
-                    $entity->getFetched('type'),
-                    'convert',
-                    $entity->get('type')
-                ]);
-                if (empty($converterName)) {
-                    $message = $this->getInjection('language')->translate('noAttributeConverterFound', 'exceptions',
-                        'Attribute');
-                    throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
-                }
-                $this->getInjection('container')->get($converterName)->convert($entity);
-            }
-
-            $result = parent::save($entity, $options);
-            if (!empty($inTransaction)) {
-                $this->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if (!empty($inTransaction)) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        return $result;
+        return parent::save($entity, $options);
     }
 
     /**
