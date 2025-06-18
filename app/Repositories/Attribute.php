@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
@@ -315,6 +317,8 @@ class Attribute extends Base
                 ],
             ]);
             $this->getEntityManager()->saveEntity($note);
+
+            $this->getEventManager()->dispatch('AttributeRepository', 'removeAttributeValue', new Event(['entityName' => $entityName, 'entityId' => $entityId, 'attributeId' => $attributeId]));
         }
 
         return true;
@@ -498,5 +502,10 @@ class Attribute extends Base
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, "exceptions", "Attribute");
+    }
+
+    protected function getEventManager(): Manager
+    {
+        return $this->getInjection('container')->get('eventManager');
     }
 }
