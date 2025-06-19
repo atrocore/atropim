@@ -24,6 +24,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
+use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
@@ -336,7 +337,8 @@ class Attribute extends Base
             ]);
             $this->getEntityManager()->saveEntity($note);
 
-            $this->getEventManager()->dispatch('AttributeRepository', 'removeAttributeValue', new Event(['entityName' => $entityName, 'entityId' => $entityId, 'attributeId' => $attributeId]));
+            $this->getEventManager()->dispatch('AttributeRepository', 'removeAttributeValue',
+                new Event(['entityName' => $entityName, 'entityId' => $entityId, 'attributeId' => $attributeId]));
         }
 
         return true;
@@ -493,6 +495,12 @@ class Attribute extends Base
         if ($entity->isNew() && !empty($entity->get('compositeAttributeId'))) {
             $this->addAttributeValueForComposite($entity);
         }
+
+        if ($entity->isAttributeChanged('attributePanelId')) {
+            $this
+                ->getAclManager()
+                ->clearAclCache();
+        }
     }
 
     protected function getAcl()
@@ -513,5 +521,10 @@ class Attribute extends Base
     protected function getEventManager(): Manager
     {
         return $this->getInjection('container')->get('eventManager');
+    }
+
+    protected function getAclManager(): AclManager
+    {
+        return $this->getInjection('container')->get('aclManager');
     }
 }
