@@ -24,9 +24,13 @@ class RoleScopeAttributePanel extends Base
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isAttributeChanged('attributePanelId') || $entity->isAttributeChanged('roleScopeId')) {
+            if (!$entity->isNew()) {
+                throw new BadRequest("Attribute Panel and Scope can not be changed.");
+            }
+
             $exists = $this
                 ->where([
-                    'roleScopeId' => $entity->get('roleScopeId'),
+                    'roleScopeId'      => $entity->get('roleScopeId'),
                     'attributePanelId' => $entity->get('attributePanelId')
                 ])
                 ->findOne();
@@ -38,7 +42,14 @@ class RoleScopeAttributePanel extends Base
             }
 
             $attributePanel = $this->getEntityManager()->getRepository('AttributePanel')->get($entity->get('attributePanelId'));
+            if (empty($attributePanel)) {
+                throw new BadRequest("Attribute Panel '{$entity->get('attributePanelId')}' does not exist.");
+            }
+
             $roleScope = $this->getEntityManager()->getRepository('RoleScope')->get($entity->get('roleScopeId'));
+            if (empty($roleScope)) {
+                throw new BadRequest("Scope '{$entity->get('roleScopeId')}' does not exist.");
+            }
 
             if ($roleScope->get('name') !== $attributePanel->get('entityId')) {
                 throw new BadRequest("The Attribute Panel {$attributePanel->get('name')} could not be chosen for the Scope {$roleScope->get('name')}");
