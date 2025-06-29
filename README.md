@@ -2,17 +2,14 @@
 <img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48">
 </p>
 
+AtroPIM is a highly flexible, configurable, modular, [open-source product information management system (PIM)](https://www.atropim.com).
+
 | Host            | URL                                          |
 | --------------- | -------------------------------------------- |
 | Main Repository | https://gitlab.atrocore.com/atrocore/atropim |
 | Mirror (GitHub) | https://github.com/atrocore/atropim          |
 
-This repository contains source code for a PIM module for the AtroCore Data Platform.
-
-## What Is AtroPIM?
-
-AtroPIM is an [open-source product information management system (PIM)](https://www.atropim.com).
-AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
+This repository contains source code for a PIM module for the AtroCore Data Platform. AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
 ![Product Detail page](_assets/product-detail-page.png)
 
