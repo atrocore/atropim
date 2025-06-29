@@ -11,9 +11,6 @@ AtroPIM is a highly flexible, configurable, modular, [open-source product inform
 
 This repository contains source code for a PIM module for the AtroCore Data Platform. AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
-![Product Detail page](_assets/product-detail-page.png)
-
-
 ### History
 Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
 Now we have much more :)
@@ -102,6 +99,10 @@ To install AtroPIM you need to install Atrocore and a PIM module for it.
 Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
+
+## Look and Feel
+
+![Product Detail page](_assets/product-detail-page.png)
 
 ### Demo
 
