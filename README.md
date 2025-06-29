@@ -15,15 +15,19 @@ This repository contains source code for a PIM module for the AtroCore Data Plat
 AtroPIM is an [open-source product information management system (PIM)](https://www.atropim.com).
 AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
+### History
+Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
+Now we have much more :)
+
+
 ## What Are the Advantages of AtroPIM?
 
 - Scalable
-- Highly configurable out of the box
-- REST API for everything incl. your custom data model
-- User-friendly and mobile-friendly
-- Configurable "everything" (entities, relations, fields, layouts, notifications, labels, navigation, dashboards, etc.)
+- Highly configurable (entities, relations, fields, layouts, attributes, notifications, labels, navigation, dashboards, etc.)
+- REST API for everything incl. your custom configurations
+- Mobile-friendly UI
 - Extensible with modules
-- ... and other advantages of [AtroCore](https://github.com/atrocore/atrocore).
+- Also check other advantages of [AtroCore](https://github.com/atrocore/atrocore).
 
 ## How Does It Work?
 
@@ -33,7 +37,9 @@ AtroPIM is an effective solution for storing, processing and managing your produ
 
 ## Features
 
-AtroPIM comes with a lot of features directly out of the box, including:
+![Product Detail page](_assets/product-detail-page.png)
+
+AtroPIM comes with a lot of features:
 
 - All AtroCore's features plus management of:
 - Products
@@ -46,7 +52,19 @@ AtroPIM comes with a lot of features directly out of the box, including:
 - Product and Category Images
 - and much more.
 
-Want to know more about AtroPIM functions and its advantages for you? Please, visit [our website](https://www.atropim.com).
+Visit [this page](https://www.atropim.com/en/features) to see all the features of AtroPIM.
+
+### Enterprise Edition?
+
+There is no Enterprise Edition, only the Core, free modules and paid modules.
+
+### Free vs Paid
+
+- The core modules, including AtroCore, PIM, Import, Export, and several others, are open-source and freely available.
+- These free modules are sufficient to meet the needs of the vast majority of users.
+- Only selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through paid modules.
+
+
 
 ## Technology
 
@@ -65,6 +83,10 @@ We offer the following native paid integrations:
 
 Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
 
+You can **build your own fully automated integration** with any third-party system via its REST / GraphQL API using our free modules: 
+- Import: HTTP Requests and/or 
+- Export: HTTP Requests.
+
 Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 
@@ -77,7 +99,7 @@ Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
-### Installation
+### Installation (Getting Started)
 
 To install AtroPIM you need to install Atrocore and a PIM module for it.
 
