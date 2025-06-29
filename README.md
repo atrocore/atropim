@@ -1,10 +1,11 @@
-<img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48"><br><br>
+<p align="center" width="100%">
+<img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48">
+</p>
 
-This repository is hosted on: https://gitlab.atrocore.com/atrocore/atropim
-
-GitHub mirror: https://github.com/atrocore/atropim
-
-> This repository is hosted by GitLab, we use GitHub to host its mirror. 
+| Host            | URL                                          |
+| --------------- | -------------------------------------------- |
+| Main Repository | https://gitlab.atrocore.com/atrocore/atropim |
+| Mirror (GitHub) | https://github.com/atrocore/atropim          |
 
 This repository contains source code for a PIM module for the AtroCore Data Platform.
 
