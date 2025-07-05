@@ -101,12 +101,12 @@ Installation Guide is [here](https://help.atrocore.com/installation-and-maintena
 Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
 
 ## Look and Feel
-|                                                                                          |                                                                                         |
-| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| [![Dashboard](_assets/dashboard.png)](_assets/dashboard.png)                             | [![Files](_assets/files.png)](_assets/files.png)                                        |
-| [![Product List](_assets/product-list.png)](_assets/product-list.png)                    | [![Product Cards](_assets/product-cards.png)](_assets/product-cards.png)                |
-| [![Product Details 1](_assets/product-details1.png)](_assets/product-details1.png)       | ![Product Details 2](_assets/product-details2.png)](_assets/product-details2.png)       |
-| [![Layout Management 1](_assets/layout-management1.png)](_assets/layout-management1.png) | ![Layout Management 2](_assets/layout-management2.png)](_assets/layout-management2.png) |
+|                                                                                          |                                                                                          |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [![Dashboard](_assets/dashboard.png)](_assets/dashboard.png)                             | [![Files](_assets/files.png)](_assets/files.png)                                         |
+| [![Product List](_assets/product-list.png)](_assets/product-list.png)                    | [![Product Cards](_assets/product-cards.png)](_assets/product-cards.png)                 |
+| [![Product Details 1](_assets/product-details1.png)](_assets/product-details1.png)       | [![Product Details 2](_assets/product-details2.png)](_assets/product-details2.png)       |
+| [![Layout Management 1](_assets/layout-management1.png)](_assets/layout-management1.png) | [![Layout Management 2](_assets/layout-management2.png)](_assets/layout-management2.png) |
 
 ### Public Demo Instance
 
