@@ -2,7 +2,9 @@
 <img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48">
 </p>
 
-AtroPIM is a highly flexible, configurable, modular, [open-source product information management system (PIM)](https://www.atropim.com).
+AtroPIM is a highly flexible, configurable, and modular [open-source product information management system (PIM)](https://www.atropim.com). 
+It enables manufacturers, brands, and retailers to efficiently centralize, manage, and distribute product data across multiple channels—making it ideal for scalable eCommerce and digital product management.
+
 
 | Host            | URL                                          |
 | --------------- | -------------------------------------------- |
