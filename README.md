@@ -108,7 +108,7 @@ Installation Guide for Docker is [here](https://help.atrocore.com/installation-a
 | [![Product Details 1](_assets/product-details1.png)](_assets/product-details1.png)       | [![Product Details 2](_assets/product-details2.png)](_assets/product-details2.png)       |
 | [![Layout Management 1](_assets/layout-management1.png)](_assets/layout-management1.png) | [![Layout Management 2](_assets/layout-management2.png)](_assets/layout-management2.png) |
 
-### Public Demo Instance
+## Public Demo Instance
 
 - URL: https://demo.atropim.com/
 - Login: admin
