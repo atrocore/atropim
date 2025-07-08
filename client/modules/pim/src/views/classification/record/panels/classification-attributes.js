@@ -9,7 +9,7 @@
  */
 
 Espo.define('pim:views/classification/record/panels/classification-attributes',
-    ['views/record/panels/relationship', 'views/record/panels/bottom', 'pim:views/record/panels/records-in-groups', 'search-manager'],
+    ['views/record/panels/relationship', 'views/record/panels/bottom', 'views/record/panels/records-in-groups', 'search-manager'],
     (Dep, BottomPanel, RecordInGroup, SearchManager) => Dep.extend({
 
         template: 'pim:classification/record/panels/classification-attributes',

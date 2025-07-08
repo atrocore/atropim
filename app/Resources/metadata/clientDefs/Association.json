@@ -1,23 +1,8 @@
 {
-    "controller": "controllers/record",
-    "iconClass": "shuffle",
-    "boolFilterList": [
-        "onlyMy",
-        "notUsedAssociations",
-        "usedAssociations"
-    ],
-    "hiddenBoolFilterList": [
-        "notUsedAssociations",
-        "usedAssociations"
-    ],
-    "disabledMassActions": [
-        "merge"
-    ],
-    "views": {
-        "list": "pim:views/list"
-    },
-    "recordViews": {
-        "list": "pim:views/record/list",
-        "detail": "pim:views/association/record/detail"
-    }
+  "views": {
+    "list": "pim:views/list"
+  },
+  "recordViews": {
+    "list": "pim:views/record/list"
+  }
 }

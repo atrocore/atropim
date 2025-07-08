@@ -1,11 +1,7 @@
 {
-  "entity": true,
-  "layouts": true,
   "tab": true,
   "acl": true,
-  "disabled": false,
   "customizable": true,
-  "type": "Relation",
   "module": "Pim",
   "importable": true,
   "streamDisabled": true

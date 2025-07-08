@@ -1,14 +1,11 @@
 {
   "fields": {
-    "association": "Association",
-    "backwardAssociation": "Backward Association",
     "mainProduct": "Main Product",
     "mainProductImage": "Main Product Image",
     "relatedProduct": "Related Product",
-    "relatedProductImage": "Related Product Image",
-    "sorting": "Sort Order"
+    "relatedProductImage": "Related Product Image"
   },
   "messages": {
-    "removeRelatedProducts": "Are you sure you want to remove all the products for the selected Association from the current product? All related products will be retained."
+    "removeRelatedRecords": "Are you sure you want to remove all the products for the selected Association from the current product? All related products will be retained."
   }
 }
