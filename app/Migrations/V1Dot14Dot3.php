@@ -426,16 +426,20 @@ class V1Dot14Dot3 extends Base
         $offset = 0;
         $limit = 5000;
 
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
         while (true) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('*')
                 ->from('product_attribute_value')
                 ->where('deleted=:false')
                 ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
+                ->andWhere('created_at < :date')
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('empty', '')
+                ->setParameter('date', $now)
                 ->fetchAllAssociative();
 
             $offset = $offset + $limit;
@@ -479,6 +483,12 @@ class V1Dot14Dot3 extends Base
                         } elseif ($column === 'channel_id') {
                             $qb->setValue('channel_id', ':channelId')
                                 ->setParameter('channelId', $item['channel_id']);
+                        } elseif ($column == 'created_at') {
+                            $qb->setValue('created_at', ':createdAt')
+                                ->setParameter('createdAt', $now);
+                        } elseif ($column === 'modified_at') {
+                            $qb->setValue('modified_at', ':modifiedAt')
+                                ->setParameter('modifiedAt', $now);
                         } else {
                             $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
                                 ->setParameter($column, $val, Mapper::getParameterType($val));
