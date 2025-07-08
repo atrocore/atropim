@@ -486,7 +486,7 @@ class V1Dot14Dot3 extends Base
                         } elseif ($column == 'created_at') {
                             $qb->setValue('created_at', ':createdAt')
                                 ->setParameter('createdAt', $now);
-                        } elseif ($column === 'modified_at') {
+                        } elseif ($column == 'modified_at') {
                             $qb->setValue('modified_at', ':modifiedAt')
                                 ->setParameter('modifiedAt', $now);
                         } else {
