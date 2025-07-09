@@ -2,20 +2,18 @@
   "fields": {
     "products": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
       "noLoad": true
     },
     "categories": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
       "noLoad": true
     },
     "brands": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "noLoad": true
+    },
+    "listings": {
+      "type": "linkMultiple",
       "noLoad": true
     }
   },
@@ -37,6 +35,12 @@
       "relationName": "brandFile",
       "foreign": "files",
       "entity": "Brand"
+    },
+    "listings": {
+      "type": "hasMany",
+      "relationName": "ListingFile",
+      "foreign": "files",
+      "entity": "Listing"
     }
   }
 }

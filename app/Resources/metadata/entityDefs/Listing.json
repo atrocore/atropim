@@ -39,6 +39,10 @@
       "type": "extensibleEnum",
       "extensibleEnumId": "listing_status",
       "required": true
+    },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {
@@ -59,6 +63,12 @@
       "type": "belongsTo",
       "entity": "Channel",
       "foreign": "listings"
+    },
+    "files": {
+      "type": "hasMany",
+      "relationName": "ListingFile",
+      "foreign": "listings",
+      "entity": "File"
     }
   },
   "collection": {
