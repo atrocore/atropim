@@ -14,5 +14,7 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "hasAttribute": true,
-  "hasClassification": true
+  "hasClassification": true,
+  "singleClassification": true,
+  "disableAttributeLinking": true
 }
