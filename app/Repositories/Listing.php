@@ -37,6 +37,8 @@ class Listing extends Base
             }
 
             $entity->set('classificationsIds', [$classification->get('id')]);
+
+            $this->getMemoryStorage()->set('listingClassificationUpdated', true);
         }
     }
 }
