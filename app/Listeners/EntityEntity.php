@@ -25,6 +25,13 @@ class EntityEntity extends AbstractEntityListener
         /** @var Entity $entity */
         $entity = $event->getArgument('entity');
 
+        if ($entity->get('id') === 'Listing') {
+            $entity->set('disableAttributeLinking', true);
+            $entity->set('singleClassification', true);
+            $entity->set('hasClassification', true);
+            $entity->set('hasAttribute', true);
+        }
+
         if ($entity->isAttributeChanged('hasAttribute') && empty($entity->get('hasAttribute'))) {
             $attribute = $this->getEntityManager()->getRepository('Attribute')
                 ->where(['entityId' => $entity->id])
