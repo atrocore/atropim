@@ -7,19 +7,21 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "status"
+        }
       ],
       [
         {
           "name": "product"
         },
         {
-          "name": "classifications"
+          "name": "channel"
         }
       ],
       [
         {
-          "name": "channel"
+          "name": "classifications"
         },
         false
       ],

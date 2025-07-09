@@ -32,7 +32,13 @@
       "required": true
     },
     "channel": {
-      "type": "link"
+      "type": "link",
+      "required": true
+    },
+    "status": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "listing_status",
+      "required": true
     }
   },
   "links": {
