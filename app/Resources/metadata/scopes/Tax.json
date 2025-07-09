@@ -12,5 +12,8 @@
   "module": "Pim",
   "object": true,
   "hasActive": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true
 }

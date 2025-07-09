@@ -69,12 +69,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "ownerUser": {
-      "required": false
-    },
-    "assignedUser": {
-      "required": false
-    },
     "type": {
       "type": "enum",
       "prohibitedEmptyValue": true,
