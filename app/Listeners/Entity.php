@@ -87,6 +87,9 @@ class Entity extends AbstractEntityListener
         $relationName = $event->getArgument('relationName');
 
         if ($relationName === 'classifications') {
+            if (is_string($classification)){
+                $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
+            }
             $this->deleteAttributeValuesFromRecord($entity, $classification);
         }
     }

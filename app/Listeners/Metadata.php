@@ -57,6 +57,11 @@ class Metadata extends AbstractListener
 
         $this->addOnlyExtensibleEnumOptionForCABoolFilter($data);
 
+        $data['entityDefs']['Listing']['fields']['classifications']['emHidden'] = true;
+        $data['entityDefs']['Listing']['fields']['classifications']['layoutListDisabled'] = true;
+        $data['entityDefs']['Listing']['fields']['classifications']['layoutDetailDisabled'] = true;
+        $data['entityDefs']['Listing']['links']['classifications']['layoutRelationshipsDisabled'] = true;
+
         $event->setArgument('data', $data);
     }
 
