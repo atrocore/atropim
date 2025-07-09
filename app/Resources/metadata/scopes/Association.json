@@ -11,5 +11,8 @@
   "type": "Base",
   "module": "Pim",
   "object": true,
-  "isActiveUnavailable": true
+  "isActiveUnavailable": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true
 }
