@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
-use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Relation;
 use Espo\ORM\Entity;
 
@@ -43,7 +43,7 @@ class ListingClassification extends Relation
             $listing = $this->getEntityManager()->getRepository('Listing')->get($entity->get('listingId'));
 
             if (!empty($classification) && !empty($listing)) {
-                throw new Forbidden();
+                throw new BadRequest($this->getLanguage()->translate('singleClassificationAllowed', 'exceptions'));
             }
         }
     }
