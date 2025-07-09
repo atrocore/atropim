@@ -118,7 +118,7 @@ class Entity extends AbstractEntityListener
         if (
             !$this->getMetadata()->get(['scopes', $entityName, 'hasClassification'], false)
             || !$this->getMetadata()->get(['scopes', $entityName, 'singleClassification'], false)
-            || !$entity->get('isNew')
+            || !$entity->isNew()
         ) {
             return;
         }
