@@ -23,6 +23,7 @@
     "ContentItem": "Élément de contenu"
   },
   "fields": {
+    "product": "Produit",
     "classifications": "Classification",
     "amount": "Montant",
     "products": "Produits",

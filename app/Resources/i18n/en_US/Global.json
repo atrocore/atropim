@@ -64,6 +64,7 @@
     }
   },
   "fields": {
+    "product": "Product",
     "classifications": "Classifications",
     "categories": "Categories",
     "channels": "Channels",

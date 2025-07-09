@@ -26,6 +26,10 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "product": {
+      "type": "link",
+      "required": true
     }
   },
   "links": {
@@ -36,6 +40,11 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "product": {
+      "type": "belongsTo",
+      "entity": "Product",
+      "foreign": "listings"
     }
   },
   "collection": {

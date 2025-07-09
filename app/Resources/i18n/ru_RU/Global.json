@@ -45,6 +45,7 @@
     }
   },
   "fields": {
+    "product": "Продукт",
     "productStatus": "Статус продукта",
     "oneGeoType": "OneGeo Type",
     "priceCurrency": "Валюта цены",

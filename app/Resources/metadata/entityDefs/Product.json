@@ -195,6 +195,10 @@
       "noLoad": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true
+    },
+    "listings": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {
@@ -290,6 +294,11 @@
       "relationName": "productContentItem",
       "foreign": "products",
       "entity": "ContentItem"
+    },
+    "listings": {
+      "type": "hasMany",
+      "foreign": "product",
+      "entity": "Listing"
     }
   },
   "collection": {

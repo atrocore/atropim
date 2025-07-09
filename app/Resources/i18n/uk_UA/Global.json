@@ -51,6 +51,7 @@
     }
   },
   "fields": {
+    "product": "Продукт",
     "classifications": "Класифікації",
     "classification": "Класифікація",
     "productStatus": "Статус продукту",
