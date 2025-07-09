@@ -31,9 +31,12 @@ class Attribute extends Base
 
     public function getAttributesDefs(string $entityName, array $attributesIds): array
     {
-        $attributes = $this->getRepository()->getAttributesByIds($attributesIds);
-
         $entity = $this->getEntityManager()->getRepository($entityName)->get();
+        if (!$entity) {
+            return [];
+        }
+
+        $attributes = $this->getRepository()->getAttributesByIds($attributesIds);
 
         /** @var AttributeFieldConverter $converter */
         $converter = $this->getInjection(AttributeFieldConverter::class);
