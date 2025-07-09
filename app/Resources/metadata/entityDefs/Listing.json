@@ -37,6 +37,7 @@
     },
     "classification": {
       "type": "link",
+      "view": "pim:views/listing/fields/classification",
       "required": true
     },
     "status": {
