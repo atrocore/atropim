@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Listing": "Listing",
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribute Panel",
     "ProductFile": "Product File",
@@ -29,6 +30,7 @@
     "ContentItem": "Content Item"
   },
   "scopeNamesPlural": {
+    "Listing": "Listings",
     "RoleScopeAttribute": "Attributes",
     "RoleScopeAttributePanel": "Attribute Panels",
     "ProductFile": "Product Files",
@@ -64,6 +66,7 @@
     }
   },
   "fields": {
+    "listings": "Listings",
     "product": "Product",
     "classifications": "Classifications",
     "categories": "Categories",
