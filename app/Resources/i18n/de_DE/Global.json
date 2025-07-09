@@ -48,6 +48,7 @@
     "ContentItem": "Inhalte"
   },
   "fields": {
+    "channel": "Kanal",
     "product": "Produkt",
     "classifications": "Klassifikationen",
     "categories": "Kategorien",

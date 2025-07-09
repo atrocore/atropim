@@ -51,6 +51,7 @@
     }
   },
   "fields": {
+    "channel": "Канал",
     "product": "Продукт",
     "classifications": "Класифікації",
     "classification": "Класифікація",

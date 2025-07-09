@@ -30,6 +30,9 @@
     "product": {
       "type": "link",
       "required": true
+    },
+    "channel": {
+      "type": "link"
     }
   },
   "links": {
@@ -44,6 +47,11 @@
     "product": {
       "type": "belongsTo",
       "entity": "Product",
+      "foreign": "listings"
+    },
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
       "foreign": "listings"
     }
   },

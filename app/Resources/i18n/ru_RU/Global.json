@@ -45,6 +45,7 @@
     }
   },
   "fields": {
+    "channel": "Канал",
     "product": "Продукт",
     "productStatus": "Статус продукта",
     "oneGeoType": "OneGeo Type",

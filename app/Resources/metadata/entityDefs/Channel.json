@@ -61,6 +61,10 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "listings": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {
@@ -88,6 +92,11 @@
       "type": "hasMany",
       "foreign": "channel",
       "entity": "Attribute"
+    },
+    "listings": {
+      "type": "hasMany",
+      "foreign": "channel",
+      "entity": "Listing"
     }
   },
   "collection": {
