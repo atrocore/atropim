@@ -15,15 +15,15 @@
         {
           "name": "product"
         },
-        {
-          "name": "channel"
-        }
+        false
       ],
       [
         {
-          "name": "classifications"
+          "name": "channel"
         },
-        false
+        {
+          "name": "classification"
+        }
       ],
       [
         {

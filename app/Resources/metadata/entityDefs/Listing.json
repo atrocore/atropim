@@ -35,6 +35,10 @@
       "type": "link",
       "required": true
     },
+    "classification": {
+      "type": "link",
+      "required": true
+    },
     "status": {
       "type": "extensibleEnum",
       "extensibleEnumId": "listing_status",
@@ -63,6 +67,10 @@
       "type": "belongsTo",
       "entity": "Channel",
       "foreign": "listings"
+    },
+    "classification": {
+      "type": "belongsTo",
+      "entity": "Classification"
     },
     "files": {
       "type": "hasMany",
