@@ -127,7 +127,10 @@ class Entity extends AbstractEntityListener
         $entityId = $entity->get($entityField);
 
         $record = $this->getEntityManager()->getRepository($entity->getEntityName())
-            ->where([$entityField => $entityId])
+            ->where([
+                $entityField => $entityId,
+                'deleted'    => false
+            ])
             ->findOne();
 
         if (!empty($record)) {
