@@ -19,7 +19,6 @@
     "image": "Основне зображення",
     "tag": "Тег",
     "productSerie": "Серія продукту",
-    "association": "Асоціація",
     "catalog": "Каталог",
     "channels": "Канали",
     "productChannels": "Канали продукту",
@@ -77,7 +76,7 @@
     }
   },
   "boolFilters": {
-    "notAssociatedProducts": "Не асоційовані продукти",
+    "notAssociatedRecords": "Не асоційовані продукти",
     "notLinkedWithBrand": "Не пов'язаний із брендом",
     "notLinkedWithProductSerie": "Не пов'язаний із серією продукту",
     "linkedWithCategory": "Пов'язаний із категорією",
@@ -85,17 +84,16 @@
     "withoutMainImage": "Без основного зображення"
   },
   "exceptions": {
-    "backwardAssociationError": "Помилка зворотної асоціації: %s",
     "wrongInputData": "Перевірка не вдалася. Неправильні ввідні дані.",
-    "noSuchAssociation": "Перевірка не вдалася. Такої асоціації не існує.",
     "itselfAssociation": "Продукт не може бути асоційований із самим собою.",
-    "productAssociationAlreadyExists": "Така продуктова асоціація вже існує.",
+    "recordAssociationAlreadyExists": "Така продуктова асоціація вже існує.",
     "youCantChangeClassificationInProduct": "Ви не можете змінити класифікацію в продукті",
     "productCanNotLinkToNonLeafCategory": "Продукт не може бути пов'язаний з категорією, яка не є кінцевою.",
     "productCatalogChangeException": "Ви не можете видалити/змінити каталог продукту, продукт використовує категорії які дозволені для оригінального(попереднього) каталогу. Будь ласка, спочатку видаліть зв'язок з цими категоріями."
   },
   "messages": {
     "emptyComponents": "Продукт не має компонентів.",
-    "componentsNotInstalled": "Встановіть модуль «Components», щоб використовувати попередній перегляд компонентів."
+    "componentsNotInstalled": "Встановіть модуль «Components», щоб використовувати попередній перегляд компонентів.",
+    "removeRelatedRecords": "Ви впевнені, що бажаєте видалити всі продукти для вибраної асоціації з поточного продукту? Усі супутні товари будуть збережені."
   }
 }

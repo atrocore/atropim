@@ -4,8 +4,5 @@
     "mainProductImage": "Image du produit principal",
     "relatedProduct": "Produit connexe",
     "relatedProductImage": "Image du produit apparenté"
-  },
-  "messages": {
-    "removeRelatedRecords": "Êtes-vous sûr de vouloir retirer tous les produits de l'association sélectionnée du produit actuel ? Tous les produits associés seront conservés."
   }
 }

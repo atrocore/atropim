@@ -13,7 +13,6 @@
     "Attribute": "Attribut",
     "Category": "Kategorie",
     "Channel": "Kanal",
-    "Association": "Assoziation",
     "Brand": "Marke",
     "Tax": "Tax",
     "Settings": "Administration",
@@ -34,7 +33,6 @@
     "Attribute": "Attribute",
     "Category": "Kategorien",
     "Channel": "Kanäle",
-    "Association": "Assoziationen",
     "Brand": "Marken",
     "AttributeGroup": "Attribut-Gruppen",
     "Tax": "Steuern",
@@ -114,12 +112,6 @@
     "removeHint": "Beim Entfernen des Katalogs werden die dazugehörigen Produkte gelöscht.",
     "categoryPreview": "Kategorievorschau",
     "productPreview": "Produktvorschau"
-  },
-  "streamMessages": {
-    "createProductAssociationThis": "{user} hat {relatedProduct} als {association} assoziiert",
-    "deleteProductAssociationThis": "{user} hat die Assoziation zu {relatedProduct} als {association} entfernt",
-    "createAssociationProductThis": "{user} hat {mainProduct} mit {relatedProduct} assoziiert",
-    "deleteAssociationProductThis": "{user} hat die Assoziation von {mainProduct} mit {relatedProduct} entfernt"
   },
   "dashlets": {
     "ProductsByTag": "Produkte nach Tag",

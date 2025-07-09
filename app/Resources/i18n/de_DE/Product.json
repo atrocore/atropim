@@ -29,7 +29,6 @@
     "image": "Hauptbild",
     "tag": "Etikett",
     "longDescription": "Lange Beschreibung",
-    "association": "Assoziation",
     "catalog": "Katalog",
     "packedAmount": "Gepackte Menge",
     "contents": "Contents",
@@ -82,7 +81,7 @@
     }
   },
   "boolFilters": {
-    "notAssociatedProducts": "Ohne assoziierte Produkte",
+    "notAssociatedRecords": "Ohne assoziierte Produkte",
     "notLinkedWithBrand": "Ohne Marke",
     "notLinkedWithProductSerie": "Ohne Produktserie",
     "linkedWithCategory": "Mit Kategorie",
@@ -90,17 +89,16 @@
     "withoutMainImage": "Ohne Hauptbild"
   },
   "exceptions": {
-    "backwardAssociationError": "Rückwärtsassoziationsfehler: %s",
     "wrongInputData": "Überprüfung ist fehlgeschlagen. Falsche Eingabedaten.",
-    "noSuchAssociation": "Überprüfung ist fehlgeschlagen. Solche Assoziation existiert nicht.",
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
-    "productAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
+    "recordAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
     "youCantChangeClassificationInProduct": "Sie können die Klassifikation in Product nicht ändern.",
     "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
     "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
   },
   "messages": {
     "componentsNotInstalled": "Installieren Sie das Modul Components, um die Komponentenvorschau zu verwenden.",
-    "emptyComponents": "Produkt hat keine Komponenten"
+    "emptyComponents": "Produkt hat keine Komponenten",
+    "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Produkte für die ausgewählte Zuordnung aus dem aktuellen Produkt entfernen möchten? Alle zugehörigen Produkte bleiben erhalten."
   }
 }

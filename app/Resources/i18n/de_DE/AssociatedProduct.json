@@ -4,8 +4,5 @@
     "relatedProduct": "Verwandtes Produkt",
     "mainProduct": "Hauptprodukt",
     "relatedProductImage": "Assoziiertes Produktbild"
-  },
-  "messages": {
-    "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Produkte für die ausgewählte Zuordnung aus dem aktuellen Produkt entfernen möchten? Alle zugehörigen Produkte bleiben erhalten."
   }
 }

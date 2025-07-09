@@ -18,57 +18,5 @@ use Slim\Http\Request;
 
 class Product extends \Atro\Core\Templates\Controllers\Hierarchy
 {
-    /**
-     * Action add associated products
-     *
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     *
-     * @throws Exceptions\BadRequest
-     * @throws Exceptions\Forbidden
-     */
-    public function actionAddAssociatedProducts(array $params, \stdClass $data, Request $request): array
-    {
-        if (!$request->isPost()) {
-            throw new Exceptions\BadRequest();
-        }
-        if (!property_exists($data, 'where') || !is_array($data->where) || !property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)) {
-            throw new Exceptions\BadRequest();
-        }
-        if (!$this->getAcl()->check('Product', 'edit')) {
-            throw new Exceptions\Forbidden();
-        }
 
-        return $this->getRecordService()->addAssociateProducts($data);
-    }
-
-    /**
-     * Action remove associated products
-     *
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     *
-     * @throws Exceptions\BadRequest
-     * @throws Exceptions\Forbidden
-     */
-    public function actionRemoveAssociatedProducts(array $params, \stdClass $data, Request $request): array
-    {
-        if (!$request->isDelete()) {
-            throw new Exceptions\BadRequest();
-        }
-        if (!property_exists($data, 'where') || !is_array($data->where) || !property_exists($data, 'foreignWhere') || !is_array($data->foreignWhere)) {
-            throw new Exceptions\BadRequest();
-        }
-        if (!$this->getAcl()->check('Product', 'edit')) {
-            throw new Exceptions\Forbidden();
-        }
-
-        return $this->getRecordService()->removeAssociateProducts($data);
-    }
 }

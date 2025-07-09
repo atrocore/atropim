@@ -9,22 +9,6 @@
     }
   },
   {
-    "route": "/Product/associatedMainProducts/relation",
-    "method": "post",
-    "params": {
-      "controller": "Product",
-      "action": "addAssociatedProducts"
-    }
-  },
-  {
-    "route": "/Product/associatedMainProducts/relation",
-    "method": "delete",
-    "params": {
-      "controller": "Product",
-      "action": "removeAssociatedProducts"
-    }
-  },
-  {
     "route": "/Attribute/action/getAttributesIdsFilter",
     "method": "get",
     "params": {
