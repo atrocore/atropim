@@ -69,12 +69,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "ownerUser": {
-      "required": false
-    },
-    "assignedUser": {
-      "required": false
-    },
     "type": {
       "type": "enum",
       "prohibitedEmptyValue": true,
@@ -85,6 +79,9 @@
         "general"
       ],
       "default": "general"
+    },
+    "channel": {
+      "type": "link"
     }
   },
   "links": {
@@ -100,6 +97,11 @@
       "type": "hasMany",
       "foreign": "classification",
       "entity": "ClassificationAttribute"
+    },
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "classifications"
     }
   },
   "collection": {

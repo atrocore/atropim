@@ -5,45 +5,31 @@
     "rows": [
       [
         {
-          "name": "isActive"
-        },
-        {
-          "name": "parents"
-        }
-      ],
-      [
-        {
           "name": "name"
         },
         {
-          "name": "type"
+          "name": "status"
         }
       ],
       [
         {
-          "name": "entity"
+          "name": "product"
         },
-        {
-          "name": "code"
-        }
+        false
       ],
       [
         {
           "name": "channel"
         },
-        false
+        {
+          "name": "classification"
+        }
       ],
       [
         {
           "name": "description",
           "fullWidth": true
         }
-      ],
-      [
-        {
-          "name": "synonyms"
-        },
-        false
       ]
     ]
   }

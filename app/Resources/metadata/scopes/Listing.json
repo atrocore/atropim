@@ -6,14 +6,15 @@
   "customizable": true,
   "importable": true,
   "notifications": true,
-  "streamDisabled": true,
   "disabled": false,
   "type": "Base",
   "module": "Pim",
   "object": true,
-  "hasActive": true,
-  "hideFieldTypeFilters": true,
   "hasOwner": true,
   "hasAssignedUser": true,
-  "hasTeam": true
+  "hasTeam": true,
+  "hasAttribute": true,
+  "hasClassification": true,
+  "singleClassification": true,
+  "disableAttributeLinking": true
 }

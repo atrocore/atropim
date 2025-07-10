@@ -107,20 +107,6 @@
     "variantSpecificAttributes": {
       "type": "linkMultiple"
     },
-    "ownerUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
-    },
     "categories": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -187,6 +173,10 @@
       "noLoad": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true
+    },
+    "listings": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {
@@ -233,20 +223,6 @@
       "foreign": "products",
       "entity": "Channel"
     },
-    "ownerUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "assignedUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "teams": {
-      "type": "hasMany",
-      "entity": "Team",
-      "relationName": "EntityTeam",
-      "layoutRelationshipsDisabled": true
-    },
     "categories": {
       "type": "hasMany",
       "relationName": "productCategory",
@@ -258,6 +234,11 @@
       "relationName": "productContentItem",
       "foreign": "products",
       "entity": "ContentItem"
+    },
+    "listings": {
+      "type": "hasMany",
+      "foreign": "product",
+      "entity": "Listing"
     }
   },
   "collection": {
@@ -268,19 +249,5 @@
       "sku",
       "type"
     ]
-  },
-  "indexes": {
-    "ownerUser": {
-      "columns": [
-        "ownerUserId",
-        "deleted"
-      ]
-    },
-    "assignedUser": {
-      "columns": [
-        "assignedUserId",
-        "deleted"
-      ]
-    }
   }
 }

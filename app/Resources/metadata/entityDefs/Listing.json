@@ -1,0 +1,107 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "wysiwyg",
+      "trim": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "product": {
+      "type": "link",
+      "required": true
+    },
+    "channel": {
+      "type": "link",
+      "required": true
+    },
+    "classification": {
+      "type": "link",
+      "view": "pim:views/listing/fields/classification",
+      "required": true
+    },
+    "status": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "listing_status",
+      "required": true
+    },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "product": {
+      "type": "belongsTo",
+      "entity": "Product",
+      "foreign": "listings"
+    },
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "listings"
+    },
+    "classification": {
+      "type": "belongsTo",
+      "entity": "Classification"
+    },
+    "files": {
+      "type": "hasMany",
+      "relationName": "ListingFile",
+      "foreign": "listings",
+      "entity": "File"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}

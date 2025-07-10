@@ -4,11 +4,13 @@
   "boolFilterList": [
     "onlyMy",
     "notEntity",
-    "onlyForEntity"
+    "onlyForEntity",
+    "onlyForChannel"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "onlyForEntity"
+    "onlyForEntity",
+    "onlyForChannel"
   ],
   "disabledMassActions": [
     "merge"

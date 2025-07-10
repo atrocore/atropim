@@ -24,20 +24,6 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "ownerUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": false,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
-    },
     "attributeGroup": {
       "type": "link",
       "view": "pim:views/attribute/fields/attribute-group",
@@ -282,23 +268,9 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "ownerUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "assignedUser": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
     "fileType": {
       "type": "belongsTo",
       "entity": "FileType"
-    },
-    "teams": {
-      "type": "hasMany",
-      "entity": "Team",
-      "relationName": "EntityTeam",
-      "layoutRelationshipsDisabled": true
     },
     "compositeAttribute": {
       "type": "belongsTo",
@@ -344,20 +316,6 @@
       "name",
       "code"
     ]
-  },
-  "indexes": {
-    "ownerUser": {
-      "columns": [
-        "ownerUserId",
-        "deleted"
-      ]
-    },
-    "assignedUser": {
-      "columns": [
-        "assignedUserId",
-        "deleted"
-      ]
-    }
   },
   "uniqueIndexes": {
     "unique_code": [

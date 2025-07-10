@@ -28,4 +28,14 @@ class Classification extends AbstractSelectManager
             ];
         }
     }
+
+    protected function boolFilterOnlyForChannel(array &$result): void
+    {
+        $channelId = (string)$this->getSelectCondition('onlyForChannel');
+        if (!empty($channelId)) {
+            $result['whereClause'][] = [
+                'channelId' => $channelId
+            ];
+        }
+    }
 }
