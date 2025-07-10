@@ -13,7 +13,6 @@
     "type": "Type",
     "amount": "Montant",
     "price": "Prix d'achat",
-    "tax": "Impôts",
     "ean": "GTIN/EAN",
     "mpn": "MPN",
     "rrp": "Prix de vente recommandé (PAV)",
