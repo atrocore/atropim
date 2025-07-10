@@ -20,7 +20,6 @@
     "image": "Main Image",
     "tag": "Tag",
     "productSerie": "Product Serie",
-    "association": "Association",
     "catalog": "Catalog",
     "channels": "Channels",
     "basePriceAmount": "Base Price Amount",
@@ -78,7 +77,7 @@
     }
   },
   "boolFilters": {
-    "notAssociatedProducts": "Without Associated Products",
+    "notAssociatedRecords": "Without Associated Products",
     "notLinkedWithBrand": "Without Brand",
     "notLinkedWithProductSerie": "Without Product Serie",
     "linkedWithCategory": "With Category",
@@ -86,17 +85,16 @@
     "withoutMainImage": "Without Main Image"
   },
   "exceptions": {
-    "backwardAssociationError": "Backward association error: %s",
     "wrongInputData": "Validation failed. Wrong input data.",
-    "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Product cannot be associated with itself.",
-    "productAssociationAlreadyExists": "Such product association exists already.",
+    "recordAssociationAlreadyExists": "Such product association exists already.",
     "youCantChangeClassificationInProduct": "You can't change Classification in Product",
     "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
     "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
   },
   "messages": {
     "componentsNotInstalled": "Install Components module to use components preview.",
-    "emptyComponents": "Product does not have Components"
+    "emptyComponents": "Product does not have Components",
+    "removeRelatedRecords": "Are you sure you want to remove all the products for the selected Association from the current product? All related products will be retained."
   }
 }

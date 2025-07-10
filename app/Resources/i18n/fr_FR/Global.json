@@ -8,7 +8,6 @@
     "Catalog": "Catalogue",
     "Category": "Catégorie",
     "Channel": "Canal",
-    "Association": "Association",
     "AttributeGroup": "Groupe d'attributs",
     "Brand": "Marque",
     "Classification": "Classification",
@@ -64,7 +63,6 @@
     "Category": "Catégories",
     "Channel": "Canaux",
     "AssociatedProduct": "Produits associés",
-    "Association": "Associations",
     "Brand": "Marques",
     "Tax": "Impôts",
     "ProductPrice": "Prix des produits",
@@ -101,12 +99,6 @@
     "bundledProducts": "Produits groupés",
     "nonHierarchicalProducts": "Produits non hiérarchisés",
     "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer."
-  },
-  "streamMessages": {
-    "createProductAssociationThis": "{utilisateur} a associé {relatedProduct} en tant que {association}",
-    "createAssociationProductThis": "{user} a associé {mainProduct} à {relatedProduct}",
-    "deleteAssociationProductThis": "{user} a supprimé l'association de {mainProduct} avec {relatedProduct}",
-    "deleteProductAssociationThis": "{utilisateur} a supprimé l'association à {relatedProduct} en tant que {association}"
   },
   "dashlets": {
     "Channels": "Canaux",

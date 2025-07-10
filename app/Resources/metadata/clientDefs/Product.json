@@ -11,7 +11,6 @@
     "ownedByMe",
     "assignedToMe",
     "notEntity",
-    "notAssociatedProducts",
     "notLinkedWithBrand",
     "withoutMainImage",
     "notLinkedWithProductSerie",
@@ -22,7 +21,6 @@
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "notAssociatedProducts",
     "notLinkedWithBrand",
     "notLinkedWithProductSerie",
     "linkedWithCategory",
@@ -64,7 +62,6 @@
     "compare": "pim:views/product/record/compare",
     "compareInstance": "pim:views/product/record/compare-instance"
   },
-  "massRelationView": "pim:views/product/modals/select-entity-and-records",
   "additionalPdfGeneratorDropdownItem": {
     "actionViewPath": "pim:views/product/actions/show-pdf-generator",
     "action": "showPdfGenerator"
@@ -116,10 +113,6 @@
         "onlyLeafCategories"
       ],
       "view": "pim:views/product/record/panels/categories"
-    },
-    "associatedProducts": {
-      "label": "associatedProducts",
-      "view": "pim:views/product/record/panels/associated-products"
     },
     "associatedMainProducts": {
       "label": "associatedProducts",

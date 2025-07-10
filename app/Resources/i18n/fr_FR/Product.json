@@ -20,7 +20,6 @@
     "image": "Image principale",
     "tag": "Étiquette",
     "productSerie": "Série de produits",
-    "association": "Association",
     "catalog": "Catalogue",
     "channels": "Canaux",
     "productChannels": "Canaux de produits",
@@ -77,7 +76,7 @@
     }
   },
   "boolFilters": {
-    "notAssociatedProducts": "Sans produits associés",
+    "notAssociatedRecords": "Sans produits associés",
     "notLinkedWithBrand": "Sans marque",
     "notLinkedWithProductSerie": "Sans série de produits",
     "linkedWithCategory": "Avec catégorie",
@@ -85,17 +84,16 @@
     "withoutMainImage": "Sans Image principale"
   },
   "exceptions": {
-    "backwardAssociationError": "Erreur d'association à rebours : %s",
     "wrongInputData": "La validation a échoué. Données d'entrée incorrectes.",
-    "noSuchAssociation": "La validation a échoué. Cette association n'existe pas.",
     "itselfAssociation": "Le produit ne peut pas être associé à lui-même.",
-    "productAssociationAlreadyExists": "Une telle association de produits existe déjà.",
+    "recordAssociationAlreadyExists": "Une telle association de produits existe déjà.",
     "youCantChangeClassificationInProduct": "Vous ne pouvez pas modifier la classification dans le produit",
     "productCanNotLinkToNonLeafCategory": "Les produits ne peuvent pas être liés à une catégorie non feuilletée.",
     "productCatalogChangeException": "Le catalogue ne peut pas être supprimé/modifié, le produit utilise des catégories autorisées pour ce catalogue. Veuillez d'abord les dissocier."
   },
   "messages": {
     "componentsNotInstalled": "Installez le module Composants pour utiliser l'aperçu des composants.",
-    "emptyComponents": "Le produit n'a pas de composants"
+    "emptyComponents": "Le produit n'a pas de composants",
+    "removeRelatedRecords": "Êtes-vous sûr de vouloir retirer tous les produits de l'association sélectionnée du produit actuel ? Tous les produits associés seront conservés."
   }
 }

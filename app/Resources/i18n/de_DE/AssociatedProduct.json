@@ -1,14 +1,8 @@
 {
   "fields": {
-    "association": "Assoziation",
+    "mainProductImage": "Hauptproduktbild",
     "relatedProduct": "Verwandtes Produkt",
     "mainProduct": "Hauptprodukt",
-    "backwardAssociation": "Umgekehrte Assoziation",
-    "relatedProductImage": "Assoziiertes Produktbild",
-    "mainProductImage": "Hauptproduktbild",
-    "sorting": "Sortierreihenfolge"
-  },
-  "messages": {
-    "removeRelatedProducts": "Sind Sie sicher, dass Sie alle Produkte für die ausgewählte Zuordnung aus dem aktuellen Produkt entfernen möchten? Alle zugehörigen Produkte bleiben erhalten."
+    "relatedProductImage": "Assoziiertes Produktbild"
   }
 }

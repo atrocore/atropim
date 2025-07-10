@@ -4,28 +4,6 @@
       "type": "link",
       "view": "pim:views/product/fields/brand"
     },
-    "associatedMainProducts": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "layoutLeftSidebarDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": false,
-      "noLoad": true,
-      "importDisabled": true,
-      "exportDisabled": false
-    },
-    "associatedRelatedProduct": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "layoutLeftSidebarDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": false,
-      "noLoad": true,
-      "exportDisabled": false,
-      "importDisabled": true
-    },
     "productStatus": {
       "type": "enum",
       "required": true,
@@ -223,44 +201,6 @@
       "type": "belongsTo",
       "foreign": "products",
       "entity": "Brand"
-    },
-    "associatedProducts": {
-      "type": "hasMany",
-      "relationName": "AssociatedProduct",
-      "entity": "Product",
-      "midKeys": [
-        "mainProductId",
-        "relatedProductId"
-      ],
-      "disableMassRelation": true
-    },
-    "relatedProducts": {
-      "type": "hasMany",
-      "relationName": "AssociatedProduct",
-      "entity": "Product",
-      "layoutRelationshipsDisabled": false,
-      "midKeys": [
-        "relatedProductId",
-        "mainProductId"
-      ],
-      "disableMassRelation": true
-    },
-    "associatedMainProducts": {
-      "type": "hasMany",
-      "foreign": "mainProduct",
-      "entity": "AssociatedProduct",
-      "layoutRelationshipsDisabled": true,
-      "addRelationCustomDefs": {
-        "link": "products",
-        "entity": "Product"
-      }
-    },
-    "associatedRelatedProduct": {
-      "type": "hasMany",
-      "foreign": "relatedProduct",
-      "entity": "AssociatedProduct",
-      "layoutRelationshipsDisabled": true,
-      "disableMassRelation": true
     },
     "tax": {
       "type": "belongsTo",

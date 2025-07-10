@@ -15,7 +15,6 @@
     "Category": "Category",
     "Channel": "Channel",
     "AssociatedProduct": "Associated Product",
-    "Association": "Association",
     "AttributeGroup": "Attribute Group",
     "AttributePanel": "Attribute Panel",
     "Brand": "Brand",
@@ -41,7 +40,6 @@
     "Category": "Categories",
     "Channel": "Channels",
     "AssociatedProduct": "Associated Products",
-    "Association": "Associations",
     "AttributeGroup": "Attribute Groups",
     "AttributePanel": "Attribute Panels",
     "Brand": "Brands",
@@ -114,12 +112,6 @@
     "removeHint": "When removing the Catalog, the Products belonging to it are deleted.",
     "categoryPreview": "Category Preview",
     "productPreview": "Product Preview"
-  },
-  "streamMessages": {
-    "createProductAssociationThis": "{user} associated {relatedProduct} as {association}",
-    "deleteProductAssociationThis": "{user} removed association to {relatedProduct} as {association}",
-    "createAssociationProductThis": "{user} associated {mainProduct} with {relatedProduct}",
-    "deleteAssociationProductThis": "{user} removed association of {mainProduct} with {relatedProduct}"
   },
   "dashlets": {
     "Channels": "Channels",

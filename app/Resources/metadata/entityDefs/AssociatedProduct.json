@@ -1,30 +1,5 @@
 {
   "fields": {
-    "association": {
-      "type": "link",
-      "required": true,
-      "view": "pim:views/associated-product/fields/association"
-    },
-    "mainProduct": {
-      "required": true,
-      "type": "link",
-      "relationField": true,
-      "view": "pim:views/associated-product/fields/main-product"
-    },
-    "relatedProduct": {
-      "required": true,
-      "type": "link",
-      "relationField": true,
-      "view": "pim:views/associated-product/fields/related-product",
-      "noLoad": false
-    },
-    "backwardAssociation": {
-      "type": "link",
-      "notStorable": true,
-      "entity": "Association",
-      "view": "pim:views/associated-product/fields/backward-association",
-      "filterDisabled": true
-    },
     "mainProductImage": {
       "type": "file",
       "previewSize": "medium",
@@ -40,77 +15,6 @@
       "notStorable": true,
       "view": "pim:views/fields/full-width-list-image",
       "importDisabled": true
-    },
-    "backwardAssociatedProduct": {
-      "type": "link",
-      "readOnly": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "createdAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "modifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "createdBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "modifiedBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "sorting": {
-      "type": "int"
     }
-  },
-  "links": {
-    "association": {
-      "type": "belongsTo",
-      "foreign": "associatedProducts",
-      "entity": "Association"
-    },
-    "mainProduct": {
-      "type": "belongsTo",
-      "foreign": "associatedMainProducts",
-      "entity": "Product"
-    },
-    "relatedProduct": {
-      "type": "belongsTo",
-      "foreign": "associatedRelatedProduct",
-      "entity": "Product"
-    },
-    "backwardAssociatedProduct": {
-      "type": "belongsTo",
-      "entity": "AssociatedProduct"
-    },
-    "createdBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    },
-    "modifiedBy": {
-      "type": "belongsTo",
-      "entity": "User"
-    }
-  },
-  "uniqueIndexes": {
-    "unique_relation": [
-      "deleted",
-      "association_id",
-      "main_product_id",
-      "related_product_id"
-    ]
   }
 }

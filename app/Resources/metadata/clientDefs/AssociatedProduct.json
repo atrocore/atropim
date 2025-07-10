@@ -1,16 +1,5 @@
 {
   "controller": "controllers/record",
-  "iconClass": "package",
-  "quickCreate": true,
-  "quickCreateOptions": {
-    "fullFormDisabled": true
-  },
-  "boolFilterList": [
-    "onlyMy"
-  ],
-  "disabledMassActions": [
-    "merge"
-  ],
   "views": {
     "detail": "pim:views/detail",
     "list": "pim:views/list"

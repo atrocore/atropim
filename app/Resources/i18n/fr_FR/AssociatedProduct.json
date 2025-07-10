@@ -1,14 +1,8 @@
 {
   "fields": {
-    "association": "Association",
-    "backwardAssociation": "Association des arriérés",
     "mainProduct": "Produit principal",
     "mainProductImage": "Image du produit principal",
     "relatedProduct": "Produit connexe",
-    "relatedProductImage": "Image du produit apparenté",
-    "sorting": "Ordre de tri"
-  },
-  "messages": {
-    "removeRelatedProducts": "Êtes-vous sûr de vouloir retirer tous les produits de l'association sélectionnée du produit actuel ? Tous les produits associés seront conservés."
+    "relatedProductImage": "Image du produit apparenté"
   }
 }

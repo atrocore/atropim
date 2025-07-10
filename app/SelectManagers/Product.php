@@ -40,50 +40,6 @@ class Product extends AbstractSelectManager
     }
 
     /**
-     * NotAssociatedProduct filter
-     *
-     * @param array $result
-     */
-    protected function boolFilterNotAssociatedProducts(&$result)
-    {
-        // prepare data
-        $data = (array)$this->getSelectCondition('notAssociatedProducts');
-
-        if (!empty($data['associationId'])) {
-            $associatedProducts = $this->getAssociatedProducts($data['associationId'], $data['mainProductId']);
-            foreach ($associatedProducts as $row) {
-                $result['whereClause'][] = [
-                    'id!=' => (string)$row['related_product_id']
-                ];
-            }
-        }
-    }
-
-    /**
-     * Get assiciated products
-     *
-     * @param string $associationId
-     * @param string $productId
-     *
-     * @return array
-     */
-    protected function getAssociatedProducts($associationId, $productId)
-    {
-        $connection = $this->getEntityManager()->getConnection();
-
-        return $connection->createQueryBuilder()
-            ->select('related_product_id')
-            ->from('associated_product')
-            ->where('main_product_id = :productId')
-            ->andWhere('association_id = :associationId')
-            ->andWhere('deleted = :false')
-            ->setParameter('productId', $productId, Mapper::getParameterType($productId))
-            ->setParameter('associationId', $associationId, Mapper::getParameterType($associationId))
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->fetchAllAssociative();
-    }
-
-    /**
      * NotLinkedWithBrand filter
      *
      * @param array $result
