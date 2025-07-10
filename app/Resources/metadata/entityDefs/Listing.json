@@ -29,16 +29,19 @@
     },
     "product": {
       "type": "link",
-      "required": true
+      "required": true,
+      "customizable": false
     },
     "channel": {
       "type": "link",
-      "required": true
+      "required": true,
+      "customizable": false
     },
     "classification": {
       "type": "link",
       "view": "pim:views/listing/fields/classification",
-      "required": true
+      "required": true,
+      "customizable": false
     },
     "status": {
       "type": "extensibleEnum",

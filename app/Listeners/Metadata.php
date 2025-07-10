@@ -73,6 +73,7 @@ class Metadata extends AbstractListener
                 }
                 $data['entityDefs'][$scope]['fields']['classifications']['type'] = "linkMultiple";
                 $data['entityDefs'][$scope]['fields']['classifications']['view'] = "pim:views/fields/classifications";
+                $data['entityDefs'][$scope]['fields']['classifications']['customizable'] = false;
 
                 $data['entityDefs'][$scope]['links']['classifications'] = [
                     "type"         => "hasMany",
