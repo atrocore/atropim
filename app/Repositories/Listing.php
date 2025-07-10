@@ -36,13 +36,13 @@ class Listing extends Base
                 throw new BadRequest("Classification Channel and Listing Channel needs to be the same.");
             }
 
-            if ($classification->get('entityId') !== 'Listing') {
-                throw new BadRequest("Wrong Classification has been chosen.");
+            if ($entity->isAttributeChanged('classificationId')) {
+                if ($classification->get('entityId') !== 'Listing') {
+                    throw new BadRequest("Wrong Classification has been chosen.");
+                }
+                $entity->set('classificationsIds', [$classification->get('id')]);
+                $this->getMemoryStorage()->set('listingClassificationUpdated', true);
             }
-
-            $entity->set('classificationsIds', [$classification->get('id')]);
-
-            $this->getMemoryStorage()->set('listingClassificationUpdated', true);
         }
     }
 }
