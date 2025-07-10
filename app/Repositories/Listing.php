@@ -23,13 +23,17 @@ class Listing extends Base
     {
         parent::beforeSave($entity, $options);
 
-        if ($entity->isAttributeChanged('classificationId')) {
+        if ($entity->isAttributeChanged('classificationId') || $entity->isAttributeChanged('channelId')) {
             $classification = $this->getEntityManager()
                 ->getRepository('Classification')
                 ->get($entity->get('classificationId'));
 
             if (empty($classification)) {
                 throw new BadRequest("Classification with ID '{$entity->get('classificationId')}' does not exist.");
+            }
+
+            if ($classification->get('channelId') !== $entity->get('channelId')) {
+                throw new BadRequest("Classification Channel and Listing Channel needs to be the same.");
             }
 
             if ($classification->get('entityId') !== 'Listing') {

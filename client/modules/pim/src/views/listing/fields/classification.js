@@ -11,13 +11,25 @@
 Espo.define('pim:views/listing/fields/classification', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['onlyForEntity'],
+        selectBoolFilterList: ['onlyForEntity', 'onlyForChannel'],
 
         boolFilterData: {
             onlyForEntity() {
                 return 'Listing';
+            },
+            onlyForChannel() {
+                return this.model.get('channelId');
             }
         },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:channelId', () => {
+                this.model.set('classificationId', null);
+                this.model.set('classificationName', null);
+            });
+        }
 
     })
 );
