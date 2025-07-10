@@ -17,6 +17,11 @@
               "type": "equals",
               "attribute": "hasAttribute",
               "value": true
+            },
+            {
+              "type": "notEquals",
+              "attribute": "id",
+              "value": "Listing"
             }
           ]
         }
@@ -37,6 +42,11 @@
               "type": "equals",
               "attribute": "hasAttribute",
               "value": true
+            },
+            {
+              "type": "notEquals",
+              "attribute": "id",
+              "value": "Listing"
             }
           ]
         }

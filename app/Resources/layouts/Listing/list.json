@@ -4,18 +4,15 @@
     "link": true
   },
   {
-    "name": "entity"
+    "name": "status"
   },
   {
-    "name": "code"
+    "name": "product"
   },
   {
     "name": "channel"
   },
   {
-    "name": "parents"
-  },
-  {
-    "name": "isActive"
+    "name": "classification"
   }
 ]

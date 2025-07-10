@@ -5,5 +5,11 @@
     "name": "Content Item List",
     "code": "contentItemList",
     "multilingual": false
+  },
+  {
+    "id": "listing_status",
+    "name": "Listing Status",
+    "code": "listingStatus",
+    "multilingual": false
   }
 ]

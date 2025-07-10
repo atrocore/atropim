@@ -4,5 +4,11 @@
   },
   {
     "name": "products"
+  },
+  {
+    "name": "listings"
+  },
+  {
+    "name": "classifications"
   }
 ]

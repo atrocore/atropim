@@ -87,6 +87,9 @@ class Entity extends AbstractEntityListener
         $relationName = $event->getArgument('relationName');
 
         if ($relationName === 'classifications') {
+            if (is_string($classification)){
+                $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
+            }
             $this->deleteAttributeValuesFromRecord($entity, $classification);
         }
     }
@@ -115,7 +118,7 @@ class Entity extends AbstractEntityListener
         if (
             !$this->getMetadata()->get(['scopes', $entityName, 'hasClassification'], false)
             || !$this->getMetadata()->get(['scopes', $entityName, 'singleClassification'], false)
-            || !$entity->get('isNew')
+            || !$entity->isNew()
         ) {
             return;
         }
@@ -124,7 +127,10 @@ class Entity extends AbstractEntityListener
         $entityId = $entity->get($entityField);
 
         $record = $this->getEntityManager()->getRepository($entity->getEntityName())
-            ->where([$entityField => $entityId])
+            ->where([
+                $entityField => $entityId,
+                'deleted'    => false
+            ])
             ->findOne();
 
         if (!empty($record)) {

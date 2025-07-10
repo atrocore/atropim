@@ -23,6 +23,8 @@
     "ContentItem": "Élément de contenu"
   },
   "fields": {
+    "channel": "Canal",
+    "product": "Produit",
     "classifications": "Classification",
     "amount": "Montant",
     "products": "Produits",
