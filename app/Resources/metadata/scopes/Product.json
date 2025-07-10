@@ -35,9 +35,6 @@
   "inheritedRelations": ["productFiles"],
   "mandatoryUnInheritedRelations": [],
   "unInheritedRelations": [],
-  "completeness": {
-    "service": "Completeness\\Services\\ProductCompleteness"
-  },
   "isActiveUnavailable": true,
   "nonComparableFields": [
     "associatedRelatedProduct",

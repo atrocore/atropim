@@ -23,7 +23,6 @@
     "brand": "Marke",
     "type": "Typ",
     "amount": "Menge",
-    "tax": "MwSt.",
     "ean": "GTIN/EAN",
     "rrp": "Unverbindliche Preisempfehlung (UVP)",
     "image": "Hauptbild",

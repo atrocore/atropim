@@ -31,10 +31,6 @@
       ],
       "default": "draft"
     },
-    "tax": {
-      "type": "link",
-      "view": "pim:views/product/fields/tax"
-    },
     "ean": {
       "type": "varchar",
       "trim": true,
@@ -201,10 +197,6 @@
       "type": "belongsTo",
       "foreign": "products",
       "entity": "Brand"
-    },
-    "tax": {
-      "type": "belongsTo",
-      "entity": "Tax"
     },
     "calls": {
       "type": "hasChildren",

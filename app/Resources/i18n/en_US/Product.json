@@ -13,7 +13,6 @@
     "type": "Type",
     "amount": "Amount",
     "price": "Purchase Price",
-    "tax": "Tax",
     "ean": "GTIN/EAN",
     "mpn": "MPN",
     "rrp": "Recommended Retail Price (RRP)",
