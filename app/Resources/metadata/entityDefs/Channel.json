@@ -65,6 +65,10 @@
     "listings": {
       "type": "linkMultiple",
       "noLoad": true
+    },
+    "classifications": {
+      "type": "linkMultiple",
+      "noLoad": true
     }
   },
   "links": {
@@ -97,6 +101,11 @@
       "type": "hasMany",
       "foreign": "channel",
       "entity": "Listing"
+    },
+    "classifications": {
+      "type": "hasMany",
+      "foreign": "channel",
+      "entity": "Classification"
     }
   },
   "collection": {

@@ -29,6 +29,12 @@
       ],
       [
         {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }
