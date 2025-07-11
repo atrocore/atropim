@@ -244,9 +244,7 @@ class Product extends Hierarchy
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this->getEntityManager()->getRepository('AssociatedProduct')->removeByProductId($entity->get('id'));
         $this->getEntityManager()->getRepository('ProductFile')->removeByProductId($entity->get('id'));
-
         $this->getEntityManager()->getRepository('ProductChannel')->where(['productId' => $entity->get('id')])->removeCollection();
 
         parent::afterRemove($entity, $options);
