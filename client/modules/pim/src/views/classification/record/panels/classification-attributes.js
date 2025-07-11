@@ -149,7 +149,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                 }
             }
 
-            this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = 200;
 
@@ -173,8 +172,6 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
                 this.listenTo(this.model, 'update-all after:relate after:unrelate', () => {
                     this.actionRefresh();
                 });
-
-                this.fetchCollectionGroups(() => this.wait(false));
             }, this);
 
             this.setupFilterActions();
@@ -182,6 +179,8 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
             this.listenTo(this, 'after-groupPanels-rendered', () => {
                 setTimeout(() =>  this.regulateTableSizes(), 500)
             });
+
+            this.fetchCollectionGroups(() => this.reRender());
         },
 
         relateAttributes(selectObj) {
@@ -525,7 +524,7 @@ Espo.define('pim:views/classification/record/panels/classification-attributes',
 
         buildGroups() {
             let areRendered = [];
-            this.groups.forEach(group => {
+            (this.groups || []).forEach(group => {
                 this.getCollectionFactory().create(this.scope, collection => {
                     let viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
                     this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
