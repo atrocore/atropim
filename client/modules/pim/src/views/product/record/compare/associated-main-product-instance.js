@@ -12,7 +12,6 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
     ['views/record/compare/relationship-instance', 'pim:views/product/record/compare/associated-main-product'],
     (Dep, AssociatedMain) => Dep.extend({
         setup() {
-            this.relationName = 'AssociatedProduct';
             this.selectFields = ['id', 'name', 'mainImageId', 'mainImageName'];
             Dep.prototype.setup.call(this);
         },
@@ -124,18 +123,6 @@ Espo.define('pim:views/product/record/compare/associated-main-product-instance',
                     callback();
                 });
             });
-        },
-
-        getModelRelationColumnId() {
-            return 'mainProductId';
-        },
-
-        getRelationshipRelationColumnId() {
-            return 'relatedProductId';
-        },
-
-        getLinkName() {
-            return 'associatedProducts';
         },
 
         getFieldColumns(linkedEntity) {
