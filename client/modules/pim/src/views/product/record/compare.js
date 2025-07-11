@@ -13,14 +13,6 @@ Espo.define('pim:views/product/record/compare', 'views/record/compare', function
 
     return Dep.extend({
 
-        isComparableLink(link) {
-            if(['associatedMainProducts'].includes(link)) {
-                return true;
-            }
-
-            return Dep.prototype.isComparableLink.call(this, link);
-        },
-
         getOverviewFiltersList() {
             let result = Dep.prototype.getOverviewFiltersList.call(this);
             if(this.overviewFilterList.find(v => v.name === 'scopeFilter'))  {
