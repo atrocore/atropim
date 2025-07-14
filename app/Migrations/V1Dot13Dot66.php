@@ -51,7 +51,7 @@ class V1Dot13Dot66 extends Base
                 ->setValue('entity_type', ':entityType')
                 ->setValue('is_active', ':active')
                 ->setValue('template', ':template')
-                ->setParameter('id', Util::generateId())
+                ->setParameter('id', 'e' . time())
                 ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
                 ->setParameter('entityType', $preview['entityType'])
                 ->setParameter('name', $preview['name'])
