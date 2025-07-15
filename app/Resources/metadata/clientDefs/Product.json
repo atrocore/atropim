@@ -115,7 +115,6 @@
       "view": "pim:views/product/record/panels/categories"
     },
     "associatedProducts": {
-      "label": "associatedProducts",
       "compareRecordsView": "pim:views/product/record/compare/associated-main-product",
       "compareInstanceRecordsView": "pim:views/product/record/compare/associated-main-product-instance"
     },
