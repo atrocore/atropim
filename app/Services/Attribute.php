@@ -127,6 +127,18 @@ class Attribute extends Base
             return false;
         }
 
+        if (!$this->getUser()->isAdmin()) {
+            $forbiddenFieldsList = $this->getAcl()->getScopeForbiddenAttributeList($entityName, 'edit');
+            if (!empty($forbiddenFieldsList)) {
+                $attributesDefs = $this->getAttributesDefs($entityName, array_column($attributes->toArray(), 'id'));
+                foreach ($attributesDefs as $field => $defs) {
+                    if (in_array($field, $forbiddenFieldsList)) {
+                        throw new Forbidden();
+                    }
+                }
+            }
+        }
+
         foreach ($attributes as $attribute) {
             try {
                 $this->getRepository()->addAttributeValue($entityName, $entityId, $attribute->get('id'));
@@ -158,6 +170,18 @@ class Attribute extends Base
     {
         if (!$this->getAcl()->check($entityName, 'deleteAttributeValue')) {
             throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            $forbiddenFieldsList = $this->getAcl()->getScopeForbiddenAttributeList($entityName, 'edit');
+            if (!empty($forbiddenFieldsList)) {
+                $attributesDefs = $this->getAttributesDefs($entityName, [$attributeId]);
+                foreach ($attributesDefs as $field => $defs) {
+                    if (in_array($field, $forbiddenFieldsList)) {
+                        throw new Forbidden();
+                    }
+                }
+            }
         }
 
         $attribute = $this->getRepository()->get($attributeId);

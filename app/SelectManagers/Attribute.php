@@ -35,6 +35,33 @@ class Attribute extends AbstractSelectManager
         $result['callbacks'][] = [$this, 'filterByType'];
     }
 
+    protected function boolFilterNotForbiddenForEditFields(array &$result): void
+    {
+        if ($this->getUser()->isAdmin()) {
+            return;
+        }
+
+        $entityName = $this->getSelectCondition('notForbiddenForEditFields')['entityName'] ?? null;
+        $entityId = $this->getSelectCondition('notForbiddenForEditFields')['entityId'] ?? null;
+
+        if (empty($entityName) || empty($entityId)) {
+            return;
+        }
+
+        $forbiddenFieldsList = $this->getAcl()->getScopeForbiddenAttributeList($entityName, 'edit');
+
+        foreach ($this->getUser()->get('roles') ?? [] as $role) {
+            $aclData = $this->getEntityManager()->getRepository('Role')->getAclData($role);
+            foreach ($aclData->attributes->$entityName ?? [] as $field => $attributeId) {
+                if (in_array($field, $forbiddenFieldsList)) {
+                    $result['whereClause'][] = [
+                        'id!=' => $attributeId
+                    ];
+                }
+            }
+        }
+    }
+
     protected function boolFilterNotLinkedWithCurrent(array &$result): void
     {
         $attributeId = (string)$this->getSelectCondition('notLinkedWithCurrent');

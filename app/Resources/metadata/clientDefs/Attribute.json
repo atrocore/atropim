@@ -9,7 +9,8 @@
     "onlyCompositeAttributes",
     "notLinkedWithCurrent",
     "onlyForEntity",
-    "onlyForAttributePanel"
+    "onlyForAttributePanel",
+    "notForbiddenForEditFields"
   ],
   "hiddenBoolFilterList": [
     "fromAttributesTab",
@@ -18,7 +19,8 @@
     "onlyCompositeAttributes",
     "notLinkedWithCurrent",
     "onlyForEntity",
-    "onlyForAttributePanel"
+    "onlyForAttributePanel",
+    "notForbiddenForEditFields"
   ],
   "disabledMassActions": [
     "merge"
