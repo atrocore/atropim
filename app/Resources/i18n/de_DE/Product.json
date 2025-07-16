@@ -1,7 +1,5 @@
 {
   "fields": {
-    "associatedMainProducts": "Assoziierte Produkte: Verwandtes Produkt",
-    "associatedRelatedProduct": "Assoziierte Produkte: Hauptprodukt",
     "attachments": "Zubehör",
     "channelProducts": "Kanalprodukte",
     "productBundles": "Produktbündel",
@@ -39,7 +37,6 @@
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
     "Add Import Filter": "Importfilter hinzufügen",
-    "associatedProducts": "Zugehörige Produkte",
     "Channels": "Kanäle",
     "itemsInRow": "Anzahl Elemente in der Reihe",
     "thereIsNoValidAttributesForChannel": "Es gibt keine gültigen Attribute für Kanal",
