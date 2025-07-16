@@ -1,7 +1,6 @@
 {
   "scopeNames": {
     "ProductChannel": "Produktkanal",
-    "AttributePanel": "Attribut-Panel",
     "ProductPrice": "Produktpreis",
     "ChannelPricing": "Kanal Pricing",
     "Catalog": "Kataloge",
@@ -22,7 +21,6 @@
   },
   "scopeNamesPlural": {
     "ProductChannel": "Produktkanäle",
-    "AttributePanel": "Attribut-Panels",
     "ProductPrice": "Produktpreise",
     "Catalog": "Kataloge",
     "Product": "Produkte",
