@@ -34,7 +34,6 @@ class Event extends AfterInstallAfterDelete
         = [
             'Association',
             'Attribute',
-            'AttributePanel',
             'AttributeGroup',
             'Brand',
             'Category',
@@ -51,7 +50,6 @@ class Event extends AfterInstallAfterDelete
         = [
             'Association',
             'Attribute',
-            'AttributePanel',
             'AttributeGroup',
             'Brand',
             'Category',
@@ -72,7 +70,6 @@ class Event extends AfterInstallAfterDelete
         $this->addNavigationItems($this->menuItems);
 
         V1Dot14Dot9::createExamplePreviews($this->getContainer()->get('connection'));
-        V1Dot14Dot6::createDefaultAttributePanel();
     }
 
     /**
