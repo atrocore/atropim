@@ -1,6 +1,6 @@
 {
   "fields": {
-    "mainProductImage": "Hauptproduktbild",
-    "relatedProductImage": "Assoziiertes Produktbild"
+    "associatingItemImage": "Hauptproduktbild",
+    "associatedItemImage": "Assoziiertes Produktbild"
   }
 }

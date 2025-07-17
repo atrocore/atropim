@@ -27,16 +27,16 @@ class AssociatedProduct extends Relation
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($mainProduct = $entity->get('mainProduct')) && !empty($image = $this->getMainImage($mainProduct))) {
-            $entity->set('mainProductImageId', $image->get('id'));
-            $entity->set('mainProductImageName', $image->get('name'));
-            $entity->set('mainProductImagePathsData', $image->getPathsData());
+        if (!empty($mainProduct = $entity->get('associatingItem')) && !empty($image = $this->getMainImage($mainProduct))) {
+            $entity->set('associatingItemImageId', $image->get('id'));
+            $entity->set('associatingItemImageName', $image->get('name'));
+            $entity->set('associatingItemImagePathsData', $image->getPathsData());
         }
 
-        if (!empty($relatedProduct = $entity->get('relatedProduct')) && !empty($image = $this->getMainImage($relatedProduct))) {
-            $entity->set('relatedProductImageId', $image->get('id'));
-            $entity->set('relatedProductImageName', $image->get('name'));
-            $entity->set('relatedProductImagePathsData', $image->getPathsData());
+        if (!empty($relatedProduct = $entity->get('associatedItem')) && !empty($image = $this->getMainImage($relatedProduct))) {
+            $entity->set('associatedItemImageId', $image->get('id'));
+            $entity->set('associatedItemImageName', $image->get('name'));
+            $entity->set('associatedItemImagePathsData', $image->getPathsData());
         }
     }
 

@@ -250,28 +250,4 @@ class Product extends Hierarchy
         return $links;
     }
 
-    protected  function applyMergeForAssociatedRelatedProduct(Entity $target, array $sourceList): void
-    {
-        $sourceIds = [];
-
-        foreach ($sourceList as $source) {
-            $sourceIds[] = $source->get('id');
-        }
-
-        /** @var Base $repository */
-        $repository = $this->getEntityManager()->getRepository('AssociatedProduct');
-
-        $associatedProducts = $repository
-            ->where(['relatedProductId' => $sourceIds])
-            ->find();
-
-        foreach ($associatedProducts as $associatedProduct) {
-            if($associatedProduct->get('mainProductId') === $target->get('id')){
-                $associatedProduct->delete();
-                continue;
-            }
-            $associatedProduct->set('relatedProductId', $target->get('id'));
-            $repository->save($associatedProduct);
-        }
-    }
 }
