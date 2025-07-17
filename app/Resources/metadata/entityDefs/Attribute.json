@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "channel": {
+      "type": "link"
+    },
+    "variantSpecificProducts": {
+      "type": "linkMultiple"
+    }
+  },
+  "links": {
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "attributes"
+    },
+    "variantSpecificProducts": {
+      "type": "hasMany",
+      "foreign": "variantSpecificAttributes",
+      "relationName": "VariantSpecificProductAttribute",
+      "entity": "Product"
+    }
+  }
+}
