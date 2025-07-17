@@ -33,14 +33,11 @@ class Event extends AfterInstallAfterDelete
     protected $searchEntities
         = [
             'Association',
-            'Attribute',
-            'AttributeGroup',
             'Brand',
             'Category',
             'Catalog',
             'Channel',
-            'Product',
-            'Classification'
+            'Product'
         ];
 
     /**
@@ -49,13 +46,10 @@ class Event extends AfterInstallAfterDelete
     protected $menuItems
         = [
             'Association',
-            'Attribute',
-            'AttributeGroup',
             'Brand',
             'Category',
             'Catalog',
-            'Channel',
-            'Classification'
+            'Channel'
         ];
 
     /**
