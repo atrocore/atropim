@@ -26,10 +26,22 @@ Espo.define('pim:views/listing/fields/classification', 'views/fields/link',
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:channelId', () => {
-                this.model.set('classificationId', null);
-                this.model.set('classificationName', null);
+                if (this.model.isNew()) {
+                    this.model.set('classificationId', null);
+                    this.model.set('classificationName', null);
+                }
             });
-        }
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get('channelId')) {
+                this.$el.parent().show();
+            } else {
+                this.$el.parent().hide();
+            }
+        },
 
     })
 );

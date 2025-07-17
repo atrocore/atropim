@@ -1,18 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "gift",
-  "dynamicLogic": {
-    "fields": {
-      "classification": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "channelId"
-            }
-          ]
-        }
-      }
-    }
-  }
+  "iconClass": "gift"
 }
