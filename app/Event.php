@@ -13,13 +13,8 @@ declare(strict_types=1);
 
 namespace Pim;
 
-use Atro\Repositories\LayoutProfile;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
-use Pim\Migrations\V1Dot13Dot66;
-use Pim\Migrations\V1Dot14Dot6;
 use Pim\Migrations\V1Dot14Dot9;
 
 /**
