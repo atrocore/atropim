@@ -7,13 +7,5 @@
       "action": "GetDashlet",
       "dashletName": ":dashletName"
     }
-  },
-  {
-    "route": "/Attribute/action/getAttributesIdsFilter",
-    "method": "get",
-    "params": {
-      "controller": "Attribute",
-      "action": "getAttributesIdsFilter"
-    }
   }
 ]
