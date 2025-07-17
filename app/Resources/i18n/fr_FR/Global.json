@@ -7,7 +7,6 @@
     "Catalog": "Catalogue",
     "Category": "Catégorie",
     "Channel": "Canal",
-    "AttributeGroup": "Groupe d'attributs",
     "Brand": "Marque",
     "Classification": "Classification",
     "ProductPrice": "Prix du produit",
@@ -67,7 +66,6 @@
     "Catalog": "Catalogues",
     "Classification": "Classification",
     "Product": "Produits",
-    "AttributeGroup": "Groupes d'attributs",
     "ClassificationAttribute": "Attributs de la classification",
     "ContentItem": "Éléments de contenu"
   },
