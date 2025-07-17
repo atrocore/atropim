@@ -1,6 +1,6 @@
 {
   "fields": {
-    "mainProductImage": {
+    "associatingItemImage": {
       "type": "file",
       "previewSize": "medium",
       "readOnly": true,
@@ -8,7 +8,7 @@
       "view": "pim:views/fields/full-width-list-image",
       "importDisabled": true
     },
-    "relatedProductImage": {
+    "associatedItemImage": {
       "type": "file",
       "previewSize": "medium",
       "readOnly": true,

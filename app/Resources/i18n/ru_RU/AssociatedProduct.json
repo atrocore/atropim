@@ -3,8 +3,8 @@
     "association": "Связь",
     "backwardAssociation": "Обратная связь",
     "mainProduct": "Главный продукт",
-    "mainProductImage": "Изображение главного продукта",
+    "associatingItemImage": "Изображение главного продукта",
     "relatedProduct": "Связанный продукт",
-    "relatedProductImage": "Изображение связанного продукта"
+    "associatedItemImage": "Изображение связанного продукта"
   }
 }

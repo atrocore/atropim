@@ -1,6 +1,6 @@
 [
   {
-    "name": "relatedProductImage",
+    "name": "associatedItemImage",
     "notSortable": true,
     "width": 20
   },

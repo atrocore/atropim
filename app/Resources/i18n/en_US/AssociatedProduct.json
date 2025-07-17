@@ -1,8 +1,6 @@
 {
   "fields": {
-    "mainProduct": "Main Product",
-    "mainProductImage": "Main Product Image",
-    "relatedProduct": "Related Product",
-    "relatedProductImage": "Related Product Image"
+    "associatingItemImage": "Associating Item Image",
+    "associatedItemImage": "Associated Item Image"
   }
 }
