@@ -362,7 +362,7 @@
 
         {% for panel in attributesPanels %}
             <h2>{{ config.referenceData.AttributePanel[panel].name ?? panel }}</h2>
-            {% set groups = attributesGroups|map(group => group|merge({ 'attributes': attributesList|filter(i => i.attributeGroupId == group.id and i.attributePanelId == panel) }))|filter(g => g.attributes is not empty) %}
+            {% set groups = attributesGroups|map(i => i ?? {id: null})|map(group => group|merge({ 'attributes': attributesList|filter(i => i.attributeGroupId == group.id and i.attributePanelId == panel) }))|filter(g => g.attributes is not empty) %}
             <table>
                 <tbody>
                 {% for group in groups|sort((a, b) => a.id is null ? -2 : a.sortOrder <=> b.sortOrder) %}
