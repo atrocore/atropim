@@ -15,11 +15,9 @@
     "Channel": "Channel",
     "AssociatedProduct": "Associated Product",
     "Brand": "Brand",
-    "Classification": "Classification",
     "ProductPrice": "Product Price",
     "ProductSerie": "Product Serie",
     "ChannelPricing": "Channel Pricing",
-    "ClassificationAttribute": "Classification Attribute",
     "Content": "Content",
     "ContentGroup": "Content Group",
     "ContentItem": "Content Item"
@@ -36,11 +34,9 @@
     "Channel": "Channels",
     "AssociatedProduct": "Associated Products",
     "Brand": "Brands",
-    "Classification": "Classifications",
     "Product": "Products",
     "ProductPrice": "Product Prices",
     "ProductSerie": "Product Series",
-    "ClassificationAttribute": "Classification Attributes",
     "Content": "Contents",
     "ContentGroup": "Content Groups",
     "ContentItem": "Content Items"
@@ -59,8 +55,6 @@
     "channel": "Channel",
     "listings": "Listings",
     "product": "Product",
-    "classification": "Classification",
-    "classifications": "Classifications",
     "categories": "Categories",
     "channels": "Channels",
     "products": "Products",
@@ -112,16 +106,11 @@
     "ProductStatusOverview": "Product Status Overview",
     "ProductsByTaskStatus": "Products by Task Status"
   },
-  "boolFilters": {
-    "multipleClassifications": "Multiple Classifications"
-  },
   "exceptions": {
     "massRelateBlocked": "Mass relating of this kind is blocked.",
     "massUnRelateBlocked": "Mass unrelating of this kind is blocked.",
     "onlyForceDeletingAvailable": "Only force deleting available",
-    "notValid": "Data is not valid",
-    "singleClassificationAllowed": "Only one classification is allowed",
-    "moreThanOneClassification": "Some records have more than one classification."
+    "notValid": "Data is not valid"
   },
   "messages": {
     "fieldHasPattern": "{field} should contain only underscore, numbers and alphabets in lower case"

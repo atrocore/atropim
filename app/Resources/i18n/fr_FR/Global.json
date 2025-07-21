@@ -8,11 +8,9 @@
     "Category": "Catégorie",
     "Channel": "Canal",
     "Brand": "Marque",
-    "Classification": "Classification",
     "ProductPrice": "Prix du produit",
     "Content": "Contenu",
     "ContentGroup": "Groupe de contenu",
-    "ClassificationAttribute": "Attribut de classification",
     "AssociatedProduct": "Produit associé",
     "ProductSerie": "Série de produits",
     "ChannelPricing": "Tarification par canal",
@@ -21,7 +19,6 @@
   "fields": {
     "channel": "Canal",
     "product": "Produit",
-    "classifications": "Classification",
     "amount": "Montant",
     "products": "Produits",
     "scope": "Champ d'application",
@@ -33,7 +30,6 @@
     "mpn": "MPN",
     "tag": "Étiquette",
     "productSerie": "Série de produits",
-    "Classification": "Classification",
     "oneGeoType": "Type OneGeo",
     "priceCurrency": "Prix Monnaie",
     "price": "Prix",
@@ -64,9 +60,7 @@
     "Content": "Contenu",
     "ContentGroup": "Groupes de contenu",
     "Catalog": "Catalogues",
-    "Classification": "Classification",
     "Product": "Produits",
-    "ClassificationAttribute": "Attributs de la classification",
     "ContentItem": "Éléments de contenu"
   },
   "labels": {
