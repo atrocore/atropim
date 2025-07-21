@@ -426,6 +426,8 @@ class V1Dot14Dot3 extends Base
         $offset = 0;
         $limit = 5000;
 
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
         while (true) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('*')
@@ -436,6 +438,7 @@ class V1Dot14Dot3 extends Base
                 ->setMaxResults($limit)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('empty', '')
+                ->orderBy('id', 'ASC')
                 ->fetchAllAssociative();
 
             $offset = $offset + $limit;
@@ -479,13 +482,22 @@ class V1Dot14Dot3 extends Base
                         } elseif ($column === 'channel_id') {
                             $qb->setValue('channel_id', ':channelId')
                                 ->setParameter('channelId', $item['channel_id']);
+                        } elseif ($column == 'created_at') {
+                            $qb->setValue('created_at', ':createdAt')
+                                ->setParameter('createdAt', $now);
+                        } elseif ($column == 'modified_at') {
+                            $qb->setValue('modified_at', ':modifiedAt')
+                                ->setParameter('modifiedAt', $now);
                         } else {
                             $qb->setValue($this->getConnection()->quoteIdentifier($column), ":$column")
                                 ->setParameter($column, $val, Mapper::getParameterType($val));
                         }
                     }
 
-                    $qb->executeQuery();
+                    try {
+                        $qb->executeQuery();
+                    } catch (\Throwable $e) {
+                    }
                 }
 
                 $this->getConnection()->createQueryBuilder()
