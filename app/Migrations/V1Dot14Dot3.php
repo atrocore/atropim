@@ -434,12 +434,11 @@ class V1Dot14Dot3 extends Base
                 ->from('product_attribute_value')
                 ->where('deleted=:false')
                 ->andWhere('channel_id IS NOT NULL AND channel_id !=:empty')
-                ->andWhere('created_at < :date')
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('empty', '')
-                ->setParameter('date', $now)
+                ->orderBy('id', 'ASC')
                 ->fetchAllAssociative();
 
             $offset = $offset + $limit;
@@ -495,7 +494,10 @@ class V1Dot14Dot3 extends Base
                         }
                     }
 
-                    $qb->executeQuery();
+                    try {
+                        $qb->executeQuery();
+                    } catch (\Throwable $e) {
+                    }
                 }
 
                 $this->getConnection()->createQueryBuilder()
