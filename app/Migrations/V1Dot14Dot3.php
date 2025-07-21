@@ -494,10 +494,7 @@ class V1Dot14Dot3 extends Base
                         }
                     }
 
-                    try {
-                        $qb->executeQuery();
-                    } catch (\Throwable $e) {
-                    }
+                    $qb->executeQuery();
                 }
 
                 $this->getConnection()->createQueryBuilder()
