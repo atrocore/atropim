@@ -9,7 +9,7 @@
   },
   "dynamicLogic": {
     "fields": {
-      "mainProductImage": {
+      "associatingItemImage": {
         "visible": {
           "conditionGroup": [
             {
@@ -19,7 +19,7 @@
           ]
         }
       },
-      "relatedProductImage": {
+      "associatedItemImage": {
         "visible": {
           "conditionGroup": [
             {

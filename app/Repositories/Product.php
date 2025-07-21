@@ -131,7 +131,7 @@ class Product extends Hierarchy
             ->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds))
             ->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds))
             ->setParameter('false', false, Mapper::getParameterType(false))
-            ->orderBy('sorting','DESC')
+            ->orderBy('sorting', 'DESC')
             ->fetchAllAssociative();
     }
 
@@ -257,13 +257,13 @@ class Product extends Hierarchy
         $this->getConnection()
             ->createQueryBuilder()
             ->update('associated_product')
-            ->set('deleted',':false')
-            ->where('main_product_id = :productId')
-            ->orWhere('related_product_id = :productId')
+            ->set('deleted', ':false')
+            ->where('associating_item_id = :productId')
+            ->orWhere('associated_item_id = :productId')
             ->andWhere('deleted = :true')
-            ->setParameter('false',false, ParameterType::BOOLEAN)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('productId', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-            ->setParameter('true',true, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
             ->executeStatement();
     }
 
