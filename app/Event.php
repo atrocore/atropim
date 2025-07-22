@@ -13,13 +13,8 @@ declare(strict_types=1);
 
 namespace Pim;
 
-use Atro\Repositories\LayoutProfile;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
-use Pim\Migrations\V1Dot13Dot66;
-use Pim\Migrations\V1Dot14Dot6;
 use Pim\Migrations\V1Dot14Dot9;
 
 /**
@@ -33,15 +28,11 @@ class Event extends AfterInstallAfterDelete
     protected $searchEntities
         = [
             'Association',
-            'Attribute',
-            'AttributePanel',
-            'AttributeGroup',
             'Brand',
             'Category',
             'Catalog',
             'Channel',
-            'Product',
-            'Classification'
+            'Product'
         ];
 
     /**
@@ -50,14 +41,10 @@ class Event extends AfterInstallAfterDelete
     protected $menuItems
         = [
             'Association',
-            'Attribute',
-            'AttributePanel',
-            'AttributeGroup',
             'Brand',
             'Category',
             'Catalog',
-            'Channel',
-            'Classification'
+            'Channel'
         ];
 
     /**
@@ -72,7 +59,6 @@ class Event extends AfterInstallAfterDelete
         $this->addNavigationItems($this->menuItems);
 
         V1Dot14Dot9::createExamplePreviews($this->getContainer()->get('connection'));
-        V1Dot14Dot6::createDefaultAttributePanel();
     }
 
     /**

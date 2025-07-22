@@ -1,44 +1,34 @@
 {
   "scopeNames": {
     "ProductChannel": "Produktkanal",
-    "AttributePanel": "Attribut-Panel",
     "ProductPrice": "Produktpreis",
     "ChannelPricing": "Kanal Pricing",
     "Catalog": "Kataloge",
     "Product": "Produkt",
-    "Classification": "Klassifikation",
     "ProductSerie": "Produktserie",
-    "AttributeGroup": "Attributgruppe",
     "AssociatedProduct": "Assoziiertes Produkt",
-    "Attribute": "Attribut",
     "Category": "Kategorie",
     "Channel": "Kanal",
     "Brand": "Marke",
     "Settings": "Administration",
-    "ClassificationAttribute": "Klassifikationsattribut",
     "Content": "Content",
     "ContentGroup": "Content Gruppe",
     "ContentItem": "Inhalt Artikel"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Produktkanäle",
-    "AttributePanel": "Attribut-Panels",
     "ProductPrice": "Produktpreise",
     "Catalog": "Kataloge",
     "Product": "Produkte",
-    "Classification": "Klassifikationen",
     "AssociatedProduct": "Assoziierte Produkte",
     "ProductSerie": "Produktserien",
-    "Attribute": "Attribute",
     "Category": "Kategorien",
     "Channel": "Kanäle",
     "Brand": "Marken",
-    "AttributeGroup": "Attribut-Gruppen",
     "Settings": "Administration",
     "ActionHistoryRecord": "Aktionsgeschichte",
     "Dashboard": "Instrumententafel",
     "EmailAddress": "E-Mail Addresse",
-    "ClassificationAttribute": "Klassifikationsattribute",
     "Content": "Contents",
     "ContentGroup": "Content Gruppen",
     "ContentItem": "Inhalte"
@@ -46,8 +36,6 @@
   "fields": {
     "channel": "Kanal",
     "product": "Produkt",
-    "classification": "Klassifikation",
-    "classifications": "Klassifikationen",
     "categories": "Kategorien",
     "channels": "Kanäle",
     "products": "Produkte",
@@ -122,16 +110,11 @@
     "ProductsByStatus": "Produkte nach Status",
     "ProductsByTaskStatus": "Products by Task Status"
   },
-  "boolFilters": {
-    "multipleClassifications": "Mehrere Klassifizierungen"
-  },
   "exceptions": {
     "massRelateBlocked": "Massenverknüpfungen dieser Art ist gesperrt.",
     "massUnRelateBlocked": "Massenaufhebung der Verknüpfungen dieser Art ist gesperrt.",
     "onlyForceDeletingAvailable": "Nur erzwingtes Löschen verfügbar",
-    "notValid": "Daten sind nicht gültig",
-    "singleClassificationAllowed": "Nur eine Klassifizierung ist zulässig",
-    "moreThanOneClassification": "Einige Datensätze haben mehr als eine Klassifizierung."
+    "notValid": "Daten sind nicht gültig"
   },
   "messages": {
     "fieldHasPattern": "{field} sollte nur Unterstriche, Zahlen und Alphabete in Kleinbuchstaben enthalten",

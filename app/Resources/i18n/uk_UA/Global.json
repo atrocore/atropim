@@ -2,36 +2,28 @@
   "scopeNames": {
     "ProductChannel": "Канал продукту",
     "Product": "Продукт",
-    "Attribute": "Атрибут",
     "Catalog": "Каталог",
     "Category": "Категорія",
     "Channel": "Канал",
     "AssociatedProduct": "Асоційований продукт",
-    "AttributeGroup": "Група атрибута",
     "Brand": "Бренд",
-    "Classification": "Класифікація",
     "ProductPrice": "Ціна продукту",
     "ProductSerie": "Серія продукту",
     "ChannelPricing": "Канал ціноутворення",
-    "ClassificationAttribute": "Атрибут класифікації",
     "Content": "Контент",
     "ContentGroup": "Група контенту",
     "ContentItem": "Елемент вмісту"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Канали продукту",
-    "Attribute": "Атрибути",
     "Catalog": "Каталоги",
     "Category": "Категорії",
     "Channel": "Канали",
     "AssociatedProduct": "Асоційовані продукти",
-    "AttributeGroup": "Групи атрибутів",
     "Brand": "Бренди",
-    "Classification": "Класифікації",
     "Product": "Продукти",
     "ProductPrice": "Ціни продукту",
     "ProductSerie": "Серії продукту",
-    "ClassificationAttribute": "Атрибути класифікації",
     "Content": "Контент",
     "ContentGroup": "Групи контенту",
     "ContentItem": "Елементи вмісту"
@@ -49,8 +41,6 @@
   "fields": {
     "channel": "Канал",
     "product": "Продукт",
-    "classifications": "Класифікації",
-    "classification": "Класифікація",
     "productStatus": "Статус продукту",
     "oneGeoType": "OneGeo Type",
     "priceCurrency": "Валюта ціни",
@@ -99,16 +89,11 @@
     "ProductStatusOverview": "Огляд статусу продукту",
     "ProductsByTaskStatus": "Продукти за статусом завдання"
   },
-  "boolFilters": {
-    "multipleClassifications": "Декілька класифікацій"
-  },
   "exceptions": {
     "massRelateBlocked": "Масове створення таких зв'язків заблоковано.",
     "massUnRelateBlocked": "Масове видалення таких зв'язків заблоковано.",
     "onlyForceDeletingAvailable": "Доступне тільки примусове видалення",
-    "notValid": "Дані не дійсні",
-    "singleClassificationAllowed": "Дозволено встановлювати лише одну класифікацію",
-    "moreThanOneClassification": "Деякі записи мають більше ніж одну класифікацію."
+    "notValid": "Дані не дійсні"
   },
   "messages": {
     "fieldHasPattern": "{field} повинне містити тільки підкреслення, цифри і букви в нижньому регістрі"
