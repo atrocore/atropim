@@ -5,8 +5,18 @@
         "required": {
           "conditionGroup": [
             {
-              "type": "isTrue",
-              "attribute": "hasListing"
+              "type": "equals",
+              "attribute": "entityId",
+              "value": "Listing"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "entityId",
+              "value": "Listing"
             }
           ]
         }

@@ -2,15 +2,6 @@
   "fields": {
     "channel": {
       "type": "link"
-    },
-    "hasListing": {
-      "type": "bool",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "notStorable": true
     }
   },
   "links": {
