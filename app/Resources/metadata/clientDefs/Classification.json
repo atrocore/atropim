@@ -1,0 +1,16 @@
+{
+  "dynamicLogic": {
+    "fields": {
+      "channel": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasListing"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
