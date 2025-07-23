@@ -2,21 +2,18 @@
   "scopeNames": {
     "ProductChannel": "Канал продукта",
     "Product": "Продукт",
-    "Catalog": "Каталог",
     "Category": "Категория",
     "Channel": "Канал",
     "AssociatedProduct": "Ассоциированный продукт",
     "Association": "Ассоциация",
     "Brand": "Бренд",
     "ProductPrice": "Цена продукта",
-    "ProductSerie": "Серия продукта",
     "ChannelPricing": "Канал ценообразования",
     "Content": "Контент",
     "ContentGroup": "Група контента"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Каналы продукта",
-    "Catalog": "Каталоги",
     "Category": "Категории",
     "Channel": "Каналы",
     "AssociatedProduct": "Ассоциированные продукты",
@@ -24,7 +21,6 @@
     "Brand": "Бренды",
     "Product": "Продукты",
     "ProductPrice": "Цены продукта",
-    "ProductSerie": "Серии продукта",
     "Content": "Контент",
     "ContentGroup": "Группы контента"
   },
@@ -51,11 +47,9 @@
     "tag": "Тег",
     "amount": "Количество",
     "mpn": "MPN",
-    "productSerie": "Серия продукта",
     "categories": "Категории",
     "channels": "Каналы",
     "products": "Продукты",
-    "catalogs": "Каталоги",
     "scope": "Область применения",
     "role": "Роль"
   },

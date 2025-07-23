@@ -13,12 +13,6 @@
           "name": "behaviorOnCategoryDelete"
         },
         false
-      ],
-      [
-        {
-          "name": "behaviorOnCategoryTreeUnlinkFromCatalog"
-        },
-        false
       ]
     ]
   }

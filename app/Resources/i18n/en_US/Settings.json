@@ -1,8 +1,7 @@
 {
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Allow to link Products to non-leaf categories.",
-    "behaviorOnCategoryDelete": "Behavior on category delete",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Behavior on category tree unlink from catalog"
+    "behaviorOnCategoryDelete": "Behavior on category delete"
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields and attribute values for this locale are automatically removed."
@@ -15,7 +14,6 @@
   },
   "tooltips": {
     "productCanLinkedWithNonLeafCategories": "If set you will be able to link products with categories, which have child categories.",
-    "behaviorOnCategoryDelete": "In case of \"Cascade\" all subcategories of this category will be also removed and all products linked to this category or its subcategories will be unlinked.",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "In case of \"Cascade\" all the categories of this tree linked with the products will be automatically unlinked."
+    "behaviorOnCategoryDelete": "In case of \"Cascade\" all subcategories of this category will be also removed and all products linked to this category or its subcategories will be unlinked."
   }
 }

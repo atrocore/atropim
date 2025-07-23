@@ -20,9 +20,7 @@
     "image": "Основное изображение",
     "tag": "Тег",
     "longDescription": "Длинное описание",
-    "productSerie": "Серия продукта",
     "association": "Ассоциация",
-    "catalog": "Каталог",
     "channels": "Каналы",
     "productChannels": "Каналы продукта",
     "basePriceAmount": "Базовая цена",
@@ -80,7 +78,6 @@
   "boolFilters": {
     "notAssociatedProducts": "Не ассоциированные продукты",
     "notLinkedWithBrand": "Не связан с брендом",
-    "notLinkedWithProductSerie": "Не связан с серией продукта",
     "linkedWithCategory": "Связан с категорией",
     "onlyConfigurableProducts": "Только конфигурируемые продукты"
   },
@@ -90,7 +87,6 @@
     "noSuchAssociation": "Проверка не удалась. Такой ассоциации не существует.",
     "itselfAssociation": "Продукт не может быть ассоциирован с самим собой.",
     "productAssociationAlreadyExists": "Такая продуктовая ассоциация уже существует.",
-    "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
-    "productCatalogChangeException": "Вы не можете удалить/изменить каталог продукта, продукт использует категории которые разрешены для оригинального(предыдущего) каталога. Пожалуйста, сначала удалите связь с этими категориями."
+    "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной."
   }
 }

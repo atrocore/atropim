@@ -30,7 +30,6 @@ class Event extends AfterInstallAfterDelete
             'Association',
             'Brand',
             'Category',
-            'Catalog',
             'Channel',
             'Product'
         ];
@@ -43,7 +42,6 @@ class Event extends AfterInstallAfterDelete
             'Association',
             'Brand',
             'Category',
-            'Catalog',
             'Channel'
         ];
 

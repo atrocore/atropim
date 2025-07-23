@@ -1,8 +1,7 @@
 {
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Permet de lier des produits à des catégories non feuilletantes.",
-    "behaviorOnCategoryDelete": "Comportement lors de la suppression d'une catégorie",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Comportement de l'arbre des catégories à la sortie du catalogue"
+    "behaviorOnCategoryDelete": "Comportement lors de la suppression d'une catégorie"
   },
   "labels": {
     "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues et les valeurs d'attributs pour cette langue sont automatiquement supprimées."
@@ -15,7 +14,6 @@
   },
   "tooltips": {
     "productCanLinkedWithNonLeafCategories": "Si cette option est activée, vous pourrez lier des produits à des catégories, qui ont des catégories enfants.",
-    "behaviorOnCategoryDelete": "En cas de \"cascade\", toutes les sous-catégories de cette catégorie seront également supprimées et tous les produits liés à cette catégorie ou à ses sous-catégories seront déréférencés.",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "En cas de \"Cascade\", toutes les catégories de cette arborescence liées aux produits seront automatiquement dissociées."
+    "behaviorOnCategoryDelete": "En cas de \"cascade\", toutes les sous-catégories de cette catégorie seront également supprimées et tous les produits liés à cette catégorie ou à ses sous-catégories seront déréférencés."
   }
 }

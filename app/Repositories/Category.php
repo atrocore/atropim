@@ -103,22 +103,6 @@ class Category extends Hierarchy
                         }
                     }
                 }
-
-                $catalogIds = [];
-                foreach ($parents as $parent) {
-                    $linkMultipleIdList = $parent->getLinkMultipleIdList('catalogs');
-
-                    if (!is_array($linkMultipleIdList)) {
-                        continue;
-                    }
-
-                    foreach ($linkMultipleIdList as $catalogId) {
-                        if (!in_array($catalogId, $catalogIds)) {
-                            $catalogIds[] = $catalogId;
-                        }
-                    }
-                }
-                $entity->set('catalogsIds', $catalogIds);
             }
         }
 

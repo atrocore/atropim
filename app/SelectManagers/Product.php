@@ -86,34 +86,6 @@ class Product extends AbstractSelectManager
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * NotLinkedWithProductSerie filter
-     *
-     * @param $result
-     */
-    protected function boolFilterNotLinkedWithProductSerie(&$result)
-    {
-        //find products
-        $products = $this
-            ->getEntityManager()
-            ->getRepository('Product')
-            ->join(['productSerie'])
-            ->where(
-                [
-                    'productSerie.id' => (string)$this->getSelectCondition('notLinkedWithProductSerie')
-                ]
-            )
-            ->find();
-
-        // add product ids to whereClause
-        if (!empty($products)) {
-            foreach ($products as $product) {
-                $result['whereClause'][] = [
-                    'id!=' => $product->get('id')
-                ];
-            }
-        }
-    }
 
     protected function boolFilterLinkedWithCategory(array &$result)
     {

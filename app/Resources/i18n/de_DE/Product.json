@@ -14,7 +14,6 @@
     "price": "Preis",
     "product": "Produkt",
     "productCategories": "Produktkategorien",
-    "productSerie": "Produktserie",
     "basePriceAmount": "Grundpreis Anzahl",
     "data": "Daten",
     "categories": "Produktkategorien",
@@ -26,7 +25,6 @@
     "image": "Hauptbild",
     "tag": "Etikett",
     "longDescription": "Lange Beschreibung",
-    "catalog": "Katalog",
     "packedAmount": "Gepackte Menge",
     "contents": "Contents",
     "taskStatus": "Task status",
@@ -79,7 +77,6 @@
   "boolFilters": {
     "notAssociatedRecords": "Ohne assoziierte Produkte",
     "notLinkedWithBrand": "Ohne Marke",
-    "notLinkedWithProductSerie": "Ohne Produktserie",
     "linkedWithCategory": "Mit Kategorie",
     "onlyConfigurableProducts": "Nur konfigurierbare Produkte",
     "withoutMainImage": "Ohne Hauptbild"
@@ -89,8 +86,7 @@
     "itselfAssociation": "Produkt kann nicht mit sich selbst assoziiert sein.",
     "recordAssociationAlreadyExists": "Eine solche Produktassoziation besteht bereits.",
     "youCantChangeClassificationInProduct": "Sie können die Klassifikation in Product nicht ändern.",
-    "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden.",
-    "productCatalogChangeException": "Katalog kann nicht entfernt/geändert werden, Produkt verwendet Kategorien aus diesem Katalog. Bitte heben Sie diese Verknüpfungen zuerst auf."
+    "productCanNotLinkToNonLeafCategory": "Produkte können nur mit Blattkategorien verlinkt werden."
   },
   "messages": {
     "componentsNotInstalled": "Installieren Sie das Modul Components, um die Komponentenvorschau zu verwenden.",

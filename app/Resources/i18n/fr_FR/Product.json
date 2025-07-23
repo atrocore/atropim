@@ -16,8 +16,6 @@
     "rrp": "Prix de vente recommandé (PAV)",
     "image": "Image principale",
     "tag": "Étiquette",
-    "productSerie": "Série de produits",
-    "catalog": "Catalogue",
     "channels": "Canaux",
     "productChannels": "Canaux de produits",
     "basePriceAmount": "Prix de base Montant",
@@ -74,7 +72,6 @@
   "boolFilters": {
     "notAssociatedRecords": "Sans produits associés",
     "notLinkedWithBrand": "Sans marque",
-    "notLinkedWithProductSerie": "Sans série de produits",
     "linkedWithCategory": "Avec catégorie",
     "onlyConfigurableProducts": "Uniquement les produits configurables",
     "withoutMainImage": "Sans Image principale"
@@ -84,8 +81,7 @@
     "itselfAssociation": "Le produit ne peut pas être associé à lui-même.",
     "recordAssociationAlreadyExists": "Une telle association de produits existe déjà.",
     "youCantChangeClassificationInProduct": "Vous ne pouvez pas modifier la classification dans le produit",
-    "productCanNotLinkToNonLeafCategory": "Les produits ne peuvent pas être liés à une catégorie non feuilletée.",
-    "productCatalogChangeException": "Le catalogue ne peut pas être supprimé/modifié, le produit utilise des catégories autorisées pour ce catalogue. Veuillez d'abord les dissocier."
+    "productCanNotLinkToNonLeafCategory": "Les produits ne peuvent pas être liés à une catégorie non feuilletée."
   },
   "messages": {
     "componentsNotInstalled": "Installez le module Composants pour utiliser l'aperçu des composants.",

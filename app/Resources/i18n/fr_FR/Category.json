@@ -15,9 +15,6 @@
     "products": "Produits",
     "sortOrder": "Ordre de tri"
   },
-  "labels": {
-    "withoutCatalog": "Sans catalogue"
-  },
   "options": {
     "template": {
       "default": "Défaut"
@@ -29,18 +26,13 @@
   "messages": {
     "channelUnlinkConfirm": "Êtes-vous sûr de vouloir dissocier le canal de la catégorie ? Tous les produits liés indirectement au canal par le biais de la catégorie seront également dissociés.",
     "categoryRemoveConfirm": "Êtes-vous sûr de vouloir supprimer la catégorie ? Toutes les sous-catégories de cette catégorie seront également supprimées et tous les produits liés à cette catégorie ou à ses sous-catégories seront dissociés.",
-    "categoryCatalogUnlinkConfirm": "Êtes-vous sûr de vouloir dissocier l'arbre des catégories du catalogue ? Tous les produits seront dissociés des catégories de cette arborescence.",
-    "categoryParentChangeConfirm": "Veuillez noter que l'arborescence de catégories mise à jour sera également affectée aux mêmes catalogues que l'arborescence de catégories d'origine. Les produits seront dissociés de tous les canaux hérités de l'arborescence originale et liés aux canaux hérités de l'arborescence mise à jour.",
-    "catalogUnlinkConfirm": "Êtes-vous sûr de vouloir dissocier le catalogue de la catégorie ? Le catalogue sera dissocié de toutes les sous-catégories de cette catégorie."
+    "categoryParentChangeConfirm": "Veuillez noter que l'arborescence de catégories mise à jour sera également affectée aux mêmes catalogues que l'arborescence de catégories d'origine. Les produits seront dissociés de tous les canaux hérités de l'arborescence originale et liés aux canaux hérités de l'arborescence mise à jour."
   },
   "exceptions": {
-    "onlyRootCategoryCanBeLinked": "Seule la catégorie racine peut être liée au catalogue.",
-    "onlyRootCategoryCanBeUnLinked": "Seule la catégorie racine peut être dissociée du catalogue.",
     "categoryHasChildren": "La catégorie sélectionnée est utilisée par une autre catégorie comme parent et ne peut pas être sélectionnée comme catégorie de produit.",
     "categoryHasChildCategoryAndCantBeDeleted": "La catégorie a une catégorie enfant et ne peut pas être supprimée.",
     "youCanNotChooseChildCategory": "Vous ne pouvez pas choisir une catégorie d'enfants ou elle-même.",
     "categoryHasProducts": "Les catégories avec des produits apparentés ne peuvent pas être supprimées.",
-    "categoryCannotBeUnRelatedFromCatalog": "L'arborescence des catégories avec des produits liés ne peut pas être dissociée du catalogue.",
     "parentCategoryHasProducts": "Cette catégorie ne peut pas être définie comme une catégorie mère, il s'agit d'une catégorie feuille avec des produits assignés.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Vous ne pouvez pas modifier la catégorie parentale dans la catégorie racine avec des produits liés."
   }
