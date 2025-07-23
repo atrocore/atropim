@@ -13,21 +13,12 @@ declare(strict_types=1);
 
 namespace Pim\Services;
 
-use Atro\Core\EventManager\Event;
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Services\Hierarchy;
+use Atro\Core\Utils\Util;
 use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Conflict;
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Services\Hierarchy;
-use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Atro\Services\MassActions;
-use Pim\Core\Exceptions\ProductAttributeAlreadyExists;
 
 class Product extends Hierarchy
 {
@@ -204,27 +195,11 @@ class Product extends Hierarchy
         $this->getEntityManager()->saveEntity($productFile);
     }
 
-    /**
-     * @return MassActions
-     */
-    protected function getMassActionsService(): MassActions
-    {
-        return $this->getServiceFactory()->create('MassActions');
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string
-     */
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         $this->setProductMainImage($entity);
@@ -232,9 +207,6 @@ class Product extends Hierarchy
         return parent::isEntityUpdated($entity, $data);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function init()
     {
         parent::init();
