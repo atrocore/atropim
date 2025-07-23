@@ -1,0 +1,26 @@
+{
+  "dynamicLogic": {
+    "fields": {
+      "channel": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "entityId",
+              "value": "Listing"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "entityId",
+              "value": "Listing"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

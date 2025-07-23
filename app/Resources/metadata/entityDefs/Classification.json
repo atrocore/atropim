@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "channel": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "classifications"
+    }
+  }
+}
