@@ -1,8 +1,7 @@
 {
   "fields": {
     "productCanLinkedWithNonLeafCategories": "Erlauben, die Produkte mit allen Kategorien (nicht nur Blattkategorien) zu verlinken.",
-    "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Verhalten beim Aufheben der Verknüpfung des Kategoriebaums mit dem Katalog"
+    "behaviorOnCategoryDelete": "Verhalten beim Löschen einer Kategorie"
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder und Attributwerte für dieses Gebietsschema eingegeben haben, automatisch entfernt."
@@ -18,7 +17,6 @@
   },
   "tooltips": {
     "productCanLinkedWithNonLeafCategories": "Wenn gesetzt, werden Sie die Produkte mit den Kategorien verlinken können, die Unterkategorien haben.",
-    "behaviorOnCategoryDelete": "Beim \"Erweitern\" werden auch alle Unterkategorien dieser Kategorie entfernt und alle Produkte, die mit dieser Kategorie oder ihren Unterkategorien verknüpft sind, werden getrennt.",
-    "behaviorOnCategoryTreeUnlinkFromCatalog": "Bei \"Erweitern\" werden alle mit den Produkten verknüpften Kategorien aus diesem Baum automatisch getrennt."
+    "behaviorOnCategoryDelete": "Beim \"Erweitern\" werden auch alle Unterkategorien dieser Kategorie entfernt und alle Produkte, die mit dieser Kategorie oder ihren Unterkategorien verknüpft sind, werden getrennt."
   }
 }

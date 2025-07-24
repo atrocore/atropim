@@ -16,8 +16,6 @@
     "rrp": "Recommended Retail Price (RRP)",
     "image": "Main Image",
     "tag": "Tag",
-    "productSerie": "Product Serie",
-    "catalog": "Catalog",
     "channels": "Channels",
     "basePriceAmount": "Base Price Amount",
     "packedAmount": "Packed Amount",
@@ -75,7 +73,6 @@
   "boolFilters": {
     "notAssociatedRecords": "Without Associated Products",
     "notLinkedWithBrand": "Without Brand",
-    "notLinkedWithProductSerie": "Without Product Serie",
     "linkedWithCategory": "With Category",
     "onlyConfigurableProducts": "Only Configurable Products",
     "withoutMainImage": "Without Main Image"
@@ -85,8 +82,7 @@
     "itselfAssociation": "Product cannot be associated with itself.",
     "recordAssociationAlreadyExists": "Such product association exists already.",
     "youCantChangeClassificationInProduct": "You can't change Classification in Product",
-    "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category.",
-    "productCatalogChangeException": "Catalog cannot be removed/changed, Product uses categories allowed for this catalog. Please unlink them first."
+    "productCanNotLinkToNonLeafCategory": "Products cannot be linked to a non-leaf category."
   },
   "messages": {
     "componentsNotInstalled": "Install Components module to use components preview.",

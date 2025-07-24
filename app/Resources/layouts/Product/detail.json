@@ -19,18 +19,10 @@
       ],
       [
         {
-          "name": "catalog"
-        },
-        {
-          "name": "classifications"
-        }
-      ],
-      [
-        {
           "name": "brand"
         },
         {
-          "name": "productSerie"
+          "name": "classifications"
         }
       ],
       [

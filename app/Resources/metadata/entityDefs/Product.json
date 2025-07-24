@@ -79,20 +79,12 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "productSerie": {
-      "type": "link"
-    },
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true
-    },
-    "catalog": {
-      "type": "link",
-      "required": false,
-      "view": "pim:views/product/fields/catalog"
     },
     "channels": {
       "type": "linkMultiple",
@@ -188,11 +180,6 @@
       "relationName": "VariantSpecificProductAttribute",
       "entity": "Attribute"
     },
-    "catalog": {
-      "type": "belongsTo",
-      "foreign": "products",
-      "entity": "Catalog"
-    },
     "brand": {
       "type": "belongsTo",
       "foreign": "products",
@@ -203,11 +190,6 @@
       "entity": "Call",
       "foreign": "parent",
       "layoutRelationshipsDisabled": true
-    },
-    "productSerie": {
-      "type": "belongsTo",
-      "foreign": "products",
-      "entity": "ProductSerie"
     },
     "channels": {
       "type": "hasMany",

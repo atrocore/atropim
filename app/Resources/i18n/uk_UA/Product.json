@@ -15,8 +15,6 @@
     "rrp": "Рекомендована роздрібна ціна",
     "image": "Основне зображення",
     "tag": "Тег",
-    "productSerie": "Серія продукту",
-    "catalog": "Каталог",
     "channels": "Канали",
     "productChannels": "Канали продукту",
     "basePriceAmount": "Базова ціна",
@@ -74,7 +72,6 @@
   "boolFilters": {
     "notAssociatedRecords": "Не асоційовані продукти",
     "notLinkedWithBrand": "Не пов'язаний із брендом",
-    "notLinkedWithProductSerie": "Не пов'язаний із серією продукту",
     "linkedWithCategory": "Пов'язаний із категорією",
     "onlyConfigurableProducts": "Тільки продукти, які моуть бути конфігуровані",
     "withoutMainImage": "Без основного зображення"
@@ -84,8 +81,7 @@
     "itselfAssociation": "Продукт не може бути асоційований із самим собою.",
     "recordAssociationAlreadyExists": "Така продуктова асоціація вже існує.",
     "youCantChangeClassificationInProduct": "Ви не можете змінити класифікацію в продукті",
-    "productCanNotLinkToNonLeafCategory": "Продукт не може бути пов'язаний з категорією, яка не є кінцевою.",
-    "productCatalogChangeException": "Ви не можете видалити/змінити каталог продукту, продукт використовує категорії які дозволені для оригінального(попереднього) каталогу. Будь ласка, спочатку видаліть зв'язок з цими категоріями."
+    "productCanNotLinkToNonLeafCategory": "Продукт не може бути пов'язаний з категорією, яка не є кінцевою."
   },
   "messages": {
     "emptyComponents": "Продукт не має компонентів.",
