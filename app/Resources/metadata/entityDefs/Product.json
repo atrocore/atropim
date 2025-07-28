@@ -34,11 +34,13 @@
     "ean": {
       "type": "varchar",
       "trim": true,
+      "index": true,
       "pattern": "/^(\\d{8}|\\d{12,14})$/"
     },
     "mpn": {
       "type": "varchar",
-      "trim": true
+      "trim": true,
+      "index": true
     },
     "rrp": {
       "type": "float",
