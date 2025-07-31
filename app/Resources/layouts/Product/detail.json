@@ -27,11 +27,9 @@
       ],
       [
         {
-          "name": "sku"
+          "name": "number"
         },
-        {
-          "name": "mpn"
-        }
+        false
       ],
       [
         {
@@ -56,6 +54,11 @@
           "name": "quantity"
         },
         false
+      ],
+      [
+        {
+          "name": "description"
+        }
       ],
       [
         {
