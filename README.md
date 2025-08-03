@@ -52,7 +52,8 @@ Visit [this page](https://www.atropim.com/en/features) to see all the features o
 
 ### Enterprise Edition?
 
-There is no Enterprise Edition, only the Core, free modules and paid modules.
+From small businesses to large enterprises, every user use the same core platform – AtroCore. This core can be extended with additional free and premium modules as needed.
+We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
 
 ### Free vs Paid
 
