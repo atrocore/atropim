@@ -74,5 +74,39 @@
         }
       ]
     ]
+  },
+  {
+    "label": "manufacturer",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "mpn"
+        },
+        false
+      ],
+      [
+        {
+          "name": "customsNumber"
+        },
+        {
+          "name": "countryOfOrigin"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "other",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "defaultSupplier"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    ]
   }
 ]
