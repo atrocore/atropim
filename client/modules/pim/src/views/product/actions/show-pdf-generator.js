@@ -48,9 +48,9 @@ Espo.define('pim:views/product/actions/show-pdf-generator', 'pdf-generator:views
 
         prepareDefaultFileName() {
             let productName = (this.model.get('name') || '').replace(/[^A-Za-z0-9-_]/g, '-');
-            let sku = (this.model.get('sku') || '').replace(/[^A-Za-z0-9-_]/g, '-');
+            let number = (this.model.get('number') || '').replace(/[^A-Za-z0-9-_]/g, '-');
 
-            return productName + '-' + sku + '.pdf';
+            return productName + '-' + number + '.pdf';
         }
     })
 );

@@ -27,11 +27,9 @@
       ],
       [
         {
-          "name": "sku"
+          "name": "number"
         },
-        {
-          "name": "mpn"
-        }
+        false
       ],
       [
         {
@@ -59,6 +57,11 @@
       ],
       [
         {
+          "name": "description"
+        }
+      ],
+      [
+        {
           "name": "longDescription"
         }
       ],
@@ -68,6 +71,40 @@
         },
         {
           "name": "taskStatus"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "manufacturer",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "mpn"
+        },
+        false
+      ],
+      [
+        {
+          "name": "customsNumber"
+        },
+        {
+          "name": "countryOfOrigin"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "other",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "defaultSupplier"
+        },
+        {
+          "name": "note"
         }
       ]
     ]

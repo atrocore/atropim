@@ -28,7 +28,7 @@
     "data"
   ],
   "unInheritedFields": [
-    "sku",
+    "number",
     "mpn"
   ],
   "relationInheritance": true,

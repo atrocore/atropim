@@ -8,7 +8,7 @@
     "notSortable": true
   },
   {
-    "name": "sku"
+    "name": "number"
   },
   {
     "name": "type"

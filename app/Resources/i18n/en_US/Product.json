@@ -12,7 +12,6 @@
     "amount": "Amount",
     "price": "Purchase Price",
     "ean": "GTIN/EAN",
-    "mpn": "MPN",
     "rrp": "Recommended Retail Price (RRP)",
     "image": "Main Image",
     "tag": "Tag",
