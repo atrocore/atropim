@@ -72,6 +72,14 @@ Espo.define('pim:views/fields/classifications-single', ['views/fields/link', 'pi
 
         inlineEditSave: function () {
             Classifications.prototype.inlineEditSave.call(this);
+        },
+
+        createFilterView: function (rule, inputName, type, delay = true) {
+            Classifications.prototype.createFilterView.call(this, rule, inputName, type, delay);
+        },
+
+        createQueryBuilderFilter(type = null) {
+            return Classifications.prototype.createQueryBuilderFilter.call(this, type);
         }
     })
 );
