@@ -16,9 +16,6 @@ namespace Pim\SelectManagers;
 use Atro\Core\Exceptions\Error;
 use Pim\Core\SelectManagers\AbstractSelectManager;
 
-/**
- * Class Channel
- */
 class Listing extends AbstractSelectManager
 {
     /**
