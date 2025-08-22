@@ -6,7 +6,8 @@
       "readOnly": true,
       "notStorable": true,
       "view": "pim:views/fields/full-width-list-image",
-      "importDisabled": true
+      "importDisabled": true,
+      "filterDisabled": true
     },
     "associatedItemImage": {
       "type": "file",
@@ -14,7 +15,13 @@
       "readOnly": true,
       "notStorable": true,
       "view": "pim:views/fields/full-width-list-image",
-      "importDisabled": true
+      "importDisabled": true,
+      "filterDisabled": true
+    },
+    "amount": {
+      "type": "int",
+      "min": 1,
+      "additionalField": true
     }
   }
 }
