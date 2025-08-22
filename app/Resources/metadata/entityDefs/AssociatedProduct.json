@@ -15,6 +15,10 @@
       "notStorable": true,
       "view": "pim:views/fields/full-width-list-image",
       "importDisabled": true
+    },
+    "amount": {
+      "type": "int",
+      "min": 1
     }
   }
 }
