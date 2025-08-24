@@ -39,20 +39,11 @@ class ProductsByStatusDashlet extends AbstractDashletService
             ->groupBy('p.product_status')
             ->fetchAllAssociative();
 
-        $fieldDefs = $this->getInjection('metadata')->get(['entityDefs', 'Product', 'fields', 'productStatus']);
 
         foreach ($products as $product) {
-            $name = $product['status'];
-            if (!empty($fieldDefs['optionsIds'])) {
-                $key = array_search($product['status'], $fieldDefs['optionsIds']);
-                if ($key !== false && isset($fieldDefs['options'][$key])) {
-                    $name = $fieldDefs['options'][$key];
-                }
-            }
-
             $result['list'][] = [
                 'id'     => $product['status'],
-                'name'   => $name,
+                'name'   => $product['status'],
                 'amount' => (int)$product['amount']
             ];
         }

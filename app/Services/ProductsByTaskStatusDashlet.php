@@ -42,15 +42,14 @@ class ProductsByTaskStatusDashlet extends AbstractDashletService
 
         $taskStatusDefs = $this->getMetadata()->get(['entityDefs', 'Product', 'fields', 'taskStatus'], []);
 
-        $taskStatusesIds = $taskStatusDefs['optionsIds'] ?? [];
-        $taskStatusesNames = $taskStatusDefs['options'] ?? [];
+        $taskStatuses = $taskStatusDefs['options'] ?? [];
 
-        $result['total'] = count($taskStatusesIds);
+        $result['total'] = count($taskStatuses);
 
-        foreach ($taskStatusesIds as $key => $status) {
+        foreach ($taskStatuses as $status) {
             $result['list'][] = [
                 'id'     => $status,
-                'name'   => $taskStatusesNames[$key],
+                'name'   => $status,
                 'amount' => $this->getRepository('Product')->where(['taskStatus*' => "%\"$status\"%"])->count()
             ];
         }
