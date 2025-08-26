@@ -1,6 +1,5 @@
 {
   "exceptions": {
-    "unitIsUsedOnProductAttribute": "L'unité \"%s\" est utilisée par l'attribut \"%s\" dans le produit \"%s\".",
-    "unitIsUsedOnClassificationAttribute": "L'unité \"%s\" est utilisée par l'attribut \"%s\" dans la classification \"%s\"."
+    "unitIsUsedOnProductAttribute": "L'unité \"%s\" est utilisée par l'attribut \"%s\" dans le produit \"%s\"."
   }
 }
