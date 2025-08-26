@@ -8,10 +8,6 @@
       "type": "enum",
       "tooltip": true,
       "required": true,
-      "optionsIds": [
-        "cascade",
-        "restrict"
-      ],
       "options": [
         "cascade",
         "restrict"
