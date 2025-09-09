@@ -51,7 +51,7 @@
     "type": {
       "type": "extensibleEnum",
       "dropdown": true,
-      "prohibitedEmptyValue": true,
+      "required": true,
       "extensibleEnumId": "content_items",
       "defaultId": "highlight"
     }
