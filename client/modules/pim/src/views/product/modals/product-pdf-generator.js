@@ -35,11 +35,11 @@ Espo.define('pim:views/product/modals/product-pdf-generator', 'pdf-generator:vie
                 scope: this.scope,
                 defs: {
                     name: 'channel',
-                    params: {
-                        options: optionsChannel,
-                        translatedOptions: translatedOptionsChannel
+                },
+                params: {
+                    options: optionsChannel,
+                    translatedOptions: translatedOptionsChannel
 
-                    }
                 },
                 mode: 'edit',
                 inlineEditDisabled: true
