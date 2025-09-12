@@ -7,7 +7,17 @@
       "notStorable": true,
       "view": "pim:views/fields/full-width-list-image",
       "importDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "associatedItemImage": {
       "type": "file",
@@ -16,7 +26,17 @@
       "notStorable": true,
       "view": "pim:views/fields/full-width-list-image",
       "importDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "amount": {
       "type": "int",

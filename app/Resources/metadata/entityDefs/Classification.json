@@ -1,7 +1,27 @@
 {
   "fields": {
     "channel": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "entityId",
+              "value": "Listing"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "entityId",
+              "value": "Listing"
+            }
+          ]
+        }
+      }
     }
   },
   "links": {
