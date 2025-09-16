@@ -31,8 +31,6 @@
     {{/if}}
     {{/if}}
 
-    <div class="filter-container"></div>
-
     {{#each buttonList}}
         {{button name scope=../scope label=label style=style}}
     {{/each}}
@@ -125,68 +123,5 @@
         padding-left: 8px;
         padding-right: 8px;
 		width: {{itemContainerWidth}}%;
-	}
-	.list-buttons-container {
-        margin-left: 5px;
-	}
-	.check-all-container {
-	    width: 20px;
-        white-space: nowrap;
-	}
-	.check-all-container .select-all-container {
-        line-height: 19px;
-        height: 19px;
-	    float: left;
-	}
-	.check-all-container .checkbox-dropdown {
-        margin-left: 3px;
-        top: -1px;
-	}
-	.check-all-container .checkbox-dropdown > a {
-	    padding: 0;
-        line-height: 1;
-        color: #000;
-	}
-	.list-buttons-container > .sort-container,
-	.list-buttons-container > .items-in-row-container {
-	    line-height: 0;
-	    float: right;
-	    margin-right: 0;
-	}
-	.sort-container .sort-label,
-	.items-in-row-container .items-in-row-label {
-	    line-height: 19px;
-	    display: inline-block;
-	    vertical-align: middle;
-        margin-right: 5px;
-	}
-    .items-in-row-container .items-in-row {
-        margin-right: 20px;
-    }
-	.sort-container .sort-field .dropdown-menu {
-        max-height: 500px;
-        overflow-y: auto;
-	}
-	.sort-container button.btn,
-	.items-in-row-container button.btn {
-        color: #000;
-        border: 0;
-        padding: 0;
-        background: #fff;
-	}
-	.items-in-row-container button.btn:hover,
-	.items-in-row-container button.btn:focus,
-	.items-in-row-container button.btn:active,
-	.items-in-row-container .open > button.btn.items-in-row-button,
-	.sort-container button.btn:hover,
-	.sort-container button.btn:focus,
-	.sort-container button.btn:active,
-	.sort-container .open > button.btn.sort-field-button,
-	.sort-container .open > button.btn.sort-direction-button {
-	    background: #fff;
-        box-shadow: none;
-	}
-	.total-count {
-	    margin-left: 20px;
 	}
 </style>
