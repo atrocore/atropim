@@ -23,7 +23,6 @@ use Espo\ORM\EntityCollection;
 class Product extends Hierarchy
 {
     protected $mandatorySelectAttributeList = ['data'];
-    protected $noEditAccessRequiredLinkList = ['categories'];
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
