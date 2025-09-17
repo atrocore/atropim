@@ -69,6 +69,38 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
             }, Dep.prototype.data.call(this));
         },
 
+        hasExternalSelectAllCheckbox() {
+            return true;
+        },
+
+        getActionsComponent: function () {
+            return Svelte.PlateActionsContainer;
+        },
+
+        getActionsProperties: function (component) {
+            const props = Dep.prototype.getActionsProperties.call(this, component);
+
+            props.itemsInRow = this.itemsInRow;
+            props.itemsInRowOptions = this.itemsInRowOptions;
+            props.changeItemsInRow = (number) => {
+                this.setItemsInRow(number);
+            };
+
+            props.sortBy = this.collection.sortBy;
+            props.sortDirection = this.collection.asc ? 'asc' : 'desc';
+            props.sortByOptions = this.getSortFieldsList();
+            props.changeSortField = (field) => {
+                this.sortByField(field);
+                component.$set({sortBy: field});
+            };
+            props.changeSortDirection = (asc) => {
+                this.toggleSort(this.collection.sortBy);
+                component.$set({sortDirection: this.collection.asc ? 'asc' : 'desc'});
+            }
+
+            return props;
+        },
+
         getSortFieldsList() {
             const fields = [];
             const fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']);
@@ -76,6 +108,7 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
                 if (!fieldDefs[field].disabled
                     && !fieldDefs[field].layoutListDisabled
                     && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
+                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[field].type)
                 ) {
                     fields.push(field);
                 }
