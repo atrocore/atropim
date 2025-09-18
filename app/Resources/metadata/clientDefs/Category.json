@@ -65,7 +65,7 @@
       "dragDrop": {
         "isActive": true,
         "maxSize": 20,
-        "sortField": "sorting"
+        "sortField": "product_category_mm.sorting"
       },
       "sortBy": "sorting",
       "asc": true,
