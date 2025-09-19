@@ -33,7 +33,6 @@ class ProductFile extends Relation
 
         if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
             $productFiles = $this
-                ->select(['id', 'isMainImage'])
                 ->where([
                     'isMainImage' => true,
                     'productId'   => $entity->get('productId'),
