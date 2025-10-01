@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -13,7 +14,6 @@ declare(strict_types=1);
 
 namespace Pim;
 
-use Espo\Core\Utils\Json;
 use Atro\Core\ModuleManager\AbstractModule;
 
 class Module extends AbstractModule
