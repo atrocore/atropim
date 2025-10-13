@@ -54,21 +54,25 @@ class V1Dot14Dot9 extends Base
         ];
 
         foreach ($previews as $preview) {
-            $connection->createQueryBuilder()
-                ->insert('preview_template')
-                ->setValue('id', ':id')
-                ->setValue('deleted', ':false')
-                ->setValue('name', ':name')
-                ->setValue('entity_type', ':entityType')
-                ->setValue('is_active', ':active')
-                ->setValue('template', ':template')
-                ->setParameter('id', $preview['id'] ?? Util::generateId())
-                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
-                ->setParameter('entityType', $preview['entityType'])
-                ->setParameter('name', $preview['name'])
-                ->setParameter('active', $preview['active'], \Doctrine\DBAL\ParameterType::BOOLEAN)
-                ->setParameter('template', file_get_contents($templateDir . $preview['templateFile']))
-                ->executeStatement();
+            try {
+                $connection->createQueryBuilder()
+                    ->insert('preview_template')
+                    ->setValue('id', ':id')
+                    ->setValue('deleted', ':false')
+                    ->setValue('name', ':name')
+                    ->setValue('entity_type', ':entityType')
+                    ->setValue('is_active', ':active')
+                    ->setValue('template', ':template')
+                    ->setParameter('id', $preview['id'] ?? Util::generateId())
+                    ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('entityType', $preview['entityType'])
+                    ->setParameter('name', $preview['name'])
+                    ->setParameter('active', $preview['active'], \Doctrine\DBAL\ParameterType::BOOLEAN)
+                    ->setParameter('template', file_get_contents($templateDir . $preview['templateFile']))
+                    ->executeStatement();
+            } catch (\Throwable $e) {
+
+            }
         }
     }
 }
