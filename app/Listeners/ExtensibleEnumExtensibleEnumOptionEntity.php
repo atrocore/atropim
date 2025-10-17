@@ -32,11 +32,10 @@ class ExtensibleEnumExtensibleEnumOptionEntity extends AbstractEntityListener
             ->select('t.*')
             ->from($conn->quoteIdentifier('classification_attribute'), 't')
             ->join('t','attribute','a','t.attribute_id=a.id')
-            ->where("t.reference_value = :referenceValue OR t.text_value LIKE :textValue")
+            ->where("t.data LIKE :textValue")
             ->andWhere('a.extensible_enum_id=:extensibleEnumId')
             ->andWhere('t.deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('referenceValue', $entity->get('extensibleEnumOptionId'), ParameterType::STRING)
             ->setParameter('textValue', "%\"{$entity->get('extensibleEnumOptionId')}\"%", ParameterType::STRING)
             ->setParameter('extensibleEnumId', $param = $entity->get('extensibleEnumId'), Mapper::getParameterType($param))
             ->fetchAssociative();
