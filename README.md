@@ -63,7 +63,7 @@ We also offer SaaS Editions, hosted in the cloud, which include some or all prem
 
 ## Technology
 
-![Architecture and Technologies](_assets/architecture-and-technologies.svg)
+![Architecture and Technologies](_assets/architecture-and-technologies.png)
 
 
 ## Integrations
