@@ -27,12 +27,6 @@ Now we have much more :)
 - Extensible with modules
 - Also check other advantages of [AtroCore](https://github.com/atrocore/atrocore).
 
-## How Does It Work?
-
-AtroPIM is an effective solution for storing, processing and managing your product information. All product data are extracted from different sources, classified, translated and enriched. AtroPIM helps you publish the relevant data on different sales channels with minimum efforts. 
-
-![Functions_banner](_assets/how_it_works_scheme__en.png)
-
 ## Features
 
 AtroPIM comes with a lot of features:
