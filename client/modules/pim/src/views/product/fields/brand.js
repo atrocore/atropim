@@ -10,8 +10,11 @@
 
 Espo.define('pim:views/product/fields/brand', 'views/fields/link',
     Dep => Dep.extend({
-
-        selectBoolFilterList:  ['onlyActive'],
-
+        setup() {
+            Dep.prototype.setup.call(this);
+            if (this.getMetadata().get(['scopes', 'Brand', 'hasActive'])) {
+                this.selectBoolFilterList.push('onlyActive');
+            }
+        }
     })
 );
