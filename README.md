@@ -1,3 +1,11 @@
+[![GitHub Stars](https://img.shields.io/github/stars/atrocore/atropim?style=flat&logo=github&color=yellow)](https://github.com/atrocore/atropim/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/atrocore/atropim?style=flat&logo=github&color=orange)](https://github.com/atrocore/atropim/network/members)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/atrocore/atropim?sort=semver)](https://github.com/atrocore/atropim/releases)
+[![GitHub last commit](https://img.shields.io/github/last-commit/atrocore/atropim)](https://github.com/atrocore/atropim/commits/master)
+[![License](https://img.shields.io/github/license/atrocore/atropim)](https://github.com/atrocore/atropim/blob/master/LICENSE.txt)
+[![Built with PHP](https://img.shields.io/badge/PHP-8.1%2B-blue?logo=php)](https://www.php.net/)
+[![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/release-notes/pim)
+
 <p align="center" width="100%">
 <img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48">
 </p>
