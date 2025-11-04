@@ -24,22 +24,450 @@ class V1Dot15Dot9 extends Base
 
     public function up(): void
     {
-        $seeder = new \Pim\Seeders\PreviewSeeder($this->getConfig(), $this->getConnection());
+        $data = [
+            'id'       => 'product_preview',
+            'template' => <<<'EOD'
+{# List of fields to display on overview table after description #}
+{% set tableFields = ['id', 'number', 'ean', 'mpn', 'price', 'rrp', 'quantity', 'taskStatus'] %}
 
-        foreach ($seeder->getPreviewTemplates() as $previews) {
-            if (empty($previews['template']) || empty($previews['id'])) {
-                continue;
+{# List of fields to be displayed as badges after overview table #}
+{% set badgeFields = ['number', 'brand'] %}
+
+{# List of linked entities that can be edited via preview mode #}
+{% set editableBadgeFields = ['brand'] %}
+
+{# If set to false, badges with empty values will be skipped #}
+{% set displayEmptyBadgeFields = false %}
+
+{% set product = entities[0]|prepareEntity|putAttributesToEntity %}
+
+{% set mainImage = null %}
+{% set mainImageWrapper = findRecord('ProductFile', { 'productId': product.id, 'isMainImage': true }) %}
+{% set files = product.files|filter(file => file|isImage) %}
+{% set images = [] %}
+{% for file in files %}
+    {% if file.id == mainImageWrapper.fileId %}
+        {% set mainImage = file|prepareEntity %}
+    {% else %}
+        {% set images = images|merge([file|prepareEntity]) %}
+    {% endif %}
+{% endfor %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }}</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #2980b9;
+            --text-color: #333;
+            --bg-color: #fff;
+            --border-color: #ddd;
+            --table-header-bg: #ecf0f1;
+            --status-color: #1a75d1;
+
+            font-family: sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2em;
+            background: var(--bg-color);
+            border-radius: 5px;
+            overflow: hidden;
+            font-size: 0.95em;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        table tbody tr td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75em 1em;
+        }
+
+        table tbody tr td[colspan="2"] {
+            background: var(--table-header-bg);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        picture {
+            background: var(--bg-color);
+            display: block;
+        }
+
+        picture img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        header, main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5em;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 0.25em;
+        }
+
+        header .status-info {
+            margin-bottom: 1.5em;
+            row-gap: .5em;
+        }
+
+        header .status-info .item {
+            font-size: .9em;
+            font-weight: bold;
+            background-color: var(--table-header-bg);
+            border-radius: .5em;
+            padding: .25em .75em;
+            line-height: 1;
+        }
+
+        header .status-info .tags .item {
+            padding: .3em .8em;
+            margin-left: .5em;
+        }
+
+        header .status-info .item.product-status {
+            color: var(--status-color);
+            background-color: var(--bg-color);
+            border: 2px solid var(--status-color);
+        }
+
+        header .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        header .fields {
+            flex: 1 1 50%;
+            padding-right: 4em;
+        }
+
+        header .main-image {
+            flex: 1 1 35%;
+            display: flex;
+            justify-content: flex-end
+        }
+
+        header picture {
+            min-height: 200px;
+        }
+
+        header picture img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section.description {
+            margin-bottom: 1em;
+            text-align: justify;
+        }
+
+        .overview table {
+            box-shadow: none;
+        }
+
+        section.branding {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            margin-bottom: 1em;
+        }
+
+        section.branding .item {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5em 1em;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        section.branding .item .name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-right: 0.5em;
+        }
+
+        main h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin: 1em 0 0.5em;
+        }
+
+        .gallery {
+            margin-top: 2em;
+        }
+
+        .gallery .row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1em;
+        }
+
+        .gallery .row .item {
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery .row .item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery .row .item > picture {
+            height: 100%;
+        }
+
+        section.components p {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2em;
+            color: #777777;
+        }
+
+        section.components .row {
+            display: flex;
+        }
+
+        section.components .row.cols-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2em;
+        }
+
+        section.components .component:not(:first-child) {
+            margin-top: 2em;
+        }
+
+        section.attributes h2,
+        section.components h2 {
+            margin-top: 2em;
+        }
+
+        section.attributes table td > *:empty {
+            display: inline;
+        }
+
+        section.attributes table td > *:empty:before,
+        section.overview table td > *:empty:before,
+        .value-container:empty:before {
+            content: 'Null';
+            font-style: italic;
+            opacity: .5;
+        }
+
+        .value-container {
+            min-width: 1em;
+            display: inline-block;
+        }
+
+        @media screen and (max-width: 640px) {
+            header picture, header .fields {
+                flex: 1 1 100%;
+                padding: 0;
             }
 
-            try {
-                $this->getConnection()->createQueryBuilder()
-                    ->update('preview_template')
-                    ->set('template', ':template')
-                    ->where('id = :id')
-                    ->setParameter('template', $previews['template'])
-                    ->setParameter('id', $previews['id'])
-                    ->executeStatement();
-            } catch (\Throwable $e) {}
+            .gallery .row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            section.components .row.cols-4 {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="value-container" {{ editable(product, getAllLanguageFields('Product', 'name')) }}>{{ product.name }}</h1>
+    <div class="row status-info">
+        <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translateOption(product.productStatus, language, 'productStatus', scope: 'Product') }}</div>
+        {% if product.tag is not empty %}
+            <div class="row tags" {{ editable(product, ['tag']) }}>
+                {% for tag in product.tag %}
+                    <div class="item">{{ tag }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="fields">
+            <section class="description value-container" {{ editable(product, getAllLanguageFields('Product', 'longDescription')) }}>{{ product.longDescription|raw }}</section>
+            <section class="overview">
+                {% if tableFields is not empty %}
+                    <table>
+                        <tbody>
+                        {% for field in tableFields %}
+                            {% set displayValue = formatField(product, field) %}
+                            {% set label = translate('unit' ~ field|capitalize, language, 'fields', 'Product') %}
+                            {% if label == 'unit' ~ field|capitalize %}
+                                {% set label = translate(field, language, 'fields', 'Product') %}
+                            {% endif %}
+                            <tr>
+                                <td>{{ label }}</td>
+                                <td><span class="value-container" {{ editable(product, getAllLanguageFields('Product', field)) }}>{% if displayValue is same as ('') %}&nbsp;{% else %}{{ displayValue }}{% endif %}</span></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </section>
+            <section class="branding">
+                {% for field in badgeFields %}
+                    {% set displayValue = formatField(product, field) %}
+                    {% set label = translate('unit' ~ field|capitalize, language, 'fields', 'Product') %}
+                    {% if label == 'unit' ~ field|capitalize %}
+                        {% set label = translate(field, language, 'fields', 'Product') %}
+                    {% endif %}
+                    {% if displayValue is not empty or displayEmptyBadgeFields %}
+                        {% set value = get(product, field) %}
+                        <div class="item" {{ editable(value) }}>
+                            <span class="name">{{ translate(field, language, 'fields', 'Product') }}: </span>{{ displayValue ?? 'Null' }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </section>
+        </div>
+        <div class="main-image">
+            {% if mainImage is not null %}
+                <picture>
+                    <img src="{{ mainImage.downloadUrl }}" alt="{{ mainImage.name }}">
+                </picture>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<main>
+    {% if images is not empty %}
+        <section class="gallery">
+            <h2>{{ translate('files', language, 'fields', 'Product') }}</h2>
+            <div class="row">
+                {% for image in images %}
+                    <div class="item">
+                        <picture>
+                            <img src="{{ image.mediumThumbnailUrl }}" alt="{{ image.name }}">
+                        </picture>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="attributes">
+        {% set attributesPanels = product.attributesDefs|column('attributePanelId')|unique %}
+        {% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null, 'id') %}
+        {% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => v.mainField == k or not v.mainField) %}
+
+        {% for panel in attributesPanels %}
+            <h2>{{ config.referenceData.AttributePanel[panel].name ?? panel }}</h2>
+            {% set groups = attributesGroups|map(i => i ?? {id: null})|map(group => group|merge({ 'attributes': attributesList|filter(i => i.attributeGroupId == group.id and i.attributePanelId == panel) }))|filter(g => g.attributes is not empty) %}
+            <table>
+                <tbody>
+                {% for group in groups|sort((a, b) => a.id is null ? -2 : a.sortOrder <=> b.sortOrder) %}
+                    <tr>
+                        <td colspan="2">{{ group.name ?? group.id ?? translate('noGroup', language, scope: 'Product')  }}</td>
+                    </tr>
+
+                    {% for key, attribute in group.attributes|sort((a, b) => a.sortOrderInAttributeGroup <=> b.sortOrderInAttributeGroup) %}
+                        <tr>
+                            <td width="50%">{{ attribute.detailViewLabel ?? attribute.label }}</td>
+                            <td width="50%">
+                                {% set mediaUrl = null %}
+                                {% set displayValue = formatField(product, key) %}
+
+                                {% if attribute.type == 'file' %}
+                                    {% set fileId = get(product, key ~ 'Id') %}
+
+                                    {% if fileId is not empty %}
+                                        {% set attrFile = findRecord('File', { 'id': get(product, key ~ 'Id') })|prepareEntity %}
+
+                                        {% if attrFile is not null and (attrFile|isImage) %}
+                                            {% set mediaUrl = attrFile.mediumThumbnailUrl %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
+                                <div class="value-container">
+                                    {% if mediaUrl is not null %}
+                                        <picture {{ editable(product, [key]) }} style="max-width: 300px">
+                                            <img src="{{ mediaUrl }}" alt="">
+                                        </picture>
+                                    {% elseif attribute.type in ['wysiwyg', 'markdown'] %}
+                                        <div class="value-container" {{ editable(product, [key]) }}>{{ displayValue|raw }}</div>
+                                    {% elseif displayValue is same as('') %}
+                                        <span class="value-container" {{ editable(product, [key]) }}>&nbsp;</span>
+                                    {% else %}
+                                        <span class="value-container" {{ editable(product, [key]) }}>{{ displayValue }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    </section>
+
+    <section class="components">
+        <h2>{{ translate('components', language, 'fields', 'Product') }}</h2>
+        {% if product.components is not defined %}
+            {{ translate('componentsNotInstalled', language, 'messages', 'Product') }}
+        {% elseif product.components is not empty %}
+            <div class="component">
+                {% for component in product.components %}
+                    {% set component = component|prepareHtmlField %}
+                    {{ component.html|raw }}
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ translate('emptyComponents', language, 'messages', 'Product') }}
+        {% endif %}
+    </section>
+</main>
+</body>
+</html>
+EOD,
+        ];
+
+        try {
+            $this->getConnection()->createQueryBuilder()
+                ->update('preview_template')
+                ->set('template', ':template')
+                ->where('id = :id')
+                ->setParameter('template', $data['template'])
+                ->setParameter('id', $data['id'])
+                ->executeStatement();
+        } catch (\Throwable $e) {
         }
     }
 }
