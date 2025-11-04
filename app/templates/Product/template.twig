@@ -10,13 +10,11 @@
 {# If set to false, badges with empty values will be skipped #}
 {% set displayEmptyBadgeFields = false %}
 
-{% set imageMimetypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}
-
 {% set product = entities[0]|prepareEntity|putAttributesToEntity %}
 
 {% set mainImage = null %}
 {% set mainImageWrapper = findRecord('ProductFile', { 'productId': product.id, 'isMainImage': true }) %}
-{% set files = product.files|filter(file => file.mimeType in imageMimetypes) %}
+{% set files = product.files|filter(file => file|isImage) %}
 {% set images = [] %}
 {% for file in files %}
     {% if file.id == mainImageWrapper.fileId %}
@@ -383,7 +381,7 @@
                                     {% if fileId is not empty %}
                                         {% set attrFile = findRecord('File', { 'id': get(product, key ~ 'Id') })|prepareEntity %}
 
-                                        {% if attrFile is not null and attrFile.mimeType in imageMimetypes %}
+                                        {% if attrFile is not null and (attrFile|isImage) %}
                                             {% set mediaUrl = attrFile.mediumThumbnailUrl %}
                                         {% endif %}
                                     {% endif %}
