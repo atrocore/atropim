@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V1Dot15Dot9 extends Base
 {
@@ -24,9 +25,9 @@ class V1Dot15Dot9 extends Base
 
     public function up(): void
     {
-        $data = [
-            'id'       => 'product_preview',
-            'template' => <<<'EOD'
+        $preview = [
+            'id'         => 'product_preview',
+            'template'   => <<<'EOD'
 {# List of fields to display on overview table after description #}
 {% set tableFields = ['id', 'number', 'ean', 'mpn', 'price', 'rrp', 'quantity', 'taskStatus'] %}
 
@@ -457,16 +458,51 @@ class V1Dot15Dot9 extends Base
 </body>
 </html>
 EOD,
+            'name'       => 'Product preview',
+            'active'     => true,
+            'entityType' => 'Product',
         ];
 
         try {
-            $this->getConnection()->createQueryBuilder()
-                ->update('preview_template')
-                ->set('template', ':template')
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('id', 'template')
+                ->from('preview_template')
                 ->where('id = :id')
-                ->setParameter('template', $data['template'])
-                ->setParameter('id', $data['id'])
-                ->executeStatement();
+                ->setParameter('id', $preview['id'])
+                ->fetchAssociative();
+
+            if (empty($res)) {
+                $this->getConnection()->createQueryBuilder()
+                    ->insert('preview_template')
+                    ->setValue('id', ':id')
+                    ->setValue('deleted', ':false')
+                    ->setValue('name', ':name')
+                    ->setValue('entity_type', ':entityType')
+                    ->setValue('is_active', ':active')
+                    ->setValue('template', ':template')
+                    ->setParameter('id', $preview['id'])
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('entityType', $preview['entityType'])
+                    ->setParameter('name', $preview['name'])
+                    ->setParameter('active', $preview['active'], ParameterType::BOOLEAN)
+                    ->setParameter('template', $preview['template'])
+                    ->executeStatement();
+            } else {
+                $template = $res['template'];
+                $template = str_replace(
+                    ['file.mimeType in imageMimetypes', 'attrFile.mimeType in imageMimetypes', "{% set imageMimetypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}"],
+                    ['file|isImage', '(attrFile|isImage)', ''],
+                    $template);
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('preview_template')
+                    ->set('template', ':template')
+                    ->where('id = :id')
+                    ->setParameter('template', $template)
+                    ->setParameter('id', $preview['id'])
+                    ->executeStatement();
+            }
+
         } catch (\Throwable $e) {
         }
     }
