@@ -21,7 +21,7 @@ class Module extends AbstractModule
     public const DASHLETS_DATA = [
         'layout' => [
             [
-                'name' => 'My AtroPIM',
+                'name' => 'Insights',
                 'layout' => [
                     [
                         'id' => 'd80992',
