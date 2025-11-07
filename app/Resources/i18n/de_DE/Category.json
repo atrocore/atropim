@@ -8,7 +8,6 @@
     "markupType": "Typ",
     "markupValue": "Wert",
     "mainImage": "Hauptbild",
-    "categoryRoute": "Kategoriebaum (ID)",
     "childrenCount": "Anzahl Kinderelemente",
     "hasChildren": "hat untergeordnete Elemente",
     "sortOrder": "Sortierreihenfolge",
@@ -16,7 +15,6 @@
     "children": "Kategorien",
     "channels": "Kanäle",
     "parents": "Hauptkategorie",
-    "categoryRouteName": "Kategoriebaum",
     "image": "Bild"
   },
   "options": {

@@ -22,7 +22,7 @@ use Espo\ORM\EntityCollection;
 
 class Product extends Hierarchy
 {
-    protected $mandatorySelectAttributeList = ['data'];
+    protected $mandatorySelectAttributeList = ['routes', 'data'];
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {

@@ -8,8 +8,6 @@
     "parents": "Parent Category",
     "children": "Child Categories",
     "channels": "Channels",
-    "categoryRoute": "Сategory Tree (ID)",
-    "categoryRouteName": "Сategory Tree",
     "scope": "Scope",
     "productCategories": "Category Products",
     "products": "Products",

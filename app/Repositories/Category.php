@@ -257,18 +257,4 @@ class Category extends Hierarchy
 
         $this->getEntityManager()->saveEntity($entity);
     }
-
-    public function updateRoute(Entity $entity): void
-    {
-        $this->getConnection()->createQueryBuilder()
-            ->update($this->getConnection()->quoteIdentifier('category'), 'c')
-            ->set('category_route', ':categoryRoute')
-            ->set('category_route_name', ':categoryRouteName')
-            ->where('c.id = :id')
-            ->setParameter('categoryRoute', $this->getCategoryRoute($entity))
-            ->setParameter('categoryRouteName', $this->getCategoryRoute($entity, true))
-            ->setParameter('id', $entity->get('id'))
-            ->executeQuery();
-    }
-
 }

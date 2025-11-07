@@ -11,11 +11,11 @@
     "name": "code"
   },
   {
-    "name": "categoryRouteName"
-  },
-  {
     "name": "channels",
     "notSortable": true
+  },
+  {
+    "name": "routes"
   },
   {
     "name": "isActive"

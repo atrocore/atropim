@@ -8,8 +8,6 @@
     "parents": "Catégorie de parents",
     "children": "Catégories d'enfants",
     "channels": "Canaux",
-    "categoryRoute": "Сategory Tree (ID)",
-    "categoryRouteName": "Сategory Tree",
     "scope": "Champ d'application",
     "productCategories": "Produits de la catégorie",
     "products": "Produits",

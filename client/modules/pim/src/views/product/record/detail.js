@@ -116,7 +116,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 let categoriesRoutes = {};
                 categories.forEach(category => {
                     let route = [];
-                    this.parseRoute(category.categoryRoute).forEach(id => {
+                    this.parseRoute(category.routes[0]).forEach(id => {
                         if (!opened[id]) {
                             route.push(id);
                         }

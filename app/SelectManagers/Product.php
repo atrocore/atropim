@@ -174,7 +174,7 @@ class Product extends AbstractSelectManager
                 $res = $connection->createQueryBuilder()
                     ->select('c.id')
                     ->from($connection->quoteIdentifier('category'), 'c')
-                    ->where('c.id= :id OR c.category_route LIKE :idLike')
+                    ->where('c.id= :id OR c.routes LIKE :idLike')
                     ->andWhere('c.deleted = :false')
                     ->setParameter('false', false, Mapper::getParameterType(false))
                     ->setParameter('id', $id)

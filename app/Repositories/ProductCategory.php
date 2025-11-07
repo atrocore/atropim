@@ -15,7 +15,6 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ProductCategory extends Relation
@@ -26,7 +25,7 @@ class ProductCategory extends Relation
 
         if ($entity->isAttributeChanged('mainCategory') && !empty($entity->get('mainCategory'))) {
             $res = $this->getConnection()->createQueryBuilder()
-                ->select('pc.id, pc.category_id, c.category_route')
+                ->select('pc.id, pc.category_id, c.routes')
                 ->from('product_category', 'pc')
                 ->innerJoin('pc', 'category', 'c', 'c.id = pc.category_id AND c.deleted = :false')
                 ->where('pc.deleted = :false')
@@ -40,9 +39,9 @@ class ProductCategory extends Relation
                 ->fetchAllAssociative();
 
             if (!empty($res[0])) {
-                $root = $this->getCategoryRoot($category->get('id'), (string)$category->get('categoryRoute'));
+                $root = $this->getCategoryRoot($category->get('id'), $category->get('routes'));
                 foreach ($res as $row) {
-                    $rowRoot = $this->getCategoryRoot($row['category_id'], (string)$row['category_route']);
+                    $rowRoot = $this->getCategoryRoot($row['category_id'], json_decode($row['routes'], true));
                     if ($root === $rowRoot) {
                         // remove mainCategory from productCategory
                         $pc = $this->get($row['id']);
@@ -59,21 +58,22 @@ class ProductCategory extends Relation
 
     protected function afterSave(Entity $entity, array $options = [])
     {
-        $this->getProductRepository()->updateProductCategorySortOrder($entity->get('productId'), $entity->get('categoryId'));
+        $this->getProductRepository()
+            ->updateProductCategorySortOrder($entity->get('productId'), $entity->get('categoryId'));
 
         parent::afterSave($entity, $options);
     }
 
-    protected function getCategoryRoot(string $id, string $categoryRoute): string
+    protected function getCategoryRoot(string $id, array $routes): string
     {
-        $root = $id;
-        if (!empty($categoryRoute)) {
-            $route = explode('|', $categoryRoute);
+        foreach ($routes as $route) {
+            $route = explode('|', $route);
             array_shift($route);
-            $root = array_shift($route);
+
+            return array_shift($route);
         }
 
-        return $root;
+        return $id;
     }
 
     protected function getProductRepository(): Product
