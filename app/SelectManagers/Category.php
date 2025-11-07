@@ -126,18 +126,13 @@ class Category extends AbstractSelectManager
         }
     }
 
-    /**
-     * @param $result
-     *
-     * @return void
-     */
-    protected function boolFilterLinkedWithProduct(&$result)
+    protected function boolFilterLinkedWithProduct(array &$result): void
     {
         if ($this->hasBoolFilter('linkedWithProduct')) {
             $list = $this
                 ->getEntityManager()
                 ->getRepository('Category')
-                ->select(['id', 'categoryRoute'])
+                ->select(['id', 'routes'])
                 ->join('products')
                 ->find()
                 ->toArray();
@@ -147,10 +142,14 @@ class Category extends AbstractSelectManager
 
                 foreach ($list as $category) {
                     $ids[] = $category['id'];
-                    if(empty($category['categoryRoute'])){
+                    if (empty($category['routes'])) {
                         continue;
                     }
-                    $parentCategoriesIds = explode("|", trim($category['categoryRoute'], "|"));
+
+                    $parentCategoriesIds = [];
+                    foreach ($category['routes'] as $route) {
+                        $parentCategoriesIds = array_merge($parentCategoriesIds, explode("|", trim($route, "|")));
+                    }
                     $ids = array_merge($ids, $parentCategoriesIds);
                 }
 

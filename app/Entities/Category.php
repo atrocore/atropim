@@ -30,28 +30,19 @@ class Category extends Hierarchy
      */
     protected $entityType = "Category";
 
-    /**
-     * @return Entity
-     * @throws Error
-     */
-    public function getRoot(): Entity
-    {
-        // validation
-        $this->isEntity();
-
-        $categoryRoute = explode('|', (string)$this->get('categoryRoute'));
-
-        return (isset($categoryRoute[1])) ? $this->getEntityManager()->getEntity('Category', $categoryRoute[1]) : $this;
-    }
-
     public function getParentsIds(): array
     {
         // validation
         $this->isEntity();
 
-        $parentsIds = explode('|', (string)$this->get('categoryRoute'));
-        array_shift($parentsIds);
-        array_pop($parentsIds);
+        $parentsIds = [];
+        foreach ($this->get('routes') as $route) {
+            $part = explode('|', (string)$route);
+            array_shift($part);
+            array_pop($part);
+
+            $parentsIds = array_merge($parentsIds, $part);
+        }
 
         return $parentsIds;
     }

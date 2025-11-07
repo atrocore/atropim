@@ -8,8 +8,6 @@
     "parents": "Батьківська категорія",
     "children": "Дочірні категорії",
     "channels": "Канали",
-    "categoryRoute": "Дерево категорій (ID)",
-    "categoryRouteName": "Дерево категорій",
     "scope": "Область застосування",
     "products": "Продукти",
     "productCategories": "Категорії продукту",
