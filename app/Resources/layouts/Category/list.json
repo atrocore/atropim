@@ -15,6 +15,9 @@
     "notSortable": true
   },
   {
+    "name": "routes"
+  },
+  {
     "name": "isActive"
   },
   {
