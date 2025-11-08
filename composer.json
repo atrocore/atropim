@@ -1,7 +1,7 @@
 {
   "name": "atrocore/pim",
-  "description": "AtroPIM. Open source PIM application.",
-  "homepage": "https://atropim.com",
+  "description": "AtroPIM - highly configurable, modular, open-source Product Information Management (PIM) system designed to meet the complex needs of medium-sized businesses and enterprises.",
+  "homepage": "https://www.atropim.com/en",
   "license": "GPL-3.0-only",
   "require": {
     "atrocore/core": "~2.1.25"
@@ -23,7 +23,7 @@
       "default": "PIM"
     },
     "description": {
-      "default": "The PIM Module is a tool with which product data and information can be centrally saved, managed and distributed."
+      "default": "AtroPIM is a highly configurable, modular, open-source Product Information Management (PIM) system designed to meet the complex needs of medium-sized businesses and enterprises."
     }
   }
 }
