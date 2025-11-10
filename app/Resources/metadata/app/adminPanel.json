@@ -5,7 +5,9 @@
       {
         "url": "#Admin/moduleSettings/id=pim:views_settings_edit",
         "label": "pimSettings",
-        "description": "pimSettings"
+        "description": "pimSettings",
+        "icon": "ph ph-gear",
+        "docsUrl": "https://help.atrocore.com/pim/administration"
       }
     ]
   }
