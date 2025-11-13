@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attributes": ""
+    "attributes": "Atributos"
   },
   "exceptions": {
-    "extensibleEnumIsUsedOnAttribute": ""
+    "extensibleEnumIsUsedOnAttribute": "La Lista '%s' es utilizada por el Atributo '%s'."
   }
 }
