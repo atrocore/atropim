@@ -1,11 +1,11 @@
 {
   "fields": {
-    "description": "",
-    "image": "",
-    "name": "",
+    "description": "Descripción",
+    "image": "Imagen",
+    "name": "Nombre",
     "plainText": "",
     "products": "",
     "richText": "",
-    "type": ""
+    "type": "Type"
   }
 }
