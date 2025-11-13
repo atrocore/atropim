@@ -30,7 +30,8 @@
     "ProductPrice": "Ceny produktów",
     "Content": "Spis treści",
     "ContentGroup": "Grupy zawartości",
-    "ContentItem": "Zawartość"
+    "ContentItem": "Zawartość",
+    "Product": "Produkty"
   },
   "options": {
     "channelsFilter": {
@@ -38,7 +39,8 @@
       "onlyGlobalScope": "Tylko zakres globalny"
     },
     "scope": {
-      "Channel": "Kanał"
+      "Channel": "Kanał",
+      "Global": "Globalny"
     }
   },
   "fields": {
@@ -56,7 +58,10 @@
     "tag": "Znacznik",
     "amount": "Kwota",
     "mpn": "MPN",
-    "scope": "Zakres"
+    "scope": "Zakres",
+    "products": "Produkty",
+    "price": "Cena",
+    "role": "Rola"
   },
   "labels": {
     "addAttribute": "Dodaj atrybut",
@@ -78,7 +83,9 @@
     "Add Field": "Dodaj filtr",
     "removeExplain": "Proszę wybrać tę opcję, aby odłączyć atrybut od innych podmiotów przed usunięciem.",
     "categoryPreview": "Podgląd kategorii",
-    "productPreview": "Podgląd produktu"
+    "productPreview": "Podgląd produktu",
+    "selectAttributes": "Wybierz atrybut(y)",
+    "typeToSearch": "Wpisz i naciśnij Enter..."
   },
   "dashlets": {
     "Channels": "Kanały",
