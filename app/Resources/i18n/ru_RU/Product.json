@@ -20,7 +20,9 @@
     "contents": "Контент",
     "taskStatus": "Статус задачи",
     "calls": "Звонки",
-    "files": "Файлы"
+    "files": "Файлы",
+    "variantSpecificAttributes": "Специфические атрибуты варианта",
+    "contentItems": "Элементы содержания"
   },
   "labels": {
     "Product Attributes": "Атрибуты",
@@ -59,17 +61,29 @@
     },
     "productStatus": {
       "draft": "Черновик",
-      "reviewed": "Проверено"
+      "reviewed": "Проверено",
+      "prepared": "Подготовлено",
+      "notReady": "Не готов",
+      "ready": "Готовые"
     }
   },
   "boolFilters": {
     "notLinkedWithBrand": "Не связан с брендом",
     "linkedWithCategory": "Связан с категорией",
-    "onlyConfigurableProducts": "Только конфигурируемые продукты"
+    "onlyConfigurableProducts": "Только конфигурируемые продукты",
+    "notAssociatedRecords": "Без сопутствующих товаров",
+    "withoutMainImage": "Без основного изображения"
   },
   "exceptions": {
     "wrongInputData": "Проверка не удалась. Неправильные вводные данные.",
     "itselfAssociation": "Продукт не может быть ассоциирован с самим собой.",
-    "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной."
+    "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
+    "recordAssociationAlreadyExists": "Такая ассоциация продуктов уже существует.",
+    "youCantChangeClassificationInProduct": "Вы не можете изменить Классификацию в Продукте"
+  },
+  "messages": {
+    "componentsNotInstalled": "Установите модуль Components, чтобы использовать предварительный просмотр компонентов.",
+    "removeRelatedRecords": "Вы уверены, что хотите удалить все продукты для выбранной Ассоциации из текущего продукта? Все сопутствующие товары будут сохранены.",
+    "emptyComponents": "Продукт не содержит компонентов"
   }
 }
