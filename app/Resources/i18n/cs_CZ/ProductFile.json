@@ -1,7 +1,7 @@
 {
   "fields": {
     "scope": "Rozsah",
-    "isMainImage": "",
+    "isMainImage": "Hlavní obrázek",
     "tags": "Štítky",
     "sorting": "Pořadí řazení"
   },
