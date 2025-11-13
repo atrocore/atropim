@@ -1,6 +1,6 @@
 {
   "fields": {
-    "scope": "Scope",
+    "scope": "Geltungsbereich",
     "isMainImage": "Hauptbild",
     "tags": "Tags",
     "sorting": "Sortierreihenfolge"
