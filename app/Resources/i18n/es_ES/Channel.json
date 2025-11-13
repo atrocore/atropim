@@ -1,9 +1,9 @@
 {
   "fields": {
-    "description": "",
-    "isActive": "",
+    "description": "Descripción",
+    "isActive": "Activo",
     "categories": "",
-    "code": "",
+    "code": "Código",
     "products": ""
   },
   "labels": {
@@ -14,7 +14,7 @@
   },
   "options": {
     "template": {
-      "default": ""
+      "default": "Por defecto"
     }
   },
   "messages": {
