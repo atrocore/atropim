@@ -10,7 +10,13 @@
     "Brand": "Marke",
     "Content": "Content",
     "ContentGroup": "Content Gruppe",
-    "ContentItem": "Inhalt Artikel"
+    "ContentItem": "Inhalt Artikel",
+    "ProductFile": "Produktdatei",
+    "CategoryFile": "Kategorie Datei",
+    "ProductCategory": "Produkt-Kategorie",
+    "CategoryChannel": "Kategorie Kanal",
+    "CategoryHierarchy": "Kategorie-Hierarchie",
+    "Listing": "Auflistung"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Produktkanäle",
@@ -22,7 +28,10 @@
     "Brand": "Marken",
     "Content": "Contents",
     "ContentGroup": "Content Gruppen",
-    "ContentItem": "Inhalte"
+    "ContentItem": "Inhalte",
+    "ProductFile": "Produkt Dateien",
+    "CategoryFile": "Kategorie Dateien",
+    "Listing": "Inserate"
   },
   "fields": {
     "channel": "Kanal",
@@ -31,7 +40,12 @@
     "channels": "Kanäle",
     "products": "Produkte",
     "scope": "Geltungsbereich",
-    "role": "Rolle"
+    "role": "Rolle",
+    "listings": "Inserate",
+    "oneGeoType": "OneGeo Typ",
+    "priceCurrency": "Preis Währung",
+    "uvp": "UVP",
+    "mpn": "MPN"
   },
   "options": {
     "channelsFilter": {
