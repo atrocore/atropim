@@ -1,1 +1,15 @@
-{}
+{
+  "fields": {
+    "description": "Popis",
+    "isActive": "Aktivní",
+    "code": "Kód"
+  },
+  "labels": {
+    "main": "Hlavní jazyk"
+  },
+  "options": {
+    "template": {
+      "default": "Výchozí"
+    }
+  }
+}
