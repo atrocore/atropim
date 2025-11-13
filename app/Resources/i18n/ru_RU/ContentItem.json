@@ -1,11 +1,11 @@
 {
   "fields": {
     "description": "Описание",
-    "image": "",
+    "image": "Изображение",
     "name": "Название",
-    "plainText": "",
+    "plainText": "Обычный текст",
     "products": "Продукты",
-    "richText": "",
+    "richText": "Насыщенный текст",
     "type": "Тип"
   }
 }
