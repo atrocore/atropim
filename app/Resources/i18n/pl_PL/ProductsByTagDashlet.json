@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "amount": "Kwota",
+    "percent": "Procent"
+  }
+}
