@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "isActive": "Aktivní pro kanál",
+    "product": "Produkt"
+  }
+}
