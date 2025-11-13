@@ -2,13 +2,13 @@
   "fields": {
     "mainImage": "Imagen principal",
     "files": "Archivos",
-    "data": "",
+    "data": "Datos",
     "categories": "Categorías",
     "product": "Producto principal",
     "products": "Productos",
     "brand": "Marca",
     "productStatus": "Estado del producto",
-    "type": "",
+    "type": "Type",
     "amount": "Importe",
     "price": "Precio de compra",
     "ean": "GTIN/EAN",
@@ -55,7 +55,7 @@
       "your_tag2": "su etiqueta2"
     },
     "taskStatus": {
-      "mar": "",
+      "mar": "Mar",
       "tech": "Tech",
       "ass": "Culo",
       "img": "Img",
@@ -64,7 +64,7 @@
       "pr": "Pr"
     },
     "template": {
-      "default": ""
+      "default": "Por defecto"
     }
   },
   "boolFilters": {
