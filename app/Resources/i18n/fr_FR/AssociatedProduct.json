@@ -1,8 +1,6 @@
 {
   "fields": {
-    "mainProduct": "Produit principal",
     "associatingItemImage": "Image du produit principal",
-    "relatedProduct": "Produit connexe",
     "associatedItemImage": "Image du produit apparenté"
   }
 }
