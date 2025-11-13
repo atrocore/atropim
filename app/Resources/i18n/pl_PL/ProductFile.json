@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "scope": "Zakres",
+    "isMainImage": "Główny obraz"
+  },
+  "options": {
+    "scope": {
+      "Channel": "Kanał"
+    }
+  }
+}
