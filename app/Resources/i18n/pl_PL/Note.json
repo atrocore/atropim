@@ -1,1 +1,8 @@
-{}
+{
+  "options": {
+    "type": {
+      "CreatePav": "Utwórz",
+      "DeletePav": "Usuń"
+    }
+  }
+}
