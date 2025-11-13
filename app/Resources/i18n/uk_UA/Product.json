@@ -21,7 +21,8 @@
     "taskStatus": "Статус завдання",
     "files": "Файли",
     "calls": "Дзвінки",
-    "contentItems": "Елементи вмісту"
+    "contentItems": "Елементи вмісту",
+    "variantSpecificAttributes": "Атрибути для конкретного варіанту"
   },
   "labels": {
     "Product Attributes": "Атрибути",
