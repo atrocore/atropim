@@ -3,6 +3,6 @@
     "attributes": "Атрибуты"
   },
   "exceptions": {
-    "extensibleEnumIsUsedOnAttribute": ""
+    "extensibleEnumIsUsedOnAttribute": "Список '%s' используется атрибутом '%s'."
   }
 }
