@@ -13,6 +13,11 @@
   },
   "labels": {
     "draft": "Entwurf",
-    "reviewed": "Überprüft"
+    "reviewed": "Überprüft",
+    "written": "Geschrieben",
+    "published": "Veröffentlicht",
+    "review": "Überprüfung",
+    "news": "Nachrichten",
+    "promotional": "Werbeartikel"
   }
 }
