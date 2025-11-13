@@ -1,8 +1,8 @@
 {
   "fields": {
     "name": "Kanál",
-    "products": "",
+    "products": "Produkty",
     "active": "Aktivní",
-    "notActive": ""
+    "notActive": "Není aktivní"
   }
 }
