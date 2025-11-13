@@ -1,12 +1,12 @@
 {
   "fieldTypes": {
-    "available-currency": ""
+    "available-currency": "Lista de divisas"
   },
   "labels": {
-    "pim": "",
-    "pimSettings": ""
+    "pim": "PIM",
+    "pimSettings": "Ajustes PIM"
   },
   "descriptions": {
-    "pimSettings": ""
+    "pimSettings": "Ajustes del sistema PIM"
   }
 }
