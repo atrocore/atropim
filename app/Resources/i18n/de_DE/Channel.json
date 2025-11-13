@@ -3,7 +3,8 @@
     "isActive": "Aktiv",
     "categories": "Kategorien",
     "code": "Code",
-    "products": "Produkte"
+    "products": "Produkte",
+    "description": "Beschreibung"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Verknüpfung der Kategorie '%s' mit Kanal '%s' aufgeben",
