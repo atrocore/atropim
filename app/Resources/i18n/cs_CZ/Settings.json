@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "",
+    "behaviorOnCategoryDelete": ""
+  },
+  "labels": {
+    "confirmLocaleChanges": ""
+  },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": ""
+  },
+  "exceptions": {
+    "languageUsedInChannel": ""
+  },
+  "tooltips": {
+    "productCanLinkedWithNonLeafCategories": "",
+    "behaviorOnCategoryDelete": ""
+  }
+}
