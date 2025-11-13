@@ -3,6 +3,6 @@
     "attributes": "Атрибуты"
   },
   "exceptions": {
-    "measureIsUsedOnAttribute": ""
+    "measureIsUsedOnAttribute": "Мера '%s' используется атрибутом '%s'."
   }
 }
