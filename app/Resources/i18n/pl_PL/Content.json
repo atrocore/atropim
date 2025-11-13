@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "description": "Description",
+    "text": "Tekst",
+    "products": "Produkty",
+    "tags": "Tagi",
+    "name": "Tytuł",
+    "status": "Status",
+    "type": "Type"
+  }
+}
