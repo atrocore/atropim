@@ -13,11 +13,6 @@
     "productCategories": "Категорії продукту",
     "sortOrder": "Порядок сортування"
   },
-  "options": {
-    "шаблон": {
-      "default": "За замовчуванням"
-    }
-  },
   "boolFilters": {
     "linkedWithProduct": "Є продукти"
   },
