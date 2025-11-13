@@ -8,7 +8,9 @@
     "code": "Code",
     "children": "Kategorien",
     "channels": "Kanäle",
-    "parents": "Hauptkategorie"
+    "parents": "Hauptkategorie",
+    "name": "Name",
+    "description": "Beschreibung"
   },
   "options": {
     "template": {
