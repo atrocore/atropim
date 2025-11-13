@@ -1,12 +1,12 @@
 {
   "fields": {
-    "products": "",
+    "products": "Produkty",
     "description": "",
     "isActive": "",
     "code": ""
   },
   "exceptions": {
-    "brandWithSuchCodeAlreadyExist": "",
-    "brandIsUsedInProducts": ""
+    "brandWithSuchCodeAlreadyExist": "Značky s takovým kódem již existují.",
+    "brandIsUsedInProducts": "Značku (značky), která je (jsou) použita (použity) v některých produktech, nelze vymazat."
   }
 }
