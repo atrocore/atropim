@@ -84,7 +84,8 @@
     "removeHierarchically": "Иерархическое удаление",
     "setAsMainCategory": "Установить как основную категорию",
     "setAsMainVariant": "Установите в качестве основного варианта",
-    "linkedChannels": "Связанные каналы"
+    "linkedChannels": "Связанные каналы",
+    "selectAttributes": "Выбрать атрибут(ы)"
   },
   "dashlets": {
     "Channels": "Каналы",
