@@ -1,1 +1,19 @@
-{}
+{
+  "labels": {
+    "confirmLocaleChanges": "Jeśli język zostanie usunięty, wszystkie dane wprowadzone wcześniej w polach wielojęzycznych i wartości atrybutów dla tej lokalizacji zostaną automatycznie usunięte."
+  },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Czy na pewno chcą Państwo wyłączyć łączenie produktów z kategoriami niebędącymi liśćmi? Wszystkie powiązane z nimi produkty zostaną automatycznie usunięte."
+  },
+  "exceptions": {
+    "languageUsedInChannel": "Język używany w niektórych kanałach nie może zostać usunięty."
+  },
+  "tooltips": {
+    "productCanLinkedWithNonLeafCategories": "Jeśli jest ustawiona, będą Państwo mogli łączyć produkty z kategoriami, które mają kategorie podrzędne.",
+    "behaviorOnCategoryDelete": "W przypadku \"Kaskady\" wszystkie podkategorie tej kategorii zostaną również usunięte, a wszystkie produkty powiązane z tą kategorią lub jej podkategoriami zostaną odlinkowane."
+  },
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "Proszę zezwolić na łączenie produktów z kategoriami innymi niż liściaste.",
+    "behaviorOnCategoryDelete": "Zachowanie po usunięciu kategorii"
+  }
+}
