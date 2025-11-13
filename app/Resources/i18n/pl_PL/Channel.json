@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "main": "Główny język"
+  },
+  "options": {
+    "template": {
+      "default": "Domyślny"
+    }
+  },
+  "fields": {
+    "description": "Description",
+    "isActive": "Aktywny",
+    "code": "Kod",
+    "products": "Produkty"
+  }
+}
