@@ -1,7 +1,7 @@
 {
   "fields": {
-    "total": "",
+    "total": "Produkty Celkem",
     "active": "",
-    "notActive": ""
+    "notActive": "Není aktivní"
   }
 }
