@@ -3,7 +3,7 @@
     "mainImage": "Image principale",
     "files": "Fichiers",
     "data": "Données",
-    "categories": "Catégories de produits",
+    "categories": "Catégories",
     "product": "Produit principal",
     "products": "Produits",
     "brand": "Marque",
@@ -21,7 +21,8 @@
     "contents": "Contenu",
     "taskStatus": "Statut de la tâche",
     "calls": "Appels",
-    "variantSpecificAttributes": "Attributs spécifiques de la variante"
+    "variantSpecificAttributes": "Attributs spécifiques de la variante",
+    "contentItems": "Éléments de contenu"
   },
   "labels": {
     "Product Attributes": "Attributs",
