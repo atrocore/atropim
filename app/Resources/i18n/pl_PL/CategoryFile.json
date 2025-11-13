@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "category": "Kategoria",
+    "isMainImage": "Główny obraz"
+  }
+}
