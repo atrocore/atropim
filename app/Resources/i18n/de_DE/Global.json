@@ -8,7 +8,6 @@
     "Category": "Kategorie",
     "Channel": "Kanal",
     "Brand": "Marke",
-    "Settings": "Administration",
     "Content": "Content",
     "ContentGroup": "Content Gruppe",
     "ContentItem": "Inhalt Artikel"
@@ -21,10 +20,6 @@
     "Category": "Kategorien",
     "Channel": "Kanäle",
     "Brand": "Marken",
-    "Settings": "Administration",
-    "ActionHistoryRecord": "Aktionsgeschichte",
-    "Dashboard": "Instrumententafel",
-    "EmailAddress": "E-Mail Addresse",
     "Content": "Contents",
     "ContentGroup": "Content Gruppen",
     "ContentItem": "Inhalte"
@@ -39,23 +34,6 @@
     "role": "Rolle"
   },
   "options": {
-    "searchRanges": {
-      "isNot": "Ist kein",
-      "isNotOneOf": "Ist kein von",
-      "noneOf": "Ist kein von"
-    },
-    "varcharSearchRanges": {
-      "equals": "Gleich",
-      "like": "Teilsuche (%)",
-      "notLike": "Ist nicht wie (%)",
-      "startsWith": "Beginnt mit",
-      "endsWith": "Endet mit",
-      "contains": "Enthält",
-      "notContains": "Nicht Enthält",
-      "isEmpty": "Ist leer",
-      "isNotEmpty": "Ist nicht leer",
-      "notEquals": "Nicht gleich"
-    },
     "channelsFilter": {
       "": "Alle Scopes",
       "onlyGlobalScope": "Nur Global"
@@ -85,14 +63,6 @@
     "restrict": "Einschränken",
     "Add Field": "Filter hinzufügen",
     "removeExplain": "Checkbox abhacken, um Attribute von anderen Entities vor dem Löschen loszubinden",
-    "Add Group": "Gruppe hinzufügen",
-    "Expand": "Erweitern",
-    "Manage Categories": "Kategorien verwalten",
-    "Manage Folders": "Ordner verwalten",
-    "New notifications": "Neue Benachrichtigungen",
-    "Return to Application": "Zurück zur Anwendung",
-    "you": "sie",
-    "removeHint": "Beim Entfernen des Katalogs werden die dazugehörigen Produkte gelöscht.",
     "categoryPreview": "Kategorievorschau",
     "productPreview": "Produktvorschau"
   },
@@ -111,16 +81,6 @@
     "notValid": "Daten sind nicht gültig"
   },
   "messages": {
-    "fieldHasPattern": "{field} sollte nur Unterstriche, Zahlen und Alphabete in Kleinbuchstaben enthalten",
-    "fieldIsUploading": "Hochladen läuft",
-    "fieldMaxFileSizeError": "Datei sollte nicht überschreiten {max} Mb",
-    "internalPostTitle": "Post wird nur von internen Benutzern angezeigt",
-    "loading": "Wird geladen...",
-    "saving": "Sparen..."
-  },
-  "navMenuDelimiters": {
-    "_delimiter_393f8383": "Artikel",
-    "Attribute": "Attribute",
-    "Product": "Produkte"
+    "fieldHasPattern": "{field} sollte nur Unterstriche, Zahlen und Alphabete in Kleinbuchstaben enthalten"
   }
 }
