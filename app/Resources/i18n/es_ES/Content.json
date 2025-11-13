@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "tags": "",
+    "name": "",
+    "status": "",
+    "type": "",
+    "description": "",
+    "text": "",
+    "metaTitle": "",
+    "metaDescription": "",
+    "contentGroup": "",
+    "products": ""
+  },
+  "labels": {
+    "draft": "",
+    "written": "",
+    "reviewed": "",
+    "published": "",
+    "review": "",
+    "news": "",
+    "promotional": ""
+  }
+}
