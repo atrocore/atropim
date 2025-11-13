@@ -1,6 +1,6 @@
 {
   "fields": {
-    "attributes": ""
+    "attributes": "Атрибуты"
   },
   "exceptions": {
     "measureIsUsedOnAttribute": ""
