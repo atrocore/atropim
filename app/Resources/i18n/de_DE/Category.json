@@ -10,7 +10,8 @@
     "channels": "Kanäle",
     "parents": "Hauptkategorie",
     "name": "Name",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "productCategories": "Kategorie Produkte"
   },
   "options": {
     "template": {
