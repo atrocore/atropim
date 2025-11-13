@@ -3,7 +3,6 @@
     "description": "Описание",
     "isActive": "Активный",
     "categories": "Категории",
-    "locales": "Языки",
     "code": "Код",
     "products": "Продукты"
   },
