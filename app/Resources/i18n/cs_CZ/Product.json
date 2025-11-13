@@ -25,6 +25,9 @@
       "cat": "Kočka",
       "ch": "Ch",
       "pr": "Pr"
+    },
+    "template": {
+      "default": "Výchozí"
     }
   },
   "labels": {
@@ -35,7 +38,9 @@
     "addAttributeFilter": "Přidat filtr atributů",
     "Channels": "Kanály",
     "Product Channel Attributes": "Atributy kanálu",
-    "typeCategoryToSearch": "Zadejte kategorii pro vyhledávání..."
+    "typeCategoryToSearch": "Zadejte kategorii pro vyhledávání...",
+    "channel": "Kanál",
+    "Product Attributes": "Atributy"
   },
   "boolFilters": {
     "notAssociatedRecords": "Bez přidružených produktů",
@@ -77,6 +82,8 @@
     "taskStatus": "Stav úkolu",
     "calls": "Hovory",
     "contentItems": "Položky obsahu",
-    "variantSpecificAttributes": "Specifické atributy varianty"
+    "variantSpecificAttributes": "Specifické atributy varianty",
+    "files": "Soubory",
+    "type": "Typ"
   }
 }
