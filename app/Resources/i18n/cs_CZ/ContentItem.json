@@ -1,1 +1,7 @@
-{}
+{
+  "fields": {
+    "type": "Typ",
+    "description": "Popis",
+    "name": "Název"
+  }
+}
