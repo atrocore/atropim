@@ -1,13 +1,10 @@
 {
   "fields": {
-    "channelProducts": "Produkte des Kanals",
     "isActive": "Aktiv",
-    "locales": "Sprachen",
-    "productCategories": "Produktkategorien",
-    "classificationAttributes": "Klassifikationsattribute",
     "categories": "Kategorien",
     "code": "Code",
-    "products": "Produkte"
+    "products": "Produkte",
+    "description": "Beschreibung"
   },
   "labels": {
     "unLinkCategoryFromChannel": "Verknüpfung der Kategorie '%s' mit Kanal '%s' aufgeben",
@@ -24,8 +21,6 @@
     "categoryChangeConfirm": "Sind Sie sicher, dass Sie den Kategoriebaum für diesen Kanal aufheben (oder ändern) möchten? Alle mit dem ursprünglichen Kategoriebaum verknüpften Produkte werden von diesem Kanal getrennt (und die Produkte des neuen Kategoriebaums werden damit verknüpft)."
   },
   "exceptions": {
-    "youShouldChooseRootCategory": "Sie müssen eine Stammkategorie auswählen.",
-    "categoryIsRequired": "Die Kategorie ist erforderlich.",
     "channelWithSuchCodeAlreadyExist": "Der Kanal mit einem solchen Code existiert bereits.",
     "channelHasProducts": "Kanäle mit zugeordneten Produkten können nicht gelöscht werden.",
     "channelHasCategory": "Kanal mit einem zugeordneten Kategoriebaum kann nicht gelöscht werden."

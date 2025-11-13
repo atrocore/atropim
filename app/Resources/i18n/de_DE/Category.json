@@ -1,21 +1,17 @@
 {
   "fields": {
-    "categoryRoot": "Stammkategorie",
     "isActive": "Aktiv",
     "products": "Produkte",
-    "rootCategories": "Stammkategorien",
-    "scope": "Scope",
-    "markupType": "Typ",
-    "markupValue": "Wert",
+    "scope": "Geltungsbereich",
     "mainImage": "Hauptbild",
-    "childrenCount": "Anzahl Kinderelemente",
-    "hasChildren": "hat untergeordnete Elemente",
     "sortOrder": "Sortierreihenfolge",
     "code": "Code",
     "children": "Kategorien",
     "channels": "Kanäle",
     "parents": "Hauptkategorie",
-    "image": "Bild"
+    "name": "Name",
+    "description": "Beschreibung",
+    "productCategories": "Kategorie Produkte"
   },
   "options": {
     "template": {

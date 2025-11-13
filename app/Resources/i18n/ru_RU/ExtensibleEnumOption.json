@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "classificationAttributes": "Атрибуты классификации"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsUsedOnProductAttribute": "Опция списка '%s' используется атрибутом '%s' в продукте '%s'.",
+    "extensibleEnumOptionIsUsedOnClassificationAttribute": "Опция списка '%s' используется атрибутом '%s' в классификации '%s'."
+  }
+}

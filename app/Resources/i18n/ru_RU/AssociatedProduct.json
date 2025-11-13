@@ -1,10 +1,6 @@
 {
   "fields": {
-    "association": "Связь",
-    "backwardAssociation": "Обратная связь",
-    "mainProduct": "Главный продукт",
     "associatingItemImage": "Изображение главного продукта",
-    "relatedProduct": "Связанный продукт",
     "associatedItemImage": "Изображение связанного продукта"
   }
 }

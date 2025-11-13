@@ -10,5 +10,14 @@
     "metaDescription": "Meta Description",
     "contentGroup": "Content Gruppe",
     "products": "Produkte"
+  },
+  "labels": {
+    "draft": "Entwurf",
+    "reviewed": "Überprüft",
+    "written": "Geschrieben",
+    "published": "Veröffentlicht",
+    "review": "Überprüfung",
+    "news": "Nachrichten",
+    "promotional": "Werbeartikel"
   }
 }

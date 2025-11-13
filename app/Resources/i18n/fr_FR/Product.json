@@ -3,7 +3,7 @@
     "mainImage": "Image principale",
     "files": "Fichiers",
     "data": "Données",
-    "categories": "Catégories de produits",
+    "categories": "Catégories",
     "product": "Produit principal",
     "products": "Produits",
     "brand": "Marque",
@@ -16,12 +16,13 @@
     "image": "Image principale",
     "tag": "Étiquette",
     "channels": "Canaux",
-    "productChannels": "Canaux de produits",
     "basePriceAmount": "Prix de base Montant",
     "packedAmount": "Quantité emballée",
     "contents": "Contenu",
     "taskStatus": "Statut de la tâche",
-    "calls": "Appels"
+    "calls": "Appels",
+    "variantSpecificAttributes": "Attributs spécifiques de la variante",
+    "contentItems": "Éléments de contenu"
   },
   "labels": {
     "Product Attributes": "Attributs",

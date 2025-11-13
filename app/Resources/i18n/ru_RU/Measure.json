@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributes": "Атрибуты"
+  },
+  "exceptions": {
+    "measureIsUsedOnAttribute": "Мера '%s' используется атрибутом '%s'."
+  }
+}

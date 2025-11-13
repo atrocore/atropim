@@ -12,7 +12,11 @@
     "ContentGroup": "Groupe de contenu",
     "AssociatedProduct": "Produit associé",
     "ChannelPricing": "Tarification par canal",
-    "ContentItem": "Élément de contenu"
+    "ContentItem": "Élément de contenu",
+    "ProductCategory": "Catégorie de produits",
+    "CategoryChannel": "Chaîne de catégorie",
+    "CategoryHierarchy": "Hiérarchie des catégories",
+    "Listing": "Liste"
   },
   "fields": {
     "channel": "Canal",
@@ -31,7 +35,8 @@
     "price": "Prix",
     "sku": "SKU",
     "uvp": "UVP",
-    "role": "Rôle"
+    "role": "Rôle",
+    "listings": "Listes"
   },
   "options": {
     "scope": {
@@ -55,7 +60,8 @@
     "Content": "Contenu",
     "ContentGroup": "Groupes de contenu",
     "Product": "Produits",
-    "ContentItem": "Éléments de contenu"
+    "ContentItem": "Éléments de contenu",
+    "Listing": "Listes"
   },
   "labels": {
     "selectAttributes": "Sélectionnez le(s) attribut(s)",
@@ -78,7 +84,8 @@
     "Reset selection": "Remise à zéro de la sélection",
     "bundledProducts": "Produits groupés",
     "nonHierarchicalProducts": "Produits non hiérarchisés",
-    "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer."
+    "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer.",
+    "addAttribute": "Ajouter un attribut"
   },
   "dashlets": {
     "Channels": "Canaux",

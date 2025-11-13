@@ -1,5 +1,6 @@
 {
   "fields": {
-    "contents": "Contents"
+    "contents": "Contents",
+    "name": "Name"
   }
 }

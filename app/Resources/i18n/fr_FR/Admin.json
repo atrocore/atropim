@@ -3,6 +3,10 @@
     "available-currency": "Liste des devises"
   },
   "labels": {
-    "pim": "PIM"
+    "pim": "PIM",
+    "pimSettings": "Paramètres PIM"
+  },
+  "descriptions": {
+    "pimSettings": "Paramètres du système PIM"
   }
 }

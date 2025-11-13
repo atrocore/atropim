@@ -2,7 +2,7 @@
   "fields": {
     "mainImage": "Основне зображення",
     "data": "Дані",
-    "categories": "Категорії продукту",
+    "categories": "Категорії",
     "product": "Основний продукт",
     "products": "Продукти",
     "brand": "Бренд",
@@ -15,13 +15,14 @@
     "image": "Основне зображення",
     "tag": "Тег",
     "channels": "Канали",
-    "productChannels": "Канали продукту",
     "basePriceAmount": "Базова ціна",
     "packedAmount": "Кількість в упаковці",
     "contents": "Контент",
     "taskStatus": "Статус завдання",
     "files": "Файли",
-    "calls": "Дзвінки"
+    "calls": "Дзвінки",
+    "contentItems": "Елементи вмісту",
+    "variantSpecificAttributes": "Атрибути для конкретного варіанту"
   },
   "labels": {
     "Product Attributes": "Атрибути",

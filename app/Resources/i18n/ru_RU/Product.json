@@ -2,34 +2,27 @@
   "fields": {
     "mainImage": "Основное изображение",
     "data": "Данные",
-    "categories": "Категории продукта",
+    "categories": "Категории",
     "product": "Основной продукт",
     "products": "Продукты",
     "brand": "Бренд",
-    "associatedMainProducts": "Ассоциированные продукты: Связанные",
-    "associatedRelatedProduct": "Ассоциированные продукты: Основные",
     "productStatus": "Статус продукта",
-    "sku": "Артикул",
-    "isActive": "Активный",
     "type": "Тип",
     "amount": "Кол-во",
     "price": "Цена покупки",
     "ean": "GTIN/EAN",
-    "mpn": "MPN",
     "rrp": "Рекомендованная розничная цена",
     "image": "Основное изображение",
     "tag": "Тег",
-    "longDescription": "Длинное описание",
-    "association": "Ассоциация",
     "channels": "Каналы",
-    "productChannels": "Каналы продукта",
     "basePriceAmount": "Базовая цена",
     "packedAmount": "Кол-во в упаковке",
     "contents": "Контент",
     "taskStatus": "Статус задачи",
-    "children": "Дочерние продукты",
-    "parents": "Родительские продукты",
-    "calls": "Звонки"
+    "calls": "Звонки",
+    "files": "Файлы",
+    "variantSpecificAttributes": "Специфические атрибуты варианта",
+    "contentItems": "Элементы содержания"
   },
   "labels": {
     "Product Attributes": "Атрибуты",
@@ -37,16 +30,10 @@
     "addAttributeFilter": "Добавить фильтр атрибутов",
     "Channels": "Каналы",
     "Product Channel Attributes": "Атрибуты канала",
-    "associatedProducts": "Ассоциированные продукты",
     "typeCategoryToSearch": "Введите категорию для поиска...",
     "noGroup": "Нет группы",
     "productImage": "Изображение продукта",
     "selectAttributeGroup": "Выбрать группу атрибута",
-    "draft": "Черновик",
-    "prepared": "Подготовлено",
-    "reviewed": "Отредактировано",
-    "notReady": "Не готово",
-    "ready": "Готово",
     "channel": "Канал"
   },
   "options": {
@@ -71,20 +58,32 @@
     },
     "template": {
       "default": "По умолчанию"
+    },
+    "productStatus": {
+      "draft": "Черновик",
+      "reviewed": "Проверено",
+      "prepared": "Подготовлено",
+      "notReady": "Не готов",
+      "ready": "Готовые"
     }
   },
   "boolFilters": {
-    "notAssociatedProducts": "Не ассоциированные продукты",
     "notLinkedWithBrand": "Не связан с брендом",
     "linkedWithCategory": "Связан с категорией",
-    "onlyConfigurableProducts": "Только конфигурируемые продукты"
+    "onlyConfigurableProducts": "Только конфигурируемые продукты",
+    "notAssociatedRecords": "Без сопутствующих товаров",
+    "withoutMainImage": "Без основного изображения"
   },
   "exceptions": {
-    "backwardAssociationError": "Ошибка обратной ассоциации: %s",
     "wrongInputData": "Проверка не удалась. Неправильные вводные данные.",
-    "noSuchAssociation": "Проверка не удалась. Такой ассоциации не существует.",
     "itselfAssociation": "Продукт не может быть ассоциирован с самим собой.",
-    "productAssociationAlreadyExists": "Такая продуктовая ассоциация уже существует.",
-    "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной."
+    "productCanNotLinkToNonLeafCategory": "Продукт не может быть связан с категорией, не являющейся конечной.",
+    "recordAssociationAlreadyExists": "Такая ассоциация продуктов уже существует.",
+    "youCantChangeClassificationInProduct": "Вы не можете изменить Классификацию в Продукте"
+  },
+  "messages": {
+    "componentsNotInstalled": "Установите модуль Components, чтобы использовать предварительный просмотр компонентов.",
+    "removeRelatedRecords": "Вы уверены, что хотите удалить все продукты для выбранной Ассоциации из текущего продукта? Все сопутствующие товары будут сохранены.",
+    "emptyComponents": "Продукт не содержит компонентов"
   }
 }

@@ -6,12 +6,12 @@
     "isActive": "Активный",
     "mainImage": "Основное изображение",
     "parents": "Родительская категория",
-    "categories": "Категории",
     "channels": "Каналы",
     "scope": "Область применения",
     "products": "Продукты",
     "productCategories": "Категории продукта",
-    "sortOrder": "Порядок сортировки"
+    "sortOrder": "Порядок сортировки",
+    "children": "Детские категории"
   },
   "options": {
     "template": {

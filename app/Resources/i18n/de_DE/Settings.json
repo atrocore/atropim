@@ -12,9 +12,6 @@
   "exceptions": {
     "languageUsedInChannel": "Diese Sprache wird in einem Kanal verwendet und kann nicht entfernt werden."
   },
-  "queueManager": {
-    "updatingOwnershipInformation": "Aktualisierung der Besiterinformationen"
-  },
   "tooltips": {
     "productCanLinkedWithNonLeafCategories": "Wenn gesetzt, werden Sie die Produkte mit den Kategorien verlinken können, die Unterkategorien haben.",
     "behaviorOnCategoryDelete": "Beim \"Erweitern\" werden auch alle Unterkategorien dieser Kategorie entfernt und alle Produkte, die mit dieser Kategorie oder ihren Unterkategorien verknüpft sind, werden getrennt."

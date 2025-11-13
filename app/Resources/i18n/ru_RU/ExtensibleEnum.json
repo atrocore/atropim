@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributes": "Атрибуты"
+  },
+  "exceptions": {
+    "extensibleEnumIsUsedOnAttribute": "Список '%s' используется атрибутом '%s'."
+  }
+}
