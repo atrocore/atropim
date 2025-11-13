@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "category": "Kategorie",
+    "isMainImage": "Hlavní obrázek"
+  }
+}
