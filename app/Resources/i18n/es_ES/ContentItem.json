@@ -3,9 +3,9 @@
     "description": "Descripción",
     "image": "Imagen",
     "name": "Nombre",
-    "plainText": "",
-    "products": "",
-    "richText": "",
+    "plainText": "Texto sin formato",
+    "products": "Productos",
+    "richText": "Texto enriquecido",
     "type": "Type"
   }
 }
