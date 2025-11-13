@@ -1,6 +1,6 @@
 {
   "fields": {
-    "sorting": "",
-    "mainCategory": ""
+    "sorting": "Orden de clasificación por categoría",
+    "mainCategory": "Categoría principal"
   }
 }
