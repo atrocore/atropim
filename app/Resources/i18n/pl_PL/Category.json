@@ -18,9 +18,20 @@
     "children": "Kategorie dzieci",
     "channels": "Kanały",
     "scope": "Zakres",
-    "productCategories": "Kategoria Produkty"
+    "productCategories": "Kategoria Produkty",
+    "name": "Name",
+    "description": "Description",
+    "code": "Kod",
+    "isActive": "Aktywny",
+    "products": "Produkty",
+    "sortOrder": "Sort Order"
   },
   "boolFilters": {
     "linkedWithProduct": "Ma produkty"
+  },
+  "options": {
+    "template": {
+      "default": "Domyślny"
+    }
   }
 }
