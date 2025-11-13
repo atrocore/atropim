@@ -1,6 +1,9 @@
 {
   "fields": {
     "category": "Kategorie",
-    "isMainImage": "Hlavní obrázek"
+    "isMainImage": "Hlavní obrázek",
+    "tags": "Štítky",
+    "preview": "Náhled",
+    "sorting": "Pořadí řazení"
   }
 }
