@@ -2,7 +2,7 @@
   "fields": {
     "mainImage": "Основне зображення",
     "data": "Дані",
-    "categories": "Категорії продукту",
+    "categories": "Категорії",
     "product": "Основний продукт",
     "products": "Продукти",
     "brand": "Бренд",
@@ -20,7 +20,8 @@
     "contents": "Контент",
     "taskStatus": "Статус завдання",
     "files": "Файли",
-    "calls": "Дзвінки"
+    "calls": "Дзвінки",
+    "contentItems": "Елементи вмісту"
   },
   "labels": {
     "Product Attributes": "Атрибути",
