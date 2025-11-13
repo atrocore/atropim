@@ -20,7 +20,8 @@
     "contents": "Contents",
     "taskStatus": "Task status",
     "files": "Dateien",
-    "calls": "Anrufe"
+    "calls": "Anrufe",
+    "variantSpecificAttributes": "Variantenspezifische Attribute"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
@@ -30,7 +31,8 @@
     "noGroup": "Keine Gruppe",
     "productImage": "Produktbild",
     "selectAttributeGroup": "Attributgruppe auswählen",
-    "channel": "Kanal"
+    "channel": "Kanal",
+    "Product Channel Attributes": "Kanal-Attribute"
   },
   "options": {
     "productStatus": {
