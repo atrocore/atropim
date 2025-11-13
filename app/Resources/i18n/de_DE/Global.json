@@ -45,7 +45,13 @@
     "oneGeoType": "OneGeo Typ",
     "priceCurrency": "Preis Währung",
     "uvp": "UVP",
-    "mpn": "MPN"
+    "mpn": "MPN",
+    "productStatus": "Produktstatus",
+    "price": "Preis",
+    "sku": "SKU",
+    "ean": "GTIN/EAN",
+    "tag": "Etikett",
+    "amount": "Menge"
   },
   "options": {
     "channelsFilter": {
@@ -78,7 +84,8 @@
     "Add Field": "Filter hinzufügen",
     "removeExplain": "Checkbox abhacken, um Attribute von anderen Entities vor dem Löschen loszubinden",
     "categoryPreview": "Kategorievorschau",
-    "productPreview": "Produktvorschau"
+    "productPreview": "Produktvorschau",
+    "addAttribute": "Attribut hinzufügen"
   },
   "dashlets": {
     "ProductsByTag": "Produkte nach Tag",
