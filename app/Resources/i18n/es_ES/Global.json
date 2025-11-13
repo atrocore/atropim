@@ -39,7 +39,8 @@
       "onlyGlobalScope": "Sólo Ámbito Global"
     },
     "scope": {
-      "Channel": "Canal"
+      "Channel": "Canal",
+      "Global": "Global"
     }
   },
   "fields": {
@@ -59,7 +60,8 @@
     "tag": "Etiqueta",
     "amount": "Importe",
     "mpn": "MPN",
-    "scope": "Alcance"
+    "scope": "Alcance",
+    "role": "Rol"
   },
   "labels": {
     "selectAttributes": "Seleccione atributo(s)",
@@ -82,7 +84,8 @@
     "Add Field": "Añadir filtro",
     "removeExplain": "Seleccione esta opción para desvincular el atributo de otras Entidades antes de eliminarlo",
     "categoryPreview": "Vista previa de la categoría",
-    "productPreview": "Vista previa del producto"
+    "productPreview": "Vista previa del producto",
+    "typeToSearch": "Escribe y presiona la tecla Enter..."
   },
   "dashlets": {
     "Channels": "Canales",
