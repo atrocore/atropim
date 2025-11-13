@@ -121,6 +121,10 @@ Installation Guide for Docker is [here](https://help.atrocore.com/installation-a
 
 AtroPIM is published under the GNU GPLv3 [license](LICENSE.txt).
 
+## Localization
+
+Would you like to help us translate UIs into your language, or improve existing translations?
+- https://translate.atrocore.com/
 
 ## Resources
 
