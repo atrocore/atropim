@@ -9,7 +9,14 @@
     "ProductPrice": "Цена продукта",
     "ChannelPricing": "Канал ценообразования",
     "Content": "Контент",
-    "ContentGroup": "Група контента"
+    "ContentGroup": "Група контента",
+    "Listing": "Листинг",
+    "ProductCategory": "Категория продукта",
+    "CategoryChannel": "Категориальный канал",
+    "CategoryHierarchy": "Иерархия категорий",
+    "ContentItem": "Содержание",
+    "ProductFile": "Файл продукта",
+    "CategoryFile": "Категория Файл"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Каналы продукта",
@@ -20,7 +27,11 @@
     "Product": "Продукты",
     "ProductPrice": "Цены продукта",
     "Content": "Контент",
-    "ContentGroup": "Группы контента"
+    "ContentGroup": "Группы контента",
+    "ContentItem": "Элементы содержания",
+    "ProductFile": "Файлы продуктов",
+    "CategoryFile": "Категория Файлы",
+    "Listing": "Списки"
   },
   "options": {
     "channelsFilter": {
@@ -49,7 +60,8 @@
     "channels": "Каналы",
     "products": "Продукты",
     "scope": "Область применения",
-    "role": "Роль"
+    "role": "Роль",
+    "listings": "Списки"
   },
   "labels": {
     "setAsMainImage": "Назначить основным изображением",
@@ -67,7 +79,12 @@
     "Add Field": "Добавить фильтр",
     "removeExplain": "Выберите эту опцию, чтобы отменить связь атрибута с другими объектами перед удалением",
     "categoryPreview": "Предпросмотр категории",
-    "productPreview": "Предпросмотр продукта"
+    "productPreview": "Предпросмотр продукта",
+    "addAttribute": "Добавить атрибут",
+    "removeHierarchically": "Иерархическое удаление",
+    "setAsMainCategory": "Установить как основную категорию",
+    "setAsMainVariant": "Установите в качестве основного варианта",
+    "linkedChannels": "Связанные каналы"
   },
   "dashlets": {
     "Channels": "Каналы",
