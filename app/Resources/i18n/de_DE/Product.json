@@ -8,7 +8,7 @@
     "product": "Produkt",
     "basePriceAmount": "Grundpreis Anzahl",
     "data": "Daten",
-    "categories": "Produktkategorien",
+    "categories": "Kategorien",
     "brand": "Marke",
     "type": "Typ",
     "amount": "Menge",
@@ -21,7 +21,8 @@
     "taskStatus": "Task status",
     "files": "Dateien",
     "calls": "Anrufe",
-    "variantSpecificAttributes": "Variantenspezifische Attribute"
+    "variantSpecificAttributes": "Variantenspezifische Attribute",
+    "contentItems": "Inhalte"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
@@ -32,7 +33,8 @@
     "productImage": "Produktbild",
     "selectAttributeGroup": "Attributgruppe auswählen",
     "channel": "Kanal",
-    "Product Channel Attributes": "Kanal-Attribute"
+    "Product Channel Attributes": "Kanal-Attribute",
+    "Product Attributes": "Attribute"
   },
   "options": {
     "productStatus": {
@@ -48,7 +50,9 @@
       "green": "grün",
       "red": "rot",
       "your tag1": "your tag1",
-      "your tag2": "your tag2"
+      "your tag2": "your tag2",
+      "your_tag1": "your tag1",
+      "your_tag2": "your tag2"
     },
     "taskStatus": {
       "mar": "Mar",
