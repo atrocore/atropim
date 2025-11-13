@@ -1,1 +1,9 @@
-{}
+{
+  "exceptions": {
+    "extensibleEnumOptionIsUsedOnClassificationAttribute": "Opcja listy \"%s\" jest używana przez atrybut \"%s\" w klasyfikacji \"%s\".",
+    "extensibleEnumOptionIsUsedOnProductAttribute": "Opcja listy \"%s\" jest używana przez atrybut \"%s\" w produkcie \"%s\"."
+  },
+  "fields": {
+    "classificationAttributes": "Atrybuty klasyfikacji"
+  }
+}
