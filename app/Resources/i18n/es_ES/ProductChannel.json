@@ -1,7 +1,7 @@
 {
   "fields": {
-    "isActive": "",
-    "product": "",
-    "channel": ""
+    "isActive": "Activo Para Canal",
+    "product": "Producto",
+    "channel": "Canal"
   }
 }
