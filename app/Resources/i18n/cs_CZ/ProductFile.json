@@ -1,14 +1,14 @@
 {
   "fields": {
-    "scope": "",
+    "scope": "Rozsah",
     "isMainImage": "",
-    "tags": "",
-    "sorting": ""
+    "tags": "Štítky",
+    "sorting": "Pořadí řazení"
   },
   "options": {
     "scope": {
-      "Global": "",
-      "Channel": ""
+      "Global": "Globální",
+      "Channel": "Kanál"
     }
   }
 }
