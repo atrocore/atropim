@@ -4,6 +4,8 @@
     "image": "Obraz",
     "name": "Name",
     "products": "Produkty",
-    "type": "Type"
+    "type": "Type",
+    "plainText": "Zwykły tekst",
+    "richText": "Bogaty tekst"
   }
 }
