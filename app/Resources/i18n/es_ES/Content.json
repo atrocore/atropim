@@ -1,11 +1,11 @@
 {
   "fields": {
     "tags": "Etiquetas",
-    "name": "",
-    "status": "",
-    "type": "",
-    "description": "",
-    "text": "",
+    "name": "Título",
+    "status": "Status",
+    "type": "Type",
+    "description": "Descripción",
+    "text": "Área de texto simple",
     "metaTitle": "Meta Título",
     "metaDescription": "Meta Descripción",
     "contentGroup": "Grupo de contenidos",
