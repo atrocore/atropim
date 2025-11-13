@@ -1,1 +1,9 @@
-{}
+{
+  "fields": {
+    "description": "Description",
+    "image": "Obraz",
+    "name": "Name",
+    "products": "Produkty",
+    "type": "Type"
+  }
+}
