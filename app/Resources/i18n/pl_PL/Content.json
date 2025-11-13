@@ -6,6 +6,18 @@
     "tags": "Tagi",
     "name": "Tytuł",
     "status": "Status",
-    "type": "Type"
+    "type": "Type",
+    "metaTitle": "Meta Title",
+    "metaDescription": "Meta Description",
+    "contentGroup": "Content Group"
+  },
+  "labels": {
+    "draft": "Wersja robocza",
+    "written": "Na piśmie",
+    "reviewed": "Recenzja",
+    "published": "Opublikowano",
+    "review": "Recenzja",
+    "news": "Aktualności",
+    "promotional": "Promocja"
   }
 }
