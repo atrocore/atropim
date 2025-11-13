@@ -10,7 +10,13 @@
     "ChannelPricing": "Канал ціноутворення",
     "Content": "Контент",
     "ContentGroup": "Група контенту",
-    "ContentItem": "Елемент вмісту"
+    "ContentItem": "Елемент вмісту",
+    "Listing": "Список",
+    "ProductCategory": "Категорія продукту",
+    "CategoryChannel": "Категорія Канал",
+    "CategoryHierarchy": "Ієрархія категорій",
+    "ProductFile": "Файл продукту",
+    "CategoryFile": "Файл категорії"
   },
   "scopeNamesPlural": {
     "ProductChannel": "Канали продукту",
@@ -22,7 +28,10 @@
     "ProductPrice": "Ціни продукту",
     "Content": "Контент",
     "ContentGroup": "Групи контенту",
-    "ContentItem": "Елементи вмісту"
+    "ContentItem": "Елементи вмісту",
+    "Listing": "Списки",
+    "ProductFile": "Файли продукту",
+    "CategoryFile": "Категорія Файли"
   },
   "options": {
     "channelsFilter": {
@@ -50,7 +59,9 @@
     "channels": "Канали",
     "products": "Продукти",
     "scope": "Область застосування",
-    "role": "Роль"
+    "role": "Роль",
+    "listings": "Списки",
+    "mpn": "MPN"
   },
   "labels": {
     "setAsMainImage": "Призначити основним зображенням",
@@ -71,7 +82,8 @@
     "Add Field": "Додати фільтр",
     "removeExplain": "Виберіть цю опцію, щоб скасувати зв'язок атрибута з іншими об'єктами перед видаленням",
     "categoryPreview": "Попередній перегляд категорії",
-    "productPreview": "Попередній перегляд продукту"
+    "productPreview": "Попередній перегляд продукту",
+    "removeHierarchically": "Видалити ієрархічно"
   },
   "dashlets": {
     "Channels": "Канали",
