@@ -10,7 +10,8 @@
     "scope": "Область применения",
     "products": "Продукты",
     "productCategories": "Категории продукта",
-    "sortOrder": "Порядок сортировки"
+    "sortOrder": "Порядок сортировки",
+    "children": "Детские категории"
   },
   "options": {
     "template": {
