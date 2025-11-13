@@ -83,7 +83,9 @@
     "removeExplain": "Виберіть цю опцію, щоб скасувати зв'язок атрибута з іншими об'єктами перед видаленням",
     "categoryPreview": "Попередній перегляд категорії",
     "productPreview": "Попередній перегляд продукту",
-    "removeHierarchically": "Видалити ієрархічно"
+    "removeHierarchically": "Видалити ієрархічно",
+    "selectAttributes": "Вибрати атрибут(и)",
+    "addAttribute": "Додати атрибут"
   },
   "dashlets": {
     "Channels": "Канали",
