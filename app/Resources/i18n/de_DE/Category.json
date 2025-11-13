@@ -2,7 +2,7 @@
   "fields": {
     "isActive": "Aktiv",
     "products": "Produkte",
-    "scope": "Scope",
+    "scope": "Geltungsbereich",
     "mainImage": "Hauptbild",
     "sortOrder": "Sortierreihenfolge",
     "code": "Code",
