@@ -12,6 +12,12 @@
     "metaTitle": "Meta název",
     "metaDescription": "Meta popis",
     "contentGroup": "Obsahová skupina",
-    "products": "Produkty"
+    "products": "Produkty",
+    "tags": "Štítky",
+    "name": "Název",
+    "status": "Stav",
+    "type": "Typ",
+    "description": "Popis",
+    "text": "Text"
   }
 }
