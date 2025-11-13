@@ -5,7 +5,13 @@
     "products": "Produkty",
     "mainImage": "Hlavní obrázek",
     "parents": "Nadřazená kategorie",
-    "children": "Kategorie dětí"
+    "children": "Kategorie dětí",
+    "scope": "Rozsah",
+    "sortOrder": "Pořadí řazení",
+    "name": "Název",
+    "description": "Popis",
+    "code": "Kód",
+    "isActive": "Aktivní"
   },
   "boolFilters": {
     "linkedWithProduct": "Má produkty"
@@ -22,5 +28,10 @@
     "categoryHasProducts": "Kategorie se souvisejícími produkty nelze odstranit.",
     "parentCategoryHasProducts": "Tuto kategorii nelze nastavit jako nadřazenou kategorii, jedná se o listovou kategorii s přiřazenými produkty.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "V kořenové kategorii s propojenými produkty nelze změnit nadřazenou kategorii."
+  },
+  "options": {
+    "template": {
+      "default": "Výchozí"
+    }
   }
 }
