@@ -28,5 +28,10 @@
     "categoryHasProducts": "Категорія з пов'язаними товарами не може бути видалена.",
     "parentCategoryHasProducts": "Цю категорію не можна встановити як батьківську, оскільки вона листова і має призначені їй продукти.",
     "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Ви не можете змінити батьківську категорію в кореневій категорії з пов'язаними продуктами."
+  },
+  "options": {
+    "template": {
+      "default": "За замовчуванням"
+    }
   }
 }
