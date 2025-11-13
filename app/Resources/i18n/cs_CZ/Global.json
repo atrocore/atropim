@@ -19,7 +19,9 @@
     "setAsMainCategory": "Nastavit jako hlavní kategorii",
     "setAsMainVariant": "Nastavit jako hlavní variantu",
     "allChannels": "Všechny kanály",
-    "linkedChannels": "Propojené kanály"
+    "linkedChannels": "Propojené kanály",
+    "typeToSearch": "Zadejte text a stiskněte Enter…",
+    "addAttribute": "[Přidat atribut]"
   },
   "dashlets": {
     "Channels": "Kanály",
@@ -54,6 +56,10 @@
     "channelsFilter": {
       "": "Všechny obory",
       "onlyGlobalScope": "Pouze globální rozsah"
+    },
+    "scope": {
+      "Global": "Globální",
+      "Channel": "Kanál"
     }
   },
   "fields": {
@@ -71,7 +77,10 @@
     "uvp": "UVP",
     "tag": "Štítek",
     "amount": "Částka",
-    "mpn": "MPN"
+    "mpn": "MPN",
+    "channel": "Kanál",
+    "scope": "Rozsah",
+    "role": "Role"
   },
   "scopeNames": {
     "Listing": "Seznam",
@@ -89,7 +98,8 @@
     "ChannelPricing": "Stanovení cen v kanálech",
     "Content": "Obsah",
     "ContentGroup": "Obsahová skupina",
-    "ContentItem": "Položka obsahu"
+    "ContentItem": "Položka obsahu",
+    "Channel": "Kanál"
   },
   "messages": {
     "fieldHasPattern": "{pole} by mělo obsahovat pouze podtržítka, čísla a malé abecedy."
