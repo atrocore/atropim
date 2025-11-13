@@ -3,11 +3,11 @@
     "scope": "Alcance",
     "isMainImage": "Imagen principal",
     "tags": "Etiquetas",
-    "sorting": ""
+    "sorting": "ordenar Orden"
   },
   "options": {
     "scope": {
-      "Global": "",
+      "Global": "Global",
       "Channel": "Canal"
     }
   }
