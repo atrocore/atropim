@@ -2,7 +2,7 @@
   "fields": {
     "mainImage": "Основное изображение",
     "data": "Данные",
-    "categories": "Категории продукта",
+    "categories": "Категории",
     "product": "Основной продукт",
     "products": "Продукты",
     "brand": "Бренд",
@@ -19,7 +19,8 @@
     "packedAmount": "Кол-во в упаковке",
     "contents": "Контент",
     "taskStatus": "Статус задачи",
-    "calls": "Звонки"
+    "calls": "Звонки",
+    "files": "Файлы"
   },
   "labels": {
     "Product Attributes": "Атрибуты",
@@ -55,6 +56,10 @@
     },
     "template": {
       "default": "По умолчанию"
+    },
+    "productStatus": {
+      "draft": "Черновик",
+      "reviewed": "Проверено"
     }
   },
   "boolFilters": {
