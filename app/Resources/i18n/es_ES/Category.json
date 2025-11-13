@@ -1,9 +1,9 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "code": "",
-    "isActive": "",
+    "name": "Nombre",
+    "description": "Descripción",
+    "code": "Código",
+    "isActive": "Activo",
     "mainImage": "",
     "parents": "",
     "children": "",
@@ -11,11 +11,11 @@
     "scope": "",
     "productCategories": "",
     "products": "",
-    "sortOrder": ""
+    "sortOrder": "ordenar Orden"
   },
   "options": {
     "template": {
-      "default": ""
+      "default": "Por defecto"
     }
   },
   "boolFilters": {
