@@ -18,7 +18,11 @@
     "contentItems": "Zawartość",
     "variantSpecificAttributes": "Specyficzne atrybuty wariantu",
     "mainImage": "Główny obraz",
-    "categories": "Kategorie"
+    "categories": "Kategorie",
+    "products": "Produkty",
+    "type": "Type",
+    "files": "Pliki",
+    "data": "Dane"
   },
   "labels": {
     "Product Attributes": "Atrybuty",
@@ -56,7 +60,11 @@
       "img": "Img",
       "cat": "Kot",
       "ch": "Ch",
-      "pr": "Pr"
+      "pr": "Pr",
+      "mar": "Mar"
+    },
+    "template": {
+      "default": "Domyślny"
     }
   },
   "boolFilters": {
