@@ -11,12 +11,13 @@
 
 namespace Pim\Core\SelectManagers;
 
+use Atro\Core\SelectManagers\Base;
 use Espo\Core\Services\Base as BaseService;
 
 /**
  * Class of AbstractSelectManager
  */
-abstract class AbstractSelectManager extends \Espo\Core\SelectManagers\Base
+abstract class AbstractSelectManager extends Base
 {
 
     /**
