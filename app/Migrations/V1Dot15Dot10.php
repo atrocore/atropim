@@ -16,7 +16,7 @@ namespace Pim\Migrations;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot15Dot9 extends Base
+class V1Dot15Dot10 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -385,8 +385,8 @@ class V1Dot15Dot9 extends Base
 
     <section class="attributes">
         {% set attributesPanels = product.attributesDefs|column('attributePanelId')|unique %}
-        {% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null, 'id') %}
-        {% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => v.mainField == k or not v.mainField) %}
+        {% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null,'id')|filter((v, k) => v.id is not empty) | merge({noGroup: {id: null}}) %}
+        {% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => (v.mainField == k or not v.mainField) and v.emHidden is empty) %}
 
         {% for panel in attributesPanels %}
             <h2>{{ config.referenceData.AttributePanel[panel].name ?? panel }}</h2>
@@ -490,8 +490,20 @@ EOD,
             } else {
                 $template = $res['template'];
                 $template = str_replace(
-                    ['file.mimeType in imageMimetypes', 'attrFile.mimeType in imageMimetypes', "{% set imageMimetypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}"],
-                    ['file|isImage', '(attrFile|isImage)', ''],
+                    [
+                        'file.mimeType in imageMimetypes',
+                        'attrFile.mimeType in imageMimetypes',
+                        "{% set imageMimetypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'] %}",
+                        "{% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null, 'id') %}",
+                        "{% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => v.mainField == k or not v.mainField) %}"
+                    ],
+                    [
+                        'file|isImage',
+                        '(attrFile|isImage)',
+                        '',
+                        "{% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null,'id')|filter((v, k) => v.id is not empty) | merge({noGroup: {id: null}}) %}",
+                        "{% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => (v.mainField == k or not v.mainField) and v.emHidden is empty) %}"
+                    ],
                     $template);
 
                 $this->getConnection()->createQueryBuilder()

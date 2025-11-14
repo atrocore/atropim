@@ -355,8 +355,8 @@
 
     <section class="attributes">
         {% set attributesPanels = product.attributesDefs|column('attributePanelId')|unique %}
-        {% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null, 'id') %}
-        {% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => v.mainField == k or not v.mainField) %}
+        {% set attributesGroups = product.attributesDefs|map(i => i.attributeGroup)|column(null,'id')|filter((v, k) => v.id is not empty) | merge({noGroup: {id: null}}) %}
+        {% set attributesList = product.attributesDefs|map(i => i|merge({ 'attributeGroupId': i.attributeGroup.id }))|filter((v, k) => (v.mainField == k or not v.mainField) and v.emHidden is empty) %}
 
         {% for panel in attributesPanels %}
             <h2>{{ config.referenceData.AttributePanel[panel].name ?? panel }}</h2>
