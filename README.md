@@ -131,10 +131,13 @@ Would you like to help us translate UIs into your language, or improve existing 
 - https://translate.atrocore.com/
 
 
-## Resources
+## Documentation
+- Please visit our Help Center (Documentation) - https://help.atrocore.com/
+
+
+## Other Resources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
-- Please visit our Help Center (Documentation) - https://help.atrocore.com/
 - Read our Release Notes - https://help.atrocore.com/release-notes/pim
 - Please visit our Community - https://community.atrocore.com
 - Сontact us - https://www.atrocore.com/contact
