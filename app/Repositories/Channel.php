@@ -45,11 +45,12 @@ class Channel extends Base
             ->where(['channelId' => $entity->get('id')])
             ->removeCollection();
 
-        if (!empty($categories = $entity->get('categories')) && count($categories) > 0) {
-            foreach ($categories as $category) {
-                $this->unrelateCategories($entity, $category, []);
-            }
-        }
+        $this
+            ->getEntityManager()
+            ->getRepository('CategoryChannel')
+            ->where(['channelId' => $entity->get('id')])
+            ->removeCollection();
+
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
