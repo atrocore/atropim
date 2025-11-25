@@ -40,6 +40,10 @@
             <label class="control-label" data-name="folder">{{translate 'Folder' category='scopeNames'}}</label>
             <div class="field" data-name="folder">{{{folder}}}</div>
         </div>
+        <div class="col-xs-6 cell form-group">
+            <label class="control-label" data-name="fileType">{{translate 'FileType' category='scopeNames'}}</label>
+            <div class="field" data-name="fileType">{{{fileType}}}</div>
+        </div>
     </div>
     <div class="row">
         <div class="col-xs-6 cell form-group">
