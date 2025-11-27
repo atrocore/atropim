@@ -1,1 +1,107 @@
-{}
+{
+  "scopeNames": {
+    "Listing": "Elenco",
+    "ProductFile": "File prodotto",
+    "CategoryFile": "Categoria File",
+    "ProductChannel": "Canale del prodotto",
+    "ProductCategory": "Categoria di prodotti",
+    "CategoryChannel": "Categoria Canale",
+    "CategoryHierarchy": "Gerarchia delle categorie",
+    "Product": "Prodotto",
+    "Category": "Categoria",
+    "Channel": "Canale",
+    "AssociatedProduct": "Prodotto associato",
+    "Brand": "Marchio",
+    "ProductPrice": "Prezzo del prodotto",
+    "ChannelPricing": "Prezzi del canale",
+    "Content": "Contenuto",
+    "ContentGroup": "Gruppo Contenuto",
+    "ContentItem": "Contenuto Articolo"
+  },
+  "fields": {
+    "mpn": "MPN",
+    "channel": "Canale",
+    "listings": "Inserzioni",
+    "product": "Prodotto",
+    "categories": "Categorie",
+    "channels": "Canali",
+    "products": "Prodotti",
+    "productStatus": "Stato del prodotto",
+    "oneGeoType": "Tipo OneGeo",
+    "priceCurrency": "Prezzo Valuta",
+    "price": "Prezzo",
+    "sku": "SKU",
+    "ean": "GTIN/EAN",
+    "uvp": "UVP",
+    "tag": "Tag",
+    "amount": "Importo",
+    "scope": "Ambito di applicazione",
+    "role": "Ruolo"
+  },
+  "labels": {
+    "lowestLevelProducts": "Prodotti di livello più basso",
+    "bundleProducts": "Prodotti in bundle",
+    "bundledProducts": "Prodotti in bundle",
+    "Reset selection": "Azzeramento della selezione",
+    "typeToSearch": "Digiti e prema Invio...",
+    "categorySettings": "Impostazioni della categoria",
+    "cascade": "Cascata",
+    "restrict": "Limitare",
+    "Add Field": "Aggiungi filtro",
+    "removeExplain": "Selezioni questo per scollegare l'attributo da altre Entità prima di rimuoverlo.",
+    "categoryPreview": "Anteprima della categoria",
+    "selectAttributes": "Selezioni l'attributo (o gli attributi)",
+    "addAttribute": "Aggiungi attributo",
+    "removeHierarchically": "Cancellare in modo gerarchico",
+    "setAsMainImage": "Imposta come immagine principale",
+    "setAsMainCategory": "Imposta come categoria principale",
+    "setAsMainVariant": "Imposta come variante principale",
+    "allChannels": "Tutti i canali",
+    "linkedChannels": "Canali collegati",
+    "nonHierarchicalProducts": "Prodotti non gerarchici",
+    "productHierarchies": "Gerarchie di prodotti",
+    "productPreview": "Anteprima del prodotto"
+  },
+  "scopeNamesPlural": {
+    "Listing": "Inserzioni",
+    "ProductFile": "File di prodotto",
+    "CategoryFile": "File di categoria",
+    "ProductChannel": "Canali di prodotto",
+    "Category": "Categorie",
+    "Channel": "Canali",
+    "AssociatedProduct": "Prodotti associati",
+    "Brand": "Marche",
+    "Product": "Prodotti",
+    "ProductPrice": "Prezzi dei prodotti",
+    "Content": "Contenuti",
+    "ContentGroup": "Gruppi di contenuti",
+    "ContentItem": "Articoli di contenuto"
+  },
+  "options": {
+    "channelsFilter": {
+      "": "Tutti i cannocchiali",
+      "onlyGlobalScope": "Solo ambito globale"
+    },
+    "scope": {
+      "Global": "Globale",
+      "Channel": "Canale"
+    }
+  },
+  "dashlets": {
+    "Channels": "Canali",
+    "ProductsByStatus": "Prodotti per stato",
+    "ProductTypes": "Tipi di prodotto",
+    "ProductsByTag": "Prodotti per Tag",
+    "ProductStatusOverview": "Panoramica sullo stato del prodotto",
+    "ProductsByTaskStatus": "Prodotti per stato di attività"
+  },
+  "exceptions": {
+    "massRelateBlocked": "Le relazioni di massa di questo tipo sono bloccate.",
+    "massUnRelateBlocked": "Questo tipo di separazione di massa è bloccata.",
+    "onlyForceDeletingAvailable": "Solo l'eliminazione forzata disponibile",
+    "notValid": "I dati non sono validi"
+  },
+  "messages": {
+    "fieldHasPattern": "{campo} deve contenere solo underscore, numeri e alfabeti in minuscolo."
+  }
+}
