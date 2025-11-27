@@ -1,6 +1,6 @@
 {
   "fields": {
-    "associatingItemImage": "",
-    "associatedItemImage": ""
+    "associatingItemImage": "Associare l'immagine dell'elemento",
+    "associatedItemImage": "Immagine dell'articolo associato"
   }
 }
