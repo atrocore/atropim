@@ -1,6 +1,6 @@
 {
   "fields": {
-    "amount": "",
-    "percent": ""
+    "amount": "Importo",
+    "percent": "Percentuale"
   }
 }
