@@ -2,7 +2,7 @@
   "fields": {
     "products": "Productos",
     "description": "Descripción",
-    "isActive": "Activo",
+    "isActive": "Active",
     "code": "Código"
   },
   "exceptions": {
