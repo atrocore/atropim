@@ -1,89 +1,89 @@
 {
   "fields": {
-    "mainImage": "",
-    "files": "",
-    "data": "",
-    "categories": "",
-    "product": "",
-    "products": "",
-    "brand": "",
-    "productStatus": "",
-    "type": "",
-    "amount": "",
-    "price": "",
-    "ean": "",
-    "rrp": "",
-    "image": "",
-    "tag": "",
-    "channels": "",
-    "basePriceAmount": "",
-    "packedAmount": "",
-    "contents": "",
-    "taskStatus": "",
-    "calls": "",
-    "contentItems": "",
-    "variantSpecificAttributes": ""
+    "mainImage": "Immagine principale",
+    "files": "File",
+    "data": "Dati",
+    "categories": "Categorie",
+    "product": "Prodotto principale",
+    "products": "Prodotti",
+    "brand": "Marchio",
+    "productStatus": "Stato del prodotto",
+    "type": "Tipo",
+    "amount": "Importo",
+    "price": "Prezzo di acquisto",
+    "ean": "GTIN/EAN",
+    "rrp": "Prezzo di vendita consigliato (RRP)",
+    "image": "Immagine principale",
+    "tag": "Tag",
+    "channels": "Canali",
+    "basePriceAmount": "Prezzo base Importo",
+    "packedAmount": "Quantità imballata",
+    "contents": "Contenuti",
+    "taskStatus": "Stato del compito",
+    "calls": "Chiamate",
+    "contentItems": "Articoli di contenuto",
+    "variantSpecificAttributes": "Attributi specifici della variante"
   },
   "labels": {
-    "Product Attributes": "",
-    "thereIsNoValidAttributesForChannel": "",
-    "addAttributeFilter": "",
-    "Channels": "",
-    "Product Channel Attributes": "",
-    "typeCategoryToSearch": "",
-    "noGroup": "",
-    "productImage": "",
-    "selectAttributeGroup": "",
-    "channel": ""
+    "Product Attributes": "Attributi",
+    "thereIsNoValidAttributesForChannel": "Non ci sono attributi validi per il canale",
+    "addAttributeFilter": "Aggiungi filtro attributo",
+    "Channels": "Canali",
+    "Product Channel Attributes": "Attributi del canale",
+    "typeCategoryToSearch": "Digiti la categoria per effettuare la ricerca...",
+    "noGroup": "Nessun gruppo",
+    "productImage": "Immagine del prodotto",
+    "selectAttributeGroup": "Selezionare il gruppo di attributi",
+    "channel": "Canale"
   },
   "options": {
     "productStatus": {
-      "draft": "",
-      "prepared": "",
-      "reviewed": "",
-      "notReady": "",
-      "ready": ""
+      "draft": "Bozza",
+      "prepared": "Preparato",
+      "reviewed": "Recensito",
+      "notReady": "Non è pronto",
+      "ready": "Pronto"
     },
     "tag": {
-      "blue": "",
-      "yellow": "",
-      "green": "",
-      "red": "",
-      "your tag1": "",
-      "your tag2": "",
-      "your_tag1": "",
-      "your_tag2": ""
+      "blue": "blu",
+      "yellow": "giallo",
+      "green": "verde",
+      "red": "rosso",
+      "your tag1": "il suo tag1",
+      "your tag2": "il suo tag2",
+      "your_tag1": "il suo tag1",
+      "your_tag2": "il suo tag2"
     },
     "taskStatus": {
-      "mar": "",
-      "tech": "",
-      "ass": "",
-      "img": "",
-      "cat": "",
-      "ch": "",
-      "pr": ""
+      "mar": "Mar",
+      "tech": "Tecnologia",
+      "ass": "Ass",
+      "img": "Img",
+      "cat": "Gatto",
+      "ch": "Ch",
+      "pr": "Pr"
     },
     "template": {
-      "default": ""
+      "default": "Predefinito"
     }
   },
   "boolFilters": {
-    "notAssociatedRecords": "",
-    "notLinkedWithBrand": "",
-    "linkedWithCategory": "",
-    "onlyConfigurableProducts": "",
-    "withoutMainImage": ""
+    "notAssociatedRecords": "Senza prodotti associati",
+    "notLinkedWithBrand": "Senza marchio",
+    "linkedWithCategory": "Con categoria",
+    "onlyConfigurableProducts": "Solo prodotti configurabili",
+    "withoutMainImage": "Senza Immagine principale"
   },
   "exceptions": {
-    "wrongInputData": "",
-    "itselfAssociation": "",
-    "recordAssociationAlreadyExists": "",
-    "youCantChangeClassificationInProduct": "",
-    "productCanNotLinkToNonLeafCategory": ""
+    "wrongInputData": "Convalida fallita. Dati di ingresso errati.",
+    "itselfAssociation": "Il prodotto non può essere associato a se stesso.",
+    "recordAssociationAlreadyExists": "Tale associazione di prodotti esiste già.",
+    "youCantChangeClassificationInProduct": "Non può cambiare la Classificazione nel Prodotto",
+    "productCanNotLinkToNonLeafCategory": "I prodotti non possono essere collegati a una categoria non foglia."
   },
   "messages": {
-    "componentsNotInstalled": "",
-    "emptyComponents": "",
-    "removeRelatedRecords": ""
+    "componentsNotInstalled": "Installi il modulo Components per utilizzare l'anteprima dei componenti.",
+    "emptyComponents": "Il prodotto non ha componenti",
+    "removeRelatedRecords": "È sicuro di voler rimuovere tutti i prodotti dell'Associazione selezionata dal prodotto corrente? Tutti i prodotti correlati saranno mantenuti."
   }
 }
