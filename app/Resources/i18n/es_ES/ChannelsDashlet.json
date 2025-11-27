@@ -2,7 +2,7 @@
   "fields": {
     "name": "Canal",
     "products": "Productos",
-    "active": "Activo",
+    "active": "Active",
     "notActive": "No activo"
   }
 }
