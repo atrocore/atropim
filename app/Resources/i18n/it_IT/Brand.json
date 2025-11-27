@@ -1,12 +1,12 @@
 {
   "fields": {
-    "products": "",
-    "description": "",
-    "isActive": "",
-    "code": ""
+    "products": "Prodotti",
+    "description": "Descrizione",
+    "isActive": "Attivo",
+    "code": "Codice"
   },
   "exceptions": {
-    "brandWithSuchCodeAlreadyExist": "",
-    "brandIsUsedInProducts": ""
+    "brandWithSuchCodeAlreadyExist": "I marchi con tale codice esistono già.",
+    "brandIsUsedInProducts": "Il/i marchio/i, che è/sono utilizzato/i in alcuni prodotti, non può essere cancellato."
   }
 }
