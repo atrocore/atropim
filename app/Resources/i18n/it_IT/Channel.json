@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "description": "",
+    "isActive": "",
+    "categories": "",
+    "code": "",
+    "products": ""
+  },
+  "labels": {
+    "unLinkCategoryFromChannel": "",
+    "linkCategoryWithChannel": "",
+    "changeCategoryForChannel": "",
+    "main": ""
+  },
+  "options": {
+    "template": {
+      "default": ""
+    }
+  },
+  "messages": {
+    "categoryChangeConfirm": ""
+  },
+  "exceptions": {
+    "channelWithSuchCodeAlreadyExist": "",
+    "channelHasProducts": "",
+    "channelHasCategory": ""
+  }
+}
