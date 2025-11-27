@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "",
+    "description": "",
+    "code": "",
+    "isActive": "",
+    "mainImage": "",
+    "parents": "",
+    "children": "",
+    "channels": "",
+    "scope": "",
+    "productCategories": "",
+    "products": "",
+    "sortOrder": ""
+  },
+  "options": {
+    "template": {
+      "default": ""
+    }
+  },
+  "boolFilters": {
+    "linkedWithProduct": ""
+  },
+  "messages": {
+    "channelUnlinkConfirm": "",
+    "categoryRemoveConfirm": "",
+    "categoryParentChangeConfirm": ""
+  },
+  "exceptions": {
+    "categoryHasChildren": "",
+    "categoryHasChildCategoryAndCantBeDeleted": "",
+    "youCanNotChooseChildCategory": "",
+    "categoryHasProducts": "",
+    "parentCategoryHasProducts": "",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": ""
+  }
+}
