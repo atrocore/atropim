@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "classificationAttributes": ""
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsUsedOnProductAttribute": "",
+    "extensibleEnumOptionIsUsedOnClassificationAttribute": ""
+  }
+}
