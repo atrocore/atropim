@@ -1,37 +1,37 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "code": "",
-    "isActive": "",
-    "mainImage": "",
-    "parents": "",
-    "children": "",
-    "channels": "",
-    "scope": "",
-    "productCategories": "",
-    "products": "",
-    "sortOrder": ""
+    "name": "Nome",
+    "description": "Descrizione",
+    "code": "Codice",
+    "isActive": "Attivo",
+    "mainImage": "Immagine principale",
+    "parents": "Categoria principale",
+    "children": "Categorie di bambini",
+    "channels": "Canali",
+    "scope": "Ambito di applicazione",
+    "productCategories": "Categoria Prodotti",
+    "products": "Prodotti",
+    "sortOrder": "Ordinamento"
   },
   "options": {
     "template": {
-      "default": ""
+      "default": "Predefinito"
     }
   },
   "boolFilters": {
-    "linkedWithProduct": ""
+    "linkedWithProduct": "Ha dei prodotti"
   },
   "messages": {
-    "channelUnlinkConfirm": "",
-    "categoryRemoveConfirm": "",
-    "categoryParentChangeConfirm": ""
+    "channelUnlinkConfirm": "È sicuro di voler scollegare il canale dalla categoria, anche tutti i prodotti collegati indirettamente tramite la categoria con il canale saranno scollegati?",
+    "categoryRemoveConfirm": "È sicuro di voler rimuovere la categoria? Anche tutte le sottocategorie di questa categoria saranno rimosse e tutti i prodotti collegati a questa categoria o alle sue sottocategorie saranno scollegati.",
+    "categoryParentChangeConfirm": "Tenga presente che l'albero delle categorie aggiornato sarà assegnato anche agli stessi cataloghi dell'albero delle categorie originale. I prodotti saranno scollegati da tutti i canali ereditati dall'albero delle categorie originale e collegati ai canali ereditati dall'albero delle categorie aggiornato."
   },
   "exceptions": {
-    "categoryHasChildren": "",
-    "categoryHasChildCategoryAndCantBeDeleted": "",
-    "youCanNotChooseChildCategory": "",
-    "categoryHasProducts": "",
-    "parentCategoryHasProducts": "",
-    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": ""
+    "categoryHasChildren": "La categoria selezionata è utilizzata da un'altra categoria come genitore e non può essere selezionata come categoria di prodotto.",
+    "categoryHasChildCategoryAndCantBeDeleted": "La categoria ha una categoria figlio e non può essere cancellata.",
+    "youCanNotChooseChildCategory": "Non può scegliere una categoria di bambini o se stessa.",
+    "categoryHasProducts": "La categoria con prodotti correlati non può essere cancellata.",
+    "parentCategoryHasProducts": "Questa categoria non può essere impostata come categoria madre, è una categoria-foglia con prodotti assegnati.",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Non può cambiare la categoria madre nella categoria principale con i prodotti collegati."
   }
 }
