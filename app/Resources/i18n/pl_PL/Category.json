@@ -22,7 +22,7 @@
     "name": "Name",
     "description": "Description",
     "code": "Kod",
-    "isActive": "Aktywny",
+    "isActive": "Active",
     "products": "Produkty",
     "sortOrder": "Sort Order"
   },
