@@ -1,0 +1,89 @@
+{
+  "fields": {
+    "mainImage": "",
+    "files": "",
+    "data": "",
+    "categories": "",
+    "product": "",
+    "products": "",
+    "brand": "",
+    "productStatus": "",
+    "type": "",
+    "amount": "",
+    "price": "",
+    "ean": "",
+    "rrp": "",
+    "image": "",
+    "tag": "",
+    "channels": "",
+    "basePriceAmount": "",
+    "packedAmount": "",
+    "contents": "",
+    "taskStatus": "",
+    "calls": "",
+    "contentItems": "",
+    "variantSpecificAttributes": ""
+  },
+  "labels": {
+    "Product Attributes": "",
+    "thereIsNoValidAttributesForChannel": "",
+    "addAttributeFilter": "",
+    "Channels": "",
+    "Product Channel Attributes": "",
+    "typeCategoryToSearch": "",
+    "noGroup": "",
+    "productImage": "",
+    "selectAttributeGroup": "",
+    "channel": ""
+  },
+  "options": {
+    "productStatus": {
+      "draft": "",
+      "prepared": "",
+      "reviewed": "",
+      "notReady": "",
+      "ready": ""
+    },
+    "tag": {
+      "blue": "",
+      "yellow": "",
+      "green": "",
+      "red": "",
+      "your tag1": "",
+      "your tag2": "",
+      "your_tag1": "",
+      "your_tag2": ""
+    },
+    "taskStatus": {
+      "mar": "",
+      "tech": "",
+      "ass": "",
+      "img": "",
+      "cat": "",
+      "ch": "",
+      "pr": ""
+    },
+    "template": {
+      "default": ""
+    }
+  },
+  "boolFilters": {
+    "notAssociatedRecords": "",
+    "notLinkedWithBrand": "",
+    "linkedWithCategory": "",
+    "onlyConfigurableProducts": "",
+    "withoutMainImage": ""
+  },
+  "exceptions": {
+    "wrongInputData": "",
+    "itselfAssociation": "",
+    "recordAssociationAlreadyExists": "",
+    "youCantChangeClassificationInProduct": "",
+    "productCanNotLinkToNonLeafCategory": ""
+  },
+  "messages": {
+    "componentsNotInstalled": "",
+    "emptyComponents": "",
+    "removeRelatedRecords": ""
+  }
+}
