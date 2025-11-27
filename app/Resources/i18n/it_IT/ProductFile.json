@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "scope": "",
+    "isMainImage": "",
+    "tags": "",
+    "sorting": ""
+  },
+  "options": {
+    "scope": {
+      "Global": "",
+      "Channel": ""
+    }
+  }
+}
