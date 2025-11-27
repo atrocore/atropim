@@ -1,23 +1,23 @@
 {
   "fields": {
-    "tags": "",
-    "name": "",
-    "status": "",
-    "type": "",
-    "description": "",
-    "text": "",
-    "metaTitle": "",
-    "metaDescription": "",
-    "contentGroup": "",
-    "products": ""
+    "tags": "Tag",
+    "name": "Titolo",
+    "status": "Stato",
+    "type": "Tipo",
+    "description": "Descrizione",
+    "text": "Testo",
+    "metaTitle": "Meta Titolo",
+    "metaDescription": "Meta descrizione",
+    "contentGroup": "Gruppo Contenuto",
+    "products": "Prodotti"
   },
   "labels": {
-    "draft": "",
-    "written": "",
-    "reviewed": "",
-    "published": "",
-    "review": "",
-    "news": "",
-    "promotional": ""
+    "draft": "Bozza",
+    "written": "Scritto",
+    "reviewed": "Recensito",
+    "published": "Pubblicato",
+    "review": "Recensione",
+    "news": "Notizie",
+    "promotional": "Promozionale"
   }
 }
