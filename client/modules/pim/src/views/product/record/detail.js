@@ -78,7 +78,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         treeLoad(treeScope) {
             if (treeScope === 'Classification') {
-                $.ajax({url: `Product/${this.model.get('id')}/classifications`, type: 'GET'}).done(response => {
+                $.ajax({ url: `Product/${this.model.get('id')}/classifications`, type: 'GET' }).done(response => {
                     if (response.total && response.total > 0) {
                         let $tree = window.treePanelComponent.getTreeEl();
                         response.list.forEach((classification) => {
@@ -102,7 +102,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             if (treeScope === 'Category') {
-                $.ajax({url: `Product/${this.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true`}).done(response => {
+                $.ajax({ url: `Product/${this.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true` }).done(response => {
                     if (response.total && response.total > 0) {
                         let opened = {};
                         this.selectCategoryNode(response.list, opened);
@@ -126,7 +126,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                 });
 
                 let $tree = window.treePanelComponent.getTreeEl();
-                this.ajaxGetRequest('Category/action/TreeData', {ids: Object.keys(categoriesRoutes)}).then(response => {
+                this.ajaxGetRequest('Category/action/TreeData', { ids: Object.keys(categoriesRoutes) }).then(response => {
                     if (response.total && response.total > 0) {
                         (response.tree || []).forEach(node => {
                             let treeData = $tree.tree('getTree').children || [];
@@ -158,10 +158,18 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (route.length > 0) {
                 let id = route.shift();
                 let node = $tree.tree('getNodeById', id);
-                $tree.tree('openNode', node, false, () => {
+                const isOpened = ($tree.tree('getState').open_nodes || []).includes(id);
+
+                const onOpened = () => {
                     opened[id] = true;
                     this.openCategoryNodes($tree, route, opened, callback);
-                });
+                }
+
+                if (isOpened) {
+                    onOpened()
+                } else {
+                    $tree.tree('openNode', node, false, onOpened);
+                }
             } else {
                 callback();
             }
@@ -324,11 +332,11 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (gridPackages && packageView) {
                 let gridModel = packageView.getView('grid').model;
                 beforeSaveGridPackages = gridModel.getClonedAttributes();
-                gridModel.set(gridPackages, {silent: true})
+                gridModel.set(gridPackages, { silent: true })
             }
 
             if (attrs) {
-                model.set(attrs, {silent: true});
+                model.set(attrs, { silent: true });
             }
 
             const panelsChanges = this.handlePanelsFetch();
