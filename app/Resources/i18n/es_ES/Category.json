@@ -3,7 +3,7 @@
     "name": "Nombre",
     "description": "Descripción",
     "code": "Código",
-    "isActive": "Active",
+    "isActive": "Activo",
     "mainImage": "Imagen principal",
     "parents": "Categoría padre",
     "children": "Categorías de niños",
