@@ -6,7 +6,7 @@
   "fields": {
     "products": "Produkty",
     "description": "Description",
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "code": "Kod"
   }
 }
