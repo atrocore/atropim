@@ -1,10 +1,22 @@
 [
   {
-    "label":  "",
+    "label": "",
     "rows": [
       [
         {
           "name": "mainImage",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "created",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "modified",
           "fullWidth": true
         }
       ]
