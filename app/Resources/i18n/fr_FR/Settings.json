@@ -1,13 +1,13 @@
 {
   "fields": {
-    "productCanLinkedWithNonLeafCategories": "Permet de lier des produits à des catégories non feuilletantes.",
+    "productCanLinkedWithNonLeafCategories": "Autoriser la liaison des produits aux catégories ayant des enfants.",
     "behaviorOnCategoryDelete": "Comportement lors de la suppression d'une catégorie"
   },
   "labels": {
     "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues et les valeurs d'attributs pour cette langue sont automatiquement supprimées."
   },
   "messages": {
-    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Êtes-vous sûr de vouloir désactiver le lien entre les produits et les catégories non feuilletantes ? Tous les produits liés à ces catégories seront automatiquement dissociés."
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Êtes-vous sûr de vouloir désactiver le lien entre les produits et les catégories des enfants ? Tous les produits liés à ces catégories seront automatiquement dissociés."
   },
   "exceptions": {
     "languageUsedInChannel": "Le langage, utilisé dans certaines chaînes, ne peut pas être supprimé."
