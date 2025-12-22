@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "type": "Typ",
+    "description": "Popis",
+    "name": "Název",
+    "image": "Obrázek",
+    "plainText": "Prostý text",
+    "products": "Produkty",
+    "richText": "Bohatý text"
+  }
+}

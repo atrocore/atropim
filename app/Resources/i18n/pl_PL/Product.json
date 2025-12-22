@@ -1,0 +1,89 @@
+{
+  "fields": {
+    "product": "Główny produkt",
+    "brand": "Marka",
+    "productStatus": "Status produktu",
+    "amount": "Kwota",
+    "price": "Cena zakupu",
+    "ean": "GTIN/EAN",
+    "rrp": "Zalecana cena detaliczna (RRP)",
+    "image": "Główny obraz",
+    "tag": "Znacznik",
+    "channels": "Kanały",
+    "basePriceAmount": "Cena podstawowa Kwota",
+    "packedAmount": "Ilość w opakowaniu",
+    "contents": "Spis treści",
+    "taskStatus": "Status zadania",
+    "calls": "Połączenia",
+    "contentItems": "Zawartość",
+    "variantSpecificAttributes": "Specyficzne atrybuty wariantu",
+    "mainImage": "Główny obraz",
+    "categories": "Kategorie",
+    "products": "Produkty",
+    "type": "Typ",
+    "files": "Pliki",
+    "data": "Dane"
+  },
+  "labels": {
+    "Product Attributes": "Atrybuty",
+    "thereIsNoValidAttributesForChannel": "Brak prawidłowych atrybutów dla kanału",
+    "addAttributeFilter": "Dodaj filtr atrybutów",
+    "noGroup": "Brak grupy",
+    "productImage": "Obraz produktu",
+    "selectAttributeGroup": "Proszę wybrać grupę atrybutów",
+    "channel": "Kanał",
+    "Channels": "Kanały",
+    "Product Channel Attributes": "Atrybuty kanału",
+    "typeCategoryToSearch": "Proszę wpisać kategorię, aby wyszukać..."
+  },
+  "options": {
+    "productStatus": {
+      "draft": "Wersja robocza",
+      "prepared": "Przygotowany",
+      "reviewed": "Recenzja",
+      "notReady": "Niegotowy",
+      "ready": "Gotowy"
+    },
+    "tag": {
+      "blue": "niebieski",
+      "yellow": "żółty",
+      "green": "zielony",
+      "red": "czerwony",
+      "your tag1": "Państwa tag1",
+      "your tag2": "Pana tag2",
+      "your_tag1": "Państwa tag1",
+      "your_tag2": "Pana tag2"
+    },
+    "taskStatus": {
+      "tech": "Tech",
+      "ass": "Tyłek",
+      "img": "Img",
+      "cat": "Kot",
+      "ch": "Ch",
+      "pr": "Pr",
+      "mar": "Mar"
+    },
+    "template": {
+      "default": "Domyślny"
+    }
+  },
+  "boolFilters": {
+    "notAssociatedRecords": "Bez produktów powiązanych",
+    "notLinkedWithBrand": "Bez marki",
+    "linkedWithCategory": "Z kategorią",
+    "onlyConfigurableProducts": "Tylko produkty konfigurowalne",
+    "withoutMainImage": "Bez głównego obrazu"
+  },
+  "exceptions": {
+    "wrongInputData": "Walidacja nie powiodła się. Nieprawidłowe dane wejściowe.",
+    "itselfAssociation": "Produkt nie może być powiązany z samym sobą.",
+    "recordAssociationAlreadyExists": "Takie skojarzenie produktów już istnieje.",
+    "youCantChangeClassificationInProduct": "Nie można zmienić klasyfikacji w produkcie",
+    "productCanNotLinkToNonLeafCategory": "Produkty nie mogą być powiązane z kategorią inną niż liściasta."
+  },
+  "messages": {
+    "componentsNotInstalled": "Proszę zainstalować moduł Components, aby korzystać z podglądu komponentów.",
+    "emptyComponents": "Produkt nie zawiera komponentów",
+    "removeRelatedRecords": "Czy na pewno chcą Państwo usunąć wszystkie produkty dla wybranego Stowarzyszenia z bieżącego produktu? Wszystkie powiązane produkty zostaną zachowane."
+  }
+}

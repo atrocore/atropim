@@ -1,0 +1,12 @@
+{
+  "exceptions": {
+    "brandIsUsedInProducts": "Nie można usunąć marek, które są używane w niektórych produktach.",
+    "brandWithSuchCodeAlreadyExist": "Marki z takim kodem już istnieją."
+  },
+  "fields": {
+    "products": "Produkty",
+    "description": "Description",
+    "isActive": "Aktywny",
+    "code": "Kod"
+  }
+}

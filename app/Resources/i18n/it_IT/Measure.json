@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributes": "Attributi"
+  },
+  "exceptions": {
+    "measureIsUsedOnAttribute": "La misura '%s' è utilizzata dall'attributo '%s'."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "description": "Description",
+    "image": "Obraz",
+    "name": "Name",
+    "products": "Produkty",
+    "type": "Typ",
+    "plainText": "Zwykły tekst",
+    "richText": "Bogaty tekst"
+  }
+}

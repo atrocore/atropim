@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "category": "Categoría",
+    "isMainImage": "Imagen principal",
+    "tags": "Etiquetas",
+    "preview": "Vista previa",
+    "sorting": "ordenar Orden"
+  }
+}

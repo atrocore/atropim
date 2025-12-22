@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributes": "Atrybuty"
+  },
+  "exceptions": {
+    "measureIsUsedOnAttribute": "Miara \"%s\" jest używana przez atrybut \"%s\"."
+  }
+}

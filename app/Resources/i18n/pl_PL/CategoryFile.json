@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "category": "Kategoria",
+    "isMainImage": "Główny obraz",
+    "tags": "Tagi",
+    "preview": "Podgląd",
+    "sorting": "Sort Order"
+  }
+}

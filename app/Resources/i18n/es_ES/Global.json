@@ -1,0 +1,107 @@
+{
+  "scopeNames": {
+    "Listing": "Listado",
+    "ProductFile": "Ficha de producto",
+    "CategoryFile": "Archivo de categoría",
+    "ProductChannel": "Canal de productos",
+    "ProductCategory": "Categoría de productos",
+    "CategoryChannel": "Canal de categorías",
+    "CategoryHierarchy": "Jerarquía de categorías",
+    "Product": "Producto",
+    "Category": "Categoría",
+    "Channel": "Canal",
+    "AssociatedProduct": "Producto asociado",
+    "Brand": "Marca",
+    "ProductPrice": "Precio del producto",
+    "ChannelPricing": "Precios del canal",
+    "Content": "Contenido",
+    "ContentGroup": "Grupo de contenidos",
+    "ContentItem": "Contenido"
+  },
+  "scopeNamesPlural": {
+    "Listing": "Listados",
+    "ProductFile": "Archivos de productos",
+    "CategoryFile": "Archivos de categoría",
+    "ProductChannel": "Canales de productos",
+    "Category": "Categorías",
+    "Channel": "Canales",
+    "AssociatedProduct": "Productos asociados",
+    "Brand": "Marcas",
+    "Product": "Productos",
+    "ProductPrice": "Precios de los productos",
+    "Content": "Contenido",
+    "ContentGroup": "Grupos de contenido",
+    "ContentItem": "Artículos de contenido"
+  },
+  "options": {
+    "channelsFilter": {
+      "": "Todos los visores",
+      "onlyGlobalScope": "Sólo Ámbito Global"
+    },
+    "scope": {
+      "Channel": "Canal",
+      "Global": "Global"
+    }
+  },
+  "fields": {
+    "channel": "Canal",
+    "listings": "Listados",
+    "product": "Producto",
+    "categories": "Categorías",
+    "channels": "Canales",
+    "products": "Productos",
+    "productStatus": "Estado del producto",
+    "oneGeoType": "Tipo OneGeo",
+    "priceCurrency": "Precio Moneda",
+    "price": "Precio",
+    "sku": "SKU",
+    "ean": "GTIN/EAN",
+    "uvp": "UVP",
+    "tag": "Etiqueta",
+    "amount": "Importe",
+    "mpn": "MPN",
+    "scope": "Alcance",
+    "role": "Rol"
+  },
+  "labels": {
+    "selectAttributes": "Seleccione atributo(s)",
+    "addAttribute": "Añadir atributo",
+    "removeHierarchically": "Borrar jerárquicamente",
+    "setAsMainImage": "Establecer como imagen principal",
+    "setAsMainCategory": "Establecer como categoría principal",
+    "setAsMainVariant": "Establecer como variante principal",
+    "allChannels": "Todos los canales",
+    "linkedChannels": "Canales enlazados",
+    "nonHierarchicalProducts": "Productos no jerárquicos",
+    "productHierarchies": "Jerarquías de productos",
+    "lowestLevelProducts": "Productos de nivel más bajo",
+    "bundleProducts": "Paquetes de productos",
+    "bundledProducts": "Productos agrupados",
+    "Reset selection": "Restablecer selección",
+    "categorySettings": "Ajustes de categoría",
+    "cascade": "Cascade",
+    "restrict": "Restringir",
+    "Add Field": "Añadir filtro",
+    "removeExplain": "Seleccione esta opción para desvincular el atributo de otras Entidades antes de eliminarlo",
+    "categoryPreview": "Vista previa de la categoría",
+    "productPreview": "Vista previa del producto",
+    "typeToSearch": "Escribe y presiona la tecla Enter..."
+  },
+  "dashlets": {
+    "Channels": "Canales",
+    "ProductsByStatus": "Productos por estado",
+    "ProductTypes": "Tipos de productos",
+    "ProductsByTag": "Productos por etiqueta",
+    "ProductStatusOverview": "Resumen del estado del producto",
+    "ProductsByTaskStatus": "Productos por estado de la tarea"
+  },
+  "exceptions": {
+    "massRelateBlocked": "Las relaciones masivas de este tipo están bloqueadas.",
+    "massUnRelateBlocked": "Las desrelaciones masivas de este tipo están bloqueadas.",
+    "onlyForceDeletingAvailable": "Sólo se puede forzar el borrado",
+    "notValid": "Los datos no son válidos"
+  },
+  "messages": {
+    "fieldHasPattern": "{campo} debe contener sólo guión bajo, números y letras en minúsculas"
+  }
+}

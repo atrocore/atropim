@@ -1,0 +1,107 @@
+{
+  "scopeNames": {
+    "Listing": "Wyszczególnienie",
+    "ProductFile": "Plik produktu",
+    "CategoryFile": "Plik kategorii",
+    "ProductChannel": "Kanał produktu",
+    "ProductCategory": "Kategoria produktu",
+    "CategoryChannel": "Kanał kategorii",
+    "CategoryHierarchy": "Hierarchia kategorii",
+    "Product": "Produkt",
+    "Category": "Kategoria",
+    "Channel": "Kanał",
+    "AssociatedProduct": "Produkt powiązany",
+    "Brand": "Marka",
+    "ProductPrice": "Cena produktu",
+    "ChannelPricing": "Wycena kanału",
+    "Content": "Treść",
+    "ContentGroup": "Content Group",
+    "ContentItem": "Zawartość Pozycja"
+  },
+  "scopeNamesPlural": {
+    "Listing": "Listy",
+    "ProductFile": "Pliki produktów",
+    "CategoryFile": "Pliki kategorii",
+    "ProductChannel": "Kanały produktów",
+    "Category": "Kategorie",
+    "Channel": "Kanały",
+    "AssociatedProduct": "Produkty powiązane",
+    "Brand": "Marki",
+    "ProductPrice": "Ceny produktów",
+    "Content": "Spis treści",
+    "ContentGroup": "Grupy zawartości",
+    "ContentItem": "Zawartość",
+    "Product": "Produkty"
+  },
+  "options": {
+    "channelsFilter": {
+      "": "Wszystkie lunety",
+      "onlyGlobalScope": "Tylko zakres globalny"
+    },
+    "scope": {
+      "Channel": "Kanał",
+      "Global": "Globalny"
+    }
+  },
+  "fields": {
+    "channel": "Kanał",
+    "listings": "Listy",
+    "product": "Produkt",
+    "categories": "Kategorie",
+    "channels": "Kanały",
+    "productStatus": "Status produktu",
+    "oneGeoType": "Typ OneGeo",
+    "priceCurrency": "Cena Waluta",
+    "sku": "SKU",
+    "ean": "GTIN/EAN",
+    "uvp": "UVP",
+    "tag": "Znacznik",
+    "amount": "Kwota",
+    "mpn": "MPN",
+    "scope": "Zakres",
+    "products": "Produkty",
+    "price": "Cena",
+    "role": "Rola"
+  },
+  "labels": {
+    "addAttribute": "Dodaj atrybut",
+    "removeHierarchically": "Usuń hierarchicznie",
+    "setAsMainImage": "Ustaw jako obraz główny",
+    "setAsMainCategory": "Ustaw jako kategorię główną",
+    "setAsMainVariant": "Ustawiony jako wariant główny",
+    "allChannels": "Wszystkie kanały",
+    "linkedChannels": "Połączone kanały",
+    "nonHierarchicalProducts": "Produkty niehierarchiczne",
+    "productHierarchies": "Hierarchie produktów",
+    "lowestLevelProducts": "Produkty najniższego poziomu",
+    "bundleProducts": "Produkty w pakiecie",
+    "bundledProducts": "Produkty w pakietach",
+    "Reset selection": "Wybór resetowania",
+    "categorySettings": "Ustawienia kategorii",
+    "cascade": "Kaskada",
+    "restrict": "Ograniczenie",
+    "Add Field": "Dodaj filtr",
+    "removeExplain": "Proszę wybrać tę opcję, aby odłączyć atrybut od innych podmiotów przed usunięciem.",
+    "categoryPreview": "Podgląd kategorii",
+    "productPreview": "Podgląd produktu",
+    "selectAttributes": "Wybierz atrybut(y)",
+    "typeToSearch": "Wpisz i naciśnij Enter..."
+  },
+  "dashlets": {
+    "Channels": "Kanały",
+    "ProductsByStatus": "Produkty według statusu",
+    "ProductTypes": "Rodzaje produktów",
+    "ProductsByTag": "Produkty według tagu",
+    "ProductStatusOverview": "Przegląd statusu produktu",
+    "ProductsByTaskStatus": "Produkty według statusu zadania"
+  },
+  "exceptions": {
+    "massRelateBlocked": "Tego rodzaju masowe działania są zablokowane.",
+    "massUnRelateBlocked": "Masowe odłączanie tego rodzaju jest zablokowane.",
+    "onlyForceDeletingAvailable": "Dostępne jest tylko wymuszone usuwanie",
+    "notValid": "Dane są nieprawidłowe"
+  },
+  "messages": {
+    "fieldHasPattern": "{field} powinno zawierać tylko podkreślenia, cyfry i małe litery."
+  }
+}

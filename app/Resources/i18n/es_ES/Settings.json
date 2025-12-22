@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "Permitir vincular Productos a categorías no hojas.",
+    "behaviorOnCategoryDelete": "Comportamiento al eliminar una categoría"
+  },
+  "labels": {
+    "confirmLocaleChanges": "Si se elimina el idioma, se eliminan automáticamente todos los datos introducidos anteriormente en los campos multilingües y los valores de los atributos para esta configuración regional."
+  },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "¿Está seguro de que desea desactivar la vinculación de productos a categorías que no son hojas? Todos los productos vinculados a ellas se desvincularán automáticamente."
+  },
+  "exceptions": {
+    "languageUsedInChannel": "El lenguaje, utilizado en algún canal, no puede eliminarse."
+  },
+  "tooltips": {
+    "productCanLinkedWithNonLeafCategories": "Si se establece, podrá enlazar productos con categorías que tengan categorías hijas.",
+    "behaviorOnCategoryDelete": "En caso de \"Cascada\" todas las subcategorías de esta categoría serán también eliminadas y todos los productos vinculados a esta categoría o a sus subcategorías serán desvinculados."
+  }
+}

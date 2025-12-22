@@ -14,9 +14,9 @@
     "ChannelPricing": "Tarification par canal",
     "ContentItem": "Élément de contenu",
     "ProductCategory": "Catégorie de produits",
-    "CategoryChannel": "Chaîne de catégorie",
+    "CategoryChannel": "Canal Categorie",
     "CategoryHierarchy": "Hiérarchie des catégories",
-    "Listing": "Liste"
+    "Listing": "Liste Produit"
   },
   "fields": {
     "channel": "Canal",
@@ -36,7 +36,7 @@
     "sku": "SKU",
     "uvp": "UVP",
     "role": "Rôle",
-    "listings": "Listes"
+    "listings": "Listes Produits"
   },
   "options": {
     "scope": {
@@ -57,11 +57,11 @@
     "AssociatedProduct": "Produits associés",
     "Brand": "Marques",
     "ProductPrice": "Prix des produits",
-    "Content": "Contenu",
+    "Content": "Contenus",
     "ContentGroup": "Groupes de contenu",
     "Product": "Produits",
     "ContentItem": "Éléments de contenu",
-    "Listing": "Listes"
+    "Listing": "Listes Produits"
   },
   "labels": {
     "selectAttributes": "Sélectionnez le(s) attribut(s)",

@@ -1,0 +1,8 @@
+{
+  "moduleNames": {
+    "Pim": "PIM"
+  },
+  "moduleDescriptions": {
+    "Pim": "Módulo de gestión de productos y entidades dependientes"
+  }
+}

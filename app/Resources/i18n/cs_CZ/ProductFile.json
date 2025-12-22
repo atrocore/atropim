@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "scope": "Rozsah",
+    "isMainImage": "Hlavní obrázek",
+    "tags": "Štítky",
+    "sorting": "Pořadí řazení"
+  },
+  "options": {
+    "scope": {
+      "Global": "Globální",
+      "Channel": "Kanál"
+    }
+  }
+}

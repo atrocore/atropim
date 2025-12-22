@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "description": "Descripción",
+    "code": "Código",
+    "isActive": "Activo",
+    "mainImage": "Imagen principal",
+    "parents": "Categoría padre",
+    "children": "Categorías de niños",
+    "channels": "Canales",
+    "scope": "Alcance",
+    "productCategories": "Categoría Productos",
+    "products": "Productos",
+    "sortOrder": "ordenar Orden"
+  },
+  "options": {
+    "template": {
+      "default": "Por defecto"
+    }
+  },
+  "boolFilters": {
+    "linkedWithProduct": "Productos"
+  },
+  "messages": {
+    "channelUnlinkConfirm": "¿Está seguro de que quiere desvincular el canal de la categoría, todos los productos vinculados indirectamente a través de la categoría con el canal se desvincularán también?",
+    "categoryRemoveConfirm": "¿Está seguro de que desea eliminar la categoría? Todas las subcategorías de esta categoría también serán eliminadas y todos los productos vinculados a esta categoría o a sus subcategorías serán desvinculados.",
+    "categoryParentChangeConfirm": "Tenga en cuenta que el árbol de categorías actualizado se asignará adicionalmente a los mismos catálogos que el árbol de categorías original. Los productos se desvincularán de todos los canales heredados del árbol de categorías original y se vincularán los canales heredados del árbol de categorías actualizado."
+  },
+  "exceptions": {
+    "categoryHasChildren": "Categoría seleccionada utilizada por otra categoría como padre y no puede ser seleccionada como categoría de producto.",
+    "categoryHasChildCategoryAndCantBeDeleted": "La categoría tiene categoría hijo y no se puede eliminar.",
+    "youCanNotChooseChildCategory": "No puede elegir una categoría infantil o a sí mismo.",
+    "categoryHasProducts": "La categoría con productos relacionados no se puede eliminar.",
+    "parentCategoryHasProducts": "Esta categoría no puede establecerse como categoría padre, es una categoría hoja con productos asignados.",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "No puede cambiar la categoría padre en la categoría raíz con productos vinculados."
+  }
+}

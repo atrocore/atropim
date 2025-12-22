@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "scope": "Alcance",
+    "isMainImage": "Imagen principal",
+    "tags": "Etiquetas",
+    "sorting": "ordenar Orden"
+  },
+  "options": {
+    "scope": {
+      "Global": "Global",
+      "Channel": "Canal"
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "labels": {
+    "nonHierarchicalProducts": "Nehierarchické produkty",
+    "productHierarchies": "Hierarchie produktů",
+    "lowestLevelProducts": "Produkty nejnižší úrovně",
+    "bundleProducts": "Svazkové produkty",
+    "bundledProducts": "Sdružené produkty",
+    "Reset selection": "Obnovení výběru",
+    "categorySettings": "Nastavení kategorie",
+    "cascade": "Kaskáda",
+    "restrict": "Omezit",
+    "Add Field": "Přidat filtr",
+    "removeExplain": "Tuto možnost vyberte, chcete-li před odstraněním atributu zrušit jeho propojení s jinými entitami.",
+    "categoryPreview": "Náhled kategorie",
+    "productPreview": "Náhled produktu",
+    "selectAttributes": "Vyberte atribut(y)",
+    "removeHierarchically": "Hierarchické odstranění",
+    "setAsMainImage": "Nastavit jako hlavní obrázek",
+    "setAsMainCategory": "Nastavit jako hlavní kategorii",
+    "setAsMainVariant": "Nastavit jako hlavní variantu",
+    "allChannels": "Všechny kanály",
+    "linkedChannels": "Propojené kanály",
+    "typeToSearch": "Zadejte text a stiskněte Enter…",
+    "addAttribute": "Přidat atribut"
+  },
+  "dashlets": {
+    "Channels": "Kanály",
+    "ProductsByStatus": "Produkty podle stavu",
+    "ProductTypes": "Typy produktů",
+    "ProductsByTag": "Produkty podle značky",
+    "ProductStatusOverview": "Přehled stavu produktu",
+    "ProductsByTaskStatus": "Produkty podle stavu úkolu"
+  },
+  "exceptions": {
+    "massRelateBlocked": "Hromadné vztahy tohoto druhu jsou blokovány.",
+    "massUnRelateBlocked": "Hromadné odreagování tohoto druhu je blokováno.",
+    "onlyForceDeletingAvailable": "Pouze vynucené odstranění dostupných",
+    "notValid": "Data nejsou platná"
+  },
+  "scopeNamesPlural": {
+    "AssociatedProduct": "Přidružené produkty",
+    "Brand": "Značky",
+    "Product": "Produkty",
+    "ProductPrice": "Ceny produktů",
+    "Content": "Obsah",
+    "ContentGroup": "Skupiny obsahu",
+    "ContentItem": "Položky obsahu",
+    "Category": "Kategorie",
+    "Channel": "Kanály",
+    "Listing": "Seznamy",
+    "ProductFile": "Soubory produktů",
+    "CategoryFile": "Kategorie Soubory",
+    "ProductChannel": "Produktové kanály"
+  },
+  "options": {
+    "channelsFilter": {
+      "": "Všechny obory",
+      "onlyGlobalScope": "Pouze globální rozsah"
+    },
+    "scope": {
+      "Global": "Globální",
+      "Channel": "Kanál"
+    }
+  },
+  "fields": {
+    "listings": "Seznamy",
+    "product": "Produkt",
+    "categories": "Kategorie",
+    "channels": "Kanály",
+    "products": "Produkty",
+    "productStatus": "Stav produktu",
+    "oneGeoType": "Typ OneGeo",
+    "priceCurrency": "Cena Měna",
+    "price": "Cena",
+    "sku": "SKU",
+    "ean": "GTIN/EAN",
+    "uvp": "UVP",
+    "tag": "Štítek",
+    "amount": "Částka",
+    "mpn": "MPN",
+    "channel": "Kanál",
+    "scope": "Rozsah",
+    "role": "Role"
+  },
+  "scopeNames": {
+    "Listing": "Seznam",
+    "ProductFile": "Soubor produktu",
+    "CategoryFile": "Soubor kategorie",
+    "ProductChannel": "Kanál výrobku",
+    "ProductCategory": "Kategorie produktu",
+    "CategoryChannel": "Kategorie Kanál",
+    "CategoryHierarchy": "Hierarchie kategorií",
+    "Product": "Produkt",
+    "Category": "Kategorie",
+    "AssociatedProduct": "Přidružený produkt",
+    "Brand": "Značka",
+    "ProductPrice": "Cena produktu",
+    "ChannelPricing": "Stanovení cen v kanálech",
+    "Content": "Obsah",
+    "ContentGroup": "Obsahová skupina",
+    "ContentItem": "Položka obsahu",
+    "Channel": "Kanál"
+  },
+  "messages": {
+    "fieldHasPattern": "{pole} by mělo obsahovat pouze podtržítka, čísla a malé abecedy."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "description": "Description",
+    "text": "Tekst",
+    "products": "Produkty",
+    "tags": "Tagi",
+    "name": "Tytuł",
+    "status": "Status",
+    "type": "Typ",
+    "metaTitle": "Meta Title",
+    "metaDescription": "Meta Description",
+    "contentGroup": "Content Group"
+  },
+  "labels": {
+    "draft": "Wersja robocza",
+    "written": "Na piśmie",
+    "reviewed": "Recenzja",
+    "published": "Opublikowano",
+    "review": "Recenzja",
+    "news": "Aktualności",
+    "promotional": "Promocja"
+  }
+}

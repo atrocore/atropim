@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "channels": "Kanály",
+    "productCategories": "Kategorie produktů",
+    "products": "Produkty",
+    "mainImage": "Hlavní obrázek",
+    "parents": "Nadřazená kategorie",
+    "children": "Kategorie dětí",
+    "scope": "Rozsah",
+    "sortOrder": "Pořadí řazení",
+    "name": "Jméno",
+    "description": "Popis",
+    "code": "Kód",
+    "isActive": "Aktivní"
+  },
+  "boolFilters": {
+    "linkedWithProduct": "Má produkty"
+  },
+  "messages": {
+    "channelUnlinkConfirm": "Jste si jisti, že chcete zrušit propojení kanálu s kategorií, všechny produkty nepřímo propojené přes kategorii s kanálem budou také zrušeny?",
+    "categoryRemoveConfirm": "Opravdu chcete odstranit kategorii? Všechny podkategorie této kategorie budou také odstraněny a všechny produkty, které jsou s touto kategorií nebo jejími podkategoriemi spojeny, budou odpojeny.",
+    "categoryParentChangeConfirm": "Uvědomte si, že aktualizovaný strom kategorií bude dodatečně přiřazen ke stejným katalogům jako původní strom kategorií. Produkty budou odpojeny od všech kanálů zděděných z původního stromu kategorií a budou propojeny s kanály zděděnými z aktualizovaného stromu kategorií."
+  },
+  "exceptions": {
+    "categoryHasChildren": "Vybranou kategorii používá jiná kategorie jako nadřazenou a nelze ji vybrat jako kategorii produktu.",
+    "categoryHasChildCategoryAndCantBeDeleted": "Kategorie má podřízenou kategorii a nelze ji odstranit.",
+    "youCanNotChooseChildCategory": "Nelze vybrat kategorii dítěte ani ji samotnou.",
+    "categoryHasProducts": "Kategorie se souvisejícími produkty nelze odstranit.",
+    "parentCategoryHasProducts": "Tuto kategorii nelze nastavit jako nadřazenou kategorii, jedná se o listovou kategorii s přiřazenými produkty.",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "V kořenové kategorii s propojenými produkty nelze změnit nadřazenou kategorii."
+  },
+  "options": {
+    "template": {
+      "default": "Výchozí"
+    }
+  }
+}

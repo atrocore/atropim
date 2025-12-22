@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "Umožňuje propojit produkty s jinými než listovými kategoriemi.",
+    "behaviorOnCategoryDelete": "Chování při mazání kategorie"
+  },
+  "labels": {
+    "confirmLocaleChanges": "Pokud je jazyk odstraněn, jsou automaticky odstraněny všechny údaje, které jste dříve zadali do vícejazyčných polí a hodnot atributů pro toto prostředí."
+  },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Jste si jisti, že chcete zakázat propojování produktů s nelistovými kategoriemi? Všechny produkty s nimi propojené budou automaticky odpojeny."
+  },
+  "exceptions": {
+    "languageUsedInChannel": "Jazyk, který se používá v některých kanálech, nelze odstranit."
+  },
+  "tooltips": {
+    "productCanLinkedWithNonLeafCategories": "Pokud je nastaveno, budete moci propojit produkty s kategoriemi, které mají podřízené kategorie.",
+    "behaviorOnCategoryDelete": "V případě \"kaskády\" budou odstraněny také všechny podkategorie této kategorie a všechny produkty, které jsou s touto kategorií nebo jejími podkategoriemi propojeny, budou odpojeny."
+  }
+}

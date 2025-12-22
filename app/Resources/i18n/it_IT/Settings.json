@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "productCanLinkedWithNonLeafCategories": "Consente di collegare i Prodotti a categorie non foglia.",
+    "behaviorOnCategoryDelete": "Comportamento in caso di cancellazione della categoria"
+  },
+  "labels": {
+    "confirmLocaleChanges": "Se la lingua viene rimossa, tutti i dati precedentemente inseriti nei campi multilingue e i valori degli attributi per questo locale vengono automaticamente rimossi."
+  },
+  "messages": {
+    "productCanLinkedWithNonLeafCategoriesChangeConfirm": "È sicuro di voler disabilitare il collegamento dei prodotti alle categorie non-foglia? Tutti i prodotti ad esse collegati saranno automaticamente scollegati."
+  },
+  "exceptions": {
+    "languageUsedInChannel": "La lingua, utilizzata in alcuni canali, non può essere rimossa."
+  },
+  "tooltips": {
+    "productCanLinkedWithNonLeafCategories": "Se impostato, potrà collegare i prodotti con le categorie, che hanno categorie figlio.",
+    "behaviorOnCategoryDelete": "In caso di \"Cascata\", tutte le sottocategorie di questa categoria saranno rimosse e tutti i prodotti collegati a questa categoria o alle sue sottocategorie saranno scollegati."
+  }
+}

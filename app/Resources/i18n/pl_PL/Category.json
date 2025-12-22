@@ -1,0 +1,37 @@
+{
+  "messages": {
+    "categoryParentChangeConfirm": "Proszę wziąć pod uwagę, że zaktualizowane drzewo kategorii zostanie dodatkowo przypisane do tych samych katalogów, co oryginalne drzewo kategorii. Produkty zostaną odłączone od wszystkich kanałów odziedziczonych po oryginalnym drzewie kategorii i połączone z kanałami odziedziczonymi po zaktualizowanym drzewie kategorii.",
+    "channelUnlinkConfirm": "Czy na pewno chce Pan odłączyć kanał od kategorii, wszystkie produkty powiązane pośrednio przez kategorię z kanałem również zostaną odłączone?",
+    "categoryRemoveConfirm": "Czy na pewno chcą Państwo usunąć kategorię? Wszystkie podkategorie tej kategorii zostaną również usunięte, a wszystkie produkty powiązane z tą kategorią lub jej podkategoriami zostaną odłączone."
+  },
+  "exceptions": {
+    "categoryHasChildren": "Wybrana kategoria jest używana przez inną kategorię jako nadrzędna i nie może być wybrana jako kategoria produktu.",
+    "categoryHasChildCategoryAndCantBeDeleted": "Kategoria ma kategorię podrzędną i nie można jej usunąć.",
+    "youCanNotChooseChildCategory": "Nie można wybrać kategorii podrzędnej ani jej samej.",
+    "categoryHasProducts": "Kategorii z powiązanymi produktami nie można usunąć.",
+    "parentCategoryHasProducts": "Ta kategoria nie może być ustawiona jako kategoria nadrzędna, jest to kategoria-liść z przypisanymi produktami.",
+    "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "Nie można zmienić kategorii nadrzędnej w kategorii głównej z połączonymi produktami."
+  },
+  "fields": {
+    "mainImage": "Główny obraz",
+    "parents": "Kategoria nadrzędna",
+    "children": "Kategorie dzieci",
+    "channels": "Kanały",
+    "scope": "Zakres",
+    "productCategories": "Kategoria Produkty",
+    "name": "Name",
+    "description": "Description",
+    "code": "Kod",
+    "isActive": "Aktywny",
+    "products": "Produkty",
+    "sortOrder": "Sort Order"
+  },
+  "boolFilters": {
+    "linkedWithProduct": "Ma produkty"
+  },
+  "options": {
+    "template": {
+      "default": "Domyślny"
+    }
+  }
+}

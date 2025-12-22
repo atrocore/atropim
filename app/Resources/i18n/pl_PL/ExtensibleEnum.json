@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributes": "Atrybuty"
+  },
+  "exceptions": {
+    "extensibleEnumIsUsedOnAttribute": "Lista '%s' jest używana przez atrybut '%s'."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "description": "Popis",
+    "isActive": "Aktivní",
+    "code": "Kód",
+    "categories": "Kategorie",
+    "products": "Produkty"
+  },
+  "labels": {
+    "main": "Hlavní jazyk",
+    "unLinkCategoryFromChannel": "Zrušení propojení kategorie '%s' s kanálem '%s'",
+    "linkCategoryWithChannel": "Propojení kategorie '%s' s kanálem '%s'",
+    "changeCategoryForChannel": "Změna kategorie na '%s' pro kanál '%s'"
+  },
+  "options": {
+    "template": {
+      "default": "Výchozí"
+    }
+  },
+  "messages": {
+    "categoryChangeConfirm": "Jste si jisti, že chcete zrušit (nebo změnit) strom kategorií pro tento kanál? Všechny produkty propojené s původním stromem kategorií budou z tohoto kanálu odpojeny (a produkty nového stromu kategorií s ním budou propojeny)."
+  },
+  "exceptions": {
+    "channelWithSuchCodeAlreadyExist": "Kanál s takovým CODE již existuje",
+    "channelHasProducts": "Kanál se souvisejícími produkty nelze odstranit.",
+    "channelHasCategory": "Kanál se stromem souvisejících kategorií nelze odstranit."
+  }
+}

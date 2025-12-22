@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "scope": "Ambito di applicazione",
+    "isMainImage": "Immagine principale",
+    "tags": "Tag",
+    "sorting": "Ordinamento"
+  },
+  "options": {
+    "scope": {
+      "Global": "Globale",
+      "Channel": "Canale"
+    }
+  }
+}

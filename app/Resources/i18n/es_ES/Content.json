@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "tags": "Etiquetas",
+    "name": "Título",
+    "status": "Status",
+    "type": "Type",
+    "description": "Descripción",
+    "text": "Área de texto simple",
+    "metaTitle": "Meta Título",
+    "metaDescription": "Meta Descripción",
+    "contentGroup": "Grupo de contenidos",
+    "products": "Productos"
+  },
+  "labels": {
+    "draft": "Borrador",
+    "written": "Escrito",
+    "reviewed": "Revisado",
+    "published": "Publicado",
+    "review": "Revise",
+    "news": "Noticias",
+    "promotional": "Promocional"
+  }
+}

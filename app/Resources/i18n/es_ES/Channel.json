@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "description": "Descripción",
+    "isActive": "Active",
+    "categories": "Categorías",
+    "code": "Código",
+    "products": "Productos"
+  },
+  "labels": {
+    "unLinkCategoryFromChannel": "Desvincular la categoría '%s' del canal '%s'",
+    "linkCategoryWithChannel": "Enlazar categoría '%s' con canal '%s'",
+    "changeCategoryForChannel": "Cambiar la categoría a '%s' para el canal '%s'",
+    "main": "Lengua principal"
+  },
+  "options": {
+    "template": {
+      "default": "Por defecto"
+    }
+  },
+  "messages": {
+    "categoryChangeConfirm": "¿Está seguro de que desea desvincular (o cambiar) el árbol de categorías de este canal? Todos los productos vinculados con el árbol de categorías original, serán desvinculados de este canal (y los productos del nuevo árbol de categorías serán vinculados con él)."
+  },
+  "exceptions": {
+    "channelWithSuchCodeAlreadyExist": "Ya existen canales con dicho CÓDIGO",
+    "channelHasProducts": "El canal con productos relacionados no se puede eliminar.",
+    "channelHasCategory": "El canal con el árbol de categorías relacionado no se puede eliminar."
+  }
+}

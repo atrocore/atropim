@@ -1,0 +1,89 @@
+{
+  "options": {
+    "tag": {
+      "red": "červená",
+      "blue": "modrá",
+      "yellow": "žlutá",
+      "green": "zelená",
+      "your tag1": "vaše značka1",
+      "your tag2": "vaše značka2",
+      "your_tag1": "vaše značka1",
+      "your_tag2": "vaše značka2"
+    },
+    "productStatus": {
+      "draft": "Návrh",
+      "prepared": "Připraveno",
+      "reviewed": "Recenze:",
+      "notReady": "Není připraven",
+      "ready": "Připraveno"
+    },
+    "taskStatus": {
+      "mar": "Mar",
+      "tech": "Tech",
+      "ass": "Zadek",
+      "img": "Obrázek",
+      "cat": "Kočka",
+      "ch": "Ch",
+      "pr": "Pr"
+    },
+    "template": {
+      "default": "Výchozí"
+    }
+  },
+  "labels": {
+    "noGroup": "Žádná skupina",
+    "productImage": "Obrázek produktu",
+    "selectAttributeGroup": "Vybrat skupinu atributů",
+    "thereIsNoValidAttributesForChannel": "Pro kanál nejsou k dispozici žádné platné atributy",
+    "addAttributeFilter": "Přidat filtr atributů",
+    "Channels": "Kanály",
+    "Product Channel Attributes": "Atributy kanálu",
+    "typeCategoryToSearch": "Zadejte kategorii pro vyhledávání...",
+    "channel": "Kanál",
+    "Product Attributes": "Atributy"
+  },
+  "boolFilters": {
+    "notAssociatedRecords": "Bez přidružených produktů",
+    "notLinkedWithBrand": "Bez značky",
+    "linkedWithCategory": "S kategorií",
+    "onlyConfigurableProducts": "Pouze konfigurovatelné produkty",
+    "withoutMainImage": "Bez hlavního obrazu"
+  },
+  "exceptions": {
+    "wrongInputData": "Ověření se nezdařilo. Špatné vstupní údaje.",
+    "itselfAssociation": "Výrobek nemůže být spojen sám se sebou.",
+    "recordAssociationAlreadyExists": "Takové sdružení výrobků již existuje.",
+    "youCantChangeClassificationInProduct": "Klasifikaci nelze změnit v okně Produkt",
+    "productCanNotLinkToNonLeafCategory": "Produkty nelze propojit s jinou než listovou kategorií."
+  },
+  "messages": {
+    "componentsNotInstalled": "Nainstalujte modul Komponenty, abyste mohli používat náhled komponent.",
+    "emptyComponents": "Výrobek nemá komponenty",
+    "removeRelatedRecords": "Jste si jisti, že chcete z aktuálního produktu odebrat všechny produkty pro vybrané sdružení? Všechny související produkty budou zachovány."
+  },
+  "fields": {
+    "mainImage": "Hlavní obrázek",
+    "data": "Data",
+    "categories": "Kategorie",
+    "product": "Hlavní produkt",
+    "products": "Produkty",
+    "brand": "Značka",
+    "productStatus": "Stav produktu",
+    "amount": "Částka",
+    "price": "Nákupní cena",
+    "ean": "GTIN/EAN",
+    "rrp": "Doporučená maloobchodní cena (RRP)",
+    "image": "Hlavní obrázek",
+    "tag": "Štítek",
+    "channels": "Kanály",
+    "basePriceAmount": "Částka základní ceny",
+    "packedAmount": "Balené množství",
+    "contents": "Obsah",
+    "taskStatus": "Stav úkolu",
+    "calls": "Hovory",
+    "contentItems": "Položky obsahu",
+    "variantSpecificAttributes": "Specifické atributy varianty",
+    "files": "Soubory",
+    "type": "Typ"
+  }
+}

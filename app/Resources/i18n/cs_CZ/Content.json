@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "review": "Recenze",
+    "news": "Zprávy",
+    "promotional": "Propagační",
+    "draft": "Návrh",
+    "written": "Napsáno na",
+    "reviewed": "Recenze:",
+    "published": "Zveřejněno na"
+  },
+  "fields": {
+    "metaTitle": "Meta název",
+    "metaDescription": "Meta popis",
+    "contentGroup": "Obsahová skupina",
+    "products": "Produkty",
+    "tags": "Štítky",
+    "name": "Název",
+    "status": "Stav",
+    "type": "Typ",
+    "description": "Popis",
+    "text": "Text"
+  }
+}
