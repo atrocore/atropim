@@ -10,18 +10,5 @@
     "tags": {
       "type": "array"
     }
-  },
-  "links": {
-    "product": {
-      "type": "belongsTo",
-      "entity": "Product"
-    }
-  },
-  "uniqueIndexes": {
-    "unique_relation": [
-      "deleted",
-      "product_id",
-      "file_id"
-    ]
   }
 }

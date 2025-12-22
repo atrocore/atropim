@@ -22,11 +22,6 @@ use Espo\ORM\EntityCollection;
 class Product extends Hierarchy
 {
     /**
-     * @var string
-     */
-    protected $entityType = "Product";
-
-    /**
      * Get product categories
      *
      * @return EntityCollection
@@ -38,13 +33,7 @@ class Product extends Hierarchy
             throw new Error('No such Product');
         }
 
-        return $this
-            ->getEntityManager()
-            ->getRepository('Category')
-            ->distinct()
-            ->join('productCategories')
-            ->where(['productCategories.productId' => $this->get('id')])
-            ->find();
+        return $this->get('categories', ['disableCache' => true]);
     }
 
     /**

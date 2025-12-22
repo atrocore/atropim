@@ -31,11 +31,13 @@ class ProductFile extends Relation
     {
         parent::afterSave($entity, $options);
 
+        $field = $this->getRelatedLink('Product');
+
         if ($entity->isAttributeChanged('isMainImage') && !empty($entity->get('isMainImage'))) {
             $productFiles = $this
                 ->where([
                     'isMainImage' => true,
-                    'productId'   => $entity->get('productId'),
+                    $field . 'Id' => $entity->get($field . 'Id'),
                     'id!='        => $entity->get('id')
                 ])
                 ->find();
@@ -49,7 +51,7 @@ class ProductFile extends Relation
 
     public function updateSortOrder(string $productId, array $filesIds): void
     {
-        $collection = $this->where(['productId' => $productId, 'fileId' => $filesIds])->find();
+        $collection = $this->where([$this->getRelatedLink('Product') . 'Id' => $productId, 'fileId' => $filesIds])->find();
         if (empty($collection[0])) {
             return;
         }
@@ -68,6 +70,6 @@ class ProductFile extends Relation
 
     public function removeByProductId(string $productId): void
     {
-        $this->where(['productId' => $productId])->removeCollection();
+        $this->where([$this->getRelatedLink('Product') . 'Id' => $productId])->removeCollection();
     }
 }

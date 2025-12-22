@@ -29,12 +29,12 @@ class Product extends Hierarchy
         // set main images
         if (count($collection) > 0) {
             $conn = $this->getEntityManager()->getConnection();
-
+            $idColumn = Util::toUnderScore(lcfirst($this->entityName) . 'Id');
             $res = $conn->createQueryBuilder()
-                ->select('ps.id, a.id as file_id, a.name, ps.product_id')
-                ->from('product_file', 'ps')
+                ->select("ps.id, a.id as file_id, a.name, ps.$idColumn")
+                ->from(Util::toUnderScore(lcfirst($this->entityName) . 'File'), 'ps')
                 ->innerJoin('ps', 'file', 'a', 'a.id=ps.file_id AND a.deleted=:false')
-                ->where('ps.product_id IN (:productsIds)')
+                ->where("ps.$idColumn IN (:productsIds)")
                 ->andWhere('ps.is_main_image = :true')
                 ->andWhere('ps.deleted = :false')
                 ->setParameter('productsIds', array_column($collection->toArray(), 'id'), $conn::PARAM_STR_ARRAY)
@@ -46,7 +46,7 @@ class Product extends Hierarchy
                 $entity->set('mainImageId', null);
                 $entity->set('mainImageName', null);
                 foreach ($res as $item) {
-                    if ($item['product_id'] === $entity->get('id')) {
+                    if ($item[$idColumn] === $entity->get('id')) {
                         $entity->set('mainImageId', $item['file_id']);
                         $entity->set('mainImageName', $item['name']);
                     }
@@ -81,10 +81,10 @@ class Product extends Hierarchy
 
             $relEntity = $this
                 ->getEntityManager()
-                ->getRepository('ProductFile')
+                ->getRepository($this->entityName . 'File')
                 ->where([
-                    'productId'   => $entity->get('id'),
-                    'isMainImage' => true
+                    lcfirst($this->entityName) . 'Id' => $entity->get('id'),
+                    'isMainImage'                     => true
                 ])
                 ->findOne();
 
@@ -127,16 +127,16 @@ class Product extends Hierarchy
     {
         $productFiles = $this
             ->getEntityManager()
-            ->getRepository('ProductFile')
-            ->where(['productId' => $duplicatingProduct->get('id')])
+            ->getRepository($this->entityName . 'File')
+            ->where([lcfirst($this->entityName) . 'Id' => $duplicatingProduct->get('id')])
             ->find();
 
         foreach ($productFiles as $productFile) {
             $item = $productFile->toArray();
             $item['id'] = Util::generateId();
-            $item['productId'] = $product->get('id');
+            $item[lcfirst($this->entityName) . 'Id'] = $product->get('id');
 
-            $entity = $this->getEntityManager()->getEntity('ProductFile');
+            $entity = $this->getEntityManager()->getEntity($this->entityName . 'File');
             $entity->set($item);
 
             $this->getEntityManager()->saveEntity($entity);
@@ -178,11 +178,11 @@ class Product extends Hierarchy
         }
 
         $where = [
-            'productId' => $entity->get('id'),
-            'fileId'    => $file->get('id')
+            lcfirst($this->entityName) . 'Id' => $entity->get('id'),
+            'fileId'                          => $file->get('id')
         ];
 
-        $repository = $this->getEntityManager()->getRepository('ProductFile');
+        $repository = $this->getEntityManager()->getRepository($this->entityName . 'File');
 
         $productFile = $repository->where($where)->findOne();
         if (empty($productFile)) {
@@ -216,7 +216,7 @@ class Product extends Hierarchy
     protected function getMandatoryLinksToMerge(): array
     {
         $links = parent::getMandatoryLinksToMerge();
-        $links[] = 'associatedRelatedProduct';
+        $links[] = 'associatedRelated' . $this->entityName;
 
         return $links;
     }

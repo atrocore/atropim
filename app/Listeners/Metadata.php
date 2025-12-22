@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
 
 class Metadata extends AbstractListener
@@ -32,6 +33,12 @@ class Metadata extends AbstractListener
         $data['entityDefs']['Listing']['fields']['classifications']['layoutListDisabled'] = true;
         $data['entityDefs']['Listing']['fields']['classifications']['layoutDetailDisabled'] = true;
         $data['entityDefs']['Listing']['links']['classifications']['layoutRelationshipsDisabled'] = true;
+
+        foreach ($data['scopes'] as $entityType => $scopeDef) {
+            if (!empty($scopeDef['primaryEntityId']) && $scopeDef['primaryEntityId'] == 'Product') {
+                $data['clientDefs'][$entityType]['relationshipPanels']['files']['dragDrop']['sortField'] = Util::toUnderScore(lcfirst($entityType)) . '_file_mm.sorting';
+            }
+        }
 
         $event->setArgument('data', $data);
     }

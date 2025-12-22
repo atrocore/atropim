@@ -15,6 +15,7 @@ namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -24,11 +25,12 @@ class Product extends Hierarchy
 {
     public function getProductsIdsViaAccountId(string $accountId): array
     {
+        $idColumn = $this->getTableName() . '_id';
         $res = $this->getConnection()->createQueryBuilder()
             ->select('p.id')
             ->distinct()
-            ->from($this->getConnection()->quoteIdentifier('product_channel'), 'pc')
-            ->innerJoin('pc', $this->getConnection()->quoteIdentifier('product'), 'p', 'pc.product_id=p.id AND p.deleted=:false')
+            ->from($this->getConnection()->quoteIdentifier($this->getTableName() . '_channel'), 'pc')
+            ->innerJoin('pc', $this->getConnection()->quoteIdentifier($this->getTableName()), 'p', "pc.$idColumn=p.id AND p.deleted=:false")
             ->innerJoin('pc', $this->getConnection()->quoteIdentifier('channel'), 'c', 'pc.channel_id=c.id AND c.deleted=:false')
             ->innerJoin('pc', $this->getConnection()->quoteIdentifier('account'), 'a', 'a.channel_id=c.id AND a.deleted=:false')
             ->where('pc.deleted=:false')
@@ -42,12 +44,13 @@ class Product extends Hierarchy
 
     public function getCategoriesChannelsIds(string $productId): array
     {
+        $idColumn = $this->getTableName() . '_id';
         $res = $this->getConnection()->createQueryBuilder()
             ->select('cc.channel_id')
             ->from($this->getConnection()->quoteIdentifier('category_channel'), 'cc')
             ->where('cc.deleted=:false')
             ->andWhere(
-                "cc.category_id IN (SELECT pc.category_id FROM {$this->getConnection()->quoteIdentifier('product_category')} pc WHERE pc.deleted=:false AND pc.product_id=:productId)"
+                "cc.category_id IN (SELECT pc.category_id FROM {$this->getConnection()->quoteIdentifier($this->getTableName() . '_category')} pc WHERE pc.deleted=:false AND pc.$idColumn=:productId)"
             )
             ->setParameter('productId', $productId)
             ->setParameter('false', false, Mapper::getParameterType(false))
@@ -61,18 +64,20 @@ class Product extends Hierarchy
         return $this->getConfig()->get('inputLanguageList', []);
     }
 
+
     public function unlinkProductsFromNonLeafCategories(): void
     {
+        $idColumn = $this->getTableName() . '_id';
         $data = $this->getConnection()->createQueryBuilder()
-            ->select('product_id, category_id')
-            ->from('product_category')
+            ->select("$idColumn, category_id")
+            ->from($this->getTableName() . '_category')
             ->where('category_id IN (SELECT DISTINCT parent_id FROM category_hierarchy where deleted=:false)')
             ->andWhere('deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
             ->fetchAllAssociative();
 
         foreach ($data as $row) {
-            $product = $this->get($row['product_id']);
+            $product = $this->get($row[$idColumn]);
             $category = $this->getEntityManager()->getRepository('Category')->get($row['category_id']);
             if (!empty($product) && !empty($category)) {
                 $this->unrelate($product, 'categories', $category);
@@ -122,10 +127,11 @@ class Product extends Hierarchy
 
     public function getProductCategoryLinkData(array $productsIds, array $categoriesIds): array
     {
+        $idColumn = $this->getTableName() . '_id';
         return $this->getConnection()->createQueryBuilder()
             ->select('pc.*')
-            ->from($this->getConnection()->quoteIdentifier('product_category'), 'pc')
-            ->where('pc.product_id IN (:productsIds)')
+            ->from($this->getConnection()->quoteIdentifier($this->getTableName() . '_category'), 'pc')
+            ->where("pc.$idColumn IN (:productsIds)")
             ->andWhere('pc.category_id IN (:categoriesIds)')
             ->andWhere('pc.deleted = :false')
             ->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds))
@@ -161,12 +167,15 @@ class Product extends Hierarchy
             $cascadeUpdate = false;
         }
 
+        $idColumn = $this->getTableName() . '_id';
+        $tableName = $this->getConnection()->quoteIdentifier($this->getTableName() . '_category');
+
         // update current
         $this->getConnection()->createQueryBuilder()
-            ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+            ->update($tableName, 'pc')
             ->set('sorting', ':sorting')
             ->where('pc.category_id = :categoryId')
-            ->andWhere('pc.product_id = :productId')
+            ->andWhere("pc.$idColumn = :productId")
             ->andWhere('pc.deleted = :false')
             ->setParameter('sorting', $sorting, Mapper::getParameterType($sorting))
             ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
@@ -178,11 +187,11 @@ class Product extends Hierarchy
             // get next records
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('pc.id')
-                ->from($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                ->from($tableName, 'pc')
                 ->where('pc.sorting >= :sorting')
                 ->andWhere('pc.category_id = :categoryId')
                 ->andWhere('pc.deleted = :false')
-                ->andWhere('pc.product_id != :productId')
+                ->andWhere("pc.$idColumn != :productId")
                 ->setParameter('sorting', $sorting, Mapper::getParameterType($sorting))
                 ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
                 ->setParameter('productId', $productId, Mapper::getParameterType($productId))
@@ -198,7 +207,7 @@ class Product extends Hierarchy
                     $max = $max + 10;
 
                     $this->getConnection()->createQueryBuilder()
-                        ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                        ->update($tableName, 'pc')
                         ->set('sorting', ':sorting')
                         ->where('pc.id = :id')
                         ->setParameter('sorting', $max, Mapper::getParameterType($max))
@@ -217,13 +226,16 @@ class Product extends Hierarchy
      */
     public function updateSortOrderInCategory(string $categoryId, array $ids): void
     {
+        $idColumn = $this->getTableName() . '_id';
+        $tableName = $this->getTableName() . '_category';
+
         foreach ($ids as $k => $id) {
             $sortOrder = (int)$k * 10;
 
             $this->getConnection()->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier('product_category'), 'pc')
+                ->update($tableName, 'pc')
                 ->set('sorting', ':sorting')
-                ->where('pc.product_id = :productId')
+                ->where("pc.$idColumn = :productId")
                 ->andWhere('pc.category_id = :categoryId')
                 ->andWhere('pc.deleted = :false')
                 ->setParameter('sorting', $sortOrder, Mapper::getParameterType($sortOrder))
@@ -232,6 +244,11 @@ class Product extends Hierarchy
                 ->setParameter('false', false, Mapper::getParameterType(false))
                 ->executeQuery();
         }
+    }
+
+    public function getTableName(): string
+    {
+        return Util::toUnderScore(lcfirst($this->entityName));
     }
 
     protected function init()
@@ -244,8 +261,8 @@ class Product extends Hierarchy
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this->getEntityManager()->getRepository('ProductFile')->removeByProductId($entity->get('id'));
-        $this->getEntityManager()->getRepository('ProductChannel')->where(['productId' => $entity->get('id')])->removeCollection();
+        $this->getEntityManager()->getRepository($this->entityName . 'File')->removeByProductId($entity->get('id'));
+        $this->getEntityManager()->getRepository($this->entityName . 'Channel')->where([lcfirst($this->entityName) . 'Id' => $entity->get('id')])->removeCollection();
 
         parent::afterRemove($entity, $options);
     }
@@ -256,7 +273,7 @@ class Product extends Hierarchy
 
         $this->getConnection()
             ->createQueryBuilder()
-            ->update('associated_product')
+            ->update('associated_' . $this->getTableName())
             ->set('deleted', ':false')
             ->where('associating_item_id = :productId')
             ->orWhere('associated_item_id = :productId')
@@ -271,7 +288,7 @@ class Product extends Hierarchy
     {
         $res = $this->getConnection()->createQueryBuilder()
             ->select('t.entity_id, t.parent_id')
-            ->from($this->getConnection()->quoteIdentifier('product_hierarchy'), 't')
+            ->from($this->getConnection()->quoteIdentifier($this->getTableName() . '_hierarchy'), 't')
             ->where('t.entity_id IN (:ids)')
             ->andWhere('t.deleted = :false')
             ->setParameter('ids', $productIds, Mapper::getParameterType($productIds))

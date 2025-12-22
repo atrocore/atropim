@@ -15,7 +15,7 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
             let list = Dep.prototype.getActionList.call(this);
             let model = this.model.relationModel
             list.forEach((item, index) => {
-                if (model) {
+                if (model && list[index].data) {
                     list[index].data.file = model.get('id');
                 }
             });
