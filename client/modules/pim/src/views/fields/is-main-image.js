@@ -25,7 +25,7 @@ Espo.define('pim:views/fields/is-main-image', 'views/fields/bool',
 
         isImage() {
             let model = this.model
-            if(model.name==='ProductFile'){
+            if (model.name === 'ProductFile' || this.getMetadata().get(['scopes', this.model.name, 'derivativeForRelation']) === 'ProductFile') {
                 model = this.getParentView().model
             }
             return $.inArray(model.get('extension'), this.getMetadata().get('app.file.image.extensions') || []) !== -1;

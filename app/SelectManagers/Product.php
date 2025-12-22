@@ -11,6 +11,7 @@
 
 namespace Pim\SelectManagers;
 
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -50,7 +51,7 @@ class Product extends AbstractSelectManager
         $brandId = (string)$this->getSelectCondition('notLinkedWithBrand');
 
         if (!empty($brandId)) {
-            $products = $this->getEntityManager()->getRepository('Product')
+            $products = $this->getEntityManager()->getRepository($this->entityType)
                 ->select(['id'])
                 ->where(['brandId' => $brandId])
                 ->find();
@@ -65,7 +66,7 @@ class Product extends AbstractSelectManager
     {
         $products = $this
             ->getEntityManager()
-            ->getRepository('Product')
+            ->getRepository($this->entityType)
             ->join('classifications')
             ->select(['id'])
             ->where(['classifications.id' => $classificationIds])
@@ -99,7 +100,7 @@ class Product extends AbstractSelectManager
             return;
         }
 
-        $repository = $category = $this->getEntityManager()->getRepository('Category');
+        $repository = $this->getEntityManager()->getRepository('Category');
         if (empty($category = $repository->get($id))) {
             throw new BadRequest('No such category');
         }
@@ -110,7 +111,10 @@ class Product extends AbstractSelectManager
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        $qb->andWhere("{$tableAlias}.id IN (SELECT product_id FROM product_category WHERE product_id IS NOT NULL AND deleted=:false AND category_id IN (:categoriesIds))");
+        $relTable = Util::toUnderScore(lcfirst($this->entityType).'Category');
+        $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
+
+        $qb->andWhere("{$tableAlias}.id IN (SELECT $idColumn FROM $relTable WHERE $idColumn IS NOT NULL AND deleted=:false AND category_id IN (:categoriesIds))");
         $qb->setParameter('false', false, Mapper::getParameterType(false));
         $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
     }
@@ -119,10 +123,13 @@ class Product extends AbstractSelectManager
     {
         $connection = $this->getEntityManager()->getConnection();
 
+        $relTable = Util::toUnderScore(lcfirst($this->entityType).'File');
+        $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
+
         $res = $connection->createQueryBuilder()
             ->select('p.id')
-            ->from($connection->quoteIdentifier('product'), 'p')
-            ->where('p.id NOT IN (SELECT DISTINCT pa.product_id FROM product_file pa WHERE pa.is_main_image = :true)')
+            ->from($connection->quoteIdentifier(Util::toUnderScore(lcfirst($this->entityType))), 'p')
+            ->where("p.id NOT IN (SELECT DISTINCT pa.$idColumn FROM $relTable pa WHERE pa.is_main_image = :true)")
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
@@ -168,6 +175,9 @@ class Product extends AbstractSelectManager
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
+        $relTable = Util::toUnderScore(lcfirst($this->entityType).'Category');
+        $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
+
         $categoriesIds = [];
         if (in_array($row['type'], ['linkedWith', 'notLinkedWith'])) {
             foreach ($ids as $id) {
@@ -186,20 +196,20 @@ class Product extends AbstractSelectManager
 
         switch ($row['type']) {
             case 'isNotLinked':
-                $qb->andWhere("$tableAlias.id NOT IN (SELECT pc44.product_id FROM product_category pc44 WHERE pc44.deleted=:false)");
+                $qb->andWhere("$tableAlias.id NOT IN (SELECT pc44.$idColumn FROM $relTable pc44 WHERE pc44.deleted=:false)");
                 $qb->setParameter('false', false, Mapper::getParameterType(false));
                 break;
             case 'isLinked':
-                $qb->andWhere("$tableAlias.id IN (SELECT pc44.product_id FROM product_category pc44 WHERE pc44.deleted=:false)");
+                $qb->andWhere("$tableAlias.id IN (SELECT pc44.$idColumn FROM $relTable pc44 WHERE pc44.deleted=:false)");
                 $qb->setParameter('false', false, Mapper::getParameterType(false));
                 break;
             case 'linkedWith':
-                $qb->andWhere("$tableAlias.id IN (SELECT pc22.product_id FROM product_category pc22 WHERE pc22.deleted=:false AND pc22.category_id IN (:categoriesIds))");
+                $qb->andWhere("$tableAlias.id IN (SELECT pc22.$idColumn FROM $relTable pc22 WHERE pc22.deleted=:false AND pc22.category_id IN (:categoriesIds))");
                 $qb->setParameter('false', false, Mapper::getParameterType(false));
                 $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
                 break;
             case 'notLinkedWith':
-                $qb->andWhere("$tableAlias.id NOT IN (SELECT pc22.product_id FROM product_category pc22 WHERE pc22.deleted=:false AND pc22.category_id IN (:categoriesIds))");
+                $qb->andWhere("$tableAlias.id NOT IN (SELECT pc22.$idColumn FROM $relTable pc22 WHERE pc22.deleted=:false AND pc22.category_id IN (:categoriesIds))");
                 $qb->setParameter('false', false, Mapper::getParameterType(false));
                 $qb->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds));
                 break;

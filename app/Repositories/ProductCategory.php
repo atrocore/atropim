@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Pim\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
@@ -23,18 +24,21 @@ class ProductCategory extends Relation
     {
         $category = $this->getEntityManager()->getRepository('Category')->get($entity->get('categoryId'));
 
+        $productField = $this->getRelatedLink('Product');
+        $idColumn = Util::toUnderScore($productField . 'Id');
+
         if ($entity->isAttributeChanged('mainCategory') && !empty($entity->get('mainCategory'))) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('pc.id, pc.category_id, c.routes')
-                ->from('product_category', 'pc')
+                ->from(Util::toUnderScore(lcfirst($this->entityName)), 'pc')
                 ->innerJoin('pc', 'category', 'c', 'c.id = pc.category_id AND c.deleted = :false')
                 ->where('pc.deleted = :false')
-                ->andWhere('pc.product_id = :productId')
+                ->andWhere("pc.$idColumn = :productId")
                 ->andWhere('pc.main_category = :true')
                 ->andWhere('pc.id != :id')
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('productId', $entity->get('productId'))
+                ->setParameter('productId', $entity->get($productField . 'Id'))
                 ->setParameter('id', $entity->isNew() ? 'no-such-id' : $entity->get('id'))
                 ->fetchAllAssociative();
 
@@ -58,8 +62,9 @@ class ProductCategory extends Relation
 
     protected function afterSave(Entity $entity, array $options = [])
     {
+        $productField = $this->getRelatedLink('Product');
         $this->getProductRepository()
-            ->updateProductCategorySortOrder($entity->get('productId'), $entity->get('categoryId'));
+            ->updateProductCategorySortOrder($entity->get($productField . 'Id'), $entity->get('categoryId'));
 
         parent::afterSave($entity, $options);
     }
@@ -78,6 +83,7 @@ class ProductCategory extends Relation
 
     protected function getProductRepository(): Product
     {
-        return $this->getEntityManager()->getRepository('Product');
+        $productField = $this->getRelatedLink('Product');
+        return $this->getEntityManager()->getRepository($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $productField, 'entity']));
     }
 }
