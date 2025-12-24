@@ -14,6 +14,6 @@
   },
   "tooltips": {
     "productCanLinkedWithNonLeafCategories": "Si se establece, podrá enlazar productos con categorías que tengan categorías hijas.",
-    "behaviorOnCategoryDelete": "En caso de \"Cascada\" todas las subcategorías de esta categoría serán también eliminadas y todos los productos vinculados a esta categoría o a sus subcategorías serán desvinculados."
+    "behaviorOnCategoryDelete": "En caso de \"Cascada\" se eliminarán también todas las subcategorías de esta categoría y se desvincularán todos los productos vinculados a esta categoría o a sus subcategorías."
   }
 }
