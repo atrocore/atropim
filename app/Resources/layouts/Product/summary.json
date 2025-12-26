@@ -19,6 +19,12 @@
           "name": "modified",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "followers",
+          "fullWidth": true
+        }
       ]
     ]
   }
