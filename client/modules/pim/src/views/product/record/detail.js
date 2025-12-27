@@ -104,29 +104,36 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             if (treeScope === 'Category') {
                 $.ajax({ url: `Product/${this.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true` }).done(response => {
                     if (response.total && response.total > 0) {
-                        let opened = {};
-                        this.selectCategoryNode(response.list, opened);
+                        this.selectCategoryNode(response.list);
                     }
                 });
             }
         },
 
-        selectCategoryNode(categories, opened) {
+        selectCategoryNode(categories) {
             if (categories.length > 0) {
-                let categoriesRoutes = {};
+                const categoriesRoutes = [];
+                const ids = []
                 categories.forEach(category => {
-                    let route = [];
-                    this.parseRoute(category.routes[0]).forEach(id => {
-                        if (!opened[id]) {
+                    const routes = category.routes || []
+                    routes.forEach(item => {
+                        let route = [];
+                        this.parseRoute(item).forEach(id => {
                             route.push(id);
-                        }
+                        });
+                        categoriesRoutes.push({ id: category.id, route: route });
                     });
 
-                    categoriesRoutes[category.id] = route;
+                    if (routes.length === 0) {
+                        categoriesRoutes.push({ id: category.id, route: [] });
+                    }
+
+                    ids.push(category.id);
                 });
 
+
                 let $tree = window.treePanelComponent.getTreeEl();
-                this.ajaxGetRequest('Category/action/TreeData', { ids: Object.keys(categoriesRoutes) }).then(response => {
+                this.ajaxGetRequest('Category/action/TreeData', { ids: ids }).then(response => {
                     if (response.total && response.total > 0) {
                         (response.tree || []).forEach(node => {
                             let treeData = $tree.tree('getTree').children || [];
@@ -141,11 +148,20 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
                             }
                         });
 
-                        Object.keys(categoriesRoutes).forEach(categoryId => {
-                            this.openCategoryNodes($tree, categoriesRoutes[categoryId], opened, () => {
-                                let node = $tree.tree('getNodeById', categoryId);
+                        categoriesRoutes.forEach(({ id, route }) => {
+                            this.openCategoryNodes($tree, route, null, (node) => {
                                 if (node) {
-                                    $tree.tree('addToSelection', node, false);
+                                    node.children.forEach(child => {
+                                        if (child.id === id) {
+                                            $tree.tree('addToSelection', child, false);
+                                        }
+                                    });
+                                } else {
+                                    // if root node
+                                    node = $tree.tree('getNodeById', id);
+                                    if (node) {
+                                        $tree.tree('addToSelection', node, false);
+                                    }
                                 }
                             });
                         });
@@ -154,24 +170,23 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
         },
 
-        openCategoryNodes($tree, route, opened, callback) {
+        openCategoryNodes($tree, route, lastNode, callback) {
             if (route.length > 0) {
                 let id = route.shift();
                 let node = $tree.tree('getNodeById', id);
                 const isOpened = ($tree.tree('getState').open_nodes || []).includes(id);
 
-                const onOpened = () => {
-                    opened[id] = true;
-                    this.openCategoryNodes($tree, route, opened, callback);
+                const onOpened = (lastNode) => {
+                    this.openCategoryNodes($tree, route, lastNode, callback);
                 }
 
                 if (isOpened) {
-                    onOpened()
+                    onOpened(node)
                 } else {
                     $tree.tree('openNode', node, false, onOpened);
                 }
             } else {
-                callback();
+                callback(lastNode);
             }
         },
 
