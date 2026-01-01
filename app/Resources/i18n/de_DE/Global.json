@@ -12,9 +12,9 @@
     "ContentGroup": "Content Gruppe",
     "ContentItem": "Inhalt Artikel",
     "ProductFile": "Produktdatei",
-    "CategoryFile": "Kategorie Datei",
+    "CategoryFile": "Kategorie-Datei",
     "ProductCategory": "Produkt-Kategorie",
-    "CategoryChannel": "Kategorie Kanal",
+    "CategoryChannel": "Kategorie-Kanal",
     "CategoryHierarchy": "Kategorie-Hierarchie",
     "Listing": "Listing"
   },
@@ -29,9 +29,9 @@
     "Content": "Contents",
     "ContentGroup": "Content Gruppen",
     "ContentItem": "Inhalte",
-    "ProductFile": "Produkt Dateien",
-    "CategoryFile": "Kategorie Dateien",
-    "Listing": "Inserate"
+    "ProductFile": "Produkt-Dateien",
+    "CategoryFile": "Kategorie-Dateien",
+    "Listing": "Listings"
   },
   "fields": {
     "channel": "Kanal",
@@ -41,16 +41,16 @@
     "products": "Produkte",
     "scope": "Geltungsbereich",
     "role": "Rolle",
-    "listings": "Inserate",
+    "listings": "Listings",
     "oneGeoType": "OneGeo Typ",
-    "priceCurrency": "Preis Währung",
+    "priceCurrency": "Preiswährung",
     "uvp": "UVP",
     "mpn": "MPN",
     "productStatus": "Produktstatus",
     "price": "Preis",
     "sku": "SKU",
     "ean": "GTIN/EAN",
-    "tag": "Etikett",
+    "tag": "Tag",
     "amount": "Menge"
   },
   "options": {
