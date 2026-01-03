@@ -86,7 +86,7 @@ You can **build your own fully automated integration** with any third-party syst
 Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 
-### Requirements
+## Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
 * Ubuntu as Operating System is recommended but not required.
@@ -95,13 +95,20 @@ Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
-### Installation (Getting Started)
+## Installation (Getting Started)
 
 To install AtroPIM you need to install Atrocore and a PIM module for it.
 
 Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
+### Docker Installation
+
 Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
+Docker Image is [here](https://gitlab.atrocore.com/atrocore/docker).
+
+If you want to test AtroCore without PIM, simply uninstall the PIM module after installing the Docker Image.
+
+> We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
 ## Screenshots
 |                                                                                          |                                                                                          |
