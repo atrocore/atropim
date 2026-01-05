@@ -173,14 +173,18 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
         openCategoryNodes($tree, route, lastNode, callback) {
             if (route.length > 0) {
                 let id = route.shift();
-                let node = $tree.tree('getNodeById', id);
-                const isOpened = ($tree.tree('getState').open_nodes || []).includes(id);
+                let node = null
+                if (lastNode) {
+                    node = lastNode.children.find(item => item.id === id);
+                } else {
+                    node = $tree.tree('getNodeById', id);
+                }
 
                 const onOpened = (lastNode) => {
                     this.openCategoryNodes($tree, route, lastNode, callback);
                 }
 
-                if (isOpened) {
+                if (node.is_open) {
                     onOpened(node)
                 } else {
                     $tree.tree('openNode', node, false, onOpened);
