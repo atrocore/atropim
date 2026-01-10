@@ -22,7 +22,7 @@
     "linkedWithProduct": "Ha dei prodotti"
   },
   "messages": {
-    "channelUnlinkConfirm": "È sicuro di voler scollegare il canale dalla categoria, anche tutti i prodotti collegati indirettamente tramite la categoria con il canale saranno scollegati?",
+    "channelUnlinkConfirm": "È sicuro di voler scollegare il canale dalla categoria, tutti i prodotti collegati indirettamente tramite la categoria con il canale saranno anch'essi scollegati?",
     "categoryRemoveConfirm": "È sicuro di voler rimuovere la categoria? Anche tutte le sottocategorie di questa categoria saranno rimosse e tutti i prodotti collegati a questa categoria o alle sue sottocategorie saranno scollegati.",
     "categoryParentChangeConfirm": "Tenga presente che l'albero delle categorie aggiornato sarà assegnato anche agli stessi cataloghi dell'albero delle categorie originale. I prodotti saranno scollegati da tutti i canali ereditati dall'albero delle categorie originale e collegati ai canali ereditati dall'albero delle categorie aggiornato."
   },
