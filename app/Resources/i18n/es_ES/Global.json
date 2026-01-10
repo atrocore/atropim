@@ -101,6 +101,6 @@
     "notValid": "Los datos no son válidos"
   },
   "messages": {
-    "fieldHasPattern": "{campo} debe contener sólo guión bajo, números y letras en minúsculas"
+    "fieldHasPattern": "{campo} debe contener sólo guiones bajos, números y letras en minúsculas"
   }
 }
