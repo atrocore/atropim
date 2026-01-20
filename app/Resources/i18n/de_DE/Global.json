@@ -92,8 +92,7 @@
     "ProductTypes": "Produkt typen",
     "ProductStatusOverview": "Produktstatus Übersicht",
     "Channels": "Kanäle",
-    "ProductsByStatus": "Produkte nach Status",
-    "ProductsByTaskStatus": "Products by Task Status"
+    "ProductsByStatus": "Produkte nach Status"
   },
   "exceptions": {
     "massRelateBlocked": "Massenverknüpfungen dieser Art ist gesperrt.",
