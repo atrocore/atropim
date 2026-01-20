@@ -28,8 +28,7 @@
     "ProductsByStatus": "Produkty podle stavu",
     "ProductTypes": "Typy produktů",
     "ProductsByTag": "Produkty podle značky",
-    "ProductStatusOverview": "Přehled stavu produktu",
-    "ProductsByTaskStatus": "Produkty podle stavu úkolu"
+    "ProductStatusOverview": "Přehled stavu produktu"
   },
   "exceptions": {
     "massRelateBlocked": "Hromadné vztahy tohoto druhu jsou blokovány.",

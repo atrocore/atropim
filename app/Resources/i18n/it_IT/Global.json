@@ -92,8 +92,7 @@
     "ProductsByStatus": "Prodotti per stato",
     "ProductTypes": "Tipi di prodotto",
     "ProductsByTag": "Prodotti per Tag",
-    "ProductStatusOverview": "Panoramica sullo stato del prodotto",
-    "ProductsByTaskStatus": "Prodotti per stato di attività"
+    "ProductStatusOverview": "Panoramica sullo stato del prodotto"
   },
   "exceptions": {
     "massRelateBlocked": "Le relazioni di massa di questo tipo sono bloccate.",

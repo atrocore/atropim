@@ -92,8 +92,7 @@
     "ProductsByStatus": "Produkty według statusu",
     "ProductTypes": "Rodzaje produktów",
     "ProductsByTag": "Produkty według tagu",
-    "ProductStatusOverview": "Przegląd statusu produktu",
-    "ProductsByTaskStatus": "Produkty według statusu zadania"
+    "ProductStatusOverview": "Przegląd statusu produktu"
   },
   "exceptions": {
     "massRelateBlocked": "Tego rodzaju masowe działania są zablokowane.",

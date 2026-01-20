@@ -92,8 +92,7 @@
     "ProductsByStatus": "Products by Status",
     "ProductTypes": "Product Types",
     "ProductsByTag": "Products by Tag",
-    "ProductStatusOverview": "Product Status Overview",
-    "ProductsByTaskStatus": "Products by Task Status"
+    "ProductStatusOverview": "Product Status Overview"
   },
   "exceptions": {
     "massRelateBlocked": "Mass relating of this kind is blocked.",

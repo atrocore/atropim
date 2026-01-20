@@ -92,8 +92,7 @@
     "ProductsByStatus": "Produits par statut",
     "ProductTypes": "Types de produits",
     "ProductsByTag": "Produits par étiquette",
-    "ProductStatusOverview": "Aperçu de l'état des produits",
-    "ProductsByTaskStatus": "Produits par statut de la tâche"
+    "ProductStatusOverview": "Aperçu de l'état des produits"
   },
   "exceptions": {
     "massRelateBlocked": "Les relations de masse de ce type sont bloquées.",

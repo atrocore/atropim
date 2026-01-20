@@ -92,8 +92,7 @@
     "ProductsByStatus": "Продукты по статусам",
     "ProductTypes": "Продукты по типам",
     "ProductsByTag": "Продукты по тегам",
-    "ProductStatusOverview": "Обзор статуса продукта",
-    "ProductsByTaskStatus": "Продукты по статусу задачи"
+    "ProductStatusOverview": "Обзор статуса продукта"
   },
   "exceptions": {
     "massRelateBlocked": "Массовое создание таких связей заблокировано.",

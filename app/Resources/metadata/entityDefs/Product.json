@@ -122,20 +122,6 @@
       "importDisabled": true,
       "exportDisabled": true
     },
-    "taskStatus": {
-      "type": "multiEnum",
-      "optionColors": {},
-      "options": [
-        "mar",
-        "tech",
-        "ass",
-        "img",
-        "cat",
-        "ch",
-        "pr"
-      ],
-      "default": []
-    },
     "contentItems": {
       "type": "linkMultiple",
       "noLoad": true,

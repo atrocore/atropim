@@ -86,9 +86,7 @@
         {
           "name": "productStatus"
         },
-        {
-          "name": "taskStatus"
-        }
+        false
       ]
     ]
   }
