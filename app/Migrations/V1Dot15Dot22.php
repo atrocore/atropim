@@ -19,7 +19,7 @@ class V1Dot15Dot22 extends BaseAlias
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-01-20 18:00:00');
+        return new \DateTime('2026-01-21 18:00:00');
     }
 
     public function up(): void
@@ -48,14 +48,19 @@ class V1Dot15Dot22 extends BaseAlias
 
     protected function removeDashlet(): void
     {
-        $users = $this
-            ->getConnection()
-            ->createQueryBuilder()
-            ->select('id, dashboard_layout')
-            ->from('user')
-            ->where('dashboard_layout LIKE :dashlet')
-            ->setParameter('dashlet', '%"ProductsByTaskStatus"%')
-            ->fetchAllAssociative();
+        $connection = $this->getConnection();
+
+        try {
+            $users = $connection
+                ->createQueryBuilder()
+                ->select('id, dashboard_layout')
+                ->from($connection->quoteIdentifier('user'))
+                ->where('dashboard_layout LIKE :dashlet')
+                ->setParameter('dashlet', '%"ProductsByTaskStatus"%')
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            return;
+        }
 
         foreach ($users as $user) {
             $dashboardLayouts = json_decode($user['dashboard_layout'], true);
@@ -73,10 +78,9 @@ class V1Dot15Dot22 extends BaseAlias
                 }
 
                 try {
-                    $this
-                        ->getConnection()
+                    $connection
                         ->createQueryBuilder()
-                        ->update('user')
+                        ->update($connection->quoteIdentifier('user'))
                         ->set('dashboard_layout', ':layout')
                         ->where('id=:id')
                         ->setParameter('layout', json_encode($dashboardLayouts))
