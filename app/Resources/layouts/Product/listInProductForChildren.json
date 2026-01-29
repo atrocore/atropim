@@ -1,15 +1,22 @@
 [
   {
+    "name": "number"
+  },
+  {
+    "name": "mainImage",
+    "notSortable": true
+  },
+  {
     "name": "name",
     "link": true
   },
   {
-    "name": "number"
+    "name": "brand"
+  },
+  {
+    "name": "productStatus"
   },
   {
     "name": "isActive"
-  },
-  {
-    "name": "ProductHierarchy__mainChild"
   }
 ]

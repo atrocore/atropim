@@ -10,21 +10,21 @@
       ],
       [
         {
-          "name": "created",
+          "name": "productStatus",
           "fullWidth": true
         }
       ],
       [
         {
-          "name": "modified",
+          "name": "tag",
           "fullWidth": true
         }
       ],
       [
         {
-          "name": "followers",
-          "fullWidth": true
-        }
+          "name": "isActive"
+        },
+        false
       ]
     ]
   }
