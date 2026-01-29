@@ -25,11 +25,6 @@ class Category extends Hierarchy
 {
     public bool $recursiveSave = false;
 
-    /**
-     * @var string
-     */
-    protected $entityType = "Category";
-
     public function getParentsIds(): array
     {
         // validation
