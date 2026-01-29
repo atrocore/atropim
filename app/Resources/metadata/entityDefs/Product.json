@@ -77,7 +77,6 @@
     },
     "channels": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
     },
@@ -86,7 +85,6 @@
     },
     "categories": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
       "noLoad": true
     },
     "isInheritAssignedUser": {
