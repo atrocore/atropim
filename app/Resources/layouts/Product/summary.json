@@ -33,7 +33,7 @@
     "rows": [
       [
         {
-          "name": "productStatus",
+          "name": "status",
           "fullWidth": true
         }
       ],

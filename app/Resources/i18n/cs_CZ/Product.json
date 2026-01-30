@@ -10,7 +10,7 @@
       "your_tag1": "vaše značka1",
       "your_tag2": "vaše značka2"
     },
-    "productStatus": {
+    "status": {
       "draft": "Návrh",
       "prepared": "Připraveno",
       "reviewed": "Recenze:",
@@ -68,7 +68,7 @@
     "product": "Hlavní produkt",
     "products": "Produkty",
     "brand": "Značka",
-    "productStatus": "Stav produktu",
+    "status": "Stav produktu",
     "amount": "Částka",
     "price": "Nákupní cena",
     "ean": "GTIN/EAN",

@@ -47,7 +47,7 @@
     "rows": [
       [
         {
-          "name": "productStatus"
+          "name": "status"
         },
         {
           "name": "tag"

@@ -2,7 +2,7 @@
   "fields": {
     "product": "Główny produkt",
     "brand": "Marka",
-    "productStatus": "Status produktu",
+    "status": "Status produktu",
     "amount": "Kwota",
     "price": "Cena zakupu",
     "ean": "GTIN/EAN",
@@ -37,7 +37,7 @@
     "typeCategoryToSearch": "Proszę wpisać kategorię, aby wyszukać..."
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Wersja robocza",
       "prepared": "Przygotowany",
       "reviewed": "Recenzja",

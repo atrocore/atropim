@@ -46,7 +46,7 @@
   "fields": {
     "channel": "Канал",
     "product": "Продукт",
-    "productStatus": "Статус продукту",
+    "status": "Статус продукту",
     "oneGeoType": "OneGeo Type",
     "priceCurrency": "Валюта ціни",
     "price": "Ціна",
