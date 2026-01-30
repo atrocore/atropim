@@ -26,7 +26,7 @@ class V1Dot15Dot23 extends Base
 
     public function up(): void
     {
-        $this->updateSuctomMetadata();
+        $this->updateCustomMetadata();
 
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
@@ -49,7 +49,7 @@ class V1Dot15Dot23 extends Base
         }
     }
 
-    protected function updateSuctomMetadata(): void
+    protected function updateCustomMetadata(): void
     {
         $fileName = "data/metadata/entityDefs/Product.json";
 
