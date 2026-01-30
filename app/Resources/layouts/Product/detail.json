@@ -1,14 +1,102 @@
 [
   {
-    "label": "Details",
+    "label": "MasterData",
     "style": "default",
     "rows": [
       [
         {
-          "name": "name"
+          "name": "name",
+          "fullwidth": true
+        }
+      ],
+      [
+        {
+          "name": "brand"
         },
         {
+          "name": "number"
+        }
+      ],
+      [
+        {
+          "name": "countryOfOrigin"
+        },
+        {
+          "name": "customsNumber"
+        }
+      ],
+      [
+        {
+          "name": "unitPrice"
+        },
+        {
+          "name": "rrp"
+        }
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "State",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "productStatus"
+        },
+        {
+          "name": "tag"
+        }
+      ],
+      [
+        {
           "name": "isActive"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "Description",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "longDescription",
+          "fullWidth": true
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Placement",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "classifications"
+        },
+        {
+          "name": "productGroup"
+        }
+      ],
+      [
+        {
+          "name": "categories"
+        },
+        {
+          "name": "channels"
         }
       ],
       [
@@ -16,94 +104,6 @@
           "name": "parent"
         },
         false
-      ],
-      [
-        {
-          "name": "brand"
-        },
-        {
-          "name": "classifications"
-        }
-      ],
-      [
-        {
-          "name": "number"
-        },
-        false
-      ],
-      [
-        {
-          "name": "ean"
-        },
-        false
-      ],
-      [
-        {
-          "name": "rrp"
-        },
-        false
-      ],
-      [
-        {
-          "name": "unitPrice"
-        },
-        false
-      ],
-      [
-        {
-          "name": "quantity"
-        },
-        false
-      ],
-      [
-        {
-          "name": "description"
-        }
-      ],
-      [
-        {
-          "name": "longDescription"
-        }
-      ],
-      [
-        {
-          "name": "productStatus"
-        },
-        false
-      ]
-    ]
-  },
-  {
-    "label": "manufacturer",
-    "style": "default",
-    "rows": [
-      [
-        {
-          "name": "mpn"
-        },
-        false
-      ],
-      [
-        {
-          "name": "customsNumber"
-        },
-        {
-          "name": "countryOfOrigin"
-        }
-      ]
-    ]
-  },
-  {
-    "label": "other",
-    "style": "default",
-    "rows": [
-      [
-        {
-          "name": "defaultSupplier"
-        },
-        {
-          "name": "note"
-        }
       ]
     ]
   }

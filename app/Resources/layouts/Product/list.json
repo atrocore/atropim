@@ -1,19 +1,28 @@
 [
   {
-    "name": "name",
-    "link": true
+    "name": "number"
   },
   {
     "name": "mainImage",
     "notSortable": true
   },
   {
-    "name": "number"
+    "name": "name",
+    "link": true
   },
   {
-    "name": "type"
+    "name": "brand"
+  },
+  {
+    "name": "productStatus"
+  },
+  {
+    "name": "tag"
   },
   {
     "name": "isActive"
+  },
+  {
+    "name": "owner"
   }
 ]
