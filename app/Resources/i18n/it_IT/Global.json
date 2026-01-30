@@ -26,7 +26,7 @@
     "categories": "Categorie",
     "channels": "Canali",
     "products": "Prodotti",
-    "productStatus": "Stato del prodotto",
+    "status": "Stato del prodotto",
     "oneGeoType": "Tipo OneGeo",
     "priceCurrency": "Prezzo Valuta",
     "price": "Prezzo",

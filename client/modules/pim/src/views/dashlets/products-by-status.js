@@ -48,7 +48,7 @@ Espo.define('pim:views/dashlets/products-by-status', 'views/dashlets/abstract/ba
                                 notSortable: true,
                                 width: '60',
                                 params: {
-                                    filterField: 'productStatus'
+                                    filterField: 'status'
                                 }
                             },
                             {
@@ -87,12 +87,12 @@ Espo.define('pim:views/dashlets/products-by-status', 'views/dashlets/abstract/ba
         },
 
         prepareStatusLabel: function () {
-            let options = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'options']) || [],
+            let options = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'status', 'options']) || [],
                 labels = [];
 
             if (options.length) {
                 options.forEach(item => {
-                    labels[item] = this.getLanguage().translateOption(item, 'productStatus', 'Product');
+                    labels[item] = this.getLanguage().translateOption(item, 'status', 'Product');
                 })
             }
 

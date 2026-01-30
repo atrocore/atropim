@@ -26,7 +26,7 @@
     "scope": "Champ d'application",
     "categories": "Catégories",
     "channels": "Canaux",
-    "productStatus": "Statut du produit",
+    "status": "Statut du produit",
     "ean": "GTIN/EAN",
     "mpn": "MPN",
     "tag": "Étiquette",
