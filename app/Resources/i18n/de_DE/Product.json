@@ -1,7 +1,7 @@
 {
   "fields": {
     "products": "Produkte",
-    "status": "Produktstatus",
+    "status": "Status",
     "mainImage": "Hauptbild",
     "channels": "Kanäle",
     "price": "Preis",
