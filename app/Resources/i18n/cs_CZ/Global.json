@@ -24,7 +24,7 @@
     "addAttribute": "Přidat atribut"
   },
   "dashlets": {
-    "Channels": "Kanály",
+    "Channels": "Kanál",
     "ProductsByStatus": "Produkty podle stavu",
     "ProductTypes": "Typy produktů",
     "ProductsByTag": "Produkty podle značky",
@@ -45,7 +45,7 @@
     "ContentGroup": "Skupiny obsahu",
     "ContentItem": "Položky obsahu",
     "Category": "Kategorie",
-    "Channel": "Kanály",
+    "Channel": "Kanál",
     "Listing": "Seznamy",
     "ProductFile": "Soubory produktů",
     "CategoryFile": "Kategorie Soubory",
@@ -65,7 +65,7 @@
     "listings": "Seznamy",
     "product": "Produkt",
     "categories": "Kategorie",
-    "channels": "Kanály",
+    "channels": "Kanál",
     "products": "Produkty",
     "status": "Stav produktu",
     "oneGeoType": "Typ OneGeo",
