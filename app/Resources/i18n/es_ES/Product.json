@@ -25,7 +25,7 @@
     "variantSpecificAttributes": "Atributos específicos de la variante"
   },
   "labels": {
-    "Product Attributes": "Atributos",
+    "Product Attributes": "Atributo",
     "thereIsNoValidAttributesForChannel": "No hay atributos válidos para el canal",
     "addAttributeFilter": "Añadir filtro de atributos",
     "Channels": "Canales",
