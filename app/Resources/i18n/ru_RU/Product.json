@@ -61,7 +61,10 @@
     },
     "status": {
       "draft": "Черновик",
-      "reviewed": "Проверено"
+      "reviewed": "Проверено",
+      "prepared": "Подготовлено",
+      "notReady": "Не готов",
+      "ready": "Готовые"
     }
   },
   "boolFilters": {
