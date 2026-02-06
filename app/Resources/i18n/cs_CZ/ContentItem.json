@@ -2,7 +2,7 @@
   "fields": {
     "type": "Typ",
     "description": "Popis",
-    "name": "Název",
+    "name": "Jméno",
     "image": "Obrázek",
     "plainText": "Prostý text",
     "products": "Produkty",

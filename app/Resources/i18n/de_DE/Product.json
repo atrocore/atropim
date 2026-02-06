@@ -15,14 +15,14 @@
     "ean": "GTIN/EAN",
     "rrp": "Unverbindliche Preisempfehlung (UVP)",
     "image": "Hauptbild",
-    "tag": "Etikett",
+    "tag": "Tag",
     "packedAmount": "Gepackte Menge",
     "contents": "Contents",
     "taskStatus": "Task status",
     "files": "Dateien",
     "calls": "Anrufe",
     "variantSpecificAttributes": "Variantenspezifische Attribute",
-    "contentItems": "Inhalte"
+    "contentItems": "Inhalts-Elemente"
   },
   "labels": {
     "addAttributeFilter": "Attributfilter hinzufügen",
@@ -51,8 +51,8 @@
       "red": "rot",
       "your tag1": "your tag1",
       "your tag2": "your tag2",
-      "your_tag1": "your tag1",
-      "your_tag2": "your tag2"
+      "your_tag1": "Ihr Tag1",
+      "your_tag2": "Ihr Tag2"
     },
     "taskStatus": {
       "mar": "Mar",
