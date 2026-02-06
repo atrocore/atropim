@@ -46,7 +46,7 @@
     "priceCurrency": "Preiswährung",
     "uvp": "UVP",
     "mpn": "MPN",
-    "productStatus": "Produktstatus",
+    "status": "Produktstatus",
     "price": "Preis",
     "sku": "SKU",
     "ean": "GTIN/EAN",

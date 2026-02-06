@@ -1,7 +1,7 @@
 {
   "fields": {
     "products": "Produkte",
-    "productStatus": "Produktstatus",
+    "status": "Status",
     "mainImage": "Hauptbild",
     "channels": "Kanäle",
     "price": "Preis",
@@ -37,7 +37,7 @@
     "Product Attributes": "Attribute"
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Entwurf",
       "prepared": "Vorbereitet",
       "reviewed": "Überprüft",

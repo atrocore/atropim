@@ -7,7 +7,7 @@
     "product": "Produit principal",
     "products": "Produits",
     "brand": "Marque",
-    "productStatus": "Statut du produit",
+    "status": "Statut",
     "type": "Type",
     "amount": "Montant",
     "price": "Prix d'achat",
@@ -37,7 +37,7 @@
     "channel": "Canal"
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Projet",
       "prepared": "Préparé",
       "reviewed": "Examiné",

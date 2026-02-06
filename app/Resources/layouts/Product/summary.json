@@ -27,5 +27,28 @@
         }
       ]
     ]
+  },
+  {
+    "label": "ProductLifeCycle",
+    "rows": [
+      [
+        {
+          "name": "status",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "tag",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ]
+    ]
   }
 ]

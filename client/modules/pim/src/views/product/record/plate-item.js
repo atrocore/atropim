@@ -13,7 +13,7 @@ Espo.define('pim:views/product/record/plate-item', 'view',
 
         template: 'pim:product/record/plate-item',
 
-        fields: ['productStatus', 'mainImage'],
+        fields: ['status', 'mainImage'],
 
         events: _.extend({
             'click .link': function (e) {

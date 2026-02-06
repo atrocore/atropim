@@ -89,7 +89,11 @@
       "selectBoolFilterList": [
         "notChildren"
       ],
-      "rowActionsView": "views/record/row-actions/relationship-no-remove"
+      "actions": {
+        "removeRelated": {
+          "disabled": true
+        }
+      }
     },
     "children": {
       "selectAction": "selectRelatedEntity",

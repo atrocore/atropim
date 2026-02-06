@@ -6,7 +6,7 @@
     "product": "Основний продукт",
     "products": "Продукти",
     "brand": "Бренд",
-    "productStatus": "Статус продукту",
+    "status": "Статус",
     "type": "Тип",
     "amount": "Кількість",
     "price": "Ціна покупки",
@@ -37,7 +37,7 @@
     "channel": "Канал"
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Чернетка",
       "prepared": "Підготовлено",
       "reviewed": "Відредаговано",

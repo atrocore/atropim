@@ -49,7 +49,7 @@
     "product": "Produkt",
     "categories": "Kategorie",
     "channels": "Kanały",
-    "productStatus": "Status produktu",
+    "status": "Status produktu",
     "oneGeoType": "Typ OneGeo",
     "priceCurrency": "Cena Waluta",
     "sku": "SKU",

@@ -11,7 +11,7 @@
 
 namespace Pim\Seeders;
 
-use Atro\Core\Utils\Util;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Seeders\AbstractSeeder;
 
 class PreviewSeeder extends AbstractSeeder
@@ -28,7 +28,7 @@ class PreviewSeeder extends AbstractSeeder
                     ->setValue('entity_type', ':entityType')
                     ->setValue('is_active', ':active')
                     ->setValue('template', ':template')
-                    ->setParameter('id', $preview['id'] ?? Util::generateId())
+                    ->setParameter('id', $preview['id'] ?? IdGenerator::uuid())
                     ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
                     ->setParameter('entityType', $preview['entityType'])
                     ->setParameter('name', $preview['name'])
