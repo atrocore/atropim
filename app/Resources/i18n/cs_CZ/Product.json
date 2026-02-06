@@ -36,7 +36,7 @@
     "selectAttributeGroup": "Vybrat skupinu atributů",
     "thereIsNoValidAttributesForChannel": "Pro kanál nejsou k dispozici žádné platné atributy",
     "addAttributeFilter": "Přidat filtr atributů",
-    "Channels": "Kanály",
+    "Channels": "Kanál",
     "Product Channel Attributes": "Atributy kanálu",
     "typeCategoryToSearch": "Zadejte kategorii pro vyhledávání...",
     "channel": "Kanál",
@@ -59,7 +59,7 @@
   "messages": {
     "componentsNotInstalled": "Nainstalujte modul Komponenty, abyste mohli používat náhled komponent.",
     "emptyComponents": "Výrobek nemá komponenty",
-    "removeRelatedRecords": "Jste si jisti, že chcete z aktuálního produktu odebrat všechny produkty pro vybrané sdružení? Všechny související produkty budou zachovány."
+    "removeRelatedRecords": "Opravdu chcete odstranit všechny záznamy vybrané asociace z aktuálního záznamu? Všechny související záznamy zůstanou zachovány."
   },
   "fields": {
     "mainImage": "Hlavní obrázek",
@@ -75,7 +75,7 @@
     "rrp": "Doporučená maloobchodní cena (RRP)",
     "image": "Hlavní obrázek",
     "tag": "Štítek",
-    "channels": "Kanály",
+    "channels": "Kanál",
     "basePriceAmount": "Částka základní ceny",
     "packedAmount": "Balené množství",
     "contents": "Obsah",
