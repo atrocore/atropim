@@ -6,7 +6,6 @@
     "product": "Основной продукт",
     "products": "Продукты",
     "brand": "Бренд",
-    "productStatus": "Статус продукта",
     "type": "Тип",
     "amount": "Кол-во",
     "price": "Цена покупки",
@@ -58,13 +57,6 @@
     },
     "template": {
       "default": "По умолчанию"
-    },
-    "productStatus": {
-      "draft": "Черновик",
-      "reviewed": "Проверено",
-      "prepared": "Подготовлено",
-      "notReady": "Не готов",
-      "ready": "Готовые"
     }
   },
   "boolFilters": {
