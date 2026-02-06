@@ -7,7 +7,7 @@
     "ProductCategory": "Kategoria produktu",
     "CategoryChannel": "Kanał kategorii",
     "CategoryHierarchy": "Hierarchia kategorii",
-    "Product": "Produkt",
+    "Product": "Produkty",
     "Category": "Kategoria",
     "Channel": "Kanał",
     "AssociatedProduct": "Produkt powiązany",
@@ -46,7 +46,7 @@
   "fields": {
     "channel": "Kanał",
     "listings": "Listy",
-    "product": "Produkt",
+    "product": "Produkty",
     "categories": "Kategorie",
     "channels": "Kanały",
     "status": "Status produktu",
