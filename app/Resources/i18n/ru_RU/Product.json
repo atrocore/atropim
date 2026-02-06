@@ -21,7 +21,8 @@
     "calls": "Звонки",
     "files": "Файлы",
     "variantSpecificAttributes": "Специфические атрибуты варианта",
-    "contentItems": "Элементы содержания"
+    "contentItems": "Элементы содержания",
+    "status": "Статус"
   },
   "labels": {
     "Product Attributes": "Атрибуты",
@@ -57,6 +58,10 @@
     },
     "template": {
       "default": "По умолчанию"
+    },
+    "status": {
+      "draft": "Черновик",
+      "reviewed": "Проверено"
     }
   },
   "boolFilters": {
