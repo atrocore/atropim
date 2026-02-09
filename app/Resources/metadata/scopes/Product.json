@@ -27,14 +27,9 @@
     "isInheritTeams",
     "data"
   ],
-  "unInheritedFields": [
-    "number",
-    "mpn"
-  ],
   "relationInheritance": true,
   "inheritedRelations": ["productFiles"],
   "mandatoryUnInheritedRelations": [],
-  "unInheritedRelations": [],
   "isActiveUnavailable": true,
   "nonComparableFields": [
     "associatedRelatedProduct",
