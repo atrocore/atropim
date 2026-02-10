@@ -11,7 +11,7 @@
     "name": "Jméno",
     "description": "Popis",
     "code": "Kód",
-    "isActive": "Aktivní"
+    "isActive": "Úno"
   },
   "boolFilters": {
     "linkedWithProduct": "Má produkty"
