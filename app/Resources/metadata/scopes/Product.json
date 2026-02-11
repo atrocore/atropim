@@ -29,7 +29,6 @@
   ],
   "relationInheritance": true,
   "inheritedRelations": ["productFiles"],
-  "mandatoryUnInheritedRelations": [],
   "isActiveUnavailable": true,
   "nonComparableFields": [
     "associatedRelatedProduct",

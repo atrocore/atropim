@@ -31,7 +31,7 @@ class ProductTypesDashlet extends AbstractDashletService
             'lowestLevelProducts'
         ];
 
-        if (in_array('productBundles', $this->getInjection('metadata')->get('scopes.Product.mandatoryUnInheritedRelations', []))) {
+        if (in_array('productBundles', $this->getInjection('metadata')->get('scopes.Product.mandatoryUnInheritedFields', []))) {
             $types[] = 'bundleProducts';
             $types[] = 'bundledProducts';
         }
