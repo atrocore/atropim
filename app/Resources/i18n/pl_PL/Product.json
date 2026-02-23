@@ -25,7 +25,7 @@
     "data": "Dane"
   },
   "labels": {
-    "Product Attributes": "Atrybuty",
+    "Product Attributes": "Atrybut",
     "thereIsNoValidAttributesForChannel": "Brak prawidłowych atrybutów dla kanału",
     "addAttributeFilter": "Dodaj filtr atrybutów",
     "noGroup": "Brak grupy",

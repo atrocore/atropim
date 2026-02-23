@@ -46,7 +46,6 @@
   "fields": {
     "channel": "Канал",
     "product": "Продукт",
-    "productStatus": "Статус продукта",
     "oneGeoType": "OneGeo Type",
     "priceCurrency": "Валюта цены",
     "price": "Цена",
@@ -61,7 +60,8 @@
     "products": "Продукты",
     "scope": "Область применения",
     "role": "Роль",
-    "listings": "Списки"
+    "listings": "Списки",
+    "status": "Статус продукта"
   },
   "labels": {
     "setAsMainImage": "Назначить основным изображением",
