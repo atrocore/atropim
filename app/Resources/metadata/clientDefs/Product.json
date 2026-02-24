@@ -74,7 +74,7 @@
       "rowActionsView": "pim:views/record/row-actions/relationship-file",
       "dragDrop": {
         "isActive": true,
-        "sortField": "product"
+        "sortField": "product_file_mm.sorting"
       },
       "recordListView": "pim:views/file/record/list",
       "sortBy": "sorting",
