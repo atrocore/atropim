@@ -37,11 +37,11 @@
     </div>
     <div class="row">
         <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="folder"><span class="label-text">{{translate 'Folder' category='scopeNames'}}</span></label>
+            <label class="control-label" data-name="folder"><span class="label-text">{{translate 'folder' scope='PdfGenerator' category='labels'}}</span></label>
             <div class="field" data-name="folder">{{{folder}}}</div>
         </div>
         <div class="col-xs-6 cell form-group">
-            <label class="control-label" data-name="fileType"><span class="label-text">{{translate 'FileType' category='scopeNames'}}</span></label>
+            <label class="control-label" data-name="fileType"><span class="label-text">{{translate 'fileType' scope='PdfGenerator' category='labels'}}</span></label>
             <div class="field" data-name="fileType">{{{fileType}}}</div>
         </div>
     </div>
