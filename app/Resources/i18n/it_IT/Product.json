@@ -7,7 +7,7 @@
     "product": "Prodotto principale",
     "products": "Prodotti",
     "brand": "Marchio",
-    "productStatus": "Stato del prodotto",
+    "status": "Stato",
     "type": "Tipo",
     "amount": "Importo",
     "price": "Prezzo di acquisto",
@@ -37,7 +37,7 @@
     "channel": "Canale"
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Bozza",
       "prepared": "Preparato",
       "reviewed": "Recensito",

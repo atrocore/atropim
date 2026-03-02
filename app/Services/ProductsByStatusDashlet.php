@@ -32,11 +32,11 @@ class ProductsByStatusDashlet extends AbstractDashletService
         $connection = $this->getEntityManager()->getConnection();
 
         $products = $connection->createQueryBuilder()
-            ->select('p.product_status AS status, COUNT(p.id) AS amount')
+            ->select('p.status AS status, COUNT(p.id) AS amount')
             ->from($connection->quoteIdentifier('product'), 'p')
             ->where('p.deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
-            ->groupBy('p.product_status')
+            ->groupBy('p.status')
             ->fetchAllAssociative();
 
 

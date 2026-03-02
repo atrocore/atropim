@@ -281,7 +281,7 @@
 <header>
     <h1 class="value-container" {{ editable(product, getAllLanguageFields('Product', 'name')) }}>{{ product.name }}</h1>
     <div class="row status-info">
-        <div class="item product-status" {{ editable(product, ['productStatus']) }}>{{ translateOption(product.productStatus, language, 'productStatus', scope: 'Product') }}</div>
+        <div class="item product-status" {{ editable(product, ['status']) }}>{{ product.status is not empty ? translateOption(product.status, language, 'status', scope: 'Product') : '' }}</div>
         {% if product.tag is not empty %}
             <div class="row tags" {{ editable(product, ['tag']) }}>
                 {% for tag in product.tag %}

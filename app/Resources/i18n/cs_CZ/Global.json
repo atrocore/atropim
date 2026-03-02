@@ -21,7 +21,7 @@
     "allChannels": "Všechny kanály",
     "linkedChannels": "Propojené kanály",
     "typeToSearch": "Zadejte text a stiskněte Enter…",
-    "addAttribute": "Přidat atribut"
+    "addAttribute": "[Přidat atribut]"
   },
   "dashlets": {
     "Channels": "Kanály",
@@ -67,7 +67,7 @@
     "categories": "Kategorie",
     "channels": "Kanály",
     "products": "Produkty",
-    "productStatus": "Stav produktu",
+    "status": "Stav produktu",
     "oneGeoType": "Typ OneGeo",
     "priceCurrency": "Cena Měna",
     "price": "Cena",

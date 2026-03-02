@@ -1,7 +1,7 @@
 {
   "fields": {
     "description": "Descripción",
-    "isActive": "Active",
+    "isActive": "Activo",
     "categories": "Categorías",
     "code": "Código",
     "products": "Productos"
@@ -22,7 +22,7 @@
   },
   "exceptions": {
     "channelWithSuchCodeAlreadyExist": "Ya existen canales con dicho CÓDIGO",
-    "channelHasProducts": "El canal con productos relacionados no se puede eliminar.",
+    "channelHasProducts": "Los canales con productos relacionados no se pueden eliminar.",
     "channelHasCategory": "El canal con el árbol de categorías relacionado no se puede eliminar."
   }
 }

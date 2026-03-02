@@ -4,7 +4,7 @@
       "type": "link",
       "view": "pim:views/product/fields/brand"
     },
-    "productStatus": {
+    "status": {
       "type": "enum",
       "required": true,
       "options": [

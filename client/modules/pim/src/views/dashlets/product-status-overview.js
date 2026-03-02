@@ -79,8 +79,8 @@ Espo.define('pim:views/dashlets/product-status-overview', ['views/dashlets/abstr
             this.fetch().then(data => {
                 this.chartData = this.prepareData(data);
                 let colorList = [],
-                    options = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'options']),
-                    optionColors = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'productStatus', 'optionColors']);
+                    options = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'status', 'options']),
+                    optionColors = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'status', 'optionColors']);
                 (data.list || []).forEach((item, index) => {
                     colorList.push('#' + optionColors[options.indexOf(item.name)]);
                 });
@@ -112,7 +112,7 @@ Espo.define('pim:views/dashlets/product-status-overview', ['views/dashlets/abstr
         prepareData(data) {
             return (data.list || []).map(item => {
                 return {
-                    label: this.getLanguage().translateOption(item.name, 'productStatus', 'Product'),
+                    label: this.getLanguage().translateOption(item.name, 'status', 'Product'),
                     data: [[0, item.amount]]
                 };
             });

@@ -1,6 +1,6 @@
 <div class="plate-item">
 	<div class="plate-item-header">
-		<div class="field-status" data-name="productStatus">
+		<div class="field-status" data-name="status">
 			{{{productStatusField}}}
 		</div>
 		<div class="actions">{{{rowActions}}}</div>

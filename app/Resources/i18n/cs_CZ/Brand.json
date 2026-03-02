@@ -2,7 +2,7 @@
   "fields": {
     "products": "Produkty",
     "description": "Popis",
-    "isActive": "Aktivní",
+    "isActive": "Úno",
     "code": "Kód"
   },
   "exceptions": {

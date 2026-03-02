@@ -84,7 +84,7 @@
       ],
       [
         {
-          "name": "productStatus"
+          "name": "status"
         },
         false
       ]

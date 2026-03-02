@@ -2,7 +2,7 @@
   "fields": {
     "product": "Główny produkt",
     "brand": "Marka",
-    "productStatus": "Status produktu",
+    "status": "Status",
     "amount": "Kwota",
     "price": "Cena zakupu",
     "ean": "GTIN/EAN",
@@ -25,7 +25,7 @@
     "data": "Dane"
   },
   "labels": {
-    "Product Attributes": "Atrybuty",
+    "Product Attributes": "Atrybut",
     "thereIsNoValidAttributesForChannel": "Brak prawidłowych atrybutów dla kanału",
     "addAttributeFilter": "Dodaj filtr atrybutów",
     "noGroup": "Brak grupy",
@@ -37,7 +37,7 @@
     "typeCategoryToSearch": "Proszę wpisać kategorię, aby wyszukać..."
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Wersja robocza",
       "prepared": "Przygotowany",
       "reviewed": "Recenzja",

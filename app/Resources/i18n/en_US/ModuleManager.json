@@ -1,8 +1,8 @@
 {
-    "moduleNames": {
-        "Pim": "PIM"
-    },
-    "moduleDescriptions": {
-        "Pim": "Management of products and its depending entities module"
-    }
+  "moduleNames": {
+    "Pim": "PIM"
+  },
+  "moduleDescriptions": {
+    "Pim": "Manage product information and all related data for different sales channels."
+  }
 }

@@ -12,7 +12,7 @@
   },
   "fields": {
     "description": "Description",
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "code": "Kod",
     "products": "Produkty",
     "categories": "Kategorie"

@@ -7,8 +7,8 @@
     "product": "Producto principal",
     "products": "Productos",
     "brand": "Marca",
-    "productStatus": "Estado del producto",
-    "type": "Type",
+    "status": "Estado",
+    "type": "Tipo",
     "amount": "Importe",
     "price": "Precio de compra",
     "ean": "GTIN/EAN",
@@ -25,7 +25,7 @@
     "variantSpecificAttributes": "Atributos específicos de la variante"
   },
   "labels": {
-    "Product Attributes": "Atributos",
+    "Product Attributes": "Atributo",
     "thereIsNoValidAttributesForChannel": "No hay atributos válidos para el canal",
     "addAttributeFilter": "Añadir filtro de atributos",
     "Channels": "Canales",
@@ -37,7 +37,7 @@
     "channel": "Canal"
   },
   "options": {
-    "productStatus": {
+    "status": {
       "draft": "Borrador",
       "prepared": "Preparado",
       "reviewed": "Revisado",

@@ -6,7 +6,6 @@
     "product": "Основной продукт",
     "products": "Продукты",
     "brand": "Бренд",
-    "productStatus": "Статус продукта",
     "type": "Тип",
     "amount": "Кол-во",
     "price": "Цена покупки",
@@ -22,7 +21,8 @@
     "calls": "Звонки",
     "files": "Файлы",
     "variantSpecificAttributes": "Специфические атрибуты варианта",
-    "contentItems": "Элементы содержания"
+    "contentItems": "Элементы содержания",
+    "status": "Статус"
   },
   "labels": {
     "Product Attributes": "Атрибуты",
@@ -59,7 +59,7 @@
     "template": {
       "default": "По умолчанию"
     },
-    "productStatus": {
+    "status": {
       "draft": "Черновик",
       "reviewed": "Проверено",
       "prepared": "Подготовлено",

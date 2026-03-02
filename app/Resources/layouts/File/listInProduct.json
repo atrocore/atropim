@@ -1,0 +1,21 @@
+[
+  {
+    "name": "preview"
+  },
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "fileSize"
+  },
+  {
+    "name": "fileMtime"
+  },
+  {
+    "name": "tags"
+  }
+]

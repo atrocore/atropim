@@ -11,7 +11,7 @@
     "parents": "Hauptkategorie",
     "name": "Name",
     "description": "Beschreibung",
-    "productCategories": "Kategorie Produkte"
+    "productCategories": "Kategorie-Produkte"
   },
   "options": {
     "template": {
