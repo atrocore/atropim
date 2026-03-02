@@ -74,7 +74,7 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
         },
 
         getActionsComponent: function () {
-            return Svelte.PlateActionsContainer;
+            return Svelte.PlateToolbar;
         },
 
         getActionsProperties: function (component) {
