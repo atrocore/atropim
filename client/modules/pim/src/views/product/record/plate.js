@@ -77,8 +77,8 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
             return Svelte.PlateToolbar;
         },
 
-        getActionsProperties: function (component) {
-            const props = Dep.prototype.getActionsProperties.call(this, component);
+        getActionsProperties: function () {
+            const props = Dep.prototype.getActionsProperties.call(this);
 
             props.itemsInRow = this.itemsInRow;
             props.itemsInRowOptions = this.itemsInRowOptions;
@@ -91,11 +91,9 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
             props.sortByOptions = this.getSortFieldsList();
             props.changeSortField = (field) => {
                 this.sortByField(field);
-                component.$set({sortBy: field});
             };
-            props.changeSortDirection = (asc) => {
+            props.changeSortDirection = () => {
                 this.toggleSort(this.collection.sortBy);
-                component.$set({sortDirection: this.collection.asc ? 'asc' : 'desc'});
             }
 
             return props;
