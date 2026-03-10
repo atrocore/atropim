@@ -16,11 +16,11 @@ namespace Pim\Migrations;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot15Dot26 extends Base
+class V1Dot15Dot25 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-03-02 10:00:00');
+        return new \DateTime('2026-02-05 10:00:00');
     }
 
     public function up(): void
@@ -30,27 +30,27 @@ class V1Dot15Dot26 extends Base
         }
 
         try {
-            $res = $this->getDbal()->createQueryBuilder()
+            $res = $this->getConnection()->createQueryBuilder()
                 ->select('id', 'group_by', 'order_by')
-                ->from($this->getDbal()->quoteIdentifier('report'))
+                ->from('report')
                 ->where('entity_name = :entityName and deleted = :false')
                 ->setParameter('entityName', 'Product')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
 
             foreach ($res as $item) {
-                $groupBy = @json_decode($item['group_by'] ?? '', true);
+                $groupBy = json_decode($item['group_by'], true);
                 if (empty($groupBy)) {
                     continue;
                 }
 
                 if (in_array('productStatus', $groupBy)) {
-                    $groupBy = array_map(fn($v) => $v === 'productStatus' ? 'status' : $v, $groupBy);
+                    $groupBy[array_search('productStatus', $groupBy)] = 'status';
                 } else {
                     continue;
                 }
 
-                $orderBy = @json_decode($item['order_by'] ?? '', true);
+                $orderBy = json_decode($item['order_by'], true);
                 if (!empty($orderBy)) {
                     foreach ($orderBy as $k => $value) {
                         if (explode(':', $value)[0] === 'productStatus') {
@@ -59,8 +59,7 @@ class V1Dot15Dot26 extends Base
                     }
                 }
 
-
-                $this->getDbal()->createQueryBuilder()
+                $this->getConnection()->createQueryBuilder()
                     ->update('report')
                     ->set('group_by', ':groupBy')
                     ->set('order_by', ':orderBy')
