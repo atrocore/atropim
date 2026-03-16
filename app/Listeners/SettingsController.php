@@ -52,21 +52,6 @@ class SettingsController extends AbstractListener
     {
         $data = Json::decode(Json::encode($event->getArgument('data')), true);
 
-        $qm = false;
-        foreach (array_keys($this->removeFields) as $key) {
-            if (isset($data[$key]) && $data[$key] != 'notInherit') {
-                $qm = true;
-                break;
-            }
-        }
-
-        if ($qm) {
-            $this
-                ->getContainer()
-                ->get('queueManager')
-                ->push($this->getLanguage()->translate('updatingOwnershipInformation', 'queueManager', 'Settings'), 'QueueManagerOwnership', $data);
-        }
-
         $this->removeConfigFields();
     }
 
