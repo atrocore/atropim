@@ -14,30 +14,15 @@ declare(strict_types=1);
 namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Json;
 use Atro\Listeners\AbstractListener;
-use Espo\Core\Utils\Util;
 
-/**
- * Class SettingsController
- */
-class SettingsController extends AbstractListener
+class SettingsService extends AbstractListener
 {
-    protected array $removeFields
-        = [
-            'assignedUserAttributeOwnership' => 'overrideAttributeAssignedUser',
-            'ownerUserAttributeOwnership'    => 'overrideAttributeOwnerUser',
-            'teamsAttributeOwnership'        => 'overrideAttributeTeams',
-            'assignedUserProductOwnership'   => 'overrideProductAssignedUser',
-            'ownerUserProductOwnership'      => 'overrideProductOwnerUser',
-            'teamsProductOwnership'          => 'overrideProductTeams'
-        ];
-
-    public function beforeActionPatch(Event $event): void
+    public function beforeUpdate(Event $event): void
     {
         $data = $event->getArgument('data');
 
@@ -48,45 +33,20 @@ class SettingsController extends AbstractListener
         $this->deleteMultiLangAttributeOnInputLanguageChange($data, 'ClassificationAttribute');
     }
 
-    public function afterActionPatch(Event $event): void
+    protected function deleteMultiLangAttributeOnInputLanguageChange($data, $entityName): void
     {
-        $data = Json::decode(Json::encode($event->getArgument('data')), true);
-
-        $this->removeConfigFields();
-    }
-
-    /**
-     * Remove unnecessary config fields
-     */
-    protected function removeConfigFields()
-    {
-        $config = $this->getConfig();
-
-        foreach (array_values($this->removeFields) as $field) {
-            if ($config->has($field)) {
-                $config->remove($field);
-            }
-        }
-        $config->save();
-    }
-
-    protected function isExistsProductsLinkedWithNonLeafCategories(): bool
-    {
-        return $this->getEntityManager()->getRepository('Product')->isExistsProductsLinkedWithNonLeafCategories();
-    }
-
-    protected function deleteMultiLangAttributeOnInputLanguageChange($data, $entityName){
-        if(!isset($data->inputLanguageList)){
+        if (!isset($data->inputLanguageList)) {
             return;
         }
 
         /** @var Connection $conn */
-        $conn = $this->getContainer()->get('connection');
+        $conn   = $this->getContainer()->get('connection');
         $result = [true];
-        $limit = 30000;
+        $limit  = 30000;
         $offset = 0;
-        while(!empty($result)){
-            $table = Util::toUnderScore($entityName);
+
+        while (!empty($result)) {
+            $table  = Util::toUnderScore($entityName);
             $result = $conn->createQueryBuilder()
                 ->from($conn->quoteIdentifier($table))
                 ->select('id')
@@ -99,13 +59,13 @@ class SettingsController extends AbstractListener
                 ->setMaxResults($limit)
                 ->fetchAllAssociative();
 
-            if(!empty($result)){
+            if (!empty($result)) {
                 $this->getService($entityName)->massRemove([
-                    "ids" => array_column($result, 'id')
+                    'ids' => array_column($result, 'id')
                 ]);
             }
 
-            if(count($result) < $limit){
+            if (count($result) < $limit) {
                 break;
             }
             $offset += $limit;

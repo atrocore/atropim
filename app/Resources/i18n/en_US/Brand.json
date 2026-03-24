@@ -6,7 +6,6 @@
     "code": "Code"
   },
   "exceptions": {
-    "brandWithSuchCodeAlreadyExist": "Brand with such code already exist.",
-    "brandIsUsedInProducts": "Brand(s), which is(are) used in some products, cannot be deleted."
+    "brandWithSuchCodeAlreadyExist": "Brand with such code already exist."
   }
 }

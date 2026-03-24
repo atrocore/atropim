@@ -6,7 +6,6 @@
     "code": "Kód"
   },
   "exceptions": {
-    "brandWithSuchCodeAlreadyExist": "Značky s takovým kódem již existují.",
-    "brandIsUsedInProducts": "Značku (značky), která je (jsou) použita (použity) v některých produktech, nelze vymazat."
+    "brandWithSuchCodeAlreadyExist": "Značky s takovým kódem již existují."
   }
 }
