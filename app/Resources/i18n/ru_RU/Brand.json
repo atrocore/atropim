@@ -6,7 +6,6 @@
     "code": "Код"
   },
   "exceptions": {
-    "brandWithSuchCodeAlreadyExist": "Бренд с таким кодом уже существует",
-    "brandIsUsedInProducts": "Такой бренд уже используется в продуктах. Пожалуйста, сначала оновите продукты"
+    "brandWithSuchCodeAlreadyExist": "Бренд с таким кодом уже существует"
   }
 }

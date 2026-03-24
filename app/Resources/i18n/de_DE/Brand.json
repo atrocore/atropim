@@ -6,7 +6,6 @@
     "description": "Beschreibung"
   },
   "exceptions": {
-    "brandIsUsedInProducts": "Die Marke(n), die in einigen Produkten verwendet wird(werden), kann (können) nicht gelöscht werden.",
     "brandWithSuchCodeAlreadyExist": "Die Marke mit einem solchen Code existiert bereits."
   }
 }
