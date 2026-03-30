@@ -27,7 +27,7 @@ Espo.define('pim:views/record/panels/files', 'views/record/panels/relationship',
 
         actionSetAsMainImage(data) {
             this.notify('Saving...');
-            this.ajaxPutRequest(`${this.model.urlRoot}File/${data.id}`, {isMainImage: true}).done(entity => {
+            this.ajaxPatchRequest(`${this.model.urlRoot}File/${data.id}`, {isMainImage: true}).done(entity => {
                 this.model.trigger('file:saved');
                 this.notify('Saved', 'success');
                 this.actionRefresh();
