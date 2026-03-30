@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Pim\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -57,8 +57,8 @@ class Category extends Hierarchy
 
     protected function getParents(Entity $entity): ?EntityCollection
     {
-        if(!empty($entity->get('parentsIds'))) {
-            $parents =  $this->where(['id' => $entity->get('parentsIds')])->find();
+        if (!empty($entity->get('parentsIds'))) {
+            $parents = $this->where(['id' => $entity->get('parentsIds')])->find();
             $entity->set('parents', $parents);
             return $parents;
         }
@@ -93,7 +93,7 @@ class Category extends Hierarchy
         }
 
         if ($entity->isAttributeChanged('parentsIds') && !empty($entity->isAttributeChanged('parentsIds'))) {
-            $parents = $this->where(['id'=> $entity->get('parentsIds')])->find();
+            $parents = $this->where(['id' => $entity->get('parentsIds')])->find();
             if (!empty($parents) && count($parents) > 0) {
                 if (!$this->getConfig()->get('productCanLinkedWithNonLeafCategories', false)) {
                     foreach ($parents as $parent) {
@@ -159,12 +159,10 @@ class Category extends Hierarchy
     {
         $result = parent::remove($entity);
 
-        $this->getEntityManager()->getRepository('ProductCategory')
-            ->where(["categoryId"  => $entity->get('id')])
-            ->removeCollection();
+        $this->removeProductCategories($entity->get('id'));
 
         $this->getEntityManager()->getRepository('CategoryChannel')
-            ->where(["categoryId"  => $entity->get('id')])
+            ->where(["categoryId" => $entity->get('id')])
             ->removeCollection();
 
         return $result;
@@ -176,18 +174,18 @@ class Category extends Hierarchy
 
         $this->getConnection()->createQueryBuilder()
             ->update('product_category')
-            ->set('deleted',':deleted')
+            ->set('deleted', ':deleted')
             ->where('category_id = :categoryId')
             ->setParameter('categoryId', $entity->get('id'))
-            ->setParameter('deleted',false, ParameterType::BOOLEAN)
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->executeQuery();
 
         $this->getConnection()->createQueryBuilder()
             ->update('category_channel')
-            ->set('deleted',':deleted')
+            ->set('deleted', ':deleted')
             ->where('category_id = :categoryId')
             ->setParameter('categoryId', $entity->get('id'))
-            ->setParameter('deleted',false, ParameterType::BOOLEAN)
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->executeQuery();
     }
 
@@ -256,5 +254,58 @@ class Category extends Hierarchy
         $entity->recursiveSave = true;
 
         $this->getEntityManager()->saveEntity($entity);
+    }
+
+    protected function removeProductCategories(string $categoryId): void
+    {
+        $total = $this->getEntityManager()->getRepository('ProductCategory')
+            ->where(["categoryId" => $categoryId])
+            ->count();
+
+        if ($total <= $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200)) {
+            $this->getEntityManager()->getRepository('ProductCategory')
+                ->where(["categoryId" => $categoryId])
+                ->removeCollection();
+            return;
+        }
+
+        $maxChunkSize = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
+        $minChunkSize = $this->getConfig()->get('massDeleteMinChunkSize', 400);
+        $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
+
+        if ($total <= ($minChunkSize * $maxConcurrentJobs)) {
+            $chunkSize = $minChunkSize;
+        } else {
+            if ($total >= ($minChunkSize * $maxConcurrentJobs) && $total <= ($maxChunkSize * $maxConcurrentJobs)) {
+                $chunkSize = ceil($total / $maxConcurrentJobs);
+            } else {
+                $chunkSize = $maxChunkSize;
+            }
+        }
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => "Create jobs for massDelete ProductCategory",
+            'type'     => 'MassActionCreator',
+            'priority' => 100,
+            'payload'  => [
+                'action'     => 'delete',
+                'entityName' => 'ProductCategory',
+                'chunkSize'  => (int)$chunkSize,
+                'total'      => $total,
+                'params'     => [
+                    'singleActionMethod' => 'deleteEntity',
+                    'where'              => [
+                        [
+                            "type"      => "equals",
+                            "attribute" => "categoryId",
+                            "value"     => $categoryId
+                        ]
+                    ],
+                ],
+            ]
+        ]);
+
+        $this->getEntityManager()->saveEntity($jobEntity);
     }
 }
