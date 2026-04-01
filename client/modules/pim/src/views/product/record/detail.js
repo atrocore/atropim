@@ -133,7 +133,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
 
                 let $tree = window.treePanelComponent.getTreeEl();
-                this.ajaxGetRequest('Category/action/TreeData', { ids: ids }).then(response => {
+                this.ajaxGetRequest('Category/treeData', { ids: ids }).then(response => {
                     if (response.total && response.total > 0) {
                         (response.tree || []).forEach(node => {
                             let treeData = $tree.tree('getTree').children || [];
