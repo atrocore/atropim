@@ -2,7 +2,7 @@
   "fields": {
     "classification": "Класифікація",
     "attribute": "Атрибут",
-    "isRequired": "Обов'язково",
+    "isRequired": "Обов'язковий",
     "maxLength": "Максимальна довжина",
     "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
     "value": "Значення за замовчуванням",
