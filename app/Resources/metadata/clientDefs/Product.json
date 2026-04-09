@@ -60,14 +60,6 @@
     "compare": "pim:views/product/record/compare",
     "compareInstance": "pim:views/product/record/compare-instance"
   },
-  "additionalPdfGeneratorDropdownItem": {
-    "actionViewPath": "pim:views/product/actions/show-pdf-generator",
-    "action": "showPdfGenerator"
-  },
-  "additionalPdfGeneratorRowActionItem": {
-    "actionViewPath": "pim:views/product/actions/show-pdf-generator",
-    "action": "showPdfGenerator"
-  },
   "relationshipPanels": {
     "files": {
       "view": "pim:views/record/panels/files",
