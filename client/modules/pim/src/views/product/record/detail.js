@@ -78,7 +78,10 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
 
         treeLoad(treeScope) {
             if (treeScope === 'Classification') {
-                $.ajax({ url: `Product/${this.model.get('id')}/classifications`, type: 'GET' }).done(response => {
+                $.ajax({
+                    url: 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=classifications',
+                    type: 'GET'
+                }).done(response => {
                     if (response.total && response.total > 0) {
                         let $tree = window.treePanelComponent.getTreeEl();
                         response.list.forEach((classification) => {
@@ -102,7 +105,7 @@ Espo.define('pim:views/product/record/detail', 'pim:views/record/detail',
             }
 
             if (treeScope === 'Category') {
-                $.ajax({ url: `Product/${this.model.get('id')}/categories?offset=0&sortBy=sortOrder&asc=true` }).done(response => {
+                $.ajax({ url: 'entityRelation?entityName=' + this.model.name + '&id=' + this.model.id + '&link=categories&offset=0&sortBy=sortOrder&asc=true' }).done(response => {
                     if (response.total && response.total > 0) {
                         this.selectCategoryNode(response.list);
                     }
