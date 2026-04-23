@@ -13,7 +13,7 @@ Espo.define('pim:views/dashlets/products-by-tag', 'views/dashlets/abstract/base'
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
-        collectionUrl: 'Dashlet/productsByTag',
+        collectionUrl: 'Product/productByTagStatistics',
 
         actionRefresh: function () {
             this.collection.fetch();

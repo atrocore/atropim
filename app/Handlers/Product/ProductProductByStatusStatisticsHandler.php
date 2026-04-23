@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Pim\Handlers\Dashlet;
+namespace Pim\Handlers\Product;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -21,11 +21,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Dashlet/channels',
+    path: '/Product/productByStatusStatistics',
     methods: ['GET'],
-    summary: 'Get channels dashlet data',
-    description: 'Returns product counts per channel split by active and inactive.',
-    tag: 'Dashlet',
+    summary: 'Get product by status statistics',
+    description: 'Returns product counts grouped by status.',
+    tag: 'Product',
     responses: [
         200 => [
             'description' => 'Dashlet data',
@@ -36,33 +36,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'total' => [
                                 'type'        => 'integer',
-                                'description' => 'Total number of channel rows',
+                                'description' => 'Total number of status rows',
                             ],
                             'list'  => [
                                 'type'        => 'array',
-                                'description' => 'Channel rows',
+                                'description' => 'Status rows',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
-                                        'id'        => [
+                                        'id'     => [
                                             'type'        => 'string',
-                                            'description' => 'Channel ID',
+                                            'description' => 'Status value',
                                         ],
-                                        'name'      => [
+                                        'name'   => [
                                             'type'        => 'string',
-                                            'description' => 'Channel name',
+                                            'description' => 'Status label',
                                         ],
-                                        'products'  => [
+                                        'amount' => [
                                             'type'        => 'integer',
-                                            'description' => 'Total number of products assigned to this channel',
-                                        ],
-                                        'active'    => [
-                                            'type'        => 'integer',
-                                            'description' => 'Number of active products in this channel',
-                                        ],
-                                        'notActive' => [
-                                            'type'        => 'integer',
-                                            'description' => 'Number of inactive products in this channel',
+                                            'description' => 'Number of products with this status',
                                         ],
                                     ],
                                 ],
@@ -74,10 +66,10 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class DashletChannelsHandler extends AbstractHandler
+class ProductProductByStatusStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('ChannelsDashlet')->getDashlet());
+        return new JsonResponse($this->getServiceFactory()->create('ProductsByStatusDashlet')->getDashlet());
     }
 }

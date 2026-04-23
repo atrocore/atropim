@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Pim\Handlers\Dashlet;
+namespace Pim\Handlers\Product;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -21,11 +21,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Dashlet/productTypes',
+    path: '/Product/productByTagStatistics',
     methods: ['GET'],
-    summary: 'Get product types dashlet data',
-    description: 'Returns product counts grouped by hierarchy type (non-hierarchical, hierarchies, lowest-level, bundles).',
-    tag: 'Dashlet',
+    summary: 'Get product by tag statistics',
+    description: 'Returns product counts for each configured product tag.',
+    tag: 'Product',
     responses: [
         200 => [
             'description' => 'Dashlet data',
@@ -36,33 +36,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'total' => [
                                 'type'        => 'integer',
-                                'description' => 'Total number of product type rows',
+                                'description' => 'Total number of tag rows',
                             ],
                             'list'  => [
                                 'type'        => 'array',
-                                'description' => 'Product type rows',
+                                'description' => 'Tag rows',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
-                                        'id'        => [
+                                        'id'     => [
                                             'type'        => 'string',
-                                            'description' => 'Product type identifier',
+                                            'description' => 'Tag identifier',
                                         ],
-                                        'name'      => [
+                                        'name'   => [
                                             'type'        => 'string',
-                                            'description' => 'Product type label',
+                                            'description' => 'Tag name',
                                         ],
-                                        'total'     => [
+                                        'amount' => [
                                             'type'        => 'integer',
-                                            'description' => 'Total number of products of this type',
-                                        ],
-                                        'active'    => [
-                                            'type'        => 'integer',
-                                            'description' => 'Number of active products of this type',
-                                        ],
-                                        'notActive' => [
-                                            'type'        => 'integer',
-                                            'description' => 'Number of inactive products of this type',
+                                            'description' => 'Number of products with this tag',
                                         ],
                                     ],
                                 ],
@@ -74,10 +66,10 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class DashletProductTypesHandler extends AbstractHandler
+class ProductProductByTagStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('ProductTypesDashlet')->getDashlet());
+        return new JsonResponse($this->getServiceFactory()->create('ProductsByTagDashlet')->getDashlet());
     }
 }

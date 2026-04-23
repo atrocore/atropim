@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Pim\Handlers\Dashlet;
+namespace Pim\Handlers\Product;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -21,11 +21,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Dashlet/productsByStatus',
+    path: '/Product/productTypeStatistics',
     methods: ['GET'],
-    summary: 'Get products by status dashlet data',
-    description: 'Returns product counts grouped by status.',
-    tag: 'Dashlet',
+    summary: 'Get product type statistics',
+    description: 'Returns product counts grouped by hierarchy type (non-hierarchical, hierarchies, lowest-level, bundles).',
+    tag: 'Product',
     responses: [
         200 => [
             'description' => 'Dashlet data',
@@ -36,25 +36,33 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'total' => [
                                 'type'        => 'integer',
-                                'description' => 'Total number of status rows',
+                                'description' => 'Total number of product type rows',
                             ],
                             'list'  => [
                                 'type'        => 'array',
-                                'description' => 'Status rows',
+                                'description' => 'Product type rows',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
-                                        'id'     => [
+                                        'id'        => [
                                             'type'        => 'string',
-                                            'description' => 'Status value',
+                                            'description' => 'Product type identifier',
                                         ],
-                                        'name'   => [
+                                        'name'      => [
                                             'type'        => 'string',
-                                            'description' => 'Status label',
+                                            'description' => 'Product type label',
                                         ],
-                                        'amount' => [
+                                        'total'     => [
                                             'type'        => 'integer',
-                                            'description' => 'Number of products with this status',
+                                            'description' => 'Total number of products of this type',
+                                        ],
+                                        'active'    => [
+                                            'type'        => 'integer',
+                                            'description' => 'Number of active products of this type',
+                                        ],
+                                        'notActive' => [
+                                            'type'        => 'integer',
+                                            'description' => 'Number of inactive products of this type',
                                         ],
                                     ],
                                 ],
@@ -66,10 +74,10 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class DashletProductsByStatusHandler extends AbstractHandler
+class ProductProductTypeStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('ProductsByStatusDashlet')->getDashlet());
+        return new JsonResponse($this->getServiceFactory()->create('ProductTypesDashlet')->getDashlet());
     }
 }
