@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     tag: 'Product',
     responses: [
         200 => [
-            'description' => 'Dashlet data',
+            'description' => 'Channel statistics',
             'content'     => [
                 'application/json' => [
                     'schema' => [
