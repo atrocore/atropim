@@ -13,7 +13,7 @@ Espo.define('pim:views/dashlets/product-types', 'views/dashlets/abstract/base',
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
-        collectionUrl: 'Dashlet/ProductTypes',
+        collectionUrl: 'Dashlet/productTypes',
 
         actionRefresh: function () {
             this.collection.fetch();

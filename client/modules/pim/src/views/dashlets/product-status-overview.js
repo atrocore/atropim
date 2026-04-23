@@ -102,7 +102,7 @@ Espo.define('pim:views/dashlets/product-status-overview', ['views/dashlets/abstr
         },
 
         getUrl() {
-            return 'Dashlet/ProductsByStatus';
+            return 'Dashlet/productsByStatus';
         },
 
         fetch() {
