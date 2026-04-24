@@ -13,7 +13,7 @@ Espo.define('pim:views/dashlets/channels', 'views/dashlets/abstract/base',
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
-        collectionUrl: 'Dashlet/Channels',
+        collectionUrl: 'Product/channelStatistics',
 
         actionRefresh: function () {
             this.collection.fetch();
