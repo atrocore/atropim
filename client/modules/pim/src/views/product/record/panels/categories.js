@@ -37,7 +37,7 @@ Espo.define('pim:views/product/record/panels/categories', 'views/record/panels/r
 
         actionSetAsMainCategory(data) {
             this.notify('Saving...');
-            this.ajaxPutRequest(`${this.model.urlRoot}Category/${data.id}`, {mainCategory: true}).done(entity => {
+            this.ajaxPatchRequest(`${this.model.urlRoot}Category/${data.id}`, {mainCategory: true}).done(entity => {
                 this.notify('Updated', 'success');
                 this.actionRefresh();
             });

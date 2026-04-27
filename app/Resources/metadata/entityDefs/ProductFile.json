@@ -2,13 +2,16 @@
   "fields": {
     "isMainImage": {
       "type": "bool",
-      "view": "pim:views/fields/is-main-image"
+      "view": "pim:views/fields/is-main-image",
+      "additionalField": true
     },
     "sorting": {
-      "type": "int"
+      "type": "int",
+      "additionalField": true
     },
     "tags": {
-      "type": "array"
+      "type": "array",
+      "additionalField": true
     }
   }
 }
