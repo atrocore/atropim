@@ -1,11 +1,13 @@
 {
   "fields": {
     "sorting": {
-      "type": "int"
+      "type": "int",
+      "additionalField": true
     },
     "mainCategory": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "additionalField": true
     }
   }
 }
