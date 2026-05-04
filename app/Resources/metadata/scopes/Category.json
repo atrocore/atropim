@@ -14,5 +14,8 @@
   "multiParents": false,
   "dragAndDrop": true,
   "isActiveUnavailable": true,
-  "defaultRelationAudited": true
+  "defaultRelationAudited": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true
 }

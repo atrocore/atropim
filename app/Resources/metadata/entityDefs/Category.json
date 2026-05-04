@@ -54,20 +54,6 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "ownerUser": {
-      "type": "link",
-      "required": true,
-      "view": "views/fields/owner-user"
-    },
-    "assignedUser": {
-      "type": "link",
-      "required": true,
-      "view": "views/fields/assigned-user"
-    },
-    "teams": {
-      "type": "linkMultiple",
-      "view": "views/fields/teams"
-    },
     "sortOrder": {
       "type": "int",
       "default": null,
