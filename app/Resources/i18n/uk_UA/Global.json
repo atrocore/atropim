@@ -84,8 +84,7 @@
     "categoryPreview": "Попередній перегляд категорії",
     "productPreview": "Попередній перегляд продукту",
     "removeHierarchically": "Видалити ієрархічно",
-    "selectAttributes": "Вибрати атрибут(и)",
-    "addAttribute": "Додати атрибут"
+    "selectAttributes": "Вибрати атрибут(и)"
   },
   "dashlets": {
     "Channels": "Канали",

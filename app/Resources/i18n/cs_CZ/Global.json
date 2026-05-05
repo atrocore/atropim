@@ -20,8 +20,7 @@
     "setAsMainVariant": "Nastavit jako hlavní variantu",
     "allChannels": "Všechny kanály",
     "linkedChannels": "Propojené kanály",
-    "typeToSearch": "Zadejte text a stiskněte Enter…",
-    "addAttribute": "[Přidat atribut]"
+    "typeToSearch": "Zadejte text a stiskněte Enter…"
   },
   "dashlets": {
     "Channels": "Kanály",

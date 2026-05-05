@@ -84,8 +84,7 @@
     "Reset selection": "Remise à zéro de la sélection",
     "bundledProducts": "Produits groupés",
     "nonHierarchicalProducts": "Produits non hiérarchisés",
-    "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer.",
-    "addAttribute": "Ajouter un attribut"
+    "removeExplain": "Sélectionnez cette option pour dissocier l'attribut des autres entités avant de le supprimer."
   },
   "dashlets": {
     "Channels": "Canaux",

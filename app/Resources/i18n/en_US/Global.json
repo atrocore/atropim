@@ -65,7 +65,6 @@
   },
   "labels": {
     "selectAttributes": "Select attribute(s)",
-    "addAttribute": "Add Attribute",
     "removeHierarchically": "Delete Hierarchically",
     "setAsMainImage": "Set as Main Image",
     "setAsMainCategory": "Set as Main Category",
