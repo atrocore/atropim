@@ -24,10 +24,10 @@ class FileService extends AbstractListener
         if (property_exists($data, '_id') && property_exists($data, '_sortedIds') && property_exists($data, '_scope') && !empty($data->_sortedIds)) {
             if ($data->_scope === 'Product') {
                 $this->getEntityManager()->getRepository('ProductFile')->updateSortOrder($data->_id, $data->_sortedIds);
-                $event->setArgument('result', $this->getService('File')->getEntity($data->_itemId));
+                $event->setArgument('result', true);
             } elseif ($data->_scope === 'Category') {
                 $this->getEntityManager()->getRepository('CategoryFile')->updateSortOrder($data->_id, $data->_sortedIds);
-                $event->setArgument('result', $this->getService('File')->getEntity($data->_itemId));
+                $event->setArgument('result', true);
             }
         }
     }
