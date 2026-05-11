@@ -3,7 +3,7 @@
     "classificationAttributes": "Атрибути класифікації"
   },
   "exceptions": {
-    "extensibleEnumOptionIsUsedOnProductAttribute": "Опція списку '%s' використовується атрибутом '%s' в продукті '%s'.",
-    "extensibleEnumOptionIsUsedOnClassificationAttribute": "Опція списку '%s' використовується атрибутом '%s' в класифікації '%s'."
+    "extensibleEnumOptionIsUsedOnProductAttribute": "Опція списку '%s' використовується атрибутом '%s' у продукті '%s'.",
+    "extensibleEnumOptionIsUsedOnClassificationAttribute": "Опція списку '%s' використовується атрибутом '%s' у класифікації '%s'."
   }
 }
