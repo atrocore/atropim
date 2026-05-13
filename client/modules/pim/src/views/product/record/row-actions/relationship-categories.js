@@ -19,6 +19,7 @@ Espo.define('pim:views/product/record/row-actions/relationship-categories', 'vie
                 list.unshift({
                     action: 'setAsMainCategory',
                     label: this.translate('setAsMainCategory'),
+                    iconClass: 'ph ph-star',
                     data: {
                         id: model.get('id')
                     }

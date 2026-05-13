@@ -19,6 +19,7 @@ Espo.define('pim:views/product/record/row-actions/relationship-children', 'views
                 list.unshift({
                     action: 'setAsMainVariant',
                     label: this.translate('setAsMainVariant'),
+                    iconClass: 'ph ph-star',
                     data: {
                         id: model.get('id')
                     }

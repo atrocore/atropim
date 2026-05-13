@@ -24,6 +24,7 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage'),
+                    iconClass: 'ph ph-image',
                     data: {
                         id: model.get('id')
                     }
