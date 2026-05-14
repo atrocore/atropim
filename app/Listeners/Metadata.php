@@ -15,9 +15,9 @@ namespace Pim\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Utils\Util;
-use Atro\Listeners\AbstractListener;
+use Atro\Listeners\AbstractMetadataListener;
 
-class Metadata extends AbstractListener
+class Metadata extends AbstractMetadataListener
 {
     public function modify(Event $event): void
     {
