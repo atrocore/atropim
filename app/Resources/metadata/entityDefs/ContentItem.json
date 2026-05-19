@@ -49,11 +49,10 @@
       "minHeight": 250
     },
     "type": {
-      "type": "extensibleEnum",
-      "dropdown": true,
+      "type": "enum",
+      "options": ["highlight", "top_features_list", "story"],
       "required": true,
-      "extensibleEnumId": "content_items",
-      "defaultId": "highlight"
+      "default": "highlight"
     }
   },
   "links": {

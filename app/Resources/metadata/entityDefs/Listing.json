@@ -44,8 +44,8 @@
       "customizable": false
     },
     "status": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "listing_status",
+      "type": "enum",
+      "options": [],
       "required": true
     },
     "files": {
