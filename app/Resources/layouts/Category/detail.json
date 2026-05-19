@@ -19,9 +19,11 @@
       ],
       [
         {
-          "name": "routes"
+          "name": "sortOrder"
         },
-        false
+        {
+          "name": "routes"
+        }
       ],
       [
         {
