@@ -7,5 +7,12 @@
     "products": "Products",
     "richText": "Rich Text",
     "type": "Type"
+  },
+  "options": {
+    "type": {
+      "highlight": "Highlight",
+      "top_features_list": "Top Features List",
+      "story": "Story"
+    }
   }
 }
