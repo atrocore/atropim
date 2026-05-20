@@ -45,7 +45,7 @@
     },
     "status": {
       "type": "enum",
-      "options": [],
+      "options": ["listing_draft", "listing_prepared", "buyable", "discoverable", "listing_error"],
       "required": true
     },
     "files": {
