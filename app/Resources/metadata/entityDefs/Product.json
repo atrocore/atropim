@@ -149,12 +149,6 @@
       "foreign": "products",
       "entity": "Brand"
     },
-    "calls": {
-      "type": "hasChildren",
-      "entity": "Call",
-      "foreign": "parent",
-      "layoutRelationshipsDisabled": true
-    },
     "channels": {
       "type": "hasMany",
       "relationName": "productChannel",
