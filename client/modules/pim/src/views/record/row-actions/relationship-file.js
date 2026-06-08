@@ -20,7 +20,12 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
                 }
             });
 
-            if (model && this.isImage() && !model.get('isMainImage') && this.options.acl.edit) {
+            const parentModel = this.getParentView()?.getParentView()?.getParentModel();
+            if (model
+                && this.isImage()
+                && !model.get('isMainImage')
+                && model.get('_meta')?.permissions?.edit
+                && (parentModel && parentModel.get('_meta')?.permissions?.edit)) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage'),
