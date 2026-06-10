@@ -22,7 +22,7 @@ class CategoryLayout extends AbstractLayoutListener
 {
     public function detail(Event $event)
     {
-        if ($this->getRelatedEntity($event) == 'Product') {
+        if ($this->getRelatedEntity($event) == 'Product' && !$this->isCustomLayout($event)) {
             $result = $event->getArgument('result');
 
             if (!str_contains(json_encode($result), '"ProductCategory__mainCategory"')) {
