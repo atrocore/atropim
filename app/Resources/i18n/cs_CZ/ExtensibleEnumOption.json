@@ -1,9 +1,0 @@
-{
-  "fields": {
-    "classificationAttributes": "Atributy klasifikace"
-  },
-  "exceptions": {
-    "extensibleEnumOptionIsUsedOnProductAttribute": "Možnost seznamu \"%s\" je použita atributem \"%s\" v produktu \"%s\".",
-    "extensibleEnumOptionIsUsedOnClassificationAttribute": "Možnost seznamu \"%s\" je použita atributem \"%s\" v klasifikaci \"%s\"."
-  }
-}

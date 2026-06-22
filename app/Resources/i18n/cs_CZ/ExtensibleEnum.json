@@ -1,8 +1,0 @@
-{
-  "fields": {
-    "attributes": "Atributy"
-  },
-  "exceptions": {
-    "extensibleEnumIsUsedOnAttribute": "Seznam \"%s\" je používán atributem \"%s\"."
-  }
-}
