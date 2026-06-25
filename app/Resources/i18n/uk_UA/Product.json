@@ -11,36 +11,36 @@
     "amount": "Кількість",
     "price": "Ціна покупки",
     "ean": "GTIN/EAN",
-    "rrp": "Рекомендована роздрібна ціна",
+    "rrp": "Рекомендована роздрібна ціна (RRP)",
     "image": "Основне зображення",
     "tag": "Тег",
     "channels": "Канали",
-    "basePriceAmount": "Базова ціна",
+    "basePriceAmount": "Кількість для базової ціни",
     "packedAmount": "Кількість в упаковці",
     "contents": "Контент",
     "taskStatus": "Статус завдання",
     "files": "Файли",
     "calls": "Дзвінки",
     "contentItems": "Елементи вмісту",
-    "variantSpecificAttributes": "Атрибути для конкретного варіанту"
+    "variantSpecificAttributes": "Атрибути, специфічні для варіанту"
   },
   "labels": {
     "Product Attributes": "Атрибути",
     "thereIsNoValidAttributesForChannel": "Для каналу немає допустимих атрибутів",
     "addAttributeFilter": "Додати фільтр атрибутів",
     "Channels": "Канали",
-    "Product Channel Attributes": "Атрибути каналу",
+    "Product Channel Attributes": "Атрибути каналу продукту",
     "typeCategoryToSearch": "Введіть категорію для пошуку...",
     "noGroup": "Немає групи",
     "productImage": "Зображення продукту",
-    "selectAttributeGroup": "Вибрати групу атрибута",
+    "selectAttributeGroup": "Вибрати групу атрибутів",
     "channel": "Канал"
   },
   "options": {
     "status": {
       "draft": "Чернетка",
       "prepared": "Підготовлено",
-      "reviewed": "Відредаговано",
+      "reviewed": "Перевірено",
       "notReady": "Не готово",
       "ready": "Готово"
     },
@@ -61,17 +61,17 @@
       "img": "Зоб.",
       "cat": "Кат.",
       "ch": "Канали",
-      "pr": "PR"
+      "pr": "Pr"
     },
     "template": {
       "default": "За замовчуванням"
     }
   },
   "boolFilters": {
-    "notAssociatedRecords": "Не асоційовані продукти",
-    "notLinkedWithBrand": "Не пов'язаний із брендом",
-    "linkedWithCategory": "Пов'язаний із категорією",
-    "onlyConfigurableProducts": "Тільки продукти, які моуть бути конфігуровані",
+    "notAssociatedRecords": "Без асоційованих продуктів",
+    "notLinkedWithBrand": "Без бренду",
+    "linkedWithCategory": "З категорією",
+    "onlyConfigurableProducts": "Лише конфігуровані продукти",
     "withoutMainImage": "Без основного зображення"
   },
   "exceptions": {
@@ -84,6 +84,6 @@
   "messages": {
     "emptyComponents": "Продукт не має компонентів.",
     "componentsNotInstalled": "Встановіть модуль «Components», щоб використовувати попередній перегляд компонентів.",
-    "removeRelatedRecords": "Ви впевнені, що бажаєте видалити всі продукти для вибраної асоціації з поточного продукту? Усі супутні товари будуть збережені."
+    "removeRelatedRecords": "Ви впевнені, що хочете видалити всі продукти вибраної асоціації з поточного продукту? Усі пов'язані продукти буде збережено."
   }
 }
