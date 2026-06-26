@@ -6,8 +6,8 @@
     "type": "Тип",
     "description": "Опис",
     "text": "Текст",
-    "metaTitle": "Meta Title",
-    "metaDescription": "Meta Description",
+    "metaTitle": "Мета-заголовок",
+    "metaDescription": "Мета-опис",
     "contentGroup": "Група контенту",
     "products": "Продукти"
   },
