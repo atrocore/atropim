@@ -39,7 +39,7 @@ Now we have much more :)
 
 **AtroCore** is the open-source framework and core ecosystem. It provides the foundational architecture, user management, API, data model configuration, and low-code capabilities. By itself, it is an abstract entity-relationship system used to build custom business software.
 
-**AtroPIM** is a Product Information Management system. It is a pre-configured bundle of modules that installs on top of AtroCore, adding specific features required to manage complex product data, catalogs, channels, and digital assets.
+**AtroPIM** consists of the underlying AtroCore platform with a specialized PIM module pre-installed on top of it. This combination provides a complete Product Information Management system, adding all the specific features required to manage complex product data, catalogs, and channels.
 
 
 ## Features
