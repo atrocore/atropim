@@ -34,6 +34,14 @@ Now we have much more :)
 - Extensible with modules
 - Also check other advantages of [AtroCore](https://github.com/atrocore/atrocore).
 
+
+## How does AtroPIM differ from AtroCore?
+
+**AtroCore** is the open-source framework and core ecosystem. It provides the foundational architecture, user management, API, data model configuration, and low-code capabilities. By itself, it is an abstract entity-relationship system used to build custom business software.
+
+**AtroPIM** is a Product Information Management system. It is a pre-configured bundle of modules that installs on top of AtroCore, adding specific features required to manage complex product data, catalogs, channels, and digital assets.
+
+
 ## Features
 
 AtroPIM comes with a lot of features:
