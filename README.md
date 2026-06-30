@@ -105,7 +105,7 @@ Installation Guide is [here](https://help.atrocore.com/installation-and-maintena
 
 Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
 
-Docker Image is [here](https://gitlab.atrocore.com/atrocore/docker).
+Docker Image is [here](https://github.com/atrocore/docker).
 
 > We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
