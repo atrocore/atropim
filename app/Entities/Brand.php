@@ -11,7 +11,8 @@
 
 namespace Pim\Entities;
 
-class Brand extends \Espo\Core\Templates\Entities\Base
+use Atro\Core\Templates\Entities\Base;
+
+class Brand extends Base
 {
-    protected $entityType = "Brand";
 }
