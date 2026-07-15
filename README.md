@@ -21,9 +21,17 @@ It enables manufacturers, brands, and retailers to efficiently centralize, manag
 
 This repository contains source code for a PIM module for the AtroCore Data Platform. AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
+
 ## History
+
 Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
-Now we have much more :)
+
+
+## Our Customers
+
+Our primary client base consists of manufacturers, wholesalers, and distributors managing highly complex product portfolios with intricate technical specifications and variant structures.
+
+We are proud to partner with leading global brands and enterprise market leaders, including: Acer, Bridgestone and Adam Hall.
 
 
 ## Why Choose AtroPIM? (At a Glance)
