@@ -9,7 +9,8 @@
 <img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48">
 </p>
 
-AtroPIM is a highly flexible, configurable, and modular [open-source product information management system (PIM)](https://www.atropim.com). 
+AtroPIM is a highly-configurable, modular, API-first open-source [Product Information Management (PIM) system](https://www.atropim.com). A lightweight alternative to Akeneo & Pimcore built on PHP & Svelte, ideal for eCommerce, ERP integrations, and B2B catalogs.
+
 It enables manufacturers, brands, and retailers to efficiently centralize, manage, and distribute product data across multiple channels – making it ideal for scalable eCommerce and digital product management.
 <!--
 | Host            | URL                                          |
@@ -25,14 +26,26 @@ Our software has been in active development since 2018. It all began with a simp
 Now we have much more :)
 
 
-## What Are the Advantages of AtroPIM?
+## Why Choose AtroPIM? (At a Glance)
 
-- Scalable
-- Highly configurable (entities, relations, fields, layouts, attributes, notifications, labels, navigation, dashboards, etc.)
-- REST API for everything incl. your custom configurations
-- Mobile-friendly UI
-- Extensible with modules
-- Also check other advantages of [AtroCore](https://github.com/atrocore/atrocore).
+AtroPIM is a modern, developer-friendly alternative to enterprise PIMs. 
+
+* **API-First & Headless:** Generates a fully-featured REST API automatically for all your custom configurations.
+* **Highly Configurable:** Create custom entities, layouts, fields, attributes, and relations directly from the UI (low-code/no-code).
+* **Lightweight & Fast:** Uses Svelte and PHP to deliver high performance with a fraction of the resource footprint of Symfony-heavy alternatives.
+* **Fully Extensible:** Features a GPLv3 open-source core with a modular ecosystem designed for effortless scaling.
+* **Mobile-Friendly UI:** Experience a fully functional, responsive interface optimized for any device.
+* **Highly Scalable:** Scale your data volume, user base, and channels seamlessly as your business grows.
+
+
+### Use AtroPIM if:
+
+* **You need to manage non-standard or complex product data models:** Easily configure custom entities, attributes, and multi-parent, multi-level relations directly from the UI without writing a single line of backend code.
+* **You want to keep hosting and infrastructure costs low:** Run a blazing-fast PIM on standard virtual private servers (VPS) without the heavy system requirements, complex Elasticsearch setups, or massive RAM overhead demanded by Java- or Symfony-heavy alternatives.
+* **You are building a headless eCommerce stack:** Leverage a native, auto-generated, and ultra-flexible REST API that exposes 100% of your custom data models, layouts, and configurations out of the box.
+* **You need deep, automated ERP integration:** Seamlessly synchronize product data with systems like SAP, Microsoft Dynamics, Odoo, etc. using native connectors or powerful, built-in HTTP import/export engines.
+* **You manage multi-lingual, multi-currency, or multi-channel catalogs:** Effortlessly localize product descriptions, manage channel-specific pricing, and distribute tailored feeds to platforms like Shopware, Magento, Shopify, and Amazon from a single source of truth.
+* **You require absolute data ownership and control:** Benefit from a fully self-hosted, GPLv3 open-source core that guarantees your data remains on your own servers with no vendor lock-in or artificial seat limits.
 
 
 ## How does AtroPIM differ from AtroCore?
