@@ -22,39 +22,44 @@ It enables manufacturers, brands, and retailers to efficiently centralize, manag
 This repository contains source code for a PIM module for the AtroCore Data Platform. AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
 
-## History
+## Evolution
 
 Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
 
+Today, our software has evolved into a robust, comprehensive ecosystem built on a highly flexible, modular architecture. This adaptable framework allows us to confidently assure our clients that their requirements – extending far beyond standard PIM functions – can be fully accommodated without compromise. By offering a versatile technical toolbox, we enable organizations to seamlessly scale, integrate, and customize their data models to meet complex, ever-changing business demands.
 
 ## Our Customers
 
-Our primary client base consists of manufacturers, wholesalers, and distributors managing highly complex product portfolios with intricate technical specifications and variant structures.
+Our customers are manufacturers, wholesalers, and distributors that manage complex and business critical data across products, assets, and processes. They rely on AtroCore to handle large and sophisticated data models, extensive product portfolios, and complex variant, classification, and integration requirements.
+
+From mid market companies to global enterprises, organizations choose AtroCore when their needs go beyond the limitations of standard software solutions and when flexibility, scalability, and seamless integration with existing software landscapes are essential.
 
 We are proud to partner with leading global brands and enterprise market leaders, including: Acer, Bridgestone and Adam Hall.
 
 
-## Why Choose AtroPIM? (At a Glance)
+## Why Choose AtroPIM?
 
-AtroPIM is a modern, developer-friendly alternative to enterprise PIMs. 
+AtroPIM is a flexible, open-source Product Information Management platform designed for companies that need to manage complex product data, integrate multiple systems, and adapt their PIM solution to specific business requirements.
 
-* **API-First & Headless:** Generates a fully-featured REST API automatically for all your custom configurations.
-* **Highly Configurable:** Create custom entities, layouts, fields, attributes, and relations directly from the UI (low-code/no-code).
-* **Lightweight & Fast:** Uses Svelte and PHP to deliver high performance with a fraction of the resource footprint of Symfony-heavy alternatives.
-* **Fully Extensible:** Features a GPLv3 open-source core with a modular ecosystem designed for effortless scaling.
-* **Mobile-Friendly UI:** Experience a fully functional, responsive interface optimized for any device.
-* **Highly Scalable:** Scale your data volume, user base, and channels seamlessly as your business grows.
+Unlike traditional PIM systems with rigid data models and costly customization projects, AtroPIM provides a highly configurable architecture that allows businesses to create, manage, and distribute product information exactly the way they need it.
 
+* **API-First & Headless Architecture:** Automatically provides a comprehensive REST API for all standard and custom data models, enabling seamless integration with ecommerce platforms, ERP systems, marketplaces, and other applications.
+* **Highly Configurable Data Model:** Create custom entities, attributes, relations, classifications, layouts, and workflows directly through the user interface without modifying the core system.
+* **Open-Source & Extensible:** Built on a GPLv3 licensed open-source foundation with a modular architecture that allows developers to extend functionality and create custom solutions.
+* **Flexible for Complex Product Data:** Manage sophisticated product structures, variants, technical specifications, classifications, relationships, and any other data requirements beyond standard catalog scenarios.
+* **Modern & Efficient Technology Stack:** Benefit from a lightweight, high-performance architecture designed for efficient operation and scalable deployments.
+* **Responsive User Experience:** Provide employees, partners, and other stakeholders with a modern, mobile-friendly interface.
+* **Scalable Architecture:** Grow from initial implementations to enterprise environments with increasing data volumes, users, integrations, and distribution channels.
 
-### Use AtroPIM if:
+## Use AtroPIM If You:
 
-* **You need to manage non-standard or complex product data models:** Easily configure custom entities, attributes, and multi-parent, multi-level relations directly from the UI without writing a single line of backend code.
-* **You want to keep hosting and infrastructure costs low:** Run a blazing-fast PIM on standard virtual private servers (VPS) without the heavy system requirements, complex Elasticsearch setups, or massive RAM overhead demanded by Java- or Symfony-heavy alternatives.
-* **You are building a headless eCommerce stack:** Leverage a native, auto-generated, and ultra-flexible REST API that exposes 100% of your custom data models, layouts, and configurations out of the box.
-* **You need deep, automated ERP integration:** Seamlessly synchronize product data with systems like SAP, Microsoft Dynamics, Odoo, etc. using native connectors or powerful, built-in HTTP import/export engines.
-* **You manage multi-lingual, multi-currency, or multi-channel catalogs:** Effortlessly localize product descriptions, manage channel-specific pricing, and distribute tailored feeds to platforms like Shopware, Magento, Shopify, and Amazon from a single source of truth.
-* **You require absolute data ownership and control:** Benefit from a fully self-hosted, GPLv3 open-source core that guarantees your data remains on your own servers with no vendor lock-in or artificial seat limits.
-
+* **Manage complex or non-standard product data:** Build flexible product models with custom entities, attributes, relationships, and multi-level structures without lengthy development projects.
+* **Need a PIM that adapts to your business instead of forcing your business into predefined structures:** Configure AtroPIM around your processes, products, and data requirements.
+* **Want a headless PIM for modern digital commerce:** Use the built-in REST API to connect AtroPIM with ecommerce platforms, mobile applications, portals, marketplaces, and any other digital channels.
+* **Require deep integration with ERP and enterprise systems:** Synchronize product information with SAP, Microsoft Dynamics, Odoo, and other business applications using APIs, connectors, and flexible import/export capabilities.
+* **Operate internationally across multiple markets and channels:** Manage multilingual content, regional requirements, channel-specific data, and different product presentations from a central source of truth.
+* **Need full control over your data and infrastructure:** Use a self-hosted, GPLv3 open-source platform with no vendor lock-in and complete ownership of your data.
+* **Look for a cost-efficient enterprise-grade PIM solution:** Reduce implementation and maintenance costs through configuration-first customization, open architecture, and reduced dependency on proprietary development.
 
 ## How does AtroPIM differ from AtroCore?
 
@@ -94,6 +99,11 @@ For teams that prefer a managed cloud environment, we offer hosted SaaS plans.
 
 ![Architecture and Technologies](_assets/architecture-and-technologies.png)
 
+- Backend: PHP, powered by enterprise-grade Symfony and Laminas components.
+- Frontend: JavaScript, migrating from legacy Backbone.js to a modern, reactive Svelte architecture.
+- Database: PostgreSQL, MySQL, and MariaDB, managed via the Doctrine DBAL abstraction layer.
+- API: Fully standardized using OpenAPI (Swagger) specifications.
+- Update Management: Driven by Composer for seamless dependency and version handling.
 
 ## Integrations
 
@@ -115,14 +125,20 @@ You can **build your own fully automated integration** with any third-party syst
 Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 
-## Requirements
+## System Requirements
 
-* Dedicated (virtual) Linux-based server with root permissions. 
-* Ubuntu as Operating System is recommended but not required.
-* PHP 8.1 - 8.4
-* MySQL 5.5.3 (or above) or PostgreSQL 14.9 (or above).
+- Linux-based **root or managed server** (recommended: Ubuntu LTS). 
+- **Minimum Ressources:**
+  - 2 vCPU
+  - 4 GB RAM
+  - 80 GB SSD Storage
+- **Software**:
+  - Apache Web Server or Nginx
+  - PHP 8.1 - 8.4.
+  - PostgreSQL 14.9+ (recommended) or MySQL 5.5+ MariaDB 5.5+.
 
-> Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
+> Please note, system will definitely NOT work on a usual shared hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
+
 
 ## Installation (Getting Started)
 
