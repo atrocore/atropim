@@ -72,16 +72,16 @@ Unlike traditional PIM systems with rigid data models and costly customization p
 
 AtroPIM comes with a lot of features:
 
-- All AtroCore's features plus management of:
-- Products
-- Associated Products
-- Channels
-- Category Trees
-- Classifications
-- Product Series
-- Products
-- Product and Category Images
-- and much more.
+- All [AtroCore's features](https://github.com/atrocore/atrocore/blob/master/README.md#feature-list) plus:
+- Product-Centric Data Management
+- Hierarchical product variants
+- Channels and channel-spesific attributes
+- Product category trees
+- Product classifications
+- Custom text blocks
+- Bidirectional product associations (upsell, cross-sell, etc.)
+- Product Listings
+- PIM-Focused Dashboard Widgets
 
 Visit [this page](https://www.atropim.com/en/features) to see all the features of AtroPIM.
 
