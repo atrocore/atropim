@@ -6,7 +6,9 @@
 [![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/release-notes/pim)
 
 <p align="center" width="100%">
+  <br><br>
 <img src="_assets/atropim-logo.svg" alt="AtroPIM Logo" height="48">
+  <br><br>
 </p>
 
 AtroPIM is a highly-configurable, modular, API-first open-source [Product Information Management (PIM) system](https://www.atropim.com). A lightweight alternative to Akeneo & Pimcore built on PHP & Svelte, ideal for eCommerce, ERP integrations, and B2B catalogs.
