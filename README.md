@@ -87,6 +87,10 @@ AtroPIM comes with a lot of features:
 
 Visit [this page](https://www.atropim.com/en/features) to see all the features of AtroPIM.
 
+### Product Development Roadmap
+
+Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
+
 
 ### Free vs Paid
 
