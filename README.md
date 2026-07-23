@@ -196,7 +196,7 @@ Would you like to help us translate UIs into your language, or improve existing 
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Read our Release Notes - https://help.atrocore.com/release-notes/pim
-- Please visit our Community - https://community.atrocore.com
+- Please visit our Community - https://community.atrocore.com (use github account to login)
 - Сontact us - https://www.atrocore.com/contact
 
 
