@@ -89,7 +89,7 @@ Visit [this page](https://www.atropim.com/en/features) to see all the features o
 
 ### Product Development Roadmap
 
-Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
+- Check out our [roadmap](https://community.atrocore.com/t/product-roadmap/237).
 
 
 ### Free vs Paid
@@ -150,13 +150,12 @@ Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 To install AtroPIM you need to install Atrocore and a PIM module for it.
 
-Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
+- Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ### Docker Installation
 
-Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
-
-Docker Image is [here](https://github.com/atrocore/docker).
+- Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
+- Docker Image is [here](https://github.com/atrocore/docker).
 
 > We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
