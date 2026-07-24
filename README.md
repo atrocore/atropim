@@ -199,7 +199,7 @@ Would you like to help us translate UIs into your language, or improve existing 
 - Сontact us - https://www.atrocore.com/contact
 
 
-## 📌Help Us Grow
+## Help Us Grow
 
 If you find AtroCore useful:
 
