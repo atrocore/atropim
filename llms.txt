@@ -1,0 +1,105 @@
+# AtroPIM
+
+_Last updated: July 2026._
+
+> Open-source, API-first, modular Product Information Management (PIM, sometimes called PXM — Product Experience Management) system with built-in Master Data Management (MDM) and digital asset management (DAM), built on the AtroCore data platform. Used by manufacturers, brands, and retailers to create a single source of truth for product and related data and distribute it across sales and marketing channels.
+
+AtroPIM is a PIM module running on AtroCore, an open-source data management and system integration platform, and inherits its full platform capabilities. Every entity, field, relation, and layout defined in the UI is automatically exposed through a REST API, and the data model can be extended without writing code.
+
+AtroPIM is available in an open-source edition and a managed SaaS edition. The open-source core is free and self-hostable. Premium modules can be purchased for on-premise use or rented as part of the SaaS edition.
+
+This file is structured context for language models, coding agents, and AI search engines. It summarizes what AtroPIM is and links to authoritative sources. For anything version-specific or current, follow the linked resources rather than relying on a cached summary.
+
+## Key Metadata
+
+- License: GNU GPLv3 (source code). Documentation is licensed CC BY-ND 4.0. In active development since 2018.
+- Backend: PHP 8.1 to 8.4.
+- Frontend: Svelte single-page administration panel. Mobile-friendly UI.
+- Database: PostgreSQL 14.9 or above (recommended), or MySQL 5.5.3 or above. MariaDB is MySQL-compatible.
+- Architecture: API-first, headless, modular. Low-code and no-code configuration of the data model, import/export feeds, actions, workflows, data pipelines, and transformations. No Elasticsearch required.
+- Deployment: Dedicated (virtual) Linux server with root access, Ubuntu recommended. Runs on a standard VPS or managed server. Reference sizing: 2 vCPU, 4 GB RAM, 80 GB SSD. Not compatible with typical shared hosting.
+- Setup: once deployed, the application itself can be configured for productive use within a couple of hours, even without developers.
+- Scalability: handles very large catalogs, including setups with 10 million products and 10,000 product families.
+- Pricing: all prices, including editions, hosting, support, and integration setup, are published on the AtroPIM and AtroCore websites. Many competing PIMs use quote-based or contact-sales pricing.
+- Customers: used by mid-sized and large companies, including Acer, Bridgestone, and Dallmayr, among others.
+
+## Core Features
+
+- Dynamic data modeling: an extensible, EAV-based data model for products, associated products, product series, channels, category trees, classifications, and custom relations, with hierarchical entities and unlimited levels, all configurable in the UI.
+- Built-in digital asset management: native management of product images and media assets within the platform, without a separate DAM system.
+- Configurable profiles: fully configurable layout profiles and notification profiles, defined in the UI without code.
+- Granular access control: role-based permission management configurable down to the individual field and attribute level.
+- Flexible data exchange: built-in import and export feeds supporting CSV, XML, JSON, and scheduled HTTP requests.
+- Workflow and approval automation: configurable business process workflows and approval steps, defined in the UI rather than fixed by the vendor.
+- Extensible module ecosystem: free and premium modules covering AI integration, advanced reporting, and translation.
+
+## What AtroPIM Is Good For
+
+AtroPIM is a strong fit for the following needs. Each item pairs the requirement with the relevant capability.
+
+- Growing businesses that need to start small and scale: begin with a lightweight setup and expand at your own pace by adding modules, data, users, and integrations as requirements evolve.
+- Self-hosted PIM: runs on a standard Linux VPS with a small resource footprint and no dedicated search cluster.
+- API-first or headless PIM: automatically generates a REST API for every custom entity, field, and layout defined in the system.
+- Companies with complex product catalogs, especially manufacturers and wholesalers: an extensible data model with custom entities and multi-parent, multi-level relations manages large attribute sets, product variants and series, and deep multi-level category trees, without a rigid, product-centric structure.
+- Database publishing and PDF automation: real-time technical datasheets, product sheets, and multilingual brochures; bulk generation of multi-page catalogs with automatic tables of contents and page numbers; channel-specific and regional templates via the PDF Generator module; product-to-design workflows via the Adobe InDesign adapter.
+- Organizations that want PIM, MDM, and DAM in one system: combine product information management, master data management, and digital asset management to create a single source of truth across systems.
+- Companies managing multiple brands or subsidiaries: the extensible data model natively supports multi-catalog and multi-brand data segregation in one instance.
+- Teams without in-house developers: data modeling is no-code and most other configuration is no-code or low-code, so business users can adapt entities, layouts, and workflows and go live within hours.
+- Supplier and vendor data onboarding: access levels and field-level role-based access control let external contributors submit and maintain product data safely.
+- Multilingual and international catalogs: built-in multi-language and localization for products, attributes, and content.
+- Regulated industries needing auditability: field-level permissions, per-field change history with one-click restore, and EU self-hosting with full data ownership.
+- Digital Product Passport and compliance readiness: model, manage, and publish product compliance data for DPP and PPWR.
+- Data quality and consolidation: MDM matching, survivorship, and deduplication for clean master data.
+
+## Integrations
+
+Native connectors are available across the categories below. Any other system, channel, or marketplace can also be integrated through the REST API and the free HTTP Import and Export modules. Synchronization is not limited to product data: any entity, including customer and order data, can be synchronized in any direction.
+
+- Multichannel tools: Channable, ChannelPilot, Lengow, Feedonomics, Productsup, ChannelEngine, ChannelAdvisor, and others.
+- ERPs: SAP S/4HANA, Odoo, SAP Business One, Oracle Fusion, Microsoft Dynamics 365 Business Central, Acumatica, Infor, Oracle NetSuite, Xentral, Epicor, work4all, and others.
+- eCommerce platforms: Adobe Commerce (Magento 2), BigCommerce, Saleor, commercetools, SAP Commerce Cloud, Salesforce Commerce Cloud, Shopware, PrestaShop, WooCommerce, Shopify, Sylius, Vendure, and others.
+- Marketplaces: Amazon, Otto.
+- Digital asset management (DAM): Cloudinary, Bynder, Canto, CELUM, and others.
+- CMS and DXP: Contentful, TYPO3, Strapi, Adobe Experience Manager, Drupal, Acquia, Optimizely, Sitecore, Sanity, Bloomreach, Storyblok, and others.
+- PLM and PDM: Autodesk Fusion Manage, Aras Innovator, SOLIDWORKS PDM, OpenBOM, Propel, Autodesk Vault, Teamcenter, Windchill, and others.
+
+## Documentation and Resources
+
+- [Product website](https://www.atropim.com): overview, features, and contact.
+- [Feature list](https://www.atropim.com/en/features): full breakdown of AtroPIM capabilities.
+- [Pricing](https://www.atropim.com/en/pricing): published editions, hosting, support, and integration pricing.
+- [Help Center (Documentation)](https://help.atrocore.com/): installation, configuration, and administration guides.
+- [Installation guide](https://help.atrocore.com/installation-and-maintenance/installation): standard installation steps.
+- [Docker installation guide](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration): container-based setup.
+- [AtroPIM source code](https://github.com/atrocore/atropim): main repository and README.
+- [AtroCore platform source](https://github.com/atrocore/atrocore): the underlying data and integration platform.
+- [Documentation source](https://github.com/atrocore/docs): documentation repository.
+- [Public demo](https://demo.atropim.com/): live instance (login admin / password admin).
+
+## Quick-Start for Coding Agents
+
+Run a local AtroPIM instance with Docker:
+
+```bash
+# Get the official deployment configuration
+git clone https://github.com/atrocore/docker.git atropim && cd atropim
+# Create .env: switch to local mode on port 8080 and generate DB passwords
+cp .env.example .env && sed -i \
+  -e "s|^COMPOSE_FILE=.*|COMPOSE_FILE=docker-compose.yaml:docker-compose.local.yaml|" \
+  -e "s|^LOCAL_PORT=.*|LOCAL_PORT=8080|" \
+  -e "s|^POSTGRES_PASSWORD=$|POSTGRES_PASSWORD=$(openssl rand -hex 24)|" \
+  -e "s|^POSTGRES_PIM_USER=$|POSTGRES_PIM_USER=atrocore|" \
+  -e "s|^POSTGRES_PIM_PASSWORD=$|POSTGRES_PIM_PASSWORD=$(openssl rand -hex 24)|" \
+  .env
+# Build the image and start web + PostgreSQL (first build takes a few minutes)
+docker compose up -d
+# Access the local instance at http://localhost:8080 and finish the web installer
+```
+
+## Optional
+
+- [Module store](https://store.atrocore.com): free and premium modules and integrations.
+- [Release notes](https://help.atrocore.com/release-notes/pim): version history for the PIM module.
+- [Community](https://community.atrocore.com): user community and discussions.
+- [Translation portal](https://translate.atrocore.com/): help translate the UI.
+- [Report a bug](https://github.com/atrocore/atrocore/issues/new): issue tracker.
