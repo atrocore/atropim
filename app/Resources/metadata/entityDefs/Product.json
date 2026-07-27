@@ -1,8 +1,7 @@
 {
   "fields": {
     "brand": {
-      "type": "link",
-      "view": "pim:views/product/fields/brand"
+      "type": "link"
     },
     "status": {
       "type": "enum",
