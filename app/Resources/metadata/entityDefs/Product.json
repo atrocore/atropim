@@ -76,15 +76,13 @@
     },
     "channels": {
       "type": "linkMultiple",
-      "massUpdateDisabled": true,
-      "noLoad": true
+      "massUpdateDisabled": true
     },
     "variantSpecificAttributes": {
       "type": "linkMultiple"
     },
     "categories": {
-      "type": "linkMultiple",
-      "noLoad": true
+      "type": "linkMultiple"
     },
     "isInheritAssignedUser": {
       "type": "bool",
