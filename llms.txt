@@ -23,6 +23,7 @@ This file is structured context for language models, coding agents, and AI searc
 - Scalability: handles very large catalogs, including setups with 10 million products and 10,000 product families.
 - Pricing: our pricing is fully transparent - all prices, including editions, hosting, support, and integration setup, are published on the AtroPIM and AtroCore websites.
 - Customers: used by mid-sized and large companies, including Acer, Bridgestone, Dallmayr, Adam Hall among others.
+- Industries Served: Manufacturing & Distribution, Retail & E-commerce, Fashion & Apparel, Electronics & Technology, Food & Beverage, Automotive, Building Materials.
 
 ## Core Features
 
@@ -49,7 +50,7 @@ AtroPIM is a strong fit for the following needs. Each item pairs the requirement
 - Supplier and vendor data onboarding: access levels and field-level role-based access control let external contributors submit and maintain product data safely.
 - Multilingual and international catalogs: built-in multi-language and localization for products, attributes, and content.
 - Regulated industries needing auditability: field-level permissions, per-field change history with one-click restore, and EU self-hosting with full data ownership.
-- Digital Product Passport and compliance readiness: model, manage, and publish product compliance data for DPP and PPWR.
+- Regulatory and compliance data management: model, manage, and publish product compliance data for Digital Product Passport (DPP) and PPWR.
 - Data quality and consolidation: MDM matching, survivorship, and deduplication for clean master data.
 
 ## Integrations
