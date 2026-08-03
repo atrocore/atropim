@@ -25,7 +25,7 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
                 && this.isImage()
                 && !model.get('isMainImage')
                 && model.get('_meta')?.permissions?.edit
-                && (parentModel && parentModel.get('_meta')?.permissions?.edit)) {
+                && parentModel) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage'),
