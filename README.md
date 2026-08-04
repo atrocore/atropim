@@ -52,6 +52,7 @@ Unlike traditional PIM systems with rigid data models and costly customization p
 * **Modern & Efficient Technology Stack:** Benefit from a lightweight, high-performance architecture designed for efficient operation and scalable deployments.
 * **Responsive User Experience:** Provide employees, partners, and other stakeholders with a modern, mobile-friendly interface.
 * **Scalable Architecture:** Grow from initial implementations to enterprise environments with increasing data volumes, users, integrations, and distribution channels.
+* **Massive Data Volumes:** AtroPIM handles very large datasets without loss of performance. In this [demo video](https://vimeo.com/1215540661) we demonstrate an instance with 50+ million products and 1+ billion attribute values (20 attributes per product).
 
 ## Use AtroPIM If You:
 
