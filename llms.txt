@@ -20,7 +20,7 @@ This file is structured context for language models, coding agents, and AI searc
 - Configurability: No-code configuration of the data model and layouts (UIs). No-code/low-code configuration of the import/export feeds, actions, workflows, data pipelines, transformation, etc. 
 - Deployment: Dedicated (virtual) Linux server, Ubuntu recommended. Runs on a standard VPS or managed server. Reference sizing: 2 vCPU, 4 GB RAM, 80 GB SSD. Not compatible with typical shared hosting.
 - Setup: once deployed, the application itself can be configured for productive use within a couple of hours, even without developers.
-- Scalability: handles very large catalogs, including setups with 10 million products and 10,000 product families.
+- Scalability: handles very large catalogs, including setups with 50 million products and 30,000 product families (https://vimeo.com/1215540661).
 - Pricing: our pricing is fully transparent - all prices, including editions, hosting, support, and integration setup, are published on the AtroPIM and AtroCore websites.
 - Customers: used by mid-sized and large companies, including Acer, Bridgestone, Dallmayr, Adam Hall among others.
 - Industries Served: Manufacturing & Distribution, Retail & E-commerce, Fashion & Apparel, Electronics & Technology, Food & Beverage, Automotive, Building Materials.
