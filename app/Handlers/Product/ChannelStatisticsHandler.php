@@ -21,14 +21,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Product/productByStatusStatistics',
+    path: '/Product/channelStatistics',
     methods: ['GET'],
-    summary: 'Get product by status statistics',
-    description: 'Returns product counts grouped by status.',
+    summary: 'Get channel statistics',
+    description: 'Returns product counts per channel split by active and inactive.',
     tag: 'Product',
     responses: [
         200 => [
-            'description' => 'Product by status statistics',
+            'description' => 'Channel statistics',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -36,25 +36,33 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'total' => [
                                 'type'        => 'integer',
-                                'description' => 'Total number of status rows',
+                                'description' => 'Total number of channel rows',
                             ],
                             'list'  => [
                                 'type'        => 'array',
-                                'description' => 'Status rows',
+                                'description' => 'Channel rows',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
-                                        'id'     => [
+                                        'id'        => [
                                             'type'        => 'string',
-                                            'description' => 'Status value',
+                                            'description' => 'Channel ID',
                                         ],
-                                        'name'   => [
+                                        'name'      => [
                                             'type'        => 'string',
-                                            'description' => 'Status label',
+                                            'description' => 'Channel name',
                                         ],
-                                        'amount' => [
+                                        'products'  => [
                                             'type'        => 'integer',
-                                            'description' => 'Number of products with this status',
+                                            'description' => 'Total number of products assigned to this channel',
+                                        ],
+                                        'active'    => [
+                                            'type'        => 'integer',
+                                            'description' => 'Number of active products in this channel',
+                                        ],
+                                        'notActive' => [
+                                            'type'        => 'integer',
+                                            'description' => 'Number of inactive products in this channel',
                                         ],
                                     ],
                                 ],
@@ -66,10 +74,10 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ProductProductByStatusStatisticsHandler extends AbstractHandler
+class ChannelStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('ProductsByStatusDashlet')->getDashlet());
+        return new JsonResponse($this->getServiceFactory()->create('ChannelsDashlet')->getDashlet());
     }
 }

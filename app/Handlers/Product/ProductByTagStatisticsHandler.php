@@ -66,7 +66,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ProductProductByTagStatisticsHandler extends AbstractHandler
+class ProductByTagStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
