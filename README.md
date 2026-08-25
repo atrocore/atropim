@@ -21,7 +21,7 @@ It enables manufacturers, brands, and retailers to efficiently centralize, manag
 | Mirror (GitHub) | https://github.com/atrocore/atropim          |
 -->
 
-This repository contains source code for a PIM module for the AtroCore Data Platform. AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
+This repository contains source code for a PIM module for the AtroCore Business Application Platform. AtroPIM is technically an instance of [AtroCore](https://github.com/atrocore/atrocore) which has a PIM module installed on it.
 
 
 ## Evolution
@@ -68,7 +68,7 @@ Unlike traditional PIM systems with rigid data models and costly customization p
 
 **AtroCore** is the open-source framework and core ecosystem. It provides the foundational architecture, user management, API, data model configuration, and low-code capabilities. By itself, it is an abstract entity-relationship system used to build custom business software.
 
-**AtroPIM** consists of the underlying AtroCore platform with a specialized PIM module pre-installed on top of it. This combination provides a complete Product Information Management system, adding all the specific features required to manage complex product data, catalogs, and channels.
+**AtroPIM** consists of the underlying AtroCore Platform with a specialized PIM module pre-installed on top of it. This combination provides a complete Product Information Management system, adding all the specific features required to manage complex product data, catalogs, and channels.
 
 
 ## Features
@@ -104,7 +104,7 @@ For teams that prefer a managed cloud environment, we offer hosted SaaS plans.
 
 ## Technology
 
-![Architecture and Technologies](_assets/architecture-and-technologies.png)
+![Architecture and Technologies](_assets/architecture-and-technologies_260822.png)
 
 - Backend: PHP, powered by enterprise-grade Symfony and Laminas components.
 - Frontend: JavaScript, migrating from legacy Backbone.js to a modern, reactive Svelte architecture.
