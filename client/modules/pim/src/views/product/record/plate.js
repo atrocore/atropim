@@ -59,7 +59,7 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
 
         getToolbarControls: function () {
             var controls = Dep.prototype.getToolbarControls.call(this);
-            controls.unshift(this.getItemsInRowToolbarControl());
+            controls.push(this.getItemsInRowToolbarControl());
             return controls;
         },
 
