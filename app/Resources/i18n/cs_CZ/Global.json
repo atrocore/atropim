@@ -1,10 +1,5 @@
 {
   "labels": {
-    "nonHierarchicalProducts": "Nehierarchické produkty",
-    "productHierarchies": "Hierarchie produktů",
-    "lowestLevelProducts": "Produkty nejnižší úrovně",
-    "bundleProducts": "Svazkové produkty",
-    "bundledProducts": "Sdružené produkty",
     "Reset selection": "Obnovení výběru",
     "categorySettings": "Nastavení kategorie",
     "cascade": "Kaskáda",
@@ -25,7 +20,6 @@
   "dashlets": {
     "Channels": "Kanály",
     "ProductsByStatus": "Produkty podle stavu",
-    "ProductTypes": "Typy produktů",
     "ProductsByTag": "Produkty podle značky",
     "ProductStatusOverview": "Přehled stavu produktu"
   },
