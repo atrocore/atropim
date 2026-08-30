@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/atrocore/atropim)](https://github.com/atrocore/atropim/blob/master/LICENSE.txt)
 [![Built with PHP](https://img.shields.io/badge/PHP-8.4%2B-blue?logo=php)](https://www.php.net/)
 [![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/)
-[![Live Demo](https://img.shields.io/badge/Demo-Try%20it%20online-brightgreen?logo=googlechrome&logoColor=white)](https://demo.atropim.com/)
+[![Live Demo](https://img.shields.io/badge/Demo-Try%20it%20now-brightgreen?logo=googlechrome&logoColor=white)](https://demo.atropim.com/)
 
 <p align="center" width="100%">
   <br><br>
