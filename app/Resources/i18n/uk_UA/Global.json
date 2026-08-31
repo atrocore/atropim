@@ -69,11 +69,6 @@
     "setAsMainVariant": "Встановити як основний варіант",
     "allChannels": "Усі канали",
     "linkedChannels": "Пов’язані канали",
-    "nonHierarchicalProducts": "Неієрархічні продукти",
-    "productHierarchies": "Продуктові ієрархії",
-    "lowestLevelProducts": "Продукти найнижчого рівня",
-    "bundleProducts": "Товарні комбінації",
-    "bundledProducts": "Комбіновані продукти",
     "Reset selection": "Скинути вибір",
     "typeToSearch": "Введ. і натисн. Enter...",
     "categorySettings": "Налаштування категорій",
@@ -89,7 +84,6 @@
   "dashlets": {
     "Channels": "Канали",
     "ProductsByStatus": "Продукти за статусами",
-    "ProductTypes": "Типи продуктів",
     "ProductsByTag": "Продукти за тегами",
     "ProductStatusOverview": "Огляд статусів продуктів"
   },

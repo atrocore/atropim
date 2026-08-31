@@ -39,9 +39,6 @@
     "role": "Ruolo"
   },
   "labels": {
-    "lowestLevelProducts": "Prodotti di livello più basso",
-    "bundleProducts": "Prodotti in bundle",
-    "bundledProducts": "Prodotti in bundle",
     "Reset selection": "Selezione di reset",
     "typeToSearch": "Digiti e prema Invio...",
     "categorySettings": "Impostazioni della categoria",
@@ -57,8 +54,6 @@
     "setAsMainVariant": "Imposta come variante principale",
     "allChannels": "Tutti i canali",
     "linkedChannels": "Canali collegati",
-    "nonHierarchicalProducts": "Prodotti non gerarchici",
-    "productHierarchies": "Gerarchie di prodotti",
     "productPreview": "Anteprima del prodotto"
   },
   "scopeNamesPlural": {
@@ -89,7 +84,6 @@
   "dashlets": {
     "Channels": "Canali",
     "ProductsByStatus": "Prodotti per stato",
-    "ProductTypes": "Tipi di prodotto",
     "ProductsByTag": "Prodotti per Tag",
     "ProductStatusOverview": "Panoramica sullo stato del prodotto"
   },
