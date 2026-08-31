@@ -12,7 +12,7 @@
   <br><br>
 </p>
 
-**[AtroPIM](https://www.atropim.com) is an open-source Product Information Management (PIM) system for companies with complex product data.** It is API-first, modular, and configurable through the user interface. AtroPIM is built with PHP and Svelte and published under the GNU GPLv3 license.
+<p align="center"><b><a href="https://www.atropim.com">AtroPIM</a> is an open-source product information management (PIM) system designed for companies with complex product data and those who need more than just a flexible PIM. It is API-first, modular, and configurable through the user interface.</b></p>
 
 Manufacturers, wholesalers, and distributors use AtroPIM to consolidate product information in one system and distribute it to online shops, marketplaces, print catalogs, ERP systems, and partner portals.
 
