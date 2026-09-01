@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim;
 
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
 use Pim\Migrations\V1Dot14Dot9;
 
