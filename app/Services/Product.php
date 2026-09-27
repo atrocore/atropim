@@ -28,11 +28,12 @@ class Product extends Hierarchy
     {
         // set main images
         if (count($collection) > 0) {
-            $conn = $this->getEntityManager()->getConnection();
-            $idColumn = Util::toUnderScore(lcfirst($this->entityName) . 'Id');
-            $res = $conn->createQueryBuilder()
+            $conn         = $this->getEntityManager()->getDbal();
+            $idColumn     = Util::toUnderScore(lcfirst($this->entityName) . 'Id');
+            $relationName = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', 'files', 'relationName']) ?? ($this->entityName . 'File');
+            $res          = $conn->createQueryBuilder()
                 ->select("ps.id, a.id as file_id, a.name, ps.$idColumn")
-                ->from(Util::toUnderScore(lcfirst($this->entityName) . 'File'), 'ps')
+                ->from(Util::toUnderScore(lcfirst($relationName)), 'ps')
                 ->innerJoin('ps', 'file', 'a', 'a.id=ps.file_id AND a.deleted=:false')
                 ->where("ps.$idColumn IN (:productsIds)")
                 ->andWhere('ps.is_main_image = :true')
@@ -79,9 +80,11 @@ class Product extends Hierarchy
             $entity->set('mainImageName', null);
             $entity->set('mainImagePathsData', null);
 
+            $relationName = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', 'files', 'relationName']) ?? ($this->entityName . 'File');
+
             $relEntity = $this
                 ->getEntityManager()
-                ->getRepository($this->entityName . 'File')
+                ->getRepository(ucfirst($relationName))
                 ->where([
                     lcfirst($this->entityName) . 'Id' => $entity->get('id'),
                     'isMainImage'                     => true
@@ -132,8 +135,8 @@ class Product extends Hierarchy
             ->find();
 
         foreach ($productFiles as $productFile) {
-            $item = $productFile->toArray();
-            $item['id'] = Util::generateId();
+            $item                                    = $productFile->toArray();
+            $item['id']                              = Util::generateId();
             $item[lcfirst($this->entityName) . 'Id'] = $product->get('id');
 
             $entity = $this->getEntityManager()->getEntity($this->entityName . 'File');
@@ -215,7 +218,7 @@ class Product extends Hierarchy
 
     protected function getMandatoryLinksToMerge(): array
     {
-        $links = parent::getMandatoryLinksToMerge();
+        $links   = parent::getMandatoryLinksToMerge();
         $links[] = 'associatedRelated' . $this->entityName;
 
         return $links;
