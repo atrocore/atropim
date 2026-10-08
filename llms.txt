@@ -2,7 +2,7 @@
 
 _Last updated: July 2026._
 
-> Open-source, API-first, modular Product Information Management (PIM, sometimes called PXM — Product Experience Management) system with built-in Master Data Management (MDM) and digital asset management (DAM), built on the AtroCore data platform. Used by manufacturers, brands, and retailers to create a single source of truth for product and related data and distribute it across sales and marketing channels.
+> Open-source, API-first, modular Product Information Management (PIM, sometimes called PXM — Product Experience Management) system with built-in Master Data Management (MDM) and digital asset management (DAM), built on the AtroCore Business Application Platform. Used by manufacturers, brands, and retailers to create a single source of truth for product and related data and distribute it across sales and marketing channels.
 
 AtroPIM is a PIM module running on AtroCore, an open-source data management and system integration platform, and inherits its full platform capabilities. Every entity, field, relation, and layout defined in the UI is automatically exposed through a REST API, and the data model can be extended without writing code.
 

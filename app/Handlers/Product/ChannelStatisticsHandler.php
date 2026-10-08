@@ -74,7 +74,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ProductChannelStatisticsHandler extends AbstractHandler
+class ChannelStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

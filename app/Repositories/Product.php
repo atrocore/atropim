@@ -259,14 +259,6 @@ class Product extends Hierarchy
         $this->addDependency('serviceFactory');
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository($this->entityName . 'File')->removeByProductId($entity->get('id'));
-        $this->getEntityManager()->getRepository($this->entityName . 'Channel')->where([lcfirst($this->entityName) . 'Id' => $entity->get('id')])->removeCollection();
-
-        parent::afterRemove($entity, $options);
-    }
-
     protected function afterRestore($entity)
     {
         parent::afterRestore($entity);

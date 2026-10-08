@@ -36,21 +36,6 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
 
                     this.actionQuickView({id});
                 }
-            },
-            'click [data-action="sortByDirection"]': function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.sortByDirection();
-            },
-            'click [data-action="sortByField"]': function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.sortByField($(e.currentTarget).data('name'));
-            },
-            'click [data-action="setItemsInRow"]': function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.setItemsInRow($(e.currentTarget).data('name'));
             }
         }, Dep.prototype.events),
 
@@ -62,7 +47,6 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
 
         data() {
             return _.extend({
-                sortFields: this.getSortFieldsList(),
                 itemsInRowOptions: this.itemsInRowOptions,
                 itemsInRow: this.itemsInRow,
                 itemContainerWidth: 100 / this.itemsInRow
@@ -73,50 +57,25 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
             return true;
         },
 
-        getActionsComponent: function () {
-            return Svelte.PlateToolbar;
+        getToolbarControls: function () {
+            var controls = Dep.prototype.getToolbarControls.call(this);
+            controls.push(this.getItemsInRowToolbarControl());
+            return controls;
         },
 
-        getActionsProperties: function () {
-            const props = Dep.prototype.getActionsProperties.call(this);
-
-            props.itemsInRow = this.itemsInRow;
-            props.itemsInRowOptions = this.itemsInRowOptions;
-            props.changeItemsInRow = (number) => {
-                this.setItemsInRow(number);
+        getItemsInRowToolbarControl: function () {
+            return {
+                key: 'itemsInRow',
+                iconClass: 'ph ph-squares-four',
+                iconTitle: this.translate('itemsInRow', 'labels'),
+                value: String(this.itemsInRow),
+                options: this.itemsInRowOptions.map(function (count) {
+                    return {value: count, label: String(count)};
+                }),
+                onSelect: function (count) {
+                    this.setItemsInRow(parseInt(count, 10));
+                }.bind(this)
             };
-
-            props.sortBy = this.collection.sortBy;
-            props.sortDirection = this.collection.asc ? 'asc' : 'desc';
-            props.sortByOptions = this.getSortFieldsList();
-            props.changeSortField = (field) => {
-                this.sortByField(field);
-            };
-            props.changeSortDirection = () => {
-                this.toggleSort(this.collection.sortBy);
-            }
-
-            return props;
-        },
-
-        getSortFieldsList() {
-            const fields = [];
-            const fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']);
-            for (let field in fieldDefs) {
-                if (!fieldDefs[field].disabled
-                    && !fieldDefs[field].layoutListDisabled
-                    && !this.getMetadata().get(['fields', fieldDefs[field].type, 'notSortable'])
-                    && ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[field].type)
-                ) {
-                    fields.push(field);
-                }
-            }
-
-            fields.sort(function (v1, v2) {
-                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
-            }.bind(this));
-
-            return fields;
         },
 
         buildRow(i, model, callback) {
@@ -189,26 +148,6 @@ Espo.define('pim:views/product/record/plate', 'pim:views/product/record/list',
             Dep.prototype.selectAllResult.call(this);
 
             this.$el.find('.list .plate-item').removeClass('active');
-        },
-
-        sortByDirection() {
-            this.toggleSort(this.collection.sortBy);
-        },
-
-        sortByField(field) {
-            var asc = this.collection.asc;
-
-            this.notify('Please wait...');
-            this.collection.once('sync', function () {
-                this.notify(false);
-                this.trigger('sort', {sortBy: field, asc: asc});
-            }, this);
-            var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
-            while (this.collection.length > maxSizeLimit) {
-                this.collection.pop();
-            }
-            this.collection.sort(field, asc);
-            this.deactivate();
         },
 
         initItemsInRow() {

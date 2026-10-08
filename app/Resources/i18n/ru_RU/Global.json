@@ -66,11 +66,6 @@
   "labels": {
     "setAsMainImage": "Назначить основным изображением",
     "allChannels": "Все каналы",
-    "nonHierarchicalProducts": "Неиерархические продукты",
-    "productHierarchies": "Продуктовые иерархии",
-    "lowestLevelProducts": "Продукты наинизшего уровня",
-    "bundleProducts": "Товарные комбинации",
-    "bundledProducts": "Комбинируемые товары",
     "Reset selection": "Сбросить выбор",
     "typeToSearch": "Введ. и нажм. Enter...",
     "categorySettings": "Настройки категорий",
@@ -89,7 +84,6 @@
   "dashlets": {
     "Channels": "Каналы",
     "ProductsByStatus": "Продукты по статусам",
-    "ProductTypes": "Продукты по типам",
     "ProductsByTag": "Продукты по тегам",
     "ProductStatusOverview": "Обзор статуса продукта"
   },

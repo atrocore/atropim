@@ -21,14 +21,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Product/productByStatusStatistics',
+    path: '/Product/productByTagStatistics',
     methods: ['GET'],
-    summary: 'Get product by status statistics',
-    description: 'Returns product counts grouped by status.',
+    summary: 'Get product by tag statistics',
+    description: 'Returns product counts for each configured product tag.',
     tag: 'Product',
     responses: [
         200 => [
-            'description' => 'Product by status statistics',
+            'description' => 'Product by tag statistics',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -36,25 +36,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'total' => [
                                 'type'        => 'integer',
-                                'description' => 'Total number of status rows',
+                                'description' => 'Total number of tag rows',
                             ],
                             'list'  => [
                                 'type'        => 'array',
-                                'description' => 'Status rows',
+                                'description' => 'Tag rows',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
                                         'id'     => [
                                             'type'        => 'string',
-                                            'description' => 'Status value',
+                                            'description' => 'Tag identifier',
                                         ],
                                         'name'   => [
                                             'type'        => 'string',
-                                            'description' => 'Status label',
+                                            'description' => 'Tag name',
                                         ],
                                         'amount' => [
                                             'type'        => 'integer',
-                                            'description' => 'Number of products with this status',
+                                            'description' => 'Number of products with this tag',
                                         ],
                                     ],
                                 ],
@@ -66,10 +66,10 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ProductProductByStatusStatisticsHandler extends AbstractHandler
+class ProductByTagStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('ProductsByStatusDashlet')->getDashlet());
+        return new JsonResponse($this->getServiceFactory()->create('ProductsByTagDashlet')->getDashlet());
     }
 }

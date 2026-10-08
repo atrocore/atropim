@@ -71,11 +71,6 @@
     "setAsMainVariant": "Establecer como variante principal",
     "allChannels": "Todos los canales",
     "linkedChannels": "Canales enlazados",
-    "nonHierarchicalProducts": "Productos no jerárquicos",
-    "productHierarchies": "Jerarquías de productos",
-    "lowestLevelProducts": "Productos de nivel más bajo",
-    "bundleProducts": "Paquetes de productos",
-    "bundledProducts": "Productos agrupados",
     "Reset selection": "Restablecer selección",
     "categorySettings": "Ajustes de categoría",
     "cascade": "Cascade",
@@ -89,7 +84,6 @@
   "dashlets": {
     "Channels": "Canales",
     "ProductsByStatus": "Productos por estado",
-    "ProductTypes": "Tipos de productos",
     "ProductsByTag": "Productos por etiqueta",
     "ProductStatusOverview": "Resumen del estado del producto"
   },

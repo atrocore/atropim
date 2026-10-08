@@ -21,14 +21,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Product/productTypeStatistics',
+    path: '/Product/productByStatusStatistics',
     methods: ['GET'],
-    summary: 'Get product type statistics',
-    description: 'Returns product counts grouped by hierarchy type (non-hierarchical, hierarchies, lowest-level, bundles).',
+    summary: 'Get product by status statistics',
+    description: 'Returns product counts grouped by status.',
     tag: 'Product',
     responses: [
         200 => [
-            'description' => 'Product type statistics',
+            'description' => 'Product by status statistics',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -36,33 +36,25 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'properties' => [
                             'total' => [
                                 'type'        => 'integer',
-                                'description' => 'Total number of product type rows',
+                                'description' => 'Total number of status rows',
                             ],
                             'list'  => [
                                 'type'        => 'array',
-                                'description' => 'Product type rows',
+                                'description' => 'Status rows',
                                 'items'       => [
                                     'type'       => 'object',
                                     'properties' => [
-                                        'id'        => [
+                                        'id'     => [
                                             'type'        => 'string',
-                                            'description' => 'Product type identifier',
+                                            'description' => 'Status value',
                                         ],
-                                        'name'      => [
+                                        'name'   => [
                                             'type'        => 'string',
-                                            'description' => 'Product type label',
+                                            'description' => 'Status label',
                                         ],
-                                        'total'     => [
+                                        'amount' => [
                                             'type'        => 'integer',
-                                            'description' => 'Total number of products of this type',
-                                        ],
-                                        'active'    => [
-                                            'type'        => 'integer',
-                                            'description' => 'Number of active products of this type',
-                                        ],
-                                        'notActive' => [
-                                            'type'        => 'integer',
-                                            'description' => 'Number of inactive products of this type',
+                                            'description' => 'Number of products with this status',
                                         ],
                                     ],
                                 ],
@@ -74,10 +66,10 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ProductProductTypeStatisticsHandler extends AbstractHandler
+class ProductByStatusStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new JsonResponse($this->getServiceFactory()->create('ProductTypesDashlet')->getDashlet());
+        return new JsonResponse($this->getServiceFactory()->create('ProductsByStatusDashlet')->getDashlet());
     }
 }

@@ -123,7 +123,8 @@ class Product extends AbstractSelectManager
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        $relTable = Util::toUnderScore(lcfirst($this->entityType).'File');
+        $relationName = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', 'files', 'relationName']) ?? ($this->entityType . 'File');
+        $relTable = Util::toUnderScore(lcfirst($relationName));
         $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
 
         $res = $connection->createQueryBuilder()
