@@ -197,6 +197,14 @@ class Product extends Hierarchy
         $this->getEntityManager()->saveEntity($productFile);
     }
 
+    /**
+     * The variant-specific attributes of a product differ between its variants by definition.
+     */
+    protected function getAttributeIdsExcludedFromFillFromChildren(Entity $parent): array
+    {
+        return $parent->getLinkMultipleIdList('variantSpecificAttributes') ?? [];
+    }
+
     protected function exception(string $key): string
     {
         return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
