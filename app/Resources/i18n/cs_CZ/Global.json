@@ -31,7 +31,6 @@
   },
   "scopeNamesPlural": {
     "AssociatedProduct": "Přidružené produkty",
-    "Brand": "Značky",
     "Product": "Produkty",
     "ProductPrice": "Ceny produktů",
     "Content": "Obsah",
@@ -84,7 +83,6 @@
     "Product": "Produkt",
     "Category": "Kategorie",
     "AssociatedProduct": "Přidružený produkt",
-    "Brand": "Značka",
     "ProductPrice": "Cena produktu",
     "ChannelPricing": "Stanovení cen v kanálech",
     "Content": "Obsah",

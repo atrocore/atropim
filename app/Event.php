@@ -40,7 +40,6 @@ class Event extends AfterInstallAfterDelete
     protected $menuItems
         = [
             'Association',
-            'Brand',
             'Category',
             'Channel'
         ];

@@ -1,25 +1,19 @@
 {
-    "controller": "controllers/record",
-    "iconClass": "tag",
-    "boolFilterList": [
-        "onlyMy"
-    ],
-    "disabledMassActions": [
-        "merge"
-    ],
-    "views": {
-        "list": "pim:views/list",
-        "detail": "pim:views/detail"
-    },
-    "recordViews": {
-        "detail": "pim:views/brand/record/detail"
-    },
-    "relationshipPanels": {
-        "products": {
-            "view": "pim:views/brand/record/panels/products",
-            "selectBoolFilterList": ["notLinkedWithBrand"],
-            "selectAction": "selectRelatedEntity",
-            "createAction": "createRelatedConfigured"
-        }
+  "views": {
+    "list": "pim:views/list",
+    "detail": "pim:views/detail"
+  },
+  "recordViews": {
+    "detail": "pim:views/brand/record/detail"
+  },
+  "relationshipPanels": {
+    "products": {
+      "view": "pim:views/brand/record/panels/products",
+      "selectBoolFilterList": [
+        "notLinkedWithBrand"
+      ],
+      "selectAction": "selectRelatedEntity",
+      "createAction": "createRelatedConfigured"
     }
+  }
 }

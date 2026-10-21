@@ -8,10 +8,6 @@
       "type": "linkMultiple",
       "noLoad": true
     },
-    "brands": {
-      "type": "linkMultiple",
-      "noLoad": true
-    },
     "listings": {
       "type": "linkMultiple",
       "noLoad": true
@@ -29,12 +25,6 @@
       "relationName": "categoryFile",
       "foreign": "files",
       "entity": "Category"
-    },
-    "brands": {
-      "type": "hasMany",
-      "relationName": "brandFile",
-      "foreign": "files",
-      "entity": "Brand"
     },
     "listings": {
       "type": "hasMany",

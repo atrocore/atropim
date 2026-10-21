@@ -1,8 +1,5 @@
 {
   "fields": {
-    "brand": {
-      "type": "link"
-    },
     "status": {
       "type": "enum",
       "required": true,
@@ -134,11 +131,6 @@
       "foreign": "variantSpecificProducts",
       "relationName": "VariantSpecificProductAttribute",
       "entity": "Attribute"
-    },
-    "brand": {
-      "type": "belongsTo",
-      "foreign": "products",
-      "entity": "Brand"
     },
     "channels": {
       "type": "hasMany",

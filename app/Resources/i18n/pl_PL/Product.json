@@ -1,7 +1,6 @@
 {
   "fields": {
     "product": "Główny produkt",
-    "brand": "Marka",
     "status": "Status",
     "amount": "Kwota",
     "price": "Cena zakupu",
