@@ -11,7 +11,6 @@
     "type": "Type",
     "amount": "Amount",
     "price": "Purchase Price",
-    "ean": "GTIN/EAN",
     "rrp": "Recommended Retail Price (RRP)",
     "image": "Main Image",
     "tag": "Tag",

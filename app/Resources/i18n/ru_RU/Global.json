@@ -50,7 +50,6 @@
     "priceCurrency": "Валюта цены",
     "price": "Цена",
     "sku": "Артикул",
-    "ean": "GTIN/EAN",
     "uvp": "UVP",
     "tag": "Тег",
     "amount": "Количество",

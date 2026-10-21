@@ -11,7 +11,6 @@
     "type": "Type",
     "amount": "Montant",
     "price": "Prix d'achat",
-    "ean": "GTIN/EAN",
     "rrp": "Prix de vente recommandé (PAV)",
     "image": "Image principale",
     "tag": "Étiquette",

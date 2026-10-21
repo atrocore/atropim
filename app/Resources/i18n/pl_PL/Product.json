@@ -5,7 +5,6 @@
     "status": "Status",
     "amount": "Kwota",
     "price": "Cena zakupu",
-    "ean": "GTIN/EAN",
     "rrp": "Zalecana cena detaliczna (RRP)",
     "image": "Główny obraz",
     "tag": "Znacznik",

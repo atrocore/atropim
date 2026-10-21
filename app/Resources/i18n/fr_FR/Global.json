@@ -27,7 +27,6 @@
     "categories": "Catégories",
     "channels": "Canaux",
     "status": "Statut du produit",
-    "ean": "GTIN/EAN",
     "mpn": "MPN",
     "tag": "Étiquette",
     "oneGeoType": "Type OneGeo",

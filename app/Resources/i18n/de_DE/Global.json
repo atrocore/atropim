@@ -49,7 +49,6 @@
     "status": "Produktstatus",
     "price": "Preis",
     "sku": "SKU",
-    "ean": "GTIN/EAN",
     "tag": "Tag",
     "amount": "Menge"
   },

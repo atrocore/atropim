@@ -11,7 +11,6 @@
     "type": "Tipo",
     "amount": "Importo",
     "price": "Prezzo di acquisto",
-    "ean": "GTIN/EAN",
     "rrp": "Prezzo di vendita consigliato (RRP)",
     "image": "Immagine principale",
     "tag": "Tag",
