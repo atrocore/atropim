@@ -25,9 +25,9 @@ Espo.define('pim:views/file/record/list', 'views/record/list',
             this.rowList.push(key);
 
             let getRelationModel = (callback) => {
-                if (model.get('__relationEntity')) {
+                if (model.getMeta('relationRecord')) {
                     this.getModelFactory().create(this.relationScope, relModel => {
-                        relModel.set(model.get('__relationEntity'));
+                        relModel.set(model.getMeta('relationRecord'));
                         model.relationModel = relModel
                         callback(relModel)
                     })
