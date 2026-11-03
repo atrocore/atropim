@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EntityFieldTypeAvailableCurrency": "Entity Field: Currency List",
     "Listing": "Listing",
     "ProductFile": "Product File",
     "CategoryFile": "Category File",
@@ -18,6 +19,7 @@
     "ContentItem": "Content Item"
   },
   "scopeNamesPlural": {
+    "EntityFieldTypeAvailableCurrency": "Entity Field: Currency List",
     "Listing": "Listings",
     "ProductFile": "Product Files",
     "CategoryFile": "Category Files",

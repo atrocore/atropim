@@ -1,24 +1,4 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"isSorted",
-         "type":"bool"
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
    "filter": true,
    "fieldDefs":{
       "type":"varchar"

@@ -15,7 +15,8 @@
       "isMultilang": true
     },
     "locales": {
-      "type": "multiLanguage"
+      "type": "multiEnum",
+      "view": "views/fields/multi-language"
     },
     "createdAt": {
       "type": "datetime",

@@ -1,0 +1,22 @@
+{
+  "type": "ReferenceData",
+  "supertypeId": "EntityField",
+  "adminPanelScope": "Entity",
+  "notificationDisabled": true,
+  "entity": true,
+  "layouts": false,
+  "acl": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "importable": false,
+  "notifications": false,
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false,
+  "bookmarkDisabled": true,
+  "emHidden": true,
+  "hideFieldTypeFilters": true,
+  "selectionDisabled": true,
+  "typeOption": "available-currency",
+  "subtypeGroup": "other"
+}
