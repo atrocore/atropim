@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Pole podmiotu: Lista walut",
     "Listing": "Wyszczególnienie",
     "ProductFile": "Plik produktu",
     "CategoryFile": "Plik kategorii",
@@ -19,7 +18,6 @@
     "ContentItem": "Zawartość Pozycja"
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Pole podmiotu: Lista walut",
     "Listing": "Listy",
     "ProductFile": "Pliki produktów",
     "CategoryFile": "Pliki kategorii",

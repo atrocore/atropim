@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Campo de entidad: Lista de divisas",
     "Listing": "Listado",
     "ProductFile": "Ficha de producto",
     "CategoryFile": "Archivo de categoría",
@@ -19,7 +18,6 @@
     "ContentItem": "Contenido"
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Campo de entidad: Lista de divisas",
     "Listing": "Listados",
     "ProductFile": "Archivos de productos",
     "CategoryFile": "Archivos de categoría",

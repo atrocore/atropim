@@ -1,7 +1,4 @@
 {
-  "fieldTypes": {
-    "available-currency": "Seznam měn"
-  },
   "labels": {
     "pim": "PIM",
     "pimSettings": "Nastavení PIM"

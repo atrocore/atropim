@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Champ de l'entité: Liste des devises",
     "CategoryFile": "Catégorie de fichier",
     "ProductFile": "Fiche produit",
     "ProductChannel": "Canal de produits",
@@ -48,7 +47,6 @@
     }
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Champ de l'entité: Liste des devises",
     "ProductFile": "Fiches produits",
     "CategoryFile": "Fichiers de catégorie",
     "ProductChannel": "Canaux de produits",

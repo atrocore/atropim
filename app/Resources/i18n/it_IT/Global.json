@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Campo Entità: Elenco delle valute",
     "Listing": "Elenco",
     "ProductFile": "File prodotto",
     "CategoryFile": "Categoria File",
@@ -56,7 +55,6 @@
     "productPreview": "Anteprima del prodotto"
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Campo Entità: Elenco delle valute",
     "Listing": "Inserzioni",
     "ProductFile": "File di prodotto",
     "CategoryFile": "File di categoria",

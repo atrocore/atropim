@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Entitätsfeld: Währungsliste",
     "ProductChannel": "Produktkanal",
     "ProductPrice": "Produktpreis",
     "ChannelPricing": "Kanal Pricing",
@@ -19,7 +18,6 @@
     "Listing": "Listing"
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Entitätsfeld: Währungsliste",
     "ProductChannel": "Produktkanäle",
     "ProductPrice": "Produktpreise",
     "Product": "Produkte",

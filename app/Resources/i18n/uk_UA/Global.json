@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Поле сутності: Список валют",
     "ProductChannel": "Канал продукту",
     "Product": "Продукт",
     "Category": "Категорія",
@@ -19,7 +18,6 @@
     "CategoryFile": "Файл категорії"
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Поле сутності: Список валют",
     "ProductChannel": "Канали продукту",
     "Category": "Категорії",
     "Channel": "Канали",

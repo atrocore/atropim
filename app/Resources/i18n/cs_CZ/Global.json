@@ -30,7 +30,6 @@
     "notValid": "Data nejsou platná"
   },
   "scopeNamesPlural": {
-    "EntityFieldTypeAvailableCurrency": "Pole entity: Seznam měn",
     "AssociatedProduct": "Přidružené produkty",
     "Product": "Produkty",
     "ProductPrice": "Ceny produktů",
@@ -74,7 +73,6 @@
     "role": "Role"
   },
   "scopeNames": {
-    "EntityFieldTypeAvailableCurrency": "Pole entity: Seznam měn",
     "Listing": "Seznam",
     "ProductFile": "Soubor produktu",
     "CategoryFile": "Soubor kategorie",
