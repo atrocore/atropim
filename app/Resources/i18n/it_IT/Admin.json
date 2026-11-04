@@ -1,7 +1,4 @@
 {
-  "fieldTypes": {
-    "available-currency": "Elenco delle valute"
-  },
   "labels": {
     "pim": "PIM",
     "pimSettings": "Impostazioni PIM"

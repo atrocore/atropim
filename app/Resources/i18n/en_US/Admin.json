@@ -1,7 +1,4 @@
 {
-  "fieldTypes": {
-    "available-currency": "Currency List"
-  },
   "labels": {
     "pim": "PIM",
     "pimSettings": "PIM Settings"
