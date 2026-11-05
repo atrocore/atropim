@@ -134,6 +134,7 @@
   },
   "links": {
     "files": {
+      "sortField": "sorting",
       "type": "hasMany",
       "relationName": "categoryFile",
       "foreign": "categories",
@@ -182,6 +183,7 @@
       ]
     },
     "products": {
+      "sortField": "sorting",
       "type": "hasMany",
       "relationName": "productCategory",
       "foreign": "categories",

@@ -34,12 +34,6 @@ class Metadata extends AbstractMetadataListener
         $data['entityDefs']['Listing']['fields']['classifications']['layoutDetailDisabled'] = true;
         $data['entityDefs']['Listing']['links']['classifications']['layoutRelationshipsDisabled'] = true;
 
-        foreach ($data['scopes'] as $entityType => $scopeDef) {
-            if (!empty($scopeDef['primaryEntityId']) && $scopeDef['primaryEntityId'] == 'Product') {
-                $data['clientDefs'][$entityType]['relationshipPanels']['files']['dragDrop']['sortField'] = Util::toUnderScore(lcfirst($entityType)) . '_file_mm.sorting';
-            }
-        }
-
         $event->setArgument('data', $data);
     }
 }

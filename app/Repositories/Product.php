@@ -64,7 +64,6 @@ class Product extends Hierarchy
         return $this->getConfig()->get('inputLanguageList', []);
     }
 
-
     public function unlinkProductsFromNonLeafCategories(): void
     {
         $idColumn = $this->getTableName() . '_id';
@@ -123,127 +122,6 @@ class Product extends Hierarchy
         }
 
         return true;
-    }
-
-    public function getProductCategoryLinkData(array $productsIds, array $categoriesIds): array
-    {
-        $idColumn = $this->getTableName() . '_id';
-        return $this->getConnection()->createQueryBuilder()
-            ->select('pc.*')
-            ->from($this->getConnection()->quoteIdentifier($this->getTableName() . '_category'), 'pc')
-            ->where("pc.$idColumn IN (:productsIds)")
-            ->andWhere('pc.category_id IN (:categoriesIds)')
-            ->andWhere('pc.deleted = :false')
-            ->setParameter('productsIds', $productsIds, Mapper::getParameterType($productsIds))
-            ->setParameter('categoriesIds', $categoriesIds, Mapper::getParameterType($categoriesIds))
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->orderBy('sorting', 'DESC')
-            ->fetchAllAssociative();
-    }
-
-    /**
-     * @param string|Entity $productId
-     * @param string|Entity $categoryId
-     * @param int|null      $sorting
-     * @param bool          $cascadeUpdate
-     */
-    public function updateProductCategorySortOrder($productId, $categoryId, int $sorting = null, bool $cascadeUpdate = true): void
-    {
-        if ($productId instanceof Entity) {
-            $productId = $productId->get('id');
-        }
-        if ($categoryId instanceof Entity) {
-            $categoryId = $categoryId->get('id');
-        }
-
-        // get link data
-        $linkData = $this->getProductCategoryLinkData([$productId], [$categoryId]);
-
-        // get max
-        $max = (int)$linkData[0]['sorting'];
-
-        if (is_null($sorting)) {
-            $sorting = $max + 10;
-            $cascadeUpdate = false;
-        }
-
-        $idColumn = $this->getTableName() . '_id';
-        $tableName = $this->getConnection()->quoteIdentifier($this->getTableName() . '_category');
-
-        // update current
-        $this->getConnection()->createQueryBuilder()
-            ->update($tableName, 'pc')
-            ->set('sorting', ':sorting')
-            ->where('pc.category_id = :categoryId')
-            ->andWhere("pc.$idColumn = :productId")
-            ->andWhere('pc.deleted = :false')
-            ->setParameter('sorting', $sorting, Mapper::getParameterType($sorting))
-            ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
-            ->setParameter('productId', $productId, Mapper::getParameterType($productId))
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->executeQuery();
-
-        if ($cascadeUpdate) {
-            // get next records
-            $res = $this->getConnection()->createQueryBuilder()
-                ->select('pc.id')
-                ->from($tableName, 'pc')
-                ->where('pc.sorting >= :sorting')
-                ->andWhere('pc.category_id = :categoryId')
-                ->andWhere('pc.deleted = :false')
-                ->andWhere("pc.$idColumn != :productId")
-                ->setParameter('sorting', $sorting, Mapper::getParameterType($sorting))
-                ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
-                ->setParameter('productId', $productId, Mapper::getParameterType($productId))
-                ->setParameter('false', false, Mapper::getParameterType(false))
-                ->orderBy('pc.sorting', 'ASC')
-                ->fetchAllAssociative();
-
-            $ids = array_column($res, 'id');
-
-            // update next records
-            if (!empty($ids)) {
-                foreach ($ids as $id) {
-                    $max = $max + 10;
-
-                    $this->getConnection()->createQueryBuilder()
-                        ->update($tableName, 'pc')
-                        ->set('sorting', ':sorting')
-                        ->where('pc.id = :id')
-                        ->setParameter('sorting', $max, Mapper::getParameterType($max))
-                        ->setParameter('id', $id, Mapper::getParameterType($id))
-                        ->executeQuery();
-                }
-            }
-        }
-    }
-
-    /**
-     * @param string $categoryId
-     * @param array  $ids
-     *
-     * @return void
-     */
-    public function updateSortOrderInCategory(string $categoryId, array $ids): void
-    {
-        $idColumn = $this->getTableName() . '_id';
-        $tableName = $this->getTableName() . '_category';
-
-        foreach ($ids as $k => $id) {
-            $sortOrder = (int)$k * 10;
-
-            $this->getConnection()->createQueryBuilder()
-                ->update($tableName, 'pc')
-                ->set('sorting', ':sorting')
-                ->where("pc.$idColumn = :productId")
-                ->andWhere('pc.category_id = :categoryId')
-                ->andWhere('pc.deleted = :false')
-                ->setParameter('sorting', $sortOrder, Mapper::getParameterType($sortOrder))
-                ->setParameter('productId', $id, Mapper::getParameterType($id))
-                ->setParameter('categoryId', $categoryId, Mapper::getParameterType($categoryId))
-                ->setParameter('false', false, Mapper::getParameterType(false))
-                ->executeQuery();
-        }
     }
 
     public function getTableName(): string

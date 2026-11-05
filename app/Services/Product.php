@@ -103,16 +103,6 @@ class Product extends Hierarchy
         }
     }
 
-    public function updateEntity(string $id, \stdClass $data): bool
-    {
-        if (property_exists($data, '_sortedIds') && property_exists($data, '_scope') && $data->_scope == 'Category' && property_exists($data, '_id')) {
-            $this->getRepository()->updateSortOrderInCategory($data->_id, $data->_sortedIds);
-            return $this->getEntity($id);
-        }
-
-        return parent::updateEntity($id, $data);
-    }
-
     public function duplicateProductPrices(Entity $product, Entity $duplicatingProduct): void
     {
         if (!$this->getServiceFactory()->checkExists('ProductPrice')) {

@@ -22,6 +22,11 @@ class ProductCategory extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        // a new product is put at the end of the category
+        if ($entity->isNew() && $entity->get('sorting') === null) {
+            $entity->set('sorting', time() - (new \DateTime('2023-01-01'))->getTimestamp());
+        }
+
         $category = $this->getEntityManager()->getRepository('Category')->get($entity->get('categoryId'));
 
         $productField = $this->getRelatedLink('Product');
@@ -58,15 +63,6 @@ class ProductCategory extends Relation
 
         $this->getProductRepository()->isProductCanLinkToNonLeafCategory($entity->get('categoryId'));
         parent::beforeSave($entity, $options);
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        $productField = $this->getRelatedLink('Product');
-        $this->getProductRepository()
-            ->updateProductCategorySortOrder($entity->get($productField . 'Id'), $entity->get('categoryId'));
-
-        parent::afterSave($entity, $options);
     }
 
     protected function getCategoryRoot(string $id, array $routes): string
