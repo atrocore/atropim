@@ -42,23 +42,4 @@ class CategoryFile extends Relation
             }
         }
     }
-
-    public function updateSortOrder(string $categoryId, array $filesIds): void
-    {
-        $collection = $this->where(['categoryId' => $categoryId, 'fileId' => $filesIds])->find();
-        if (empty($collection[0])) {
-            return;
-        }
-
-        foreach ($filesIds as $k => $id) {
-            $sortOrder = (int)$k * 10;
-            foreach ($collection as $entity) {
-                if ($entity->get('fileId') !== (string)$id) {
-                    continue;
-                }
-                $entity->set('sorting', $sortOrder);
-                $this->save($entity);
-            }
-        }
-    }
 }

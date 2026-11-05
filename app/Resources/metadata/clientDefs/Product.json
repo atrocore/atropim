@@ -65,8 +65,7 @@
       "view": "pim:views/record/panels/files",
       "rowActionsView": "pim:views/record/row-actions/relationship-file",
       "dragDrop": {
-        "isActive": true,
-        "sortField": "product_file_mm.sorting"
+        "isActive": true
       },
       "recordListView": "pim:views/file/record/list",
       "sortBy": "sorting",
@@ -94,8 +93,7 @@
       ],
       "dragDrop": {
         "isActive": true,
-        "maxSize": 20,
-        "sortField": "sortOrder"
+        "maxSize": 20
       },
       "view": "pim:views/product/record/panels/children"
     },

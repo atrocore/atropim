@@ -121,6 +121,7 @@
   },
   "links": {
     "files": {
+      "sortField": "sorting",
       "type": "hasMany",
       "relationName": "productFile",
       "foreign": "products",

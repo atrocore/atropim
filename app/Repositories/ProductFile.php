@@ -49,25 +49,6 @@ class ProductFile extends Relation
         }
     }
 
-    public function updateSortOrder(string $productId, array $filesIds): void
-    {
-        $collection = $this->where([$this->getRelatedLink('Product') . 'Id' => $productId, 'fileId' => $filesIds])->find();
-        if (empty($collection[0])) {
-            return;
-        }
-
-        foreach ($filesIds as $k => $id) {
-            $sortOrder = (int)$k * 10;
-            foreach ($collection as $entity) {
-                if ($entity->get('fileId') !== (string)$id) {
-                    continue;
-                }
-                $entity->set('sorting', $sortOrder);
-                $this->save($entity);
-            }
-        }
-    }
-
     public function removeByProductId(string $productId): void
     {
         $this->where([$this->getRelatedLink('Product') . 'Id' => $productId])->removeCollection();
