@@ -45,11 +45,6 @@
     "files": {
       "view": "pim:views/record/panels/files",
       "rowActionsView": "pim:views/record/row-actions/relationship-file",
-      "dragDrop": {
-        "isActive": true
-      },
-      "sortBy": "sorting",
-      "asc": true,
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notEntity"
@@ -61,12 +56,6 @@
       "selectBoolFilterList": [
         "notEntity"
       ],
-      "dragDrop": {
-        "isActive": true,
-        "maxSize": 20
-      },
-      "sortBy": "sorting",
-      "asc": true,
       "view": "pim:views/category/record/panels/products"
     },
     "parents": {
@@ -79,11 +68,7 @@
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notParents"
-      ],
-      "dragDrop": {
-        "isActive": true,
-        "maxSize": 20
-      }
+      ]
     }
   }
 }

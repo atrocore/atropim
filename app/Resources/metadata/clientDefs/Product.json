@@ -64,12 +64,7 @@
     "files": {
       "view": "pim:views/record/panels/files",
       "rowActionsView": "pim:views/record/row-actions/relationship-file",
-      "dragDrop": {
-        "isActive": true
-      },
       "recordListView": "pim:views/file/record/list",
-      "sortBy": "sorting",
-      "asc": true,
       "selectAction": "selectRelatedEntity",
       "selectBoolFilterList": [
         "notEntity"
@@ -91,10 +86,6 @@
       "selectBoolFilterList": [
         "notParents"
       ],
-      "dragDrop": {
-        "isActive": true,
-        "maxSize": 20
-      },
       "view": "pim:views/product/record/panels/children"
     },
     "categories": {
