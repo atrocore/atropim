@@ -1,5 +1,6 @@
 {
     "view": "pim:views/dashlets/channels",
+    "className": "\\Pim\\Dashlets\\Channels",
     "options": {
         "fields": {
             "title": {

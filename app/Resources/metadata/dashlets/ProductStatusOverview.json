@@ -1,5 +1,6 @@
 {
     "view": "pim:views/dashlets/product-status-overview",
+    "className": "\\Pim\\Dashlets\\ProductsByStatus",
     "options": {
         "fields": {
             "title": {
