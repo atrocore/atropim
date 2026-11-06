@@ -11,8 +11,8 @@
 
 namespace Pim\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 /**

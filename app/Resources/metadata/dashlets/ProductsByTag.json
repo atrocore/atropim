@@ -1,5 +1,6 @@
 {
     "view": "pim:views/dashlets/products-by-tag",
+    "className": "\\Pim\\Dashlets\\ProductsByTag",
     "options": {
         "fields": {
             "title": {

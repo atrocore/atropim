@@ -13,7 +13,6 @@ Espo.define('pim:views/dashlets/products-by-tag', 'views/dashlets/abstract/base'
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
-        collectionUrl: 'Product/productByTagStatistics',
 
         actionRefresh: function () {
             this.collection.fetch();
@@ -23,7 +22,7 @@ Espo.define('pim:views/dashlets/products-by-tag', 'views/dashlets/abstract/base'
             this.getCollectionFactory().create('ProductsByTagDashlet', function (collection) {
                 this.collection = collection;
 
-                collection.url = this.collectionUrl;
+                collection.url = this.getDataUrl();
                 collection.maxSize = this.getOption('displayRecords');
                 collection.model = collection.model.extend({
                     defs: {
