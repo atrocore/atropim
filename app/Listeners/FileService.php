@@ -31,4 +31,24 @@ class FileService extends AbstractListener
             }
         }
     }
+
+    public function beforePutAclMetaForLink(Event $event): void
+    {
+        $entity = $event->getArgument('entity');
+        $link = $event->getArgument('link');
+
+        if ($link !== 'files' || !in_array($event->getArgument('entityFrom')->getEntityName(), ['Product', 'Category'])) {
+            return;
+        }
+
+        $relationEntity = $entity->relationEntity ?? null;
+
+        $entity->setAvailableAction('setAsMainImage',
+            !empty($relationEntity)
+            && empty($relationEntity->get('isMainImage'))
+            && !empty($entity->get('mimeType'))
+            && $entity->isImage()
+            && ($this->getUser()->isAdmin() || $this->getAcl()->check($relationEntity, 'edit'))
+        );
+    }
 }
