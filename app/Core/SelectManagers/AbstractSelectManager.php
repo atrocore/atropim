@@ -12,7 +12,7 @@
 namespace Pim\Core\SelectManagers;
 
 use Atro\Core\SelectManagers\Base;
-use Espo\Core\Services\Base as BaseService;
+use Atro\Core\Services\AbstractService as BaseService;
 
 /**
  * Class of AbstractSelectManager
