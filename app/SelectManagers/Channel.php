@@ -23,7 +23,7 @@ class Channel extends AbstractSelectManager
     /**
      * @param $result
      *
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Atro\Core\Exceptions\Error
      */
     protected function boolFilterNotLinkedWithProduct(&$result)
     {

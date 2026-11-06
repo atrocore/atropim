@@ -18,7 +18,7 @@ namespace Pim\Repositories;
  *
  * @package Pim\Repositories
  */
-class Content extends \Espo\Core\Templates\Repositories\Base
+class Content extends \Atro\Core\Templates\Repositories\Base
 {
 
 }

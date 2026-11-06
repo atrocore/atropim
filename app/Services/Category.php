@@ -16,7 +16,7 @@ use Doctrine\DBAL\ParameterType;
 use Atro\Core\Templates\Services\Hierarchy;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\Services\Record;
+use Atro\Services\Record;
 
 class Category extends Hierarchy
 {

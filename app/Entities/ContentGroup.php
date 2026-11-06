@@ -18,7 +18,7 @@ namespace Pim\Entities;
  *
  * @package Pim\Entities
  */
-class ContentGroup extends \Espo\Core\Templates\Entities\Base
+class ContentGroup extends \Atro\Core\Templates\Entities\Base
 {
     protected $entityType = "ContentGroup";
 }

@@ -18,7 +18,7 @@ namespace Pim\Services;
  *
  * @package Pim\Services
  */
-class ContentGroup extends \Espo\Core\Templates\Services\Base
+class ContentGroup extends \Atro\Core\Templates\Services\Base
 {
 
 }

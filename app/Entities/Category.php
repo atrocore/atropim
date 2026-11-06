@@ -16,7 +16,7 @@ namespace Pim\Entities;
 use Atro\Core\Templates\Entities\Hierarchy;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
 /**
  * Entity Category
