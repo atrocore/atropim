@@ -20,12 +20,7 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
                 }
             });
 
-            const parentModel = this.getParentView()?.getParentView()?.getParentModel();
-            if (model
-                && this.isImage()
-                && !model.get('isMainImage')
-                && model.get('_meta')?.availableActions?.edit
-                && parentModel) {
+            if (model && this.model.get('_meta')?.availableActions?.setAsMainImage) {
                 list.unshift({
                     action: 'setAsMainImage',
                     label: this.translate('setAsMainImage'),
@@ -46,11 +41,6 @@ Espo.define('pim:views/record/row-actions/relationship-file', 'views/record/row-
             if (model && this.$el && model.get('isMainImage')) {
                 this.$el.parent().addClass('main-image global-main-image');
             }
-        },
-
-
-        isImage() {
-            return $.inArray(this.model.get('extension'), this.getMetadata().get('app.file.image.extensions') || []) !== -1;
         },
 
     })
