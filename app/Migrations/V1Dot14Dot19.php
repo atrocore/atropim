@@ -24,15 +24,13 @@ class V1Dot14Dot19 extends Base
 
     public function up(): void
     {
-        $seeder = new \Pim\Seeders\PreviewSeeder($this->getConfig(), $this->getConnection());
-
-        foreach ($seeder->getPreviewTemplates() as $previews) {
+        foreach ($this->getPreviewTemplates() as $previews) {
             if (empty($previews['template']) || empty($previews['id'])) {
                 continue;
             }
 
             try {
-                $this->getConnection()->createQueryBuilder()
+                $this->getDbal()->createQueryBuilder()
                     ->update('preview_template')
                     ->set('template', ':template')
                     ->where('id = :id')
@@ -41,5 +39,20 @@ class V1Dot14Dot19 extends Base
                     ->executeStatement();
             } catch (\Throwable $e) {}
         }
+    }
+
+    private function getPreviewTemplates(): array
+    {
+        $templateDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+
+        return [
+            [
+                'id'         => 'product_preview',
+                'name'       => 'Product preview',
+                'template'   => file_get_contents($templateDir . 'Product' . DIRECTORY_SEPARATOR . 'template.twig'),
+                'active'     => true,
+                'entityType' => 'Product',
+            ],
+        ];
     }
 }
