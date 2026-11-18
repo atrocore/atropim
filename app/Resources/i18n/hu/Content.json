@@ -1,23 +1,23 @@
 {
     "fields": {
-        "tags": "",
-        "name": "",
-        "status": "",
-        "type": "",
-        "description": "",
-        "text": "",
-        "metaTitle": "",
-        "metaDescription": "",
-        "contentGroup": "",
-        "products": ""
+        "tags": "Címkék",
+        "name": "Cím",
+        "status": "Állapot",
+        "type": "Típus",
+        "description": "Leírás",
+        "text": "Szöveg",
+        "metaTitle": "Meta cím",
+        "metaDescription": "Meta leírás",
+        "contentGroup": "Tartalomcsoport",
+        "products": "Termékek"
     },
     "labels": {
-        "draft": "",
-        "written": "",
-        "reviewed": "",
-        "published": "",
-        "review": "",
-        "news": "",
-        "promotional": ""
+        "draft": "Piszkozat",
+        "written": "Megírva",
+        "reviewed": "Átnézve",
+        "published": "Közzétéve",
+        "review": "Értékelés",
+        "news": "Hírek",
+        "promotional": "Promóciós"
     }
 }
