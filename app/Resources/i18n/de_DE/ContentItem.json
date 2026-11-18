@@ -1,11 +1,18 @@
 {
-  "fields": {
-    "description": "Beschreibung",
-    "image": "Bild",
-    "name": "Name",
-    "plainText": "Klartext",
-    "products": "Produkte",
-    "richText": "Reichhaltiger Text",
-    "type": "Typ"
-  }
+    "fields": {
+        "description": "Beschreibung",
+        "image": "Bild",
+        "name": "Name",
+        "plainText": "Klartext",
+        "products": "Produkte",
+        "richText": "Reichhaltiger Text",
+        "type": "Typ"
+    },
+    "options": {
+        "type": {
+            "highlight": "Hervorhebung",
+            "top_features_list": "Liste der wichtigsten Merkmale",
+            "story": "Geschichte"
+        }
+    }
 }
