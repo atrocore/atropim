@@ -1,37 +1,37 @@
 {
     "fields": {
-        "name": "",
-        "description": "",
-        "code": "",
-        "isActive": "",
-        "mainImage": "",
-        "parents": "",
-        "children": "",
-        "channels": "",
-        "scope": "",
-        "productCategories": "",
-        "products": "",
-        "sortOrder": ""
+        "name": "Név",
+        "description": "Leírás",
+        "code": "Kód",
+        "isActive": "Aktív",
+        "mainImage": "Főkép",
+        "parents": "Szülőkategória",
+        "children": "Alkategóriák",
+        "channels": "Csatornák",
+        "scope": "Hatókör",
+        "productCategories": "Kategória termékei",
+        "products": "Termékek",
+        "sortOrder": "Rendezési sorrend"
     },
     "options": {
         "template": {
-            "default": ""
+            "default": "Alapértelmezett"
         }
     },
     "boolFilters": {
-        "linkedWithProduct": ""
+        "linkedWithProduct": "Vannak termékei"
     },
     "messages": {
-        "channelUnlinkConfirm": "",
-        "categoryRemoveConfirm": "",
-        "categoryParentChangeConfirm": ""
+        "channelUnlinkConfirm": "Biztosan leválasztja a csatornát a kategóriáról? A kategórián keresztül közvetetten a csatornához kapcsolódó összes termék is leválasztásra kerül.",
+        "categoryRemoveConfirm": "Biztosan törölni szeretné a kategóriát? A kategória összes alkategóriája is törlődik, és a kategóriához vagy alkategóriáihoz kapcsolt összes termék kapcsolata megszűnik.",
+        "categoryParentChangeConfirm": "Fontos, hogy a frissített kategóriafa az eredeti kategóriafával megegyező katalógusokhoz is hozzá lesz rendelve. A termékek leválasztásra kerülnek az eredeti kategóriafától örökölt összes csatornáról, és hozzá lesznek rendelve a frissített kategóriafától örökölt csatornákhoz."
     },
     "exceptions": {
-        "categoryHasChildren": "",
-        "categoryHasChildCategoryAndCantBeDeleted": "",
-        "youCanNotChooseChildCategory": "",
-        "categoryHasProducts": "",
-        "parentCategoryHasProducts": "",
-        "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": ""
+        "categoryHasChildren": "A kiválasztott kategóriát egy másik kategória szülőként használja, ezért termékkategóriaként nem választható ki.",
+        "categoryHasChildCategoryAndCantBeDeleted": "Az alkategóriát tartalmazó kategória nem törölhető.",
+        "youCanNotChooseChildCategory": "Nem választhat ki alkategóriát vagy magát a kategóriát.",
+        "categoryHasProducts": "A kapcsolódó termékekkel rendelkező kategória nem törölhető.",
+        "parentCategoryHasProducts": "Ez a kategória nem állítható be szülőkategóriaként, mert egy hozzárendelt termékekkel rendelkező levélkategória.",
+        "youCanNotChangeParentCategoryInRootCategoryWithLinkedProducts": "A kapcsolódó termékeket tartalmazó gyökérkategória szülőkategóriája nem módosítható."
     }
 }
