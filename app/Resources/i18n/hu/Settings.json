@@ -1,19 +1,19 @@
 {
     "fields": {
-        "productCanLinkedWithNonLeafCategories": "",
-        "behaviorOnCategoryDelete": ""
+        "productCanLinkedWithNonLeafCategories": "Termékek nem végponti kategóriákhoz kapcsolásának engedélyezése.",
+        "behaviorOnCategoryDelete": "Kategória törlésekor alkalmazott viselkedés"
     },
     "labels": {
-        "confirmLocaleChanges": ""
+        "confirmLocaleChanges": "A nyelv eltávolításakor az adott területi beállításhoz tartozó, többnyelvű mezőkben korábban megadott összes adat és attribútumérték automatikusan törlődik."
     },
     "messages": {
-        "productCanLinkedWithNonLeafCategoriesChangeConfirm": ""
+        "productCanLinkedWithNonLeafCategoriesChangeConfirm": "Biztosan le szeretné tiltani a termékek nem végponti kategóriákhoz kapcsolását? Az ezekhez kapcsolt összes termék kapcsolata automatikusan megszűnik."
     },
     "exceptions": {
-        "languageUsedInChannel": ""
+        "languageUsedInChannel": "Egyes csatornák által használt nyelv nem távolítható el."
     },
     "tooltips": {
-        "productCanLinkedWithNonLeafCategories": "",
-        "behaviorOnCategoryDelete": ""
+        "productCanLinkedWithNonLeafCategories": "Beállítása esetén termékeket kapcsolhat olyan kategóriákhoz, amelyeknek alkategóriái vannak.",
+        "behaviorOnCategoryDelete": "„Kaszkád” esetén a kategória összes alkategóriája is törlődik, és a kategóriához vagy annak alkategóriáihoz kapcsolt összes termék kapcsolata megszűnik."
     }
 }
