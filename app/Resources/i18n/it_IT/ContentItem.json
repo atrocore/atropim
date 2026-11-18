@@ -1,11 +1,18 @@
 {
-  "fields": {
-    "description": "Descrizione",
-    "image": "Immagine",
-    "name": "Nome",
-    "plainText": "Testo normale",
-    "products": "Prodotti",
-    "richText": "Testo ricco",
-    "type": "Tipo"
-  }
+    "fields": {
+        "description": "Descrizione",
+        "image": "Immagine",
+        "name": "Nome",
+        "plainText": "Testo normale",
+        "products": "Prodotti",
+        "richText": "Testo ricco",
+        "type": "Tipo"
+    },
+    "options": {
+        "type": {
+            "highlight": "Evidenziazione",
+            "top_features_list": "Elenco delle caratteristiche principali",
+            "story": "Storia"
+        }
+    }
 }
