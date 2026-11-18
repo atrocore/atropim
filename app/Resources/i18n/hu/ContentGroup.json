@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": "",
-        "contents": ""
+        "name": "Név",
+        "contents": "Tartalom"
     }
 }
