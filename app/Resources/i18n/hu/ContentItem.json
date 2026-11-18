@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "description": "",
+        "image": "",
+        "name": "",
+        "plainText": "",
+        "products": "",
+        "richText": "",
+        "type": ""
+    },
+    "options": {
+        "type": {
+            "highlight": "",
+            "top_features_list": "",
+            "story": ""
+        }
+    }
+}
