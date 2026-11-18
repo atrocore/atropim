@@ -1,14 +1,14 @@
 {
     "fields": {
-        "scope": "",
-        "isMainImage": "",
-        "tags": "",
-        "sorting": ""
+        "scope": "Hatókör",
+        "isMainImage": "Főkép",
+        "tags": "Címkék",
+        "sorting": "Rendezési sorrend"
     },
     "options": {
         "scope": {
-            "Global": "",
-            "Channel": ""
+            "Global": "Globális",
+            "Channel": "Csatorna"
         }
     }
 }
