@@ -1,11 +1,18 @@
 {
-  "fields": {
-    "description": "Description",
-    "image": "Obraz",
-    "name": "Name",
-    "products": "Produkty",
-    "type": "Typ",
-    "plainText": "Zwykły tekst",
-    "richText": "Bogaty tekst"
-  }
+    "fields": {
+        "description": "Description",
+        "image": "Obraz",
+        "name": "Name",
+        "products": "Produkty",
+        "type": "Typ",
+        "plainText": "Zwykły tekst",
+        "richText": "Bogaty tekst"
+    },
+    "options": {
+        "type": {
+            "highlight": "Wyróżnienie",
+            "top_features_list": "Lista najważniejszych cech",
+            "story": "Historia"
+        }
+    }
 }
