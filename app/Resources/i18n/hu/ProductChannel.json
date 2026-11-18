@@ -1,7 +1,7 @@
 {
     "fields": {
-        "isActive": "",
-        "product": "",
-        "channel": ""
+        "isActive": "Aktív a csatornán",
+        "product": "Termék",
+        "channel": "Csatorna"
     }
 }
