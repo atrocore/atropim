@@ -1,9 +1,9 @@
 {
     "labels": {
-        "pim": "",
-        "pimSettings": ""
+        "pim": "PIM",
+        "pimSettings": "PIM-beállítások"
     },
     "descriptions": {
-        "pimSettings": ""
+        "pimSettings": "PIM rendszerbeállításai"
     }
 }
