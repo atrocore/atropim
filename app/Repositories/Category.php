@@ -189,16 +189,6 @@ class Category extends Hierarchy
             ->executeQuery();
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-    }
-
     protected function exception(string $key): string
     {
         return $this->translate($key, 'exceptions', 'Category');
@@ -206,7 +196,7 @@ class Category extends Hierarchy
 
     protected function translate(string $key, string $label = 'labels', string $scope = 'Global'): string
     {
-        return $this->getInjection('language')->translate($key, $label, $scope);
+        return $this->container->get('language')->translate($key, $label, $scope);
     }
 
     protected function getProductRepository(): Product

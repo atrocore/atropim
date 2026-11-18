@@ -129,14 +129,6 @@ class Product extends Hierarchy
         return Util::toUnderScore(lcfirst($this->entityName));
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('serviceFactory');
-    }
-
     protected function afterRestore($entity)
     {
         parent::afterRestore($entity);
@@ -178,11 +170,11 @@ class Product extends Hierarchy
 
     protected function translate(string $key, string $label, $scope = ''): string
     {
-        return $this->getInjection('language')->translate($key, $label, $scope);
+        return $this->container->get('language')->translate($key, $label, $scope);
     }
 
     protected function dispatch(string $target, string $action, Event $event): Event
     {
-        return $this->getInjection('eventManager')->dispatch($target, $action, $event);
+        return $this->container->get('eventManager')->dispatch($target, $action, $event);
     }
 }

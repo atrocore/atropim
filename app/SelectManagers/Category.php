@@ -42,7 +42,7 @@ class Category extends AbstractSelectManager
         $qb->setParameter('false', false, Mapper::getParameterType(false));
     }
 
-    public function applyAdditional(array &$result, array $params)
+    public function applyAdditional(array &$result, array $params): void
     {
         parent::applyAdditional($result, $params);
 

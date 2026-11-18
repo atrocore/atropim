@@ -34,7 +34,7 @@ abstract class AbstractSelectManager extends Base
      *
      * @return array
      */
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false): array
     {
         // set select data
         $this->selectData = $params;

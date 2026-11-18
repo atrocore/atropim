@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Pim\Listeners;
 
-use Espo\Core\ServiceFactory;
+use Atro\Core\ServiceFactory;
 use Atro\Listeners\AbstractListener;
 
 abstract class AbstractEntityListener extends AbstractListener

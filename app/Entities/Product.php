@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Pim\Entities;
 
 use Atro\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 use Atro\Core\Templates\Entities\Hierarchy;
 use Espo\ORM\EntityCollection;
@@ -44,7 +43,7 @@ class Product extends Hierarchy
         $result = [];
 
         if (!empty($this->get('data'))) {
-            $result = Json::decode(Json::encode($this->get('data')), true);
+            $result = json_decode(json_encode($this->get('data')), true);
         }
 
         return $result;

@@ -197,7 +197,7 @@ class Product extends Hierarchy
 
     protected function exception(string $key): string
     {
-        return $this->getInjection('language')->translate($key, 'exceptions', 'Product');
+        return $this->container->get('language')->translate($key, 'exceptions', 'Product');
     }
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
@@ -207,13 +207,6 @@ class Product extends Hierarchy
         return parent::isEntityUpdated($entity, $data);
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
-    }
-
     protected function getMandatoryLinksToMerge(): array
     {
         $links   = parent::getMandatoryLinksToMerge();
@@ -221,5 +214,4 @@ class Product extends Hierarchy
 
         return $links;
     }
-
 }

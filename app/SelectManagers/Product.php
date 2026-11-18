@@ -23,7 +23,7 @@ class Product extends AbstractSelectManager
 {
     private array $filterByCategories = [];
 
-    protected function textFilter($textFilter, &$result)
+    protected function textFilter($textFilter, &$result): void
     {
         parent::textFilter($textFilter, $result);
 
@@ -51,7 +51,7 @@ class Product extends AbstractSelectManager
         $brandId = (string)$this->getSelectCondition('notLinkedWithBrand');
 
         if (!empty($brandId)) {
-            $products = $this->getEntityManager()->getRepository($this->entityType)
+            $products = $this->getEntityManager()->getRepository($this->getEntityType())
                 ->select(['id'])
                 ->where(['brandId' => $brandId])
                 ->find();
@@ -66,7 +66,7 @@ class Product extends AbstractSelectManager
     {
         $products = $this
             ->getEntityManager()
-            ->getRepository($this->entityType)
+            ->getRepository($this->getEntityType())
             ->join('classifications')
             ->select(['id'])
             ->where(['classifications.id' => $classificationIds])
@@ -111,8 +111,8 @@ class Product extends AbstractSelectManager
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        $relTable = Util::toUnderScore(lcfirst($this->entityType).'Category');
-        $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
+        $relTable = Util::toUnderScore(lcfirst($this->getEntityType()).'Category');
+        $idColumn = Util::toUnderScore(lcfirst($this->getEntityType()).'Id');
 
         $qb->andWhere("{$tableAlias}.id IN (SELECT $idColumn FROM $relTable WHERE $idColumn IS NOT NULL AND deleted=:false AND category_id IN (:categoriesIds))");
         $qb->setParameter('false', false, Mapper::getParameterType(false));
@@ -123,13 +123,13 @@ class Product extends AbstractSelectManager
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        $relationName = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', 'files', 'relationName']) ?? ($this->entityType . 'File');
+        $relationName = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', 'files', 'relationName']) ?? ($this->getEntityType() . 'File');
         $relTable = Util::toUnderScore(lcfirst($relationName));
-        $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
+        $idColumn = Util::toUnderScore(lcfirst($this->getEntityType()).'Id');
 
         $res = $connection->createQueryBuilder()
             ->select('p.id')
-            ->from($connection->quoteIdentifier(Util::toUnderScore(lcfirst($this->entityType))), 'p')
+            ->from($connection->quoteIdentifier(Util::toUnderScore(lcfirst($this->getEntityType()))), 'p')
             ->where("p.id NOT IN (SELECT DISTINCT pa.$idColumn FROM $relTable pa WHERE pa.is_main_image = :true)")
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
@@ -176,8 +176,8 @@ class Product extends AbstractSelectManager
 
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        $relTable = Util::toUnderScore(lcfirst($this->entityType).'Category');
-        $idColumn = Util::toUnderScore(lcfirst($this->entityType).'Id');
+        $relTable = Util::toUnderScore(lcfirst($this->getEntityType()).'Category');
+        $idColumn = Util::toUnderScore(lcfirst($this->getEntityType()).'Id');
 
         $categoriesIds = [];
         if (in_array($row['type'], ['linkedWith', 'notLinkedWith'])) {
