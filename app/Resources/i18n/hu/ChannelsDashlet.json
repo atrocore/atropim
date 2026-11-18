@@ -1,8 +1,8 @@
 {
     "fields": {
-        "name": "",
-        "products": "",
-        "active": "",
-        "notActive": ""
+        "name": "Csatorna",
+        "products": "Termékek",
+        "active": "Aktív",
+        "notActive": "Nem aktív"
     }
 }
