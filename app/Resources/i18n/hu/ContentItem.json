@@ -1,18 +1,18 @@
 {
     "fields": {
-        "description": "",
-        "image": "",
-        "name": "",
-        "plainText": "",
-        "products": "",
-        "richText": "",
-        "type": ""
+        "description": "Leírás",
+        "image": "Kép",
+        "name": "Név",
+        "plainText": "Egyszerű szöveg",
+        "products": "Termékek",
+        "richText": "Formázott szöveg",
+        "type": "Típus"
     },
     "options": {
         "type": {
-            "highlight": "",
-            "top_features_list": "",
-            "story": ""
+            "highlight": "Kiemelés",
+            "top_features_list": "Kiemelt jellemzők listája",
+            "story": "Történet"
         }
     }
 }
