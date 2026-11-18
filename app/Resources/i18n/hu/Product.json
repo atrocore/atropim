@@ -1,87 +1,87 @@
 {
     "fields": {
-        "mainImage": "",
-        "files": "",
-        "data": "",
-        "categories": "",
-        "product": "",
-        "products": "",
-        "status": "",
-        "type": "",
-        "amount": "",
-        "price": "",
-        "rrp": "",
-        "image": "",
-        "tag": "",
-        "channels": "",
-        "basePriceAmount": "",
-        "packedAmount": "",
-        "contents": "",
-        "taskStatus": "",
-        "calls": "",
-        "contentItems": "",
-        "variantSpecificAttributes": ""
+        "mainImage": "Főkép",
+        "files": "Fájlok",
+        "data": "Adatok",
+        "categories": "Kategóriák",
+        "product": "Főtermék",
+        "products": "Termékek",
+        "status": "Állapot",
+        "type": "Típus",
+        "amount": "Összeg",
+        "price": "Beszerzési ár",
+        "rrp": "Ajánlott fogyasztói ár (RRP)",
+        "image": "Főkép",
+        "tag": "Címke",
+        "channels": "Csatornák",
+        "basePriceAmount": "Alapár összege",
+        "packedAmount": "Csomagolt mennyiség",
+        "contents": "Tartalom",
+        "taskStatus": "Feladat állapota",
+        "calls": "Hívások",
+        "contentItems": "Tartalmi elemek",
+        "variantSpecificAttributes": "Változatspecifikus attribútumok"
     },
     "labels": {
-        "Product Attributes": "",
-        "thereIsNoValidAttributesForChannel": "",
-        "addAttributeFilter": "",
-        "Channels": "",
-        "Product Channel Attributes": "",
-        "typeCategoryToSearch": "",
-        "noGroup": "",
-        "productImage": "",
-        "selectAttributeGroup": "",
-        "channel": ""
+        "Product Attributes": "Attribútumok",
+        "thereIsNoValidAttributesForChannel": "Nincsenek érvényes attribútumok a csatornához",
+        "addAttributeFilter": "Attribútumszűrő hozzáadása",
+        "Channels": "Csatornák",
+        "Product Channel Attributes": "Csatorna-attribútumok",
+        "typeCategoryToSearch": "Kategória beírása a kereséshez...",
+        "noGroup": "Nincs csoport",
+        "productImage": "Termékkép",
+        "selectAttributeGroup": "Attribútumcsoport kiválasztása",
+        "channel": "Csatorna"
     },
     "options": {
         "status": {
-            "draft": "",
-            "prepared": "",
-            "reviewed": "",
-            "notReady": "",
-            "ready": ""
+            "draft": "Piszkozat",
+            "prepared": "Előkészítve",
+            "reviewed": "Ellenőrizve",
+            "notReady": "Nem kész",
+            "ready": "Kész"
         },
         "tag": {
-            "blue": "",
-            "yellow": "",
-            "green": "",
-            "red": "",
-            "your tag1": "",
-            "your tag2": "",
-            "your_tag1": "",
-            "your_tag2": ""
+            "blue": "kék",
+            "yellow": "sárga",
+            "green": "zöld",
+            "red": "piros",
+            "your tag1": "saját tag1",
+            "your tag2": "saját tag2 címkéje",
+            "your_tag1": "Saját tag1",
+            "your_tag2": "saját tag2"
         },
         "taskStatus": {
-            "mar": "",
-            "tech": "",
-            "ass": "",
-            "img": "",
-            "cat": "",
-            "ch": "",
-            "pr": ""
+            "mar": "Mar",
+            "tech": "Tech",
+            "ass": "Ass",
+            "img": "Kép",
+            "cat": "Macska",
+            "ch": "Ch",
+            "pr": "Termék"
         },
         "template": {
-            "default": ""
+            "default": "Alapértelmezett"
         }
     },
     "boolFilters": {
-        "notAssociatedRecords": "",
-        "notLinkedWithBrand": "",
-        "linkedWithCategory": "",
-        "onlyConfigurableProducts": "",
-        "withoutMainImage": ""
+        "notAssociatedRecords": "Társított termékek nélkül",
+        "notLinkedWithBrand": "Márka nélkül",
+        "linkedWithCategory": "Kategóriával",
+        "onlyConfigurableProducts": "Csak konfigurálható termékek",
+        "withoutMainImage": "Főkép nélkül"
     },
     "exceptions": {
-        "wrongInputData": "",
-        "itselfAssociation": "",
-        "recordAssociationAlreadyExists": "",
-        "youCantChangeClassificationInProduct": "",
-        "productCanNotLinkToNonLeafCategory": ""
+        "wrongInputData": "Az ellenőrzés sikertelen. Hibás bemeneti adatok.",
+        "itselfAssociation": "A termék nem társítható önmagával.",
+        "recordAssociationAlreadyExists": "Ez a terméktársítás már létezik.",
+        "youCantChangeClassificationInProduct": "A Termékben nem módosíthatja az Osztályozást",
+        "productCanNotLinkToNonLeafCategory": "A termékek nem kapcsolhatók nem végső kategóriához."
     },
     "messages": {
-        "componentsNotInstalled": "",
-        "emptyComponents": "",
-        "removeRelatedRecords": ""
+        "componentsNotInstalled": "Telepítse a Komponensek modult az összetevők előnézetének használatához.",
+        "emptyComponents": "A termékhez nem tartoznak komponensek",
+        "removeRelatedRecords": "Biztosan el szeretné távolítani a kiválasztott társításhoz tartozó összes terméket az aktuális termékből? Minden kapcsolódó termék megmarad."
     }
 }
