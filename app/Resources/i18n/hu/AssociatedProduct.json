@@ -1,6 +1,6 @@
 {
     "fields": {
-        "associatingItemImage": "",
-        "associatedItemImage": ""
+        "associatingItemImage": "Társító elem képe",
+        "associatedItemImage": "Kapcsolódó elem képe"
     }
 }
