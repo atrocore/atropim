@@ -1,28 +1,28 @@
 {
     "fields": {
-        "description": "",
-        "isActive": "",
-        "categories": "",
-        "code": "",
-        "products": ""
+        "description": "Leírás",
+        "isActive": "Aktív",
+        "categories": "Kategóriák",
+        "code": "Kód",
+        "products": "Termékek"
     },
     "labels": {
-        "unLinkCategoryFromChannel": "",
-        "linkCategoryWithChannel": "",
-        "changeCategoryForChannel": "",
-        "main": ""
+        "unLinkCategoryFromChannel": "A(z) „%s” kategória leválasztása a(z) „%s” csatornáról",
+        "linkCategoryWithChannel": "A(z) „%s” kategória összekapcsolása a(z) „%s” csatornával",
+        "changeCategoryForChannel": "A(z) „%s” kategóriára váltás a(z) „%s” csatornánál",
+        "main": "Fő nyelv"
     },
     "options": {
         "template": {
-            "default": ""
+            "default": "Alapértelmezett"
         }
     },
     "messages": {
-        "categoryChangeConfirm": ""
+        "categoryChangeConfirm": "Biztosan leválasztja (vagy módosítja) a kategóriafát ennél a csatornánál? Az eredeti kategóriafához kapcsolódó összes termék leválasztásra kerül erről a csatornáról (és az új kategóriafához tartozó termékek kapcsolódnak hozzá)."
     },
     "exceptions": {
-        "channelWithSuchCodeAlreadyExist": "",
-        "channelHasProducts": "",
-        "channelHasCategory": ""
+        "channelWithSuchCodeAlreadyExist": "Már létezik ilyen kódú csatorna",
+        "channelHasProducts": "Kapcsolódó termékekkel rendelkező csatorna nem törölhető.",
+        "channelHasCategory": "Kapcsolódó kategóriafával rendelkező csatorna nem törölhető."
     }
 }
