@@ -36,6 +36,13 @@ Espo.define('pim:views/listing/fields/classification', 'views/fields/link',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            // In a list view, $el.parent() is the complete table row. The
+            // channel may not be part of the selected list attributes, so
+            // hiding the parent would incorrectly hide the whole record.
+            if (this.isListView()) {
+                return;
+            }
+
             if (this.model.get('channelId')) {
                 this.$el.parent().show();
             } else {
