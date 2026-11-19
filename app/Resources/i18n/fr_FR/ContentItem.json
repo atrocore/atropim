@@ -1,11 +1,18 @@
 {
-  "fields": {
-    "description": "Description",
-    "image": "Image",
-    "name": "Nom",
-    "plainText": "Texte en clair",
-    "products": "Produits",
-    "richText": "Texte enrichi",
-    "type": "Type"
-  }
+    "fields": {
+        "description": "Description",
+        "image": "Image",
+        "name": "Nom",
+        "plainText": "Texte en clair",
+        "products": "Produits",
+        "richText": "Texte enrichi",
+        "type": "Type"
+    },
+    "options": {
+        "type": {
+            "highlight": "Mise en avant",
+            "top_features_list": "Liste des caractéristiques principales",
+            "story": "Récit"
+        }
+    }
 }

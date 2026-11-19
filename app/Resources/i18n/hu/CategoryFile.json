@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "category": "Kategória",
+        "isMainImage": "Főkép",
+        "tags": "Címkék",
+        "preview": "Előnézet",
+        "sorting": "Rendezési sorrend"
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "description": "Leírás",
+        "image": "Kép",
+        "name": "Név",
+        "plainText": "Egyszerű szöveg",
+        "products": "Termékek",
+        "richText": "Formázott szöveg",
+        "type": "Típus"
+    },
+    "options": {
+        "type": {
+            "highlight": "Kiemelés",
+            "top_features_list": "Kiemelt jellemzők listája",
+            "story": "Történet"
+        }
+    }
+}

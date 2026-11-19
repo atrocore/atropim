@@ -1,11 +1,18 @@
 {
-  "fields": {
-    "description": "Описание",
-    "image": "Изображение",
-    "name": "Название",
-    "plainText": "Обычный текст",
-    "products": "Продукты",
-    "richText": "Насыщенный текст",
-    "type": "Тип"
-  }
+    "fields": {
+        "description": "Описание",
+        "image": "Изображение",
+        "name": "Название",
+        "plainText": "Обычный текст",
+        "products": "Продукты",
+        "richText": "Насыщенный текст",
+        "type": "Тип"
+    },
+    "options": {
+        "type": {
+            "highlight": "Выделение",
+            "top_features_list": "Список основных характеристик",
+            "story": "История"
+        }
+    }
 }

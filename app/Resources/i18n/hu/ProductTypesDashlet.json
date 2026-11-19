@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "total": "Termékek összesen",
+        "active": "Aktív",
+        "notActive": "Nem aktív"
+    }
+}

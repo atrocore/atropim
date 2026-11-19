@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "attributes": "Attribútumok"
+    },
+    "exceptions": {
+        "measureIsUsedOnAttribute": "A(z) „%s” mértékegységet a(z) „%s” Attribútum használja."
+    }
+}

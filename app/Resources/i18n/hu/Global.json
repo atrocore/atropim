@@ -1,0 +1,96 @@
+{
+    "scopeNames": {
+        "Product": "Termék",
+        "ContentItem": "Tartalomelem",
+        "ProductPrice": "Termékár",
+        "Channel": "Csatorna",
+        "ProductChannel": "Termékcsatorna",
+        "CategoryChannel": "Kategóriacsatorna",
+        "CategoryFile": "Kategóriafájl",
+        "AssociatedProduct": "Kapcsolódó termék",
+        "Listing": "Listázás",
+        "ChannelPricing": "Csatornaárazás",
+        "ProductCategory": "Termékkategória",
+        "Category": "Kategória",
+        "CategoryHierarchy": "Kategóriahierarchia",
+        "ContentGroup": "Tartalomcsoport",
+        "Content": "Tartalom",
+        "ProductFile": "Termékfájl"
+    },
+    "scopeNamesPlural": {
+        "Content": "Tartalmak",
+        "ProductFile": "Termékfájlok",
+        "Product": "Termékek",
+        "ProductPrice": "Termékárak",
+        "Category": "Kategóriák",
+        "AssociatedProduct": "Kapcsolódó termékek",
+        "ContentGroup": "Tartalomcsoportok",
+        "ContentItem": "Tartalomelemek",
+        "ProductChannel": "Termékcsatornák",
+        "Listing": "Listázások",
+        "CategoryFile": "Kategóriafájlok",
+        "Channel": "Csatornák"
+    },
+    "labels": {
+        "removeExplain": "Válassza ezt az Attribútum más Entitásokról való leválasztásához az eltávolítás előtt",
+        "Add Field": "Szűrő hozzáadása",
+        "setAsMainImage": "Beállítás fő képként",
+        "Reset selection": "Kijelölés visszaállítása",
+        "removeHierarchically": "Hierarchikus törlés",
+        "categoryPreview": "Kategória előnézete",
+        "cascade": "Kaszkád",
+        "restrict": "Korlátozás",
+        "setAsMainVariant": "Beállítás fő változatként",
+        "setAsMainCategory": "Beállítás fő kategóriaként",
+        "productPreview": "Termékelőnézet",
+        "linkedChannels": "Kapcsolt csatornák",
+        "typeToSearch": "Gépeljen, majd nyomja meg az Enter billentyűt...",
+        "categorySettings": "Kategóriabeállítások",
+        "allChannels": "Összes csatorna",
+        "selectAttributes": "Attribútum(ok) kiválasztása"
+    },
+    "fields": {
+        "channels": "Csatornák",
+        "channel": "Csatorna",
+        "scope": "Hatókör",
+        "oneGeoType": "OneGeo-típus",
+        "uvp": "UVP",
+        "tag": "Címke",
+        "mpn": "MPN",
+        "priceCurrency": "Ár pénzneme",
+        "products": "Termékek",
+        "categories": "Kategóriák",
+        "status": "Termékállapot",
+        "amount": "Összeg",
+        "sku": "SKU",
+        "product": "Termék",
+        "price": "Ár",
+        "listings": "Terméklisták",
+        "role": "Szerepkör"
+    },
+    "messages": {
+        "fieldHasPattern": "A(z) {field} kizárólag aláhúzásjelet, számokat és kisbetűket tartalmazhat"
+    },
+    "options": {
+        "scope": {
+            "Channel": "Csatorna",
+            "Global": "Globális"
+        },
+        "channelsFilter": {
+            "": "Összes hatókör",
+            "onlyGlobalScope": "Csak globális hatókör"
+        }
+    },
+    "dashlets": {
+        "ProductsByTag": "Termékek címke szerint",
+        "ProductsByStatus": "Termékek állapot szerint",
+        "ProductStatusOverview": "Termékállapot áttekintése",
+        "Channels": "Csatornák"
+    },
+    "exceptions": {
+        "onlyForceDeletingAvailable": "Csak kényszerített törlés érhető el",
+        "massUnRelateBlocked": "Az ilyen típusú tömeges kapcsolatbontás nem engedélyezett.",
+        "massRelateBlocked": "Az ilyen típusú tömeges összekapcsolás nem engedélyezett.",
+        "notValid": "Az adatok érvénytelenek"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "fields": {
+        "tags": "Címkék",
+        "name": "Cím",
+        "status": "Állapot",
+        "type": "Típus",
+        "description": "Leírás",
+        "text": "Szöveg",
+        "metaTitle": "Meta cím",
+        "metaDescription": "Meta leírás",
+        "contentGroup": "Tartalomcsoport",
+        "products": "Termékek"
+    },
+    "labels": {
+        "draft": "Piszkozat",
+        "written": "Megírva",
+        "reviewed": "Átnézve",
+        "published": "Közzétéve",
+        "review": "Értékelés",
+        "news": "Hírek",
+        "promotional": "Promóciós"
+    }
+}

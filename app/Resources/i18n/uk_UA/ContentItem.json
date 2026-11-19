@@ -1,11 +1,18 @@
 {
-  "fields": {
-    "description": "Опис",
-    "image": "Зображення",
-    "name": "Назва",
-    "plainText": "Простий текст",
-    "products": "Продукти",
-    "richText": "Форматований текст",
-    "type": "Тип"
-  }
+    "fields": {
+        "description": "Опис",
+        "image": "Зображення",
+        "name": "Назва",
+        "plainText": "Простий текст",
+        "products": "Продукти",
+        "richText": "Форматований текст",
+        "type": "Тип"
+    },
+    "options": {
+        "type": {
+            "highlight": "Виділення",
+            "top_features_list": "Список основних характеристик",
+            "story": "Історія"
+        }
+    }
 }
