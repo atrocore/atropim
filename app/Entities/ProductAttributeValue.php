@@ -79,7 +79,10 @@ class ProductAttributeValue extends AbstractAttributeValue
 
     public function __get($name)
     {
-        $this->getRepository()->getValueConverter()->convertFrom($this, $this->get('attribute'), false);
+        // the values of the script and alias attributes are calculated, they must not be replaced by the stored ones
+        if (empty($this->get('isVirtual'))) {
+            $this->getRepository()->getValueConverter()->convertFrom($this, $this->get('attribute'), false);
+        }
 
         return parent::__get($name);
     }
